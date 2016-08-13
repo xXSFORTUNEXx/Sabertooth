@@ -284,7 +284,7 @@ namespace Server.Classes
         }
 
         //Update npc to all clients
-        static void SendNpcData(NetServer svrServer, NPC[] svrNpc, int npcNum)
+        public void SendNpcData(NetServer svrServer, NPC[] svrNpc, int npcNum)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);

@@ -57,7 +57,7 @@ namespace Client.Classes
         public void DrawNpc(RenderWindow svrWindow, Texture svrTexture)
         {
             svrSprite.Texture = svrTexture;
-            svrSprite.TextureRect = new IntRect((Step * 32), (Direction * 32), 32, 48);
+            svrSprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48);
             svrSprite.Position = new Vector2f((X * 32), ((Y * 32) - 16));
 
             svrWindow.Draw(svrSprite);

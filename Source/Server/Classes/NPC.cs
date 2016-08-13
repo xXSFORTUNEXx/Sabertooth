@@ -82,8 +82,8 @@ namespace Server.Classes
                 Sprite = binaryReader.ReadInt32();
                 Step = binaryReader.ReadInt32();
                 Owner = binaryReader.ReadInt32();
-                SpawnTime = binaryReader.ReadInt32();
                 Behavior = binaryReader.ReadInt32();
+                SpawnTime = binaryReader.ReadInt32();
             }
             catch (Exception e)
             {

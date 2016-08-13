@@ -257,6 +257,17 @@ namespace Client.Classes
             }
         }
 
+        void DrawNpcs()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (svrNpc[i].isSpawned == true)
+                {
+                    svrNpc[i].DrawNpc(svrWindow, svrSprite[svrNpc[i].Sprite]);
+                }
+            }
+        }
+
         void DrawIndexPlayer()
         {
             svrPlayer[handleData.clientIndex].DrawPlayer(svrWindow, svrSprite[svrPlayer[handleData.clientIndex].Sprite]);
@@ -304,6 +315,7 @@ namespace Client.Classes
                 DrawLowLevelTiles();
                 DrawPlayers();
                 DrawIndexPlayer();
+                DrawNpcs();
                 DrawUpperLevelTiles();
                 if (TickCount - walkTick > 100)
                 {

@@ -42,6 +42,7 @@ namespace Server.Classes
                     SavePlayers();
                     saveTick = TickCount;
                 }
+                CheckNPCSpawn(svrServer);
                 RestDuringDebug();
             }
         }
@@ -56,7 +57,7 @@ namespace Server.Classes
             Thread.Sleep(30);
         }
 
-        void CheckNPCSpawn()
+        void CheckNPCSpawn(NetServer svrServer)
         {
             //Check for map spawning
             for (int x = 0; x < 50; x++)
@@ -72,6 +73,7 @@ namespace Server.Classes
                             svrNpc[npcNum].X = x;
                             svrNpc[npcNum].Y = y;
                             svrNpc[npcNum].isSpawned = true;
+                            handleData.SendNpcData(svrServer, svrNpc, npcNum);
                         }
                     }
                 }
@@ -132,15 +134,15 @@ namespace Server.Classes
 
             for (int i = 0; i < 10; i++)
             { 
-                if (!File.Exists("NPCS/Npc" + (i + 1) + ".bin"))
+                if (!File.Exists("NPCS/Npc" + i + ".bin"))
                 {
                     svrNpc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000);
-                    svrNpc[i].SaveNPC(i + 1);
+                    svrNpc[i].SaveNPC(i);
                 }
                 else
                 {
                     svrNpc[i] = new NPC();
-                    svrNpc[i].LoadNPC(i + 1);
+                    svrNpc[i].LoadNPC(i);
                 }
             }
         }
