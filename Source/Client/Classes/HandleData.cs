@@ -104,6 +104,8 @@ namespace Client.Classes
                 svrNpc[i].Behavior = incMSG.ReadInt32();
                 svrNpc[i].SpawnTime = incMSG.ReadInt32();
                 svrNpc[i].isSpawned = incMSG.ReadBoolean();
+
+                Console.WriteLine("Spawned:" + svrNpc[i].isSpawned);
             }
         }
 

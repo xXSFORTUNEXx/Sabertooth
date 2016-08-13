@@ -263,7 +263,7 @@ namespace Client.Classes
             {
                 if (svrNpc[i].isSpawned == true)
                 {
-                    svrNpc[i].DrawNpc(svrWindow, svrSprite[svrNpc[i].Sprite]);
+                    svrNpc[i].DrawNpc(svrWindow, svrSprite[(svrNpc[i].Sprite - 1)]);
                 }
             }
         }
