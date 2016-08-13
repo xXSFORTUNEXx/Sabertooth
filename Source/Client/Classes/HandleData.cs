@@ -13,10 +13,11 @@ namespace Client.Classes
 {
     class HandleData
     {
-        public static string ipAddress;
-        public static string port;
-        public int clientIndex;
+        public static string ipAddress; //So we can change the port XML instead of directly in the code
+        public static string port;  //So we can change the port from XML and not directly in the code
+        public int clientIndex; //The index of this client
 
+        //This is where we process the 
         public void DataMessage(NetClient svrClient, Canvas svrCanvas, GUI svrGUI, Player[] svrPlayer, Map svrMap, ClientConfig cConfig, NPC[] svrNpc)
         {
             NetIncomingMessage incMSG;
