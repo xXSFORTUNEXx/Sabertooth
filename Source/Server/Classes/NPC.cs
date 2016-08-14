@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using static Microsoft.VisualBasic.Interaction;
+using Lidgren.Network;
 
 namespace Server.Classes
 {
@@ -19,9 +20,12 @@ namespace Server.Classes
 
         //Only needed on live server and client no editors
         public bool isSpawned;
+        public bool didMove;
 
+        //Empty NPC
         public NPC() { }
 
+        //Detailed NPC
         public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
         {
             Name = name;
@@ -36,6 +40,7 @@ namespace Server.Classes
             isSpawned = false;
         }
 
+        //One with location but other default values as well
         public NPC(int x, int y)
         {
             Name = "Default";
@@ -48,6 +53,89 @@ namespace Server.Classes
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
             isSpawned = false;
+        }
+
+        public void NpcAI(int canMove, int dir, Map movementMap)
+        {
+            //check if we moved
+            didMove = false;
+
+            if (canMove > 80)
+            {
+                //check directions
+                switch (dir)
+                {
+                    //down
+                    case (int)Directions.Down:
+                        //check if they are going out of bounds
+                        if (Y < 49)
+                        {
+                            //Check to see if the next tile is blocked
+                            if (movementMap.Ground[X, Y + 1].type == (int)TileType.Blocked)
+                            {
+                                //just change the direction and exit
+                                Direction = (int)Directions.Down;
+                                didMove = true;
+                                return;
+                            }
+                            //move the npcs over
+                            Y += 1;
+                            Direction = (int)Directions.Down;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Left:
+                        if (X > 1)
+                        {
+                            if (movementMap.Ground[X - 1, Y].type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Left;
+                                didMove = true;
+                                return;
+                            }
+                            X -= 1;
+                            Direction = (int)Directions.Left;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Right:
+                        if (X < 49)
+                        {
+                            if (movementMap.Ground[X + 1, Y].type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Right;
+                                didMove = true;
+                                return;
+                            }
+                            X += 1;
+                            Direction = (int)Directions.Right;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Up:
+                        if (Y > 1)
+                        {
+                            if (movementMap.Ground[X, Y - 1].type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Up;
+                                didMove = true;
+                                return;
+                            }
+                            Y -= 1;
+                            Direction = (int)Directions.Up;
+                            didMove = true;
+                        }
+                        break;
+                }
+
+                if (didMove == true)
+                {
+                    if (Step == 3) { Step = 0; } else { Step += 1; }
+                }
+            }
         }
 
         public void SaveNPC(int npcNum)

@@ -287,7 +287,7 @@ namespace Server.Classes
         public void SendNpcData(NetServer svrServer, NPC[] svrNpc, int npcNum)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.Npcs);
+            outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.Write(npcNum);
             outMSG.Write(svrNpc[npcNum].Name);
             outMSG.Write(svrNpc[npcNum].X);

@@ -16,12 +16,14 @@ namespace Server.Classes
         NPC[] svrNpc = new NPC[10];
         HandleData handleData = new HandleData();
         Map svrMap = new Map();
+        Random RND = new Random();
         static int lastTick;
         static int lastCycleRate;
         static int cycleRate;
         private int saveTick;
-        private static int restTick;
         private int saveTime = 300000;
+        private int aiTick;
+        private int aiTime = 1000;
 
         public void ServerLoop(NetServer svrServer)
         {
@@ -34,7 +36,7 @@ namespace Server.Classes
 
             while (true)
             {
-                Console.Title = "Sabertooth Server - Bind IP: " + svrServer.Socket.LocalEndPoint + " CPS: " + CalculateCycleRate();
+                //Console.Title = "Sabertooth Server - Bind IP: " + svrServer.Socket.LocalEndPoint + " CPS: " + CalculateCycleRate();
                 handleData.HandleDataMessage(svrServer, svrPlayer, svrMap, svrNpc);
 
                 if (TickCount - saveTick > saveTime)
@@ -43,18 +45,8 @@ namespace Server.Classes
                     saveTick = TickCount;
                 }
                 CheckNPCSpawn(svrServer);
-                RestDuringDebug();
+                CheckNpcAI(svrServer);
             }
-        }
-
-        static void RestDuringDebug()   //This is for debugging so my laptops bat doesnt die so fast
-        {
-            if (TickCount - restTick > 60000)
-            {
-                LogWriter.WriteLog("Sleeping to reduce CPU usage for debugging, needs to be disabled later causes lag", "Server");
-                restTick = TickCount;
-            }
-            Thread.Sleep(30);
         }
 
         void CheckNPCSpawn(NetServer svrServer)
@@ -144,6 +136,30 @@ namespace Server.Classes
                     svrNpc[i] = new NPC();
                     svrNpc[i].LoadNPC(i);
                 }
+            }
+        }
+
+        void CheckNpcAI(NetServer svrServer)
+        {
+            if (TickCount - aiTick > aiTime)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    if (svrNpc[i].isSpawned == true)
+                    {
+                        int canMove = RND.Next(0, 100);
+                        int dir = RND.Next(0, 3);
+
+                        svrNpc[i].NpcAI(canMove, dir, svrMap);
+
+                        if (svrNpc[i].didMove == true)
+                        {
+                            svrNpc[i].didMove = false;
+                            handleData.SendNpcData(svrServer, svrNpc, i);
+                        }
+                    }
+                }
+                aiTick = TickCount;
             }
         }
     }

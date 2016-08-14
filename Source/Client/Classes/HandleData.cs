@@ -94,16 +94,19 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                svrNpc[i].Name = incMSG.ReadString();
-                svrNpc[i].X = incMSG.ReadInt32();
-                svrNpc[i].Y = incMSG.ReadInt32();
-                svrNpc[i].Direction = incMSG.ReadInt32();
-                svrNpc[i].Sprite = incMSG.ReadInt32();
-                svrNpc[i].Step = incMSG.ReadInt32();
-                svrNpc[i].Owner = incMSG.ReadInt32();
-                svrNpc[i].Behavior = incMSG.ReadInt32();
-                svrNpc[i].SpawnTime = incMSG.ReadInt32();
-                svrNpc[i].isSpawned = incMSG.ReadBoolean();
+                if (svrNpc[i] != null)
+                {
+                    svrNpc[i].Name = incMSG.ReadString();
+                    svrNpc[i].X = incMSG.ReadInt32();
+                    svrNpc[i].Y = incMSG.ReadInt32();
+                    svrNpc[i].Direction = incMSG.ReadInt32();
+                    svrNpc[i].Sprite = incMSG.ReadInt32();
+                    svrNpc[i].Step = incMSG.ReadInt32();
+                    svrNpc[i].Owner = incMSG.ReadInt32();
+                    svrNpc[i].Behavior = incMSG.ReadInt32();
+                    svrNpc[i].SpawnTime = incMSG.ReadInt32();
+                    svrNpc[i].isSpawned = incMSG.ReadBoolean();
+                }
 
                 Console.WriteLine("Spawned:" + svrNpc[i].isSpawned);
             }

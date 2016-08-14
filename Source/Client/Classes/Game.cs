@@ -313,9 +313,9 @@ namespace Client.Classes
             if (svrMap.Name != null)
             {
                 DrawLowLevelTiles();
+                DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
-                DrawNpcs();
                 DrawUpperLevelTiles();
                 if (TickCount - walkTick > 100)
                 {
