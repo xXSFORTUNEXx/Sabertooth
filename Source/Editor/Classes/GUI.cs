@@ -89,6 +89,7 @@ namespace Editor.Classes
             editorMap = editMap;
         }
 
+        //Creating of the windows
         public void CreateToolWindow(Base parent)
         {
             maptoolsWin = new WindowControl(parent.GetCanvas());
@@ -141,126 +142,6 @@ namespace Editor.Classes
             loadmapBtn.SetBounds(new Rectangle(45, 255, 100, 25));
             loadmapBtn.Text = "Load Map";
             loadmapBtn.Clicked += LoadmapBtn_Clicked;
-        }
-
-        private void LoadmapBtn_Clicked(Base sender, ClickedEventArgs arguments)
-        {
-            editorMap.LoadMap();
-            Console.WriteLine("Loading Map...");
-        }
-
-        private void DeleteLayer_DoubleClicked(Base sender, ClickedEventArgs arguments)
-        {
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
-                {
-                    switch (editLayer)
-                    {
-                        case (int)TileLayers.Ground:
-                            editorMap.Ground[x, y].tileX = 0;
-                            editorMap.Ground[x, y].tileY = 0;
-                            editorMap.Ground[x, y].tileW = 0;
-                            editorMap.Ground[x, y].tileH = 0;
-                            editorMap.Ground[x, y].Tileset = 0;
-                            editorMap.Ground[x, y].type = 0;
-                            break;
-                        case (int)TileLayers.Mask:
-                            editorMap.Mask[x, y].tileX = 0;
-                            editorMap.Mask[x, y].tileY = 0;
-                            editorMap.Mask[x, y].tileW = 0;
-                            editorMap.Mask[x, y].tileH = 0;
-                            editorMap.Mask[x, y].Tileset = 0;
-                            editorMap.Mask[x, y].type = 0;
-                            break;
-                        case (int)TileLayers.MaskA:
-                            editorMap.MaskA[x, y].tileX = 0;
-                            editorMap.MaskA[x, y].tileY = 0;
-                            editorMap.MaskA[x, y].tileW = 0;
-                            editorMap.MaskA[x, y].tileH = 0;
-                            editorMap.MaskA[x, y].Tileset = 0;
-                            editorMap.MaskA[x, y].type = 0;
-                            break;
-                        case (int)TileLayers.Fringe:
-                            editorMap.Fringe[x, y].tileX = 0;
-                            editorMap.Fringe[x, y].tileY = 0;
-                            editorMap.Fringe[x, y].tileW = 0;
-                            editorMap.Fringe[x, y].tileH = 0;
-                            editorMap.Fringe[x, y].Tileset = 0;
-                            editorMap.Fringe[x, y].type = 0;
-                            break;
-                        case (int)TileLayers.FringeA:
-                            editorMap.FringeA[x, y].tileX = 0;
-                            editorMap.FringeA[x, y].tileY = 0;
-                            editorMap.FringeA[x, y].tileW = 0;
-                            editorMap.FringeA[x, y].tileH = 0;
-                            editorMap.FringeA[x, y].Tileset = 0;
-                            editorMap.FringeA[x, y].type = 0;
-                            break;
-                    }
-                }
-            }
-            Console.WriteLine("Layer deleted!");
-        }
-
-        private void FillLayer_DoubleClicked(Base sender, ClickedEventArgs arguments)
-        {
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
-                {
-                    switch (editLayer)
-                    {
-                        case (int)TileLayers.Ground:
-                            editorMap.Ground[x, y].tileX = edittileX * picX;
-                            editorMap.Ground[x, y].tileY = edittileY * picY;
-                            editorMap.Ground[x, y].tileW = picX;
-                            editorMap.Ground[x, y].tileH = picY;
-                            editorMap.Ground[x, y].Tileset = editTileset;
-                            editorMap.Ground[x, y].type = editType;
-                            break;
-                        case (int)TileLayers.Mask:
-                            editorMap.Mask[x, y].tileX = edittileX * picX;
-                            editorMap.Mask[x, y].tileY = edittileY * picY;
-                            editorMap.Mask[x, y].tileW = picX;
-                            editorMap.Mask[x, y].tileH = picY;
-                            editorMap.Mask[x, y].Tileset = editTileset;
-                            editorMap.Mask[x, y].type = editType;
-                            break;
-                        case (int)TileLayers.MaskA:
-                            editorMap.MaskA[x, y].tileX = edittileX * picX;
-                            editorMap.MaskA[x, y].tileY = edittileY * picY;
-                            editorMap.MaskA[x, y].tileW = picX;
-                            editorMap.MaskA[x, y].tileH = picY;
-                            editorMap.MaskA[x, y].Tileset = editTileset;
-                            editorMap.MaskA[x, y].type = editType;
-                            break;
-                        case (int)TileLayers.Fringe:
-                            editorMap.Fringe[x, y].tileX = edittileX * picX;
-                            editorMap.Fringe[x, y].tileY = edittileY * picY;
-                            editorMap.Fringe[x, y].tileW = picX;
-                            editorMap.Fringe[x, y].tileH = picY;
-                            editorMap.Fringe[x, y].Tileset = editTileset;
-                            editorMap.Fringe[x, y].type = editType;
-                            break;
-                        case (int)TileLayers.FringeA:
-                            editorMap.FringeA[x, y].tileX = edittileX * picX;
-                            editorMap.FringeA[x, y].tileY = edittileY * picY;
-                            editorMap.FringeA[x, y].tileW = picX;
-                            editorMap.FringeA[x, y].tileH = picY;
-                            editorMap.FringeA[x, y].Tileset = editTileset;
-                            editorMap.FringeA[x, y].type = editType;
-                            break;
-                    }
-                }
-            }
-            Console.WriteLine("Layer filled!");
-        }
-
-        private void SavemapBtn_Clicked(Base sender, ClickedEventArgs arguments)
-        {
-            editorMap.SaveMap();
-            Console.WriteLine("Map Saved!");
         }
 
         public void CreateLayerWindow(Base parent)
@@ -428,6 +309,157 @@ namespace Editor.Classes
             spawntimeScroll.ValueChanged += SpawntimeScroll_ValueChanged;
         }
 
+        public void CreateNpcSpawnSelectWindow(Base parent)
+        {
+            npcSelect = new WindowControl(parent.GetCanvas());
+            npcSelect.SetBounds(new Rectangle(550, 25, 180, 375));
+            npcSelect.Title = "Select NPC";
+
+            npcLabel = new Label(npcSelect);
+            npcLabel.SetText("Spawn: 1");
+            npcLabel.SetPosition(10, 45);
+
+            npcNum = new HorizontalSlider(npcSelect);
+            npcNum.SetBounds(new Rectangle(10, 10, 150, 25));
+            npcNum.SetRange(0, 10);
+            npcNum.NotchCount = 10;
+            npcNum.Value = 1;
+            npcNum.SnapToNotches = true;
+            npcNum.ValueChanged += NpcNum_ValueChanged;
+
+            for (int i = 0; i < 10; i++)
+            {
+                npcCombo[i] = new ComboBox(npcSelect);
+                npcCombo[i].SetBounds(new Rectangle(10, (((i + 1) * 25) + 35), 150, 25));
+                for (int n = 0; n < 10; n++)
+                {
+                    npcCombo[i].AddItem("NPC: " + n, "NPC" + n, n);
+                }
+                npcCombo[i].ItemSelected += npcCombo_ItemSelected;
+            }
+        }
+
+        //All control events
+        private void LoadmapBtn_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            editorMap.LoadMap();
+            Console.WriteLine("Loading Map...");
+        }
+
+        private void DeleteLayer_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    switch (editLayer)
+                    {
+                        case (int)TileLayers.Ground:
+                            editorMap.Ground[x, y].tileX = 0;
+                            editorMap.Ground[x, y].tileY = 0;
+                            editorMap.Ground[x, y].tileW = 0;
+                            editorMap.Ground[x, y].tileH = 0;
+                            editorMap.Ground[x, y].Tileset = 0;
+                            editorMap.Ground[x, y].type = 0;
+                            break;
+                        case (int)TileLayers.Mask:
+                            editorMap.Mask[x, y].tileX = 0;
+                            editorMap.Mask[x, y].tileY = 0;
+                            editorMap.Mask[x, y].tileW = 0;
+                            editorMap.Mask[x, y].tileH = 0;
+                            editorMap.Mask[x, y].Tileset = 0;
+                            editorMap.Mask[x, y].type = 0;
+                            break;
+                        case (int)TileLayers.MaskA:
+                            editorMap.MaskA[x, y].tileX = 0;
+                            editorMap.MaskA[x, y].tileY = 0;
+                            editorMap.MaskA[x, y].tileW = 0;
+                            editorMap.MaskA[x, y].tileH = 0;
+                            editorMap.MaskA[x, y].Tileset = 0;
+                            editorMap.MaskA[x, y].type = 0;
+                            break;
+                        case (int)TileLayers.Fringe:
+                            editorMap.Fringe[x, y].tileX = 0;
+                            editorMap.Fringe[x, y].tileY = 0;
+                            editorMap.Fringe[x, y].tileW = 0;
+                            editorMap.Fringe[x, y].tileH = 0;
+                            editorMap.Fringe[x, y].Tileset = 0;
+                            editorMap.Fringe[x, y].type = 0;
+                            break;
+                        case (int)TileLayers.FringeA:
+                            editorMap.FringeA[x, y].tileX = 0;
+                            editorMap.FringeA[x, y].tileY = 0;
+                            editorMap.FringeA[x, y].tileW = 0;
+                            editorMap.FringeA[x, y].tileH = 0;
+                            editorMap.FringeA[x, y].Tileset = 0;
+                            editorMap.FringeA[x, y].type = 0;
+                            break;
+                    }
+                }
+            }
+            Console.WriteLine("Layer deleted!");
+        }
+
+        private void FillLayer_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    switch (editLayer)
+                    {
+                        case (int)TileLayers.Ground:
+                            editorMap.Ground[x, y].tileX = edittileX * picX;
+                            editorMap.Ground[x, y].tileY = edittileY * picY;
+                            editorMap.Ground[x, y].tileW = picX;
+                            editorMap.Ground[x, y].tileH = picY;
+                            editorMap.Ground[x, y].Tileset = editTileset;
+                            editorMap.Ground[x, y].type = editType;
+                            break;
+                        case (int)TileLayers.Mask:
+                            editorMap.Mask[x, y].tileX = edittileX * picX;
+                            editorMap.Mask[x, y].tileY = edittileY * picY;
+                            editorMap.Mask[x, y].tileW = picX;
+                            editorMap.Mask[x, y].tileH = picY;
+                            editorMap.Mask[x, y].Tileset = editTileset;
+                            editorMap.Mask[x, y].type = editType;
+                            break;
+                        case (int)TileLayers.MaskA:
+                            editorMap.MaskA[x, y].tileX = edittileX * picX;
+                            editorMap.MaskA[x, y].tileY = edittileY * picY;
+                            editorMap.MaskA[x, y].tileW = picX;
+                            editorMap.MaskA[x, y].tileH = picY;
+                            editorMap.MaskA[x, y].Tileset = editTileset;
+                            editorMap.MaskA[x, y].type = editType;
+                            break;
+                        case (int)TileLayers.Fringe:
+                            editorMap.Fringe[x, y].tileX = edittileX * picX;
+                            editorMap.Fringe[x, y].tileY = edittileY * picY;
+                            editorMap.Fringe[x, y].tileW = picX;
+                            editorMap.Fringe[x, y].tileH = picY;
+                            editorMap.Fringe[x, y].Tileset = editTileset;
+                            editorMap.Fringe[x, y].type = editType;
+                            break;
+                        case (int)TileLayers.FringeA:
+                            editorMap.FringeA[x, y].tileX = edittileX * picX;
+                            editorMap.FringeA[x, y].tileY = edittileY * picY;
+                            editorMap.FringeA[x, y].tileW = picX;
+                            editorMap.FringeA[x, y].tileH = picY;
+                            editorMap.FringeA[x, y].Tileset = editTileset;
+                            editorMap.FringeA[x, y].type = editType;
+                            break;
+                    }
+                }
+            }
+            Console.WriteLine("Layer filled!");
+        }
+
+        private void SavemapBtn_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            editorMap.SaveMap();
+            Console.WriteLine("Map Saved!");
+        }
+
         private void SpawntimeScroll_ValueChanged(Base sender, EventArgs arguments)
         {
             spawntimeLabel.SetText("Spawn Time (MS): " + spawntimeScroll.Value);
@@ -472,30 +504,6 @@ namespace Editor.Classes
                     dirLabel.SetText("Direction: " + dirScroll.Value + " - Up");
                     break;
             }
-        }
-
-        public void LoadNpcDataIntoUI()
-        {
-            if (npcWin == null || editorNpc == null) { return; }
-
-            nameText.SetText(editorNpc.Name);
-            dirLabel.SetText("Direction: " + editorNpc.Direction);
-            dirScroll.Value = editorNpc.Direction;
-            spriteLabel.SetText("Sprite: " + editorNpc.Sprite);
-            spriteScroll.Value = editorNpc.Sprite;
-            spawntimeLabel.SetText("Spawn Time (MS): " + editorNpc.SpawnTime);
-            spawntimeScroll.Value = editorNpc.SpawnTime;
-            behaviorCombo.SelectByUserData(editorNpc.Behavior);
-        }
-
-        public void SaveNpcDataFromUI()
-        {
-            editorNpc.Name = nameText.Text;
-            editorNpc.Direction = (int)dirScroll.Value;
-            editorNpc.Sprite = (int)spriteScroll.Value;
-            editorNpc.SpawnTime = (int)spawntimeScroll.Value;
-            editorNpc.SaveNPC();
-            npcWin.Close();
         }
 
         private void NpcOpen_Clicked(Base sender, ClickedEventArgs arguments)
@@ -587,8 +595,13 @@ namespace Editor.Classes
             }
             if (select.Text == " NPC Spawn")
             {
-                CreateNpcSpawnSelectWindow(type.Parent);
                 editType = (int)TileType.NPCSpawn;
+                if (npcSelect == null || npcSelect.IsVisible == false)
+                {
+                    npcSelect = null;
+                    CreateNpcSpawnSelectWindow(type.Parent);
+                    LoadMapDataIntoUI();
+                }
             }
         }
 
@@ -596,36 +609,6 @@ namespace Editor.Classes
         {
             npcLabel.SetText("Spawn: " + npcNum.Value);
             editselectNpc = (int)npcNum.Value;
-        }
-
-        public void CreateNpcSpawnSelectWindow(Base parent)
-        {
-            npcSelect = new WindowControl(parent.GetCanvas());
-            npcSelect.SetBounds(new Rectangle(550, 25, 180, 375));
-            npcSelect.Title = "Select NPC";
-
-            npcLabel = new Label(npcSelect);
-            npcLabel.SetText("Spawn: 1");
-            npcLabel.SetPosition(10, 45);
-
-            npcNum = new HorizontalSlider(npcSelect);
-            npcNum.SetBounds(new Rectangle(10, 10, 150, 25));
-            npcNum.SetRange(0, 10);
-            npcNum.NotchCount = 10;
-            npcNum.Value = 1;
-            npcNum.SnapToNotches = true;
-            npcNum.ValueChanged += NpcNum_ValueChanged;
-
-            for (int i = 0; i < 10; i++)
-            {
-                npcCombo[i] = new ComboBox(npcSelect);
-                npcCombo[i].SetBounds(new Rectangle(10, (((i + 1) * 25) + 35), 150, 25));
-                for (int n = 0; n < 10; n++)
-                {
-                    npcCombo[i].AddItem("NPC: " + n, "NPC" + n, n);
-                }
-                npcCombo[i].ItemSelected += npcCombo_ItemSelected;
-            }
         }
 
         private void npcCombo_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
@@ -709,6 +692,44 @@ namespace Editor.Classes
             {
                 CreateTypeWindow(control.GetCanvas());
             }
+        }
+
+        //Other voids for loading in UI data and such
+        public void LoadMapDataIntoUI()
+        {
+            if (npcSelect == null) { return; }
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (editorMap.mapNpc[i] != null)
+                {
+                    npcCombo[i].SelectByUserData(editorMap.mapNpc[i].npcNum);
+                }
+            }
+        }
+
+        public void LoadNpcDataIntoUI()
+        {
+            if (npcWin == null || editorNpc == null) { return; }
+
+            nameText.SetText(editorNpc.Name);
+            dirLabel.SetText("Direction: " + editorNpc.Direction);
+            dirScroll.Value = editorNpc.Direction;
+            spriteLabel.SetText("Sprite: " + editorNpc.Sprite);
+            spriteScroll.Value = editorNpc.Sprite;
+            spawntimeLabel.SetText("Spawn Time (MS): " + editorNpc.SpawnTime);
+            spawntimeScroll.Value = editorNpc.SpawnTime;
+            behaviorCombo.SelectByUserData(editorNpc.Behavior);
+        }
+
+        public void SaveNpcDataFromUI()
+        {
+            editorNpc.Name = nameText.Text;
+            editorNpc.Direction = (int)dirScroll.Value;
+            editorNpc.Sprite = (int)spriteScroll.Value;
+            editorNpc.SpawnTime = (int)spawntimeScroll.Value;
+            editorNpc.SaveNPC();
+            npcWin.Close();
         }
     }
 }

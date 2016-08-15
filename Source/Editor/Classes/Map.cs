@@ -251,6 +251,7 @@ namespace Editor.Classes
                     Ground[x, y].tileW = binaryReader.ReadInt32();
                     Ground[x, y].tileH = binaryReader.ReadInt32();
                     Ground[x, y].Tileset = binaryReader.ReadInt32();
+                    Ground[x, y].type = binaryReader.ReadInt32();
                     Ground[x, y].spawnNum = binaryReader.ReadInt32();
                     //Mask
                     Mask[x, y].tileX = binaryReader.ReadInt32();
