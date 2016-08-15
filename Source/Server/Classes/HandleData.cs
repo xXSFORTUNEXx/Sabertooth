@@ -12,7 +12,7 @@ namespace Server.Classes
 {
     class HandleData
     {
-        public void HandleDataMessage(NetServer svrServer, Player[] svrPlayer, Map svrMap, NPC[] svrNpc)
+        public void HandleDataMessage(NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
         {
             NetIncomingMessage incMSG;  //create incoming message
 
@@ -60,6 +60,7 @@ namespace Server.Classes
             svrServer.Recycle(incMSG);
         }
 
+        //Handle incoming packets for movement of the player
         static void HandleMoveData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             int index = incMSG.ReadInt32();
@@ -78,6 +79,7 @@ namespace Server.Classes
             SendUpdateMovementData(svrServer, index, x, y, direction, step);
         }
 
+        //Sending out the data for movement to be processed by everyone connected
         static void SendUpdateMovementData(NetServer svrServer, int index, int x, int y, int direction, int step)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -90,6 +92,7 @@ namespace Server.Classes
             svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Handles incoming direction data for players
         static void HandleDirectionData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             int index = incMSG.ReadInt32();
@@ -101,6 +104,7 @@ namespace Server.Classes
             SendUpdateDirection(svrServer, index, direction);
         }
 
+        //Sends a direction update to the client so it can be processed and sent to all connected
         static void SendUpdateDirection(NetServer svrServer, int index, int direction)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -109,6 +113,7 @@ namespace Server.Classes
             svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Handles a discovery response from the server
         static void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer svrServer)
         {
             Console.WriteLine("Client discovered @ " + incMSG.SenderEndPoint.ToString());
@@ -117,6 +122,7 @@ namespace Server.Classes
             svrServer.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
         }
 
+        //Handles our connection getting approved from our server
         static void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer svrServer)
         {
             if (incMSG.ReadByte() == (byte)PacketTypes.Connection)
@@ -137,6 +143,7 @@ namespace Server.Classes
             }
         }
 
+        //Handles our registration requests to the server
         static void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             string username = incMSG.ReadString();
@@ -174,7 +181,8 @@ namespace Server.Classes
             }
         }
 
-        static void HandleLoginRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map svrMap, NPC[] svrNpc)
+        //Handle logging in requests for the server
+        static void HandleLoginRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -188,13 +196,14 @@ namespace Server.Classes
                     {
                         svrPlayer[i] = new Player(username, password, incMSG.SenderConnection);
                         svrPlayer[i].LoadPlayerXML();
+                        int currentMap = svrPlayer[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
                         NetOutgoingMessage outMSG = svrServer.CreateMessage();
                         outMSG.Write((byte)PacketTypes.Login);
                         svrServer.SendMessage(outMSG, svrPlayer[i].Connection, NetDeliveryMethod.ReliableOrdered);
                         SendUserData(incMSG, svrServer, svrPlayer, i);
                         SendUsers(incMSG, svrServer, svrPlayer);
-                        SendMapData(incMSG, svrServer, svrMap, svrPlayer);
+                        SendMapData(incMSG, svrServer, svrMap[currentMap], svrPlayer);
                         SendNpcs(incMSG, svrServer, svrNpc);
                     }
                     else
@@ -239,6 +248,7 @@ namespace Server.Classes
             outMSG.Write(svrPlayer[svrIndex].Name);
             outMSG.Write(svrPlayer[svrIndex].X);
             outMSG.Write(svrPlayer[svrIndex].Y);
+            outMSG.Write(svrPlayer[svrIndex].Map);
             outMSG.Write(svrPlayer[svrIndex].Direction);
             outMSG.Write(svrPlayer[svrIndex].Sprite);
             svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -254,6 +264,7 @@ namespace Server.Classes
                 outMSG.Write(svrPlayer[i].Name);
                 outMSG.Write(svrPlayer[i].X);
                 outMSG.Write(svrPlayer[i].Y);
+                outMSG.Write(svrPlayer[i].Map);
                 outMSG.Write(svrPlayer[i].Direction);
                 outMSG.Write(svrPlayer[i].Sprite);
             }
@@ -303,6 +314,7 @@ namespace Server.Classes
             svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Sends an error message to be processed by the client
         static void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer svrServer)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -427,6 +439,14 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
             outMSG.Write(svrMap.Name);
+
+            for (int i = 0; i < 10; i++)
+            {
+                outMSG.Write(svrMap.mapNpc[i].Name);
+                outMSG.Write(svrMap.mapNpc[i].X);
+                outMSG.Write(svrMap.mapNpc[i].Y);
+                outMSG.Write(svrMap.mapNpc[i].npcNum);
+            }
 
             for (int x = 0; x < 50; x++)
             {

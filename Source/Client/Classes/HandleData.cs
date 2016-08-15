@@ -215,6 +215,7 @@ namespace Client.Classes
             svrPlayer[clientIndex].Name = incMSG.ReadString();
             svrPlayer[clientIndex].X = incMSG.ReadInt32();
             svrPlayer[clientIndex].Y = incMSG.ReadInt32();
+            svrPlayer[clientIndex].Map = incMSG.ReadInt32();
             svrPlayer[clientIndex].Direction = incMSG.ReadInt32();
             svrPlayer[clientIndex].Sprite = incMSG.ReadInt32();
             svrPlayer[clientIndex].offsetX = 12;
@@ -235,6 +236,15 @@ namespace Client.Classes
         {
             svrMap.Name = incMSG.ReadString();
             Console.WriteLine("Receiving map data...");
+
+            for (int i = 0; i < 10; i++)
+            {
+                svrMap.mapNpc[i] = new MapNpc();
+                svrMap.mapNpc[i].Name = incMSG.ReadString();
+                svrMap.mapNpc[i].X = incMSG.ReadInt32();
+                svrMap.mapNpc[i].Y = incMSG.ReadInt32();
+                svrMap.mapNpc[i].npcNum = incMSG.ReadInt32();
+            }
 
             for (int x = 0; x < 50; x++)
             {
@@ -291,6 +301,7 @@ namespace Client.Classes
                 svrPlayer[i].Name = incMSG.ReadString();
                 svrPlayer[i].X = incMSG.ReadInt32();
                 svrPlayer[i].Y = incMSG.ReadInt32();
+                svrPlayer[i].Map = incMSG.ReadInt32();
                 svrPlayer[i].Direction = incMSG.ReadInt32();
                 svrPlayer[i].Sprite = incMSG.ReadInt32();
                 svrPlayer[i].offsetX = 12;

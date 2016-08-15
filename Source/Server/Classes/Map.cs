@@ -15,10 +15,18 @@ namespace Server.Classes
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
 
-        public void GenerateMap(string name)
+        public MapNpc[] mapNpc = new MapNpc[10];
+
+        public void GenerateMap(int mapNum)
         {
-            LogWriter.WriteLog("Generating the default map...", "Server");
-            Name = name;
+            LogWriter.WriteLog("Generating map #" + mapNum, "Server");
+
+            Name = "Default";
+
+            for (int i = 0; i < 10; i++)
+            {
+                mapNpc[i] = new MapNpc("None", 0, 0, 0);
+            }
 
             for (int x = 0; x < 50; x++)
             {
@@ -65,12 +73,20 @@ namespace Server.Classes
             }
         }
 
-        public void SaveMap()
+        public void SaveMap(int mapNum)
         {
-            FileStream fileStream = File.OpenWrite("Maps/Map.bin");
+            FileStream fileStream = File.OpenWrite("Maps/Map" + mapNum + ".bin");
             BinaryWriter binaryWriter = new BinaryWriter(fileStream);
-            LogWriter.WriteLog("Saving the default map...", "Server");
+            LogWriter.WriteLog("Saving map #" + mapNum, "Server");
             binaryWriter.Write(Name);
+
+            for (int i = 0; i < 10; i++)
+            {
+                binaryWriter.Write(mapNpc[i].Name);
+                binaryWriter.Write(mapNpc[i].X);
+                binaryWriter.Write(mapNpc[i].Y);
+                binaryWriter.Write(mapNpc[i].npcNum);
+            }
 
             for (int x = 0; x < 50; x++)
             {
@@ -115,14 +131,23 @@ namespace Server.Classes
             binaryWriter.Close();
         }
 
-        public void LoadMap()
+        public void LoadMap(int mapNum)
         {
-            FileStream fileStream = File.OpenRead("Maps/Map.bin");
+            FileStream fileStream = File.OpenRead("Maps/Map" + mapNum + ".bin");
             BinaryReader binaryReader = new BinaryReader(fileStream);
-            LogWriter.WriteLog("Loading the default map...", "Server");
+            LogWriter.WriteLog("Loading map #" + mapNum, "Server");
             try
             {
                 Name = binaryReader.ReadString();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    mapNpc[i] = new MapNpc();
+                    mapNpc[i].Name = binaryReader.ReadString();
+                    mapNpc[i].X = binaryReader.ReadInt32();
+                    mapNpc[i].Y = binaryReader.ReadInt32();
+                    mapNpc[i].npcNum = binaryReader.ReadInt32();
+                }
 
                 for (int x = 0; x < 50; x++)
                 {
@@ -174,6 +199,24 @@ namespace Server.Classes
                 MsgBox(e.GetType() + ": " + e.Message, MsgBoxStyle.Critical, "Error");
             }
             binaryReader.Close();
+        }
+    }
+
+    class MapNpc
+    {
+        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int npcNum { get; set; }
+
+        public MapNpc() { }
+
+        public MapNpc(string name, int x, int y, int npcnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            npcnum = npcNum;
         }
     }
 

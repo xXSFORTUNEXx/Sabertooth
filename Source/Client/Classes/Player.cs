@@ -14,6 +14,7 @@ namespace Client.Classes
         RenderText svrText = new RenderText();
         public int X { get; set; }  //define x
         public int Y { get; set; }  //define y
+        public int Map { get; set; }    //define map
         public int Direction { get; set; }  //define direction
         public int Sprite { get; set; } //define player sprite
         public int Step;    //the step at which the player is
@@ -26,12 +27,13 @@ namespace Client.Classes
         public int tempStep;    //temp step that is saved for movement over packets
         Sprite svrSprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
-        public Player(string name, string pass, int x, int y, int direction, NetConnection conn)    //main player contructor if we have all the details
+        public Player(string name, string pass, int x, int y, int direction, int map, NetConnection conn)    //main player contructor if we have all the details
         {
             Name = name;
             Pass = pass;
             X = x;
             Y = y;
+            Map = map;
             offsetX = 12;
             offsetY = 9;
             Direction = direction;
@@ -57,10 +59,7 @@ namespace Client.Classes
             Connection = conn;
         }
 
-        public Player()     //An emply player contructor, this is only needed to setup a blank player array for information to be stored appon login
-        {
-
-        }
+        public Player() { }     //An emply player contructor, this is only needed to setup a blank player array for information to be stored appon login
 
         public void DrawPlayer(RenderWindow svrWindow, Texture svrTexture)  // draws the player to the screen
         {

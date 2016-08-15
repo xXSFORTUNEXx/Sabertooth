@@ -15,7 +15,7 @@ namespace Server.Classes
         Player[] svrPlayer = new Player[5];
         NPC[] svrNpc = new NPC[10];
         HandleData handleData = new HandleData();
-        Map svrMap = new Map();
+        Map[] svrMap = new Map[10];
         Random RND = new Random();
         static int lastTick;
         static int lastCycleRate;
@@ -56,9 +56,9 @@ namespace Server.Classes
             {
                 for (int y = 0; y < 50; y++)
                 {
-                    if (svrMap.Ground[x, y].type == (int)TileType.NPCSpawn)
+                    if (svrMap[0].Ground[x, y].type == (int)TileType.NPCSpawn)
                     {
-                        int npcNum = svrMap.Ground[x, y].spawnNum;
+                        int npcNum = svrMap[0].Ground[x, y].spawnNum;
 
                         if (svrNpc[npcNum].isSpawned == false)
                         {
@@ -111,12 +111,20 @@ namespace Server.Classes
         {
             Console.WriteLine("Loading maps...");
             LogWriter.WriteLog("Loading maps...", "Server");
-            if (!File.Exists("Maps/Map.bin"))
+            for (int i = 0; i < 10; i++)
             {
-                svrMap.GenerateMap("Home");
-                svrMap.SaveMap();
+                if (!File.Exists("Maps/Map" + i + ".bin"))
+                {
+                    svrMap[i] = new Map();
+                    svrMap[i].GenerateMap(i);
+                    svrMap[i].SaveMap(i);
+                }
+                else
+                {
+                    svrMap[i] = new Map();
+                    svrMap[i].LoadMap(i);
+                }
             }
-            svrMap.LoadMap();
         }
 
         void InitNPC()
@@ -150,7 +158,7 @@ namespace Server.Classes
                         int canMove = RND.Next(0, 100);
                         int dir = RND.Next(0, 3);
 
-                        svrNpc[i].NpcAI(canMove, dir, svrMap);
+                        svrNpc[i].NpcAI(canMove, dir, svrMap[0]);
 
                         if (svrNpc[i].didMove == true)
                         {

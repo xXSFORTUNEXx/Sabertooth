@@ -11,20 +11,22 @@ namespace Server.Classes
     class Player
     {
         public string Name { get; set; }    //define name property
-        public string Pass { get; set; }
-        public NetConnection Connection;
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Direction { get; set; }
-        public int Sprite { get; set; }
-        public int Step;
+        public string Pass { get; set; }    //define password
+        public NetConnection Connection;        //define network connection
+        public int X { get; set; }  //define x
+        public int Y { get; set; }  //define y
+        public int Map { get; set; }    //define map
+        public int Direction { get; set; }  //define direction
+        public int Sprite { get; set; } //define sprite
+        public int Step;    //define step
 
-        public Player(string name, string pass, int x, int y, int direction, NetConnection conn)
+        public Player(string name, string pass, int x, int y, int direction, int map, NetConnection conn)
         {
             Name = name;
             Pass = pass;
             X = x;
             Y = y;
+            Map = map;
             Direction = direction;
             Connection = conn;
         }
@@ -61,6 +63,7 @@ namespace Server.Classes
             writer.WriteElementString("Password", Pass);
             writer.WriteElementString("X", X.ToString());
             writer.WriteElementString("Y", Y.ToString());
+            writer.WriteElementString("Map", Map.ToString());
             writer.WriteElementString("Direction", Direction.ToString());
             writer.WriteElementString("Sprite", Sprite.ToString());
             writer.WriteEndElement();
@@ -82,6 +85,8 @@ namespace Server.Classes
             X = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Y");
             Y = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Map");
+            Map = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Direction");
             Direction = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Sprite");

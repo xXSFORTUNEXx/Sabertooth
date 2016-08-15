@@ -20,6 +20,7 @@ namespace Client.Classes
         Label debugName;
         Label debugX;
         Label debugY;
+        Label debugMap;
         Label debugDir;
         Label debugSprite;
         Label debugIP;
@@ -460,32 +461,36 @@ namespace Client.Classes
             debugY.SetPosition(10, 35);
             debugY.Text = "Y: ?";
 
+            debugMap = new Label(debugWindow);
+            debugMap.SetPosition(10, 45);
+            debugMap.Text = "Map: ?";
+
             debugDir = new Label(debugWindow);
-            debugDir.SetPosition(10, 45);
+            debugDir.SetPosition(10, 55);
             debugDir.Text = "Direction : ?";
 
             debugSprite = new Label(debugWindow);
-            debugSprite.SetPosition(10, 55);
+            debugSprite.SetPosition(10, 65);
             debugSprite.Text = "Sprite: ?";
 
             debugIP = new Label(debugWindow);
-            debugIP.SetPosition(10, 65);
+            debugIP.SetPosition(10, 75);
             debugIP.Text = "IP Address: ?";
 
             debugPort = new Label(debugWindow);
-            debugPort.SetPosition(10, 75);
+            debugPort.SetPosition(10, 85);
             debugPort.Text = "Port: ?";
 
             debugLatency = new Label(debugWindow);
-            debugLatency.SetPosition(10, 85);
+            debugLatency.SetPosition(10, 95);
             debugLatency.Text = "Latency: ?";
 
             debugPacketsIn = new Label(debugWindow);
-            debugPacketsIn.SetPosition(10, 95);
+            debugPacketsIn.SetPosition(10, 105);
             debugPacketsIn.Text = "Packets In: ?";
 
             debugPacketsOut = new Label(debugWindow);
-            debugPacketsOut.SetPosition(10, 105);
+            debugPacketsOut.SetPosition(10, 115);
             debugPacketsOut.Text = "Packets Out: ?";
         }
 
@@ -494,11 +499,12 @@ namespace Client.Classes
             if (debugWindow != null)
             {
                 debugWindow.Title = "Debug Window - Admin";
-                //debugWindow.SetPosition(0, 0);
+                debugWindow.SetPosition(0, 0);
                 debugFps.Text = "FPS: " + fps;
                 debugName.Text = "Name: " + svrPlayer[drawIndex].Name + " (" + drawIndex + ")";
                 debugX.Text = "X: " + (svrPlayer[drawIndex].X + svrPlayer[drawIndex].offsetX);
                 debugY.Text = "Y: " + (svrPlayer[drawIndex].Y + svrPlayer[drawIndex].offsetY);
+                debugMap.Text = "Map: " + svrPlayer[drawIndex].Map;
                 debugDir.Text = "Direction: " + svrPlayer[drawIndex].Direction;
                 debugSprite.Text = "Sprite: " + svrPlayer[drawIndex].Sprite;
                 debugIP.Text = "IP Address: " + srvrClient.ServerConnection.RemoteEndPoint.Address.ToString();

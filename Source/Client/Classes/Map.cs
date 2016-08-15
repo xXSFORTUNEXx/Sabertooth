@@ -13,6 +13,8 @@ namespace Client.Classes
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
 
+        public MapNpc[] mapNpc = new MapNpc[10];
+
         Texture[] TileSet = new Texture[67];
         Sprite Tiles = new Sprite();
 
@@ -45,6 +47,14 @@ namespace Client.Classes
             BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
             binaryWriter.Write(Name);
+
+            for (int i = 0; i < 10; i++)
+            {
+                binaryWriter.Write(mapNpc[i].Name);
+                binaryWriter.Write(mapNpc[i].X);
+                binaryWriter.Write(mapNpc[i].Y);
+                binaryWriter.Write(mapNpc[i].npcNum);
+            }
 
             for (int x = 0; x < 50; x++)
             {
@@ -96,6 +106,16 @@ namespace Client.Classes
 
             Name = binaryReader.ReadString();
 
+            for (int i = 0; i < 10; i++)
+            {
+                mapNpc[i] = new MapNpc();
+                mapNpc[i].Name = binaryReader.ReadString();
+                mapNpc[i].X = binaryReader.ReadInt32();
+                mapNpc[i].Y = binaryReader.ReadInt32();
+                mapNpc[i].npcNum = binaryReader.ReadInt32();
+
+            }
+
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -141,6 +161,25 @@ namespace Client.Classes
                 }
             }
             binaryReader.Close();
+        }
+    }
+
+
+    class MapNpc
+    {
+        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int npcNum { get; set; }
+
+        public MapNpc() { }
+
+        public MapNpc(string name, int x, int y, int npcnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            npcnum = npcNum;
         }
     }
 

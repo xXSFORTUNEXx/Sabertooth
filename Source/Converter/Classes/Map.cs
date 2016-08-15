@@ -17,6 +17,8 @@ namespace Converter.Classes
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
 
+        public MapNpc[] mapNpc = new MapNpc[10];
+
         public void LoadMap()
         {
             OpenFileDialog loadMapDialog = new OpenFileDialog();
@@ -52,39 +54,31 @@ namespace Converter.Classes
                             Ground[x, y].tileH = binaryReader.ReadInt32();
                             Ground[x, y].Tileset = binaryReader.ReadInt32();
                             Ground[x, y].type = binaryReader.ReadInt32();
-                            //Ground[x, y].spawnNum = binaryReader.ReadInt32();
+                            Ground[x, y].spawnNum = binaryReader.ReadInt32();
                             //Mask
                             Mask[x, y].tileX = binaryReader.ReadInt32();
                             Mask[x, y].tileY = binaryReader.ReadInt32();
                             Mask[x, y].tileW = binaryReader.ReadInt32();
                             Mask[x, y].tileH = binaryReader.ReadInt32();
                             Mask[x, y].Tileset = binaryReader.ReadInt32();
-                            Mask[x, y].type = binaryReader.ReadInt32();
-                            //Mask[x, y].spawnNum = binaryReader.ReadInt32();
                             //Fringe
                             Fringe[x, y].tileX = binaryReader.ReadInt32();
                             Fringe[x, y].tileY = binaryReader.ReadInt32();
                             Fringe[x, y].tileW = binaryReader.ReadInt32();
                             Fringe[x, y].tileH = binaryReader.ReadInt32();
                             Fringe[x, y].Tileset = binaryReader.ReadInt32();
-                            Fringe[x, y].type = binaryReader.ReadInt32();
-                           // Fringe[x, y].spawnNum = binaryReader.ReadInt32();
-                            //Mask 2
+                            //MaskA
                             MaskA[x, y].tileX = binaryReader.ReadInt32();
                             MaskA[x, y].tileY = binaryReader.ReadInt32();
                             MaskA[x, y].tileW = binaryReader.ReadInt32();
                             MaskA[x, y].tileH = binaryReader.ReadInt32();
                             MaskA[x, y].Tileset = binaryReader.ReadInt32();
-                            MaskA[x, y].type = binaryReader.ReadInt32();
-                            //MaskA[x, y].spawnNum = binaryReader.ReadInt32();
-                            //Fringe 2
+                            //FringeA
                             FringeA[x, y].tileX = binaryReader.ReadInt32();
                             FringeA[x, y].tileY = binaryReader.ReadInt32();
                             FringeA[x, y].tileW = binaryReader.ReadInt32();
                             FringeA[x, y].tileH = binaryReader.ReadInt32();
                             FringeA[x, y].Tileset = binaryReader.ReadInt32();
-                            FringeA[x, y].type = binaryReader.ReadInt32();
-                            //FringeA[x, y].spawnNum = binaryReader.ReadInt32();
                         }
                     }
                     binaryReader.Close();
@@ -112,6 +106,15 @@ namespace Converter.Classes
 
                 binaryWriter.Write(Name);
 
+                for (int i = 0; i < 10; i++)
+                {
+                    mapNpc[i] = new MapNpc("Default", 0, 0, 0);
+                    binaryWriter.Write(mapNpc[i].Name);
+                    binaryWriter.Write(mapNpc[i].X);
+                    binaryWriter.Write(mapNpc[i].Y);
+                    binaryWriter.Write(mapNpc[i].npcNum);
+                }
+
                 for (int x = 0; x < 50; x++)
                 {
                     for (int y = 0; y < 50; y++)
@@ -136,13 +139,13 @@ namespace Converter.Classes
                         binaryWriter.Write(Fringe[x, y].tileW);
                         binaryWriter.Write(Fringe[x, y].tileH);
                         binaryWriter.Write(Fringe[x, y].Tileset);
-                        //Mask2
+
                         binaryWriter.Write(MaskA[x, y].tileX);
                         binaryWriter.Write(MaskA[x, y].tileY);
                         binaryWriter.Write(MaskA[x, y].tileW);
                         binaryWriter.Write(MaskA[x, y].tileH);
                         binaryWriter.Write(MaskA[x, y].Tileset);
-                        //Fringe2
+
                         binaryWriter.Write(FringeA[x, y].tileX);
                         binaryWriter.Write(FringeA[x, y].tileY);
                         binaryWriter.Write(FringeA[x, y].tileW);
@@ -150,9 +153,28 @@ namespace Converter.Classes
                         binaryWriter.Write(FringeA[x, y].Tileset);
                     }
                 }
+
                 binaryWriter.Flush();
                 binaryWriter.Close();
             }
+        }
+    }
+
+    class MapNpc
+    {
+        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int npcNum { get; set; }
+
+        public MapNpc() { }
+
+        public MapNpc(string name, int x, int y, int npcnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            npcnum = npcNum;
         }
     }
 
