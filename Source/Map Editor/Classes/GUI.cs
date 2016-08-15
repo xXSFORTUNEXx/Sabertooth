@@ -79,6 +79,7 @@ namespace Editor.Classes
         public WindowControl npcSelect;
         Label npcLabel;
         public HorizontalSlider npcNum;
+        ComboBox[] npcCombo = new ComboBox[10];
 
         public GUI(Canvas svrCanvas, Gwen.Font svrFont, Gwen.Renderer.SFML gwenRenderer, Map editMap)
         {
@@ -600,7 +601,7 @@ namespace Editor.Classes
         public void CreateNpcSpawnSelectWindow(Base parent)
         {
             npcSelect = new WindowControl(parent.GetCanvas());
-            npcSelect.SetBounds(new Rectangle(550, 25, 75, 150));
+            npcSelect.SetBounds(new Rectangle(550, 25, 180, 375));
             npcSelect.Title = "Select NPC";
 
             npcLabel = new Label(npcSelect);
@@ -608,12 +609,30 @@ namespace Editor.Classes
             npcLabel.SetPosition(10, 45);
 
             npcNum = new HorizontalSlider(npcSelect);
-            npcNum.SetBounds(new Rectangle(10, 10, 65, 25));
+            npcNum.SetBounds(new Rectangle(10, 10, 150, 25));
             npcNum.SetRange(0, 10);
             npcNum.NotchCount = 10;
             npcNum.Value = 1;
             npcNum.SnapToNotches = true;
             npcNum.ValueChanged += NpcNum_ValueChanged;
+
+            for (int i = 0; i < 10; i++)
+            {
+                npcCombo[i] = new ComboBox(npcSelect);
+                npcCombo[i].SetBounds(new Rectangle(10, (((i + 1) * 25) + 35), 150, 25));
+                for (int n = 0; n < 10; n++)
+                {
+                    npcCombo[i].AddItem("NPC: " + n, "NPC" + n, n);
+                }
+                npcCombo[i].ItemSelected += npcCombo_ItemSelected;
+            }
+        }
+
+        private void npcCombo_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
+        {
+            int index = Array.IndexOf(npcCombo, (ComboBox)sender);
+            Console.WriteLine((int)arguments.SelectedItem.UserData);
+            editorMap.mapNpc[index].npcNum = (int)arguments.SelectedItem.UserData;
         }
 
         private void LayerGroup_SelectionChanged(Base sender, ItemSelectedEventArgs arguments)

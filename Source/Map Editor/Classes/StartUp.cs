@@ -41,7 +41,7 @@ namespace Editor.Classes
                 Directory.CreateDirectory("NPCS");
             }
             Thread.Sleep(500);
-            ShowWindow(handle, SW_HIDE);
+            //ShowWindow(handle, SW_HIDE);
             editor.EditorLoop();  //like with any other game lets start the loop
         }
 
