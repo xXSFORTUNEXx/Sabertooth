@@ -50,6 +50,7 @@ namespace Client.Classes
 
             for (int i = 0; i < 10; i++)
             {
+                mapNpc[i] = new MapNpc("Cache", 0, 0, 0);
                 binaryWriter.Write(mapNpc[i].Name);
                 binaryWriter.Write(mapNpc[i].X);
                 binaryWriter.Write(mapNpc[i].Y);
@@ -165,11 +166,8 @@ namespace Client.Classes
     }
 
 
-    class MapNpc
+    class MapNpc : NPC
     {
-        public string Name { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
         public int npcNum { get; set; }
 
         public MapNpc() { }

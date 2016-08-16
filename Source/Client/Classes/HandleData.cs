@@ -79,8 +79,15 @@ namespace Client.Classes
                                 Console.WriteLine("Recieved npc data...");
                                 break;
 
+                            case (byte)PacketTypes.MapNpc:
+                                HandleMapNpcs(incMSG, svrMap);
+                                break;
+
                             case (byte)PacketTypes.NpcData:
-                                HandleNpcData(incMSG, svrNpc);
+                                if (svrMap.Name != null)
+                                {
+                                    HandleNpcData(incMSG, svrMap);
+                                }
                                 break;
                         }
                         break;
@@ -112,21 +119,44 @@ namespace Client.Classes
             }
         }
 
+        //Handle incoming NPC data
+        static void HandleMapNpcs(NetIncomingMessage incMSG, Map svrMap)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (svrMap.mapNpc[i] != null)
+                {
+                    svrMap.mapNpc[i].Name = incMSG.ReadString();
+                    svrMap.mapNpc[i].X = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Y = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Direction = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Sprite = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Step = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Owner = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].Behavior = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].SpawnTime = incMSG.ReadInt32();
+                    svrMap.mapNpc[i].isSpawned = incMSG.ReadBoolean();
+                }
+
+                Console.WriteLine("Spawned:" + svrMap.mapNpc[i].isSpawned);
+            }
+        }
+
         //Handle incoming data for a single npc
-        static void HandleNpcData(NetIncomingMessage incMSG, NPC[] svrNpc)
+        static void HandleNpcData(NetIncomingMessage incMSG, Map svrMap)
         {
             int npcNum = incMSG.ReadInt32();
 
-            svrNpc[npcNum].Name = incMSG.ReadString();
-            svrNpc[npcNum].X = incMSG.ReadInt32();
-            svrNpc[npcNum].Y = incMSG.ReadInt32();
-            svrNpc[npcNum].Direction = incMSG.ReadInt32();
-            svrNpc[npcNum].Sprite = incMSG.ReadInt32();
-            svrNpc[npcNum].Step = incMSG.ReadInt32();
-            svrNpc[npcNum].Owner = incMSG.ReadInt32();
-            svrNpc[npcNum].Behavior = incMSG.ReadInt32();
-            svrNpc[npcNum].SpawnTime = incMSG.ReadInt32();
-            svrNpc[npcNum].isSpawned = incMSG.ReadBoolean();
+            svrMap.mapNpc[npcNum].Name = incMSG.ReadString();
+            svrMap.mapNpc[npcNum].X = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Y = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Direction = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Sprite = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Step = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Owner = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].Behavior = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].SpawnTime = incMSG.ReadInt32();
+            svrMap.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
         }
 
         //Handle player direction packet
@@ -237,15 +267,6 @@ namespace Client.Classes
             svrMap.Name = incMSG.ReadString();
             Console.WriteLine("Receiving map data...");
 
-            for (int i = 0; i < 10; i++)
-            {
-                svrMap.mapNpc[i] = new MapNpc();
-                svrMap.mapNpc[i].Name = incMSG.ReadString();
-                svrMap.mapNpc[i].X = incMSG.ReadInt32();
-                svrMap.mapNpc[i].Y = incMSG.ReadInt32();
-                svrMap.mapNpc[i].npcNum = incMSG.ReadInt32();
-            }
-
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -326,6 +347,7 @@ namespace Client.Classes
         UpdateDirection,
         DirData,
         NpcData,
-        Npcs
+        Npcs,
+        MapNpc
     }
 }

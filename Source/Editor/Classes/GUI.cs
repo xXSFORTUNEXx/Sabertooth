@@ -614,7 +614,6 @@ namespace Editor.Classes
         private void npcCombo_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
         {
             int index = Array.IndexOf(npcCombo, (ComboBox)sender);
-            Console.WriteLine((int)arguments.SelectedItem.UserData);
             editorMap.mapNpc[index].npcNum = (int)arguments.SelectedItem.UserData;
         }
 

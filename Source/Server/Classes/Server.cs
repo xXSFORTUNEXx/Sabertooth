@@ -24,6 +24,8 @@ namespace Server.Classes
         private int saveTime = 300000;
         private int aiTick;
         private int aiTime = 1000;
+        private int spawnTick;
+        private int spawnTime = 5000;
 
         public void ServerLoop(NetServer svrServer)
         {
@@ -52,24 +54,31 @@ namespace Server.Classes
         void CheckNPCSpawn(NetServer svrServer)
         {
             //Check for map spawning
-            for (int x = 0; x < 50; x++)
+            if (TickCount - spawnTick > spawnTime)
             {
-                for (int y = 0; y < 50; y++)
+                for (int i = 0; i < 10; i++)
                 {
-                    if (svrMap[0].Ground[x, y].type == (int)TileType.NPCSpawn)
+                    for (int x = 0; x < 50; x++)
                     {
-                        int npcNum = svrMap[0].Ground[x, y].spawnNum;
-
-                        if (svrNpc[npcNum].isSpawned == false)
+                        for (int y = 0; y < 50; y++)
                         {
-                            svrNpc[npcNum].X = x;
-                            svrNpc[npcNum].Y = y;
-                            svrNpc[npcNum].isSpawned = true;
-                            handleData.SendNpcData(svrServer, svrNpc, npcNum);
+                            if (svrMap[i].Ground[x, y].type == (int)TileType.NPCSpawn)
+                            {
+                                int npcNum = svrMap[i].Ground[x, y].spawnNum;
+
+                                if (svrMap[i].mapNpc[npcNum].isSpawned == false)
+                                {
+                                    svrMap[i].mapNpc[npcNum].X = x;
+                                    svrMap[i].mapNpc[npcNum].Y = y;
+                                    svrMap[i].mapNpc[npcNum].isSpawned = true;
+                                    handleData.SendMapNpcData(svrServer, svrPlayer, svrMap[i], i, npcNum);
+                                }
+                            }
                         }
                     }
                 }
             }
+            spawnTick = TickCount;
         }
 
         static int CalculateCycleRate()
@@ -145,6 +154,24 @@ namespace Server.Classes
                     svrNpc[i].LoadNPC(i);
                 }
             }
+
+            //Load in data we need for mapnpcs
+            for (int i = 0; i < 10; i++)
+            {
+                for (int n = 0; n < 10; n++)
+                {
+                    int num = svrMap[i].mapNpc[n].npcNum;
+                    svrMap[i].mapNpc[n].Name = svrNpc[num].Name;
+                    svrMap[i].mapNpc[n].X = svrNpc[num].X;
+                    svrMap[i].mapNpc[n].Y = svrNpc[num].Y;
+                    svrMap[i].mapNpc[n].Direction = svrNpc[num].Direction;
+                    svrMap[i].mapNpc[n].Step = svrNpc[num].Step;
+                    svrMap[i].mapNpc[n].Sprite = svrNpc[num].Sprite;
+                    svrMap[i].mapNpc[n].Behavior = svrNpc[num].Behavior;
+                    svrMap[i].mapNpc[n].Owner = svrNpc[num].Owner;
+                    svrMap[i].mapNpc[n].isSpawned = svrNpc[num].isSpawned;
+                }
+            }
         }
 
         void CheckNpcAI(NetServer svrServer)
@@ -153,17 +180,20 @@ namespace Server.Classes
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    if (svrNpc[i].isSpawned == true)
+                    for (int n = 0; n < 10; n++)
                     {
-                        int canMove = RND.Next(0, 100);
-                        int dir = RND.Next(0, 3);
-
-                        svrNpc[i].NpcAI(canMove, dir, svrMap[0]);
-
-                        if (svrNpc[i].didMove == true)
+                        if (svrMap[i].mapNpc[n].isSpawned == true)
                         {
-                            svrNpc[i].didMove = false;
-                            handleData.SendNpcData(svrServer, svrNpc, i);
+                            int canMove = RND.Next(0, 100);
+                            int dir = RND.Next(0, 3);
+
+                            svrMap[i].mapNpc[n].NpcAI(canMove, dir, svrMap[i]);
+
+                            if (svrMap[i].mapNpc[n].didMove == true)
+                            {
+                                svrMap[i].mapNpc[n].didMove = false;
+                                handleData.SendMapNpcData(svrServer, svrPlayer, svrMap[i], i, n);
+                            }
                         }
                     }
                 }

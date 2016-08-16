@@ -205,6 +205,7 @@ namespace Server.Classes
                         SendUsers(incMSG, svrServer, svrPlayer);
                         SendMapData(incMSG, svrServer, svrMap[currentMap], svrPlayer);
                         SendNpcs(incMSG, svrServer, svrNpc);
+                        SendMapNpcs(incMSG, svrServer, svrMap[currentMap]);
                     }
                     else
                     {
@@ -270,7 +271,7 @@ namespace Server.Classes
             }
             svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
-        
+
         //Send npc data to client
         static void SendNpcs(NetIncomingMessage incMSG, NetServer svrServer, NPC[] svrNpc)
         {
@@ -294,24 +295,52 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
-        //Update npc to all clients
-        public void SendNpcData(NetServer svrServer, NPC[] svrNpc, int npcNum)
+        static void SendMapNpcs(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap)
+        {
+            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.MapNpc);
+            for (int i = 0; i < 10; i++)
+            {
+                outMSG.Write(svrMap.mapNpc[i].Name);
+                outMSG.Write(svrMap.mapNpc[i].X);
+                outMSG.Write(svrMap.mapNpc[i].Y);
+                outMSG.Write(svrMap.mapNpc[i].Direction);
+                outMSG.Write(svrMap.mapNpc[i].Sprite);
+                outMSG.Write(svrMap.mapNpc[i].Step);
+                outMSG.Write(svrMap.mapNpc[i].Owner);
+                outMSG.Write(svrMap.mapNpc[i].Behavior);
+                outMSG.Write(svrMap.mapNpc[i].SpawnTime);
+                outMSG.Write(svrMap.mapNpc[i].isSpawned);
+            }
+            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendMapNpcData(NetServer svrServer, Player[] svrPlayer, Map svrMap, int mapNum, int npcNum)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.Write(npcNum);
-            outMSG.Write(svrNpc[npcNum].Name);
-            outMSG.Write(svrNpc[npcNum].X);
-            outMSG.Write(svrNpc[npcNum].Y);
-            outMSG.Write(svrNpc[npcNum].Direction);
-            outMSG.Write(svrNpc[npcNum].Sprite);
-            outMSG.Write(svrNpc[npcNum].Step);
-            outMSG.Write(svrNpc[npcNum].Owner);
-            outMSG.Write(svrNpc[npcNum].Behavior);
-            outMSG.Write(svrNpc[npcNum].SpawnTime);
-            outMSG.Write(svrNpc[npcNum].isSpawned);
+            outMSG.Write(svrMap.mapNpc[npcNum].Name);
+            outMSG.Write(svrMap.mapNpc[npcNum].X);
+            outMSG.Write(svrMap.mapNpc[npcNum].Y);
+            outMSG.Write(svrMap.mapNpc[npcNum].Direction);
+            outMSG.Write(svrMap.mapNpc[npcNum].Sprite);
+            outMSG.Write(svrMap.mapNpc[npcNum].Step);
+            outMSG.Write(svrMap.mapNpc[npcNum].Owner);
+            outMSG.Write(svrMap.mapNpc[npcNum].Behavior);
+            outMSG.Write(svrMap.mapNpc[npcNum].SpawnTime);
+            outMSG.Write(svrMap.mapNpc[npcNum].isSpawned);
 
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            for (int i = 0; i < 5; i++)
+            {
+                if (svrPlayer[i].Connection != null)
+                {
+                    if (svrPlayer[i].Map == mapNum)
+                    {
+                        svrServer.SendMessage(outMSG, svrPlayer[i].Connection, NetDeliveryMethod.ReliableOrdered);
+                    }
+                }
+            }
         }
 
         //Sends an error message to be processed by the client
@@ -440,14 +469,6 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.MapData);
             outMSG.Write(svrMap.Name);
 
-            for (int i = 0; i < 10; i++)
-            {
-                outMSG.Write(svrMap.mapNpc[i].Name);
-                outMSG.Write(svrMap.mapNpc[i].X);
-                outMSG.Write(svrMap.mapNpc[i].Y);
-                outMSG.Write(svrMap.mapNpc[i].npcNum);
-            }
-
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -505,6 +526,7 @@ namespace Server.Classes
         UpdateDirection,
         DirData,
         NpcData,
-        Npcs
+        Npcs,
+        MapNpc
     }
 }

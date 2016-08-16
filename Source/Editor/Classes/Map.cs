@@ -283,11 +283,8 @@ namespace Editor.Classes
         }
     }
 
-    class MapNpc
+    class MapNpc : NPC
     {
-        public string Name { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
         public int npcNum { get; set; }
 
         public MapNpc() { }

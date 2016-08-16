@@ -261,9 +261,9 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                if (svrNpc[i].isSpawned == true)
+                if (svrMap.mapNpc[i].isSpawned == true)
                 {
-                    svrNpc[i].DrawNpc(svrWindow, svrSprite[(svrNpc[i].Sprite - 1)]);
+                    svrMap.mapNpc[i].DrawNpc(svrWindow, svrSprite[(svrMap.mapNpc[i].Sprite - 1)]);
                 }
             }
         }
