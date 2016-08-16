@@ -71,7 +71,14 @@ namespace Server.Classes
                                     svrMap[i].mapNpc[npcNum].X = x;
                                     svrMap[i].mapNpc[npcNum].Y = y;
                                     svrMap[i].mapNpc[npcNum].isSpawned = true;
-                                    handleData.SendMapNpcData(svrServer, svrPlayer, svrMap[i], i, npcNum);
+
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (svrPlayer[i].Connection != null && svrPlayer[p].Map == i)
+                                        {
+                                            handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], npcNum);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -192,7 +199,14 @@ namespace Server.Classes
                             if (svrMap[i].mapNpc[n].didMove == true)
                             {
                                 svrMap[i].mapNpc[n].didMove = false;
-                                handleData.SendMapNpcData(svrServer, svrPlayer, svrMap[i], i, n);
+                                
+                                for (int p = 0; p < 5; p++)
+                                {
+                                    if (svrPlayer[p].Connection != null && svrPlayer[p].Map == i)
+                                    {
+                                        handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], n);
+                                    }
+                                }
                             }
                         }
                     }

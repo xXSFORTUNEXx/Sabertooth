@@ -315,7 +315,7 @@ namespace Server.Classes
             svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendMapNpcData(NetServer svrServer, Player[] svrPlayer, Map svrMap, int mapNum, int npcNum)
+        public void SendMapNpcData(NetServer svrServer, NetConnection playerConn, Map svrMap, int npcNum)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
@@ -331,16 +331,7 @@ namespace Server.Classes
             outMSG.Write(svrMap.mapNpc[npcNum].SpawnTime);
             outMSG.Write(svrMap.mapNpc[npcNum].isSpawned);
 
-            for (int i = 0; i < 5; i++)
-            {
-                if (svrPlayer[i].Connection != null)
-                {
-                    if (svrPlayer[i].Map == mapNum)
-                    {
-                        svrServer.SendMessage(outMSG, svrPlayer[i].Connection, NetDeliveryMethod.ReliableOrdered);
-                    }
-                }
-            }
+            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Sends an error message to be processed by the client
