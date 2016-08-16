@@ -25,7 +25,7 @@ namespace Server.Classes
         private int aiTick;
         private int aiTime = 1000;
         private int spawnTick;
-        private int spawnTime = 5000;
+        private int spawnTime = 1000;
 
         public void ServerLoop(NetServer svrServer)
         {
@@ -49,43 +49,6 @@ namespace Server.Classes
                 CheckNPCSpawn(svrServer);
                 CheckNpcAI(svrServer);
             }
-        }
-
-        void CheckNPCSpawn(NetServer svrServer)
-        {
-            //Check for map spawning
-            if (TickCount - spawnTick > spawnTime)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    for (int x = 0; x < 50; x++)
-                    {
-                        for (int y = 0; y < 50; y++)
-                        {
-                            if (svrMap[i].Ground[x, y].type == (int)TileType.NPCSpawn)
-                            {
-                                int npcNum = svrMap[i].Ground[x, y].spawnNum;
-
-                                if (svrMap[i].mapNpc[npcNum].isSpawned == false)
-                                {
-                                    svrMap[i].mapNpc[npcNum].X = x;
-                                    svrMap[i].mapNpc[npcNum].Y = y;
-                                    svrMap[i].mapNpc[npcNum].isSpawned = true;
-
-                                    for (int p = 0; p < 5; p++)
-                                    {
-                                        if (svrPlayer[i].Connection != null && svrPlayer[p].Map == i)
-                                        {
-                                            handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], npcNum);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            spawnTick = TickCount;
         }
 
         static int CalculateCycleRate()
@@ -213,6 +176,43 @@ namespace Server.Classes
                 }
                 aiTick = TickCount;
             }
+        }
+
+        void CheckNPCSpawn(NetServer svrServer)
+        {
+            //Check for map spawning
+            if (TickCount - spawnTick > spawnTime)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            if (svrMap[i].Ground[x, y].type == (int)TileType.NPCSpawn)
+                            {
+                                int npcNum = svrMap[i].Ground[x, y].spawnNum;
+
+                                if (svrMap[i].mapNpc[npcNum].isSpawned == false)
+                                {
+                                    svrMap[i].mapNpc[npcNum].X = x;
+                                    svrMap[i].mapNpc[npcNum].Y = y;
+                                    svrMap[i].mapNpc[npcNum].isSpawned = true;
+
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (svrPlayer[p].Connection != null && i == svrPlayer[p].Map)
+                                        {
+                                            handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], npcNum);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            spawnTick = TickCount;
         }
     }
 }

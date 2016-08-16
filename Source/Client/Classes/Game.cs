@@ -248,7 +248,7 @@ namespace Client.Classes
             {
                 if (svrPlayer[i].Name != "")
                 {
-                    if (i != handleData.clientIndex)
+                    if (i != handleData.clientIndex && svrPlayer[i].Map == svrPlayer[handleData.clientIndex].Map)
                     {
                         svrPlayer[i].DrawPlayer(svrWindow, svrSprite[svrPlayer[i].Sprite]);
                         svrPlayer[i].DrawPlayerName(svrWindow);

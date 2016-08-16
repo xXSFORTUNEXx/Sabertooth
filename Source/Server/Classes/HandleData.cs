@@ -76,11 +76,18 @@ namespace Server.Classes
             svrPlayer[index].Y = y;
             svrPlayer[index].Direction = direction;
             svrPlayer[index].Step = step;
-            SendUpdateMovementData(svrServer, index, x, y, direction, step);
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (svrPlayer[i].Connection != null && svrPlayer[i].Map == svrPlayer[index].Map)
+                {
+                    SendUpdateMovementData(svrServer, svrPlayer[i].Connection, index, x, y, direction, step);
+                }
+            }
         }
 
         //Sending out the data for movement to be processed by everyone connected
-        static void SendUpdateMovementData(NetServer svrServer, int index, int x, int y, int direction, int step)
+        static void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
@@ -89,7 +96,8 @@ namespace Server.Classes
             outMSG.Write(y);
             outMSG.Write(direction);
             outMSG.Write(step);
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+
+            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Handles incoming direction data for players
