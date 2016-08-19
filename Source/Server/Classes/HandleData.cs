@@ -240,6 +240,7 @@ namespace Server.Classes
             string msg = incMSG.ReadString();
             string name = svrPlayer[GetPlayerConnection(incMSG, svrPlayer)].Name;
             string finalMsg = name + ": " + msg;
+
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ChatMessage);
             outMSG.Write(finalMsg);
