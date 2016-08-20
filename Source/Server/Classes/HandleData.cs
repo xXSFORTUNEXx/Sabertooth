@@ -7,6 +7,7 @@ using Lidgren.Network;
 using System.Threading;
 using System.Xml;
 using static System.IO.File;
+using static System.Convert;
 
 namespace Server.Classes
 {
@@ -238,15 +239,37 @@ namespace Server.Classes
         static void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             string msg = incMSG.ReadString();
-            string name = svrPlayer[GetPlayerConnection(incMSG, svrPlayer)].Name;
-            string finalMsg = name + ": " + msg;
+            //Check for an admin command
+            if (msg.Substring(0, 1) == "/")
+            {
+                CheckCommand(msg);
+                return;
+            }
+            else
+            {
+                string name = svrPlayer[GetPlayerConnection(incMSG, svrPlayer)].Name;
+                string finalMsg = name + ": " + msg;
+                NetOutgoingMessage outMSG = svrServer.CreateMessage();
+                outMSG.Write((byte)PacketTypes.ChatMessage);
+                outMSG.Write(finalMsg);
+                svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+                LogWriter.WriteLog(finalMsg, "Chat");
+                Console.WriteLine(finalMsg);
+            }
+        }
 
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.ChatMessage);
-            outMSG.Write(finalMsg);
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
-            LogWriter.WriteLog(finalMsg, "Chat");
-            Console.WriteLine(finalMsg);
+        static void CheckCommand(string msg)
+        {
+            //Make sure it has lenghth and isnt just 1 forwardslash
+            if (msg.Length > 2)
+            {
+                //Check for map command
+                if (msg.Length > 4 && msg.Substring(2, 3).ToString() == "map")
+                {
+                    int mapNum = ToInt32(msg.Substring(4, 5));
+                    Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                }
+            }
         }
 
         //Send user data of the main index
