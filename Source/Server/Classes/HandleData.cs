@@ -40,7 +40,7 @@ namespace Server.Classes
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
-                                HandleChatMessage(incMSG, svrServer, svrPlayer);
+                                HandleChatMessage(incMSG, svrServer, svrPlayer, svrMap);
                                 break;
 
                             case (byte)PacketTypes.MoveData:
@@ -236,13 +236,13 @@ namespace Server.Classes
         }
         
         //Handleing a chat message incoming
-        static void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        static void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap)
         {
             string msg = incMSG.ReadString();
             //Check for an admin command
             if (msg.Substring(0, 1) == "/")
             {
-                CheckCommand(msg);
+                CheckCommand(msg, GetPlayerConnection(incMSG, svrPlayer), svrPlayer, incMSG, svrServer, svrMap);
                 return;
             }
             else
@@ -258,16 +258,23 @@ namespace Server.Classes
             }
         }
 
-        static void CheckCommand(string msg)
+        static void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
             if (msg.Length > 2)
             {
                 //Check for map command
-                if (msg.Length > 4 && msg.Substring(2, 3).ToString() == "map")
+                if (msg.Substring(1, 3) == "map")
                 {
-                    int mapNum = ToInt32(msg.Substring(4, 5));
-                    Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                    if (msg.Length > 4)
+                    {
+                        int mapNum = ToInt32(msg.Substring(5, 1));
+                        svrPlayer[index].Map = mapNum;
+                        SendMapData(incMSG, svrServer, svrMap[mapNum], svrPlayer);
+                        SendUsers(incMSG, svrServer, svrPlayer);
+                        SendMapNpcs(incMSG, svrServer, svrMap[mapNum]);
+                        Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                    }
                 }
             }
         }

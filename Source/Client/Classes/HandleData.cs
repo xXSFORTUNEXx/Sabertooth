@@ -60,6 +60,7 @@ namespace Client.Classes
 
                             case (byte)PacketTypes.MapData:
                                 HandleMapData(svrClient, incMSG, svrMap);
+                                Console.WriteLine("Recieved map data...");
                                 break;
 
                             case (byte)PacketTypes.Users:
@@ -114,8 +115,6 @@ namespace Client.Classes
                     svrNpc[i].SpawnTime = incMSG.ReadInt32();
                     svrNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
-
-                Console.WriteLine("Spawned:" + svrNpc[i].isSpawned);
             }
         }
 
@@ -137,8 +136,6 @@ namespace Client.Classes
                     svrMap.mapNpc[i].SpawnTime = incMSG.ReadInt32();
                     svrMap.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
-
-                Console.WriteLine("Spawned:" + svrMap.mapNpc[i].isSpawned);
             }
         }
 
@@ -265,7 +262,6 @@ namespace Client.Classes
         static void HandleMapData(NetClient svrClient, NetIncomingMessage incMSG, Map svrMap)
         {
             svrMap.Name = incMSG.ReadString();
-            Console.WriteLine("Receiving map data...");
 
             for (int x = 0; x < 50; x++)
             {
