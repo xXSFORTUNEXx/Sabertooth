@@ -261,12 +261,12 @@ namespace Server.Classes
         static void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
-            if (msg.Length > 2)
+            if (msg.Length >= 6)
             {
                 //Check for map command
                 if (msg.Substring(1, 3) == "map")
                 {
-                    if (msg.Length > 4)
+                    if (msg.Length >= 6)
                     {
                         int mapNum = ToInt32(msg.Substring(5, 1));
                         svrPlayer[index].Map = mapNum;
@@ -274,7 +274,28 @@ namespace Server.Classes
                         SendUsers(incMSG, svrServer, svrPlayer);
                         SendMapNpcs(incMSG, svrServer, svrMap[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                        return;
                     }
+                }
+            }
+
+            if (msg.Length >= 9)
+            {
+                if (msg.Substring(1, 6) == "sprite")
+                {
+                    int spriteNum;
+                    if (msg.Length == 10)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 2));
+                    }
+                    else
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 1));
+                    }
+                    svrPlayer[index].Sprite = spriteNum;
+                    SendUsers(incMSG, svrServer, svrPlayer);
+                    Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
+                    return;
                 }
             }
         }
