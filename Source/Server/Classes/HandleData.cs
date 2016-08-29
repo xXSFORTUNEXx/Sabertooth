@@ -288,6 +288,10 @@ namespace Server.Classes
                     {
                         spriteNum = ToInt32(msg.Substring(8, 2));
                     }
+                    else if (msg.Length == 11)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 3));
+                    }
                     else
                     {
                         spriteNum = ToInt32(msg.Substring(8, 1));
