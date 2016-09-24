@@ -13,8 +13,8 @@ namespace Client.Classes
 {
     class HandleData
     {
-        public static string ipAddress; //So we can change the port XML instead of directly in the code
-        public static string port;  //So we can change the port from XML and not directly in the code
+        public string ipAddress; //So we can change the port XML instead of directly in the code
+        public string port;  //So we can change the port from XML and not directly in the code
         public int clientIndex; //The index of this client
 
         //This is where we process the 
@@ -98,7 +98,7 @@ namespace Client.Classes
         }
 
         //Handle incoming NPC data
-        static void HandleNpcs(NetIncomingMessage incMSG, NPC[] svrNpc)
+        void HandleNpcs(NetIncomingMessage incMSG, NPC[] svrNpc)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -119,7 +119,7 @@ namespace Client.Classes
         }
 
         //Handle incoming NPC data
-        static void HandleMapNpcs(NetIncomingMessage incMSG, Map svrMap)
+        void HandleMapNpcs(NetIncomingMessage incMSG, Map svrMap)
         {
             for (int i = 0; i < 10; i++)
             {
@@ -140,7 +140,7 @@ namespace Client.Classes
         }
 
         //Handle incoming data for a single npc
-        static void HandleNpcData(NetIncomingMessage incMSG, Map svrMap)
+        void HandleNpcData(NetIncomingMessage incMSG, Map svrMap)
         {
             int npcNum = incMSG.ReadInt32();
 
@@ -157,7 +157,7 @@ namespace Client.Classes
         }
 
         //Handle player direction packet
-        static void HandleDirectionData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
+        void HandleDirectionData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
@@ -168,7 +168,7 @@ namespace Client.Classes
         }
 
         //handle incoming movement data
-        static void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
+        void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
         {
             int index = incMSG.ReadInt32();
             int x = incMSG.ReadInt32();
@@ -186,7 +186,7 @@ namespace Client.Classes
         }
 
         //Discovery response sent from the server
-        static void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient svrClient)
+        void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient svrClient)
         {
             Console.WriteLine("Found Server: " + incMSG.ReadString() + " @ " + incMSG.SenderEndPoint);
             NetOutgoingMessage outMSG = svrClient.CreateMessage();
@@ -196,14 +196,14 @@ namespace Client.Classes
         }
 
         //Assuring we are connected to the server
-        static void HandleConnectionData(NetIncomingMessage incMSG, NetClient svrClient)
+        void HandleConnectionData(NetIncomingMessage incMSG, NetClient svrClient)
         {
             if (svrClient.ServerConnection != null) { return; }
             Console.WriteLine("Connected to server!");
         }
 
         //Packet incoming for chat message
-        static void HandleChatMessage(NetIncomingMessage incMSG, GUI svrGUI)
+        void HandleChatMessage(NetIncomingMessage incMSG, GUI svrGUI)
         {
             string msg = incMSG.ReadString();
             int msgLength = msg.Length;
@@ -227,7 +227,7 @@ namespace Client.Classes
         }
 
         //Packet for succesful login, after this is done we get all the maps, npc, other players the whole nine yards
-        static void HandleLoginData(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas, GUI svrGUI)
+        void HandleLoginData(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas, GUI svrGUI)
         {
             Console.WriteLine("Login successful!");
             svrCanvas.DeleteAllChildren();
@@ -237,7 +237,7 @@ namespace Client.Classes
         }
 
         //Player incoming data for the clients index
-        static void HandlePlayerData(NetIncomingMessage incMSG, NetClient svrClient, Player[] svrPlayer, int clientIndex)
+        void HandlePlayerData(NetIncomingMessage incMSG, NetClient svrClient, Player[] svrPlayer, int clientIndex)
         {
             svrPlayer[clientIndex].Name = incMSG.ReadString();
             svrPlayer[clientIndex].X = incMSG.ReadInt32();
@@ -250,7 +250,7 @@ namespace Client.Classes
         }
 
         //Error message handler
-        static void HandleErrorMessage(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas)
+        void HandleErrorMessage(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas)
         {
             string msg = incMSG.ReadString();
             string caption = incMSG.ReadString();
@@ -259,7 +259,7 @@ namespace Client.Classes
         }
 
         //Handle the incoming map data whether it be logging in or changing maps.
-        static void HandleMapData(NetClient svrClient, NetIncomingMessage incMSG, Map svrMap)
+        void HandleMapData(NetClient svrClient, NetIncomingMessage incMSG, Map svrMap)
         {
             svrMap.Name = incMSG.ReadString();
 
@@ -311,7 +311,7 @@ namespace Client.Classes
         }
 
         //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
-        static void HandlePlayers(NetClient svrClient, NetIncomingMessage incMSG, Player[] svrPlayer)
+        void HandlePlayers(NetClient svrClient, NetIncomingMessage incMSG, Player[] svrPlayer)
         {
             for (int i = 0; i < 5; i++)
             {

@@ -62,7 +62,7 @@ namespace Server.Classes
         }
 
         //Handle incoming packets for movement of the player
-        static void HandleMoveData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleMoveData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             int index = incMSG.ReadInt32();
             int x = incMSG.ReadInt32();
@@ -88,7 +88,7 @@ namespace Server.Classes
         }
 
         //Sending out the data for movement to be processed by everyone connected
-        static void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
+        void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
@@ -102,7 +102,7 @@ namespace Server.Classes
         }
 
         //Handles incoming direction data for players
-        static void HandleDirectionData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleDirectionData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
@@ -114,7 +114,7 @@ namespace Server.Classes
         }
 
         //Sends a direction update to the client so it can be processed and sent to all connected
-        static void SendUpdateDirection(NetServer svrServer, int index, int direction)
+        void SendUpdateDirection(NetServer svrServer, int index, int direction)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write(index);
@@ -123,7 +123,7 @@ namespace Server.Classes
         }
 
         //Handles a discovery response from the server
-        static void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer svrServer)
+        void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer svrServer)
         {
             Console.WriteLine("Client discovered @ " + incMSG.SenderEndPoint.ToString());
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -132,7 +132,7 @@ namespace Server.Classes
         }
 
         //Handles our connection getting approved from our server
-        static void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer svrServer)
+        void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer svrServer)
         {
             if (incMSG.ReadByte() == (byte)PacketTypes.Connection)
             {
@@ -153,7 +153,7 @@ namespace Server.Classes
         }
 
         //Handles our registration requests to the server
-        static void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -191,7 +191,7 @@ namespace Server.Classes
         }
 
         //Handle logging in requests for the server
-        static void HandleLoginRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -236,7 +236,7 @@ namespace Server.Classes
         }
         
         //Handleing a chat message incoming
-        static void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap)
+        void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap)
         {
             string msg = incMSG.ReadString();
             //Check for an admin command
@@ -258,7 +258,7 @@ namespace Server.Classes
             }
         }
 
-        static void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
+        void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
             if (msg.Length >= 6)
@@ -305,7 +305,7 @@ namespace Server.Classes
         }
 
         //Send user data of the main index
-        static void SendUserData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, int svrIndex)
+        void SendUserData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, int svrIndex)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UserData);
@@ -320,7 +320,7 @@ namespace Server.Classes
         }
 
         //Send user data to all
-        static void SendUsers(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void SendUsers(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Users);
@@ -337,7 +337,7 @@ namespace Server.Classes
         }
 
         //Send npc data to client
-        static void SendNpcs(NetIncomingMessage incMSG, NetServer svrServer, NPC[] svrNpc)
+        void SendNpcs(NetIncomingMessage incMSG, NetServer svrServer, NPC[] svrNpc)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);
@@ -359,7 +359,7 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
-        static void SendMapNpcs(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap)
+        void SendMapNpcs(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapNpc);
@@ -399,7 +399,7 @@ namespace Server.Classes
         }
 
         //Sends an error message to be processed by the client
-        static void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer svrServer)
+        void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer svrServer)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ErrorMessage);
@@ -478,7 +478,7 @@ namespace Server.Classes
             return false;
         }
 
-        static void ClearSlot(NetConnection conn, Player[] svrPlayer)
+        void ClearSlot(NetConnection conn, Player[] svrPlayer)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -491,7 +491,7 @@ namespace Server.Classes
             }
         }
 
-        static void HandleStatusChange(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleStatusChange(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
             Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
             LogWriter.WriteLog(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status, "Server");
@@ -507,7 +507,7 @@ namespace Server.Classes
             }
         }
 
-        static void SavePlayers(Player[] svrPlayer)
+        void SavePlayers(Player[] svrPlayer)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -518,7 +518,7 @@ namespace Server.Classes
             }
         }
 
-        static void SendMapData(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap, Player[] svrPlayer)
+        void SendMapData(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap, Player[] svrPlayer)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
