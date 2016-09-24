@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
+using System;
 using System.Threading;
 using System.Xml;
-using static System.IO.File;
 using static System.Convert;
+using static System.IO.File;
 
 namespace Server.Classes
 {
     class HandleData
     {
+        /// <summary>
+        /// This method checks for incoming messages and processes the header (name) of the packet for processing
+        /// </summary>
         public void HandleDataMessage(NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
         {
             NetIncomingMessage incMSG;  //create incoming message
@@ -61,6 +60,9 @@ namespace Server.Classes
             svrServer.Recycle(incMSG);
         }
 
+        /// <summary>
+        /// These methods handle data that is incoming from connected clients
+        /// </summary>
         //Handle incoming packets for movement of the player
         void HandleMoveData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
@@ -87,20 +89,6 @@ namespace Server.Classes
             }
         }
 
-        //Sending out the data for movement to be processed by everyone connected
-        void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
-        {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.UpdateMoveData);
-            outMSG.Write(index);
-            outMSG.Write(x);
-            outMSG.Write(y);
-            outMSG.Write(direction);
-            outMSG.Write(step);
-
-            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
-        }
-
         //Handles incoming direction data for players
         void HandleDirectionData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
         {
@@ -111,15 +99,6 @@ namespace Server.Classes
 
             svrPlayer[index].Direction = direction;
             SendUpdateDirection(svrServer, index, direction);
-        }
-
-        //Sends a direction update to the client so it can be processed and sent to all connected
-        void SendUpdateDirection(NetServer svrServer, int index, int direction)
-        {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
-            outMSG.Write(index);
-            outMSG.Write(direction);
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Handles a discovery response from the server
@@ -258,50 +237,30 @@ namespace Server.Classes
             }
         }
 
-        void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
+        /// <summary>
+        /// These methods handle sending data to clients that are requesting it
+        /// </summary>
+        //Sends a direction update to the client so it can be processed and sent to all connected
+        void SendUpdateDirection(NetServer svrServer, int index, int direction)
         {
-            //Make sure it has lenghth and isnt just 1 forwardslash
-            if (msg.Length >= 6)
-            {
-                //Check for map command
-                if (msg.Substring(1, 3) == "map")
-                {
-                    if (msg.Length >= 6)
-                    {
-                        int mapNum = ToInt32(msg.Substring(5, 1));
-                        svrPlayer[index].Map = mapNum;
-                        SendMapData(incMSG, svrServer, svrMap[mapNum], svrPlayer);
-                        SendUsers(incMSG, svrServer, svrPlayer);
-                        SendMapNpcs(incMSG, svrServer, svrMap[mapNum]);
-                        Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
-                        return;
-                    }
-                }
-            }
+            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            outMSG.Write(index);
+            outMSG.Write(direction);
+            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
 
-            if (msg.Length >= 9)
-            {
-                if (msg.Substring(1, 6) == "sprite")
-                {
-                    int spriteNum;
-                    if (msg.Length == 10)
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 2));
-                    }
-                    else if (msg.Length == 11)
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 3));
-                    }
-                    else
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 1));
-                    }
-                    svrPlayer[index].Sprite = spriteNum;
-                    SendUsers(incMSG, svrServer, svrPlayer);
-                    Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
-                    return;
-                }
-            }
+        //Sending out the data for movement to be processed by everyone connected
+        void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
+        {
+            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UpdateMoveData);
+            outMSG.Write(index);
+            outMSG.Write(x);
+            outMSG.Write(y);
+            outMSG.Write(direction);
+            outMSG.Write(step);
+
+            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send user data of the main index
@@ -359,6 +318,7 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
+        //Send map npcs to client
         void SendMapNpcs(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -379,6 +339,7 @@ namespace Server.Classes
             svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Send npc's associated with the map the player is currently on
         public void SendMapNpcData(NetServer svrServer, NetConnection playerConn, Map svrMap, int npcNum)
         {
             NetOutgoingMessage outMSG = svrServer.CreateMessage();
@@ -408,6 +369,56 @@ namespace Server.Classes
             svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        void SendMapData(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap, Player[] svrPlayer)
+        {
+            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.MapData);
+            outMSG.Write(svrMap.Name);
+
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    //ground
+                    outMSG.Write(svrMap.Ground[x, y].tileX);
+                    outMSG.Write(svrMap.Ground[x, y].tileY);
+                    outMSG.Write(svrMap.Ground[x, y].tileW);
+                    outMSG.Write(svrMap.Ground[x, y].tileH);
+                    outMSG.Write(svrMap.Ground[x, y].Tileset);
+                    outMSG.Write(svrMap.Ground[x, y].type);
+                    outMSG.Write(svrMap.Ground[x, y].spawnNum);
+                    //mask
+                    outMSG.Write(svrMap.Mask[x, y].tileX);
+                    outMSG.Write(svrMap.Mask[x, y].tileY);
+                    outMSG.Write(svrMap.Mask[x, y].tileW);
+                    outMSG.Write(svrMap.Mask[x, y].tileH);
+                    outMSG.Write(svrMap.Mask[x, y].Tileset);
+                    //fringe
+                    outMSG.Write(svrMap.Fringe[x, y].tileX);
+                    outMSG.Write(svrMap.Fringe[x, y].tileY);
+                    outMSG.Write(svrMap.Fringe[x, y].tileW);
+                    outMSG.Write(svrMap.Fringe[x, y].tileH);
+                    outMSG.Write(svrMap.Fringe[x, y].Tileset);
+                    //mask a
+                    outMSG.Write(svrMap.MaskA[x, y].tileX);
+                    outMSG.Write(svrMap.MaskA[x, y].tileY);
+                    outMSG.Write(svrMap.MaskA[x, y].tileW);
+                    outMSG.Write(svrMap.MaskA[x, y].tileH);
+                    outMSG.Write(svrMap.MaskA[x, y].Tileset);
+                    //fringe a
+                    outMSG.Write(svrMap.FringeA[x, y].tileX);
+                    outMSG.Write(svrMap.FringeA[x, y].tileY);
+                    outMSG.Write(svrMap.FringeA[x, y].tileW);
+                    outMSG.Write(svrMap.FringeA[x, y].tileH);
+                    outMSG.Write(svrMap.FringeA[x, y].Tileset);
+                }
+            }
+            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        /// <summary>
+        /// These methods handle all the data from incoming messages
+        /// </summary>
         static bool AlreadyLogged(string name, Player[] svrPlayer)
         {
             if (name == null) return false;
@@ -518,54 +529,56 @@ namespace Server.Classes
             }
         }
 
-        void SendMapData(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap, Player[] svrPlayer)
+        void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.MapData);
-            outMSG.Write(svrMap.Name);
-
-            for (int x = 0; x < 50; x++)
+            //Make sure it has lenghth and isnt just 1 forwardslash
+            if (msg.Length >= 6)
             {
-                for (int y = 0; y < 50; y++)
+                //Check for map command
+                if (msg.Substring(1, 3) == "map")
                 {
-                    //ground
-                    outMSG.Write(svrMap.Ground[x, y].tileX);
-                    outMSG.Write(svrMap.Ground[x, y].tileY);
-                    outMSG.Write(svrMap.Ground[x, y].tileW);
-                    outMSG.Write(svrMap.Ground[x, y].tileH);
-                    outMSG.Write(svrMap.Ground[x, y].Tileset);
-                    outMSG.Write(svrMap.Ground[x, y].type);
-                    outMSG.Write(svrMap.Ground[x, y].spawnNum);
-                    //mask
-                    outMSG.Write(svrMap.Mask[x, y].tileX);
-                    outMSG.Write(svrMap.Mask[x, y].tileY);
-                    outMSG.Write(svrMap.Mask[x, y].tileW);
-                    outMSG.Write(svrMap.Mask[x, y].tileH);
-                    outMSG.Write(svrMap.Mask[x, y].Tileset);
-                    //fringe
-                    outMSG.Write(svrMap.Fringe[x, y].tileX);
-                    outMSG.Write(svrMap.Fringe[x, y].tileY);
-                    outMSG.Write(svrMap.Fringe[x, y].tileW);
-                    outMSG.Write(svrMap.Fringe[x, y].tileH);
-                    outMSG.Write(svrMap.Fringe[x, y].Tileset);
-                    //mask a
-                    outMSG.Write(svrMap.MaskA[x, y].tileX);
-                    outMSG.Write(svrMap.MaskA[x, y].tileY);
-                    outMSG.Write(svrMap.MaskA[x, y].tileW);
-                    outMSG.Write(svrMap.MaskA[x, y].tileH);
-                    outMSG.Write(svrMap.MaskA[x, y].Tileset);
-                    //fringe a
-                    outMSG.Write(svrMap.FringeA[x, y].tileX);
-                    outMSG.Write(svrMap.FringeA[x, y].tileY);
-                    outMSG.Write(svrMap.FringeA[x, y].tileW);
-                    outMSG.Write(svrMap.FringeA[x, y].tileH);
-                    outMSG.Write(svrMap.FringeA[x, y].Tileset);
+                    if (msg.Length >= 6)
+                    {
+                        int mapNum = ToInt32(msg.Substring(5, 1));
+                        svrPlayer[index].Map = mapNum;
+                        SendMapData(incMSG, svrServer, svrMap[mapNum], svrPlayer);
+                        SendUsers(incMSG, svrServer, svrPlayer);
+                        SendMapNpcs(incMSG, svrServer, svrMap[mapNum]);
+                        Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                        return;
+                    }
                 }
             }
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+
+            if (msg.Length >= 9)
+            {
+                if (msg.Substring(1, 6) == "sprite")
+                {
+                    int spriteNum;
+                    if (msg.Length == 10)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 2));
+                    }
+                    else if (msg.Length == 11)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 3));
+                    }
+                    else
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 1));
+                    }
+                    svrPlayer[index].Sprite = spriteNum;
+                    SendUsers(incMSG, svrServer, svrPlayer);
+                    Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
+                    return;
+                }
+            }
         }
     }
 
+    /// <summary>
+    /// Packet headers
+    /// </summary>
     public enum PacketTypes
     {
         Connection,
