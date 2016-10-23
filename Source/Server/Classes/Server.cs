@@ -17,9 +17,11 @@ namespace Server.Classes
         HandleData handleData = new HandleData();
         Map[] s_Map = new Map[10];
         Random RND = new Random();
+        static string s_userCommand;
         static int lastTick;
         static int lastCycleRate;
         static int cycleRate;
+        public bool isRunning;
         private int saveTick;
         private int saveTime = 300000;
         private int aiTick;
@@ -32,37 +34,39 @@ namespace Server.Classes
             InitPlayerArray();
             InitMap();
             InitNPC();
+            InitFinal();
 
-            Console.WriteLine("Listening for connections...");
-            LogWriter.WriteLog("Server is listening for connections...", "Server");
+            Thread s_Command = new Thread(CommandWindow);
+            s_Command.Start();
 
-            while (true)
+            isRunning = true;
+            while (isRunning)
             {
-                //Console.Title = "Sabertooth Server - Bind IP: " + svrServer.Socket.LocalEndPoint + " CPS: " + CalculateCycleRate();
                 handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc);
-
-                if (TickCount - saveTick > saveTime)
-                {
-                    SavePlayers();
-                    saveTick = TickCount;
-                }
+                SavePlayers();
                 CheckNPCSpawn(s_Server);
                 CheckNpcAI(s_Server);
+                CheckCommands();
             }
+            Console.WriteLine("Shutting down...");
+            s_Server.Shutdown("Shutting down");
+            Thread.Sleep(2500);
+            Exit(0);
         }
-
-        static int CalculateCycleRate()
+        
+        //Command window thread
+        static void CommandWindow()
         {
-            if (TickCount - lastTick >= 1000)
+            Console.WriteLine("Enter commands below, type help for commands:");
+            do
             {
-                lastCycleRate = cycleRate;
-                cycleRate = 0;
-                lastTick = TickCount;
-            }
-            cycleRate++;
-            return lastCycleRate;
+                Console.Write("");
+                s_userCommand = Console.ReadLine();
+            } while (s_userCommand != null);
         }
 
+        ///Init methods
+        //Creates the player array for use when players join
         void InitPlayerArray()
         {
             Console.WriteLine("Creating player array...");
@@ -73,19 +77,7 @@ namespace Server.Classes
             }
         }
 
-        void SavePlayers()
-        {
-            Console.WriteLine("Saving players...");
-            LogWriter.WriteLog("Saving players...", "Server");
-            for (int i = 0; i < 5; i++)
-            {
-                if (s_Player[i].Name != null)
-                {
-                    s_Player[i].SavePlayerXML();
-                }
-            }
-        }
-
+        //Loads in our maps
         void InitMap()
         {
             Console.WriteLine("Loading maps...");
@@ -106,13 +98,14 @@ namespace Server.Classes
             }
         }
 
+        //Loads in our npcs
         void InitNPC()
         {
             Console.WriteLine("Loading npcs...");
             LogWriter.WriteLog("Loading npcs...", "Server");
 
             for (int i = 0; i < 10; i++)
-            { 
+            {
                 if (!File.Exists("NPCS/Npc" + i + ".bin"))
                 {
                     s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000);
@@ -144,6 +137,49 @@ namespace Server.Classes
             }
         }
 
+        //Final checks before we really get going
+        void InitFinal()
+        {
+            Console.WriteLine("Listening for connections...");
+            LogWriter.WriteLog("Server is listening for connections...", "Server");
+        }
+
+        ///Saving methods
+        //Saves all players online every 300000ms (5 Min)
+        void SavePlayers()
+        {
+            if (TickCount - saveTick > saveTime)
+            {
+                Console.WriteLine("Saving players...");
+                LogWriter.WriteLog("Saving players...", "Server");
+                for (int i = 0; i < 5; i++)
+                {
+                    if (s_Player[i].Name != null)
+                    {
+                        s_Player[i].SavePlayerXML();
+                    }
+                }
+                saveTick = TickCount;
+            }
+        }
+
+        //Saves all online for sever command
+        void SaveAll()
+        {
+            Console.WriteLine("Saving players...");
+            LogWriter.WriteLog("Saving players...", "Server");
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i].Name != null)
+                {
+                    s_Player[i].SavePlayerXML();
+                }
+            }
+            Console.WriteLine("Players saved!");
+        }
+
+        ///Regular check methods
+        //Run our AI script to get the npc's moving and killing shit
         void CheckNpcAI(NetServer s_Server)
         {
             if (TickCount - aiTick > aiTime)
@@ -178,6 +214,7 @@ namespace Server.Classes
             }
         }
 
+        //Check to see if we need to perhaps spawn an npc
         void CheckNPCSpawn(NetServer s_Server)
         {
             //Check for map spawning
@@ -213,6 +250,32 @@ namespace Server.Classes
                 }
             }
             spawnTick = TickCount;
+        }
+
+        //Check to see if the user entered any commands
+        void CheckCommands()
+        {
+            if (s_userCommand != null)
+            {
+                switch (s_userCommand)
+                {
+                    case "shutdown":
+                        isRunning = false;
+                        break;
+                    case "save all":
+                        SaveAll();
+                        break;
+                    case "help":
+                        Console.WriteLine("Commands:");
+                        Console.WriteLine("save all - saves all players");
+                        Console.WriteLine("shutdown - shuts down the server");
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid command!");
+                        break;
+                }
+                s_userCommand = null;
+            }
         }
     }
 }

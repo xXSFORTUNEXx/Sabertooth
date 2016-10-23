@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using System.IO;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Server.Classes
 {
@@ -16,7 +18,15 @@ namespace Server.Classes
         static void Main(string[] args)
         {
             Console.Title = "Sabertooth Server";
-            Console.WriteLine("Initializing Server...");
+            Console.WriteLine(@"  _____       _               _              _   _     ");
+            Console.WriteLine(@" / ____|     | |             | |            | | | |    ");
+            Console.WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            Console.WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            Console.WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            Console.WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            Console.WriteLine(@"                              Created by Steven Fortune");
+            Console.WriteLine("Loading...Please wait...");
+            LogWriter.WriteLog("Loading...Please wait...", "Server");
 
             s_Config = new NetPeerConfiguration("sabertooth");
             s_Config.Port = 14242;
@@ -27,7 +37,6 @@ namespace Server.Classes
 
             Console.WriteLine("Enabling message types...");
             CheckDirectories();
-            LogWriter.WriteLog("Initializing Server...", "Server");
             LogWriter.WriteLog("Checking directories...", "Server");
             Console.WriteLine("Checking directories...");
             s_Server = new NetServer(s_Config);
