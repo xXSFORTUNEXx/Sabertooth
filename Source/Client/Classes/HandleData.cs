@@ -245,6 +245,10 @@ namespace Client.Classes
             c_Player[clientIndex].Map = incMSG.ReadInt32();
             c_Player[clientIndex].Direction = incMSG.ReadInt32();
             c_Player[clientIndex].Sprite = incMSG.ReadInt32();
+            c_Player[clientIndex].Health = incMSG.ReadInt32();
+            c_Player[clientIndex].Experience = incMSG.ReadInt32();
+            c_Player[clientIndex].Money = incMSG.ReadInt32();
+
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
         }
@@ -321,6 +325,9 @@ namespace Client.Classes
                 c_Player[i].Map = incMSG.ReadInt32();
                 c_Player[i].Direction = incMSG.ReadInt32();
                 c_Player[i].Sprite = incMSG.ReadInt32();
+                c_Player[i].Health = incMSG.ReadInt32();
+                c_Player[i].Experience = incMSG.ReadInt32();
+                c_Player[i].Money = incMSG.ReadInt32();
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }

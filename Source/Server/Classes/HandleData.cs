@@ -275,6 +275,10 @@ namespace Server.Classes
             outMSG.Write(s_Player[svrIndex].Map);
             outMSG.Write(s_Player[svrIndex].Direction);
             outMSG.Write(s_Player[svrIndex].Sprite);
+            outMSG.Write(s_Player[svrIndex].Health);
+            outMSG.Write(s_Player[svrIndex].Experience);
+            outMSG.Write(s_Player[svrIndex].Money);
+
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -291,6 +295,9 @@ namespace Server.Classes
                 outMSG.Write(s_Player[i].Map);
                 outMSG.Write(s_Player[i].Direction);
                 outMSG.Write(s_Player[i].Sprite);
+                outMSG.Write(s_Player[i].Health);
+                outMSG.Write(s_Player[i].Experience);
+                outMSG.Write(s_Player[i].Money);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }

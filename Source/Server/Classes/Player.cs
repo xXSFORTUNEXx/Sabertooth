@@ -20,7 +20,11 @@ namespace Server.Classes
         public int Sprite { get; set; } //define sprite
         public int Step;    //define step
 
-        public Player(string name, string pass, int x, int y, int direction, int map, NetConnection conn)
+        public int Health { get; set; }
+        public int Experience { get; set; }
+        public int Money { get; set; }
+
+        public Player(string name, string pass, int x, int y, int direction, int map, int health, int exp, int money, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -28,6 +32,9 @@ namespace Server.Classes
             Y = y;
             Map = map;
             Direction = direction;
+            Health = health;
+            Experience = exp;
+            Money = money;
             Connection = conn;
         }
 
@@ -43,10 +50,7 @@ namespace Server.Classes
             Connection = conn;
         }
 
-        public Player()
-        {
-
-        }
+        public Player() { }
 
         public void SavePlayerXML()
         {
@@ -66,6 +70,9 @@ namespace Server.Classes
             writer.WriteElementString("Map", Map.ToString());
             writer.WriteElementString("Direction", Direction.ToString());
             writer.WriteElementString("Sprite", Sprite.ToString());
+            writer.WriteElementString("Health", Health.ToString());
+            writer.WriteElementString("Experience", Experience.ToString());
+            writer.WriteElementString("Money", Money.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -91,6 +98,12 @@ namespace Server.Classes
             Direction = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Sprite");
             Sprite = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Health");
+            Health = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Experience");
+            Experience = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Money");
+            Money = reader.ReadElementContentAsInt();
             reader.Close();
         }
     }

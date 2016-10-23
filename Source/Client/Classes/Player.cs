@@ -18,6 +18,11 @@ namespace Client.Classes
         public int Direction { get; set; }  //define direction
         public int Sprite { get; set; } //define player sprite
         public int Step;    //the step at which the player is
+
+        public int Health;
+        public int Experience;
+        public int Money;
+
         public bool Moved;  //if they have moved
         public int offsetX; //offset for center screen
         public int offsetY; //offset for center screen
@@ -27,7 +32,7 @@ namespace Client.Classes
         public int tempStep;    //temp step that is saved for movement over packets
         Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
-        public Player(string name, string pass, int x, int y, int direction, int map, NetConnection conn)    //main player contructor if we have all the details
+        public Player(string name, string pass, int x, int y, int direction, int map, int health, int exp, int money, NetConnection conn)    //main player contructor if we have all the details
         {
             Name = name;
             Pass = pass;
@@ -37,6 +42,9 @@ namespace Client.Classes
             offsetX = 12;
             offsetY = 9;
             Direction = direction;
+            Health = health;
+            Experience = exp;
+            Money = money;
             Connection = conn;
         }
 
