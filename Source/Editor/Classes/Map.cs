@@ -63,13 +63,13 @@ namespace Editor.Classes
             }
         }
 
-        public void DrawTile(RenderWindow svrWindow, Vector2f position, int x, int y, int w, int h, int tileSet)
+        public void DrawTile(RenderWindow e_Window, Vector2f position, int x, int y, int w, int h, int tileSet)
         {
             Tiles.Texture = TileSet[tileSet];
             Tiles.TextureRect = new IntRect(x, y, w, h);
             Tiles.Position = position;
 
-            svrWindow.Draw(Tiles);
+            e_Window.Draw(Tiles);
         }
 
         public void LoadMap()

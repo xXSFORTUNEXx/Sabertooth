@@ -10,11 +10,11 @@ namespace Editor.Classes
     class GUI
     {
         //GUI
-        Canvas mapeditorUI;
-        Gwen.Font srvrFont;
+        Canvas e_Canvas;
+        Gwen.Font e_Font;
         Gwen.Renderer.SFML mapRenderer;
-        Map editorMap;
-        public NPC editorNpc;
+        Map e_Map;
+        public NPC e_Npc;
         //Map editor variables
         public int editMode;
         public int editLayer;
@@ -81,12 +81,12 @@ namespace Editor.Classes
         public HorizontalSlider npcNum;
         ComboBox[] npcCombo = new ComboBox[10];
 
-        public GUI(Canvas svrCanvas, Gwen.Font svrFont, Gwen.Renderer.SFML gwenRenderer, Map editMap)
+        public GUI(Canvas e_Canvas, Gwen.Font e_Font, Gwen.Renderer.SFML gwenRenderer, Map e_Map)
         {
-            mapeditorUI = svrCanvas;
-            srvrFont = svrFont;
+            this.e_Canvas = e_Canvas;
+            this.e_Font = e_Font;
             mapRenderer = gwenRenderer;
-            editorMap = editMap;
+            this.e_Map = e_Map;
         }
 
         //Creating of the windows
@@ -342,7 +342,7 @@ namespace Editor.Classes
         //All control events
         private void LoadmapBtn_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            editorMap.LoadMap();
+            e_Map.LoadMap();
             Console.WriteLine("Loading Map...");
         }
 
@@ -355,44 +355,44 @@ namespace Editor.Classes
                     switch (editLayer)
                     {
                         case (int)TileLayers.Ground:
-                            editorMap.Ground[x, y].tileX = 0;
-                            editorMap.Ground[x, y].tileY = 0;
-                            editorMap.Ground[x, y].tileW = 0;
-                            editorMap.Ground[x, y].tileH = 0;
-                            editorMap.Ground[x, y].Tileset = 0;
-                            editorMap.Ground[x, y].type = 0;
+                            e_Map.Ground[x, y].tileX = 0;
+                            e_Map.Ground[x, y].tileY = 0;
+                            e_Map.Ground[x, y].tileW = 0;
+                            e_Map.Ground[x, y].tileH = 0;
+                            e_Map.Ground[x, y].Tileset = 0;
+                            e_Map.Ground[x, y].type = 0;
                             break;
                         case (int)TileLayers.Mask:
-                            editorMap.Mask[x, y].tileX = 0;
-                            editorMap.Mask[x, y].tileY = 0;
-                            editorMap.Mask[x, y].tileW = 0;
-                            editorMap.Mask[x, y].tileH = 0;
-                            editorMap.Mask[x, y].Tileset = 0;
-                            editorMap.Mask[x, y].type = 0;
+                            e_Map.Mask[x, y].tileX = 0;
+                            e_Map.Mask[x, y].tileY = 0;
+                            e_Map.Mask[x, y].tileW = 0;
+                            e_Map.Mask[x, y].tileH = 0;
+                            e_Map.Mask[x, y].Tileset = 0;
+                            e_Map.Mask[x, y].type = 0;
                             break;
                         case (int)TileLayers.MaskA:
-                            editorMap.MaskA[x, y].tileX = 0;
-                            editorMap.MaskA[x, y].tileY = 0;
-                            editorMap.MaskA[x, y].tileW = 0;
-                            editorMap.MaskA[x, y].tileH = 0;
-                            editorMap.MaskA[x, y].Tileset = 0;
-                            editorMap.MaskA[x, y].type = 0;
+                            e_Map.MaskA[x, y].tileX = 0;
+                            e_Map.MaskA[x, y].tileY = 0;
+                            e_Map.MaskA[x, y].tileW = 0;
+                            e_Map.MaskA[x, y].tileH = 0;
+                            e_Map.MaskA[x, y].Tileset = 0;
+                            e_Map.MaskA[x, y].type = 0;
                             break;
                         case (int)TileLayers.Fringe:
-                            editorMap.Fringe[x, y].tileX = 0;
-                            editorMap.Fringe[x, y].tileY = 0;
-                            editorMap.Fringe[x, y].tileW = 0;
-                            editorMap.Fringe[x, y].tileH = 0;
-                            editorMap.Fringe[x, y].Tileset = 0;
-                            editorMap.Fringe[x, y].type = 0;
+                            e_Map.Fringe[x, y].tileX = 0;
+                            e_Map.Fringe[x, y].tileY = 0;
+                            e_Map.Fringe[x, y].tileW = 0;
+                            e_Map.Fringe[x, y].tileH = 0;
+                            e_Map.Fringe[x, y].Tileset = 0;
+                            e_Map.Fringe[x, y].type = 0;
                             break;
                         case (int)TileLayers.FringeA:
-                            editorMap.FringeA[x, y].tileX = 0;
-                            editorMap.FringeA[x, y].tileY = 0;
-                            editorMap.FringeA[x, y].tileW = 0;
-                            editorMap.FringeA[x, y].tileH = 0;
-                            editorMap.FringeA[x, y].Tileset = 0;
-                            editorMap.FringeA[x, y].type = 0;
+                            e_Map.FringeA[x, y].tileX = 0;
+                            e_Map.FringeA[x, y].tileY = 0;
+                            e_Map.FringeA[x, y].tileW = 0;
+                            e_Map.FringeA[x, y].tileH = 0;
+                            e_Map.FringeA[x, y].Tileset = 0;
+                            e_Map.FringeA[x, y].type = 0;
                             break;
                     }
                 }
@@ -409,44 +409,44 @@ namespace Editor.Classes
                     switch (editLayer)
                     {
                         case (int)TileLayers.Ground:
-                            editorMap.Ground[x, y].tileX = edittileX * picX;
-                            editorMap.Ground[x, y].tileY = edittileY * picY;
-                            editorMap.Ground[x, y].tileW = picX;
-                            editorMap.Ground[x, y].tileH = picY;
-                            editorMap.Ground[x, y].Tileset = editTileset;
-                            editorMap.Ground[x, y].type = editType;
+                            e_Map.Ground[x, y].tileX = edittileX * picX;
+                            e_Map.Ground[x, y].tileY = edittileY * picY;
+                            e_Map.Ground[x, y].tileW = picX;
+                            e_Map.Ground[x, y].tileH = picY;
+                            e_Map.Ground[x, y].Tileset = editTileset;
+                            e_Map.Ground[x, y].type = editType;
                             break;
                         case (int)TileLayers.Mask:
-                            editorMap.Mask[x, y].tileX = edittileX * picX;
-                            editorMap.Mask[x, y].tileY = edittileY * picY;
-                            editorMap.Mask[x, y].tileW = picX;
-                            editorMap.Mask[x, y].tileH = picY;
-                            editorMap.Mask[x, y].Tileset = editTileset;
-                            editorMap.Mask[x, y].type = editType;
+                            e_Map.Mask[x, y].tileX = edittileX * picX;
+                            e_Map.Mask[x, y].tileY = edittileY * picY;
+                            e_Map.Mask[x, y].tileW = picX;
+                            e_Map.Mask[x, y].tileH = picY;
+                            e_Map.Mask[x, y].Tileset = editTileset;
+                            e_Map.Mask[x, y].type = editType;
                             break;
                         case (int)TileLayers.MaskA:
-                            editorMap.MaskA[x, y].tileX = edittileX * picX;
-                            editorMap.MaskA[x, y].tileY = edittileY * picY;
-                            editorMap.MaskA[x, y].tileW = picX;
-                            editorMap.MaskA[x, y].tileH = picY;
-                            editorMap.MaskA[x, y].Tileset = editTileset;
-                            editorMap.MaskA[x, y].type = editType;
+                            e_Map.MaskA[x, y].tileX = edittileX * picX;
+                            e_Map.MaskA[x, y].tileY = edittileY * picY;
+                            e_Map.MaskA[x, y].tileW = picX;
+                            e_Map.MaskA[x, y].tileH = picY;
+                            e_Map.MaskA[x, y].Tileset = editTileset;
+                            e_Map.MaskA[x, y].type = editType;
                             break;
                         case (int)TileLayers.Fringe:
-                            editorMap.Fringe[x, y].tileX = edittileX * picX;
-                            editorMap.Fringe[x, y].tileY = edittileY * picY;
-                            editorMap.Fringe[x, y].tileW = picX;
-                            editorMap.Fringe[x, y].tileH = picY;
-                            editorMap.Fringe[x, y].Tileset = editTileset;
-                            editorMap.Fringe[x, y].type = editType;
+                            e_Map.Fringe[x, y].tileX = edittileX * picX;
+                            e_Map.Fringe[x, y].tileY = edittileY * picY;
+                            e_Map.Fringe[x, y].tileW = picX;
+                            e_Map.Fringe[x, y].tileH = picY;
+                            e_Map.Fringe[x, y].Tileset = editTileset;
+                            e_Map.Fringe[x, y].type = editType;
                             break;
                         case (int)TileLayers.FringeA:
-                            editorMap.FringeA[x, y].tileX = edittileX * picX;
-                            editorMap.FringeA[x, y].tileY = edittileY * picY;
-                            editorMap.FringeA[x, y].tileW = picX;
-                            editorMap.FringeA[x, y].tileH = picY;
-                            editorMap.FringeA[x, y].Tileset = editTileset;
-                            editorMap.FringeA[x, y].type = editType;
+                            e_Map.FringeA[x, y].tileX = edittileX * picX;
+                            e_Map.FringeA[x, y].tileY = edittileY * picY;
+                            e_Map.FringeA[x, y].tileW = picX;
+                            e_Map.FringeA[x, y].tileH = picY;
+                            e_Map.FringeA[x, y].Tileset = editTileset;
+                            e_Map.FringeA[x, y].type = editType;
                             break;
                     }
                 }
@@ -456,7 +456,7 @@ namespace Editor.Classes
 
         private void SavemapBtn_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            editorMap.SaveMap();
+            e_Map.SaveMap();
             Console.WriteLine("Map Saved!");
         }
 
@@ -469,15 +469,15 @@ namespace Editor.Classes
         {
             if (behaviorCombo.SelectedItem.Name == "fri")
             {
-                editorNpc.Behavior = 0;
+                e_Npc.Behavior = 0;
             }
             else if (behaviorCombo.SelectedItem.Name == "pas")
             {
-                editorNpc.Behavior = 1;
+                e_Npc.Behavior = 1;
             }
             else
             {
-                editorNpc.Behavior = 2;
+                e_Npc.Behavior = 2;
             }
         }
 
@@ -508,16 +508,16 @@ namespace Editor.Classes
 
         private void NpcOpen_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            if (editorNpc == null) { return; }
+            if (e_Npc == null) { return; }
 
-            editorNpc.LoadNPC();
+            e_Npc.LoadNPC();
             if (npcWin.IsVisible != true) { CreateNpcEditWindow(sender.GetCanvas()); }
             LoadNpcDataIntoUI();
         }
 
         private void NpcSave_Clicked(Base sender, EventArgs arguments)
         {
-            if (editorNpc == null) { return; }
+            if (e_Npc == null) { return; }
 
             SaveNpcDataFromUI();
         }
@@ -614,7 +614,7 @@ namespace Editor.Classes
         private void npcCombo_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
         {
             int index = Array.IndexOf(npcCombo, (ComboBox)sender);
-            editorMap.mapNpc[index].npcNum = (int)arguments.SelectedItem.UserData;
+            e_Map.mapNpc[index].npcNum = (int)arguments.SelectedItem.UserData;
         }
 
         private void LayerGroup_SelectionChanged(Base sender, ItemSelectedEventArgs arguments)
@@ -700,34 +700,34 @@ namespace Editor.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                if (editorMap.mapNpc[i] != null)
+                if (e_Map.mapNpc[i] != null)
                 {
-                    npcCombo[i].SelectByUserData(editorMap.mapNpc[i].npcNum);
+                    npcCombo[i].SelectByUserData(e_Map.mapNpc[i].npcNum);
                 }
             }
         }
 
         public void LoadNpcDataIntoUI()
         {
-            if (npcWin == null || editorNpc == null) { return; }
+            if (npcWin == null || e_Npc == null) { return; }
 
-            nameText.SetText(editorNpc.Name);
-            dirLabel.SetText("Direction: " + editorNpc.Direction);
-            dirScroll.Value = editorNpc.Direction;
-            spriteLabel.SetText("Sprite: " + editorNpc.Sprite);
-            spriteScroll.Value = editorNpc.Sprite;
-            spawntimeLabel.SetText("Spawn Time (MS): " + editorNpc.SpawnTime);
-            spawntimeScroll.Value = editorNpc.SpawnTime;
-            behaviorCombo.SelectByUserData(editorNpc.Behavior);
+            nameText.SetText(e_Npc.Name);
+            dirLabel.SetText("Direction: " + e_Npc.Direction);
+            dirScroll.Value = e_Npc.Direction;
+            spriteLabel.SetText("Sprite: " + e_Npc.Sprite);
+            spriteScroll.Value = e_Npc.Sprite;
+            spawntimeLabel.SetText("Spawn Time (MS): " + e_Npc.SpawnTime);
+            spawntimeScroll.Value = e_Npc.SpawnTime;
+            behaviorCombo.SelectByUserData(e_Npc.Behavior);
         }
 
         public void SaveNpcDataFromUI()
         {
-            editorNpc.Name = nameText.Text;
-            editorNpc.Direction = (int)dirScroll.Value;
-            editorNpc.Sprite = (int)spriteScroll.Value;
-            editorNpc.SpawnTime = (int)spawntimeScroll.Value;
-            editorNpc.SaveNPC();
+            e_Npc.Name = nameText.Text;
+            e_Npc.Direction = (int)dirScroll.Value;
+            e_Npc.Sprite = (int)spriteScroll.Value;
+            e_Npc.SpawnTime = (int)spawntimeScroll.Value;
+            e_Npc.SaveNPC();
             npcWin.Close();
         }
     }

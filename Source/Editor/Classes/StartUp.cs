@@ -30,10 +30,10 @@ namespace Editor.Classes
             Console.WriteLine("Checking for existing map...");
             if (!File.Exists("Maps/Map.bin"))   //check and see if the map file exists
             {
-                DefaultMap(editor.editMap);  //call the default map method
+                DefaultMap(editor.e_Map);  //call the default map method
             }
             Console.WriteLine("Loading map...");
-            editor.editMap.LoadDeafultMap();    //load the map.bin from /maps/
+            editor.e_Map.LoadDeafultMap();    //load the map.bin from /maps/
 
             Console.WriteLine("Checking for npc directory...");
             if (!Directory.Exists("NPCS"))

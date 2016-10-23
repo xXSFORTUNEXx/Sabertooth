@@ -19,8 +19,8 @@ namespace Editor.Classes
         public int Owner { get; set; }
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
-        public Texture[] npcTextures = new Texture[200];
-        public Sprite npcSprite = new Sprite();
+        public Texture[] e_npcTectures = new Texture[200];
+        public Sprite e_npcSprite = new Sprite();
 
         public NPC() { }
 

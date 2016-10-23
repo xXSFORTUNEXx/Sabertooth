@@ -15,21 +15,21 @@ namespace Editor.Classes
     class Editor
     {
         //Editor
-        public RenderWindow editorWindow;
-        static GUI editorUI;
-        static Canvas Canvas;
-        static Gwen.Input.SFML svrInput;
-        View editorView = new View();
+        public RenderWindow e_Window;
+        static GUI e_GUI;
+        static Canvas e_Canvas;
+        static Gwen.Input.SFML e_Input;
+        View e_View = new View();
         //Map editor 
-        public Map editMap = new Map();
-        Texture[] TileSet = new Texture[67];
-        Sprite Tiles = new Sprite();
-        Sprite editorTile = new Sprite();
-        Sprite editorGrid = new Sprite();
-        RenderText svrText = new RenderText();
-        RectangleShape selectTile = new RectangleShape(new Vector2f(32, 32));
+        public Map e_Map = new Map();
+        Texture[] e_Tileset = new Texture[67];
+        Sprite e_Tiles = new Sprite();
+        Sprite e_Tile = new Sprite();
+        Sprite e_Grid = new Sprite();
+        RenderText e_Text = new RenderText();
+        RectangleShape e_selectTile = new RectangleShape(new Vector2f(32, 32));
         //Npc editor
-        public NPC editNpc;
+        public NPC e_Npc;
         public bool inNpcEditor;
         //Editor
         public int viewX { get; set; }
@@ -85,24 +85,24 @@ namespace Editor.Classes
 
             for (int i = 0; i < 67; i++)
             {
-                TileSet[i].Dispose();
+                e_Tileset[i].Dispose();
             }
-            TileSet = null;
+            e_Tileset = null;
 
-            editMap.Dispose();
-            editMap = null;
-            editorView.Dispose();
-            editorView = null;
-            Tiles.Dispose();
-            Tiles = null;
-            editorTile.Dispose();
-            editorTile = null;
-            editorGrid.Dispose();
-            editorGrid = null;
-            svrText.Dispose();
-            svrText = null;
-            selectTile.Dispose();
-            selectTile = null;
+            e_Map.Dispose();
+            e_Map = null;
+            e_View.Dispose();
+            e_View = null;
+            e_Tiles.Dispose();
+            e_Tiles = null;
+            e_Tile.Dispose();
+            e_Tile = null;
+            e_Grid.Dispose();
+            e_Grid = null;
+            e_Text.Dispose();
+            e_Text = null;
+            e_selectTile.Dispose();
+            e_selectTile = null;
 
             disposed = true;
         }
@@ -112,7 +112,7 @@ namespace Editor.Classes
             Console.WriteLine("Loading tilesets...");
             for (int i = 0; i < 67; i++)
             {
-                TileSet[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
+                e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
             selectedLayer = (int)TileLayers.Ground;
             selectedType = (int)TileType.None;
@@ -127,41 +127,41 @@ namespace Editor.Classes
 
         public void EditorLoop()
         {
-            editorWindow = new RenderWindow(new VideoMode(1216, 608), "Editor Suite");
-            editorWindow.Closed += new EventHandler(onClose);
-            editorWindow.MouseMoved += new EventHandler<MouseMoveEventArgs>(onMouseMove);
-            editorWindow.KeyPressed += new EventHandler<KeyEventArgs>(onKeyPress);
-            editorWindow.KeyReleased += new EventHandler<KeyEventArgs>(onKeyReleased);
-            editorWindow.TextEntered += new EventHandler<TextEventArgs>(onTextEntered);
-            editorWindow.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(onMouseButton);
-            editorWindow.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(onMouseButtonRelease);
-            editorWindow.MouseWheelScrolled += new EventHandler<MouseWheelScrollEventArgs>(onMouseScroll);
+            e_Window = new RenderWindow(new VideoMode(1216, 608), "Editor Suite");
+            e_Window.Closed += new EventHandler(onClose);
+            e_Window.MouseMoved += new EventHandler<MouseMoveEventArgs>(onMouseMove);
+            e_Window.KeyPressed += new EventHandler<KeyEventArgs>(onKeyPress);
+            e_Window.KeyReleased += new EventHandler<KeyEventArgs>(onKeyReleased);
+            e_Window.TextEntered += new EventHandler<TextEventArgs>(onTextEntered);
+            e_Window.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(onMouseButton);
+            e_Window.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(onMouseButtonRelease);
+            e_Window.MouseWheelScrolled += new EventHandler<MouseWheelScrollEventArgs>(onMouseScroll);
 
             //setup gwen
-            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(editorWindow);
+            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(e_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
             Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
-            Canvas = new Canvas(skin);
-            Canvas.SetSize(1216, 608);
-            Canvas.ShouldDrawBackground = true;
-            Canvas.BackgroundColor = System.Drawing.Color.Transparent;
-            Canvas.KeyboardInputEnabled = true;
-            svrInput = new Gwen.Input.SFML();   //attach gwen and sfml input classes
-            svrInput.Initialize(Canvas, editorWindow);  //initalize the input both with the canvas and the window
-            editorUI = new GUI(Canvas, defaultFont, gwenRenderer, editMap);
+            e_Canvas = new Canvas(skin);
+            e_Canvas.SetSize(1216, 608);
+            e_Canvas.ShouldDrawBackground = true;
+            e_Canvas.BackgroundColor = System.Drawing.Color.Transparent;
+            e_Canvas.KeyboardInputEnabled = true;
+            e_Input = new Gwen.Input.SFML();   //attach gwen and sfml input classes
+            e_Input.Initialize(e_Canvas, e_Window);  //initalize the input both with the canvas and the window
+            e_GUI = new GUI(e_Canvas, defaultFont, gwenRenderer, e_Map);
 
-            while (editorWindow.IsOpen == true)
+            while (e_Window.IsOpen == true)
             {
-                editorWindow.DispatchEvents();
+                e_Window.DispatchEvents();
 
-                editorView.Reset(new FloatRect(0, 0, 1216, 608));
-                editorView.Move(new Vector2f(viewX * picX, viewY * picY));
-                editorWindow.SetView(editorView);
+                e_View.Reset(new FloatRect(0, 0, 1216, 608));
+                e_View.Move(new Vector2f(viewX * picX, viewY * picY));
+                e_Window.SetView(e_View);
 
-                editorWindow.Clear();
+                e_Window.Clear();
 
                 if (utiWindow == true)
                 {
@@ -175,9 +175,9 @@ namespace Editor.Classes
                 {
                     DrawMapEditingScreen();
                 }
-                editorWindow.Display();
+                e_Window.Display();
             }
-            Canvas.Dispose();
+            e_Canvas.Dispose();
             Thread.Sleep(650);
             Exit(0);
         }
@@ -191,14 +191,14 @@ namespace Editor.Classes
         public void onKeyPress(object sender, KeyEventArgs e)
         {
             RenderWindow mainWindow = (RenderWindow)sender;
-            svrInput.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
+            e_Input.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
             CheckDevelopmentKeys(mainWindow, e);
             CheckMovementKeys(e);
         }
 
         public void onMouseMove(object sender, MouseMoveEventArgs e)
         {
-            svrInput.ProcessMessage(e);
+            e_Input.ProcessMessage(e);
 
             RenderWindow editorWindow = (RenderWindow)sender;
             CurX = e.X;
@@ -228,21 +228,21 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorBrushSize; y++)
                                             {
-                                                editMap.Ground[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                editMap.Ground[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                editMap.Ground[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Ground[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Ground[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Ground[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                e_Map.Ground[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                e_Map.Ground[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Ground[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Ground[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        editMap.Ground[clickX, clickY].tileX = editorTileX * picX;
-                                        editMap.Ground[clickX, clickY].tileY = editorTileY * picY;
-                                        editMap.Ground[clickX, clickY].tileH = picX;
-                                        editMap.Ground[clickX, clickY].tileW = picY;
-                                        editMap.Ground[clickX, clickY].Tileset = editorTileset;
+                                        e_Map.Ground[clickX, clickY].tileX = editorTileX * picX;
+                                        e_Map.Ground[clickX, clickY].tileY = editorTileY * picY;
+                                        e_Map.Ground[clickX, clickY].tileH = picX;
+                                        e_Map.Ground[clickX, clickY].tileW = picY;
+                                        e_Map.Ground[clickX, clickY].Tileset = editorTileset;
                                     }
                                     break;
                                 case (int)TileLayers.Mask:
@@ -252,21 +252,21 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorBrushSize; y++)
                                             {
-                                                editMap.Mask[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                editMap.Mask[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                editMap.Mask[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Mask[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Mask[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Mask[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                e_Map.Mask[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                e_Map.Mask[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Mask[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Mask[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        editMap.Mask[clickX, clickY].tileX = editorTileX * picX;
-                                        editMap.Mask[clickX, clickY].tileY = editorTileY * picY;
-                                        editMap.Mask[clickX, clickY].tileH = picX;
-                                        editMap.Mask[clickX, clickY].tileW = picY;
-                                        editMap.Mask[clickX, clickY].Tileset = editorTileset;
+                                        e_Map.Mask[clickX, clickY].tileX = editorTileX * picX;
+                                        e_Map.Mask[clickX, clickY].tileY = editorTileY * picY;
+                                        e_Map.Mask[clickX, clickY].tileH = picX;
+                                        e_Map.Mask[clickX, clickY].tileW = picY;
+                                        e_Map.Mask[clickX, clickY].Tileset = editorTileset;
                                     }
                                     break;
                                 case (int)TileLayers.Fringe:
@@ -276,21 +276,21 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorBrushSize; y++)
                                             {
-                                                editMap.Fringe[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                editMap.Fringe[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                editMap.Fringe[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Fringe[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        editMap.Fringe[clickX, clickY].tileX = editorTileX * picX;
-                                        editMap.Fringe[clickX, clickY].tileY = editorTileY * picY;
-                                        editMap.Fringe[clickX, clickY].tileH = picX;
-                                        editMap.Fringe[clickX, clickY].tileW = picY;
-                                        editMap.Fringe[clickX, clickY].Tileset = editorTileset;
+                                        e_Map.Fringe[clickX, clickY].tileX = editorTileX * picX;
+                                        e_Map.Fringe[clickX, clickY].tileY = editorTileY * picY;
+                                        e_Map.Fringe[clickX, clickY].tileH = picX;
+                                        e_Map.Fringe[clickX, clickY].tileW = picY;
+                                        e_Map.Fringe[clickX, clickY].Tileset = editorTileset;
                                     }
                                     break;
                                 case (int)TileLayers.MaskA:
@@ -300,21 +300,21 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorBrushSize; y++)
                                             {
-                                                editMap.MaskA[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                editMap.MaskA[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                editMap.MaskA[clickX + x, clickY + y].tileH = picX;
-                                                editMap.MaskA[clickX + x, clickY + y].tileW = picY;
-                                                editMap.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        editMap.MaskA[clickX, clickY].tileX = editorTileX * picX;
-                                        editMap.MaskA[clickX, clickY].tileY = editorTileY * picY;
-                                        editMap.MaskA[clickX, clickY].tileH = picX;
-                                        editMap.MaskA[clickX, clickY].tileW = picY;
-                                        editMap.MaskA[clickX, clickY].Tileset = editorTileset;
+                                        e_Map.MaskA[clickX, clickY].tileX = editorTileX * picX;
+                                        e_Map.MaskA[clickX, clickY].tileY = editorTileY * picY;
+                                        e_Map.MaskA[clickX, clickY].tileH = picX;
+                                        e_Map.MaskA[clickX, clickY].tileW = picY;
+                                        e_Map.MaskA[clickX, clickY].Tileset = editorTileset;
                                     }
                                     break;
                                 case (int)TileLayers.FringeA:
@@ -324,29 +324,29 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorBrushSize; y++)
                                             {
-                                                editMap.FringeA[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                editMap.FringeA[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                editMap.FringeA[clickX + x, clickY + y].tileH = picX;
-                                                editMap.FringeA[clickX + x, clickY + y].tileW = picY;
-                                                editMap.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        editMap.FringeA[clickX, clickY].tileX = editorTileX * picX;
-                                        editMap.FringeA[clickX, clickY].tileY = editorTileY * picY;
-                                        editMap.FringeA[clickX, clickY].tileH = picX;
-                                        editMap.FringeA[clickX, clickY].tileW = picY;
-                                        editMap.FringeA[clickX, clickY].Tileset = editorTileset;
+                                        e_Map.FringeA[clickX, clickY].tileX = editorTileX * picX;
+                                        e_Map.FringeA[clickX, clickY].tileY = editorTileY * picY;
+                                        e_Map.FringeA[clickX, clickY].tileH = picX;
+                                        e_Map.FringeA[clickX, clickY].tileW = picY;
+                                        e_Map.FringeA[clickX, clickY].Tileset = editorTileset;
                                     }
                                     break;
                             }
                         }
                         else if (editMode == (int)EditorModes.Type)
                         {
-                            editMap.Ground[clickX, clickY].type = selectedType;
-                            editMap.Ground[clickX, clickY].spawnNum = selectedNpc;
+                            e_Map.Ground[clickX, clickY].type = selectedType;
+                            e_Map.Ground[clickX, clickY].spawnNum = selectedNpc;
                         }
                     }
                     else if (Mouse.IsButtonPressed(Mouse.Button.Right))
@@ -356,46 +356,46 @@ namespace Editor.Classes
                             switch (selectedLayer)
                             {
                                 case (int)TileLayers.Ground:
-                                    editMap.Ground[clickX, clickY].tileX = 0;
-                                    editMap.Ground[clickX, clickY].tileY = 0;
-                                    editMap.Ground[clickX, clickY].tileH = 0;
-                                    editMap.Ground[clickX, clickY].tileW = 0;
-                                    editMap.Ground[clickX, clickY].Tileset = 0;
+                                    e_Map.Ground[clickX, clickY].tileX = 0;
+                                    e_Map.Ground[clickX, clickY].tileY = 0;
+                                    e_Map.Ground[clickX, clickY].tileH = 0;
+                                    e_Map.Ground[clickX, clickY].tileW = 0;
+                                    e_Map.Ground[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.Mask:
-                                    editMap.Mask[clickX, clickY].tileX = 0;
-                                    editMap.Mask[clickX, clickY].tileY = 0;
-                                    editMap.Mask[clickX, clickY].tileH = 0;
-                                    editMap.Mask[clickX, clickY].tileW = 0;
-                                    editMap.Mask[clickX, clickY].Tileset = 0;
+                                    e_Map.Mask[clickX, clickY].tileX = 0;
+                                    e_Map.Mask[clickX, clickY].tileY = 0;
+                                    e_Map.Mask[clickX, clickY].tileH = 0;
+                                    e_Map.Mask[clickX, clickY].tileW = 0;
+                                    e_Map.Mask[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.Fringe:
-                                    editMap.Fringe[clickX, clickY].tileX = editorTileX * picX;
-                                    editMap.Fringe[clickX, clickY].tileY = editorTileY * picY;
-                                    editMap.Fringe[clickX, clickY].tileH = editorTileH;
-                                    editMap.Fringe[clickX, clickY].tileW = editorTileW;
-                                    editMap.Fringe[clickX, clickY].Tileset = 0;
+                                    e_Map.Fringe[clickX, clickY].tileX = editorTileX * picX;
+                                    e_Map.Fringe[clickX, clickY].tileY = editorTileY * picY;
+                                    e_Map.Fringe[clickX, clickY].tileH = editorTileH;
+                                    e_Map.Fringe[clickX, clickY].tileW = editorTileW;
+                                    e_Map.Fringe[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.MaskA:
-                                    editMap.MaskA[clickX, clickY].tileX = editorTileX * picX;
-                                    editMap.MaskA[clickX, clickY].tileY = editorTileY * picY;
-                                    editMap.MaskA[clickX, clickY].tileH = editorTileH;
-                                    editMap.MaskA[clickX, clickY].tileW = editorTileW;
-                                    editMap.MaskA[clickX, clickY].Tileset = 0;
+                                    e_Map.MaskA[clickX, clickY].tileX = editorTileX * picX;
+                                    e_Map.MaskA[clickX, clickY].tileY = editorTileY * picY;
+                                    e_Map.MaskA[clickX, clickY].tileH = editorTileH;
+                                    e_Map.MaskA[clickX, clickY].tileW = editorTileW;
+                                    e_Map.MaskA[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.FringeA:
-                                    editMap.FringeA[clickX, clickY].tileX = editorTileX * picX;
-                                    editMap.FringeA[clickX, clickY].tileY = editorTileY * picY;
-                                    editMap.FringeA[clickX, clickY].tileH = editorTileH;
-                                    editMap.FringeA[clickX, clickY].tileW = editorTileW;
-                                    editMap.FringeA[clickX, clickY].Tileset = 0;
+                                    e_Map.FringeA[clickX, clickY].tileX = editorTileX * picX;
+                                    e_Map.FringeA[clickX, clickY].tileY = editorTileY * picY;
+                                    e_Map.FringeA[clickX, clickY].tileH = editorTileH;
+                                    e_Map.FringeA[clickX, clickY].tileW = editorTileW;
+                                    e_Map.FringeA[clickX, clickY].Tileset = 0;
                                     break;
                             }
                         }
                         else if (editMode == (int)EditorModes.Type)
                         {
-                            editMap.Ground[clickX, clickY].type = (int)TileType.None;
-                            editMap.Ground[clickX, clickY].spawnNum = 0;
+                            e_Map.Ground[clickX, clickY].type = (int)TileType.None;
+                            e_Map.Ground[clickX, clickY].spawnNum = 0;
                         }
                     }
                 }
@@ -415,7 +415,7 @@ namespace Editor.Classes
 
             if (utiWindow == true)
             {
-                svrInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+                e_Input.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
 
                 try
                 {
@@ -455,11 +455,11 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorTileH; y++)
                                             {
-                                                editMap.Ground[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
-                                                editMap.Ground[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
-                                                editMap.Ground[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Ground[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Ground[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Ground[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
+                                                e_Map.Ground[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
+                                                e_Map.Ground[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Ground[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Ground[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
@@ -471,21 +471,21 @@ namespace Editor.Classes
                                             {
                                                 for (int y = 0; y < editorBrushSize; y++)
                                                 {
-                                                    editMap.Ground[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                    editMap.Ground[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                    editMap.Ground[clickX + x, clickY + y].tileH = picX;
-                                                    editMap.Ground[clickX + x, clickY + y].tileW = picY;
-                                                    editMap.Ground[clickX + x, clickY + y].Tileset = editorTileset;
+                                                    e_Map.Ground[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                    e_Map.Ground[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                    e_Map.Ground[clickX + x, clickY + y].tileH = picX;
+                                                    e_Map.Ground[clickX + x, clickY + y].tileW = picY;
+                                                    e_Map.Ground[clickX + x, clickY + y].Tileset = editorTileset;
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            editMap.Ground[clickX, clickY].tileX = editorTileX * picX;
-                                            editMap.Ground[clickX, clickY].tileY = editorTileY * picY;
-                                            editMap.Ground[clickX, clickY].tileH = picX;
-                                            editMap.Ground[clickX, clickY].tileW = picY;
-                                            editMap.Ground[clickX, clickY].Tileset = editorTileset;
+                                            e_Map.Ground[clickX, clickY].tileX = editorTileX * picX;
+                                            e_Map.Ground[clickX, clickY].tileY = editorTileY * picY;
+                                            e_Map.Ground[clickX, clickY].tileH = picX;
+                                            e_Map.Ground[clickX, clickY].tileW = picY;
+                                            e_Map.Ground[clickX, clickY].Tileset = editorTileset;
                                         }
                                     }
                                     break;
@@ -496,11 +496,11 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorTileH; y++)
                                             {
-                                                editMap.Mask[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
-                                                editMap.Mask[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
-                                                editMap.Mask[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Mask[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Mask[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Mask[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
+                                                e_Map.Mask[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
+                                                e_Map.Mask[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Mask[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Mask[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
@@ -512,21 +512,21 @@ namespace Editor.Classes
                                             {
                                                 for (int y = 0; y < editorBrushSize; y++)
                                                 {
-                                                    editMap.Mask[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                    editMap.Mask[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                    editMap.Mask[clickX + x, clickY + y].tileH = picX;
-                                                    editMap.Mask[clickX + x, clickY + y].tileW = picY;
-                                                    editMap.Mask[clickX + x, clickY + y].Tileset = editorTileset;
+                                                    e_Map.Mask[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                    e_Map.Mask[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                    e_Map.Mask[clickX + x, clickY + y].tileH = picX;
+                                                    e_Map.Mask[clickX + x, clickY + y].tileW = picY;
+                                                    e_Map.Mask[clickX + x, clickY + y].Tileset = editorTileset;
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            editMap.Mask[clickX, clickY].tileX = editorTileX * picX;
-                                            editMap.Mask[clickX, clickY].tileY = editorTileY * picY;
-                                            editMap.Mask[clickX, clickY].tileH = picX;
-                                            editMap.Mask[clickX, clickY].tileW = picY;
-                                            editMap.Mask[clickX, clickY].Tileset = editorTileset;
+                                            e_Map.Mask[clickX, clickY].tileX = editorTileX * picX;
+                                            e_Map.Mask[clickX, clickY].tileY = editorTileY * picY;
+                                            e_Map.Mask[clickX, clickY].tileH = picX;
+                                            e_Map.Mask[clickX, clickY].tileW = picY;
+                                            e_Map.Mask[clickX, clickY].Tileset = editorTileset;
                                         }
                                     }
                                     break;
@@ -537,11 +537,11 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorTileH; y++)
                                             {
-                                                editMap.Fringe[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
-                                                editMap.Fringe[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
-                                                editMap.Fringe[clickX + x, clickY + y].tileH = picX;
-                                                editMap.Fringe[clickX + x, clickY + y].tileW = picY;
-                                                editMap.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.Fringe[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
@@ -553,21 +553,21 @@ namespace Editor.Classes
                                             {
                                                 for (int y = 0; y < editorBrushSize; y++)
                                                 {
-                                                    editMap.Fringe[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                    editMap.Fringe[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                    editMap.Fringe[clickX + x, clickY + y].tileH = picX;
-                                                    editMap.Fringe[clickX + x, clickY + y].tileW = picY;
-                                                    editMap.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
+                                                    e_Map.Fringe[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                    e_Map.Fringe[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                    e_Map.Fringe[clickX + x, clickY + y].tileH = picX;
+                                                    e_Map.Fringe[clickX + x, clickY + y].tileW = picY;
+                                                    e_Map.Fringe[clickX + x, clickY + y].Tileset = editorTileset;
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            editMap.Fringe[clickX, clickY].tileX = editorTileX * picX;
-                                            editMap.Fringe[clickX, clickY].tileY = editorTileY * picY;
-                                            editMap.Fringe[clickX, clickY].tileH = picX;
-                                            editMap.Fringe[clickX, clickY].tileW = picY;
-                                            editMap.Fringe[clickX, clickY].Tileset = editorTileset;
+                                            e_Map.Fringe[clickX, clickY].tileX = editorTileX * picX;
+                                            e_Map.Fringe[clickX, clickY].tileY = editorTileY * picY;
+                                            e_Map.Fringe[clickX, clickY].tileH = picX;
+                                            e_Map.Fringe[clickX, clickY].tileW = picY;
+                                            e_Map.Fringe[clickX, clickY].Tileset = editorTileset;
                                         }
                                     }
                                     break;
@@ -578,11 +578,11 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorTileH; y++)
                                             {
-                                                editMap.MaskA[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
-                                                editMap.MaskA[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
-                                                editMap.MaskA[clickX + x, clickY + y].tileH = picX;
-                                                editMap.MaskA[clickX + x, clickY + y].tileW = picY;
-                                                editMap.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.MaskA[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
@@ -594,21 +594,21 @@ namespace Editor.Classes
                                             {
                                                 for (int y = 0; y < editorBrushSize; y++)
                                                 {
-                                                    editMap.MaskA[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                    editMap.MaskA[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                    editMap.MaskA[clickX + x, clickY + y].tileH = picX;
-                                                    editMap.MaskA[clickX + x, clickY + y].tileW = picY;
-                                                    editMap.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                    e_Map.MaskA[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                    e_Map.MaskA[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                    e_Map.MaskA[clickX + x, clickY + y].tileH = picX;
+                                                    e_Map.MaskA[clickX + x, clickY + y].tileW = picY;
+                                                    e_Map.MaskA[clickX + x, clickY + y].Tileset = editorTileset;
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            editMap.MaskA[clickX, clickY].tileX = editorTileX * picX;
-                                            editMap.MaskA[clickX, clickY].tileY = editorTileY * picY;
-                                            editMap.MaskA[clickX, clickY].tileH = picX;
-                                            editMap.MaskA[clickX, clickY].tileW = picY;
-                                            editMap.MaskA[clickX, clickY].Tileset = editorTileset;
+                                            e_Map.MaskA[clickX, clickY].tileX = editorTileX * picX;
+                                            e_Map.MaskA[clickX, clickY].tileY = editorTileY * picY;
+                                            e_Map.MaskA[clickX, clickY].tileH = picX;
+                                            e_Map.MaskA[clickX, clickY].tileW = picY;
+                                            e_Map.MaskA[clickX, clickY].Tileset = editorTileset;
                                         }
                                     }
                                     break;
@@ -619,11 +619,11 @@ namespace Editor.Classes
                                         {
                                             for (int y = 0; y < editorTileH; y++)
                                             {
-                                                editMap.FringeA[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
-                                                editMap.FringeA[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
-                                                editMap.FringeA[clickX + x, clickY + y].tileH = picX;
-                                                editMap.FringeA[clickX + x, clickY + y].tileW = picY;
-                                                editMap.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileX = (editorTileX + x) * picX;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileY = (editorTileY + y) * picY;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileH = picX;
+                                                e_Map.FringeA[clickX + x, clickY + y].tileW = picY;
+                                                e_Map.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
                                             }
                                         }
                                     }
@@ -635,21 +635,21 @@ namespace Editor.Classes
                                             {
                                                 for (int y = 0; y < editorBrushSize; y++)
                                                 {
-                                                    editMap.FringeA[clickX + x, clickY + y].tileX = editorTileX * picX;
-                                                    editMap.FringeA[clickX + x, clickY + y].tileY = editorTileY * picY;
-                                                    editMap.FringeA[clickX + x, clickY + y].tileH = picX;
-                                                    editMap.FringeA[clickX + x, clickY + y].tileW = picY;
-                                                    editMap.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
+                                                    e_Map.FringeA[clickX + x, clickY + y].tileX = editorTileX * picX;
+                                                    e_Map.FringeA[clickX + x, clickY + y].tileY = editorTileY * picY;
+                                                    e_Map.FringeA[clickX + x, clickY + y].tileH = picX;
+                                                    e_Map.FringeA[clickX + x, clickY + y].tileW = picY;
+                                                    e_Map.FringeA[clickX + x, clickY + y].Tileset = editorTileset;
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            editMap.FringeA[clickX, clickY].tileX = editorTileX * picX;
-                                            editMap.FringeA[clickX, clickY].tileY = editorTileY * picY;
-                                            editMap.FringeA[clickX, clickY].tileH = picX;
-                                            editMap.FringeA[clickX, clickY].tileW = picY;
-                                            editMap.FringeA[clickX, clickY].Tileset = editorTileset;
+                                            e_Map.FringeA[clickX, clickY].tileX = editorTileX * picX;
+                                            e_Map.FringeA[clickX, clickY].tileY = editorTileY * picY;
+                                            e_Map.FringeA[clickX, clickY].tileH = picX;
+                                            e_Map.FringeA[clickX, clickY].tileW = picY;
+                                            e_Map.FringeA[clickX, clickY].Tileset = editorTileset;
                                         }
                                     }
                                     break;
@@ -657,8 +657,8 @@ namespace Editor.Classes
                         }
                         else if (editMode == (int)EditorModes.Type)
                         {
-                            editMap.Ground[clickX, clickY].type = selectedType;
-                            editMap.Ground[clickX, clickY].spawnNum = selectedNpc;
+                            e_Map.Ground[clickX, clickY].type = selectedType;
+                            e_Map.Ground[clickX, clickY].spawnNum = selectedNpc;
                         }
                     }
                     else if (e.Button == Mouse.Button.Right)
@@ -670,82 +670,82 @@ namespace Editor.Classes
                             switch (selectedLayer)
                             {
                                 case (int)TileLayers.Ground:
-                                    editMap.Ground[clickX, clickY].tileX = 0;
-                                    editMap.Ground[clickX, clickY].tileY = 0;
-                                    editMap.Ground[clickX, clickY].tileH = 0;
-                                    editMap.Ground[clickX, clickY].tileW = 0;
-                                    editMap.Ground[clickX, clickY].Tileset = 0;
+                                    e_Map.Ground[clickX, clickY].tileX = 0;
+                                    e_Map.Ground[clickX, clickY].tileY = 0;
+                                    e_Map.Ground[clickX, clickY].tileH = 0;
+                                    e_Map.Ground[clickX, clickY].tileW = 0;
+                                    e_Map.Ground[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.Mask:
-                                    editMap.Mask[clickX, clickY].tileX = 0;
-                                    editMap.Mask[clickX, clickY].tileY = 0;
-                                    editMap.Mask[clickX, clickY].tileH = 0;
-                                    editMap.Mask[clickX, clickY].tileW = 0;
-                                    editMap.Mask[clickX, clickY].Tileset = 0;
+                                    e_Map.Mask[clickX, clickY].tileX = 0;
+                                    e_Map.Mask[clickX, clickY].tileY = 0;
+                                    e_Map.Mask[clickX, clickY].tileH = 0;
+                                    e_Map.Mask[clickX, clickY].tileW = 0;
+                                    e_Map.Mask[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.Fringe:
-                                    editMap.Fringe[clickX, clickY].tileX = 0;
-                                    editMap.Fringe[clickX, clickY].tileY = 0;
-                                    editMap.Fringe[clickX, clickY].tileH = 0;
-                                    editMap.Fringe[clickX, clickY].tileW = 0;
-                                    editMap.Fringe[clickX, clickY].Tileset = 0;
+                                    e_Map.Fringe[clickX, clickY].tileX = 0;
+                                    e_Map.Fringe[clickX, clickY].tileY = 0;
+                                    e_Map.Fringe[clickX, clickY].tileH = 0;
+                                    e_Map.Fringe[clickX, clickY].tileW = 0;
+                                    e_Map.Fringe[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.MaskA:
-                                    editMap.MaskA[clickX, clickY].tileX = 0;
-                                    editMap.MaskA[clickX, clickY].tileY = 0;
-                                    editMap.MaskA[clickX, clickY].tileH = 0;
-                                    editMap.MaskA[clickX, clickY].tileW = 0;
-                                    editMap.MaskA[clickX, clickY].Tileset = 0;
+                                    e_Map.MaskA[clickX, clickY].tileX = 0;
+                                    e_Map.MaskA[clickX, clickY].tileY = 0;
+                                    e_Map.MaskA[clickX, clickY].tileH = 0;
+                                    e_Map.MaskA[clickX, clickY].tileW = 0;
+                                    e_Map.MaskA[clickX, clickY].Tileset = 0;
                                     break;
                                 case (int)TileLayers.FringeA:
-                                    editMap.FringeA[clickX, clickY].tileX = 0;
-                                    editMap.FringeA[clickX, clickY].tileY = 0;
-                                    editMap.FringeA[clickX, clickY].tileH = 0;
-                                    editMap.FringeA[clickX, clickY].tileW = 0;
-                                    editMap.FringeA[clickX, clickY].Tileset = 0;
+                                    e_Map.FringeA[clickX, clickY].tileX = 0;
+                                    e_Map.FringeA[clickX, clickY].tileY = 0;
+                                    e_Map.FringeA[clickX, clickY].tileH = 0;
+                                    e_Map.FringeA[clickX, clickY].tileW = 0;
+                                    e_Map.FringeA[clickX, clickY].Tileset = 0;
                                     break;
                             }
                         }
                         else if (editMode == (int)EditorModes.Type)
                         {
-                            editMap.Ground[clickX, clickY].type = (int)TileType.None;
-                            editMap.Ground[clickX, clickY].spawnNum = 0;
+                            e_Map.Ground[clickX, clickY].type = (int)TileType.None;
+                            e_Map.Ground[clickX, clickY].spawnNum = 0;
                         }
                     }
                     else if (e.Button == Mouse.Button.Middle)
                     {
                         isInput = "Click: Middle";
 
-                        editMap.Ground[clickX, clickY].tileX = 0;
-                        editMap.Ground[clickX, clickY].tileY = 32;
-                        editMap.Ground[clickX, clickY].tileH = 32;
-                        editMap.Ground[clickX, clickY].tileW = 32;
-                        editMap.Ground[clickX, clickY].Tileset = 0;
-                        editMap.Ground[clickX, clickY].type = (int)TileType.None;
-                        editMap.Mask[clickX, clickY].tileX = 0;
-                        editMap.Mask[clickX, clickY].tileY = 0;
-                        editMap.Mask[clickX, clickY].tileH = 0;
-                        editMap.Mask[clickX, clickY].tileW = 0;
-                        editMap.Mask[clickX, clickY].Tileset = 0;
-                        editMap.Mask[clickX, clickY].type = (int)TileType.None;
-                        editMap.Fringe[clickX, clickY].tileX = 0;
-                        editMap.Fringe[clickX, clickY].tileY = 0;
-                        editMap.Fringe[clickX, clickY].tileH = 0;
-                        editMap.Fringe[clickX, clickY].tileW = 0;
-                        editMap.Fringe[clickX, clickY].Tileset = 0;
-                        editMap.Fringe[clickX, clickY].type = (int)TileType.None;
-                        editMap.MaskA[clickX, clickY].tileX = 0;
-                        editMap.MaskA[clickX, clickY].tileY = 0;
-                        editMap.MaskA[clickX, clickY].tileH = 0;
-                        editMap.MaskA[clickX, clickY].tileW = 0;
-                        editMap.MaskA[clickX, clickY].Tileset = 0;
-                        editMap.MaskA[clickX, clickY].type = (int)TileType.None;
-                        editMap.FringeA[clickX, clickY].tileX = 0;
-                        editMap.FringeA[clickX, clickY].tileY = 0;
-                        editMap.FringeA[clickX, clickY].tileH = 0;
-                        editMap.FringeA[clickX, clickY].tileW = 0;
-                        editMap.FringeA[clickX, clickY].Tileset = 0;
-                        editMap.FringeA[clickX, clickY].type = (int)TileType.None;
+                        e_Map.Ground[clickX, clickY].tileX = 0;
+                        e_Map.Ground[clickX, clickY].tileY = 32;
+                        e_Map.Ground[clickX, clickY].tileH = 32;
+                        e_Map.Ground[clickX, clickY].tileW = 32;
+                        e_Map.Ground[clickX, clickY].Tileset = 0;
+                        e_Map.Ground[clickX, clickY].type = (int)TileType.None;
+                        e_Map.Mask[clickX, clickY].tileX = 0;
+                        e_Map.Mask[clickX, clickY].tileY = 0;
+                        e_Map.Mask[clickX, clickY].tileH = 0;
+                        e_Map.Mask[clickX, clickY].tileW = 0;
+                        e_Map.Mask[clickX, clickY].Tileset = 0;
+                        e_Map.Mask[clickX, clickY].type = (int)TileType.None;
+                        e_Map.Fringe[clickX, clickY].tileX = 0;
+                        e_Map.Fringe[clickX, clickY].tileY = 0;
+                        e_Map.Fringe[clickX, clickY].tileH = 0;
+                        e_Map.Fringe[clickX, clickY].tileW = 0;
+                        e_Map.Fringe[clickX, clickY].Tileset = 0;
+                        e_Map.Fringe[clickX, clickY].type = (int)TileType.None;
+                        e_Map.MaskA[clickX, clickY].tileX = 0;
+                        e_Map.MaskA[clickX, clickY].tileY = 0;
+                        e_Map.MaskA[clickX, clickY].tileH = 0;
+                        e_Map.MaskA[clickX, clickY].tileW = 0;
+                        e_Map.MaskA[clickX, clickY].Tileset = 0;
+                        e_Map.MaskA[clickX, clickY].type = (int)TileType.None;
+                        e_Map.FringeA[clickX, clickY].tileX = 0;
+                        e_Map.FringeA[clickX, clickY].tileY = 0;
+                        e_Map.FringeA[clickX, clickY].tileH = 0;
+                        e_Map.FringeA[clickX, clickY].tileW = 0;
+                        e_Map.FringeA[clickX, clickY].Tileset = 0;
+                        e_Map.FringeA[clickX, clickY].type = (int)TileType.None;
                     }
                 }
                 catch (Exception)
@@ -756,13 +756,13 @@ namespace Editor.Classes
 
             if (inNpcEditor == true)
             {
-                svrInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+                e_Input.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
             }
         }
 
         public void onMouseButtonRelease(object sender, MouseButtonEventArgs e)
         {
-            svrInput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, false));
+            e_Input.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, false));
         }
 
         public void onMouseScroll(object sender, MouseWheelScrollEventArgs e)
@@ -788,12 +788,12 @@ namespace Editor.Classes
 
         public void onKeyReleased(object sender, KeyEventArgs e)
         {
-            svrInput.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, false));
+            e_Input.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, false));
         }
 
         public void onTextEntered(object sender, TextEventArgs e)
         {
-            svrInput.ProcessMessage(e);
+            e_Input.ProcessMessage(e);
         }
 
         static int CalculateFrameRate()
@@ -810,19 +810,19 @@ namespace Editor.Classes
 
         void SetNewEditorValues()
         {
-            editMode = editorUI.editMode;
-            selectedLayer = editorUI.editLayer;
-            editorTileset = editorUI.editTileset;
-            selectedType = editorUI.editType;
-            gridActive = editorUI.editGrid;
-            utiLayers = editorUI.editshowTypes;
-            editorBrushSize = editorUI.brushSize;
-            selectedNpc = editorUI.editselectNpc;
+            editMode = e_GUI.editMode;
+            selectedLayer = e_GUI.editLayer;
+            editorTileset = e_GUI.editTileset;
+            selectedType = e_GUI.editType;
+            gridActive = e_GUI.editGrid;
+            utiLayers = e_GUI.editshowTypes;
+            editorBrushSize = e_GUI.brushSize;
+            selectedNpc = e_GUI.editselectNpc;
 
-            editorUI.edittileX = editorTileX;
-            editorUI.edittileY = editorTileY;
-            editorUI.edittileH = editorTileH;
-            editorUI.edittileW = editorTileW;
+            e_GUI.edittileX = editorTileX;
+            e_GUI.edittileY = editorTileY;
+            e_GUI.edittileH = editorTileH;
+            e_GUI.edittileW = editorTileW;
         }
 
         void DrawMapEditingScreen()
@@ -834,29 +834,29 @@ namespace Editor.Classes
             int realCurX = ((CurX) + (viewX * picX));
             int realCurY = ((CurY) + (viewY * picY));
 
-            editorWindow.SetFramerateLimit(60);
+            e_Window.SetFramerateLimit(60);
 
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
                 {
-                    editMap.DrawTile(editorWindow, new Vector2f((x * picX), (y * picY)), editMap.Ground[x, y].tileX, editMap.Ground[x, y].tileY, editMap.Ground[x, y].tileW, editMap.Ground[x, y].tileH, editMap.Ground[x, y].Tileset);
+                    e_Map.DrawTile(e_Window, new Vector2f((x * picX), (y * picY)), e_Map.Ground[x, y].tileX, e_Map.Ground[x, y].tileY, e_Map.Ground[x, y].tileW, e_Map.Ground[x, y].tileH, e_Map.Ground[x, y].Tileset);
 
-                    if (editMap.Mask[x, y].tileX > 0 || editMap.Mask[x, y].tileY > 0)
+                    if (e_Map.Mask[x, y].tileX > 0 || e_Map.Mask[x, y].tileY > 0)
                     {
-                        editMap.DrawTile(editorWindow, new Vector2f((x * picX), (y * picY)), editMap.Mask[x, y].tileX, editMap.Mask[x, y].tileY, editMap.Mask[x, y].tileW, editMap.Mask[x, y].tileH, editMap.Mask[x, y].Tileset);
+                        e_Map.DrawTile(e_Window, new Vector2f((x * picX), (y * picY)), e_Map.Mask[x, y].tileX, e_Map.Mask[x, y].tileY, e_Map.Mask[x, y].tileW, e_Map.Mask[x, y].tileH, e_Map.Mask[x, y].Tileset);
                     }
-                    if (editMap.MaskA[x, y].tileX > 0 || editMap.MaskA[x, y].tileY > 0)
+                    if (e_Map.MaskA[x, y].tileX > 0 || e_Map.MaskA[x, y].tileY > 0)
                     {
-                        editMap.DrawTile(editorWindow, new Vector2f((x * picX), (y * picY)), editMap.MaskA[x, y].tileX, editMap.MaskA[x, y].tileY, editMap.MaskA[x, y].tileW, editMap.MaskA[x, y].tileH, editMap.MaskA[x, y].Tileset);
+                        e_Map.DrawTile(e_Window, new Vector2f((x * picX), (y * picY)), e_Map.MaskA[x, y].tileX, e_Map.MaskA[x, y].tileY, e_Map.MaskA[x, y].tileW, e_Map.MaskA[x, y].tileH, e_Map.MaskA[x, y].Tileset);
                     }
-                    if (editMap.Fringe[x, y].tileX > 0 || editMap.Fringe[x, y].tileY > 0)
+                    if (e_Map.Fringe[x, y].tileX > 0 || e_Map.Fringe[x, y].tileY > 0)
                     {
-                        editMap.DrawTile(editorWindow, new Vector2f((x * picX), (y * picY)), editMap.Fringe[x, y].tileX, editMap.Fringe[x, y].tileY, editMap.Fringe[x, y].tileW, editMap.Fringe[x, y].tileH, editMap.Fringe[x, y].Tileset);
+                        e_Map.DrawTile(e_Window, new Vector2f((x * picX), (y * picY)), e_Map.Fringe[x, y].tileX, e_Map.Fringe[x, y].tileY, e_Map.Fringe[x, y].tileW, e_Map.Fringe[x, y].tileH, e_Map.Fringe[x, y].Tileset);
                     }
-                    if (editMap.FringeA[x, y].tileX > 0 || editMap.FringeA[x, y].tileY > 0)
+                    if (e_Map.FringeA[x, y].tileX > 0 || e_Map.FringeA[x, y].tileY > 0)
                     {
-                        editMap.DrawTile(editorWindow, new Vector2f((x * picX), (y * picY)), editMap.FringeA[x, y].tileX, editMap.FringeA[x, y].tileY, editMap.FringeA[x, y].tileW, editMap.FringeA[x, y].tileH, editMap.FringeA[x, y].Tileset);
+                        e_Map.DrawTile(e_Window, new Vector2f((x * picX), (y * picY)), e_Map.FringeA[x, y].tileX, e_Map.FringeA[x, y].tileY, e_Map.FringeA[x, y].tileW, e_Map.FringeA[x, y].tileH, e_Map.FringeA[x, y].Tileset);
                     }
                 }
             }
@@ -865,37 +865,37 @@ namespace Editor.Classes
             {
                 if (editorBrushSize > 1)
                 {
-                    editorTile.Texture = TileSet[editorTileset];
-                    editorTile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, picX, picY);
+                    e_Tile.Texture = e_Tileset[editorTileset];
+                    e_Tile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, picX, picY);
                     for (int x = 0; x < editorBrushSize; x++)
                     {
                         for (int y = 0; y < editorBrushSize; y++)
                         {
-                            editorTile.Position = new Vector2f(((x + realX) * picX), ((y + realY) * picY));
-                            editorWindow.Draw(editorTile);
+                            e_Tile.Position = new Vector2f(((x + realX) * picX), ((y + realY) * picY));
+                            e_Window.Draw(e_Tile);
                         }
                     }
                 }
                 else
                 {
-                    editorTile.Texture = TileSet[editorTileset];
-                    editorTile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, editorTileW * picX, editorTileH * picY);
-                    editorTile.Position = new Vector2f((realX * picX), (realY * picY));
-                    editorWindow.Draw(editorTile);
+                    e_Tile.Texture = e_Tileset[editorTileset];
+                    e_Tile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, editorTileW * picX, editorTileH * picY);
+                    e_Tile.Position = new Vector2f((realX * picX), (realY * picY));
+                    e_Window.Draw(e_Tile);
                 }
             }
 
             if (gridActive == true)
             {
-                editorGrid.Texture = new Texture("Resources/Skins/Grid.png");
-                editorGrid.TextureRect = new IntRect(0, 0, 32, 32);
+                e_Grid.Texture = new Texture("Resources/Skins/Grid.png");
+                e_Grid.TextureRect = new IntRect(0, 0, 32, 32);
 
                 for (int x = 0; x < 38; x++)
                 {
                     for (int y = 0; y < 19; y++)
                     {
-                        editorGrid.Position = new Vector2f((x + viewX) * picX, (y + viewY) * picY);
-                        editorWindow.Draw(editorGrid);
+                        e_Grid.Position = new Vector2f((x + viewX) * picX, (y + viewY) * picY);
+                        e_Window.Draw(e_Grid);
                     }
                 }
             }
@@ -906,18 +906,18 @@ namespace Editor.Classes
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        if (editMap.Ground[x, y].type > 0)
+                        if (e_Map.Ground[x, y].type > 0)
                         {
-                            switch (editMap.Ground[x, y].type)
+                            switch (e_Map.Ground[x, y].type)
                             {
                                 case (int)TileType.None:
                                     break;
 
                                 case (int)TileType.Blocked:
-                                    svrText.DrawText(editorWindow, "B", new Vector2f((x * picX) + 12, (y * picY) + 7), 12, Color.Red);
+                                    e_Text.DrawText(e_Window, "B", new Vector2f((x * picX) + 12, (y * picY) + 7), 12, Color.Red);
                                     break;
                                 case (int)TileType.NPCSpawn:
-                                    svrText.DrawText(editorWindow, "S", new Vector2f((x * picX) + 12, (y * picY) + 7), 12, Color.Yellow);
+                                    e_Text.DrawText(e_Window, "S", new Vector2f((x * picX) + 12, (y * picY) + 7), 12, Color.Yellow);
                                     break;
                             }
                         }
@@ -925,70 +925,70 @@ namespace Editor.Classes
                 }
             }
 
-            svrText.DrawText(editorWindow, "FPS: " + CalculateFrameRate(), new Vector2f((viewX * picX) + 5, (viewY * picY) + 0), 12, Color.White); //Draw fps
-            svrText.DrawText(editorWindow, "MapX: " + realX + " MapY: " + realY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 10), 12, Color.Yellow);
-            svrText.DrawText(editorWindow, "CurX: " + realCurX + " CurY: " + realCurY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 20), 12, Color.Yellow);
-            svrText.DrawText(editorWindow, "ViewX: " + viewX + " ViewY: " + viewY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 30), 12, Color.Yellow);
-            svrText.DrawText(editorWindow, isInput, new Vector2f((viewX * picX) + 5, (viewY * picY) + 40), 12, Color.Yellow);
+            e_Text.DrawText(e_Window, "FPS: " + CalculateFrameRate(), new Vector2f((viewX * picX) + 5, (viewY * picY) + 0), 12, Color.White); //Draw fps
+            e_Text.DrawText(e_Window, "MapX: " + realX + " MapY: " + realY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 10), 12, Color.Yellow);
+            e_Text.DrawText(e_Window, "CurX: " + realCurX + " CurY: " + realCurY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 20), 12, Color.Yellow);
+            e_Text.DrawText(e_Window, "ViewX: " + viewX + " ViewY: " + viewY, new Vector2f((viewX * picX) + 5, (viewY * picY) + 30), 12, Color.Yellow);
+            e_Text.DrawText(e_Window, isInput, new Vector2f((viewX * picX) + 5, (viewY * picY) + 40), 12, Color.Yellow);
 
         }
 
         void DrawTileSelectionScreen()
         {
             SetNewEditorValues();
-            editorWindow.SetFramerateLimit(32);
-            Tiles.Position = new Vector2f(0, 0);
-            Tiles.Texture = TileSet[editorTileset];
-            Tiles.TextureRect = new IntRect(0, 0, (int)TileSet[editorTileset].Size.X, (int)TileSet[editorTileset].Size.Y);
+            e_Window.SetFramerateLimit(32);
+            e_Tiles.Position = new Vector2f(0, 0);
+            e_Tiles.Texture = e_Tileset[editorTileset];
+            e_Tiles.TextureRect = new IntRect(0, 0, (int)e_Tileset[editorTileset].Size.X, (int)e_Tileset[editorTileset].Size.Y);
 
-            editorTile.Position = new Vector2f(395, 212);
-            editorTile.Texture = TileSet[editorTileset];
-            editorTile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, editorTileW * picX, editorTileH * picY);
+            e_Tile.Position = new Vector2f(395, 212);
+            e_Tile.Texture = e_Tileset[editorTileset];
+            e_Tile.TextureRect = new IntRect(editorTileX * picX, editorTileY * picY, editorTileW * picX, editorTileH * picY);
 
-            selectTile.OutlineColor = Color.Red;
-            selectTile.OutlineThickness = 1;
-            selectTile.FillColor = Color.Transparent;
-            selectTile.Position = new Vector2f(editorTileX * picX, editorTileY * picY);
-            selectTile.Size = new Vector2f(editorTileW * picX, editorTileH * picY);
+            e_selectTile.OutlineColor = Color.Red;
+            e_selectTile.OutlineThickness = 1;
+            e_selectTile.FillColor = Color.Transparent;
+            e_selectTile.Position = new Vector2f(editorTileX * picX, editorTileY * picY);
+            e_selectTile.Size = new Vector2f(editorTileW * picX, editorTileH * picY);
 
-            editorWindow.Draw(Tiles);
-            editorWindow.Draw(selectTile);
-            editorWindow.SetView(editorWindow.DefaultView); //set it back to default view
-            editorWindow.Draw(editorTile);
-            svrText.DrawText(editorWindow, "FPS: " + CalculateFrameRate(), new Vector2f(5, 0), 12, Color.White);
-            svrText.DrawText(editorWindow, "Edit Mode: " + editNames[editMode], new Vector2f(395, 32), 12, Color.White);
-            svrText.DrawText(editorWindow, "Layer Selected: " + layerNames[selectedLayer], new Vector2f(395, 62), 12, Color.White);
-            svrText.DrawText(editorWindow, "Type Selected: " + typeNames[selectedType], new Vector2f(395, 92), 12, Color.White);
-            svrText.DrawText(editorWindow, "Tileset: " + editorTileset, new Vector2f(395, 122), 12, Color.White);
-            svrText.DrawText(editorWindow, "Tile Selected: ", new Vector2f(395, 152), 12, Color.White);
-            svrText.DrawText(editorWindow, "Width: " + (editorTileW * picX) + " Height: " + (editorTileH * picY), new Vector2f(395, 182), 12, Color.White);
-            Canvas.RenderCanvas();  //draw the ui
+            e_Window.Draw(e_Tiles);
+            e_Window.Draw(e_selectTile);
+            e_Window.SetView(e_Window.DefaultView); //set it back to default view
+            e_Window.Draw(e_Tile);
+            e_Text.DrawText(e_Window, "FPS: " + CalculateFrameRate(), new Vector2f(5, 0), 12, Color.White);
+            e_Text.DrawText(e_Window, "Edit Mode: " + editNames[editMode], new Vector2f(395, 32), 12, Color.White);
+            e_Text.DrawText(e_Window, "Layer Selected: " + layerNames[selectedLayer], new Vector2f(395, 62), 12, Color.White);
+            e_Text.DrawText(e_Window, "Type Selected: " + typeNames[selectedType], new Vector2f(395, 92), 12, Color.White);
+            e_Text.DrawText(e_Window, "Tileset: " + editorTileset, new Vector2f(395, 122), 12, Color.White);
+            e_Text.DrawText(e_Window, "Tile Selected: ", new Vector2f(395, 152), 12, Color.White);
+            e_Text.DrawText(e_Window, "Width: " + (editorTileW * picX) + " Height: " + (editorTileH * picY), new Vector2f(395, 182), 12, Color.White);
+            e_Canvas.RenderCanvas();  //draw the ui
         }
 
         void DrawNpcEditorScreen()
         {
-            editorWindow.SetFramerateLimit(32);
-            editorWindow.SetView(editorWindow.DefaultView);
+            e_Window.SetFramerateLimit(32);
+            e_Window.SetView(e_Window.DefaultView);
 
-            if (editNpc == null)
+            if (e_Npc == null)
             {
-                editNpc = new NPC();
-                editNpc.LoadNPC();
-                if (editNpc.Name != null)
+                e_Npc = new NPC();
+                e_Npc.LoadNPC();
+                if (e_Npc.Name != null)
                 {
-                    editorUI.editorNpc = editNpc;
-                    editorUI.CreateNpcToolWindow(Canvas);
-                    editorUI.CreateNpcEditWindow(Canvas);
-                    editorUI.LoadNpcDataIntoUI();
+                    e_GUI.e_Npc = e_Npc;
+                    e_GUI.CreateNpcToolWindow(e_Canvas);
+                    e_GUI.CreateNpcEditWindow(e_Canvas);
+                    e_GUI.LoadNpcDataIntoUI();
                 }
                 else
                 {
-                    editNpc = null;
+                    e_Npc = null;
                 }
             }
 
-            svrText.DrawText(editorWindow, "FPS: " + CalculateFrameRate(), new Vector2f(5, 0), 12, Color.White);
-            Canvas.RenderCanvas();
+            e_Text.DrawText(e_Window, "FPS: " + CalculateFrameRate(), new Vector2f(5, 0), 12, Color.White);
+            e_Canvas.RenderCanvas();
         }
 
         void CheckDevelopmentKeys(RenderWindow mainWindow, KeyEventArgs e)
@@ -997,7 +997,7 @@ namespace Editor.Classes
             {
                 //Escapes editor and saves all
                 case Keyboard.Key.Escape:
-                    editMap.SaveMap();
+                    e_Map.SaveMap();
                     mainWindow.Close();
                     break;
                 //Opens map editor UI
@@ -1005,7 +1005,7 @@ namespace Editor.Classes
                     if (utiWindow == true)
                     {
                         utiWindow = false;
-                        editorUI.maptoolsWin.Close();
+                        e_GUI.maptoolsWin.Close();
                         viewX = storedViewX;
                         viewY = storedViewY;
                         storedViewX = 0;
@@ -1015,8 +1015,8 @@ namespace Editor.Classes
                     {
                         utiWindow = true;
                         inNpcEditor = false;
-                        editorUI.CreateToolWindow(Canvas);
-                        if (editNpc != null) { editorUI.npcWin.Hide(); editorUI.npctoolWin.Hide(); }
+                        e_GUI.CreateToolWindow(e_Canvas);
+                        if (e_Npc != null) { e_GUI.npcWin.Hide(); e_GUI.npctoolWin.Hide(); }
                         storedViewX = viewX;
                         storedViewY = viewY;
                         viewX = 0;
@@ -1032,10 +1032,10 @@ namespace Editor.Classes
                     else
                     {
                         inNpcEditor = true;
-                        if (editNpc != null) { editorUI.npcWin.Show(); editorUI.npctoolWin.Show(); }
+                        if (e_Npc != null) { e_GUI.npcWin.Show(); e_GUI.npctoolWin.Show(); }
 
                         utiWindow = false;
-                        if (editorUI.maptoolsWin != null) { editorUI.maptoolsWin.Close(); }
+                        if (e_GUI.maptoolsWin != null) { e_GUI.maptoolsWin.Close(); }
                     }
                     break;
                 //Change tile size
