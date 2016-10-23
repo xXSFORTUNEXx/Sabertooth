@@ -18,157 +18,157 @@ namespace Client.Classes
         public int clientIndex; //The index of this client
 
         //This is where we process the 
-        public void DataMessage(NetClient svrClient, Canvas svrCanvas, GUI svrGUI, Player[] svrPlayer, Map svrMap, ClientConfig cConfig, NPC[] svrNpc)
+        public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, ClientConfig c_Config, NPC[] c_Npc)
         {
             NetIncomingMessage incMSG;
-            ipAddress = cConfig.ipAddress;
-            port = cConfig.port;
+            ipAddress = c_Config.ipAddress;
+            port = c_Config.port;
 
-            if ((incMSG = svrClient.ReadMessage()) != null)
+            if ((incMSG = c_Client.ReadMessage()) != null)
             {
                 switch (incMSG.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
-                        HandleDiscoveryResponse(incMSG, svrClient);
+                        HandleDiscoveryResponse(incMSG, c_Client);
                         break;
 
                     case NetIncomingMessageType.Data:
                         switch (incMSG.ReadByte())
                         {
                             case (byte)PacketTypes.Connection:
-                                HandleConnectionData(incMSG, svrClient);
+                                HandleConnectionData(incMSG, c_Client);
                                 break;
 
                             case (byte)PacketTypes.ErrorMessage:
-                                HandleErrorMessage(incMSG, svrClient, svrCanvas);
+                                HandleErrorMessage(incMSG, c_Client, c_Canvas);
                                 break;
 
                             case (byte)PacketTypes.Login:
-                                HandleLoginData(incMSG, svrClient, svrCanvas, svrGUI);
+                                HandleLoginData(incMSG, c_Client, c_Canvas, c_GUI);
                                 break;
 
                             case (byte)PacketTypes.UserData:
                                 clientIndex = incMSG.ReadInt32();
-                                svrGUI.guiIndex = clientIndex;
+                                c_GUI.guiIndex = clientIndex;
                                 Console.WriteLine("Client index: " + clientIndex);
-                                HandlePlayerData(incMSG, svrClient, svrPlayer, clientIndex);
+                                HandlePlayerData(incMSG, c_Client, c_Player, clientIndex);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
-                                HandleChatMessage(incMSG, svrGUI);
+                                HandleChatMessage(incMSG, c_GUI);
                                 break;
 
                             case (byte)PacketTypes.MapData:
-                                HandleMapData(svrClient, incMSG, svrMap);
+                                HandleMapData(c_Client, incMSG, c_Map);
                                 Console.WriteLine("Recieved map data...");
                                 break;
 
                             case (byte)PacketTypes.Users:
-                                HandlePlayers(svrClient, incMSG, svrPlayer);
+                                HandlePlayers(c_Client, incMSG, c_Player);
                                 break;
 
                             case (byte)PacketTypes.UpdateMoveData:
-                                HandleUpdateMoveData(incMSG, svrPlayer, clientIndex);
+                                HandleUpdateMoveData(incMSG, c_Player, clientIndex);
                                 break;
 
                             case (byte)PacketTypes.DirData:
-                                HandleDirectionData(incMSG, svrPlayer, clientIndex);
+                                HandleDirectionData(incMSG, c_Player, clientIndex);
                                 break;
 
                             case (byte)PacketTypes.Npcs:
-                                HandleNpcs(incMSG, svrNpc);
+                                HandleNpcs(incMSG, c_Npc);
                                 Console.WriteLine("Recieved npc data...");
                                 break;
 
                             case (byte)PacketTypes.MapNpc:
-                                HandleMapNpcs(incMSG, svrMap);
+                                HandleMapNpcs(incMSG, c_Map);
                                 break;
 
                             case (byte)PacketTypes.NpcData:
-                                if (svrMap.Name != null)
+                                if (c_Map.Name != null)
                                 {
-                                    HandleNpcData(incMSG, svrMap);
+                                    HandleNpcData(incMSG, c_Map);
                                 }
                                 break;
                         }
                         break;
                 }
             }
-            svrClient.Recycle(incMSG);
+            c_Client.Recycle(incMSG);
         }
 
         //Handle incoming NPC data
-        void HandleNpcs(NetIncomingMessage incMSG, NPC[] svrNpc)
+        void HandleNpcs(NetIncomingMessage incMSG, NPC[] c_Npc)
         {
             for (int i = 0; i < 10; i++)
             {
-                if (svrNpc[i] != null)
+                if (c_Npc[i] != null)
                 {
-                    svrNpc[i].Name = incMSG.ReadString();
-                    svrNpc[i].X = incMSG.ReadInt32();
-                    svrNpc[i].Y = incMSG.ReadInt32();
-                    svrNpc[i].Direction = incMSG.ReadInt32();
-                    svrNpc[i].Sprite = incMSG.ReadInt32();
-                    svrNpc[i].Step = incMSG.ReadInt32();
-                    svrNpc[i].Owner = incMSG.ReadInt32();
-                    svrNpc[i].Behavior = incMSG.ReadInt32();
-                    svrNpc[i].SpawnTime = incMSG.ReadInt32();
-                    svrNpc[i].isSpawned = incMSG.ReadBoolean();
+                    c_Npc[i].Name = incMSG.ReadString();
+                    c_Npc[i].X = incMSG.ReadInt32();
+                    c_Npc[i].Y = incMSG.ReadInt32();
+                    c_Npc[i].Direction = incMSG.ReadInt32();
+                    c_Npc[i].Sprite = incMSG.ReadInt32();
+                    c_Npc[i].Step = incMSG.ReadInt32();
+                    c_Npc[i].Owner = incMSG.ReadInt32();
+                    c_Npc[i].Behavior = incMSG.ReadInt32();
+                    c_Npc[i].SpawnTime = incMSG.ReadInt32();
+                    c_Npc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
         }
 
         //Handle incoming NPC data
-        void HandleMapNpcs(NetIncomingMessage incMSG, Map svrMap)
+        void HandleMapNpcs(NetIncomingMessage incMSG, Map c_Map)
         {
             for (int i = 0; i < 10; i++)
             {
-                if (svrMap.mapNpc[i] != null)
+                if (c_Map.mapNpc[i] != null)
                 {
-                    svrMap.mapNpc[i].Name = incMSG.ReadString();
-                    svrMap.mapNpc[i].X = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Y = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Direction = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Sprite = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Step = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Owner = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].Behavior = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].SpawnTime = incMSG.ReadInt32();
-                    svrMap.mapNpc[i].isSpawned = incMSG.ReadBoolean();
+                    c_Map.mapNpc[i].Name = incMSG.ReadString();
+                    c_Map.mapNpc[i].X = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Y = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Direction = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Sprite = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Step = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Owner = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].Behavior = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].SpawnTime = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
         }
 
         //Handle incoming data for a single npc
-        void HandleNpcData(NetIncomingMessage incMSG, Map svrMap)
+        void HandleNpcData(NetIncomingMessage incMSG, Map c_Map)
         {
             int npcNum = incMSG.ReadInt32();
 
-            svrMap.mapNpc[npcNum].Name = incMSG.ReadString();
-            svrMap.mapNpc[npcNum].X = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Y = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Direction = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Sprite = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Step = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Owner = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].Behavior = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].SpawnTime = incMSG.ReadInt32();
-            svrMap.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
+            c_Map.mapNpc[npcNum].Name = incMSG.ReadString();
+            c_Map.mapNpc[npcNum].X = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Y = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Direction = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Sprite = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Step = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Owner = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].Behavior = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
         }
 
         //Handle player direction packet
-        void HandleDirectionData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
+        void HandleDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
 
             if (index == clientIndex) { return; }
 
-            svrPlayer[index].Direction = direction;
+            c_Player[index].Direction = direction;
         }
 
         //handle incoming movement data
-        void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] svrPlayer, int clientIndex)
+        void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
             int index = incMSG.ReadInt32();
             int x = incMSG.ReadInt32();
@@ -177,33 +177,33 @@ namespace Client.Classes
             int step = incMSG.ReadInt32();
 
             if (index == clientIndex) { return; }
-            if (step == svrPlayer[index].Step) { return; }
+            if (step == c_Player[index].Step) { return; }
 
-            svrPlayer[index].tempX = x;
-            svrPlayer[index].tempY = y;
-            svrPlayer[index].tempDir = direction;
-            svrPlayer[index].tempStep = step;
+            c_Player[index].tempX = x;
+            c_Player[index].tempY = y;
+            c_Player[index].tempDir = direction;
+            c_Player[index].tempStep = step;
         }
 
         //Discovery response sent from the server
-        void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient svrClient)
+        void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient c_Client)
         {
             Console.WriteLine("Found Server: " + incMSG.ReadString() + " @ " + incMSG.SenderEndPoint);
-            NetOutgoingMessage outMSG = svrClient.CreateMessage();
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.Connection);
             outMSG.Write("sabertooth");
-            svrClient.Connect(ipAddress, ToInt32(port), outMSG);
+            c_Client.Connect(ipAddress, ToInt32(port), outMSG);
         }
 
         //Assuring we are connected to the server
-        void HandleConnectionData(NetIncomingMessage incMSG, NetClient svrClient)
+        void HandleConnectionData(NetIncomingMessage incMSG, NetClient c_Client)
         {
-            if (svrClient.ServerConnection != null) { return; }
+            if (c_Client.ServerConnection != null) { return; }
             Console.WriteLine("Connected to server!");
         }
 
         //Packet incoming for chat message
-        void HandleChatMessage(NetIncomingMessage incMSG, GUI svrGUI)
+        void HandleChatMessage(NetIncomingMessage incMSG, GUI c_GUI)
         {
             string msg = incMSG.ReadString();
             int msgLength = msg.Length;
@@ -215,114 +215,114 @@ namespace Client.Classes
                 int splitLength = msgLength - maxLength;
                 splitMsg[0] = msg.Substring(0, maxLength);
                 splitMsg[1] = msg.Substring(maxLength, splitLength);
-                svrGUI.outputChat.AddRow(splitMsg[0]);
-                svrGUI.outputChat.AddRow(splitMsg[1]);
+                c_GUI.outputChat.AddRow(splitMsg[0]);
+                c_GUI.outputChat.AddRow(splitMsg[1]);
             }
             else
             {
-                svrGUI.outputChat.AddRow(msg);
+                c_GUI.outputChat.AddRow(msg);
             }
-            svrGUI.outputChat.ScrollToBottom();
-            svrGUI.outputChat.UnselectAll();
+            c_GUI.outputChat.ScrollToBottom();
+            c_GUI.outputChat.UnselectAll();
         }
 
         //Packet for succesful login, after this is done we get all the maps, npc, other players the whole nine yards
-        void HandleLoginData(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas, GUI svrGUI)
+        void HandleLoginData(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas, GUI c_GUI)
         {
             Console.WriteLine("Login successful!");
-            svrCanvas.DeleteAllChildren();
-            svrGUI.CreateDebugWindow(svrCanvas);
-            svrGUI.CreateChatWindow(svrCanvas);
-            svrGUI.AddText("Welcome to Sabertooth!");
+            c_Canvas.DeleteAllChildren();
+            c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.CreateChatWindow(c_Canvas);
+            c_GUI.AddText("Welcome to Sabertooth!");
         }
 
         //Player incoming data for the clients index
-        void HandlePlayerData(NetIncomingMessage incMSG, NetClient svrClient, Player[] svrPlayer, int clientIndex)
+        void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
         {
-            svrPlayer[clientIndex].Name = incMSG.ReadString();
-            svrPlayer[clientIndex].X = incMSG.ReadInt32();
-            svrPlayer[clientIndex].Y = incMSG.ReadInt32();
-            svrPlayer[clientIndex].Map = incMSG.ReadInt32();
-            svrPlayer[clientIndex].Direction = incMSG.ReadInt32();
-            svrPlayer[clientIndex].Sprite = incMSG.ReadInt32();
-            svrPlayer[clientIndex].offsetX = 12;
-            svrPlayer[clientIndex].offsetY = 9;
+            c_Player[clientIndex].Name = incMSG.ReadString();
+            c_Player[clientIndex].X = incMSG.ReadInt32();
+            c_Player[clientIndex].Y = incMSG.ReadInt32();
+            c_Player[clientIndex].Map = incMSG.ReadInt32();
+            c_Player[clientIndex].Direction = incMSG.ReadInt32();
+            c_Player[clientIndex].Sprite = incMSG.ReadInt32();
+            c_Player[clientIndex].offsetX = 12;
+            c_Player[clientIndex].offsetY = 9;
         }
 
         //Error message handler
-        void HandleErrorMessage(NetIncomingMessage incMSG, NetClient svrClient, Canvas svrCanvas)
+        void HandleErrorMessage(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas)
         {
             string msg = incMSG.ReadString();
             string caption = incMSG.ReadString();
-            MessageBox msgBox = new MessageBox(svrCanvas, msg, caption);
+            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
         }
 
         //Handle the incoming map data whether it be logging in or changing maps.
-        void HandleMapData(NetClient svrClient, NetIncomingMessage incMSG, Map svrMap)
+        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map)
         {
-            svrMap.Name = incMSG.ReadString();
+            c_Map.Name = incMSG.ReadString();
 
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
                 {
-                    svrMap.Ground[x, y] = new Tile();
-                    svrMap.Mask[x, y] = new Tile();
-                    svrMap.Fringe[x, y] = new Tile();
-                    svrMap.MaskA[x, y] = new Tile();
-                    svrMap.FringeA[x, y] = new Tile();
+                    c_Map.Ground[x, y] = new Tile();
+                    c_Map.Mask[x, y] = new Tile();
+                    c_Map.Fringe[x, y] = new Tile();
+                    c_Map.MaskA[x, y] = new Tile();
+                    c_Map.FringeA[x, y] = new Tile();
 
                     //ground
-                    svrMap.Ground[x, y].tileX = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].tileY = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].tileW = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].tileH = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].Tileset = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].type = incMSG.ReadInt32();
-                    svrMap.Ground[x, y].spawnNum = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].tileX = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].tileY = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].tileW = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].tileH = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].type = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].spawnNum = incMSG.ReadInt32();
                     //mask
-                    svrMap.Mask[x, y].tileX = incMSG.ReadInt32();
-                    svrMap.Mask[x, y].tileY = incMSG.ReadInt32();
-                    svrMap.Mask[x, y].tileW = incMSG.ReadInt32();
-                    svrMap.Mask[x, y].tileH = incMSG.ReadInt32();
-                    svrMap.Mask[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].tileX = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].tileY = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].tileW = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].tileH = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].Tileset = incMSG.ReadInt32();
                     //fringe
-                    svrMap.Fringe[x, y].tileX = incMSG.ReadInt32();
-                    svrMap.Fringe[x, y].tileY = incMSG.ReadInt32();
-                    svrMap.Fringe[x, y].tileW = incMSG.ReadInt32();
-                    svrMap.Fringe[x, y].tileH = incMSG.ReadInt32();
-                    svrMap.Fringe[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].tileX = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].tileY = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].tileW = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].tileH = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].Tileset = incMSG.ReadInt32();
                     //mask a
-                    svrMap.MaskA[x, y].tileX = incMSG.ReadInt32();
-                    svrMap.MaskA[x, y].tileY = incMSG.ReadInt32();
-                    svrMap.MaskA[x, y].tileW = incMSG.ReadInt32();
-                    svrMap.MaskA[x, y].tileH = incMSG.ReadInt32();
-                    svrMap.MaskA[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].tileX = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].tileY = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].tileW = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].tileH = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].Tileset = incMSG.ReadInt32();
                     //fringe a
-                    svrMap.FringeA[x, y].tileX = incMSG.ReadInt32();
-                    svrMap.FringeA[x, y].tileY = incMSG.ReadInt32();
-                    svrMap.FringeA[x, y].tileW = incMSG.ReadInt32();
-                    svrMap.FringeA[x, y].tileH = incMSG.ReadInt32();
-                    svrMap.FringeA[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].tileX = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].tileY = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].tileW = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].tileH = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].Tileset = incMSG.ReadInt32();
                 }
             }
-            svrMap.SaveMap();
+            c_Map.SaveMap();
         }
 
         //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
-        void HandlePlayers(NetClient svrClient, NetIncomingMessage incMSG, Player[] svrPlayer)
+        void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
         {
             for (int i = 0; i < 5; i++)
             {
-                svrPlayer[i].Name = incMSG.ReadString();
-                svrPlayer[i].X = incMSG.ReadInt32();
-                svrPlayer[i].Y = incMSG.ReadInt32();
-                svrPlayer[i].Map = incMSG.ReadInt32();
-                svrPlayer[i].Direction = incMSG.ReadInt32();
-                svrPlayer[i].Sprite = incMSG.ReadInt32();
-                svrPlayer[i].offsetX = 12;
-                svrPlayer[i].offsetY = 9;
+                c_Player[i].Name = incMSG.ReadString();
+                c_Player[i].X = incMSG.ReadInt32();
+                c_Player[i].Y = incMSG.ReadInt32();
+                c_Player[i].Map = incMSG.ReadInt32();
+                c_Player[i].Direction = incMSG.ReadInt32();
+                c_Player[i].Sprite = incMSG.ReadInt32();
+                c_Player[i].offsetX = 12;
+                c_Player[i].offsetY = 9;
             }
         }
     }

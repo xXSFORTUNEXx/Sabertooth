@@ -10,35 +10,35 @@ namespace Server.Classes
 {
     class StartUp
     {
-        static NetServer svrServer;
-        static NetPeerConfiguration Config;
+        static NetServer s_Server;
+        static NetPeerConfiguration s_Config;
 
         static void Main(string[] args)
         {
             Console.Title = "Sabertooth Server";
             Console.WriteLine("Initializing Server...");
 
-            Config = new NetPeerConfiguration("sabertooth");
-            Config.Port = 14242;
-            Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-            Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-            Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
-            Config.EnableUPnP = true;
+            s_Config = new NetPeerConfiguration("sabertooth");
+            s_Config.Port = 14242;
+            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            s_Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            s_Config.EnableUPnP = true;
 
             Console.WriteLine("Enabling message types...");
             CheckDirectories();
             LogWriter.WriteLog("Initializing Server...", "Server");
             LogWriter.WriteLog("Checking directories...", "Server");
             Console.WriteLine("Checking directories...");
-            svrServer = new NetServer(Config);
-            svrServer.Start();
+            s_Server = new NetServer(s_Config);
+            s_Server.Start();
             Console.WriteLine("Forwarding ports...");
             LogWriter.WriteLog("Forwarding ports...", "Server");
-            svrServer.UPnP.ForwardPort(14242, "Sabertooth");
+            s_Server.UPnP.ForwardPort(14242, "Sabertooth");
             Server srvrServer = new Server();
             Console.WriteLine("Server Started...");
             LogWriter.WriteLog("Server started...", "Server");
-            srvrServer.ServerLoop(svrServer);
+            srvrServer.ServerLoop(s_Server);
         }
 
         static void CheckDirectories()

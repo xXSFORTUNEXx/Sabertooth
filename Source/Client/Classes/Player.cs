@@ -11,7 +11,7 @@ namespace Client.Classes
         public string Name { get; set; }    //define player name
         public string Pass { get; set; }    //define player password
         public NetConnection Connection;    //create network connection
-        RenderText svrText = new RenderText();
+        RenderText c_Text = new RenderText();
         public int X { get; set; }  //define x
         public int Y { get; set; }  //define y
         public int Map { get; set; }    //define map
@@ -25,7 +25,7 @@ namespace Client.Classes
         public int tempY;   //temp y that is saved for movement over packets
         public int tempDir; //temp direction that is saved for movement over packets
         public int tempStep;    //temp step that is saved for movement over packets
-        Sprite svrSprite = new Sprite();    //define a sprite for which the above texture with be reference from
+        Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
         public Player(string name, string pass, int x, int y, int direction, int map, NetConnection conn)    //main player contructor if we have all the details
         {
@@ -61,25 +61,25 @@ namespace Client.Classes
 
         public Player() { }     //An emply player contructor, this is only needed to setup a blank player array for information to be stored appon login
 
-        public void DrawPlayer(RenderWindow svrWindow, Texture svrTexture)  // draws the player to the screen
+        public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)  // draws the player to the screen
         {
-            svrSprite.Texture = svrTexture; //set the sprites texture
-            svrSprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48); //define what are we want to draw from the texture using a intrect (rectangle)
-            svrSprite.Position = new Vector2f(((X * 32) + (offsetX * 32)), (((Y * 32) + (offsetY * 32) - 16))); //Define the actual location on the screen
+            c_Sprite.Texture = c_Texture; //set the sprites texture
+            c_Sprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48); //define what are we want to draw from the texture using a intrect (rectangle)
+            c_Sprite.Position = new Vector2f(((X * 32) + (offsetX * 32)), (((Y * 32) + (offsetY * 32) - 16))); //Define the actual location on the screen
 
-            svrWindow.Draw(svrSprite);  //draw the player to the define window using the above sprite array
+            c_Window.Draw(c_Sprite);  //draw the player to the define window using the above sprite array
         }
 
-        public void DrawPlayerName(RenderWindow svrWindow)
+        public void DrawPlayerName(RenderWindow c_Window)
         {
-            svrText.DrawText(svrWindow, Name, new Vector2f((X * 32) + ((offsetX * 32) - Name.Length / 2), (Y * 32) + (offsetY * 32) - 32), 12, Color.White);
+            c_Text.DrawText(c_Window, Name, new Vector2f((X * 32) + ((offsetX * 32) - Name.Length / 2), (Y * 32) + (offsetY * 32) - 32), 12, Color.White);
         }
 
-        public void CheckMovement(NetClient svrClient, int index, RenderWindow svrWindow, Map movementMap, GUI svrGUI)   //Check for player movement
+        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map movementMap, GUI c_GUI)   //Check for player movement
         {
             if (Moved == true) { Moved = false; return; }   //check and see if they are already moving and if so we return and exit the void
-            if (svrGUI.inputChat.HasFocus == true) { return; }
-            if (!svrWindow.HasFocus()) { return; }  //we need to make sure that when a button is pressed our game window has focus otherwise we dont want to process the button press
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }  //we need to make sure that when a button is pressed our game window has focus otherwise we dont want to process the button press
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))  //check for w
             {
@@ -89,7 +89,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Up; //set the direction to up
                         Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(svrClient, index);  //send the update direction packet
+                        SendUpdateDirection(c_Client, index);  //send the update direction packet
                         return; //exit this bitch
                     }
                     Y -= 1; //move the player up
@@ -106,7 +106,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down; //set the direction to down
                         Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(svrClient, index);  //send the update direction packet
+                        SendUpdateDirection(c_Client, index);  //send the update direction packet
                         return; //exit this bitch
                     }
                     Y += 1; //move the player down
@@ -123,7 +123,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Left; //set the direction to left
                         Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(svrClient, index);  //send the update direction packet
+                        SendUpdateDirection(c_Client, index);  //send the update direction packet
                         return; //exit this bitch
                     }
                     X -= 1; //move player to the left
@@ -140,7 +140,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Right; //set the direction to right
                         Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(svrClient, index);  //send the update direction packet
+                        SendUpdateDirection(c_Client, index);  //send the update direction packet
                         return; //exit this bitch
                     }
                     X += 1; //move player to the right
@@ -154,29 +154,29 @@ namespace Client.Classes
                 Step += 1;  //add a step if so
                 if (Step == 4) { Step = 0; }    //if we have reached the make amount of steps then we need to start over
                 Moved = false;  //we moved so let make sure it knows we can move again
-                SendMovementData(svrClient, index); //send movement data to the server
+                SendMovementData(c_Client, index); //send movement data to the server
             }
         }
 
-        void SendMovementData(NetClient svrClient, int index)   //packet for sending data to the server
+        void SendMovementData(NetClient c_Client, int index)   //packet for sending data to the server
         {
-            NetOutgoingMessage outMSG = svrClient.CreateMessage();  //create the message we will use to write out data going out to the server
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to write out data going out to the server
             outMSG.Write((byte)PacketTypes.MoveData);   //packet header name
             outMSG.Write(index);    //current user's index
             outMSG.Write(X);    //write the x of the current index
             outMSG.Write(Y);    //write the y of the current index
             outMSG.Write(Direction);    //write the direction of the current index
             outMSG.Write(Step); //write the step of the current index
-            svrClient.SendMessage(outMSG, svrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet to the server in reliable order so its not jumbled when the server gets it
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet to the server in reliable order so its not jumbled when the server gets it
         }
 
-        void SendUpdateDirection(NetClient svrClient, int index)    //packet for updateing the direction
+        void SendUpdateDirection(NetClient c_Client, int index)    //packet for updateing the direction
         {
-            NetOutgoingMessage outMSG = svrClient.CreateMessage();  //create the message we will use to wirte out data going to the server
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to wirte out data going to the server
             outMSG.Write((byte)PacketTypes.UpdateDirection);    //packet header name
             outMSG.Write(index);    //current clients index
             outMSG.Write(Direction);    //current index direction
-            svrClient.SendMessage(outMSG, svrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet in reliable order
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet in reliable order
         }
     }
 

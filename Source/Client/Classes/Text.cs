@@ -37,15 +37,15 @@ namespace Client.Classes
             disposed = true;    //its disposed so let the client know
         }
 
-        public void DrawText(RenderWindow dWindow, string dText, Vector2f position, uint dSize, Color cColor)   //method for drawing text on the screen
+        public void DrawText(RenderWindow c_Window, string c_Text, Vector2f position, uint c_Size, Color c_Color)   //method for drawing text on the screen
         {
             defaultText.Font = defaultFont; //set the font
-            defaultText.CharacterSize = dSize;  //set it size
+            defaultText.CharacterSize = c_Size;  //set it size
             defaultText.Position = position;    //set its location on the screen
-            defaultText.DisplayedString = dText;    //what is actually being displayed (text)
-            defaultText.Color = cColor; //the color of the text we are drawing
+            defaultText.DisplayedString = c_Text;    //what is actually being displayed (text)
+            defaultText.Color = c_Color; //the color of the text we are drawing
 
-            dWindow.Draw(defaultText);  //window drawing function
+            c_Window.Draw(defaultText);  //window drawing function
         }
     }
 }

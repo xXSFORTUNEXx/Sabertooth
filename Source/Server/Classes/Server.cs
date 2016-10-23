@@ -12,10 +12,10 @@ namespace Server.Classes
 {
     class Server
     {
-        Player[] svrPlayer = new Player[5];
-        NPC[] svrNpc = new NPC[10];
+        Player[] s_Player = new Player[5];
+        NPC[] s_Npc = new NPC[10];
         HandleData handleData = new HandleData();
-        Map[] svrMap = new Map[10];
+        Map[] s_Map = new Map[10];
         Random RND = new Random();
         static int lastTick;
         static int lastCycleRate;
@@ -27,7 +27,7 @@ namespace Server.Classes
         private int spawnTick;
         private int spawnTime = 1000;
 
-        public void ServerLoop(NetServer svrServer)
+        public void ServerLoop(NetServer s_Server)
         {
             InitPlayerArray();
             InitMap();
@@ -39,15 +39,15 @@ namespace Server.Classes
             while (true)
             {
                 //Console.Title = "Sabertooth Server - Bind IP: " + svrServer.Socket.LocalEndPoint + " CPS: " + CalculateCycleRate();
-                handleData.HandleDataMessage(svrServer, svrPlayer, svrMap, svrNpc);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc);
 
                 if (TickCount - saveTick > saveTime)
                 {
                     SavePlayers();
                     saveTick = TickCount;
                 }
-                CheckNPCSpawn(svrServer);
-                CheckNpcAI(svrServer);
+                CheckNPCSpawn(s_Server);
+                CheckNpcAI(s_Server);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Server.Classes
             LogWriter.WriteLog("Creating player array...", "Server");
             for (int i = 0; i < 5; i++)
             {
-                svrPlayer[i] = new Player();
+                s_Player[i] = new Player();
             }
         }
 
@@ -79,9 +79,9 @@ namespace Server.Classes
             LogWriter.WriteLog("Saving players...", "Server");
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Name != null)
+                if (s_Player[i].Name != null)
                 {
-                    svrPlayer[i].SavePlayerXML();
+                    s_Player[i].SavePlayerXML();
                 }
             }
         }
@@ -94,14 +94,14 @@ namespace Server.Classes
             {
                 if (!File.Exists("Maps/Map" + i + ".bin"))
                 {
-                    svrMap[i] = new Map();
-                    svrMap[i].GenerateMap(i);
-                    svrMap[i].SaveMap(i);
+                    s_Map[i] = new Map();
+                    s_Map[i].GenerateMap(i);
+                    s_Map[i].SaveMap(i);
                 }
                 else
                 {
-                    svrMap[i] = new Map();
-                    svrMap[i].LoadMap(i);
+                    s_Map[i] = new Map();
+                    s_Map[i].LoadMap(i);
                 }
             }
         }
@@ -115,13 +115,13 @@ namespace Server.Classes
             { 
                 if (!File.Exists("NPCS/Npc" + i + ".bin"))
                 {
-                    svrNpc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000);
-                    svrNpc[i].SaveNPC(i);
+                    s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000);
+                    s_Npc[i].SaveNPC(i);
                 }
                 else
                 {
-                    svrNpc[i] = new NPC();
-                    svrNpc[i].LoadNPC(i);
+                    s_Npc[i] = new NPC();
+                    s_Npc[i].LoadNPC(i);
                 }
             }
 
@@ -130,21 +130,21 @@ namespace Server.Classes
             {
                 for (int n = 0; n < 10; n++)
                 {
-                    int num = svrMap[i].mapNpc[n].npcNum;
-                    svrMap[i].mapNpc[n].Name = svrNpc[num].Name;
-                    svrMap[i].mapNpc[n].X = svrNpc[num].X;
-                    svrMap[i].mapNpc[n].Y = svrNpc[num].Y;
-                    svrMap[i].mapNpc[n].Direction = svrNpc[num].Direction;
-                    svrMap[i].mapNpc[n].Step = svrNpc[num].Step;
-                    svrMap[i].mapNpc[n].Sprite = svrNpc[num].Sprite;
-                    svrMap[i].mapNpc[n].Behavior = svrNpc[num].Behavior;
-                    svrMap[i].mapNpc[n].Owner = svrNpc[num].Owner;
-                    svrMap[i].mapNpc[n].isSpawned = svrNpc[num].isSpawned;
+                    int num = s_Map[i].mapNpc[n].npcNum;
+                    s_Map[i].mapNpc[n].Name = s_Npc[num].Name;
+                    s_Map[i].mapNpc[n].X = s_Npc[num].X;
+                    s_Map[i].mapNpc[n].Y = s_Npc[num].Y;
+                    s_Map[i].mapNpc[n].Direction = s_Npc[num].Direction;
+                    s_Map[i].mapNpc[n].Step = s_Npc[num].Step;
+                    s_Map[i].mapNpc[n].Sprite = s_Npc[num].Sprite;
+                    s_Map[i].mapNpc[n].Behavior = s_Npc[num].Behavior;
+                    s_Map[i].mapNpc[n].Owner = s_Npc[num].Owner;
+                    s_Map[i].mapNpc[n].isSpawned = s_Npc[num].isSpawned;
                 }
             }
         }
 
-        void CheckNpcAI(NetServer svrServer)
+        void CheckNpcAI(NetServer s_Server)
         {
             if (TickCount - aiTick > aiTime)
             {
@@ -152,22 +152,22 @@ namespace Server.Classes
                 {
                     for (int n = 0; n < 10; n++)
                     {
-                        if (svrMap[i].mapNpc[n].isSpawned == true)
+                        if (s_Map[i].mapNpc[n].isSpawned == true)
                         {
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
-                            svrMap[i].mapNpc[n].NpcAI(canMove, dir, svrMap[i]);
+                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i]);
 
-                            if (svrMap[i].mapNpc[n].didMove == true)
+                            if (s_Map[i].mapNpc[n].didMove == true)
                             {
-                                svrMap[i].mapNpc[n].didMove = false;
+                                s_Map[i].mapNpc[n].didMove = false;
                                 
                                 for (int p = 0; p < 5; p++)
                                 {
-                                    if (svrPlayer[p].Connection != null && svrPlayer[p].Map == i)
+                                    if (s_Player[p].Connection != null && s_Player[p].Map == i)
                                     {
-                                        handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], n);
+                                        handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
                                     }
                                 }
                             }
@@ -178,7 +178,7 @@ namespace Server.Classes
             }
         }
 
-        void CheckNPCSpawn(NetServer svrServer)
+        void CheckNPCSpawn(NetServer s_Server)
         {
             //Check for map spawning
             if (TickCount - spawnTick > spawnTime)
@@ -189,21 +189,21 @@ namespace Server.Classes
                     {
                         for (int y = 0; y < 50; y++)
                         {
-                            if (svrMap[i].Ground[x, y].type == (int)TileType.NPCSpawn)
+                            if (s_Map[i].Ground[x, y].type == (int)TileType.NPCSpawn)
                             {
-                                int npcNum = svrMap[i].Ground[x, y].spawnNum;
+                                int npcNum = s_Map[i].Ground[x, y].spawnNum;
 
-                                if (svrMap[i].mapNpc[npcNum].isSpawned == false)
+                                if (s_Map[i].mapNpc[npcNum].isSpawned == false)
                                 {
-                                    svrMap[i].mapNpc[npcNum].X = x;
-                                    svrMap[i].mapNpc[npcNum].Y = y;
-                                    svrMap[i].mapNpc[npcNum].isSpawned = true;
+                                    s_Map[i].mapNpc[npcNum].X = x;
+                                    s_Map[i].mapNpc[npcNum].Y = y;
+                                    s_Map[i].mapNpc[npcNum].isSpawned = true;
 
                                     for (int p = 0; p < 5; p++)
                                     {
-                                        if (svrPlayer[p].Connection != null && i == svrPlayer[p].Map)
+                                        if (s_Player[p].Connection != null && i == s_Player[p].Map)
                                         {
-                                            handleData.SendMapNpcData(svrServer, svrPlayer[p].Connection, svrMap[i], npcNum);
+                                            handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], npcNum);
                                         }
                                     }
                                 }

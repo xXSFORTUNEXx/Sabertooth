@@ -12,59 +12,59 @@ namespace Server.Classes
         /// <summary>
         /// This method checks for incoming messages and processes the header (name) of the packet for processing
         /// </summary>
-        public void HandleDataMessage(NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc)
         {
             NetIncomingMessage incMSG;  //create incoming message
 
-            if ((incMSG = svrServer.ReadMessage()) != null)
+            if ((incMSG = s_Server.ReadMessage()) != null)
             {
                 switch (incMSG.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryRequest:
-                        HandleDiscoveryRequest(incMSG, svrServer);
+                        HandleDiscoveryRequest(incMSG, s_Server);
                         break;
 
                     case NetIncomingMessageType.ConnectionApproval:
-                        HandleConnectionApproval(incMSG, svrServer);
+                        HandleConnectionApproval(incMSG, s_Server);
                         break;
 
                     case NetIncomingMessageType.Data:
                         switch (incMSG.ReadByte())
                         {
                             case (byte)PacketTypes.Register:
-                                HandleRegisterRequest(incMSG, svrServer, svrPlayer);
+                                HandleRegisterRequest(incMSG, s_Server, s_Player);
                                 break;
                             case (byte)PacketTypes.Login:
-                                HandleLoginRequest(incMSG, svrServer, svrPlayer, svrMap, svrNpc);
+                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
-                                HandleChatMessage(incMSG, svrServer, svrPlayer, svrMap);
+                                HandleChatMessage(incMSG, s_Server, s_Player, s_Map);
                                 break;
 
                             case (byte)PacketTypes.MoveData:
-                                HandleMoveData(incMSG, svrServer, svrPlayer);
+                                HandleMoveData(incMSG, s_Server, s_Player);
                                 break;
 
                             case (byte)PacketTypes.UpdateDirection:
-                                HandleDirectionData(incMSG, svrServer, svrPlayer);
+                                HandleDirectionData(incMSG, s_Server, s_Player);
                                 break;
                         }
                         break;
 
                     case NetIncomingMessageType.StatusChanged:
-                        HandleStatusChange(incMSG, svrServer, svrPlayer);
+                        HandleStatusChange(incMSG, s_Server, s_Player);
                         break;
                 }
             }
-            svrServer.Recycle(incMSG);
+            s_Server.Recycle(incMSG);
         }
 
         /// <summary>
         /// These methods handle data that is incoming from connected clients
         /// </summary>
         //Handle incoming packets for movement of the player
-        void HandleMoveData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleMoveData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             int index = incMSG.ReadInt32();
             int x = incMSG.ReadInt32();
@@ -72,46 +72,46 @@ namespace Server.Classes
             int direction = incMSG.ReadInt32();
             int step = incMSG.ReadInt32();
 
-            if (step == svrPlayer[index].Step) { return; }
-            if (x == svrPlayer[index].X && y == svrPlayer[index].Y) { return; }
+            if (step == s_Player[index].Step) { return; }
+            if (x == s_Player[index].X && y == s_Player[index].Y) { return; }
 
-            svrPlayer[index].X = x;
-            svrPlayer[index].Y = y;
-            svrPlayer[index].Direction = direction;
-            svrPlayer[index].Step = step;
+            s_Player[index].X = x;
+            s_Player[index].Y = y;
+            s_Player[index].Direction = direction;
+            s_Player[index].Step = step;
 
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Connection != null && svrPlayer[i].Map == svrPlayer[index].Map)
+                if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
                 {
-                    SendUpdateMovementData(svrServer, svrPlayer[i].Connection, index, x, y, direction, step);
+                    SendUpdateMovementData(s_Server, s_Player[i].Connection, index, x, y, direction, step);
                 }
             }
         }
 
         //Handles incoming direction data for players
-        void HandleDirectionData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleDirectionData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
 
-            if (direction == svrPlayer[index].Direction) { return; }
+            if (direction == s_Player[index].Direction) { return; }
 
-            svrPlayer[index].Direction = direction;
-            SendUpdateDirection(svrServer, index, direction);
+            s_Player[index].Direction = direction;
+            SendUpdateDirection(s_Server, index, direction);
         }
 
         //Handles a discovery response from the server
-        void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer svrServer)
+        void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer s_Server)
         {
             Console.WriteLine("Client discovered @ " + incMSG.SenderEndPoint.ToString());
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write("Sabertooth Server");
-            svrServer.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
+            s_Server.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
         }
 
         //Handles our connection getting approved from our server
-        void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer svrServer)
+        void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer s_Server)
         {
             if (incMSG.ReadByte() == (byte)PacketTypes.Connection)
             {
@@ -120,9 +120,9 @@ namespace Server.Classes
                 {
                     incMSG.SenderConnection.Approve();
                     Thread.Sleep(500);
-                    NetOutgoingMessage outMSG = svrServer.CreateMessage();
+                    NetOutgoingMessage outMSG = s_Server.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Connection);
-                    svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                    s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                 }
                 else
                 {
@@ -132,106 +132,106 @@ namespace Server.Classes
         }
 
         //Handles our registration requests to the server
-        void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
 
-            if (!AlreadyLogged(username, svrPlayer))
+            if (!AlreadyLogged(username, s_Player))
             {
                 if (!AccountExist(username))
                 {
-                    int i = OpenSlot(svrPlayer);
+                    int i = OpenSlot(s_Player);
                     if (i < 5)
                     {
-                        svrPlayer[i] = new Player(username, password, incMSG.SenderConnection);
-                        svrPlayer[i].SavePlayerXML();
+                        s_Player[i] = new Player(username, password, incMSG.SenderConnection);
+                        s_Player[i].SavePlayerXML();
                         Console.WriteLine("Account created, " + username + ", " + password);
-                        SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, svrServer);
-                        ClearSlot(incMSG.SenderConnection, svrPlayer);
+                        SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
+                        ClearSlot(incMSG.SenderConnection, s_Player);
                     }
                     else
                     {
                         Console.WriteLine("Server Full!");
-                        SendErrorMessage("Server is full. Please try again later.", "Server Full", incMSG, svrServer);
+                        SendErrorMessage("Server is full. Please try again later.", "Server Full", incMSG, s_Server);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Account already exists!");
-                    SendErrorMessage("Account already exists! Please choose another username.", "Account Exists", incMSG, svrServer);
+                    SendErrorMessage("Account already exists! Please choose another username.", "Account Exists", incMSG, s_Server);
                 }
             }
             else
             {
                 Console.WriteLine("Attempted multi-login!");
-                SendErrorMessage("Account already logged in. If this is an error, please try again.", "Account Logged", incMSG, svrServer);
+                SendErrorMessage("Account already logged in. If this is an error, please try again.", "Account Logged", incMSG, s_Server);
             }
         }
 
         //Handle logging in requests for the server
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap, NPC[] svrNpc)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
 
-            if (!AlreadyLogged(username, svrPlayer))
+            if (!AlreadyLogged(username, s_Player))
             {
                 if (AccountExist(username) && CheckPassword(username, password))
                 {
-                    int i = OpenSlot(svrPlayer);
+                    int i = OpenSlot(s_Player);
                     if (i < 5)
                     {
-                        svrPlayer[i] = new Player(username, password, incMSG.SenderConnection);
-                        svrPlayer[i].LoadPlayerXML();
-                        int currentMap = svrPlayer[i].Map;
+                        s_Player[i] = new Player(username, password, incMSG.SenderConnection);
+                        s_Player[i].LoadPlayerXML();
+                        int currentMap = s_Player[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
-                        NetOutgoingMessage outMSG = svrServer.CreateMessage();
+                        NetOutgoingMessage outMSG = s_Server.CreateMessage();
                         outMSG.Write((byte)PacketTypes.Login);
-                        svrServer.SendMessage(outMSG, svrPlayer[i].Connection, NetDeliveryMethod.ReliableOrdered);
-                        SendUserData(incMSG, svrServer, svrPlayer, i);
-                        SendUsers(incMSG, svrServer, svrPlayer);
-                        SendMapData(incMSG, svrServer, svrMap[currentMap], svrPlayer);
-                        SendNpcs(incMSG, svrServer, svrNpc);
-                        SendMapNpcs(incMSG, svrServer, svrMap[currentMap]);
+                        s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
+                        SendUserData(incMSG, s_Server, s_Player, i);
+                        SendUsers(incMSG, s_Server, s_Player);
+                        SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
+                        SendNpcs(incMSG, s_Server, s_Npc);
+                        SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                     }
                     else
                     {
                         Console.WriteLine("Server is full...");
-                        SendErrorMessage("Server is full. Please try again later.", "Server Full", incMSG, svrServer);
+                        SendErrorMessage("Server is full. Please try again later.", "Server Full", incMSG, s_Server);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Invalid login by: " + username + ", " + password);
-                    SendErrorMessage("Invalid username or password.", "Invalid Login", incMSG, svrServer);
+                    SendErrorMessage("Invalid username or password.", "Invalid Login", incMSG, s_Server);
                 }
             }
             else
             {
                 Console.WriteLine("Multiple login attempt by: " + username + ", " + password);
-                SendErrorMessage("Account already logged in. If this is an error, please try again.", "Account Logged", incMSG, svrServer);
+                SendErrorMessage("Account already logged in. If this is an error, please try again.", "Account Logged", incMSG, s_Server);
             }
         }
         
         //Handleing a chat message incoming
-        void HandleChatMessage(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, Map[] svrMap)
+        void HandleChatMessage(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
         {
             string msg = incMSG.ReadString();
             //Check for an admin command
             if (msg.Substring(0, 1) == "/")
             {
-                CheckCommand(msg, GetPlayerConnection(incMSG, svrPlayer), svrPlayer, incMSG, svrServer, svrMap);
+                CheckCommand(msg, GetPlayerConnection(incMSG, s_Player), s_Player, incMSG, s_Server, s_Map);
                 return;
             }
             else
             {
-                string name = svrPlayer[GetPlayerConnection(incMSG, svrPlayer)].Name;
+                string name = s_Player[GetPlayerConnection(incMSG, s_Player)].Name;
                 string finalMsg = name + ": " + msg;
-                NetOutgoingMessage outMSG = svrServer.CreateMessage();
+                NetOutgoingMessage outMSG = s_Server.CreateMessage();
                 outMSG.Write((byte)PacketTypes.ChatMessage);
                 outMSG.Write(finalMsg);
-                svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+                s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
                 LogWriter.WriteLog(finalMsg, "Chat");
                 Console.WriteLine(finalMsg);
             }
@@ -241,18 +241,18 @@ namespace Server.Classes
         /// These methods handle sending data to clients that are requesting it
         /// </summary>
         //Sends a direction update to the client so it can be processed and sent to all connected
-        void SendUpdateDirection(NetServer svrServer, int index, int direction)
+        void SendUpdateDirection(NetServer s_Server, int index, int direction)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write(index);
             outMSG.Write(direction);
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Sending out the data for movement to be processed by everyone connected
-        void SendUpdateMovementData(NetServer svrServer, NetConnection playerConn, int index, int x, int y, int direction, int step)
+        void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int step)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
             outMSG.Write(index);
             outMSG.Write(x);
@@ -260,174 +260,174 @@ namespace Server.Classes
             outMSG.Write(direction);
             outMSG.Write(step);
 
-            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send user data of the main index
-        void SendUserData(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer, int svrIndex)
+        void SendUserData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int svrIndex)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UserData);
             outMSG.Write(svrIndex);
-            outMSG.Write(svrPlayer[svrIndex].Name);
-            outMSG.Write(svrPlayer[svrIndex].X);
-            outMSG.Write(svrPlayer[svrIndex].Y);
-            outMSG.Write(svrPlayer[svrIndex].Map);
-            outMSG.Write(svrPlayer[svrIndex].Direction);
-            outMSG.Write(svrPlayer[svrIndex].Sprite);
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            outMSG.Write(s_Player[svrIndex].Name);
+            outMSG.Write(s_Player[svrIndex].X);
+            outMSG.Write(s_Player[svrIndex].Y);
+            outMSG.Write(s_Player[svrIndex].Map);
+            outMSG.Write(s_Player[svrIndex].Direction);
+            outMSG.Write(s_Player[svrIndex].Sprite);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send user data to all
-        void SendUsers(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void SendUsers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.Users);
             for (int i = 0; i < 5; i++)
             {
-                outMSG.Write(svrPlayer[i].Name);
-                outMSG.Write(svrPlayer[i].X);
-                outMSG.Write(svrPlayer[i].Y);
-                outMSG.Write(svrPlayer[i].Map);
-                outMSG.Write(svrPlayer[i].Direction);
-                outMSG.Write(svrPlayer[i].Sprite);
+                outMSG.Write(s_Player[i].Name);
+                outMSG.Write(s_Player[i].X);
+                outMSG.Write(s_Player[i].Y);
+                outMSG.Write(s_Player[i].Map);
+                outMSG.Write(s_Player[i].Direction);
+                outMSG.Write(s_Player[i].Sprite);
             }
-            svrServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send npc data to client
-        void SendNpcs(NetIncomingMessage incMSG, NetServer svrServer, NPC[] svrNpc)
+        void SendNpcs(NetIncomingMessage incMSG, NetServer s_Server, NPC[] s_Npc)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);
             for (int i = 0; i < 10; i++)
             {
-                outMSG.Write(svrNpc[i].Name);
-                outMSG.Write(svrNpc[i].X);
-                outMSG.Write(svrNpc[i].Y);
-                outMSG.Write(svrNpc[i].Direction);
-                outMSG.Write(svrNpc[i].Sprite);
-                outMSG.Write(svrNpc[i].Step);
-                outMSG.Write(svrNpc[i].Owner);
-                outMSG.Write(svrNpc[i].Behavior);
-                outMSG.Write(svrNpc[i].SpawnTime);
-                outMSG.Write(svrNpc[i].isSpawned);
+                outMSG.Write(s_Npc[i].Name);
+                outMSG.Write(s_Npc[i].X);
+                outMSG.Write(s_Npc[i].Y);
+                outMSG.Write(s_Npc[i].Direction);
+                outMSG.Write(s_Npc[i].Sprite);
+                outMSG.Write(s_Npc[i].Step);
+                outMSG.Write(s_Npc[i].Owner);
+                outMSG.Write(s_Npc[i].Behavior);
+                outMSG.Write(s_Npc[i].SpawnTime);
+                outMSG.Write(s_Npc[i].isSpawned);
             }
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending NPS...");
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
         //Send map npcs to client
-        void SendMapNpcs(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap)
+        void SendMapNpcs(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapNpc);
             for (int i = 0; i < 10; i++)
             {
-                outMSG.Write(svrMap.mapNpc[i].Name);
-                outMSG.Write(svrMap.mapNpc[i].X);
-                outMSG.Write(svrMap.mapNpc[i].Y);
-                outMSG.Write(svrMap.mapNpc[i].Direction);
-                outMSG.Write(svrMap.mapNpc[i].Sprite);
-                outMSG.Write(svrMap.mapNpc[i].Step);
-                outMSG.Write(svrMap.mapNpc[i].Owner);
-                outMSG.Write(svrMap.mapNpc[i].Behavior);
-                outMSG.Write(svrMap.mapNpc[i].SpawnTime);
-                outMSG.Write(svrMap.mapNpc[i].isSpawned);
+                outMSG.Write(s_Map.mapNpc[i].Name);
+                outMSG.Write(s_Map.mapNpc[i].X);
+                outMSG.Write(s_Map.mapNpc[i].Y);
+                outMSG.Write(s_Map.mapNpc[i].Direction);
+                outMSG.Write(s_Map.mapNpc[i].Sprite);
+                outMSG.Write(s_Map.mapNpc[i].Step);
+                outMSG.Write(s_Map.mapNpc[i].Owner);
+                outMSG.Write(s_Map.mapNpc[i].Behavior);
+                outMSG.Write(s_Map.mapNpc[i].SpawnTime);
+                outMSG.Write(s_Map.mapNpc[i].isSpawned);
             }
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send npc's associated with the map the player is currently on
-        public void SendMapNpcData(NetServer svrServer, NetConnection playerConn, Map svrMap, int npcNum)
+        public void SendMapNpcData(NetServer s_Server, NetConnection playerConn, Map s_Map, int npcNum)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.Write(npcNum);
-            outMSG.Write(svrMap.mapNpc[npcNum].Name);
-            outMSG.Write(svrMap.mapNpc[npcNum].X);
-            outMSG.Write(svrMap.mapNpc[npcNum].Y);
-            outMSG.Write(svrMap.mapNpc[npcNum].Direction);
-            outMSG.Write(svrMap.mapNpc[npcNum].Sprite);
-            outMSG.Write(svrMap.mapNpc[npcNum].Step);
-            outMSG.Write(svrMap.mapNpc[npcNum].Owner);
-            outMSG.Write(svrMap.mapNpc[npcNum].Behavior);
-            outMSG.Write(svrMap.mapNpc[npcNum].SpawnTime);
-            outMSG.Write(svrMap.mapNpc[npcNum].isSpawned);
+            outMSG.Write(s_Map.mapNpc[npcNum].Name);
+            outMSG.Write(s_Map.mapNpc[npcNum].X);
+            outMSG.Write(s_Map.mapNpc[npcNum].Y);
+            outMSG.Write(s_Map.mapNpc[npcNum].Direction);
+            outMSG.Write(s_Map.mapNpc[npcNum].Sprite);
+            outMSG.Write(s_Map.mapNpc[npcNum].Step);
+            outMSG.Write(s_Map.mapNpc[npcNum].Owner);
+            outMSG.Write(s_Map.mapNpc[npcNum].Behavior);
+            outMSG.Write(s_Map.mapNpc[npcNum].SpawnTime);
+            outMSG.Write(s_Map.mapNpc[npcNum].isSpawned);
 
-            svrServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Sends an error message to be processed by the client
-        void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer svrServer)
+        void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer s_Server)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.ErrorMessage);
             outMSG.Write(message);
             outMSG.Write(caption);
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendMapData(NetIncomingMessage incMSG, NetServer svrServer, Map svrMap, Player[] svrPlayer)
+        void SendMapData(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map, Player[] s_Player)
         {
-            NetOutgoingMessage outMSG = svrServer.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
-            outMSG.Write(svrMap.Name);
+            outMSG.Write(s_Map.Name);
 
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
                 {
                     //ground
-                    outMSG.Write(svrMap.Ground[x, y].tileX);
-                    outMSG.Write(svrMap.Ground[x, y].tileY);
-                    outMSG.Write(svrMap.Ground[x, y].tileW);
-                    outMSG.Write(svrMap.Ground[x, y].tileH);
-                    outMSG.Write(svrMap.Ground[x, y].Tileset);
-                    outMSG.Write(svrMap.Ground[x, y].type);
-                    outMSG.Write(svrMap.Ground[x, y].spawnNum);
+                    outMSG.Write(s_Map.Ground[x, y].tileX);
+                    outMSG.Write(s_Map.Ground[x, y].tileY);
+                    outMSG.Write(s_Map.Ground[x, y].tileW);
+                    outMSG.Write(s_Map.Ground[x, y].tileH);
+                    outMSG.Write(s_Map.Ground[x, y].Tileset);
+                    outMSG.Write(s_Map.Ground[x, y].type);
+                    outMSG.Write(s_Map.Ground[x, y].spawnNum);
                     //mask
-                    outMSG.Write(svrMap.Mask[x, y].tileX);
-                    outMSG.Write(svrMap.Mask[x, y].tileY);
-                    outMSG.Write(svrMap.Mask[x, y].tileW);
-                    outMSG.Write(svrMap.Mask[x, y].tileH);
-                    outMSG.Write(svrMap.Mask[x, y].Tileset);
+                    outMSG.Write(s_Map.Mask[x, y].tileX);
+                    outMSG.Write(s_Map.Mask[x, y].tileY);
+                    outMSG.Write(s_Map.Mask[x, y].tileW);
+                    outMSG.Write(s_Map.Mask[x, y].tileH);
+                    outMSG.Write(s_Map.Mask[x, y].Tileset);
                     //fringe
-                    outMSG.Write(svrMap.Fringe[x, y].tileX);
-                    outMSG.Write(svrMap.Fringe[x, y].tileY);
-                    outMSG.Write(svrMap.Fringe[x, y].tileW);
-                    outMSG.Write(svrMap.Fringe[x, y].tileH);
-                    outMSG.Write(svrMap.Fringe[x, y].Tileset);
+                    outMSG.Write(s_Map.Fringe[x, y].tileX);
+                    outMSG.Write(s_Map.Fringe[x, y].tileY);
+                    outMSG.Write(s_Map.Fringe[x, y].tileW);
+                    outMSG.Write(s_Map.Fringe[x, y].tileH);
+                    outMSG.Write(s_Map.Fringe[x, y].Tileset);
                     //mask a
-                    outMSG.Write(svrMap.MaskA[x, y].tileX);
-                    outMSG.Write(svrMap.MaskA[x, y].tileY);
-                    outMSG.Write(svrMap.MaskA[x, y].tileW);
-                    outMSG.Write(svrMap.MaskA[x, y].tileH);
-                    outMSG.Write(svrMap.MaskA[x, y].Tileset);
+                    outMSG.Write(s_Map.MaskA[x, y].tileX);
+                    outMSG.Write(s_Map.MaskA[x, y].tileY);
+                    outMSG.Write(s_Map.MaskA[x, y].tileW);
+                    outMSG.Write(s_Map.MaskA[x, y].tileH);
+                    outMSG.Write(s_Map.MaskA[x, y].Tileset);
                     //fringe a
-                    outMSG.Write(svrMap.FringeA[x, y].tileX);
-                    outMSG.Write(svrMap.FringeA[x, y].tileY);
-                    outMSG.Write(svrMap.FringeA[x, y].tileW);
-                    outMSG.Write(svrMap.FringeA[x, y].tileH);
-                    outMSG.Write(svrMap.FringeA[x, y].Tileset);
+                    outMSG.Write(s_Map.FringeA[x, y].tileX);
+                    outMSG.Write(s_Map.FringeA[x, y].tileY);
+                    outMSG.Write(s_Map.FringeA[x, y].tileW);
+                    outMSG.Write(s_Map.FringeA[x, y].tileH);
+                    outMSG.Write(s_Map.FringeA[x, y].Tileset);
                 }
             }
-            svrServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         /// <summary>
         /// These methods handle all the data from incoming messages
         /// </summary>
-        static bool AlreadyLogged(string name, Player[] svrPlayer)
+        static bool AlreadyLogged(string name, Player[] s_Player)
         {
             if (name == null) return false;
 
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Name != null)
+                if (s_Player[i].Name != null)
                 {
-                    string alname = svrPlayer[i].Name.ToLower();
+                    string alname = s_Player[i].Name.ToLower();
                     string alother = name.ToLower();
                     if (alname == alother)
                     {
@@ -438,11 +438,11 @@ namespace Server.Classes
             return false;
         }
 
-        static int OpenSlot(Player[] svrPlayer)
+        static int OpenSlot(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Name == null)
+                if (s_Player[i].Name == null)
                 {
                     return i;
                 }
@@ -450,11 +450,11 @@ namespace Server.Classes
             return 5;
         }
 
-        static int GetPlayerConnection(NetIncomingMessage incMSG, Player[] svrPlayer)
+        static int GetPlayerConnection(NetIncomingMessage incMSG, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Connection == incMSG.SenderConnection)
+                if (s_Player[i].Connection == incMSG.SenderConnection)
                 {
                     return i;
                 }
@@ -489,20 +489,20 @@ namespace Server.Classes
             return false;
         }
 
-        void ClearSlot(NetConnection conn, Player[] svrPlayer)
+        void ClearSlot(NetConnection conn, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i] != null && svrPlayer[i].Connection == conn)
+                if (s_Player[i] != null && s_Player[i].Connection == conn)
                 {
-                    svrPlayer[i] = null;
-                    svrPlayer[i] = new Player();
+                    s_Player[i] = null;
+                    s_Player[i] = new Player();
                     break;
                 }
             }
         }
 
-        void HandleStatusChange(NetIncomingMessage incMSG, NetServer svrServer, Player[] svrPlayer)
+        void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
             LogWriter.WriteLog(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status, "Server");
@@ -512,9 +512,9 @@ namespace Server.Classes
                 LogWriter.WriteLog("Disconnected clearing data...", "Server");
                 Console.WriteLine("Saving player...");
                 LogWriter.WriteLog("Saving player...", "Server");
-                SavePlayers(svrPlayer);
-                ClearSlot(incMSG.SenderConnection, svrPlayer);
-                SendUsers(incMSG, svrServer, svrPlayer);
+                SavePlayers(s_Player);
+                ClearSlot(incMSG.SenderConnection, s_Player);
+                SendUsers(incMSG, s_Server, s_Player);
             }
         }
 
@@ -529,7 +529,7 @@ namespace Server.Classes
             }
         }
 
-        void CheckCommand(string msg, int index, Player[] svrPlayer, NetIncomingMessage incMSG, NetServer svrServer, Map[] svrMap)
+        void CheckCommand(string msg, int index, Player[] s_Player, NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
             if (msg.Length >= 6)
@@ -540,10 +540,10 @@ namespace Server.Classes
                     if (msg.Length >= 6)
                     {
                         int mapNum = ToInt32(msg.Substring(5, 1));
-                        svrPlayer[index].Map = mapNum;
-                        SendMapData(incMSG, svrServer, svrMap[mapNum], svrPlayer);
-                        SendUsers(incMSG, svrServer, svrPlayer);
-                        SendMapNpcs(incMSG, svrServer, svrMap[mapNum]);
+                        s_Player[index].Map = mapNum;
+                        SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
+                        SendUsers(incMSG, s_Server, s_Player);
+                        SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
                         return;
                     }
@@ -567,8 +567,8 @@ namespace Server.Classes
                     {
                         spriteNum = ToInt32(msg.Substring(8, 1));
                     }
-                    svrPlayer[index].Sprite = spriteNum;
-                    SendUsers(incMSG, svrServer, svrPlayer);
+                    s_Player[index].Sprite = spriteNum;
+                    SendUsers(incMSG, s_Server, s_Player);
                     Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
                     return;
                 }

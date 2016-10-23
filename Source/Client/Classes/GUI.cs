@@ -9,11 +9,11 @@ namespace Client.Classes
 {
     class GUI
     {
-        static NetClient srvrClient;
-        Canvas srvrCanvas;
-        Gwen.Font srvrFont;
-        Player[] srvrPlayer;
-        ClientConfig svrcConfig;
+        static NetClient c_Client;
+        Canvas c_Canvas;
+        Gwen.Font c_Font;
+        Player[] c_Player;
+        ClientConfig c_Config;
         public WindowControl debugWindow;
         public int guiIndex;
         Label debugFps;
@@ -56,13 +56,13 @@ namespace Client.Classes
         public ListBox outputChat;
         public TextBox inputChat;
 
-        public GUI(NetClient svrClient, Canvas svrCanvas, Gwen.Font svrFont, Gwen.Renderer.SFML gwenRenderer, Player[] svrPlayer, ClientConfig cConfig)
+        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
         {
-            srvrClient = svrClient;
-            srvrCanvas = svrCanvas;
-            srvrFont = svrFont;
-            srvrPlayer = svrPlayer;
-            svrcConfig = cConfig;
+            GUI.c_Client = c_Client;
+            this.c_Canvas = c_Canvas;
+            this.c_Font = c_Font;
+            this.c_Player = c_Player;
+            this.c_Config = c_Config;
         }
 
         public void CreateMainWindow(Base parent)
@@ -96,7 +96,7 @@ namespace Client.Classes
         private void CheckMainWindowLogin(Base control, ClickedEventArgs e)
         {
             Button button = control as Button;
-            CreateLoginWindow(button.GetCanvas(), svrcConfig);
+            CreateLoginWindow(button.GetCanvas(), c_Config);
         }
 
         private void CheckMainWindowRegister(Base control, ClickedEventArgs e)
@@ -107,12 +107,12 @@ namespace Client.Classes
 
         private void CheckMainWindowExit(Base control, ClickedEventArgs e)
         {
-            srvrClient.Disconnect("Shutting Down");
+            c_Client.Disconnect("Shutting Down");
             Thread.Sleep(500);
             Exit(0);
         }
 
-        public void CreateLoginWindow(Base parent, ClientConfig cConfig)
+        public void CreateLoginWindow(Base parent, ClientConfig c_Config)
         {
             logWindow = new WindowControl(parent.GetCanvas());
             logWindow.Title = "Login";
@@ -130,9 +130,9 @@ namespace Client.Classes
             unlogBox.SetPosition(25, 35);
             unlogBox.SetSize(140, 25);
             unlogBox.Focus();
-            if (svrcConfig.saveCreds == "1")
+            if (this.c_Config.saveCreds == "1")
             {
-                unlogBox.Text = cConfig.savedUser;
+                unlogBox.Text = c_Config.savedUser;
             }
             pwloglabel = new Label(logWindow);
             pwloglabel.SetPosition(25, 75);
@@ -141,9 +141,9 @@ namespace Client.Classes
             pwlogBox = new TextBoxPassword(logWindow);
             pwlogBox.SetPosition(25, 95);
             pwlogBox.SetSize(140, 25);
-            if (svrcConfig.saveCreds == "1")
+            if (this.c_Config.saveCreds == "1")
             {
-                pwlogBox.Text = cConfig.savedPass;
+                pwlogBox.Text = c_Config.savedPass;
             }
             //pwlogBox.Focus();
             pwlogBox.SubmitPressed += CheckLogWindowSubmit;
@@ -174,33 +174,33 @@ namespace Client.Classes
 
             if (unlogBox.Text != "" && pwlogBox.Text != "")
             {
-                if (srvrClient.ServerConnection == null)
+                if (c_Client.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", srvrCanvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
                     return;
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
 
-                if (svrcConfig.saveCreds == "1")
+                if (c_Config.saveCreds == "1")
                 {
-                    svrcConfig.savedUser = username;
-                    svrcConfig.savedPass = password;
-                    svrcConfig.SaveConfig();
+                    c_Config.savedUser = username;
+                    c_Config.savedPass = password;
+                    c_Config.SaveConfig();
                 }
 
-                NetOutgoingMessage outMSG = srvrClient.CreateMessage();
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
-                srvrClient.SendMessage(outMSG, srvrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out the login info.", "Login Failed", srvrCanvas);
+                MsgBox("Please fill out the login info.", "Login Failed", c_Canvas);
             }
         }
 
@@ -210,33 +210,33 @@ namespace Client.Classes
 
             if (unlogBox.Text != "" && pwlogBox.Text != "")
             {
-                if (srvrClient.ServerConnection == null)
+                if (c_Client.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", srvrCanvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
                     return;
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
 
-                if (svrcConfig.saveCreds == "1")
+                if (c_Config.saveCreds == "1")
                 {
-                    svrcConfig.savedUser = username;
-                    svrcConfig.savedPass = password;
-                    svrcConfig.SaveConfig();
+                    c_Config.savedUser = username;
+                    c_Config.savedPass = password;
+                    c_Config.SaveConfig();
                 }
 
-                NetOutgoingMessage outMSG = srvrClient.CreateMessage();
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
-                srvrClient.SendMessage(outMSG, srvrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out the login info.", "Login Failed", srvrCanvas);
+                MsgBox("Please fill out the login info.", "Login Failed", c_Canvas);
             }
         }
 
@@ -301,10 +301,10 @@ namespace Client.Classes
 
             if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
             {
-                if (srvrClient.ServerConnection == null)
+                if (c_Client.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", srvrCanvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
                     return;
                 }
 
@@ -312,23 +312,23 @@ namespace Client.Classes
                 {
                     string username = unregBox.Text;
                     string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = srvrClient.CreateMessage();
+                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Register);
                     outMSG.Write(username);
                     outMSG.Write(password);
-                    srvrClient.SendMessage(outMSG, srvrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                     parent.Hide();
                 }
                 else
                 {
                     parent.Hide();
-                    MsgBox("Passwords do not match!", "Retry", srvrCanvas);
+                    MsgBox("Passwords do not match!", "Retry", c_Canvas);
                 }
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out account info for registration.", "Error", srvrCanvas);
+                MsgBox("Please fill out account info for registration.", "Error", c_Canvas);
             }
         }
 
@@ -338,10 +338,10 @@ namespace Client.Classes
 
             if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
             {
-                if (srvrClient.ServerConnection == null)
+                if (c_Client.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", srvrCanvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
                     return;
                 }
 
@@ -349,23 +349,23 @@ namespace Client.Classes
                 {
                     string username = unregBox.Text;
                     string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = srvrClient.CreateMessage();
+                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Register);
                     outMSG.Write(username);
                     outMSG.Write(password);
-                    srvrClient.SendMessage(outMSG, srvrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                     parent.Hide();
                 }
                 else
                 {
                     parent.Hide();
-                    MsgBox("Passwords do not match!", "Retry", srvrCanvas);
+                    MsgBox("Passwords do not match!", "Retry", c_Canvas);
                 }
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out account info for registration.", "Error", srvrCanvas);
+                MsgBox("Please fill out account info for registration.", "Error", c_Canvas);
             }
         }
 
@@ -394,10 +394,10 @@ namespace Client.Classes
             if (inputChat.Text != "")
             {
                 string msg = inputChat.Text;
-                NetOutgoingMessage outMSG = srvrClient.CreateMessage();
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
                 outMSG.Write((byte)PacketTypes.ChatMessage);
                 outMSG.Write(msg);
-                srvrClient.SendMessage(outMSG, srvrClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 inputChat.Text = "";
             }
         }
@@ -410,7 +410,7 @@ namespace Client.Classes
             outputChat.UnselectAll();
         }
 
-        public void UpdateWindowPositions(Player[] svrPlayer, int index)
+        public void UpdateWindowPositions(Player[] c_Player, int index)
         {
             if (mainWindow != null)
             {
@@ -431,9 +431,9 @@ namespace Client.Classes
             }
         }
 
-        public void MsgBox(string msg, string caption, Canvas svrCanvas)
+        public void MsgBox(string msg, string caption, Canvas c_Canvas)
         {
-            MessageBox msgBox = new MessageBox(svrCanvas, msg, caption);
+            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
         }
 
@@ -494,24 +494,24 @@ namespace Client.Classes
             debugPacketsOut.Text = "Packets Out: ?";
         }
 
-        public void UpdateDebugWindow(int fps, Player[] svrPlayer, int drawIndex)
+        public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
         {
             if (debugWindow != null)
             {
                 debugWindow.Title = "Debug Window - Admin";
                 debugWindow.SetPosition(0, 0);
                 debugFps.Text = "FPS: " + fps;
-                debugName.Text = "Name: " + svrPlayer[drawIndex].Name + " (" + drawIndex + ")";
-                debugX.Text = "X: " + (svrPlayer[drawIndex].X + svrPlayer[drawIndex].offsetX);
-                debugY.Text = "Y: " + (svrPlayer[drawIndex].Y + svrPlayer[drawIndex].offsetY);
-                debugMap.Text = "Map: " + svrPlayer[drawIndex].Map;
-                debugDir.Text = "Direction: " + svrPlayer[drawIndex].Direction;
-                debugSprite.Text = "Sprite: " + svrPlayer[drawIndex].Sprite;
-                debugIP.Text = "IP Address: " + srvrClient.ServerConnection.RemoteEndPoint.Address.ToString();
-                debugPort.Text = "Port: " + srvrClient.ServerConnection.RemoteEndPoint.Port.ToString();
-                debugLatency.Text = "Latency: " + srvrClient.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
-                debugPacketsIn.Text = "Packets Received: " + srvrClient.Statistics.ReceivedPackets.ToString();
-                debugPacketsOut.Text = "Packets Sent: " + srvrClient.Statistics.SentPackets.ToString();
+                debugName.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
+                debugX.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
+                debugY.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
+                debugMap.Text = "Map: " + c_Player[drawIndex].Map;
+                debugDir.Text = "Direction: " + c_Player[drawIndex].Direction;
+                debugSprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
+                debugIP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
+                debugPort.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
+                debugLatency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
+                debugPacketsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
+                debugPacketsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
             } 
         }
     }

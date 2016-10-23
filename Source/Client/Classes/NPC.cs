@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
-using Lidgren.Network;
 
 namespace Client.Classes
 {
@@ -24,7 +18,7 @@ namespace Client.Classes
         //Only for live applications, no editors
         public bool isSpawned;
 
-        Sprite svrSprite = new Sprite();
+        Sprite c_Sprite = new Sprite();
 
         public NPC() { }
 
@@ -54,13 +48,13 @@ namespace Client.Classes
             SpawnTime = 5000;
         }
 
-        public void DrawNpc(RenderWindow svrWindow, Texture svrTexture)
+        public void DrawNpc(RenderWindow c_Window, Texture c_Texture)
         {
-            svrSprite.Texture = svrTexture;
-            svrSprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48);
-            svrSprite.Position = new Vector2f((X * 32), ((Y * 32) - 16));
+            c_Sprite.Texture = c_Texture;
+            c_Sprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48);
+            c_Sprite.Position = new Vector2f((X * 32), ((Y * 32) - 16));
 
-            svrWindow.Draw(svrSprite);
+            c_Window.Draw(c_Sprite);
         }
 
         public enum BehaviorType

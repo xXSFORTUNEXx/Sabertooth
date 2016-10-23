@@ -9,8 +9,8 @@ namespace Client.Classes
 {
     class StartUp
     {
-        static NetClient svrClient;
-        static NetPeerConfiguration Config;
+        static NetClient c_Client;
+        static NetPeerConfiguration c_Config;
 
         [DllImport("kernel32.dll")]
         static extern IntPtr GetConsoleWindow();
@@ -28,17 +28,17 @@ namespace Client.Classes
             Console.Title = "Sabertooth Console - Debug Info";  //set console title
             Console.WriteLine("Initializing client...");    //inform the user whats going on
             ClientConfig cConfig = new ClientConfig();  //load client configuration
-            Config = new NetPeerConfiguration("sabertooth");    //create a new peer config
-            Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse); //enable message type for discovery response
-            Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);  //enable message for latency
+            c_Config = new NetPeerConfiguration("sabertooth");    //create a new peer config
+            c_Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse); //enable message type for discovery response
+            c_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);  //enable message for latency
             Console.WriteLine("Enabling message types..."); //inform the user whats going on
-            svrClient = new NetClient(Config);  //create the client with the peer config
+            c_Client = new NetClient(c_Config);  //create the client with the peer config
             Console.WriteLine("Loading config..."); //inform the user whats going on
-            svrClient.Start();  //start the client
+            c_Client.Start();  //start the client
             Console.WriteLine("Client started..."); //let the user know whats up
-            Game svrGame = new Game();  //create game class
+            Game c_Game = new Game();  //create game class
             //ShowWindow(handle, SW_HIDE);
-            svrGame.GameLoop(svrClient, cConfig);    //start game loop
+            c_Game.GameLoop(c_Client, cConfig);    //start game loop
         }
     }
 
