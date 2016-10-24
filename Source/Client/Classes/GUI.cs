@@ -28,6 +28,9 @@ namespace Client.Classes
         Label debugLatency;
         Label debugPacketsIn;
         Label debugPacketsOut;
+        Label debugHealth;
+        Label debugExp;
+        Label debugMoney;
 
         WindowControl mainWindow;
         Button mainbuttonLog;
@@ -492,6 +495,18 @@ namespace Client.Classes
             debugPacketsOut = new Label(debugWindow);
             debugPacketsOut.SetPosition(10, 115);
             debugPacketsOut.Text = "Packets Out: ?";
+
+            debugHealth = new Label(debugWindow);
+            debugHealth.SetPosition(10, 125);
+            debugHealth.Text = "Health: ?";
+
+            debugExp = new Label(debugWindow);
+            debugExp.SetPosition(10, 135);
+            debugExp.Text = "Experience: ?";
+
+            debugMoney = new Label(debugWindow);
+            debugMoney.SetPosition(10, 145);
+            debugMoney.Text = "Money: ?";
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
@@ -507,6 +522,9 @@ namespace Client.Classes
                 debugMap.Text = "Map: " + c_Player[drawIndex].Map;
                 debugDir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 debugSprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
+                debugHealth.Text = "Health: " + c_Player[drawIndex].Health;
+                debugExp.Text = "Experience: " + c_Player[drawIndex].Experience;
+                debugMoney.Text = "Money: " + c_Player[drawIndex].Money;
                 debugIP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
                 debugPort.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
                 debugLatency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
