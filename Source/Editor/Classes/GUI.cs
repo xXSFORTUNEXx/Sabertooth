@@ -313,6 +313,7 @@ namespace Editor.Classes
         {
             npcSelect = new WindowControl(parent.GetCanvas());
             npcSelect.SetBounds(new Rectangle(550, 25, 180, 375));
+            npcSelect.DisableResizing();
             npcSelect.Title = "Select NPC";
 
             npcLabel = new Label(npcSelect);

@@ -74,6 +74,11 @@ namespace Server.Classes
                 Directory.CreateDirectory("NPCS");
                 exists = true;
             }
+            if (!Directory.Exists("Items"))
+            {
+                Directory.CreateDirectory("Items");
+                exists = true;
+            }
 
             if (exists)
             {

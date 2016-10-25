@@ -14,13 +14,11 @@ namespace Server.Classes
     {
         Player[] s_Player = new Player[5];
         NPC[] s_Npc = new NPC[10];
+        Item[] s_Item = new Item[50];
         HandleData handleData = new HandleData();
         Map[] s_Map = new Map[10];
         Random RND = new Random();
         static string s_userCommand;
-        static int lastTick;
-        static int lastCycleRate;
-        static int cycleRate;
         public bool isRunning;
         private int saveTick;
         private int saveTime = 300000;
@@ -33,6 +31,7 @@ namespace Server.Classes
         {
             InitPlayerArray();
             InitMap();
+            InitItems();
             InitNPC();
             InitFinal();
 
@@ -94,6 +93,27 @@ namespace Server.Classes
                 {
                     s_Map[i] = new Map();
                     s_Map[i].LoadMap(i);
+                }
+            }
+        }
+
+        //Load in the items!
+        void InitItems()
+        {
+            Console.WriteLine("Loading items...");
+            LogWriter.WriteLog("Loading npcs...", "Server");
+
+            for (int i = 0; i < 50; i++)
+            {
+                if (!File.Exists("Items/Item" + i + ".bin"))
+                {
+                    s_Item[i] = new Item("Default", 0, 0, (int)ItemType.None);
+                    s_Item[i].SaveItem(i);
+                }
+                else
+                {
+                    s_Item[i] = new Item();
+                    s_Item[i].LoadItem(i);
                 }
             }
         }
@@ -265,8 +285,26 @@ namespace Server.Classes
                     case "save all":
                         SaveAll();
                         break;
+                    case "reload":
+                        Console.WriteLine("reload command needs argument (eg reload npcs)");
+                        break;
+                    case "reload npcs":
+                        Console.WriteLine("Reloading Npcs...");
+                        InitNPC();
+                        break;
+                    case "reload maps":
+                        Console.WriteLine("Reloading Maps...");
+                        InitMap();
+                        break;
+                    case "reload items":
+                        Console.WriteLine("Reloading Items...");
+                        InitItems();
+                        break;
                     case "help":
                         Console.WriteLine("Commands:");
+                        Console.WriteLine("reload npcs - reloads all npcs from their bin files");
+                        Console.WriteLine("reload maps - reloads all maps from their bin files");
+                        Console.WriteLine("reload items - reloads all items from their bin files");
                         Console.WriteLine("save all - saves all players");
                         Console.WriteLine("shutdown - shuts down the server");
                         break;
