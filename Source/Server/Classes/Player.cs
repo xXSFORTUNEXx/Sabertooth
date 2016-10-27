@@ -21,10 +21,18 @@ namespace Server.Classes
         public int Step;    //define step
 
         public int Health { get; set; }
+        public int Hunger { get; set; }
+        public int Hydration { get; set; }
         public int Experience { get; set; }
         public int Money { get; set; }
+        public int Armor { get; set; }
+    
+        public int Strength { get; set; }
+        public int Agility { get; set; }
+        public int Endurance { get; set; }
+        public int Stamina { get; set; }
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int health, int exp, int money, NetConnection conn)
+        public Player(string name, string pass, int x, int y, int direction, int map, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -35,6 +43,13 @@ namespace Server.Classes
             Health = health;
             Experience = exp;
             Money = money;
+            Armor = armor;
+            Hunger = hunger;
+            Hydration = hydration;
+            Strength = str;
+            Agility = agi;
+            Endurance = end;
+            Stamina = sta;
             Connection = conn;
         }
 
@@ -73,6 +88,15 @@ namespace Server.Classes
             writer.WriteElementString("Health", Health.ToString());
             writer.WriteElementString("Experience", Experience.ToString());
             writer.WriteElementString("Money", Money.ToString());
+            writer.WriteElementString("Armor", Armor.ToString());
+            writer.WriteElementString("Hunger", Hunger.ToString());
+            writer.WriteElementString("Hydration", Hydration.ToString());
+
+            //Stats
+            writer.WriteElementString("Strength", Strength.ToString());
+            writer.WriteElementString("Agility", Agility.ToString());
+            writer.WriteElementString("Endurance", Endurance.ToString());
+            writer.WriteElementString("Stramina", Stamina.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -104,6 +128,21 @@ namespace Server.Classes
             Experience = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Money");
             Money = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Armor");
+            Armor = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Hunger");
+            Hunger = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Hydration");
+            Hydration = reader.ReadElementContentAsInt();
+
+            reader.ReadToFollowing("Strength");
+            Strength = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Agility");
+            Agility = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Endurance");
+            Endurance = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Stamina");
+            Stamina = reader.ReadElementContentAsInt();
             reader.Close();
         }
     }

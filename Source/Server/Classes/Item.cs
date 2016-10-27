@@ -11,16 +11,33 @@ namespace Server.Classes
         public string Name { get; set; }
         public int Sprite { get; set; }
         public int Damage { get; set; }
+        public int Armor { get; set; }
         public int Type { get; set; }
+        public int HealthRestore { get; set; }
+        public int HungerRestore { get; set; }
+        public int HydrateRestore { get; set; }
+
+        public int addStrength { get; set; }
+        public int addAgility { get; set; }
+        public int addEndurance { get; set; }
+        public int addStamina { get; set; }
 
         public Item() { }
 
-        public Item(string name, int sprite, int damage, int type)
+        public Item(string name, int sprite, int damage, int armor, int type, int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta)
         {
             Name = name;
             Sprite = sprite;
             Damage = damage;
+            Armor = armor;
             Type = type;
+            HealthRestore = healthRestore;
+            HungerRestore = foodRestore;
+            HydrateRestore = drinkRestore;
+            addStrength = str;
+            addAgility = agi;
+            addEndurance = end;
+            addStamina = sta;
         }
 
         public void SaveItem(int itemNum)
@@ -31,7 +48,15 @@ namespace Server.Classes
             binaryWriter.Write(Name);
             binaryWriter.Write(Sprite);
             binaryWriter.Write(Damage);
+            binaryWriter.Write(Armor);
             binaryWriter.Write(Type);
+            binaryWriter.Write(HealthRestore);
+            binaryWriter.Write(HungerRestore);
+            binaryWriter.Write(HydrateRestore);
+            binaryWriter.Write(addStrength);
+            binaryWriter.Write(addAgility);
+            binaryWriter.Write(addEndurance);
+            binaryWriter.Write(addStamina);
             binaryWriter.Flush();
             binaryWriter.Close();
         }
@@ -46,7 +71,15 @@ namespace Server.Classes
                 Name = binaryReader.ReadString();
                 Sprite = binaryReader.ReadInt32();
                 Damage = binaryReader.ReadInt32();
+                Armor = binaryReader.ReadInt32();
                 Type = binaryReader.ReadInt32();
+                HealthRestore = binaryReader.ReadInt32();
+                HungerRestore = binaryReader.ReadInt32();
+                HydrateRestore = binaryReader.ReadInt32();
+                addStrength = binaryReader.ReadInt32();
+                addAgility = binaryReader.ReadInt32();
+                addEndurance = binaryReader.ReadInt32();
+                addStamina = binaryReader.ReadInt32();
             }
             catch (Exception e)
             {
@@ -67,6 +100,7 @@ namespace Server.Classes
         FirstAid,
         Shirt,
         Pants,
-        Shoes
+        Shoes,
+        Other
     }
 }
