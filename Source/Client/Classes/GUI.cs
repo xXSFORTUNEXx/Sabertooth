@@ -453,7 +453,7 @@ namespace Client.Classes
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 265);
+            d_Window.SetSize(200, 285);
             d_Window.SetPosition(10, 10);
             d_Window.DisableResizing();
 
@@ -570,7 +570,7 @@ namespace Client.Classes
                 d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
                 d_Level.Text = "Level: " + c_Player[drawIndex].Level;
-                d_Health.Text = "Health: " + c_Player[drawIndex].Health;
+                d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].maxHealth;
                 d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
                 d_Hydration.Text = "Hydration: " + c_Player[drawIndex].Hydration + " / 100";
                 d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 500);

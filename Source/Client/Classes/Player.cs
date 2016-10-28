@@ -18,6 +18,7 @@ namespace Client.Classes
         public int Direction { get; set; }  //define direction
         public int Sprite { get; set; } //define player sprite
         public int Step;    //the step at which the player is
+        public int maxHealth;
 
         public Item MainWeapon = new Item();
         public Item OffWeapon = new Item();

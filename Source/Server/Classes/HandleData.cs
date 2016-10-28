@@ -190,8 +190,8 @@ namespace Server.Classes
                         NetOutgoingMessage outMSG = s_Server.CreateMessage();
                         outMSG.Write((byte)PacketTypes.Login);
                         s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
-                        SendUserData(incMSG, s_Server, s_Player, i);
-                        SendUsers(incMSG, s_Server, s_Player);
+                        SendPlayerData(incMSG, s_Server, s_Player, i);
+                        SendPlayers(incMSG, s_Server, s_Player);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
@@ -264,35 +264,57 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public void SendUpdateHealthData(NetServer s_Server, int index, int health)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.HealthData);
+            outMSG.Write(index);
+            outMSG.Write(health);
+
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdateVitalData(NetServer s_Server, int index, string vitalName, int vital)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.VitalLoss);
+            outMSG.Write(index);
+            outMSG.Write(vitalName);
+            outMSG.Write(vital);
+
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
+
         //Send user data of the main index
-        void SendUserData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int svrIndex)
+        void SendPlayerData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UserData);
-            outMSG.Write(svrIndex);
-            outMSG.Write(s_Player[svrIndex].Name);
-            outMSG.Write(s_Player[svrIndex].X);
-            outMSG.Write(s_Player[svrIndex].Y);
-            outMSG.Write(s_Player[svrIndex].Map);
-            outMSG.Write(s_Player[svrIndex].Direction);
-            outMSG.Write(s_Player[svrIndex].Sprite);
-            outMSG.Write(s_Player[svrIndex].Level);
-            outMSG.Write(s_Player[svrIndex].Health);
-            outMSG.Write(s_Player[svrIndex].Hunger);
-            outMSG.Write(s_Player[svrIndex].Hydration);
-            outMSG.Write(s_Player[svrIndex].Experience);
-            outMSG.Write(s_Player[svrIndex].Money);
-            outMSG.Write(s_Player[svrIndex].Armor);
-            outMSG.Write(s_Player[svrIndex].Strength);
-            outMSG.Write(s_Player[svrIndex].Agility);
-            outMSG.Write(s_Player[svrIndex].Endurance);
-            outMSG.Write(s_Player[svrIndex].Stamina);
+            outMSG.Write(index);
+            outMSG.Write(s_Player[index].Name);
+            outMSG.Write(s_Player[index].X);
+            outMSG.Write(s_Player[index].Y);
+            outMSG.Write(s_Player[index].Map);
+            outMSG.Write(s_Player[index].Direction);
+            outMSG.Write(s_Player[index].Sprite);
+            outMSG.Write(s_Player[index].Level);
+            outMSG.Write(s_Player[index].Health);
+            outMSG.Write(s_Player[index].maxHealth);
+            outMSG.Write(s_Player[index].Hunger);
+            outMSG.Write(s_Player[index].Hydration);
+            outMSG.Write(s_Player[index].Experience);
+            outMSG.Write(s_Player[index].Money);
+            outMSG.Write(s_Player[index].Armor);
+            outMSG.Write(s_Player[index].Strength);
+            outMSG.Write(s_Player[index].Agility);
+            outMSG.Write(s_Player[index].Endurance);
+            outMSG.Write(s_Player[index].Stamina);
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send user data to all
-        void SendUsers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        void SendPlayers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.Users);
@@ -306,6 +328,7 @@ namespace Server.Classes
                 outMSG.Write(s_Player[i].Sprite);
                 outMSG.Write(s_Player[i].Level);
                 outMSG.Write(s_Player[i].Health);
+                outMSG.Write(s_Player[i].maxHealth);
                 outMSG.Write(s_Player[i].Hunger);
                 outMSG.Write(s_Player[i].Hydration);
                 outMSG.Write(s_Player[i].Experience);
@@ -538,7 +561,7 @@ namespace Server.Classes
                 LogWriter.WriteLog("Saving player...", "Server");
                 SavePlayers(s_Player);
                 ClearSlot(incMSG.SenderConnection, s_Player);
-                SendUsers(incMSG, s_Server, s_Player);
+                SendPlayers(incMSG, s_Server, s_Player);
             }
         }
 
@@ -566,7 +589,7 @@ namespace Server.Classes
                         int mapNum = ToInt32(msg.Substring(5, 1));
                         s_Player[index].Map = mapNum;
                         SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
-                        SendUsers(incMSG, s_Server, s_Player);
+                        SendPlayers(incMSG, s_Server, s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
                         return;
@@ -592,7 +615,7 @@ namespace Server.Classes
                         spriteNum = ToInt32(msg.Substring(8, 1));
                     }
                     s_Player[index].Sprite = spriteNum;
-                    SendUsers(incMSG, s_Server, s_Player);
+                    SendPlayers(incMSG, s_Server, s_Player);
                     Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
                     return;
                 }
@@ -619,6 +642,8 @@ namespace Server.Classes
         DirData,
         NpcData,
         Npcs,
-        MapNpc
+        MapNpc,
+        HealthData,
+        VitalLoss
     }
 }

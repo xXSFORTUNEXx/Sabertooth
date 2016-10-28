@@ -26,6 +26,12 @@ namespace Server.Classes
         private int aiTime = 1000;
         private int spawnTick;
         private int spawnTime = 1000;
+        private int regenTick;
+        private int regenTime = 30000;
+        private int hungerTick;
+        private int hungerTime = 600000;
+        private int hydrationTick;
+        private int hydrationTime = 300000;   
 
         public void ServerLoop(NetServer s_Server)
         {
@@ -45,6 +51,8 @@ namespace Server.Classes
                 SavePlayers();
                 CheckNPCSpawn(s_Server);
                 CheckNpcAI(s_Server);
+                CheckHealthRegen(s_Server);
+                CheckVitalLoss(s_Server);
                 CheckCommands();
             }
             Console.WriteLine("Shutting down...");
@@ -180,6 +188,60 @@ namespace Server.Classes
                     }
                 }
                 saveTick = TickCount;
+            }
+        }
+
+        //Check to see who needs health regen
+        void CheckHealthRegen(NetServer s_Server)
+        {
+            if (TickCount - regenTick > regenTime)
+            {
+                Console.WriteLine("Checking for health regen...");
+                LogWriter.WriteLog("Checking for health regin...", "Server");
+                for (int i = 0; i < 5; i++)
+                {
+                    if (s_Player[i].Name != null)
+                    {
+                        s_Player[i].RegenHealth();
+                        handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
+                    }
+                }
+                regenTick = TickCount;
+            }
+        }
+
+        //Check and see who needs to eat some food and drink some water
+        void CheckVitalLoss(NetServer s_Server)
+        {
+            //Check for hunger
+            if (TickCount - hungerTick > hungerTime)
+            {
+                Console.WriteLine("Checking for hunger loss...");
+                LogWriter.WriteLog("Checking for hunger loss...", "Server");
+                for (int i = 0; i < 5; i++)
+                {
+                    if (s_Player[i].Name != null)
+                    {
+                        s_Player[i].VitalLoss("food");
+                        handleData.SendUpdateVitalData(s_Server, i, "food", s_Player[i].Hunger);
+                    }
+                }
+                hungerTick = TickCount;
+            }
+
+            if (TickCount - hydrationTick > hydrationTime)
+            {
+                Console.WriteLine("Checking for hydration loss...");
+                LogWriter.WriteLog("Checking for hydration loss...", "Server");
+                for (int i = 0; i < 5; i++)
+                {
+                    if (s_Player[i].Name != null)
+                    {
+                        s_Player[i].VitalLoss("water");
+                        handleData.SendUpdateVitalData(s_Server, i, "water", s_Player[i].Hydration);
+                    }
+                }
+                hydrationTick = TickCount;
             }
         }
 

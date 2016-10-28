@@ -19,6 +19,7 @@ namespace Server.Classes
         public int Direction { get; set; }  //define direction
         public int Sprite { get; set; } //define sprite
         public int Step;    //define step
+        public int maxHealth;
 
         public Item MainWeapon = new Item();
         public Item OffWeapon = new Item();
@@ -45,7 +46,6 @@ namespace Server.Classes
             Map = map;
             Direction = direction;
             Level = level;
-            Health = health;
             Experience = exp;
             Money = money;
             Armor = armor;
@@ -57,6 +57,8 @@ namespace Server.Classes
             Stamina = sta;
             Connection = conn;
             MainWeapon = new Item("Gun", 1, 25, 0, (int)ItemType.RangedWeapon, 0, 0, 0, 5, 5, 5, 5);
+            FindMaxHealth();
+            Health = maxHealth;
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -64,6 +66,7 @@ namespace Server.Classes
             Name = name;
             Pass = pass;
             Connection = conn;
+            FindMaxHealth();
         }
 
         public Player(NetConnection conn)
@@ -72,6 +75,37 @@ namespace Server.Classes
         }
 
         public Player() { }
+
+        public void FindMaxHealth()
+        {
+            maxHealth = 100 + (Endurance * 5) + (Level * 10);
+        }
+
+        public void RegenHealth()
+        {
+            if (Health < maxHealth)
+            {
+                Health += (Stamina * 10);
+            }
+
+            if (Health > maxHealth)
+            {
+                Health = maxHealth;
+            }
+        }
+
+        public void VitalLoss(string vital)
+        {
+            if (vital == "food")
+            {
+                Hunger -= 10;
+            }
+
+            if (vital == "water")
+            {
+                Hydration -= 10;
+            }
+        }
 
         public void SavePlayerXML()
         {
@@ -149,6 +183,7 @@ namespace Server.Classes
             Endurance = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Stamina");
             Stamina = reader.ReadElementContentAsInt();
+            FindMaxHealth();
             reader.Close();
         }
     }

@@ -90,6 +90,14 @@ namespace Client.Classes
                                     HandleNpcData(incMSG, c_Map);
                                 }
                                 break;
+
+                            case (byte)PacketTypes.HealthData:
+                                HandleHealthData(incMSG, c_Player);
+                                break;
+
+                            case (byte)PacketTypes.VitalLoss:
+                                HandleVitalData(incMSG, c_Player);
+                                break;
                         }
                         break;
                 }
@@ -236,6 +244,24 @@ namespace Client.Classes
             c_GUI.AddText("Welcome to Sabertooth!");
         }
 
+        void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
+        {
+            int index = incMSG.ReadInt32();
+            string vitalName = incMSG.ReadString();
+            int vital = incMSG.ReadInt32();
+
+            if (vitalName == "food") { c_Player[index].Hunger = vital; }
+            if (vitalName == "water") { c_Player[index].Hydration = vital; }
+        }
+
+        void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
+        {
+            int index = incMSG.ReadInt32();
+            int health = incMSG.ReadInt32();
+
+            c_Player[index].Health = health;
+        }
+
         //Player incoming data for the clients index
         void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
         {
@@ -248,6 +274,7 @@ namespace Client.Classes
             c_Player[clientIndex].Level = incMSG.ReadInt32();
             c_Player[clientIndex].Health = incMSG.ReadInt32();
             c_Player[clientIndex].Hunger = incMSG.ReadInt32();
+            c_Player[clientIndex].maxHealth = incMSG.ReadInt32();
             c_Player[clientIndex].Hydration = incMSG.ReadInt32();
             c_Player[clientIndex].Experience = incMSG.ReadInt32();
             c_Player[clientIndex].Money = incMSG.ReadInt32();
@@ -273,6 +300,7 @@ namespace Client.Classes
                 c_Player[i].Sprite = incMSG.ReadInt32();
                 c_Player[i].Level = incMSG.ReadInt32();
                 c_Player[i].Health = incMSG.ReadInt32();
+                c_Player[i].maxHealth = incMSG.ReadInt32();
                 c_Player[i].Hunger = incMSG.ReadInt32();
                 c_Player[i].Hydration = incMSG.ReadInt32();
                 c_Player[i].Experience = incMSG.ReadInt32();
@@ -366,6 +394,8 @@ namespace Client.Classes
         DirData,
         NpcData,
         Npcs,
-        MapNpc
+        MapNpc,
+        HealthData,
+        VitalLoss
     }
 }
