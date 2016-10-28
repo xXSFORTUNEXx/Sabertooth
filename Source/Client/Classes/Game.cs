@@ -156,16 +156,16 @@ namespace Client.Classes
 
             if (e.Code == Keyboard.Key.Tab)
             {
-                if (c_GUI.chatWindow == null || c_GUI.debugWindow == null) { return; }
-                if (c_GUI.chatWindow.IsVisible == true || c_GUI.debugWindow.IsVisible == true)
+                if (c_GUI.chatWindow == null || c_GUI.d_Window == null) { return; }
+                if (c_GUI.chatWindow.IsVisible == true || c_GUI.d_Window.IsVisible == true)
                 {
                     c_GUI.chatWindow.Hide();
-                    c_GUI.debugWindow.Hide();
+                    c_GUI.d_Window.Hide();
                 }
-                else if (c_GUI.debugWindow.IsVisible == false || c_GUI.debugWindow.IsVisible == false)
+                else if (c_GUI.d_Window.IsVisible == false || c_GUI.d_Window.IsVisible == false)
                 {
                     c_GUI.chatWindow.Show();
-                    c_GUI.debugWindow.Show();
+                    c_GUI.d_Window.Show();
                 }
             }
         }
@@ -248,7 +248,7 @@ namespace Client.Classes
             {
                 if (c_Player[i].Name != "")
                 {
-                    if (i != handleData.clientIndex && c_Player[i].Map == c_Player[handleData.clientIndex].Map)
+                    if (i != handleData.c_Index && c_Player[i].Map == c_Player[handleData.c_Index].Map)
                     {
                         c_Player[i].DrawPlayer(c_Window, c_Sprite[c_Player[i].Sprite]);
                         c_Player[i].DrawPlayerName(c_Window);
@@ -270,15 +270,15 @@ namespace Client.Classes
 
         void DrawIndexPlayer()
         {
-            c_Player[handleData.clientIndex].DrawPlayer(c_Window, c_Sprite[c_Player[handleData.clientIndex].Sprite]);
-            c_Player[handleData.clientIndex].DrawPlayerName(c_Window);
+            c_Player[handleData.c_Index].DrawPlayer(c_Window, c_Sprite[c_Player[handleData.c_Index].Sprite]);
+            c_Player[handleData.c_Index].DrawPlayerName(c_Window);
         }
 
         void ProcessMovement()
         {
             for (int i = 0; i < 5; i++)
             {
-                if (c_Player[i].tempStep != 5 && i != handleData.clientIndex)
+                if (c_Player[i].tempStep != 5 && i != handleData.c_Index)
                 {
                     c_Player[i].X = c_Player[i].tempX;
                     c_Player[i].Y = c_Player[i].tempY;
@@ -292,7 +292,7 @@ namespace Client.Classes
 
         void UpdateTitle(int fps)
         {
-            c_Window.SetTitle("Sabertooth - Logged: " + c_Player[handleData.clientIndex].Name + " FPS: " + fps);
+            c_Window.SetTitle("Sabertooth - Logged: " + c_Player[handleData.c_Index].Name + " FPS: " + fps);
         }
 
         void CheckForConnection(NetClient c_Client)
@@ -319,7 +319,7 @@ namespace Client.Classes
                 DrawUpperLevelTiles();
                 if (TickCount - walkTick > 100)
                 {
-                    c_Player[handleData.clientIndex].CheckMovement(c_Client, handleData.clientIndex, c_Window, c_Map, c_GUI);
+                    c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
@@ -333,7 +333,7 @@ namespace Client.Classes
         {
             UpdateTitle(fps);   //update the title with the fps
             c_View.Reset(new FloatRect(0, 0, 800, 600));
-            c_View.Move(new Vector2f(c_Player[handleData.clientIndex].X * 32, c_Player[handleData.clientIndex].Y * 32));
+            c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
             handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc); 
             c_Window.SetActive();
             c_Window.DispatchEvents();
@@ -341,7 +341,7 @@ namespace Client.Classes
             Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
             c_Window.SetView(c_View);
             fps = CalculateFrameRate();
-            c_GUI.UpdateDebugWindow(fps, c_Player, handleData.clientIndex);
+            c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
         }
     }
 }

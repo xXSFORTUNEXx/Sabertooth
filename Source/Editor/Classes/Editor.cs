@@ -1011,7 +1011,7 @@ namespace Editor.Classes
                         storedViewX = 0;
                         storedViewY = 0;
                     }
-                    else
+                    else if (!inNpcEditor == true)
                     {
                         utiWindow = true;
                         inNpcEditor = false;

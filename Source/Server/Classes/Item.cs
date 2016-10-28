@@ -17,12 +17,17 @@ namespace Server.Classes
         public int HungerRestore { get; set; }
         public int HydrateRestore { get; set; }
 
-        public int addStrength { get; set; }
-        public int addAgility { get; set; }
-        public int addEndurance { get; set; }
-        public int addStamina { get; set; }
+        public int Strength { get; set; }
+        public int Agility { get; set; }
+        public int Endurance { get; set; }
+        public int Stamina { get; set; }
 
         public Item() { }
+
+        public Item(ItemType type)
+        {
+            Type = (int)type;
+        }
 
         public Item(string name, int sprite, int damage, int armor, int type, int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta)
         {
@@ -34,10 +39,10 @@ namespace Server.Classes
             HealthRestore = healthRestore;
             HungerRestore = foodRestore;
             HydrateRestore = drinkRestore;
-            addStrength = str;
-            addAgility = agi;
-            addEndurance = end;
-            addStamina = sta;
+            Strength = str;
+            Agility = agi;
+            Endurance = end;
+            Stamina = sta;
         }
 
         public void SaveItem(int itemNum)
@@ -53,10 +58,10 @@ namespace Server.Classes
             binaryWriter.Write(HealthRestore);
             binaryWriter.Write(HungerRestore);
             binaryWriter.Write(HydrateRestore);
-            binaryWriter.Write(addStrength);
-            binaryWriter.Write(addAgility);
-            binaryWriter.Write(addEndurance);
-            binaryWriter.Write(addStamina);
+            binaryWriter.Write(Strength);
+            binaryWriter.Write(Agility);
+            binaryWriter.Write(Endurance);
+            binaryWriter.Write(Stamina);
             binaryWriter.Flush();
             binaryWriter.Close();
         }
@@ -76,10 +81,10 @@ namespace Server.Classes
                 HealthRestore = binaryReader.ReadInt32();
                 HungerRestore = binaryReader.ReadInt32();
                 HydrateRestore = binaryReader.ReadInt32();
-                addStrength = binaryReader.ReadInt32();
-                addAgility = binaryReader.ReadInt32();
-                addEndurance = binaryReader.ReadInt32();
-                addStamina = binaryReader.ReadInt32();
+                Strength = binaryReader.ReadInt32();
+                Agility = binaryReader.ReadInt32();
+                Endurance = binaryReader.ReadInt32();
+                Stamina = binaryReader.ReadInt32();
             }
             catch (Exception e)
             {
@@ -89,7 +94,7 @@ namespace Server.Classes
         }
     }
 
-    enum ItemType
+    public enum ItemType
     {
         None,
         MeleeWeapon,

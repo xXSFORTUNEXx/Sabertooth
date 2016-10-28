@@ -107,7 +107,7 @@ namespace Server.Classes
             {
                 if (!File.Exists("Items/Item" + i + ".bin"))
                 {
-                    s_Item[i] = new Item("Default", 0, 0, (int)ItemType.None);
+                    s_Item[i] = new Item("Default", 0, 0, (int)ItemType.None, 1, 1, 1, 1, 1, 1, 1, 1);
                     s_Item[i].SaveItem(i);
                 }
                 else

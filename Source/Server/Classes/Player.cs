@@ -20,6 +20,10 @@ namespace Server.Classes
         public int Sprite { get; set; } //define sprite
         public int Step;    //define step
 
+        public Item MainWeapon = new Item();
+        public Item OffWeapon = new Item();
+
+        public int Level { get; set; }
         public int Health { get; set; }
         public int Hunger { get; set; }
         public int Hydration { get; set; }
@@ -32,7 +36,7 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
+        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -40,6 +44,7 @@ namespace Server.Classes
             Y = y;
             Map = map;
             Direction = direction;
+            Level = level;
             Health = health;
             Experience = exp;
             Money = money;
@@ -51,6 +56,7 @@ namespace Server.Classes
             Endurance = end;
             Stamina = sta;
             Connection = conn;
+            MainWeapon = new Item("Gun", 1, 25, 0, (int)ItemType.RangedWeapon, 0, 0, 0, 5, 5, 5, 5);
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -85,18 +91,17 @@ namespace Server.Classes
             writer.WriteElementString("Map", Map.ToString());
             writer.WriteElementString("Direction", Direction.ToString());
             writer.WriteElementString("Sprite", Sprite.ToString());
+            writer.WriteElementString("Level", Level.ToString());
             writer.WriteElementString("Health", Health.ToString());
             writer.WriteElementString("Experience", Experience.ToString());
             writer.WriteElementString("Money", Money.ToString());
             writer.WriteElementString("Armor", Armor.ToString());
             writer.WriteElementString("Hunger", Hunger.ToString());
             writer.WriteElementString("Hydration", Hydration.ToString());
-
-            //Stats
             writer.WriteElementString("Strength", Strength.ToString());
             writer.WriteElementString("Agility", Agility.ToString());
             writer.WriteElementString("Endurance", Endurance.ToString());
-            writer.WriteElementString("Stramina", Stamina.ToString());
+            writer.WriteElementString("Stamina", Stamina.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -122,6 +127,8 @@ namespace Server.Classes
             Direction = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Sprite");
             Sprite = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Level");
+            Level = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Health");
             Health = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Experience");
@@ -134,7 +141,6 @@ namespace Server.Classes
             Hunger = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Hydration");
             Hydration = reader.ReadElementContentAsInt();
-
             reader.ReadToFollowing("Strength");
             Strength = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Agility");

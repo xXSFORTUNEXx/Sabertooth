@@ -13,16 +13,16 @@ namespace Client.Classes
 {
     class HandleData
     {
-        public string ipAddress; //So we can change the port XML instead of directly in the code
-        public string port;  //So we can change the port from XML and not directly in the code
-        public int clientIndex; //The index of this client
+        public string s_IPAddress; //So we can change the port XML instead of directly in the code
+        public string s_Port;  //So we can change the port from XML and not directly in the code
+        public int c_Index; //The index of this client
 
         //This is where we process the 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, ClientConfig c_Config, NPC[] c_Npc)
         {
             NetIncomingMessage incMSG;
-            ipAddress = c_Config.ipAddress;
-            port = c_Config.port;
+            s_IPAddress = c_Config.ipAddress;
+            s_Port = c_Config.port;
 
             if ((incMSG = c_Client.ReadMessage()) != null)
             {
@@ -48,10 +48,10 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.UserData:
-                                clientIndex = incMSG.ReadInt32();
-                                c_GUI.guiIndex = clientIndex;
-                                Console.WriteLine("Client index: " + clientIndex);
-                                HandlePlayerData(incMSG, c_Client, c_Player, clientIndex);
+                                c_Index = incMSG.ReadInt32();
+                                c_GUI.g_Index = c_Index;
+                                Console.WriteLine("Client index: " + c_Index);
+                                HandlePlayerData(incMSG, c_Client, c_Player, c_Index);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
@@ -68,11 +68,11 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.UpdateMoveData:
-                                HandleUpdateMoveData(incMSG, c_Player, clientIndex);
+                                HandleUpdateMoveData(incMSG, c_Player, c_Index);
                                 break;
 
                             case (byte)PacketTypes.DirData:
-                                HandleDirectionData(incMSG, c_Player, clientIndex);
+                                HandleDirectionData(incMSG, c_Player, c_Index);
                                 break;
 
                             case (byte)PacketTypes.Npcs:
@@ -192,7 +192,7 @@ namespace Client.Classes
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.Connection);
             outMSG.Write("sabertooth");
-            c_Client.Connect(ipAddress, ToInt32(port), outMSG);
+            c_Client.Connect(s_IPAddress, ToInt32(s_Port), outMSG);
         }
 
         //Assuring we are connected to the server
@@ -245,12 +245,46 @@ namespace Client.Classes
             c_Player[clientIndex].Map = incMSG.ReadInt32();
             c_Player[clientIndex].Direction = incMSG.ReadInt32();
             c_Player[clientIndex].Sprite = incMSG.ReadInt32();
+            c_Player[clientIndex].Level = incMSG.ReadInt32();
             c_Player[clientIndex].Health = incMSG.ReadInt32();
+            c_Player[clientIndex].Hunger = incMSG.ReadInt32();
+            c_Player[clientIndex].Hydration = incMSG.ReadInt32();
             c_Player[clientIndex].Experience = incMSG.ReadInt32();
             c_Player[clientIndex].Money = incMSG.ReadInt32();
-
+            c_Player[clientIndex].Armor = incMSG.ReadInt32();
+            c_Player[clientIndex].Strength = incMSG.ReadInt32();
+            c_Player[clientIndex].Agility = incMSG.ReadInt32();
+            c_Player[clientIndex].Endurance = incMSG.ReadInt32();
+            c_Player[clientIndex].Stamina = incMSG.ReadInt32();
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
+        }
+
+        //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
+        void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                c_Player[i].Name = incMSG.ReadString();
+                c_Player[i].X = incMSG.ReadInt32();
+                c_Player[i].Y = incMSG.ReadInt32();
+                c_Player[i].Map = incMSG.ReadInt32();
+                c_Player[i].Direction = incMSG.ReadInt32();
+                c_Player[i].Sprite = incMSG.ReadInt32();
+                c_Player[i].Level = incMSG.ReadInt32();
+                c_Player[i].Health = incMSG.ReadInt32();
+                c_Player[i].Hunger = incMSG.ReadInt32();
+                c_Player[i].Hydration = incMSG.ReadInt32();
+                c_Player[i].Experience = incMSG.ReadInt32();
+                c_Player[i].Money = incMSG.ReadInt32();
+                c_Player[i].Armor = incMSG.ReadInt32();
+                c_Player[i].Strength = incMSG.ReadInt32();
+                c_Player[i].Agility = incMSG.ReadInt32();
+                c_Player[i].Endurance = incMSG.ReadInt32();
+                c_Player[i].Stamina = incMSG.ReadInt32();
+                c_Player[i].offsetX = 12;
+                c_Player[i].offsetY = 9;
+            }
         }
 
         //Error message handler
@@ -312,25 +346,6 @@ namespace Client.Classes
                 }
             }
             c_Map.SaveMap();
-        }
-
-        //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
-        void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                c_Player[i].Name = incMSG.ReadString();
-                c_Player[i].X = incMSG.ReadInt32();
-                c_Player[i].Y = incMSG.ReadInt32();
-                c_Player[i].Map = incMSG.ReadInt32();
-                c_Player[i].Direction = incMSG.ReadInt32();
-                c_Player[i].Sprite = incMSG.ReadInt32();
-                c_Player[i].Health = incMSG.ReadInt32();
-                c_Player[i].Experience = incMSG.ReadInt32();
-                c_Player[i].Money = incMSG.ReadInt32();
-                c_Player[i].offsetX = 12;
-                c_Player[i].offsetY = 9;
-            }
         }
     }
 

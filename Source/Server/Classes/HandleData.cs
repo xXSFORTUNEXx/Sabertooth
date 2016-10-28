@@ -144,7 +144,8 @@ namespace Server.Classes
                     int i = OpenSlot(s_Player);
                     if (i < 5)
                     {
-                        s_Player[i] = new Player(username, password, incMSG.SenderConnection);
+                        //s_Player[i] = new Player(username, password, incMSG.SenderConnection);
+                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, incMSG.SenderConnection);
                         s_Player[i].SavePlayerXML();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
@@ -275,9 +276,17 @@ namespace Server.Classes
             outMSG.Write(s_Player[svrIndex].Map);
             outMSG.Write(s_Player[svrIndex].Direction);
             outMSG.Write(s_Player[svrIndex].Sprite);
+            outMSG.Write(s_Player[svrIndex].Level);
             outMSG.Write(s_Player[svrIndex].Health);
+            outMSG.Write(s_Player[svrIndex].Hunger);
+            outMSG.Write(s_Player[svrIndex].Hydration);
             outMSG.Write(s_Player[svrIndex].Experience);
             outMSG.Write(s_Player[svrIndex].Money);
+            outMSG.Write(s_Player[svrIndex].Armor);
+            outMSG.Write(s_Player[svrIndex].Strength);
+            outMSG.Write(s_Player[svrIndex].Agility);
+            outMSG.Write(s_Player[svrIndex].Endurance);
+            outMSG.Write(s_Player[svrIndex].Stamina);
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -295,9 +304,17 @@ namespace Server.Classes
                 outMSG.Write(s_Player[i].Map);
                 outMSG.Write(s_Player[i].Direction);
                 outMSG.Write(s_Player[i].Sprite);
+                outMSG.Write(s_Player[i].Level);
                 outMSG.Write(s_Player[i].Health);
+                outMSG.Write(s_Player[i].Hunger);
+                outMSG.Write(s_Player[i].Hydration);
                 outMSG.Write(s_Player[i].Experience);
                 outMSG.Write(s_Player[i].Money);
+                outMSG.Write(s_Player[i].Armor);
+                outMSG.Write(s_Player[i].Strength);
+                outMSG.Write(s_Player[i].Agility);
+                outMSG.Write(s_Player[i].Endurance);
+                outMSG.Write(s_Player[i].Stamina);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }

@@ -104,6 +104,7 @@
     <Compile Include="Classes\Game.cs" />
     <Compile Include="Classes\GUI.cs" />
     <Compile Include="Classes\HandleData.cs" />
+    <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\Map.cs" />
     <Compile Include="Classes\NPC.cs" />
     <Compile Include="Classes\Player.cs" />

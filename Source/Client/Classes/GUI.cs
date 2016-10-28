@@ -14,23 +14,32 @@ namespace Client.Classes
         Gwen.Font c_Font;
         Player[] c_Player;
         ClientConfig c_Config;
-        public WindowControl debugWindow;
-        public int guiIndex;
-        Label debugFps;
-        Label debugName;
-        Label debugX;
-        Label debugY;
-        Label debugMap;
-        Label debugDir;
-        Label debugSprite;
-        Label debugIP;
-        Label debugPort;
-        Label debugLatency;
-        Label debugPacketsIn;
-        Label debugPacketsOut;
-        Label debugHealth;
-        Label debugExp;
-        Label debugMoney;
+        public WindowControl d_Window;
+        public int g_Index;
+        Label d_FPS;
+        Label d_Name;
+        Label d_X;
+        Label d_Y;
+        Label d_Map;
+        Label d_Dir;
+        Label d_Sprite;
+        Label d_IP;
+        Label d_Port;
+        Label d_Latency;
+        Label d_packetsIn;
+        Label d_packetsOut;
+        Label d_Stats;
+        Label d_Level;
+        Label d_Health;
+        Label d_Hunger;
+        Label d_Hydration;
+        Label d_Exp;
+        Label d_Money;
+        Label d_Armor;
+        Label d_Strength;
+        Label d_Agility;
+        Label d_Endurance;
+        Label d_Stamina;
 
         WindowControl mainWindow;
         Button mainbuttonLog;
@@ -442,94 +451,140 @@ namespace Client.Classes
 
         public void CreateDebugWindow(Base parent)
         {
-            debugWindow = new WindowControl(parent.GetCanvas());
-            debugWindow.Title = "Debug";
-            debugWindow.SetSize(200, 200);
-            debugWindow.SetPosition(10, 10);
-            debugWindow.DisableResizing();
+            d_Window = new WindowControl(parent.GetCanvas());
+            d_Window.Title = "Debug";
+            d_Window.SetSize(200, 265);
+            d_Window.SetPosition(10, 10);
+            d_Window.DisableResizing();
 
-            debugFps = new Label(debugWindow);
-            debugFps.SetPosition(10, 5);
-            debugFps.Text = "FPS: ";
+            d_FPS = new Label(d_Window);
+            d_FPS.SetPosition(10, 5);
+            d_FPS.Text = "FPS: ";
 
-            debugName = new Label(debugWindow);
-            debugName.SetPosition(10, 15);
-            debugName.Text = "Name: Player";
+            d_Name = new Label(d_Window);
+            d_Name.SetPosition(10, 15);
+            d_Name.Text = "Name: Player";
 
-            debugX = new Label(debugWindow);
-            debugX.SetPosition(10, 25);
-            debugX.Text = "X: ?";
+            d_X = new Label(d_Window);
+            d_X.SetPosition(10, 25);
+            d_X.Text = "X: ?";
 
-            debugY = new Label(debugWindow);
-            debugY.SetPosition(10, 35);
-            debugY.Text = "Y: ?";
+            d_Y = new Label(d_Window);
+            d_Y.SetPosition(10, 35);
+            d_Y.Text = "Y: ?";
 
-            debugMap = new Label(debugWindow);
-            debugMap.SetPosition(10, 45);
-            debugMap.Text = "Map: ?";
+            d_Map = new Label(d_Window);
+            d_Map.SetPosition(10, 45);
+            d_Map.Text = "Map: ?";
 
-            debugDir = new Label(debugWindow);
-            debugDir.SetPosition(10, 55);
-            debugDir.Text = "Direction : ?";
+            d_Dir = new Label(d_Window);
+            d_Dir.SetPosition(10, 55);
+            d_Dir.Text = "Direction : ?";
 
-            debugSprite = new Label(debugWindow);
-            debugSprite.SetPosition(10, 65);
-            debugSprite.Text = "Sprite: ?";
+            d_Sprite = new Label(d_Window);
+            d_Sprite.SetPosition(10, 65);
+            d_Sprite.Text = "Sprite: ?";
 
-            debugIP = new Label(debugWindow);
-            debugIP.SetPosition(10, 75);
-            debugIP.Text = "IP Address: ?";
+            d_IP = new Label(d_Window);
+            d_IP.SetPosition(10, 75);
+            d_IP.Text = "IP Address: ?";
 
-            debugPort = new Label(debugWindow);
-            debugPort.SetPosition(10, 85);
-            debugPort.Text = "Port: ?";
+            d_Port = new Label(d_Window);
+            d_Port.SetPosition(10, 85);
+            d_Port.Text = "Port: ?";
 
-            debugLatency = new Label(debugWindow);
-            debugLatency.SetPosition(10, 95);
-            debugLatency.Text = "Latency: ?";
+            d_Latency = new Label(d_Window);
+            d_Latency.SetPosition(10, 95);
+            d_Latency.Text = "Latency: ?";
 
-            debugPacketsIn = new Label(debugWindow);
-            debugPacketsIn.SetPosition(10, 105);
-            debugPacketsIn.Text = "Packets In: ?";
+            d_packetsIn = new Label(d_Window);
+            d_packetsIn.SetPosition(10, 105);
+            d_packetsIn.Text = "Packets In: ?";
 
-            debugPacketsOut = new Label(debugWindow);
-            debugPacketsOut.SetPosition(10, 115);
-            debugPacketsOut.Text = "Packets Out: ?";
+            d_packetsOut = new Label(d_Window);
+            d_packetsOut.SetPosition(10, 115);
+            d_packetsOut.Text = "Packets Out: ?";
 
-            debugHealth = new Label(debugWindow);
-            debugHealth.SetPosition(10, 125);
-            debugHealth.Text = "Health: ?";
+            d_Stats = new Label(d_Window);
+            d_Stats.SetPosition(10, 130);
+            d_Stats.Text = "Stats:";
 
-            debugExp = new Label(debugWindow);
-            debugExp.SetPosition(10, 135);
-            debugExp.Text = "Experience: ?";
+            d_Level = new Label(d_Window);
+            d_Level.SetPosition(10, 140);
+            d_Level.Text = "Level: ?";
 
-            debugMoney = new Label(debugWindow);
-            debugMoney.SetPosition(10, 145);
-            debugMoney.Text = "Money: ?";
+            d_Health = new Label(d_Window);
+            d_Health.SetPosition(10, 150);
+            d_Health.Text = "Health: ?";
+
+            d_Hunger = new Label(d_Window);
+            d_Hunger.SetPosition(10, 160);
+            d_Hunger.Text = "Hunger: ?";
+
+            d_Hydration = new Label(d_Window);
+            d_Hydration.SetPosition(10, 170);
+            d_Hydration.Text = "Hydration: ?";
+
+            d_Exp = new Label(d_Window);
+            d_Exp.SetPosition(10, 180);
+            d_Exp.Text = "Experience: ?";
+
+            d_Money = new Label(d_Window);
+            d_Money.SetPosition(10, 190);
+            d_Money.Text = "Money: ?";
+
+            d_Armor = new Label(d_Window);
+            d_Armor.SetPosition(10, 200);
+            d_Armor.Text = "Armor: ?";
+
+            d_Strength = new Label(d_Window);
+            d_Strength.SetPosition(10, 210);
+            d_Strength.Text = "Strength: ?";
+
+            d_Agility = new Label(d_Window);
+            d_Agility.SetPosition(10, 220);
+            d_Agility.Text = "Agility: ?";
+
+            d_Endurance = new Label(d_Window);
+            d_Endurance.SetPosition(10, 230);
+            d_Endurance.Text = "Endurance: ?";
+
+            d_Stamina = new Label(d_Window);
+            d_Stamina.SetPosition(10, 240);
+            d_Stamina.Text = "Stamina: ?";
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
         {
-            if (debugWindow != null)
+            if (d_Window != null)
             {
-                debugWindow.Title = "Debug Window - Admin";
-                debugWindow.SetPosition(0, 0);
-                debugFps.Text = "FPS: " + fps;
-                debugName.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
-                debugX.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
-                debugY.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
-                debugMap.Text = "Map: " + c_Player[drawIndex].Map;
-                debugDir.Text = "Direction: " + c_Player[drawIndex].Direction;
-                debugSprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
-                debugHealth.Text = "Health: " + c_Player[drawIndex].Health;
-                debugExp.Text = "Experience: " + c_Player[drawIndex].Experience;
-                debugMoney.Text = "Money: " + c_Player[drawIndex].Money;
-                debugIP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                debugPort.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
-                debugLatency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
-                debugPacketsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
-                debugPacketsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+                int p_level = c_Player[drawIndex].Level;
+
+                d_Window.Title = "Debug Window - Admin";
+                d_Window.SetPosition(0, 0);
+                d_FPS.Text = "FPS: " + fps;
+                d_Name.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
+                d_X.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
+                d_Y.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
+                d_Map.Text = "Map: " + c_Player[drawIndex].Map;
+                d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
+                d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
+                d_Level.Text = "Level: " + c_Player[drawIndex].Level;
+                d_Health.Text = "Health: " + c_Player[drawIndex].Health;
+                d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
+                d_Hydration.Text = "Hydration: " + c_Player[drawIndex].Hydration + " / 100";
+                d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 500);
+                d_Money.Text = "Money: " + c_Player[drawIndex].Money;
+                d_Armor.Text = "Armor: " + c_Player[drawIndex].Armor;
+                d_Strength.Text = "Strength: " + c_Player[drawIndex].Strength;
+                d_Agility.Text = "Agility: " + c_Player[drawIndex].Agility;
+                d_Endurance.Text = "Endurance: " + c_Player[drawIndex].Endurance;
+                d_Stamina.Text = "Stamina: " + c_Player[drawIndex].Stamina;
+                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
+                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
+                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
+                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
+                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
             } 
         }
     }
