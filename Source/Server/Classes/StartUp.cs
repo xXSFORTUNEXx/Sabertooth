@@ -47,6 +47,7 @@ namespace Server.Classes
             Server srvrServer = new Server();
             Console.WriteLine("Server Started...");
             LogWriter.WriteLog("Server started...", "Server");
+            srvrServer.LoadServerConfig();
             srvrServer.ServerLoop(s_Server);
         }
 

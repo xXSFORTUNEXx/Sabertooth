@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using System.Xml;
+using static System.Environment;
+using System.IO;
+using System.Threading;
 
 namespace Server.Classes
 {
@@ -18,12 +21,6 @@ namespace Server.Classes
         public int Map { get; set; }    //define map
         public int Direction { get; set; }  //define direction
         public int Sprite { get; set; } //define sprite
-        public int Step;    //define step
-        public int maxHealth;
-
-        public Item MainWeapon = new Item();
-        public Item OffWeapon = new Item();
-
         public int Level { get; set; }
         public int Health { get; set; }
         public int Hunger { get; set; }
@@ -31,11 +28,15 @@ namespace Server.Classes
         public int Experience { get; set; }
         public int Money { get; set; }
         public int Armor { get; set; }
-    
         public int Strength { get; set; }
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
+
+        public int Step;
+        public int maxHealth;
+        public int hungerTick;
+        public int hydrationTick;
 
         public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
         {
@@ -56,9 +57,10 @@ namespace Server.Classes
             Endurance = end;
             Stamina = sta;
             Connection = conn;
-            MainWeapon = new Item("Gun", 1, 25, 0, (int)ItemType.RangedWeapon, 0, 0, 0, 5, 5, 5, 5);
             FindMaxHealth();
             Health = maxHealth;
+            hungerTick = TickCount;
+            hydrationTick = TickCount;
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -67,6 +69,8 @@ namespace Server.Classes
             Pass = pass;
             Connection = conn;
             FindMaxHealth();
+            hungerTick = TickCount;
+            hydrationTick = TickCount;
         }
 
         public Player(NetConnection conn)
@@ -98,12 +102,28 @@ namespace Server.Classes
         {
             if (vital == "food")
             {
-                Hunger -= 10;
+                if (Hunger <= 0)
+                {
+                    //Basically we start die
+                    Console.WriteLine("We start to die...");
+                }
+                else
+                {
+                    Hunger -= 10;
+                }
             }
 
             if (vital == "water")
             {
-                Hydration -= 10;
+                if (Hydration <= 0)
+                {
+                    //Basically we start die
+                    Console.WriteLine("We start to die...");
+                }
+                else
+                {
+                    Hydration -= 10;
+                }
             }
         }
 

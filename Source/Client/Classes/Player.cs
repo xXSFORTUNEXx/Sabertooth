@@ -20,9 +20,6 @@ namespace Client.Classes
         public int Step;    //the step at which the player is
         public int maxHealth;
 
-        public Item MainWeapon = new Item();
-        public Item OffWeapon = new Item();
-
         public int Level { get; set; }
         public int Health { get; set; }
         public int Hunger { get; set; }

@@ -9,9 +9,6 @@ namespace Server.Classes
 {
     class HandleData
     {
-        /// <summary>
-        /// This method checks for incoming messages and processes the header (name) of the packet for processing
-        /// </summary>
         public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc)
         {
             NetIncomingMessage incMSG;  //create incoming message
@@ -60,9 +57,6 @@ namespace Server.Classes
             s_Server.Recycle(incMSG);
         }
 
-        /// <summary>
-        /// These methods handle data that is incoming from connected clients
-        /// </summary>
         //Handle incoming packets for movement of the player
         void HandleMoveData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
@@ -238,9 +232,23 @@ namespace Server.Classes
             }
         }
 
-        /// <summary>
-        /// These methods handle sending data to clients that are requesting it
-        /// </summary>
+        void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
+            LogWriter.WriteLog(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status, "Server");
+            if (incMSG.SenderConnection.Status == NetConnectionStatus.Disconnected || incMSG.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+            {
+                Console.WriteLine("Disconnected clearing data...");
+                LogWriter.WriteLog("Disconnected clearing data...", "Server");
+                Console.WriteLine("Saving player...");
+                LogWriter.WriteLog("Saving player...", "Server");
+                SavePlayers(s_Player);
+                ClearSlot(incMSG.SenderConnection, s_Player);
+                SendPlayers(incMSG, s_Server, s_Player);
+            }
+        }
+
+
         //Sends a direction update to the client so it can be processed and sent to all connected
         void SendUpdateDirection(NetServer s_Server, int index, int direction)
         {
@@ -463,9 +471,76 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        /// <summary>
-        /// These methods handle all the data from incoming messages
-        /// </summary>
+        void ClearSlot(NetConnection conn, Player[] s_Player)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i] != null && s_Player[i].Connection == conn)
+                {
+                    s_Player[i] = null;
+                    s_Player[i] = new Player();
+                    break;
+                }
+            }
+        }
+
+        void SavePlayers(Player[] svrPlayer)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (svrPlayer[i].Name != null)
+                {
+                    svrPlayer[i].SavePlayerXML();
+                }
+            }
+        }
+
+        void CheckCommand(string msg, int index, Player[] s_Player, NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
+        {
+            //Make sure it has lenghth and isnt just 1 forwardslash
+            if (msg.Length >= 6)
+            {
+                //Check for map command
+                if (msg.Substring(1, 3) == "map")
+                {
+                    if (msg.Length >= 6)
+                    {
+                        int mapNum = ToInt32(msg.Substring(5, 1));
+                        s_Player[index].Map = mapNum;
+                        SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
+                        SendPlayers(incMSG, s_Server, s_Player);
+                        SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
+                        Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
+                        return;
+                    }
+                }
+            }
+
+            if (msg.Length >= 9)
+            {
+                if (msg.Substring(1, 6) == "sprite")
+                {
+                    int spriteNum;
+                    if (msg.Length == 10)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 2));
+                    }
+                    else if (msg.Length == 11)
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 3));
+                    }
+                    else
+                    {
+                        spriteNum = ToInt32(msg.Substring(8, 1));
+                    }
+                    s_Player[index].Sprite = spriteNum;
+                    SendPlayers(incMSG, s_Server, s_Player);
+                    Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
+                    return;
+                }
+            }
+        }
+
         static bool AlreadyLogged(string name, Player[] s_Player)
         {
             if (name == null) return false;
@@ -535,97 +610,8 @@ namespace Server.Classes
             }
             return false;
         }
-
-        void ClearSlot(NetConnection conn, Player[] s_Player)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                if (s_Player[i] != null && s_Player[i].Connection == conn)
-                {
-                    s_Player[i] = null;
-                    s_Player[i] = new Player();
-                    break;
-                }
-            }
-        }
-
-        void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
-        {
-            Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
-            LogWriter.WriteLog(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status, "Server");
-            if (incMSG.SenderConnection.Status == NetConnectionStatus.Disconnected || incMSG.SenderConnection.Status == NetConnectionStatus.Disconnecting)
-            {
-                Console.WriteLine("Disconnected clearing data...");
-                LogWriter.WriteLog("Disconnected clearing data...", "Server");
-                Console.WriteLine("Saving player...");
-                LogWriter.WriteLog("Saving player...", "Server");
-                SavePlayers(s_Player);
-                ClearSlot(incMSG.SenderConnection, s_Player);
-                SendPlayers(incMSG, s_Server, s_Player);
-            }
-        }
-
-        void SavePlayers(Player[] svrPlayer)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                if (svrPlayer[i].Name != null)
-                {
-                    svrPlayer[i].SavePlayerXML();
-                }
-            }
-        }
-
-        void CheckCommand(string msg, int index, Player[] s_Player, NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
-        {
-            //Make sure it has lenghth and isnt just 1 forwardslash
-            if (msg.Length >= 6)
-            {
-                //Check for map command
-                if (msg.Substring(1, 3) == "map")
-                {
-                    if (msg.Length >= 6)
-                    {
-                        int mapNum = ToInt32(msg.Substring(5, 1));
-                        s_Player[index].Map = mapNum;
-                        SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
-                        SendPlayers(incMSG, s_Server, s_Player);
-                        SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
-                        Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
-                        return;
-                    }
-                }
-            }
-
-            if (msg.Length >= 9)
-            {
-                if (msg.Substring(1, 6) == "sprite")
-                {
-                    int spriteNum;
-                    if (msg.Length == 10)
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 2));
-                    }
-                    else if (msg.Length == 11)
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 3));
-                    }
-                    else
-                    {
-                        spriteNum = ToInt32(msg.Substring(8, 1));
-                    }
-                    s_Player[index].Sprite = spriteNum;
-                    SendPlayers(incMSG, s_Server, s_Player);
-                    Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
-                    return;
-                }
-            }
-        }
     }
 
-    /// <summary>
-    /// Packet headers
-    /// </summary>
     public enum PacketTypes
     {
         Connection,
