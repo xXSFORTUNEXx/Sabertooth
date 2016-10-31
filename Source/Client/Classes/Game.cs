@@ -21,6 +21,7 @@ namespace Client.Classes
         HandleData handleData;  //create the handle data class (udp packet shit)
         Player[] c_Player = new Player[5]; //create player class array
         NPC[] c_Npc = new NPC[10]; //create the npc class array
+        Item[] c_Item = new Item[50];   //Create item array
         Texture[] c_Sprite = new Texture[200]; //set the players texture to a texture
         Map c_Map = new Map(); //create map class
         View c_View = new View();  //create view for the plaer
@@ -70,11 +71,12 @@ namespace Client.Classes
 
             SetupPlayerArray(); //create the player array
             SetupNpcArray();    //create the npc array
+            SetupItemArray();
 
             while (c_Window.IsOpen)    //the actual game loop runs as long as the window is open
             {
                 CheckForConnection(c_Client);  //check for the server connection
-                UpdateView(c_Client, c_Config, c_Npc);  //update the players view
+                UpdateView(c_Client, c_Config, c_Npc, c_Item);  //update the players view
                 DrawGraphics(c_Client);    //draw graphics like maps, players, npcs, items, sprites
                 c_Window.Display();    //display everything we put on the screen
             }
@@ -195,6 +197,14 @@ namespace Client.Classes
             for (int i = 0; i < 10; i++)
             {
                 c_Npc[i] = new NPC();
+            }
+        }
+
+        private void SetupItemArray()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                c_Item[i] = new Item();
             }
         }
 
@@ -329,12 +339,12 @@ namespace Client.Classes
             c_Canvas.RenderCanvas();   //draw the canvas so it doesnt move
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, NPC[] c_Npc)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item)
         {
             UpdateTitle(fps);   //update the title with the fps
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item); 
             c_Window.SetActive();
             c_Window.DispatchEvents();
             c_Window.Clear();

@@ -9,7 +9,7 @@ namespace Server.Classes
 {
     class HandleData
     {
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item)
         {
             NetIncomingMessage incMSG;  //create incoming message
 
@@ -32,7 +32,7 @@ namespace Server.Classes
                                 HandleRegisterRequest(incMSG, s_Server, s_Player);
                                 break;
                             case (byte)PacketTypes.Login:
-                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc);
+                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
@@ -165,7 +165,7 @@ namespace Server.Classes
         }
 
         //Handle logging in requests for the server
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -189,6 +189,7 @@ namespace Server.Classes
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
+                        SendItems(incMSG, s_Server, s_Item);
                     }
                     else
                     {
@@ -248,7 +249,6 @@ namespace Server.Classes
             }
         }
 
-
         //Sends a direction update to the client so it can be processed and sent to all connected
         void SendUpdateDirection(NetServer s_Server, int index, int direction)
         {
@@ -297,7 +297,7 @@ namespace Server.Classes
         void SendPlayerData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
-            outMSG.Write((byte)PacketTypes.UserData);
+            outMSG.Write((byte)PacketTypes.PlayerData);
             outMSG.Write(index);
             outMSG.Write(s_Player[index].Name);
             outMSG.Write(s_Player[index].X);
@@ -325,7 +325,7 @@ namespace Server.Classes
         void SendPlayers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
-            outMSG.Write((byte)PacketTypes.Users);
+            outMSG.Write((byte)PacketTypes.Players);
             for (int i = 0; i < 5; i++)
             {
                 outMSG.Write(s_Player[i].Name);
@@ -348,6 +348,55 @@ namespace Server.Classes
                 outMSG.Write(s_Player[i].Stamina);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Sending players...");
+            LogWriter.WriteLog("Sending players...", "Server");
+        }
+
+        //Send item data
+        void SendItemData(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ItemData);
+            outMSG.Write(index);
+            outMSG.Write(s_Item[index].Name);
+            outMSG.Write(s_Item[index].Sprite);
+            outMSG.Write(s_Item[index].Damage);
+            outMSG.Write(s_Item[index].Armor);
+            outMSG.Write(s_Item[index].Type);
+            outMSG.Write(s_Item[index].HealthRestore);
+            outMSG.Write(s_Item[index].HungerRestore);
+            outMSG.Write(s_Item[index].HydrateRestore);
+            outMSG.Write(s_Item[index].Strength);
+            outMSG.Write(s_Item[index].Agility);
+            outMSG.Write(s_Item[index].Endurance);
+            outMSG.Write(s_Item[index].Stamina);
+
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        //Send item data to all
+        void SendItems(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Items);
+            for (int i = 0; i < 50; i++)
+            {
+                outMSG.Write(s_Item[i].Name);
+                outMSG.Write(s_Item[i].Sprite);
+                outMSG.Write(s_Item[i].Damage);
+                outMSG.Write(s_Item[i].Armor);
+                outMSG.Write(s_Item[i].Type);
+                outMSG.Write(s_Item[i].HealthRestore);
+                outMSG.Write(s_Item[i].HungerRestore);
+                outMSG.Write(s_Item[i].HydrateRestore);
+                outMSG.Write(s_Item[i].Strength);
+                outMSG.Write(s_Item[i].Agility);
+                outMSG.Write(s_Item[i].Endurance);
+                outMSG.Write(s_Item[i].Stamina);
+            }
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Sending items...");
+            LogWriter.WriteLog("Sending items...", "Server");
         }
 
         //Send npc data to client
@@ -469,6 +518,8 @@ namespace Server.Classes
                 }
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Sending map...");
+            LogWriter.WriteLog("Sending map...", "Server");
         }
 
         void ClearSlot(NetConnection conn, Player[] s_Player)
@@ -618,10 +669,10 @@ namespace Server.Classes
         Register,
         ErrorMessage,
         Login,
-        UserData,
+        PlayerData,
         ChatMessage,
         MapData,
-        Users,
+        Players,
         MoveData,
         UpdateMoveData,
         UpdateDirection,
@@ -630,6 +681,8 @@ namespace Server.Classes
         Npcs,
         MapNpc,
         HealthData,
-        VitalLoss
+        VitalLoss,
+        ItemData,
+        Items
     }
 }

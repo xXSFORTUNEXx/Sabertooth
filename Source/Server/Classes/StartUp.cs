@@ -48,6 +48,7 @@ namespace Server.Classes
             Console.WriteLine("Server Started...");
             LogWriter.WriteLog("Server started...", "Server");
             srvrServer.LoadServerConfig();
+            Console.WriteLine("Configuration loaded...");
             srvrServer.ServerLoop(s_Server);
         }
 

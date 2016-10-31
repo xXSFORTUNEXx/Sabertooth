@@ -38,7 +38,8 @@ namespace Server.Classes
         public int hungerTick;
         public int hydrationTick;
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
+        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, 
+                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -61,6 +62,29 @@ namespace Server.Classes
             Health = maxHealth;
             hungerTick = TickCount;
             hydrationTick = TickCount;
+        }
+
+        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money,
+                      int armor, int hunger, int hydration, int str, int agi, int end, int sta)
+        {
+            Name = name;
+            Pass = pass;
+            X = x;
+            Y = y;
+            Map = map;
+            Direction = direction;
+            Level = level;
+            Experience = exp;
+            Money = money;
+            Armor = armor;
+            Hunger = hunger;
+            Hydration = hydration;
+            Strength = str;
+            Agility = agi;
+            Endurance = end;
+            Stamina = sta;
+            FindMaxHealth();
+            Health = maxHealth;
         }
 
         public Player(string name, string pass, NetConnection conn)

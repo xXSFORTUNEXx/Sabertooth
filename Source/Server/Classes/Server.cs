@@ -8,6 +8,7 @@ using static System.Environment;
 using System.IO;
 using System.Threading;
 using System.Xml;
+using static System.IO.File;
 
 namespace Server.Classes
 {
@@ -46,7 +47,7 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item);
                 SavePlayers();
                 CheckNPCSpawn(s_Server);
                 CheckNpcAI(s_Server);
@@ -108,7 +109,7 @@ namespace Server.Classes
         //Command window thread
         static void CommandWindow()
         {
-            Console.WriteLine("Enter commands below, type help for commands:");
+            //Console.WriteLine("Enter commands below, type help for commands:");
             do
             {
                 Console.Write("");
@@ -240,12 +241,13 @@ namespace Server.Classes
         {
             if (TickCount - regenTick > regenTime)
             {
-                Console.WriteLine("Checking for health regen...");
-                LogWriter.WriteLog("Checking for health regin...", "Server");
                 for (int i = 0; i < 5; i++)
                 {
                     if (s_Player[i].Name != null)
                     {
+                        Console.WriteLine("Checking for health regen...");
+                        LogWriter.WriteLog("Checking for health regin...", "Server");
+
                         s_Player[i].RegenHealth();
                         handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
                     }
@@ -262,11 +264,11 @@ namespace Server.Classes
                 //Check for hunger
                 if (TickCount - s_Player[i].hungerTick > hungerTime)
                 {
-                    Console.WriteLine("Checking for hunger loss...");
-                    LogWriter.WriteLog("Checking for hunger loss...", "Server");
-
                     if (s_Player[i].Name != null)
                     {
+                        Console.WriteLine("Checking for hunger loss...");
+                        LogWriter.WriteLog("Checking for hunger loss...", "Server");
+
                         s_Player[i].VitalLoss("food");
                         handleData.SendUpdateVitalData(s_Server, i, "food", s_Player[i].Hunger);
                     }
@@ -275,11 +277,11 @@ namespace Server.Classes
 
                 if (TickCount - s_Player[i].hydrationTick > hydrationTime)
                 {
-                    Console.WriteLine("Checking for hydration loss...");
-                    LogWriter.WriteLog("Checking for hydration loss...", "Server");
-
                     if (s_Player[i].Name != null)
                     {
+                        Console.WriteLine("Checking for hydration loss...");
+                        LogWriter.WriteLog("Checking for hydration loss...", "Server");
+
                         s_Player[i].VitalLoss("water");
                         handleData.SendUpdateVitalData(s_Server, i, "water", s_Player[i].Hydration);
                     }
@@ -382,43 +384,95 @@ namespace Server.Classes
         {
             if (s_userCommand != null)
             {
-                switch (s_userCommand)
+                //Dynamic Commands
+                if (s_userCommand.Length >= 7 && s_userCommand.Substring(0, 7) == "account")    //Check for account command
                 {
-                    case "shutdown":
-                        isRunning = false;
+                    if (s_userCommand.Substring(8, 6) == "create")    //Create
+                    {
+                        if (s_userCommand.Length >= 14)
+                        {
+                            string restofInfo = s_userCommand.Substring(14);  //Get whats left of the string after account create (username and pass)  
+                            string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
+                            if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
+                            {
+                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 1, 100, 0,
+                                                              100, 10, 100, 100, 5, 5, 5, 5);   //Create the player in an array so we can save it
+                                ac_Player.SavePlayerXML();  //Save it
+                                Console.WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know
+                            }
+                            else { Console.WriteLine("USERNAME and PASSWORD must be 3 characters each!"); } //Dont fuck it up by making basic shit
+
+                            s_userCommand = null;   //Clear the command
+                            return; //Get da fuck out
+                        }
+                    }
+                    else if (s_userCommand.Substring(8, 6) == "delete")
+                    {
+                        if (s_userCommand.Length >= 14)
+                        {
+                            string restofInfo = s_userCommand.Substring(14);
+                            if (AccountExist(restofInfo))
+                            {
+                                Console.Write("Are you sure? (y/n)");
+                                string answer = Console.ReadLine();
+                                if (answer == "y") { Delete("Players / " + restofInfo + ".xml"); s_userCommand = null; return; }
+                            }
+                            else { Console.WriteLine("Account doesnt exist!"); s_userCommand = null; return; }
+                        }
+                    }
+                    else { Console.WriteLine("Please enter a valid command!"); s_userCommand = null; return; }  //Did you provide a modifier?
+                }
+                //Basic commands
+                switch (s_userCommand)  //Basic commands can be ran in a switch statement since they dont require modifiers and arguments
+                {
+                    case "shutdown":    //Shutdow the server in about 3 seconds
+                        isRunning = false;  //Break the loop
                         break;
-                    case "save all":
-                        SaveAll();
+                    case "exit":    //Same as shutdown command but shorter and it was the first command it wrote
+                        isRunning = false;  //Break the loop
                         break;
-                    case "reload":
-                        Console.WriteLine("reload command needs argument (eg reload npcs)");
+                    case "save all":    //Save all players (online) which just saves all accounts to their respective XML files
+                        SaveAll();  //The void for this command
                         break;
-                    case "reload npcs":
-                        Console.WriteLine("Reloading Npcs...");
-                        InitNPC();
+                    case "reload":  //Reload which actually requires a modifier but not any arguments like account
+                        Console.WriteLine("reload command needs argument (eg reload npcs)");    //If you dont provide a modifier
                         break;
-                    case "reload maps":
-                        Console.WriteLine("Reloading Maps...");
-                        InitMap();
+                    case "reload npcs": //Reload NPCS
+                        Console.WriteLine("Reloading Npcs..."); //Let the op know
+                        InitNPC();  //The same void thats ran when we first load them from their BIN files
                         break;
-                    case "reload items":
+                    case "reload maps": //Reloads maps
+                        Console.WriteLine("Reloading Maps..."); //Let the op know
+                        InitMap();  //Same on that loads when the server boots just like npcs
+                        break;
+                    case "reload items":    //Reload items
                         Console.WriteLine("Reloading Items...");
                         InitItems();
                         break;
-                    case "help":
+                    case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Console.WriteLine("Commands:");
                         Console.WriteLine("reload npcs - reloads all npcs from their bin files");
                         Console.WriteLine("reload maps - reloads all maps from their bin files");
                         Console.WriteLine("reload items - reloads all items from their bin files");
+                        Console.WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
                         Console.WriteLine("save all - saves all players");
                         Console.WriteLine("shutdown - shuts down the server");
                         break;
-                    default:
+                    default:    //If you entered something that wasnt a command or pure garbage
                         Console.WriteLine("Please enter a valid command!");
                         break;
                 }
-                s_userCommand = null;
+                s_userCommand = null;   //Clear the command
             }
+        }
+
+        static bool AccountExist(string name)
+        {
+            if (Exists("Players/" + name + ".xml"))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

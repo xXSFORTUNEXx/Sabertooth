@@ -18,7 +18,8 @@ namespace Client.Classes
         public int c_Index; //The index of this client
 
         //This is where we process the 
-        public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, ClientConfig c_Config, NPC[] c_Npc)
+        public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
+            ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -98,11 +99,61 @@ namespace Client.Classes
                             case (byte)PacketTypes.VitalLoss:
                                 HandleVitalData(incMSG, c_Player);
                                 break;
+
+                            case (byte)PacketTypes.ItemData:
+                                HandleItemData(incMSG, c_Item);
+                                break;
+
+                            case (byte)PacketTypes.Items:
+                                HandleItems(incMSG, c_Item);
+                                break;
                         }
                         break;
                 }
             }
             c_Client.Recycle(incMSG);
+        }
+
+        void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (c_Item[i] != null)
+                {
+                    c_Item[i].Name = incMSG.ReadString();
+                    c_Item[i].Sprite = incMSG.ReadInt32();
+                    c_Item[i].Damage = incMSG.ReadInt32();
+                    c_Item[i].Sprite = incMSG.ReadInt32();
+                    c_Item[i].Armor = incMSG.ReadInt32();
+                    c_Item[i].Type = incMSG.ReadInt32();
+                    c_Item[i].HealthRestore = incMSG.ReadInt32();
+                    c_Item[i].HungerRestore = incMSG.ReadInt32();
+                    c_Item[i].HydrateRestore = incMSG.ReadInt32();
+                    c_Item[i].Strength = incMSG.ReadInt32();
+                    c_Item[i].Agility = incMSG.ReadInt32();
+                    c_Item[i].Endurance = incMSG.ReadInt32();
+                    c_Item[i].Stamina = incMSG.ReadInt32();
+                }
+            }
+        }
+
+        void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
+        {
+            int index = incMSG.ReadInt32();
+
+            c_Item[index].Name = incMSG.ReadString();
+            c_Item[index].Sprite = incMSG.ReadInt32();
+            c_Item[index].Damage = incMSG.ReadInt32();
+            c_Item[index].Sprite = incMSG.ReadInt32();
+            c_Item[index].Armor = incMSG.ReadInt32();
+            c_Item[index].Type = incMSG.ReadInt32();
+            c_Item[index].HealthRestore = incMSG.ReadInt32();
+            c_Item[index].HungerRestore = incMSG.ReadInt32();
+            c_Item[index].HydrateRestore = incMSG.ReadInt32();
+            c_Item[index].Strength = incMSG.ReadInt32();
+            c_Item[index].Agility = incMSG.ReadInt32();
+            c_Item[index].Endurance = incMSG.ReadInt32();
+            c_Item[index].Stamina = incMSG.ReadInt32();
         }
 
         //Handle incoming NPC data
@@ -396,6 +447,8 @@ namespace Client.Classes
         Npcs,
         MapNpc,
         HealthData,
-        VitalLoss
+        VitalLoss,
+        ItemData,
+        Items
     }
 }
