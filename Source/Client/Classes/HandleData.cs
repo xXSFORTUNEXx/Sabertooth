@@ -51,7 +51,6 @@ namespace Client.Classes
                             case (byte)PacketTypes.UserData:
                                 c_Index = incMSG.ReadInt32();
                                 c_GUI.g_Index = c_Index;
-                                Console.WriteLine("Client index: " + c_Index);
                                 HandlePlayerData(incMSG, c_Client, c_Player, c_Index);
                                 break;
 
@@ -61,7 +60,6 @@ namespace Client.Classes
 
                             case (byte)PacketTypes.MapData:
                                 HandleMapData(c_Client, incMSG, c_Map);
-                                Console.WriteLine("Recieved map data...");
                                 break;
 
                             case (byte)PacketTypes.Users:
@@ -78,7 +76,6 @@ namespace Client.Classes
 
                             case (byte)PacketTypes.Npcs:
                                 HandleNpcs(incMSG, c_Npc);
-                                Console.WriteLine("Recieved npc data...");
                                 break;
 
                             case (byte)PacketTypes.MapNpc:
@@ -114,6 +111,7 @@ namespace Client.Classes
             c_Client.Recycle(incMSG);
         }
 
+        //Handles data for incoming items
         void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
         {
             for (int i = 0; i < 50; i++)
@@ -123,7 +121,6 @@ namespace Client.Classes
                     c_Item[i].Name = incMSG.ReadString();
                     c_Item[i].Sprite = incMSG.ReadInt32();
                     c_Item[i].Damage = incMSG.ReadInt32();
-                    c_Item[i].Sprite = incMSG.ReadInt32();
                     c_Item[i].Armor = incMSG.ReadInt32();
                     c_Item[i].Type = incMSG.ReadInt32();
                     c_Item[i].HealthRestore = incMSG.ReadInt32();
@@ -135,8 +132,11 @@ namespace Client.Classes
                     c_Item[i].Stamina = incMSG.ReadInt32();
                 }
             }
+
+            Console.WriteLine("Items data received from server! IP: " + incMSG.SenderConnection);
         }
 
+        //Handles data for incoming items
         void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
         {
             int index = incMSG.ReadInt32();
@@ -144,7 +144,6 @@ namespace Client.Classes
             c_Item[index].Name = incMSG.ReadString();
             c_Item[index].Sprite = incMSG.ReadInt32();
             c_Item[index].Damage = incMSG.ReadInt32();
-            c_Item[index].Sprite = incMSG.ReadInt32();
             c_Item[index].Armor = incMSG.ReadInt32();
             c_Item[index].Type = incMSG.ReadInt32();
             c_Item[index].HealthRestore = incMSG.ReadInt32();
@@ -154,6 +153,8 @@ namespace Client.Classes
             c_Item[index].Agility = incMSG.ReadInt32();
             c_Item[index].Endurance = incMSG.ReadInt32();
             c_Item[index].Stamina = incMSG.ReadInt32();
+
+            Console.WriteLine("Item data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
         }
 
         //Handle incoming NPC data
@@ -175,6 +176,7 @@ namespace Client.Classes
                     c_Npc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
+            Console.WriteLine("NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
         //Handle incoming NPC data
@@ -196,6 +198,7 @@ namespace Client.Classes
                     c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
+            Console.WriteLine("Map NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
         //Handle incoming data for a single npc
@@ -213,6 +216,8 @@ namespace Client.Classes
             c_Map.mapNpc[npcNum].Behavior = incMSG.ReadInt32();
             c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadInt32();
             c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
+
+            Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
         }
 
         //Handle player direction packet
@@ -220,6 +225,8 @@ namespace Client.Classes
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
+
+            Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
             if (index == clientIndex) { return; }
 
@@ -234,6 +241,8 @@ namespace Client.Classes
             int y = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
             int step = incMSG.ReadInt32();
+
+            Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
             if (index == clientIndex) { return; }
             if (step == c_Player[index].Step) { return; }
@@ -283,18 +292,20 @@ namespace Client.Classes
             }
             c_GUI.outputChat.ScrollToBottom();
             c_GUI.outputChat.UnselectAll();
+            Console.WriteLine("Chat data receievd from server! IP: " + incMSG.SenderConnection);
         }
 
         //Packet for succesful login, after this is done we get all the maps, npc, other players the whole nine yards
         void HandleLoginData(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas, GUI c_GUI)
         {
-            Console.WriteLine("Login successful!");
+            Console.WriteLine("Login successful! IP: " + incMSG.SenderConnection);
             c_Canvas.DeleteAllChildren();
             c_GUI.CreateDebugWindow(c_Canvas);
             c_GUI.CreateChatWindow(c_Canvas);
             c_GUI.AddText("Welcome to Sabertooth!");
         }
 
+        //Handles incoming vital data
         void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
         {
             int index = incMSG.ReadInt32();
@@ -303,14 +314,18 @@ namespace Client.Classes
 
             if (vitalName == "food") { c_Player[index].Hunger = vital; }
             if (vitalName == "water") { c_Player[index].Hydration = vital; }
+
+            Console.WriteLine("Vital data received from server! Index: " + index + " Vital: " + vitalName + " IP: " + incMSG.SenderConnection);
         }
 
+        //Handles incoming health data
         void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
         {
             int index = incMSG.ReadInt32();
             int health = incMSG.ReadInt32();
 
             c_Player[index].Health = health;
+            Console.WriteLine("Health data received from server! Index:" + index + " Amount: " + health + " IP: " + incMSG.SenderConnection);
         }
 
         //Player incoming data for the clients index
@@ -336,6 +351,8 @@ namespace Client.Classes
             c_Player[clientIndex].Stamina = incMSG.ReadInt32();
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
+
+            Console.WriteLine("Player data received from server! Index: " + clientIndex + " Account Name: " + c_Player[clientIndex].Name + " IP: " + incMSG.SenderConnection);
         }
 
         //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
@@ -364,6 +381,7 @@ namespace Client.Classes
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
+            Console.WriteLine("Player data received from server! Index: All IP: " + incMSG.SenderConnection);
         }
 
         //Error message handler
@@ -373,6 +391,7 @@ namespace Client.Classes
             string caption = incMSG.ReadString();
             MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
+            Console.WriteLine("Error message data received from server! IP: " + incMSG.SenderConnection);
         }
 
         //Handle the incoming map data whether it be logging in or changing maps.
@@ -425,6 +444,7 @@ namespace Client.Classes
                 }
             }
             c_Map.SaveMap();
+            Console.WriteLine("Map data received from server! IP: " + incMSG.SenderConnection);
         }
     }
 

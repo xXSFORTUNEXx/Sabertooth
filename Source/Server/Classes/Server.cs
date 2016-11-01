@@ -53,7 +53,7 @@ namespace Server.Classes
                 CheckNpcAI(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
-                CheckCommands();
+                CheckCommands(s_Server);
             }
             Console.WriteLine("Shutting down...");
             s_Server.Shutdown("Shutting down");
@@ -380,7 +380,7 @@ namespace Server.Classes
         }
 
         //Check to see if the user entered any commands
-        void CheckCommands()
+        void CheckCommands(NetServer s_Server)
         {
             if (s_userCommand != null)
             {
@@ -449,12 +449,20 @@ namespace Server.Classes
                         Console.WriteLine("Reloading Items...");
                         InitItems();
                         break;
+                    case "stats":
+                        Console.WriteLine("Statistics: ");
+                        Console.WriteLine(s_Server.Statistics);
+                        break;
+                    case "server":
+                        Console.WriteLine("Server Info: " + s_Server);
+                        break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Console.WriteLine("Commands:");
                         Console.WriteLine("reload npcs - reloads all npcs from their bin files");
                         Console.WriteLine("reload maps - reloads all maps from their bin files");
                         Console.WriteLine("reload items - reloads all items from their bin files");
                         Console.WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
+                        Console.WriteLine("stats - shows the servers stats");
                         Console.WriteLine("save all - saves all players");
                         Console.WriteLine("shutdown - shuts down the server");
                         break;

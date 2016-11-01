@@ -186,10 +186,10 @@ namespace Server.Classes
                         s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
                         SendPlayerData(incMSG, s_Server, s_Player, i);
                         SendPlayers(incMSG, s_Server, s_Player);
-                        SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
-                        SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendItems(incMSG, s_Server, s_Item);
+                        SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
+                        SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                     }
                     else
                     {
