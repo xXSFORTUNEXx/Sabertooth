@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lidgren.Network;
-using System.IO;
-using System.Diagnostics;
-using System.Threading;
+﻿using Lidgren.Network;
+using static Server.Classes.LogWriter;
+using static System.Console;
+using static System.IO.Directory;
 
 namespace Server.Classes
 {
@@ -17,16 +12,16 @@ namespace Server.Classes
 
         static void Main(string[] args)
         {
-            Console.Title = "Sabertooth Server";
-            Console.WriteLine(@"  _____       _               _              _   _     ");
-            Console.WriteLine(@" / ____|     | |             | |            | | | |    ");
-            Console.WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
-            Console.WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
-            Console.WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
-            Console.WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
-            Console.WriteLine(@"                              Created by Steven Fortune");
-            Console.WriteLine("Loading...Please wait...");
-            LogWriter.WriteLog("Loading...Please wait...", "Server");
+            Title = "Sabertooth Server";
+            WriteLine(@"  _____       _               _              _   _     ");
+            WriteLine(@" / ____|     | |             | |            | | | |    ");
+            WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            WriteLine(@"                              Created by Steven Fortune");
+            WriteLine("Loading...Please wait...");
+            WriteLog("Loading...Please wait...", "Server");
 
             s_Config = new NetPeerConfiguration("sabertooth");
             s_Config.Port = 14242;
@@ -35,20 +30,20 @@ namespace Server.Classes
             s_Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             s_Config.EnableUPnP = true;
 
-            Console.WriteLine("Enabling message types...");
+            WriteLine("Enabling message types...");
             CheckDirectories();
-            LogWriter.WriteLog("Checking directories...", "Server");
-            Console.WriteLine("Checking directories...");
+            WriteLog("Checking directories...", "Server");
+            WriteLine("Checking directories...");
             s_Server = new NetServer(s_Config);
             s_Server.Start();
-            Console.WriteLine("Forwarding ports...");
-            LogWriter.WriteLog("Forwarding ports...", "Server");
+            WriteLine("Forwarding ports...");
+            WriteLog("Forwarding ports...", "Server");
             s_Server.UPnP.ForwardPort(14242, "Sabertooth");
             Server srvrServer = new Server();
-            Console.WriteLine("Server Started...");
-            LogWriter.WriteLog("Server started...", "Server");
+            WriteLine("Server Started...");
+            WriteLog("Server started...", "Server");
             srvrServer.LoadServerConfig();
-            Console.WriteLine("Configuration loaded...");
+            WriteLine("Configuration loaded...");
             srvrServer.ServerLoop(s_Server);
         }
 
@@ -56,35 +51,35 @@ namespace Server.Classes
         {
             bool exists = false;
 
-            if (!Directory.Exists("Players"))
+            if (!Exists("Players"))
             {
-                Directory.CreateDirectory("Players");
+                CreateDirectory("Players");
                 exists = true;
             }
-            if (!Directory.Exists("Maps"))
+            if (!Exists("Maps"))
             {
-                Directory.CreateDirectory("Maps");
+                CreateDirectory("Maps");
                 exists = true;
             }
-            if (!Directory.Exists("Logs"))
+            if (!Exists("Logs"))
             {
-                Directory.CreateDirectory("Logs");
+                CreateDirectory("Logs");
                 exists = true;
             }
-            if (!Directory.Exists("NPCS"))
+            if (!Exists("NPCS"))
             {
-                Directory.CreateDirectory("NPCS");
+                CreateDirectory("NPCS");
                 exists = true;
             }
-            if (!Directory.Exists("Items"))
+            if (!Exists("Items"))
             {
-                Directory.CreateDirectory("Items");
+                CreateDirectory("Items");
                 exists = true;
             }
 
             if (exists)
             {
-                LogWriter.WriteLog("Directories created...", "Server");
+                WriteLog("Directories created...", "Server");
             }
         }
     }
