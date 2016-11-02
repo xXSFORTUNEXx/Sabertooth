@@ -7,6 +7,7 @@ using static Server.Classes.LogWriter;
 using static System.Console;
 using static System.Environment;
 using static System.IO.File;
+using System.Net;
 
 namespace Server.Classes
 {
@@ -31,6 +32,13 @@ namespace Server.Classes
         private int spawnTime;
         private int aiTime;
 
+        public int s_Second;
+        public int s_Minute;
+        public int s_Hour;
+        public int s_Day;
+        public int s_uptimeTick;
+        public string upTime;
+
         public void ServerLoop(NetServer s_Server)
         {
             InitPlayerArray();
@@ -39,9 +47,10 @@ namespace Server.Classes
             InitNPC();
             InitFinal();
 
+            Thread s_upTime = new Thread(UpTime);
             Thread s_Command = new Thread(CommandWindow);
             s_Command.Start();
-
+            s_upTime.Start();
             isRunning = true;
             while (isRunning)
             {
@@ -113,6 +122,38 @@ namespace Server.Classes
                 Write("");
                 s_userCommand = ReadLine();
             } while (s_userCommand != null);
+        }
+
+        void UpTime()
+        {
+            while (isRunning)
+            {
+                if (TickCount - s_uptimeTick > 1000)
+                {
+                    if (s_Second < 60)
+                    {
+                        s_Second += 1;
+                    }
+                    else
+                    {
+                        s_Second = 0;
+                        s_Minute += 1;
+                    }
+
+                    if (s_Minute >= 60)
+                    {
+                        s_Minute = 0;
+                        s_Hour += 1;
+                    }
+                    if (s_Hour == 24)
+                    {
+                        s_Hour = 0;
+                        s_Day += 1;
+                    }
+                    upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
+                    s_uptimeTick = TickCount;
+                }
+            }
         }
 
         ///Init methods
@@ -452,7 +493,12 @@ namespace Server.Classes
                         WriteLine(s_Server.Statistics);
                         break;
                     case "server":
-                        WriteLine("Server Info: ");
+                        string hostName = Dns.GetHostName();
+                        WriteLine("Server Details: ");
+                        WriteLine(upTime);
+                        WriteLine("Host Name: " + hostName);
+                        WriteLine("Ip Address: " + NetUtility.Resolve(hostName));
+                        WriteLine("Port: " + s_Server.Port);
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");
