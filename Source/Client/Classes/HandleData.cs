@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Lidgren.Network;
 using Gwen.Control;
 using System.Drawing;
@@ -104,11 +104,22 @@ namespace Client.Classes
                             case (byte)PacketTypes.Items:
                                 HandleItems(incMSG, c_Item);
                                 break;
+
+                            case (byte)PacketTypes.Shutdown:
+                                HandleServerShutdown(c_Client, c_Canvas);
+                                break;
                         }
                         break;
                 }
             }
             c_Client.Recycle(incMSG);
+        }
+
+        void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
+        {
+            c_Canvas.Dispose();
+            c_Client.Shutdown("Disconnect");
+            Exit(0);
         }
 
         //Handles data for incoming items
@@ -469,6 +480,7 @@ namespace Client.Classes
         HealthData,
         VitalLoss,
         ItemData,
-        Items
+        Items,
+        Shutdown
     }
 }

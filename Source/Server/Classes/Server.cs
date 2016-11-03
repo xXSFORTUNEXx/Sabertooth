@@ -60,12 +60,23 @@ namespace Server.Classes
                 CheckNpcAI(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
-                CheckCommands(s_Server);
+                CheckCommands(s_Server, s_Player);
             }
-            WriteLine("Shutting down...");
+            DisconnectClients(s_Server);
+            WriteLine("Disconnecting clients...");
+            Thread.Sleep(2500);
             s_Server.Shutdown("Shutting down");
+            WriteLine("Shutting down...");
             Thread.Sleep(2500);
             Exit(0);
+        }
+
+        public void DisconnectClients(NetServer s_Server)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+
+            outMSG.Write((byte)PacketTypes.Shutdown);
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SaveServerConfig()
@@ -419,7 +430,7 @@ namespace Server.Classes
         }
 
         //Check to see if the user entered any commands
-        void CheckCommands(NetServer s_Server)
+        void CheckCommands(NetServer s_Server, Player[] s_Player)
         {
             if (s_userCommand != null)
             {
@@ -488,17 +499,25 @@ namespace Server.Classes
                         WriteLine("Reloading Items...");
                         InitItems();
                         break;
-                    case "stats":
-                        WriteLine("Statistics: ");
-                        WriteLine(s_Server.Statistics);
-                        break;
-                    case "server":
+                    case "info":
                         string hostName = Dns.GetHostName();
-                        WriteLine("Server Details: ");
+                        WriteLine("Statistics: ");
                         WriteLine(upTime);
                         WriteLine("Host Name: " + hostName);
                         WriteLine("Ip Address: " + NetUtility.Resolve(hostName));
                         WriteLine("Port: " + s_Server.Port);
+                        WriteLine(s_Server.Statistics.ToString());
+                        WriteLine("Connections: ");
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (s_Player[i].Connection != null)
+                            {
+                                WriteLine(s_Player[i].Connection);
+                            }
+                        }
+                        break;
+                    case "uptime":
+                        WriteLine(upTime);
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");
@@ -506,7 +525,9 @@ namespace Server.Classes
                         WriteLine("reload maps - reloads all maps from their bin files");
                         WriteLine("reload items - reloads all items from their bin files");
                         WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
-                        WriteLine("stats - shows the servers stats");
+                        WriteLine("info - shows the servers stat, hosts, ip, connections");
+                        WriteLine("uptime - shows the servers up time");
+                        WriteLine("uptime - shows server uptime.");
                         WriteLine("save all - saves all players");
                         WriteLine("shutdown - shuts down the server");
                         break;

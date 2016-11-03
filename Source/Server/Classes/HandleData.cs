@@ -683,6 +683,7 @@ namespace Server.Classes
         HealthData,
         VitalLoss,
         ItemData,
-        Items
+        Items,
+        Shutdown
     }
 }
