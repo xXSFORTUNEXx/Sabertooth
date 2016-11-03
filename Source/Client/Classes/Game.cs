@@ -44,7 +44,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;    //event for mouse button released
             c_Window.MouseMoved += window_MouseMoved;  //event for mouse movement
             c_Window.TextEntered += window_TextEntered;    //event for text being entered for gwen
-            c_Window.SetFramerateLimit(60);    //set the max framerate for our window
+            c_Window.SetFramerateLimit(75);    //set the max framerate for our window
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);    //create the renderer that allows gwen to access SFML
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");  //load the texture for gwen's skin

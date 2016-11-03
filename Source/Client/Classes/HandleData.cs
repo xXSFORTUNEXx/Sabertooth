@@ -71,7 +71,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.DirData:
-                                HandleDirectionData(incMSG, c_Player, c_Index);
+                                HandleUpdateDirectionData(incMSG, c_Player, c_Index);
                                 break;
 
                             case (byte)PacketTypes.Npcs:
@@ -232,7 +232,7 @@ namespace Client.Classes
         }
 
         //Handle player direction packet
-        void HandleDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
+        void HandleUpdateDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
             int index = incMSG.ReadInt32();
             int direction = incMSG.ReadInt32();
@@ -454,7 +454,14 @@ namespace Client.Classes
             }
             c_Map.SaveMap();
             Console.WriteLine("Map data received from server! IP: " + incMSG.SenderConnection);
+
             //Loading is complete after the map
+            LoadMainGUI(c_GUI, c_Canvas);
+        }
+
+        //Loads the main GUI once the loading is finished
+        void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
+        {
             c_Canvas.DeleteAllChildren();
             c_GUI.CreateDebugWindow(c_Canvas);
             c_GUI.CreateChatWindow(c_Canvas);

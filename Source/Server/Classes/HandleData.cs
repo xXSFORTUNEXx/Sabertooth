@@ -252,6 +252,7 @@ namespace Server.Classes
         void SendUpdateDirection(NetServer s_Server, int index, int direction)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.DirData);
             outMSG.Write(index);
             outMSG.Write(direction);
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
