@@ -181,9 +181,7 @@ namespace Server.Classes
                         s_Player[i].LoadPlayerXML();
                         int currentMap = s_Player[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
-                        NetOutgoingMessage outMSG = s_Server.CreateMessage();
-                        outMSG.Write((byte)PacketTypes.Login);
-                        s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
+                        SendAcceptLogin(s_Server, s_Player, i);
                         SendPlayerData(incMSG, s_Server, s_Player, i);
                         SendPlayers(incMSG, s_Server, s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
@@ -233,6 +231,7 @@ namespace Server.Classes
             }
         }
 
+        //Handle the status change of a client
         void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
@@ -272,6 +271,7 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Update health
         public void SendUpdateHealthData(NetServer s_Server, int index, int health)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -282,6 +282,7 @@ namespace Server.Classes
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Update the vital data
         public void SendUpdateVitalData(NetServer s_Server, int index, string vitalName, int vital)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -291,6 +292,14 @@ namespace Server.Classes
             outMSG.Write(vital);
 
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        //Sending data letting the client know we are connected and data is coming
+        void SendAcceptLogin(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Login);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         //Send user data of the main index
@@ -473,6 +482,7 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        //Send the map to the client
         void SendMapData(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -522,6 +532,7 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending map...", "Server");
         }
 
+        //Clear the slot for other players to connect
         void ClearSlot(NetConnection conn, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -535,6 +546,7 @@ namespace Server.Classes
             }
         }
 
+        //Saves all players
         void SavePlayers(Player[] svrPlayer)
         {
             for (int i = 0; i < 5; i++)
@@ -546,6 +558,7 @@ namespace Server.Classes
             }
         }
 
+        //Checks commands sent from the client
         void CheckCommand(string msg, int index, Player[] s_Player, NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
@@ -592,6 +605,7 @@ namespace Server.Classes
             }
         }
 
+        //Check to see if the account is already logged in
         static bool AlreadyLogged(string name, Player[] s_Player)
         {
             if (name == null) return false;
@@ -611,6 +625,7 @@ namespace Server.Classes
             return false;
         }
 
+        //Check and assign and open slot if open
         static int OpenSlot(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -623,6 +638,7 @@ namespace Server.Classes
             return 5;
         }
 
+        //Get the players connection
         static int GetPlayerConnection(NetIncomingMessage incMSG, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -635,6 +651,7 @@ namespace Server.Classes
             return 5;
         }
 
+        //Check the password to make sure its correct
         static bool CheckPassword(string name, string pass)
         {
             XmlReader reader = XmlReader.Create("Players/" + name + ".xml");
@@ -653,6 +670,7 @@ namespace Server.Classes
             }
         }
 
+        //If creating an account check to see if it already exists
         static bool AccountExist(string name)
         {
             if (Exists("Players/" + name + ".xml"))

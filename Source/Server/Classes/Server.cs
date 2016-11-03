@@ -512,7 +512,11 @@ namespace Server.Classes
                         {
                             if (s_Player[i].Connection != null)
                             {
-                                WriteLine(s_Player[i].Connection);
+                                WriteLine(s_Player[i].Connection + " Logged in as: " + s_Player[i].Name);
+                            }
+                            else
+                            {
+                                WriteLine("Open");
                             }
                         }
                         break;

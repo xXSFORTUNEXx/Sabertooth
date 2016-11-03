@@ -59,7 +59,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.MapData:
-                                HandleMapData(c_Client, incMSG, c_Map);
+                                HandleMapData(c_Client, incMSG, c_Map, c_GUI, c_Canvas);
                                 break;
 
                             case (byte)PacketTypes.Users:
@@ -311,9 +311,7 @@ namespace Client.Classes
         {
             Console.WriteLine("Login successful! IP: " + incMSG.SenderConnection);
             c_Canvas.DeleteAllChildren();
-            c_GUI.CreateDebugWindow(c_Canvas);
-            c_GUI.CreateChatWindow(c_Canvas);
-            c_GUI.AddText("Welcome to Sabertooth!");
+            c_GUI.CreateLoadingWindow(c_Canvas);
         }
 
         //Handles incoming vital data
@@ -406,7 +404,7 @@ namespace Client.Classes
         }
 
         //Handle the incoming map data whether it be logging in or changing maps.
-        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map)
+        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
         {
             c_Map.Name = incMSG.ReadString();
 
@@ -456,6 +454,11 @@ namespace Client.Classes
             }
             c_Map.SaveMap();
             Console.WriteLine("Map data received from server! IP: " + incMSG.SenderConnection);
+            //Loading is complete after the map
+            c_Canvas.DeleteAllChildren();
+            c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.CreateChatWindow(c_Canvas);
+            c_GUI.AddText("Welcome to Sabertooth!");
         }
     }
 

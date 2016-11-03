@@ -41,12 +41,15 @@ namespace Client.Classes
         Label d_Endurance;
         Label d_Stamina;
 
-        WindowControl mainWindow;
+        public WindowControl loadWindow;
+        Label loadLabel;
+
+        public WindowControl mainWindow;
         Button mainbuttonLog;
         Button mainbuttonReg;
         Button mainbuttonExit;
 
-        WindowControl regWindow;
+        public WindowControl regWindow;
         Label unregLabel;
         Label pwregLabel;
         Label repwLabel;
@@ -56,7 +59,7 @@ namespace Client.Classes
         Button regButton;
         Button canregButton;
 
-        WindowControl logWindow;
+        public WindowControl logWindow;
         Label unlogLabel;
         Label pwloglabel;
         TextBox unlogBox;
@@ -75,6 +78,19 @@ namespace Client.Classes
             this.c_Font = c_Font;
             this.c_Player = c_Player;
             this.c_Config = c_Config;
+        }
+
+        public void CreateLoadingWindow(Base parent)
+        {
+            loadWindow = new WindowControl(parent.GetCanvas());
+            loadWindow.SetSize(250, 75);
+            loadWindow.Position(Gwen.Pos.Center);
+            loadWindow.DisableResizing();
+            loadWindow.IsClosable = false;
+
+            loadLabel = new Label(loadWindow);
+            loadLabel.SetPosition(70, 15);
+            loadLabel.Text = "Loading...Please Wait...";
         }
 
         public void CreateMainWindow(Base parent)

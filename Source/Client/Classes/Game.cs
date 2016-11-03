@@ -333,8 +333,8 @@ namespace Client.Classes
                     ProcessMovement();
                     walkTick = TickCount;
                 }
-            }
 
+            }
             c_Window.SetView(c_Window.DefaultView);   //change the default view back
             c_Canvas.RenderCanvas();   //draw the canvas so it doesnt move
         }
