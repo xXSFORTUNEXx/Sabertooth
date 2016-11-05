@@ -47,10 +47,8 @@ namespace Server.Classes
             InitNPC();
             InitFinal();
 
-            Thread s_upTime = new Thread(UpTime);
             Thread s_Command = new Thread(CommandWindow);
             s_Command.Start();
-            s_upTime.Start();
             isRunning = true;
             while (isRunning)
             {
@@ -61,6 +59,7 @@ namespace Server.Classes
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
                 CheckCommands(s_Server, s_Player);
+                UpTime();
             }
             DisconnectClients(s_Server);
             WriteLine("Disconnecting clients...");
@@ -135,35 +134,33 @@ namespace Server.Classes
             } while (s_userCommand != null);
         }
 
+        //Servers uptime
         void UpTime()
         {
-            while (isRunning)
+            if (TickCount - s_uptimeTick > 1000)
             {
-                if (TickCount - s_uptimeTick > 1000)
+                if (s_Second < 60)
                 {
-                    if (s_Second < 60)
-                    {
-                        s_Second += 1;
-                    }
-                    else
-                    {
-                        s_Second = 0;
-                        s_Minute += 1;
-                    }
-
-                    if (s_Minute >= 60)
-                    {
-                        s_Minute = 0;
-                        s_Hour += 1;
-                    }
-                    if (s_Hour == 24)
-                    {
-                        s_Hour = 0;
-                        s_Day += 1;
-                    }
-                    upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
-                    s_uptimeTick = TickCount;
+                    s_Second += 1;
                 }
+                else
+                {
+                    s_Second = 0;
+                    s_Minute += 1;
+                }
+
+                if (s_Minute >= 60)
+                {
+                    s_Minute = 0;
+                    s_Hour += 1;
+                }
+                if (s_Hour == 24)
+                {
+                    s_Hour = 0;
+                    s_Day += 1;
+                }
+                upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
+                s_uptimeTick = TickCount;
             }
         }
 
