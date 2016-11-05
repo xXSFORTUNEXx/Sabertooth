@@ -76,7 +76,7 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
 
             outMSG.Write((byte)PacketTypes.Shutdown);
-            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
         }
 
         public void SaveServerConfig()

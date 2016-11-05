@@ -60,11 +60,11 @@ namespace Server.Classes
         //Handle incoming packets for movement of the player
         void HandleMoveData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
-            int index = incMSG.ReadInt32();
-            int x = incMSG.ReadInt32();
-            int y = incMSG.ReadInt32();
-            int direction = incMSG.ReadInt32();
-            int step = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
+            int x = incMSG.ReadVariableInt32();
+            int y = incMSG.ReadVariableInt32();
+            int direction = incMSG.ReadVariableInt32();
+            int step = incMSG.ReadVariableInt32();
 
             if (step == s_Player[index].Step) { return; }
             if (x == s_Player[index].X && y == s_Player[index].Y) { return; }
@@ -86,13 +86,20 @@ namespace Server.Classes
         //Handles incoming direction data for players
         void HandleDirectionData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
-            int index = incMSG.ReadInt32();
-            int direction = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
+            int direction = incMSG.ReadVariableInt32();
 
             if (direction == s_Player[index].Direction) { return; }
 
             s_Player[index].Direction = direction;
-            SendUpdateDirection(s_Server, index, direction);
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
+                {
+                    SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction);
+                }
+            }
         }
 
         //Handles a discovery response from the server
@@ -249,13 +256,13 @@ namespace Server.Classes
         }
 
         //Sends a direction update to the client so it can be processed and sent to all connected
-        void SendUpdateDirection(NetServer s_Server, int index, int direction)
+        void SendUpdateDirection(NetServer s_Server, NetConnection playerConn, int index, int direction)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.DirData);
-            outMSG.Write(index);
-            outMSG.Write(direction);
-            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(direction);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 2);
         }
 
         //Sending out the data for movement to be processed by everyone connected
@@ -263,13 +270,13 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
-            outMSG.Write(index);
-            outMSG.Write(x);
-            outMSG.Write(y);
-            outMSG.Write(direction);
-            outMSG.Write(step);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(x);
+            outMSG.WriteVariableInt32(y);
+            outMSG.WriteVariableInt32(direction);
+            outMSG.WriteVariableInt32(step);
 
-            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 1);
         }
 
         //Update health
@@ -277,8 +284,8 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.HealthData);
-            outMSG.Write(index);
-            outMSG.Write(health);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(health);
 
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -288,9 +295,9 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.VitalLoss);
-            outMSG.Write(index);
+            outMSG.WriteVariableInt32(index);
             outMSG.Write(vitalName);
-            outMSG.Write(vital);
+            outMSG.WriteVariableInt32(vital);
 
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -310,23 +317,23 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.PlayerData);
             outMSG.Write(index);
             outMSG.Write(s_Player[index].Name);
-            outMSG.Write(s_Player[index].X);
-            outMSG.Write(s_Player[index].Y);
-            outMSG.Write(s_Player[index].Map);
-            outMSG.Write(s_Player[index].Direction);
-            outMSG.Write(s_Player[index].Sprite);
-            outMSG.Write(s_Player[index].Level);
-            outMSG.Write(s_Player[index].Health);
-            outMSG.Write(s_Player[index].maxHealth);
-            outMSG.Write(s_Player[index].Hunger);
-            outMSG.Write(s_Player[index].Hydration);
-            outMSG.Write(s_Player[index].Experience);
-            outMSG.Write(s_Player[index].Money);
-            outMSG.Write(s_Player[index].Armor);
-            outMSG.Write(s_Player[index].Strength);
-            outMSG.Write(s_Player[index].Agility);
-            outMSG.Write(s_Player[index].Endurance);
-            outMSG.Write(s_Player[index].Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].X);
+            outMSG.WriteVariableInt32(s_Player[index].Y);
+            outMSG.WriteVariableInt32(s_Player[index].Map);
+            outMSG.WriteVariableInt32(s_Player[index].Direction);
+            outMSG.WriteVariableInt32(s_Player[index].Sprite);
+            outMSG.WriteVariableInt32(s_Player[index].Level);
+            outMSG.WriteVariableInt32(s_Player[index].Health);
+            outMSG.WriteVariableInt32(s_Player[index].maxHealth);
+            outMSG.WriteVariableInt32(s_Player[index].Hunger);
+            outMSG.WriteVariableInt32(s_Player[index].Hydration);
+            outMSG.WriteVariableInt32(s_Player[index].Experience);
+            outMSG.WriteVariableInt32(s_Player[index].Money);
+            outMSG.WriteVariableInt32(s_Player[index].Armor);
+            outMSG.WriteVariableInt32(s_Player[index].Strength);
+            outMSG.WriteVariableInt32(s_Player[index].Agility);
+            outMSG.WriteVariableInt32(s_Player[index].Endurance);
+            outMSG.WriteVariableInt32(s_Player[index].Stamina);
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -339,23 +346,24 @@ namespace Server.Classes
             for (int i = 0; i < 5; i++)
             {
                 outMSG.Write(s_Player[i].Name);
-                outMSG.Write(s_Player[i].X);
-                outMSG.Write(s_Player[i].Y);
-                outMSG.Write(s_Player[i].Map);
-                outMSG.Write(s_Player[i].Direction);
-                outMSG.Write(s_Player[i].Sprite);
-                outMSG.Write(s_Player[i].Level);
-                outMSG.Write(s_Player[i].Health);
-                outMSG.Write(s_Player[i].maxHealth);
-                outMSG.Write(s_Player[i].Hunger);
-                outMSG.Write(s_Player[i].Hydration);
-                outMSG.Write(s_Player[i].Experience);
-                outMSG.Write(s_Player[i].Money);
-                outMSG.Write(s_Player[i].Armor);
-                outMSG.Write(s_Player[i].Strength);
-                outMSG.Write(s_Player[i].Agility);
-                outMSG.Write(s_Player[i].Endurance);
-                outMSG.Write(s_Player[i].Stamina);
+                outMSG.WriteVariableInt32(s_Player[i].X);
+                outMSG.WriteVariableInt32(s_Player[i].Y);
+                outMSG.WriteVariableInt32(s_Player[i].Map);
+                outMSG.WriteVariableInt32(s_Player[i].Direction);
+                outMSG.WriteVariableInt32(s_Player[i].Sprite);
+                outMSG.WriteVariableInt32(s_Player[i].Level);
+                outMSG.WriteVariableInt32(s_Player[i].Health);
+                outMSG.WriteVariableInt32(s_Player[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Player[i].Hunger);
+                outMSG.WriteVariableInt32(s_Player[i].Hydration);
+                outMSG.WriteVariableInt32(s_Player[i].Experience);
+                outMSG.WriteVariableInt32(s_Player[i].Money);
+                outMSG.WriteVariableInt32(s_Player[i].Armor);
+                outMSG.WriteVariableInt32(s_Player[i].Strength);
+                outMSG.WriteVariableInt32(s_Player[i].Agility);
+                outMSG.WriteVariableInt32(s_Player[i].Endurance);
+                outMSG.WriteVariableInt32(s_Player[i].Stamina);
+                
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending players...");
@@ -367,19 +375,19 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.ItemData);
-            outMSG.Write(index);
+            outMSG.WriteVariableInt32(index);
             outMSG.Write(s_Item[index].Name);
-            outMSG.Write(s_Item[index].Sprite);
-            outMSG.Write(s_Item[index].Damage);
-            outMSG.Write(s_Item[index].Armor);
-            outMSG.Write(s_Item[index].Type);
-            outMSG.Write(s_Item[index].HealthRestore);
-            outMSG.Write(s_Item[index].HungerRestore);
-            outMSG.Write(s_Item[index].HydrateRestore);
-            outMSG.Write(s_Item[index].Strength);
-            outMSG.Write(s_Item[index].Agility);
-            outMSG.Write(s_Item[index].Endurance);
-            outMSG.Write(s_Item[index].Stamina);
+            outMSG.WriteVariableInt32(s_Item[index].Sprite);
+            outMSG.WriteVariableInt32(s_Item[index].Damage);
+            outMSG.WriteVariableInt32(s_Item[index].Armor);
+            outMSG.WriteVariableInt32(s_Item[index].Type);
+            outMSG.WriteVariableInt32(s_Item[index].HealthRestore);
+            outMSG.WriteVariableInt32(s_Item[index].HungerRestore);
+            outMSG.WriteVariableInt32(s_Item[index].HydrateRestore);
+            outMSG.WriteVariableInt32(s_Item[index].Strength);
+            outMSG.WriteVariableInt32(s_Item[index].Agility);
+            outMSG.WriteVariableInt32(s_Item[index].Endurance);
+            outMSG.WriteVariableInt32(s_Item[index].Stamina);
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -392,17 +400,17 @@ namespace Server.Classes
             for (int i = 0; i < 50; i++)
             {
                 outMSG.Write(s_Item[i].Name);
-                outMSG.Write(s_Item[i].Sprite);
-                outMSG.Write(s_Item[i].Damage);
-                outMSG.Write(s_Item[i].Armor);
-                outMSG.Write(s_Item[i].Type);
-                outMSG.Write(s_Item[i].HealthRestore);
-                outMSG.Write(s_Item[i].HungerRestore);
-                outMSG.Write(s_Item[i].HydrateRestore);
-                outMSG.Write(s_Item[i].Strength);
-                outMSG.Write(s_Item[i].Agility);
-                outMSG.Write(s_Item[i].Endurance);
-                outMSG.Write(s_Item[i].Stamina);
+                outMSG.WriteVariableInt32(s_Item[i].Sprite);
+                outMSG.WriteVariableInt32(s_Item[i].Damage);
+                outMSG.WriteVariableInt32(s_Item[i].Armor);
+                outMSG.WriteVariableInt32(s_Item[i].Type);
+                outMSG.WriteVariableInt32(s_Item[i].HealthRestore);
+                outMSG.WriteVariableInt32(s_Item[i].HungerRestore);
+                outMSG.WriteVariableInt32(s_Item[i].HydrateRestore);
+                outMSG.WriteVariableInt32(s_Item[i].Strength);
+                outMSG.WriteVariableInt32(s_Item[i].Agility);
+                outMSG.WriteVariableInt32(s_Item[i].Endurance);
+                outMSG.WriteVariableInt32(s_Item[i].Stamina);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending items...");
@@ -417,14 +425,14 @@ namespace Server.Classes
             for (int i = 0; i < 10; i++)
             {
                 outMSG.Write(s_Npc[i].Name);
-                outMSG.Write(s_Npc[i].X);
-                outMSG.Write(s_Npc[i].Y);
-                outMSG.Write(s_Npc[i].Direction);
-                outMSG.Write(s_Npc[i].Sprite);
-                outMSG.Write(s_Npc[i].Step);
-                outMSG.Write(s_Npc[i].Owner);
-                outMSG.Write(s_Npc[i].Behavior);
-                outMSG.Write(s_Npc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Npc[i].X);
+                outMSG.WriteVariableInt32(s_Npc[i].Y);
+                outMSG.WriteVariableInt32(s_Npc[i].Direction);
+                outMSG.WriteVariableInt32(s_Npc[i].Sprite);
+                outMSG.WriteVariableInt32(s_Npc[i].Step);
+                outMSG.WriteVariableInt32(s_Npc[i].Owner);
+                outMSG.WriteVariableInt32(s_Npc[i].Behavior);
+                outMSG.WriteVariableInt32(s_Npc[i].SpawnTime);
                 outMSG.Write(s_Npc[i].isSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -440,14 +448,14 @@ namespace Server.Classes
             for (int i = 0; i < 10; i++)
             {
                 outMSG.Write(s_Map.mapNpc[i].Name);
-                outMSG.Write(s_Map.mapNpc[i].X);
-                outMSG.Write(s_Map.mapNpc[i].Y);
-                outMSG.Write(s_Map.mapNpc[i].Direction);
-                outMSG.Write(s_Map.mapNpc[i].Sprite);
-                outMSG.Write(s_Map.mapNpc[i].Step);
-                outMSG.Write(s_Map.mapNpc[i].Owner);
-                outMSG.Write(s_Map.mapNpc[i].Behavior);
-                outMSG.Write(s_Map.mapNpc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].X);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Y);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Direction);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Sprite);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Step);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Owner);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Behavior);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].SpawnTime);
                 outMSG.Write(s_Map.mapNpc[i].isSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -460,14 +468,14 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.Write(npcNum);
             outMSG.Write(s_Map.mapNpc[npcNum].Name);
-            outMSG.Write(s_Map.mapNpc[npcNum].X);
-            outMSG.Write(s_Map.mapNpc[npcNum].Y);
-            outMSG.Write(s_Map.mapNpc[npcNum].Direction);
-            outMSG.Write(s_Map.mapNpc[npcNum].Sprite);
-            outMSG.Write(s_Map.mapNpc[npcNum].Step);
-            outMSG.Write(s_Map.mapNpc[npcNum].Owner);
-            outMSG.Write(s_Map.mapNpc[npcNum].Behavior);
-            outMSG.Write(s_Map.mapNpc[npcNum].SpawnTime);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Y);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Direction);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Sprite);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Step);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Owner);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Behavior);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].SpawnTime);
             outMSG.Write(s_Map.mapNpc[npcNum].isSpawned);
 
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
@@ -495,37 +503,37 @@ namespace Server.Classes
                 for (int y = 0; y < 50; y++)
                 {
                     //ground
-                    outMSG.Write(s_Map.Ground[x, y].tileX);
-                    outMSG.Write(s_Map.Ground[x, y].tileY);
-                    outMSG.Write(s_Map.Ground[x, y].tileW);
-                    outMSG.Write(s_Map.Ground[x, y].tileH);
-                    outMSG.Write(s_Map.Ground[x, y].Tileset);
-                    outMSG.Write(s_Map.Ground[x, y].type);
-                    outMSG.Write(s_Map.Ground[x, y].spawnNum);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileX);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileY);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileW);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].Tileset);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].type);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].spawnNum);
                     //mask
-                    outMSG.Write(s_Map.Mask[x, y].tileX);
-                    outMSG.Write(s_Map.Mask[x, y].tileY);
-                    outMSG.Write(s_Map.Mask[x, y].tileW);
-                    outMSG.Write(s_Map.Mask[x, y].tileH);
-                    outMSG.Write(s_Map.Mask[x, y].Tileset);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileX);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileY);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileW);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].Tileset);
                     //fringe
-                    outMSG.Write(s_Map.Fringe[x, y].tileX);
-                    outMSG.Write(s_Map.Fringe[x, y].tileY);
-                    outMSG.Write(s_Map.Fringe[x, y].tileW);
-                    outMSG.Write(s_Map.Fringe[x, y].tileH);
-                    outMSG.Write(s_Map.Fringe[x, y].Tileset);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileX);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileY);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileW);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].Tileset);
                     //mask a
-                    outMSG.Write(s_Map.MaskA[x, y].tileX);
-                    outMSG.Write(s_Map.MaskA[x, y].tileY);
-                    outMSG.Write(s_Map.MaskA[x, y].tileW);
-                    outMSG.Write(s_Map.MaskA[x, y].tileH);
-                    outMSG.Write(s_Map.MaskA[x, y].Tileset);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileX);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileY);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileW);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].Tileset);
                     //fringe a
-                    outMSG.Write(s_Map.FringeA[x, y].tileX);
-                    outMSG.Write(s_Map.FringeA[x, y].tileY);
-                    outMSG.Write(s_Map.FringeA[x, y].tileW);
-                    outMSG.Write(s_Map.FringeA[x, y].tileH);
-                    outMSG.Write(s_Map.FringeA[x, y].Tileset);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileX);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileY);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileW);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].Tileset);
                 }
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);

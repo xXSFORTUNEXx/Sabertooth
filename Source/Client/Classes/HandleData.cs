@@ -130,17 +130,17 @@ namespace Client.Classes
                 if (c_Item[i] != null)
                 {
                     c_Item[i].Name = incMSG.ReadString();
-                    c_Item[i].Sprite = incMSG.ReadInt32();
-                    c_Item[i].Damage = incMSG.ReadInt32();
-                    c_Item[i].Armor = incMSG.ReadInt32();
-                    c_Item[i].Type = incMSG.ReadInt32();
-                    c_Item[i].HealthRestore = incMSG.ReadInt32();
-                    c_Item[i].HungerRestore = incMSG.ReadInt32();
-                    c_Item[i].HydrateRestore = incMSG.ReadInt32();
-                    c_Item[i].Strength = incMSG.ReadInt32();
-                    c_Item[i].Agility = incMSG.ReadInt32();
-                    c_Item[i].Endurance = incMSG.ReadInt32();
-                    c_Item[i].Stamina = incMSG.ReadInt32();
+                    c_Item[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Item[i].Damage = incMSG.ReadVariableInt32();
+                    c_Item[i].Armor = incMSG.ReadVariableInt32();
+                    c_Item[i].Type = incMSG.ReadVariableInt32();
+                    c_Item[i].HealthRestore = incMSG.ReadVariableInt32();
+                    c_Item[i].HungerRestore = incMSG.ReadVariableInt32();
+                    c_Item[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    c_Item[i].Strength = incMSG.ReadVariableInt32();
+                    c_Item[i].Agility = incMSG.ReadVariableInt32();
+                    c_Item[i].Endurance = incMSG.ReadVariableInt32();
+                    c_Item[i].Stamina = incMSG.ReadVariableInt32();
                 }
             }
 
@@ -150,20 +150,20 @@ namespace Client.Classes
         //Handles data for incoming items
         void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
         {
-            int index = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
 
             c_Item[index].Name = incMSG.ReadString();
-            c_Item[index].Sprite = incMSG.ReadInt32();
-            c_Item[index].Damage = incMSG.ReadInt32();
-            c_Item[index].Armor = incMSG.ReadInt32();
-            c_Item[index].Type = incMSG.ReadInt32();
-            c_Item[index].HealthRestore = incMSG.ReadInt32();
-            c_Item[index].HungerRestore = incMSG.ReadInt32();
-            c_Item[index].HydrateRestore = incMSG.ReadInt32();
-            c_Item[index].Strength = incMSG.ReadInt32();
-            c_Item[index].Agility = incMSG.ReadInt32();
-            c_Item[index].Endurance = incMSG.ReadInt32();
-            c_Item[index].Stamina = incMSG.ReadInt32();
+            c_Item[index].Sprite = incMSG.ReadVariableInt32();
+            c_Item[index].Damage = incMSG.ReadVariableInt32();
+            c_Item[index].Armor = incMSG.ReadVariableInt32();
+            c_Item[index].Type = incMSG.ReadVariableInt32();
+            c_Item[index].HealthRestore = incMSG.ReadVariableInt32();
+            c_Item[index].HungerRestore = incMSG.ReadVariableInt32();
+            c_Item[index].HydrateRestore = incMSG.ReadVariableInt32();
+            c_Item[index].Strength = incMSG.ReadVariableInt32();
+            c_Item[index].Agility = incMSG.ReadVariableInt32();
+            c_Item[index].Endurance = incMSG.ReadVariableInt32();
+            c_Item[index].Stamina = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Item data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
         }
@@ -176,14 +176,14 @@ namespace Client.Classes
                 if (c_Npc[i] != null)
                 {
                     c_Npc[i].Name = incMSG.ReadString();
-                    c_Npc[i].X = incMSG.ReadInt32();
-                    c_Npc[i].Y = incMSG.ReadInt32();
-                    c_Npc[i].Direction = incMSG.ReadInt32();
-                    c_Npc[i].Sprite = incMSG.ReadInt32();
-                    c_Npc[i].Step = incMSG.ReadInt32();
-                    c_Npc[i].Owner = incMSG.ReadInt32();
-                    c_Npc[i].Behavior = incMSG.ReadInt32();
-                    c_Npc[i].SpawnTime = incMSG.ReadInt32();
+                    c_Npc[i].X = incMSG.ReadVariableInt32();
+                    c_Npc[i].Y = incMSG.ReadVariableInt32();
+                    c_Npc[i].Direction = incMSG.ReadVariableInt32();
+                    c_Npc[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Npc[i].Step = incMSG.ReadVariableInt32();
+                    c_Npc[i].Owner = incMSG.ReadVariableInt32();
+                    c_Npc[i].Behavior = incMSG.ReadVariableInt32();
+                    c_Npc[i].SpawnTime = incMSG.ReadVariableInt32();
                     c_Npc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
@@ -198,14 +198,14 @@ namespace Client.Classes
                 if (c_Map.mapNpc[i] != null)
                 {
                     c_Map.mapNpc[i].Name = incMSG.ReadString();
-                    c_Map.mapNpc[i].X = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Y = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Direction = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Sprite = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Step = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Owner = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].Behavior = incMSG.ReadInt32();
-                    c_Map.mapNpc[i].SpawnTime = incMSG.ReadInt32();
+                    c_Map.mapNpc[i].X = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Y = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Direction = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Step = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Owner = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Behavior = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
@@ -215,17 +215,17 @@ namespace Client.Classes
         //Handle incoming data for a single npc
         void HandleNpcData(NetIncomingMessage incMSG, Map c_Map)
         {
-            int npcNum = incMSG.ReadInt32();
+            int npcNum = incMSG.ReadVariableInt32();
 
             c_Map.mapNpc[npcNum].Name = incMSG.ReadString();
-            c_Map.mapNpc[npcNum].X = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Y = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Direction = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Sprite = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Step = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Owner = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].Behavior = incMSG.ReadInt32();
-            c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadInt32();
+            c_Map.mapNpc[npcNum].X = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Y = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Step = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
 
             Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
@@ -234,8 +234,8 @@ namespace Client.Classes
         //Handle player direction packet
         void HandleUpdateDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
-            int index = incMSG.ReadInt32();
-            int direction = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
+            int direction = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
@@ -247,11 +247,11 @@ namespace Client.Classes
         //handle incoming movement data
         void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
-            int index = incMSG.ReadInt32();
-            int x = incMSG.ReadInt32();
-            int y = incMSG.ReadInt32();
-            int direction = incMSG.ReadInt32();
-            int step = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
+            int x = incMSG.ReadVariableInt32();
+            int y = incMSG.ReadVariableInt32();
+            int direction = incMSG.ReadVariableInt32();
+            int step = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
@@ -317,21 +317,21 @@ namespace Client.Classes
         //Handles incoming vital data
         void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
         {
-            int index = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
             string vitalName = incMSG.ReadString();
-            int vital = incMSG.ReadInt32();
+            int vital = incMSG.ReadVariableInt32();
 
             if (vitalName == "food") { c_Player[index].Hunger = vital; }
             if (vitalName == "water") { c_Player[index].Hydration = vital; }
 
-            Console.WriteLine("Vital data received from server! Index: " + index + " Vital: " + vitalName + " IP: " + incMSG.SenderConnection);
+            Console.WriteLine("Vital data received from server! Index: " + index + " Vital: " + vitalName +  "Amount: " + vital + " IP: " + incMSG.SenderConnection);
         }
 
         //Handles incoming health data
         void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
         {
-            int index = incMSG.ReadInt32();
-            int health = incMSG.ReadInt32();
+            int index = incMSG.ReadVariableInt32();
+            int health = incMSG.ReadVariableInt32();
 
             c_Player[index].Health = health;
             Console.WriteLine("Health data received from server! Index:" + index + " Amount: " + health + " IP: " + incMSG.SenderConnection);
@@ -341,23 +341,23 @@ namespace Client.Classes
         void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
         {
             c_Player[clientIndex].Name = incMSG.ReadString();
-            c_Player[clientIndex].X = incMSG.ReadInt32();
-            c_Player[clientIndex].Y = incMSG.ReadInt32();
-            c_Player[clientIndex].Map = incMSG.ReadInt32();
-            c_Player[clientIndex].Direction = incMSG.ReadInt32();
-            c_Player[clientIndex].Sprite = incMSG.ReadInt32();
-            c_Player[clientIndex].Level = incMSG.ReadInt32();
-            c_Player[clientIndex].Health = incMSG.ReadInt32();
-            c_Player[clientIndex].Hunger = incMSG.ReadInt32();
-            c_Player[clientIndex].maxHealth = incMSG.ReadInt32();
-            c_Player[clientIndex].Hydration = incMSG.ReadInt32();
-            c_Player[clientIndex].Experience = incMSG.ReadInt32();
-            c_Player[clientIndex].Money = incMSG.ReadInt32();
-            c_Player[clientIndex].Armor = incMSG.ReadInt32();
-            c_Player[clientIndex].Strength = incMSG.ReadInt32();
-            c_Player[clientIndex].Agility = incMSG.ReadInt32();
-            c_Player[clientIndex].Endurance = incMSG.ReadInt32();
-            c_Player[clientIndex].Stamina = incMSG.ReadInt32();
+            c_Player[clientIndex].X = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Y = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Map = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Direction = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Sprite = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Level = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Health = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Hunger = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].maxHealth = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Hydration = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Experience = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Money = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Armor = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Strength = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Agility = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Endurance = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Stamina = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
 
@@ -370,23 +370,23 @@ namespace Client.Classes
             for (int i = 0; i < 5; i++)
             {
                 c_Player[i].Name = incMSG.ReadString();
-                c_Player[i].X = incMSG.ReadInt32();
-                c_Player[i].Y = incMSG.ReadInt32();
-                c_Player[i].Map = incMSG.ReadInt32();
-                c_Player[i].Direction = incMSG.ReadInt32();
-                c_Player[i].Sprite = incMSG.ReadInt32();
-                c_Player[i].Level = incMSG.ReadInt32();
-                c_Player[i].Health = incMSG.ReadInt32();
-                c_Player[i].maxHealth = incMSG.ReadInt32();
-                c_Player[i].Hunger = incMSG.ReadInt32();
-                c_Player[i].Hydration = incMSG.ReadInt32();
-                c_Player[i].Experience = incMSG.ReadInt32();
-                c_Player[i].Money = incMSG.ReadInt32();
-                c_Player[i].Armor = incMSG.ReadInt32();
-                c_Player[i].Strength = incMSG.ReadInt32();
-                c_Player[i].Agility = incMSG.ReadInt32();
-                c_Player[i].Endurance = incMSG.ReadInt32();
-                c_Player[i].Stamina = incMSG.ReadInt32();
+                c_Player[i].X = incMSG.ReadVariableInt32();
+                c_Player[i].Y = incMSG.ReadVariableInt32();
+                c_Player[i].Map = incMSG.ReadVariableInt32();
+                c_Player[i].Direction = incMSG.ReadVariableInt32();
+                c_Player[i].Sprite = incMSG.ReadVariableInt32();
+                c_Player[i].Level = incMSG.ReadVariableInt32();
+                c_Player[i].Health = incMSG.ReadVariableInt32();
+                c_Player[i].maxHealth = incMSG.ReadVariableInt32();
+                c_Player[i].Hunger = incMSG.ReadVariableInt32();
+                c_Player[i].Hydration = incMSG.ReadVariableInt32();
+                c_Player[i].Experience = incMSG.ReadVariableInt32();
+                c_Player[i].Money = incMSG.ReadVariableInt32();
+                c_Player[i].Armor = incMSG.ReadVariableInt32();
+                c_Player[i].Strength = incMSG.ReadVariableInt32();
+                c_Player[i].Agility = incMSG.ReadVariableInt32();
+                c_Player[i].Endurance = incMSG.ReadVariableInt32();
+                c_Player[i].Stamina = incMSG.ReadVariableInt32();
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
@@ -419,37 +419,37 @@ namespace Client.Classes
                     c_Map.FringeA[x, y] = new Tile();
 
                     //ground
-                    c_Map.Ground[x, y].tileX = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].tileY = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].tileW = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].tileH = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].Tileset = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].type = incMSG.ReadInt32();
-                    c_Map.Ground[x, y].spawnNum = incMSG.ReadInt32();
+                    c_Map.Ground[x, y].tileX = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].tileY = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].tileW = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].type = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].spawnNum = incMSG.ReadVariableInt32();
                     //mask
-                    c_Map.Mask[x, y].tileX = incMSG.ReadInt32();
-                    c_Map.Mask[x, y].tileY = incMSG.ReadInt32();
-                    c_Map.Mask[x, y].tileW = incMSG.ReadInt32();
-                    c_Map.Mask[x, y].tileH = incMSG.ReadInt32();
-                    c_Map.Mask[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.Mask[x, y].tileX = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].tileY = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].tileW = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe
-                    c_Map.Fringe[x, y].tileX = incMSG.ReadInt32();
-                    c_Map.Fringe[x, y].tileY = incMSG.ReadInt32();
-                    c_Map.Fringe[x, y].tileW = incMSG.ReadInt32();
-                    c_Map.Fringe[x, y].tileH = incMSG.ReadInt32();
-                    c_Map.Fringe[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.Fringe[x, y].tileX = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].tileY = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].tileW = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].Tileset = incMSG.ReadVariableInt32();
                     //mask a
-                    c_Map.MaskA[x, y].tileX = incMSG.ReadInt32();
-                    c_Map.MaskA[x, y].tileY = incMSG.ReadInt32();
-                    c_Map.MaskA[x, y].tileW = incMSG.ReadInt32();
-                    c_Map.MaskA[x, y].tileH = incMSG.ReadInt32();
-                    c_Map.MaskA[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.MaskA[x, y].tileX = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].tileY = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].tileW = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe a
-                    c_Map.FringeA[x, y].tileX = incMSG.ReadInt32();
-                    c_Map.FringeA[x, y].tileY = incMSG.ReadInt32();
-                    c_Map.FringeA[x, y].tileW = incMSG.ReadInt32();
-                    c_Map.FringeA[x, y].tileH = incMSG.ReadInt32();
-                    c_Map.FringeA[x, y].Tileset = incMSG.ReadInt32();
+                    c_Map.FringeA[x, y].tileX = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].tileY = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].tileW = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
             c_Map.SaveMap();

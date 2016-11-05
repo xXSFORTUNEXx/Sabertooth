@@ -188,21 +188,21 @@ namespace Client.Classes
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to write out data going out to the server
             outMSG.Write((byte)PacketTypes.MoveData);   //packet header name
-            outMSG.Write(index);    //current user's index
-            outMSG.Write(X);    //write the x of the current index
-            outMSG.Write(Y);    //write the y of the current index
-            outMSG.Write(Direction);    //write the direction of the current index
-            outMSG.Write(Step); //write the step of the current index
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet to the server in reliable order so its not jumbled when the server gets it
+            outMSG.WriteVariableInt32(index);    //current user's index
+            outMSG.WriteVariableInt32(X);    //write the x of the current index
+            outMSG.WriteVariableInt32(Y);    //write the y of the current index
+            outMSG.WriteVariableInt32(Direction);    //write the direction of the current index
+            outMSG.WriteVariableInt32(Step); //write the step of the current index
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);   //send the packet to the server in reliable order so its not jumbled when the server gets it
         }
 
         void SendUpdateDirection(NetClient c_Client, int index)    //packet for updateing the direction
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to wirte out data going to the server
             outMSG.Write((byte)PacketTypes.UpdateDirection);    //packet header name
-            outMSG.Write(index);    //current clients index
-            outMSG.Write(Direction);    //current index direction
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);   //send the packet in reliable order
+            outMSG.WriteVariableInt32(index);    //current clients index
+            outMSG.WriteVariableInt32(Direction);    //current index direction
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);   //send the packet in reliable order
         }
     }
 

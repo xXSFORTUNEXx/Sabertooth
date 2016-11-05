@@ -31,6 +31,15 @@ namespace Client.Classes
             c_Config = new NetPeerConfiguration("sabertooth");    //create a new peer config
             c_Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse); //enable message type for discovery response
             c_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);  //enable message for latency
+            c_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            c_Config.DisableMessageType(NetIncomingMessageType.Error);
+            c_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            c_Config.DisableMessageType(NetIncomingMessageType.Receipt);
+            c_Config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            c_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            c_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            c_Config.UseMessageRecycling = true;
+            c_Config.MaximumTransmissionUnit = 1500;
             Console.WriteLine("Enabling message types..."); //inform the user whats going on
             c_Client = new NetClient(c_Config);  //create the client with the peer config
             Console.WriteLine("Loading config..."); //inform the user whats going on

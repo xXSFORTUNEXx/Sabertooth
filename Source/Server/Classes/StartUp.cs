@@ -28,6 +28,16 @@ namespace Server.Classes
             s_Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             s_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
             s_Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            s_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            s_Config.DisableMessageType(NetIncomingMessageType.Error);
+            s_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            s_Config.DisableMessageType(NetIncomingMessageType.Receipt);
+            s_Config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            s_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            s_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            s_Config.UseMessageRecycling = true;
+            s_Config.MaximumTransmissionUnit = 1500;
+            s_Config.MaximumConnections = 5;
             s_Config.EnableUPnP = true;
 
             WriteLine("Enabling message types...");
