@@ -48,7 +48,7 @@ namespace Client.Classes
                                 HandleLoginData(incMSG, c_Client, c_Canvas, c_GUI);
                                 break;
 
-                            case (byte)PacketTypes.UserData:
+                            case (byte)PacketTypes.PlayerData:
                                 c_Index = incMSG.ReadInt32();
                                 c_GUI.g_Index = c_Index;
                                 HandlePlayerData(incMSG, c_Client, c_Player, c_Index);
@@ -62,7 +62,7 @@ namespace Client.Classes
                                 HandleMapData(c_Client, incMSG, c_Map, c_GUI, c_Canvas);
                                 break;
 
-                            case (byte)PacketTypes.Users:
+                            case (byte)PacketTypes.Players:
                                 HandlePlayers(c_Client, incMSG, c_Player);
                                 break;
 
@@ -476,10 +476,10 @@ namespace Client.Classes
         Register,
         ErrorMessage,
         Login,
-        UserData,
+        PlayerData,
         ChatMessage,
         MapData,
-        Users,
+        Players,
         MoveData,
         UpdateMoveData,
         UpdateDirection,
