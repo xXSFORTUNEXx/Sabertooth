@@ -13,6 +13,7 @@ namespace Server.Classes
         public int Damage { get; set; }
         public int Armor { get; set; }
         public int Type { get; set; }
+        public int AttackSpeed { get; set; }
         public int HealthRestore { get; set; }
         public int HungerRestore { get; set; }
         public int HydrateRestore { get; set; }
@@ -22,6 +23,10 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
 
+        public int Clip { get; set; }
+        public int maxClip { get; set; }
+        public int ammoType { get; set; }
+
         public Item() { }
 
         public Item(ItemType type)
@@ -29,13 +34,15 @@ namespace Server.Classes
             Type = (int)type;
         }
 
-        public Item(string name, int sprite, int damage, int armor, int type, int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta)
+        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed,
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype)
         {
             Name = name;
             Sprite = sprite;
             Damage = damage;
             Armor = armor;
             Type = type;
+            AttackSpeed = attackspeed;
             HealthRestore = healthRestore;
             HungerRestore = foodRestore;
             HydrateRestore = drinkRestore;
@@ -43,6 +50,7 @@ namespace Server.Classes
             Agility = agi;
             Endurance = end;
             Stamina = sta;
+            ammoType = ammotype;
         }
 
         public void SaveItem(int itemNum)
@@ -55,6 +63,7 @@ namespace Server.Classes
             binaryWriter.Write(Damage);
             binaryWriter.Write(Armor);
             binaryWriter.Write(Type);
+            binaryWriter.Write(AttackSpeed);
             binaryWriter.Write(HealthRestore);
             binaryWriter.Write(HungerRestore);
             binaryWriter.Write(HydrateRestore);
@@ -62,6 +71,9 @@ namespace Server.Classes
             binaryWriter.Write(Agility);
             binaryWriter.Write(Endurance);
             binaryWriter.Write(Stamina);
+            binaryWriter.Write(Clip);
+            binaryWriter.Write(maxClip);
+            binaryWriter.Write(ammoType);
             binaryWriter.Flush();
             binaryWriter.Close();
         }
@@ -78,6 +90,7 @@ namespace Server.Classes
                 Damage = binaryReader.ReadInt32();
                 Armor = binaryReader.ReadInt32();
                 Type = binaryReader.ReadInt32();
+                AttackSpeed = binaryReader.ReadInt32();
                 HealthRestore = binaryReader.ReadInt32();
                 HungerRestore = binaryReader.ReadInt32();
                 HydrateRestore = binaryReader.ReadInt32();
@@ -85,6 +98,9 @@ namespace Server.Classes
                 Agility = binaryReader.ReadInt32();
                 Endurance = binaryReader.ReadInt32();
                 Stamina = binaryReader.ReadInt32();
+                Clip = binaryReader.ReadInt32();
+                maxClip = binaryReader.ReadInt32();
+                ammoType = binaryReader.ReadInt32();
             }
             catch (Exception e)
             {
@@ -107,5 +123,14 @@ namespace Server.Classes
         Pants,
         Shoes,
         Other
+    }
+
+    public enum AmmoType
+    {
+        None,
+        Pistol,
+        AssaultRifle,
+        Rocket,
+        Grenade
     }
 }

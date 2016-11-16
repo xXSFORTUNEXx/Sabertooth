@@ -17,6 +17,7 @@ namespace Server.Classes
         NPC[] s_Npc = new NPC[10];
         Item[] s_Item = new Item[50];
         HandleData handleData = new HandleData();
+        Projectile[] s_Proj = new Projectile[10];
         Map[] s_Map = new Map[10];
         Random RND = new Random();
         static string s_userCommand;
@@ -45,6 +46,7 @@ namespace Server.Classes
             InitMap();
             InitItems();
             InitNPC();
+            InitProjectiles();
             InitFinal();
 
             Thread s_Command = new Thread(CommandWindow);
@@ -52,7 +54,7 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
                 SavePlayers();
                 CheckNPCSpawn(s_Server);
                 CheckNpcAI(s_Server);
@@ -207,13 +209,34 @@ namespace Server.Classes
             {
                 if (!Exists("Items/Item" + i + ".bin"))
                 {
-                    s_Item[i] = new Item("Default", 0, 0, (int)ItemType.None, 1, 1, 1, 1, 1, 1, 1, 1);
+                    s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
                     s_Item[i].SaveItem(i);
                 }
                 else
                 {
                     s_Item[i] = new Item();
                     s_Item[i].LoadItem(i);
+                }
+            }
+        }
+
+        //Load in the projectiles
+        void InitProjectiles()
+        {
+            WriteLine("Loading projectiles...");
+            WriteLog("Loading projectiles...", "Server");
+
+            for  (int i = 0; i < 10; i++)
+            {
+                if (!Exists("Projectiles/Projectile" + i + ".bin"))
+                {
+                    s_Proj[i] = new Projectile("Bullet", 100, 50, 1, 0, (int)ProjType.Bullet, 150);
+                    s_Proj[i].SaveProjectile(i);
+                }
+                else
+                {
+                    s_Proj[i] = new Projectile();
+                    s_Proj[i].LoadProjectile(i);
                 }
             }
         }
@@ -228,7 +251,7 @@ namespace Server.Classes
             {
                 if (!Exists("NPCS/Npc" + i + ".bin"))
                 {
-                    s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000);
+                    s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
                     s_Npc[i].SaveNPC(i);
                 }
                 else
@@ -443,7 +466,7 @@ namespace Server.Classes
                             if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
                             {
                                 Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 1, 100, 0,
-                                                              100, 10, 100, 100, 5, 5, 5, 5);   //Create the player in an array so we can save it
+                                                              100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
                                 ac_Player.SavePlayerXML();  //Save it
                                 WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know
                             }

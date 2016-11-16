@@ -9,7 +9,7 @@ namespace Server.Classes
 {
     class HandleData
     {
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             NetIncomingMessage incMSG;  //create incoming message
 
@@ -32,7 +32,7 @@ namespace Server.Classes
                                 HandleRegisterRequest(incMSG, s_Server, s_Player);
                                 break;
                             case (byte)PacketTypes.Login:
-                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item);
+                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
@@ -46,6 +46,14 @@ namespace Server.Classes
                             case (byte)PacketTypes.UpdateDirection:
                                 HandleDirectionData(incMSG, s_Server, s_Player);
                                 break;
+
+                            case (byte)PacketTypes.Attack:
+                                HandleAttackData(incMSG, s_Server, s_Player, s_Map);
+                                break;
+
+                            case (byte)PacketTypes.UpdateProj:
+                                HandleUpdateProjectileData(incMSG, s_Server, s_Map, s_Player);
+                                break;
                         }
                         break;
 
@@ -55,6 +63,43 @@ namespace Server.Classes
                 }
             }
             s_Server.Recycle(incMSG);
+        }
+
+        //Handle projectiledata
+        void HandleUpdateProjectileData(NetIncomingMessage incMSG, NetServer s_Server,  Map[] s_Map, Player[] s_Player)
+        {
+            int slot = incMSG.ReadVariableInt32();
+            bool valid = incMSG.ReadBoolean();
+            int owner = incMSG.ReadVariableInt32();
+            int cMap = s_Player[owner].Map;
+
+            if (valid == false) { s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot); return; }
+            if (s_Map[cMap].mapProj[slot] == null) { return; }
+
+            s_Map[cMap].mapProj[slot].X = incMSG.ReadVariableInt32();
+            s_Map[cMap].mapProj[slot].Y = incMSG.ReadVariableInt32();
+            s_Map[cMap].mapProj[slot].Direction = incMSG.ReadVariableInt32();
+        }
+
+        //Handles when one of the players attacks
+        void HandleAttackData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int direction = incMSG.ReadVariableInt32();
+
+            if (s_Player[index].mainWeapon.Type == (int)ItemType.MeleeWeapon)
+            {
+                //Do a melee attack and update everyone
+                return;
+            }
+
+            if (s_Player[index].mainWeapon.Type == (int)ItemType.RangedWeapon)
+            {
+                //Do a range attack and update everyone
+                int cMap = s_Player[index].Map;
+                s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
+                return;
+            }
         }
 
         //Handle incoming packets for movement of the player
@@ -146,7 +191,7 @@ namespace Server.Classes
                     if (i < 5)
                     {
                         //s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, incMSG.SenderConnection);
+                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         s_Player[i].SavePlayerXML();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
@@ -172,7 +217,7 @@ namespace Server.Classes
         }
 
         //Handle logging in requests for the server
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -193,6 +238,7 @@ namespace Server.Classes
                         SendPlayers(incMSG, s_Server, s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
+                        SendProjectiles(incMSG, s_Server, s_Proj);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                     }
@@ -334,6 +380,10 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Agility);
             outMSG.WriteVariableInt32(s_Player[index].Endurance);
             outMSG.WriteVariableInt32(s_Player[index].Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].PistolAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -363,11 +413,47 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].Agility);
                 outMSG.WriteVariableInt32(s_Player[i].Endurance);
                 outMSG.WriteVariableInt32(s_Player[i].Stamina);
-                
+                outMSG.WriteVariableInt32(s_Player[i].PistolAmmo);
+                outMSG.WriteVariableInt32(s_Player[i].AssaultAmmo);
+                outMSG.WriteVariableInt32(s_Player[i].RocketAmmo);
+                outMSG.WriteVariableInt32(s_Player[i].GrenadeAmmo);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending players...");
             LogWriter.WriteLog("Sending players...", "Server");
+        }
+
+        //Send projectile data
+        void SendProjData(NetIncomingMessage incMSG, NetServer s_Server, Projectile[] s_Proj, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ProjData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.Write(s_Proj[index].Name);
+            outMSG.WriteVariableInt32(s_Proj[index].Damage);
+            outMSG.WriteVariableInt32(s_Proj[index].Range);
+            outMSG.WriteVariableInt32(s_Proj[index].Sprite);
+            outMSG.WriteVariableInt32(s_Proj[index].Type);
+            outMSG.WriteVariableInt32(s_Proj[index].Speed);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendProjectiles(NetIncomingMessage incMSG, NetServer s_Server, Projectile[] s_Proj)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Projectiles);
+            for (int i = 0; i < 10; i++)
+            {
+                outMSG.Write(s_Proj[i].Name);
+                outMSG.WriteVariableInt32(s_Proj[i].Damage);
+                outMSG.WriteVariableInt32(s_Proj[i].Range);
+                outMSG.WriteVariableInt32(s_Proj[i].Sprite);
+                outMSG.WriteVariableInt32(s_Proj[i].Type);
+                outMSG.WriteVariableInt32(s_Proj[i].Sprite);
+            }
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Sending projectiles...");
+            LogWriter.WriteLog("Sending projectiles...", "Server");
         }
 
         //Send item data
@@ -388,7 +474,9 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Item[index].Agility);
             outMSG.WriteVariableInt32(s_Item[index].Endurance);
             outMSG.WriteVariableInt32(s_Item[index].Stamina);
-
+            outMSG.WriteVariableInt32(s_Item[index].Clip);
+            outMSG.WriteVariableInt32(s_Item[index].maxClip);
+            outMSG.WriteVariableInt32(s_Item[index].ammoType);
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -411,6 +499,9 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Item[i].Agility);
                 outMSG.WriteVariableInt32(s_Item[i].Endurance);
                 outMSG.WriteVariableInt32(s_Item[i].Stamina);
+                outMSG.WriteVariableInt32(s_Item[i].Clip);
+                outMSG.WriteVariableInt32(s_Item[i].maxClip);
+                outMSG.WriteVariableInt32(s_Item[i].ammoType);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending items...");
@@ -433,6 +524,9 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Npc[i].Owner);
                 outMSG.WriteVariableInt32(s_Npc[i].Behavior);
                 outMSG.WriteVariableInt32(s_Npc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Npc[i].Health);
+                outMSG.WriteVariableInt32(s_Npc[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Npc[i].Damage);
                 outMSG.Write(s_Npc[i].isSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -456,6 +550,9 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].Owner);
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].Behavior);
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Health);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Damage);
                 outMSG.Write(s_Map.mapNpc[i].isSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -476,6 +573,9 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Owner);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Behavior);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].SpawnTime);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Health);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].maxHealth);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Damage);
             outMSG.Write(s_Map.mapNpc[npcNum].isSpawned);
 
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
@@ -556,14 +656,31 @@ namespace Server.Classes
         }
 
         //Saves all players
-        void SavePlayers(Player[] svrPlayer)
+        void SavePlayers(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
-                if (svrPlayer[i].Name != null)
+                if (s_Player[i].Name != null)
                 {
-                    svrPlayer[i].SavePlayerXML();
+                    s_Player[i].SavePlayerXML();
                 }
+            }
+        }
+
+        //Send updated ammo reserve and clip
+        public void SendUpdateAmmo(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            if (s_Player[index].Connection != null)
+            {
+                outMSG.Write((byte)PacketTypes.UpdateAmmo);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Clip);
+                outMSG.WriteVariableInt32(s_Player[index].PistolAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
+                s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
             }
         }
 
@@ -711,6 +828,13 @@ namespace Server.Classes
         VitalLoss,
         ItemData,
         Items,
-        Shutdown
+        Shutdown,
+        Attack,
+        ProjData,
+        Projectiles,
+        UpdateAmmo,
+        CreateProj,
+        ClearProj,
+        UpdateProj
     }
 }

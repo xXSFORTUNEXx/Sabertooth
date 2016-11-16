@@ -7,6 +7,10 @@ namespace Server.Classes
 {
     class StartUp
     {
+
+        // Run to check how many lines of code my project has
+        //Ctrl+Shift+F, use regular expression, ^(?([^\r\n])\s)*[^\s+?/]+[^\n]*$
+
         static NetServer s_Server;
         static NetPeerConfiguration s_Config;
 
@@ -86,7 +90,11 @@ namespace Server.Classes
                 CreateDirectory("Items");
                 exists = true;
             }
-
+            if (!Exists("Projectiles"))
+            {
+                CreateDirectory("Projectiles");
+                exists = true;
+            }
             if (exists)
             {
                 WriteLog("Directories created...", "Server");

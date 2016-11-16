@@ -32,14 +32,25 @@ namespace Server.Classes
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
+        public bool Attacking { get; set; }
 
+        //Create some default ones for testing
+        public Item mainWeapon = new Item("Assult Rifle", 1, 100, 0, (int)ItemType.RangedWeapon, 250, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.AssaultRifle);
+        public Item offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+
+        public int PistolAmmo { get; set; }
+        public int AssaultAmmo { get; set; }
+        public int RocketAmmo { get; set; }
+        public int GrenadeAmmo { get; set; }
+
+        public int attackSpeed;
         public int Step;
         public int maxHealth;
         public int hungerTick;
         public int hydrationTick;
 
         public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, 
-                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)
+                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -62,10 +73,14 @@ namespace Server.Classes
             Health = maxHealth;
             hungerTick = TickCount;
             hydrationTick = TickCount;
+            PistolAmmo = defaultAmmo;
+            AssaultAmmo = defaultAmmo;
+            RocketAmmo = 5;
+            GrenadeAmmo = 3;
         }
 
         public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money,
-                      int armor, int hunger, int hydration, int str, int agi, int end, int sta)
+                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo)
         {
             Name = name;
             Pass = pass;
@@ -85,6 +100,10 @@ namespace Server.Classes
             Stamina = sta;
             FindMaxHealth();
             Health = maxHealth;
+            PistolAmmo = defaultAmmo;
+            AssaultAmmo = defaultAmmo;
+            RocketAmmo = 5;
+            GrenadeAmmo = 3;
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -151,6 +170,134 @@ namespace Server.Classes
             }
         }
 
+        public void RemoveBulletFromClip()
+        {
+            if (mainWeapon.Clip > 0)
+            {
+                mainWeapon.Clip -= 1;
+            }
+            else
+            {
+                ReloadClip();
+            }
+        }
+
+        public void ReloadClip()
+        {
+            if (mainWeapon.Clip == 0)
+            {
+                switch (mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.None:
+                        return;
+                    case (int)AmmoType.Pistol:
+                        if (PistolAmmo > mainWeapon.maxClip)
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            PistolAmmo -= mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = PistolAmmo;
+                            PistolAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        if (AssaultAmmo > mainWeapon.maxClip)
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            AssaultAmmo -= mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = AssaultAmmo;
+                            AssaultAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.Rocket:
+                        if (RocketAmmo > mainWeapon.maxClip)
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            RocketAmmo = -mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = RocketAmmo;
+                            RocketAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.Grenade:
+                        if (GrenadeAmmo > mainWeapon.maxClip)
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            GrenadeAmmo = -mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = GrenadeAmmo;
+                            GrenadeAmmo = 0;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                switch (mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.None:
+                        return;
+                    case (int)AmmoType.Pistol:
+                        if (PistolAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
+                        {
+                            PistolAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip += PistolAmmo;
+                            PistolAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        if (AssaultAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
+                        {
+                            AssaultAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip += AssaultAmmo;
+                            AssaultAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.Rocket:
+                        if (AssaultAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
+                        {
+                            AssaultAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip += AssaultAmmo;
+                            AssaultAmmo = 0;
+                        }
+                        break;
+                    case (int)AmmoType.Grenade:
+                        if (GrenadeAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
+                        {
+                            GrenadeAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip += GrenadeAmmo;
+                            GrenadeAmmo = 0;
+                        }
+                        break;
+                }
+            }
+        }
+
         public void SavePlayerXML()
         {
             XmlWriterSettings userData = new XmlWriterSettings();
@@ -180,6 +327,10 @@ namespace Server.Classes
             writer.WriteElementString("Agility", Agility.ToString());
             writer.WriteElementString("Endurance", Endurance.ToString());
             writer.WriteElementString("Stamina", Stamina.ToString());
+            writer.WriteElementString("PistolAmmo", PistolAmmo.ToString());
+            writer.WriteElementString("AssaultAmmo", AssaultAmmo.ToString());
+            writer.WriteElementString("RocketAmmo", RocketAmmo.ToString());
+            writer.WriteElementString("GrenadeAmmo", GrenadeAmmo.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -227,6 +378,14 @@ namespace Server.Classes
             Endurance = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Stamina");
             Stamina = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("PistolAmmo");
+            PistolAmmo = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AssaultAmmo");
+            AssaultAmmo = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("RocketAmmo");
+            RocketAmmo = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("GrenadeAmmo");
+            GrenadeAmmo = reader.ReadElementContentAsInt();
             FindMaxHealth();
             reader.Close();
         }

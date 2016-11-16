@@ -14,7 +14,9 @@ namespace Client.Classes
         public int Owner { get; set; }
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
-
+        public int Health { get; set; }
+        public int maxHealth { get; set; }
+        public int Damage { get; set; }
         //Only for live applications, no editors
         public bool isSpawned;
 

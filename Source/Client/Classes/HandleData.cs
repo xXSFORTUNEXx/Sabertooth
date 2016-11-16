@@ -19,7 +19,7 @@ namespace Client.Classes
 
         //This is where we process the 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item)
+            ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -108,6 +108,26 @@ namespace Client.Classes
                             case (byte)PacketTypes.Shutdown:
                                 HandleServerShutdown(c_Client, c_Canvas);
                                 break;
+
+                            case (byte)PacketTypes.ProjData:
+                                HandleProjData(incMSG, c_Proj);
+                                break;
+
+                            case (byte)PacketTypes.Projectiles:
+                                HandleProjectiles(incMSG, c_Proj);
+                                break;
+
+                            case (byte)PacketTypes.UpdateAmmo:
+                                HandleUpdateAmmo(incMSG, c_Player);
+                                break;
+
+                            case (byte)PacketTypes.CreateProj:
+                                HandleCreateProjectile(incMSG, c_Player, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.ClearProj:
+                                HandleClearProjectile(incMSG, c_Player, c_Map);
+                                break;
                         }
                         break;
                 }
@@ -115,11 +135,81 @@ namespace Client.Classes
             c_Client.Recycle(incMSG);
         }
 
+        //Handle the server shutting down via commands
         void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
         {
             c_Canvas.Dispose();
             c_Client.Shutdown("Disconnect");
             Exit(0);
+        }
+
+        //Clear the projectile
+        void HandleClearProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
+        {
+            string mapName = incMSG.ReadString();
+            if (mapName != c_Map.Name) { return; }
+
+            int slot = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot] = null;
+        }
+
+        //Create a projectile
+        void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
+        {
+            int slot = incMSG.ReadVariableInt32();
+
+            c_Map.mapProj[slot] = new MapProj();
+
+            c_Map.mapProj[slot].Name = incMSG.ReadString();
+            c_Map.mapProj[slot].X = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Y = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Direction = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Speed = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Owner = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Sprite = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
+        }
+
+        //Update clip and remaining ammo
+        void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+        }
+
+        //Update all projectiles in the array
+        void HandleProjectiles(NetIncomingMessage incMSG, Projectile[] c_Proj)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (c_Proj[i] != null)
+                {
+                    c_Proj[i].Name = incMSG.ReadString();
+                    c_Proj[i].Damage = incMSG.ReadVariableInt32();
+                    c_Proj[i].Range = incMSG.ReadVariableInt32();
+                    c_Proj[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Proj[i].Type = incMSG.ReadVariableInt32();
+                    c_Proj[i].Speed = incMSG.ReadVariableInt32();
+                }
+            }
+        }
+
+        //Handle one new piece of the projectile array
+        void HandleProjData(NetIncomingMessage incMSG, Projectile[] c_Proj)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Proj[index].Name = incMSG.ReadString();
+            c_Proj[index].Damage = incMSG.ReadVariableInt32();
+            c_Proj[index].Range = incMSG.ReadVariableInt32();
+            c_Proj[index].Sprite = incMSG.ReadVariableInt32();
+            c_Proj[index].Type = incMSG.ReadVariableInt32();
+            c_Proj[index].Speed = incMSG.ReadVariableInt32();
         }
 
         //Handles data for incoming items
@@ -141,6 +231,9 @@ namespace Client.Classes
                     c_Item[i].Agility = incMSG.ReadVariableInt32();
                     c_Item[i].Endurance = incMSG.ReadVariableInt32();
                     c_Item[i].Stamina = incMSG.ReadVariableInt32();
+                    c_Item[i].Clip = incMSG.ReadVariableInt32();
+                    c_Item[i].maxClip = incMSG.ReadVariableInt32();
+                    c_Item[i].ammoType = incMSG.ReadVariableInt32();
                 }
             }
 
@@ -164,6 +257,9 @@ namespace Client.Classes
             c_Item[index].Agility = incMSG.ReadVariableInt32();
             c_Item[index].Endurance = incMSG.ReadVariableInt32();
             c_Item[index].Stamina = incMSG.ReadVariableInt32();
+            c_Item[index].Clip = incMSG.ReadVariableInt32();
+            c_Item[index].maxClip = incMSG.ReadVariableInt32();
+            c_Item[index].ammoType = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Item data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
         }
@@ -184,6 +280,9 @@ namespace Client.Classes
                     c_Npc[i].Owner = incMSG.ReadVariableInt32();
                     c_Npc[i].Behavior = incMSG.ReadVariableInt32();
                     c_Npc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    c_Npc[i].Health = incMSG.ReadVariableInt32();
+                    c_Npc[i].maxHealth = incMSG.ReadVariableInt32();
+                    c_Npc[i].Damage = incMSG.ReadVariableInt32();
                     c_Npc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
@@ -206,6 +305,9 @@ namespace Client.Classes
                     c_Map.mapNpc[i].Owner = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].Behavior = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Health = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].maxHealth = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].Damage = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
             }
@@ -226,8 +328,10 @@ namespace Client.Classes
             c_Map.mapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Health = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].maxHealth = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
-
             Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
         }
 
@@ -358,6 +462,10 @@ namespace Client.Classes
             c_Player[clientIndex].Agility = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Endurance = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Stamina = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].PistolAmmo = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].AssaultAmmo = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].RocketAmmo = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
 
@@ -387,6 +495,10 @@ namespace Client.Classes
                 c_Player[i].Agility = incMSG.ReadVariableInt32();
                 c_Player[i].Endurance = incMSG.ReadVariableInt32();
                 c_Player[i].Stamina = incMSG.ReadVariableInt32();
+                c_Player[i].PistolAmmo = incMSG.ReadVariableInt32();
+                c_Player[i].AssaultAmmo = incMSG.ReadVariableInt32();
+                c_Player[i].RocketAmmo = incMSG.ReadVariableInt32();
+                c_Player[i].GrenadeAmmo = incMSG.ReadVariableInt32();
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
@@ -491,6 +603,13 @@ namespace Client.Classes
         VitalLoss,
         ItemData,
         Items,
-        Shutdown
+        Shutdown,
+        Attack,
+        ProjData,
+        Projectiles,
+        UpdateAmmo,
+        CreateProj,
+        ClearProj,
+        UpdateProj
     }
 }

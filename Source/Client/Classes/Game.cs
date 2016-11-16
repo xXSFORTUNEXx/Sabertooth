@@ -22,6 +22,7 @@ namespace Client.Classes
         Player[] c_Player = new Player[5]; //create player class array
         NPC[] c_Npc = new NPC[10]; //create the npc class array
         Item[] c_Item = new Item[50];   //Create item array
+        Projectile[] c_Proj = new Projectile[10]; //create projectile array
         Texture[] c_Sprite = new Texture[200]; //set the players texture to a texture
         Map c_Map = new Map(); //create map class
         View c_View = new View();  //create view for the plaer
@@ -44,7 +45,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;    //event for mouse button released
             c_Window.MouseMoved += window_MouseMoved;  //event for mouse movement
             c_Window.TextEntered += window_TextEntered;    //event for text being entered for gwen
-            c_Window.SetFramerateLimit(75);    //set the max framerate for our window
+            c_Window.SetFramerateLimit(60);    //set the max framerate for our window
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);    //create the renderer that allows gwen to access SFML
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");  //load the texture for gwen's skin
@@ -71,7 +72,8 @@ namespace Client.Classes
 
             SetupPlayerArray(); //create the player array
             SetupNpcArray();    //create the npc array
-            SetupItemArray();
+            SetupItemArray();   //create the item array
+            SetupProjectileArray(); //create the projectile array
 
             while (c_Window.IsOpen)    //the actual game loop runs as long as the window is open
             {
@@ -208,6 +210,14 @@ namespace Client.Classes
             }
         }
 
+        private void SetupProjectileArray()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                c_Proj[i] = new Projectile();
+            }
+        }
+
         void DrawLowLevelTiles()
         {
             for (int x = 0; x < 50; x++)
@@ -278,6 +288,18 @@ namespace Client.Classes
             }
         }
 
+        void DrawProjectiles(NetClient c_Client)
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                if (c_Map.mapProj[i] != null)
+                {
+                    c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
+                    c_Map.mapProj[i].DrawProjectile(c_Window);
+                }
+            }
+        }
+
         void DrawIndexPlayer()
         {
             c_Player[handleData.c_Index].DrawPlayer(c_Window, c_Sprite[c_Player[handleData.c_Index].Sprite]);
@@ -326,10 +348,12 @@ namespace Client.Classes
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
+                DrawProjectiles(c_Client);
                 DrawUpperLevelTiles();
                 if (TickCount - walkTick > 100)
                 {
                     c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
@@ -344,7 +368,7 @@ namespace Client.Classes
             UpdateTitle(fps);   //update the title with the fps
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj); 
             c_Window.SetActive();
             c_Window.DispatchEvents();
             c_Window.Clear();

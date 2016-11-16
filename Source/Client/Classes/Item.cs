@@ -13,6 +13,7 @@ namespace Client.Classes
         public int Damage { get; set; }
         public int Armor { get; set; }
         public int Type { get; set; }
+        public int AttackSpeed { get; set; }
         public int HealthRestore { get; set; }
         public int HungerRestore { get; set; }
         public int HydrateRestore { get; set; }
@@ -22,6 +23,10 @@ namespace Client.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
 
+        public int Clip { get; set; }
+        public int maxClip { get; set; }
+        public int ammoType { get; set; }
+
         public Item() { }
 
         public Item(ItemType type)
@@ -29,13 +34,15 @@ namespace Client.Classes
             Type = (int)type;
         }
 
-        public Item(string name, int sprite, int damage, int armor, int type, int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta)
+        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed,
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype)
         {
             Name = name;
             Sprite = sprite;
             Damage = damage;
             Armor = armor;
             Type = type;
+            AttackSpeed = attackspeed;
             HealthRestore = healthRestore;
             HungerRestore = foodRestore;
             HydrateRestore = drinkRestore;
@@ -43,6 +50,7 @@ namespace Client.Classes
             Agility = agi;
             Endurance = end;
             Stamina = sta;
+            ammoType = ammotype;
         }
     }
 
@@ -59,5 +67,14 @@ namespace Client.Classes
         Pants,
         Shoes,
         Other
+    }
+
+    public enum AmmoType
+    {
+        None,
+        Pistol,
+        AssaultRifle,
+        Rocket,
+        Grenade
     }
 }

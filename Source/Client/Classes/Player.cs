@@ -20,6 +20,7 @@ namespace Client.Classes
         public int Step;    //the step at which the player is
         public int maxHealth;
 
+        //Primary attributes
         public int Level { get; set; }
         public int Health { get; set; }
         public int Hunger { get; set; }
@@ -28,12 +29,25 @@ namespace Client.Classes
         public int Money { get; set; }
         public int Armor { get; set; }
 
+        //Stats
         public int Strength { get; set; }
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
 
+        //Weapons
+        public Item mainWeapon = new Item();
+        public Item offWeapon = new Item();
+
+        //Player ammo
+        public int PistolAmmo { get; set; }
+        public int AssaultAmmo { get; set; }
+        public int RocketAmmo { get; set; }
+        public int GrenadeAmmo { get; set; }
+
         public bool Moved;  //if they have moved
+        public bool Attacking;
+        //public int attackSpeed;
         public int offsetX; //offset for center screen
         public int offsetY; //offset for center screen
         public int tempX;   //temp x that is saved for movement over packets
@@ -42,7 +56,8 @@ namespace Client.Classes
         public int tempStep;    //temp step that is saved for movement over packets
         Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, int hydration, int str, int agi, int end, int sta, NetConnection conn)    //main player contructor if we have all the details
+        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, 
+                      int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)    //main player contructor if we have all the details
         {
             Name = name;
             Pass = pass;
@@ -64,6 +79,10 @@ namespace Client.Classes
             Endurance = end;
             Stamina = sta;
             Connection = conn;
+            PistolAmmo = defaultAmmo;
+            AssaultAmmo = defaultAmmo;
+            RocketAmmo = 5;
+            GrenadeAmmo = 3;
         }
 
         public Player(string name, string pass, NetConnection conn) //player contructor if we are missing a few key setails
@@ -184,6 +203,60 @@ namespace Client.Classes
             }
         }
 
+        public void CheckAttack(NetClient c_Client, GUI c_GUI, Window c_Window, int index)
+        {
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+
+            //Melee
+            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
+            {
+                Attacking = true;
+                SendAttackData(c_Client, index, true);
+            }
+            //Direction Up
+            if (Keyboard.IsKeyPressed(Keyboard.Key.I))
+            {
+                Direction = (int)Directions.Up;
+                Attacking = true;
+                SendUpdateDirection(c_Client, index);
+                SendAttackData(c_Client, index, false);
+            }
+            //Direction Down
+            if (Keyboard.IsKeyPressed(Keyboard.Key.K))
+            {
+                Direction = (int)Directions.Down;
+                Attacking = true;
+                SendUpdateDirection(c_Client, index);
+                SendAttackData(c_Client, index, false);
+            }
+            //Direction Left
+            if (Keyboard.IsKeyPressed(Keyboard.Key.J))
+            {
+                Direction = (int)Directions.Left;
+                Attacking = true;
+                SendUpdateDirection(c_Client, index);
+                SendAttackData(c_Client, index, false);
+            }
+            //Direction Right
+            if (Keyboard.IsKeyPressed(Keyboard.Key.L))
+            {
+                Direction = (int)Directions.Right;
+                Attacking = true;
+                SendUpdateDirection(c_Client, index);
+                SendAttackData(c_Client, index, false);
+            }
+        }
+
+        void SendAttackData(NetClient c_Client, int index, bool melee)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Attack);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(Direction);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 3);
+        }
+
         void SendMovementData(NetClient c_Client, int index)   //packet for sending data to the server
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to write out data going out to the server
@@ -217,4 +290,6 @@ namespace Client.Classes
         UpLeft,
         UpRight
     }
+
+    //Channels
 }

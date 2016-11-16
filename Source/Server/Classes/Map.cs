@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using static Microsoft.VisualBasic.Interaction;
+using static System.Console;
+using Lidgren.Network;
 
 namespace Server.Classes
 {
@@ -16,6 +18,76 @@ namespace Server.Classes
         public Tile[,] FringeA = new Tile[50, 50];
 
         public MapNpc[] mapNpc = new MapNpc[10];
+
+        public MapProj[] mapProj = new MapProj[200];
+
+        public int FindOpenProjSlot()
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                if (mapProj[i] == null)
+                {
+                    return i;
+                }
+            }
+            return 200;
+        }
+
+        public void ClearProjSlot(NetServer s_Server, Map[] s_Map, int mapIndex, int slot)
+        {
+            if (mapProj[slot] != null)
+            {
+                mapProj[slot] = null;
+                NetOutgoingMessage outMSG = s_Server.CreateMessage();
+                outMSG.Write((byte)PacketTypes.ClearProj);
+                outMSG.Write(s_Map[mapIndex].Name);
+                outMSG.WriteVariableInt32(slot);                
+                s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        public void CreateProjectile(NetServer s_Server, Player[] s_Player, int playerIndex)
+        {
+            int slot = FindOpenProjSlot();
+
+            if (slot == 200) { WriteLine("Bullet max reached!"); return; }
+
+            //For testing purposes
+            mapProj[slot] = new MapProj();
+            mapProj[slot].Name = "test";
+            mapProj[slot].X = (s_Player[playerIndex].X + 12);
+            mapProj[slot].Y = (s_Player[playerIndex].Y + 9);
+            mapProj[slot].Direction = s_Player[playerIndex].Direction;
+            mapProj[slot].Speed = 250;
+            mapProj[slot].Owner = playerIndex;
+            mapProj[slot].Sprite = 1;
+            mapProj[slot].Type = (int)ProjType.Bullet;
+
+            SendNewProjectile(s_Server, s_Player, slot, playerIndex);
+        }
+
+        public void SendNewProjectile(NetServer s_Server, Player[] s_Player, int slot, int playerIndex)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.CreateProj);
+            outMSG.WriteVariableInt32(slot);
+            outMSG.Write(mapProj[slot].Name);
+            outMSG.WriteVariableInt32(mapProj[slot].X);
+            outMSG.WriteVariableInt32(mapProj[slot].Y);
+            outMSG.WriteVariableInt32(mapProj[slot].Direction);
+            outMSG.WriteVariableInt32(mapProj[slot].Speed);
+            outMSG.WriteVariableInt32(mapProj[slot].Owner);
+            outMSG.WriteVariableInt32(mapProj[slot].Sprite);
+            outMSG.WriteVariableInt32(mapProj[slot].Type);
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i] != null && s_Player[i].Name != null && s_Player[i].Map == s_Player[playerIndex].Map)
+                {
+                    s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+        }
 
         public void GenerateMap(int mapNum)
         {
@@ -214,6 +286,21 @@ namespace Server.Classes
             X = x;
             Y = y;
             npcnum = npcNum;
+        }
+    }
+
+    class MapProj : Projectile
+    {
+        public int projNum { get; set; }
+
+        public MapProj() { }
+
+        public MapProj(string name, int x, int y, int projnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            projNum = projnum;
         }
     }
 

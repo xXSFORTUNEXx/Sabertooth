@@ -15,6 +15,8 @@ namespace Client.Classes
 
         public MapNpc[] mapNpc = new MapNpc[10];
 
+        public MapProj[] mapProj = new MapProj[200];
+
         Texture[] TileSet = new Texture[67];
         Sprite Tiles = new Sprite();
 
@@ -178,6 +180,21 @@ namespace Client.Classes
             X = x;
             Y = y;
             npcnum = npcNum;
+        }
+    }
+
+    class MapProj : Projectile
+    {
+        public int projNum { get; set; }
+
+        public MapProj() { }
+
+        public MapProj(string name, int x, int y, int projnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            projNum = projnum;
         }
     }
 

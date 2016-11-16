@@ -17,6 +17,9 @@ namespace Server.Classes
         public int Owner { get; set; }
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
+        public int Health { get; set; }
+        public int maxHealth { get; set; }
+        public int Damage { get; set; }
 
         //Only needed on live server and client no editors
         public bool isSpawned;
@@ -26,7 +29,7 @@ namespace Server.Classes
         public NPC() { }
 
         //Detailed NPC
-        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
+        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
         {
             Name = name;
             X = x;
@@ -38,6 +41,9 @@ namespace Server.Classes
             Behavior = behavior;
             SpawnTime = spawnTime;
             isSpawned = false;
+            Health = health;
+            maxHealth = maxhealth;
+            Damage = damage;
         }
 
         //One with location but other default values as well
@@ -152,6 +158,9 @@ namespace Server.Classes
             binaryWriter.Write(Owner);
             binaryWriter.Write(Behavior);
             binaryWriter.Write(SpawnTime);
+            binaryWriter.Write(Health);
+            binaryWriter.Write(maxHealth);
+            binaryWriter.Write(Damage);
             binaryWriter.Flush();
             binaryWriter.Close();
         }
@@ -172,6 +181,9 @@ namespace Server.Classes
                 Owner = binaryReader.ReadInt32();
                 Behavior = binaryReader.ReadInt32();
                 SpawnTime = binaryReader.ReadInt32();
+                Health = binaryReader.ReadInt32();
+                maxHealth = binaryReader.ReadInt32();
+                Damage = binaryReader.ReadInt32();
             }
             catch (Exception e)
             {
