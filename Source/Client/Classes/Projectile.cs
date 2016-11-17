@@ -172,7 +172,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(Y);
             outMSG.WriteVariableInt32(Direction);
 
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 4);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 5);
         }
     }
 
