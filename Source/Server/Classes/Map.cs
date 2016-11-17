@@ -57,7 +57,7 @@ namespace Server.Classes
             mapProj[slot].Name = "test";
             mapProj[slot].X = (s_Player[playerIndex].X + 12);
             mapProj[slot].Y = (s_Player[playerIndex].Y + 9);
-            mapProj[slot].Direction = s_Player[playerIndex].Direction;
+            mapProj[slot].Direction = s_Player[playerIndex].AimDirection;
             mapProj[slot].Speed = 250;
             mapProj[slot].Owner = playerIndex;
             mapProj[slot].Sprite = 1;

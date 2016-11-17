@@ -16,6 +16,7 @@ namespace Client.Classes
         public int Y { get; set; }  //define y
         public int Map { get; set; }    //define map
         public int Direction { get; set; }  //define direction
+        public int AimDirection { get; set; }
         public int Sprite { get; set; } //define player sprite
         public int Step;    //the step at which the player is
         public int maxHealth;
@@ -53,10 +54,11 @@ namespace Client.Classes
         public int tempX;   //temp x that is saved for movement over packets
         public int tempY;   //temp y that is saved for movement over packets
         public int tempDir; //temp direction that is saved for movement over packets
+        public int tempaimDir;
         public int tempStep;    //temp step that is saved for movement over packets
         Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, int armor, int hunger, 
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)    //main player contructor if we have all the details
         {
             Name = name;
@@ -67,6 +69,7 @@ namespace Client.Classes
             offsetX = 12;
             offsetY = 9;
             Direction = direction;
+            AimDirection = aimdirection;
             Level = level;
             Health = health;
             Experience = exp;
@@ -109,7 +112,7 @@ namespace Client.Classes
         public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)  // draws the player to the screen
         {
             c_Sprite.Texture = c_Texture; //set the sprites texture
-            c_Sprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48); //define what are we want to draw from the texture using a intrect (rectangle)
+            c_Sprite.TextureRect = new IntRect((Step * 32), (AimDirection * 48), 32, 48); //define what are we want to draw from the texture using a intrect (rectangle)
             c_Sprite.Position = new Vector2f(((X * 32) + (offsetX * 32)), (((Y * 32) + (offsetY * 32) - 16))); //Define the actual location on the screen
 
             c_Window.Draw(c_Sprite);  //draw the player to the define window using the above sprite array
@@ -217,7 +220,7 @@ namespace Client.Classes
             //Direction Up
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
-                Direction = (int)Directions.Up;
+                AimDirection = (int)Directions.Up;
                 Attacking = true;
                 SendUpdateDirection(c_Client, index);
                 SendAttackData(c_Client, index, false);
@@ -225,7 +228,7 @@ namespace Client.Classes
             //Direction Down
             if (Keyboard.IsKeyPressed(Keyboard.Key.K))
             {
-                Direction = (int)Directions.Down;
+                AimDirection = (int)Directions.Down;
                 Attacking = true;
                 SendUpdateDirection(c_Client, index);
                 SendAttackData(c_Client, index, false);
@@ -233,7 +236,7 @@ namespace Client.Classes
             //Direction Left
             if (Keyboard.IsKeyPressed(Keyboard.Key.J))
             {
-                Direction = (int)Directions.Left;
+                AimDirection = (int)Directions.Left;
                 Attacking = true;
                 SendUpdateDirection(c_Client, index);
                 SendAttackData(c_Client, index, false);
@@ -241,7 +244,7 @@ namespace Client.Classes
             //Direction Right
             if (Keyboard.IsKeyPressed(Keyboard.Key.L))
             {
-                Direction = (int)Directions.Right;
+                AimDirection = (int)Directions.Right;
                 Attacking = true;
                 SendUpdateDirection(c_Client, index);
                 SendAttackData(c_Client, index, false);
@@ -254,6 +257,7 @@ namespace Client.Classes
             outMSG.Write((byte)PacketTypes.Attack);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(Direction);
+            outMSG.WriteVariableInt32(AimDirection);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 3);
         }
 
@@ -265,6 +269,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(X);    //write the x of the current index
             outMSG.WriteVariableInt32(Y);    //write the y of the current index
             outMSG.WriteVariableInt32(Direction);    //write the direction of the current index
+            outMSG.WriteVariableInt32(AimDirection);
             outMSG.WriteVariableInt32(Step); //write the step of the current index
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);   //send the packet to the server in reliable order so its not jumbled when the server gets it
         }
@@ -275,6 +280,7 @@ namespace Client.Classes
             outMSG.Write((byte)PacketTypes.UpdateDirection);    //packet header name
             outMSG.WriteVariableInt32(index);    //current clients index
             outMSG.WriteVariableInt32(Direction);    //current index direction
+            outMSG.WriteVariableInt32(AimDirection);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);   //send the packet in reliable order
         }
     }

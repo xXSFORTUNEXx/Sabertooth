@@ -86,6 +86,7 @@ namespace Server.Classes
         {
             int index = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
+            int aimdirection = incMSG.ReadVariableInt32();
 
             if (s_Player[index].mainWeapon.Type == (int)ItemType.MeleeWeapon)
             {
@@ -109,6 +110,7 @@ namespace Server.Classes
             int x = incMSG.ReadVariableInt32();
             int y = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
+            int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
 
             if (step == s_Player[index].Step) { return; }
@@ -117,13 +119,14 @@ namespace Server.Classes
             s_Player[index].X = x;
             s_Player[index].Y = y;
             s_Player[index].Direction = direction;
+            s_Player[index].AimDirection = aimdirection;
             s_Player[index].Step = step;
 
             for (int i = 0; i < 5; i++)
             {
                 if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
                 {
-                    SendUpdateMovementData(s_Server, s_Player[i].Connection, index, x, y, direction, step);
+                    SendUpdateMovementData(s_Server, s_Player[i].Connection, index, x, y, direction, aimdirection, step);
                 }
             }
         }
@@ -133,16 +136,18 @@ namespace Server.Classes
         {
             int index = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
+            int aimdirection = incMSG.ReadVariableInt32();
 
             if (direction == s_Player[index].Direction) { return; }
 
             s_Player[index].Direction = direction;
+            s_Player[index].AimDirection = aimdirection;
 
             for (int i = 0; i < 5; i++)
             {
                 if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
                 {
-                    SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction);
+                    SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction, aimdirection);
                 }
             }
         }
@@ -191,7 +196,7 @@ namespace Server.Classes
                     if (i < 5)
                     {
                         //s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
+                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         s_Player[i].SavePlayerXML();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
@@ -302,17 +307,18 @@ namespace Server.Classes
         }
 
         //Sends a direction update to the client so it can be processed and sent to all connected
-        void SendUpdateDirection(NetServer s_Server, NetConnection playerConn, int index, int direction)
+        void SendUpdateDirection(NetServer s_Server, NetConnection playerConn, int index, int direction, int aimdirection)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.DirData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(direction);
+            outMSG.WriteVariableInt32(aimdirection);
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 2);
         }
 
         //Sending out the data for movement to be processed by everyone connected
-        void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int step)
+        void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
@@ -320,6 +326,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(x);
             outMSG.WriteVariableInt32(y);
             outMSG.WriteVariableInt32(direction);
+            outMSG.WriteVariableInt32(aimdirection);
             outMSG.WriteVariableInt32(step);
 
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 1);
@@ -367,6 +374,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Y);
             outMSG.WriteVariableInt32(s_Player[index].Map);
             outMSG.WriteVariableInt32(s_Player[index].Direction);
+            outMSG.WriteVariableInt32(s_Player[index].AimDirection);
             outMSG.WriteVariableInt32(s_Player[index].Sprite);
             outMSG.WriteVariableInt32(s_Player[index].Level);
             outMSG.WriteVariableInt32(s_Player[index].Health);
@@ -400,6 +408,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].Y);
                 outMSG.WriteVariableInt32(s_Player[i].Map);
                 outMSG.WriteVariableInt32(s_Player[i].Direction);
+                outMSG.WriteVariableInt32(s_Player[i].AimDirection);
                 outMSG.WriteVariableInt32(s_Player[i].Sprite);
                 outMSG.WriteVariableInt32(s_Player[i].Level);
                 outMSG.WriteVariableInt32(s_Player[i].Health);

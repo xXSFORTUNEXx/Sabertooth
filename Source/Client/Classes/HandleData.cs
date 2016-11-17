@@ -343,12 +343,14 @@ namespace Client.Classes
         {
             int index = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
+            int aimdirection = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
             if (index == clientIndex) { return; }
 
             c_Player[index].Direction = direction;
+            c_Player[index].AimDirection = aimdirection;
         }
 
         //handle incoming movement data
@@ -358,6 +360,7 @@ namespace Client.Classes
             int x = incMSG.ReadVariableInt32();
             int y = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
+            int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
@@ -368,6 +371,7 @@ namespace Client.Classes
             c_Player[index].tempX = x;
             c_Player[index].tempY = y;
             c_Player[index].tempDir = direction;
+            c_Player[index].tempaimDir = aimdirection; 
             c_Player[index].tempStep = step;
         }
 
@@ -452,6 +456,7 @@ namespace Client.Classes
             c_Player[clientIndex].Y = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Map = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Direction = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].AimDirection = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Sprite = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Level = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Health = incMSG.ReadVariableInt32();
@@ -485,6 +490,7 @@ namespace Client.Classes
                 c_Player[i].Y = incMSG.ReadVariableInt32();
                 c_Player[i].Map = incMSG.ReadVariableInt32();
                 c_Player[i].Direction = incMSG.ReadVariableInt32();
+                c_Player[i].AimDirection = incMSG.ReadVariableInt32();
                 c_Player[i].Sprite = incMSG.ReadVariableInt32();
                 c_Player[i].Level = incMSG.ReadVariableInt32();
                 c_Player[i].Health = incMSG.ReadVariableInt32();

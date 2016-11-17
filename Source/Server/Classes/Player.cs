@@ -20,6 +20,7 @@ namespace Server.Classes
         public int Y { get; set; }  //define y
         public int Map { get; set; }    //define map
         public int Direction { get; set; }  //define direction
+        public int AimDirection { get; set; }
         public int Sprite { get; set; } //define sprite
         public int Level { get; set; }
         public int Health { get; set; }
@@ -43,13 +44,13 @@ namespace Server.Classes
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
 
-        public int attackSpeed;
+        //public int attackSpeed;
         public int Step;
         public int maxHealth;
         public int hungerTick;
         public int hydrationTick;
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money, 
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
@@ -58,6 +59,7 @@ namespace Server.Classes
             Y = y;
             Map = map;
             Direction = direction;
+            AimDirection = aimdirection;
             Level = level;
             Experience = exp;
             Money = money;
@@ -79,7 +81,7 @@ namespace Server.Classes
             GrenadeAmmo = 3;
         }
 
-        public Player(string name, string pass, int x, int y, int direction, int map, int level, int health, int exp, int money,
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money,
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo)
         {
             Name = name;
@@ -88,6 +90,7 @@ namespace Server.Classes
             Y = y;
             Map = map;
             Direction = direction;
+            AimDirection = aimdirection;
             Level = level;
             Experience = exp;
             Money = money;
@@ -315,6 +318,7 @@ namespace Server.Classes
             writer.WriteElementString("Y", Y.ToString());
             writer.WriteElementString("Map", Map.ToString());
             writer.WriteElementString("Direction", Direction.ToString());
+            writer.WriteElementString("AimDirection", AimDirection.ToString());
             writer.WriteElementString("Sprite", Sprite.ToString());
             writer.WriteElementString("Level", Level.ToString());
             writer.WriteElementString("Health", Health.ToString());
@@ -354,6 +358,8 @@ namespace Server.Classes
             Map = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Direction");
             Direction = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AimDirection");
+            AimDirection = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Sprite");
             Sprite = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Level");

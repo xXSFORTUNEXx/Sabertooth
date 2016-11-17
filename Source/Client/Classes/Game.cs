@@ -315,6 +315,7 @@ namespace Client.Classes
                     c_Player[i].X = c_Player[i].tempX;
                     c_Player[i].Y = c_Player[i].tempY;
                     c_Player[i].Direction = c_Player[i].tempDir;
+                    c_Player[i].AimDirection = c_Player[i].tempaimDir;
                     c_Player[i].Step = c_Player[i].tempStep;
 
                     c_Player[i].tempStep = 5;

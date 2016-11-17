@@ -51,7 +51,7 @@ namespace Client.Classes
         public void DrawProjectile(RenderWindow c_Window)
         {
             c_Sprite.Texture = proj_Texture;
-            c_Sprite.TextureRect = new IntRect(32, (Direction * 32), 32, 32);
+            c_Sprite.TextureRect = new IntRect((Direction * 32), 32, 32, 32);
             c_Sprite.Position = new Vector2f((X * 32), (Y * 32));
 
             c_Window.Draw(c_Sprite);
