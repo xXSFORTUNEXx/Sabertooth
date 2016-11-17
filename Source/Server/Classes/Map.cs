@@ -71,6 +71,7 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);
+            outMSG.Write(Name);
             outMSG.Write(mapProj[slot].Name);
             outMSG.WriteVariableInt32(mapProj[slot].X);
             outMSG.WriteVariableInt32(mapProj[slot].Y);
@@ -80,13 +81,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(mapProj[slot].Sprite);
             outMSG.WriteVariableInt32(mapProj[slot].Type);
 
-            for (int i = 0; i < 5; i++)
-            {
-                if (s_Player[i] != null && s_Player[i].Name != null && s_Player[i].Map == s_Player[playerIndex].Map)
-                {
-                    s_Server.SendMessage(outMSG, s_Player[i].Connection, NetDeliveryMethod.ReliableOrdered);
-                }
-            }
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void GenerateMap(int mapNum)
@@ -150,7 +145,7 @@ namespace Server.Classes
             FileStream fileStream = File.OpenWrite("Maps/Map" + mapNum + ".bin");
             BinaryWriter binaryWriter = new BinaryWriter(fileStream);
             LogWriter.WriteLog("Saving map #" + mapNum, "Server");
-            binaryWriter.Write(Name);
+            binaryWriter.Write(Name + mapNum.ToString());
 
             for (int i = 0; i < 10; i++)
             {

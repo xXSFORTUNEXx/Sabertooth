@@ -157,6 +157,9 @@ namespace Client.Classes
         void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
         {
             int slot = incMSG.ReadVariableInt32();
+            string mapName = incMSG.ReadString();
+            
+            if (mapName != c_Map.Name) { return; }
 
             c_Map.mapProj[slot] = new MapProj();
 
