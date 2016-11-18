@@ -167,7 +167,6 @@ namespace Client.Classes
         }
     }
 
-
     class MapNpc : NPC
     {
         public int npcNum { get; set; }

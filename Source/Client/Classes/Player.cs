@@ -208,46 +208,50 @@ namespace Client.Classes
 
         public void CheckAttack(NetClient c_Client, GUI c_GUI, Window c_Window, int index)
         {
+            if (Attacking == true) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+
+            bool isMelee = false;
 
             //Melee
             if (Keyboard.IsKeyPressed(Keyboard.Key.F))
             {
+                AimDirection = Direction;
                 Attacking = true;
-                SendAttackData(c_Client, index, true);
+                isMelee = true;
             }
             //Direction Up
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
                 AimDirection = (int)Directions.Up;
                 Attacking = true;
-                SendUpdateDirection(c_Client, index);
-                SendAttackData(c_Client, index, false);
             }
             //Direction Down
             if (Keyboard.IsKeyPressed(Keyboard.Key.K))
             {
                 AimDirection = (int)Directions.Down;
                 Attacking = true;
-                SendUpdateDirection(c_Client, index);
-                SendAttackData(c_Client, index, false);
             }
             //Direction Left
             if (Keyboard.IsKeyPressed(Keyboard.Key.J))
             {
                 AimDirection = (int)Directions.Left;
                 Attacking = true;
-                SendUpdateDirection(c_Client, index);
-                SendAttackData(c_Client, index, false);
             }
             //Direction Right
             if (Keyboard.IsKeyPressed(Keyboard.Key.L))
             {
                 AimDirection = (int)Directions.Right;
                 Attacking = true;
+            }
+
+            if (Attacking == true)
+            {
                 SendUpdateDirection(c_Client, index);
-                SendAttackData(c_Client, index, false);
+                SendAttackData(c_Client, index, isMelee);
+                SendMovementData(c_Client, index);
+                Attacking = false;
             }
         }
 

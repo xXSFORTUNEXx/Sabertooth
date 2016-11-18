@@ -130,7 +130,7 @@ namespace Server.Classes
                 }
             }
         }
-
+        
         //Handles incoming direction data for players
         void HandleDirectionData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {

@@ -75,11 +75,6 @@ namespace Server.Classes
                 CreateDirectory("Maps");
                 exists = true;
             }
-            if (!Exists("Logs"))
-            {
-                CreateDirectory("Logs");
-                exists = true;
-            }
             if (!Exists("NPCS"))
             {
                 CreateDirectory("NPCS");
