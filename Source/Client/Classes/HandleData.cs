@@ -347,10 +347,11 @@ namespace Client.Classes
 
             Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
+            c_Player[index].AimDirection = aimdirection;
+
             if (index == clientIndex) { return; }
 
             c_Player[index].Direction = direction;
-            c_Player[index].AimDirection = aimdirection;
         }
 
         //handle incoming movement data
@@ -365,13 +366,14 @@ namespace Client.Classes
 
             Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
+            c_Player[index].tempaimDir = aimdirection;
+
             if (index == clientIndex) { return; }
             if (step == c_Player[index].Step) { return; }
 
             c_Player[index].tempX = x;
             c_Player[index].tempY = y;
             c_Player[index].tempDir = direction;
-            c_Player[index].tempaimDir = aimdirection; 
             c_Player[index].tempStep = step;
         }
 

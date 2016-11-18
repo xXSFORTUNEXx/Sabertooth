@@ -113,13 +113,14 @@ namespace Server.Classes
             int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
 
+            s_Player[index].AimDirection = aimdirection;
+
             if (step == s_Player[index].Step) { return; }
             if (x == s_Player[index].X && y == s_Player[index].Y) { return; }
 
             s_Player[index].X = x;
             s_Player[index].Y = y;
             s_Player[index].Direction = direction;
-            s_Player[index].AimDirection = aimdirection;
             s_Player[index].Step = step;
 
             for (int i = 0; i < 5; i++)
@@ -138,10 +139,11 @@ namespace Server.Classes
             int direction = incMSG.ReadVariableInt32();
             int aimdirection = incMSG.ReadVariableInt32();
 
+            s_Player[index].AimDirection = aimdirection;
+
             if (direction == s_Player[index].Direction) { return; }
 
             s_Player[index].Direction = direction;
-            s_Player[index].AimDirection = aimdirection;
 
             for (int i = 0; i < 5; i++)
             {
