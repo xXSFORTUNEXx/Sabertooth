@@ -209,7 +209,7 @@ namespace Server.Classes
             {
                 if (!Exists("Items/Item" + i + ".bin"))
                 {
-                    s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
+                    s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
                     s_Item[i].SaveItem(i);
                 }
                 else

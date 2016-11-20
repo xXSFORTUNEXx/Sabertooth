@@ -40,6 +40,9 @@ namespace Client.Classes
         Label d_Agility;
         Label d_Endurance;
         Label d_Stamina;
+        Label d_MainClip;
+        Label d_PistolAmmo;
+        Label d_AssaultAmmo;
 
         public WindowControl loadWindow;
         Label loadLabel;
@@ -469,7 +472,7 @@ namespace Client.Classes
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 285);
+            d_Window.SetSize(200, 325);
             d_Window.SetPosition(10, 10);
             d_Window.DisableResizing();
 
@@ -568,11 +571,23 @@ namespace Client.Classes
             d_Stamina = new Label(d_Window);
             d_Stamina.SetPosition(10, 240);
             d_Stamina.Text = "Stamina: ?";
+
+            d_MainClip = new Label(d_Window);
+            d_MainClip.SetPosition(10, 250);
+            d_MainClip.Text = "Clip: ?";
+
+            d_PistolAmmo = new Label(d_Window);
+            d_PistolAmmo.SetPosition(10, 260);
+            d_PistolAmmo.Text = "Pistol Ammo: ?";
+
+            d_AssaultAmmo = new Label(d_Window);
+            d_AssaultAmmo.SetPosition(10, 270);
+            d_AssaultAmmo.Text = "Assault Ammo: ?";
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
         {
-            if (d_Window != null)
+            if (d_Window != null && c_Player[drawIndex] != null)
             {
                 int p_level = c_Player[drawIndex].Level;
 
@@ -596,6 +611,9 @@ namespace Client.Classes
                 d_Agility.Text = "Agility: " + c_Player[drawIndex].Agility;
                 d_Endurance.Text = "Endurance: " + c_Player[drawIndex].Endurance;
                 d_Stamina.Text = "Stamina: " + c_Player[drawIndex].Stamina;
+                d_MainClip.Text = "Clip: " + c_Player[drawIndex].mainWeapon.Clip + " / " + c_Player[drawIndex].mainWeapon.maxClip;
+                d_PistolAmmo.Text = "Pistol Ammo: " + c_Player[drawIndex].PistolAmmo;
+                d_AssaultAmmo.Text = "Assault Ammo: " + c_Player[drawIndex].AssaultAmmo;
                 d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
                 d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
                 d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";

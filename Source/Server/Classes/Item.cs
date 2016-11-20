@@ -35,7 +35,7 @@ namespace Server.Classes
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype)
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype)
         {
             Name = name;
             Sprite = sprite;
@@ -50,6 +50,8 @@ namespace Server.Classes
             Agility = agi;
             Endurance = end;
             Stamina = sta;
+            Clip = clip;
+            maxClip = maxclip;
             ammoType = ammotype;
         }
 

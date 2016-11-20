@@ -128,6 +128,10 @@ namespace Client.Classes
                             case (byte)PacketTypes.ClearProj:
                                 HandleClearProjectile(incMSG, c_Player, c_Map);
                                 break;
+
+                            case (byte)PacketTypes.UpdateWeapons:
+                                HandleWeaponsUpdate(incMSG, c_Client, c_Player, c_Index);
+                                break;
                         }
                         break;
                 }
@@ -347,11 +351,10 @@ namespace Client.Classes
 
             Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
+            c_Player[index].Direction = direction;
             c_Player[index].AimDirection = aimdirection;
 
-            if (index == clientIndex) { return; }
-
-            c_Player[index].Direction = direction;
+            //if (index == clientIndex) { return; }
         }
 
         //handle incoming movement data
@@ -366,15 +369,14 @@ namespace Client.Classes
 
             Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
 
-            c_Player[index].tempaimDir = aimdirection;
-
-            if (index == clientIndex) { return; }
-            if (step == c_Player[index].Step) { return; }
-
             c_Player[index].tempX = x;
             c_Player[index].tempY = y;
             c_Player[index].tempDir = direction;
+            c_Player[index].tempaimDir = aimdirection;
             c_Player[index].tempStep = step;
+
+            //if (index == clientIndex) { return; }
+            //if (step == c_Player[index].Step) { return; }
         }
 
         //Discovery response sent from the server
@@ -452,7 +454,7 @@ namespace Client.Classes
 
         //Player incoming data for the clients index
         void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
-        {
+        {            
             c_Player[clientIndex].Name = incMSG.ReadString();
             c_Player[clientIndex].X = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Y = incMSG.ReadVariableInt32();
@@ -479,7 +481,83 @@ namespace Client.Classes
             c_Player[clientIndex].offsetX = 12;
             c_Player[clientIndex].offsetY = 9;
 
+            //Main Weapon
+            c_Player[clientIndex].mainWeapon.Name = incMSG.ReadString();
+            c_Player[clientIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+
+            //Secondary Weapon
+            c_Player[clientIndex].offWeapon.Name = incMSG.ReadString();
+            c_Player[clientIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.ammoType = incMSG.ReadVariableInt32();
+
             Console.WriteLine("Player data received from server! Index: " + clientIndex + " Account Name: " + c_Player[clientIndex].Name + " IP: " + incMSG.SenderConnection);
+        }
+
+        //Handle incoming weapon data
+        void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
+        {
+            //Main Weapon
+            c_Player[clientIndex].mainWeapon.Name = incMSG.ReadString();
+            c_Player[clientIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+
+            //Secondary Weapon
+            c_Player[clientIndex].offWeapon.Name = incMSG.ReadString();
+            c_Player[clientIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.ammoType = incMSG.ReadVariableInt32();
         }
 
         //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
@@ -621,6 +699,7 @@ namespace Client.Classes
         UpdateAmmo,
         CreateProj,
         ClearProj,
-        UpdateProj
+        UpdateProj,
+        UpdateWeapons
     }
 }

@@ -63,6 +63,9 @@ namespace Server.Classes
             mapProj[slot].Sprite = 1;
             mapProj[slot].Type = (int)ProjType.Bullet;
 
+            s_Player[playerIndex].RemoveBulletFromClip();
+            s_Player[playerIndex].SendUpdateAmmo(s_Server, s_Player, playerIndex);
+
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);

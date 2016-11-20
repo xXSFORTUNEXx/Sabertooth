@@ -36,8 +36,9 @@ namespace Server.Classes
         public bool Attacking { get; set; }
 
         //Create some default ones for testing
-        public Item mainWeapon = new Item("Assult Rifle", 1, 100, 0, (int)ItemType.RangedWeapon, 250, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.AssaultRifle);
-        public Item offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+        //public Item mainWeapon = new Item("Assult Rifle", 1, 100, 0, (int)ItemType.RangedWeapon, 250, 0, 0, 0, 0, 0, 0, 0, 30, 30, (int)AmmoType.AssaultRifle);
+        public Item mainWeapon = new Item();
+        public Item offWeapon = new Item();
 
         public int PistolAmmo { get; set; }
         public int AssaultAmmo { get; set; }
@@ -79,6 +80,9 @@ namespace Server.Classes
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
+
+            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
+            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money,
@@ -107,6 +111,9 @@ namespace Server.Classes
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
+
+            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
+            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -301,6 +308,23 @@ namespace Server.Classes
             }
         }
 
+        //Send updated ammo reserve and clip
+        public void SendUpdateAmmo(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            if (s_Player[index].Connection != null)
+            {
+                outMSG.Write((byte)PacketTypes.UpdateAmmo);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Clip);
+                outMSG.WriteVariableInt32(s_Player[index].PistolAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
+                outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
+                s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
+            }
+        }
+
         public void SavePlayerXML()
         {
             XmlWriterSettings userData = new XmlWriterSettings();
@@ -335,6 +359,39 @@ namespace Server.Classes
             writer.WriteElementString("AssaultAmmo", AssaultAmmo.ToString());
             writer.WriteElementString("RocketAmmo", RocketAmmo.ToString());
             writer.WriteElementString("GrenadeAmmo", GrenadeAmmo.ToString());
+            writer.WriteStartElement("MainWeaponData");
+            writer.WriteElementString("Name", mainWeapon.Name);
+            writer.WriteElementString("Clip", mainWeapon.Clip.ToString());
+            writer.WriteElementString("MaxClip", mainWeapon.maxClip.ToString());
+            writer.WriteElementString("Sprite", mainWeapon.Sprite.ToString());
+            writer.WriteElementString("Damage", mainWeapon.Damage.ToString());
+            writer.WriteElementString("Armor", mainWeapon.Armor.ToString());
+            writer.WriteElementString("Type", mainWeapon.Type.ToString());
+            writer.WriteElementString("AttackSpeed", mainWeapon.AttackSpeed.ToString());
+            writer.WriteElementString("HealthRestore", mainWeapon.HealthRestore.ToString());
+            writer.WriteElementString("HungerRestore", mainWeapon.HungerRestore.ToString());
+            writer.WriteElementString("HydrateRestore", mainWeapon.HydrateRestore.ToString());
+            writer.WriteElementString("Strength", mainWeapon.Strength.ToString());
+            writer.WriteElementString("Agility", mainWeapon.Agility.ToString());
+            writer.WriteElementString("Endurance", mainWeapon.Endurance.ToString());
+            writer.WriteElementString("Stamina", mainWeapon.Stamina.ToString());
+            writer.WriteEndElement();
+            writer.WriteStartElement("OffWeaponData");
+            writer.WriteElementString("Name", offWeapon.Name);
+            writer.WriteElementString("Clip", offWeapon.Clip.ToString());
+            writer.WriteElementString("MaxClip", offWeapon.maxClip.ToString());
+            writer.WriteElementString("Sprite", offWeapon.Sprite.ToString());
+            writer.WriteElementString("Damage", offWeapon.Damage.ToString());
+            writer.WriteElementString("Armor", offWeapon.Armor.ToString());
+            writer.WriteElementString("Type", offWeapon.Type.ToString());
+            writer.WriteElementString("AttackSpeed", offWeapon.AttackSpeed.ToString());
+            writer.WriteElementString("HealthRestore", offWeapon.HealthRestore.ToString());
+            writer.WriteElementString("HungerRestore", offWeapon.HungerRestore.ToString());
+            writer.WriteElementString("HydrateRestore", offWeapon.HydrateRestore.ToString());
+            writer.WriteElementString("Strength", offWeapon.Strength.ToString());
+            writer.WriteElementString("Agility", offWeapon.Agility.ToString());
+            writer.WriteElementString("Endurance", offWeapon.Endurance.ToString());
+            writer.WriteElementString("Stamina", offWeapon.Stamina.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -393,6 +450,68 @@ namespace Server.Classes
             reader.ReadToFollowing("GrenadeAmmo");
             GrenadeAmmo = reader.ReadElementContentAsInt();
             FindMaxHealth();
+            //MainwWeapon
+            reader.ReadToFollowing("Name");
+            mainWeapon.Name = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Clip");
+            mainWeapon.Clip = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("MaxClip");
+            mainWeapon.maxClip = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Sprite");
+            mainWeapon.Sprite = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Damage");
+            mainWeapon.Damage = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Armor");
+            mainWeapon.Armor = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Type");
+            mainWeapon.Type = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AttackSpeed");
+            mainWeapon.AttackSpeed = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HealthRestore");
+            mainWeapon.HealthRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HungerRestore");
+            mainWeapon.HungerRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HydrateRestore");
+            mainWeapon.HydrateRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Strength");
+            mainWeapon.Strength = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Agility");
+            mainWeapon.Agility = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Endurance");
+            mainWeapon.Endurance = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Stamina");
+            mainWeapon.Stamina = reader.ReadElementContentAsInt();
+            //Offweapon
+            reader.ReadToFollowing("Name");
+            offWeapon.Name = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Clip");
+            offWeapon.Clip = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("MaxClip");
+            offWeapon.maxClip = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Sprite");
+            offWeapon.Sprite = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Damage");
+            offWeapon.Damage = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Armor");
+            offWeapon.Armor = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Type");
+            offWeapon.Type = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AttackSpeed");
+            offWeapon.AttackSpeed = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HealthRestore");
+            offWeapon.HealthRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HungerRestore");
+            offWeapon.HungerRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("HydrateRestore");
+            offWeapon.HydrateRestore = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Strength");
+            offWeapon.Strength = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Agility");
+            offWeapon.Agility = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Endurance");
+            offWeapon.Endurance = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("Stamina");
+            offWeapon.Stamina = reader.ReadElementContentAsInt();
             reader.Close();
         }
     }
