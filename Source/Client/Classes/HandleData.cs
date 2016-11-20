@@ -490,6 +490,7 @@ namespace Client.Classes
             c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
@@ -508,6 +509,7 @@ namespace Client.Classes
             c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
@@ -532,6 +534,7 @@ namespace Client.Classes
             c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
@@ -550,6 +553,7 @@ namespace Client.Classes
             c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
             c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();

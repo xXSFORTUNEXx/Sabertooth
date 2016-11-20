@@ -14,6 +14,7 @@ namespace Client.Classes
         public int Armor { get; set; }
         public int Type { get; set; }
         public int AttackSpeed { get; set; }
+        public int ReloadSpeed { get; set; }
         public int HealthRestore { get; set; }
         public int HungerRestore { get; set; }
         public int HydrateRestore { get; set; }
@@ -34,7 +35,7 @@ namespace Client.Classes
             Type = (int)type;
         }
 
-        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed,
+        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
                     int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype)
         {
             Name = name;
@@ -43,6 +44,7 @@ namespace Client.Classes
             Armor = armor;
             Type = type;
             AttackSpeed = attackspeed;
+            ReloadSpeed = reloadspeed;
             HealthRestore = healthRestore;
             HungerRestore = foodRestore;
             HydrateRestore = drinkRestore;

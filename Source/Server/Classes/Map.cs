@@ -4,6 +4,7 @@ using System.IO;
 using static Microsoft.VisualBasic.Interaction;
 using static System.Console;
 using Lidgren.Network;
+using static System.Environment;
 
 namespace Server.Classes
 {
@@ -52,6 +53,8 @@ namespace Server.Classes
 
             if (slot == 200) { WriteLine("Bullet max reached!"); return; }
 
+            s_Player[playerIndex].RemoveBulletFromClip(s_Server, s_Player, playerIndex);
+
             //For testing purposes
             mapProj[slot] = new MapProj();
             mapProj[slot].Name = "test";
@@ -62,9 +65,6 @@ namespace Server.Classes
             mapProj[slot].Owner = playerIndex;
             mapProj[slot].Sprite = 1;
             mapProj[slot].Type = (int)ProjType.Bullet;
-
-            s_Player[playerIndex].RemoveBulletFromClip();
-            s_Player[playerIndex].SendUpdateAmmo(s_Server, s_Player, playerIndex);
 
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);

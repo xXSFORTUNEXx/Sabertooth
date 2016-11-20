@@ -4,6 +4,7 @@ using System.Threading;
 using System.Xml;
 using static System.Convert;
 using static System.IO.File;
+using static System.Environment;
 
 namespace Server.Classes
 {
@@ -100,18 +101,20 @@ namespace Server.Classes
 
             if (s_Player[index].mainWeapon.Type == (int)ItemType.RangedWeapon)
             {
-                //Do a range attack and update everyone
-                s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
+                if (TickCount - s_Player[index].reloadTick < s_Player[index].mainWeapon.ReloadSpeed) { return; }
+                
+                if (TickCount - s_Player[index].attackTick < s_Player[index].mainWeapon.AttackSpeed) { return; }
 
-                //update direction
-                for (int i = 0; i < 5; i++)
+                s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
+            }
+
+            //update direction
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
                 {
-                    if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
-                    {
-                        SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction, aimdirection);
-                    }
+                    SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction, aimdirection);
                 }
-                return;
             }
         }
 
@@ -416,6 +419,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Armor);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Type);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ReloadSpeed);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HealthRestore);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HungerRestore);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HydrateRestore);
@@ -434,6 +438,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Armor);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Type);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ReloadSpeed);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HealthRestore);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HungerRestore);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HydrateRestore);
@@ -459,6 +464,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Armor);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Type);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ReloadSpeed);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HealthRestore);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HungerRestore);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.HydrateRestore);
@@ -477,6 +483,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Armor);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Type);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ReloadSpeed);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HealthRestore);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HungerRestore);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.HydrateRestore);

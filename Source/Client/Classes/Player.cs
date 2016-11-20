@@ -48,7 +48,6 @@ namespace Client.Classes
 
         public bool Moved;  //if they have moved
         public bool Attacking;
-        //public int attackSpeed;
         public int offsetX; //offset for center screen
         public int offsetY; //offset for center screen
         public int tempX;   //temp x that is saved for movement over packets

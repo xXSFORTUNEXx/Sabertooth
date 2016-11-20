@@ -45,11 +45,12 @@ namespace Server.Classes
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
 
-        //public int attackSpeed;
         public int Step;
         public int maxHealth;
         public int hungerTick;
         public int hydrationTick;
+        public int reloadTick;
+        public int attackTick;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -81,8 +82,8 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
 
-            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
-            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
+            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money,
@@ -112,8 +113,8 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
 
-            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
-            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 750, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
+            offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -180,16 +181,21 @@ namespace Server.Classes
             }
         }
 
-        public void RemoveBulletFromClip()
+        public void RemoveBulletFromClip(NetServer s_Server, Player[] s_Player, int index)
         {
             if (mainWeapon.Clip > 0)
             {
                 mainWeapon.Clip -= 1;
+                attackTick = TickCount;
             }
-            else
+
+            if (mainWeapon.Clip == 0)
             {
                 ReloadClip();
+                reloadTick = TickCount;
             }
+
+            SendUpdateAmmo(s_Server, s_Player, index);
         }
 
         public void ReloadClip()
@@ -204,7 +210,7 @@ namespace Server.Classes
                         if (PistolAmmo > mainWeapon.maxClip)
                         {
                             mainWeapon.Clip = mainWeapon.maxClip;
-                            PistolAmmo -= mainWeapon.maxClip;
+                            PistolAmmo -= mainWeapon.maxClip;                            
                         }
                         else
                         {
@@ -261,11 +267,13 @@ namespace Server.Classes
                         {
                             PistolAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
                             mainWeapon.Clip = mainWeapon.maxClip;
+                            reloadTick = TickCount;
                         }
                         else
                         {
                             mainWeapon.Clip += PistolAmmo;
                             PistolAmmo = 0;
+                            reloadTick = TickCount;
                         }
                         break;
                     case (int)AmmoType.AssaultRifle:
@@ -359,6 +367,7 @@ namespace Server.Classes
             writer.WriteElementString("AssaultAmmo", AssaultAmmo.ToString());
             writer.WriteElementString("RocketAmmo", RocketAmmo.ToString());
             writer.WriteElementString("GrenadeAmmo", GrenadeAmmo.ToString());
+
             writer.WriteStartElement("MainWeaponData");
             writer.WriteElementString("Name", mainWeapon.Name);
             writer.WriteElementString("Clip", mainWeapon.Clip.ToString());
@@ -368,6 +377,7 @@ namespace Server.Classes
             writer.WriteElementString("Armor", mainWeapon.Armor.ToString());
             writer.WriteElementString("Type", mainWeapon.Type.ToString());
             writer.WriteElementString("AttackSpeed", mainWeapon.AttackSpeed.ToString());
+            writer.WriteElementString("ReloadSpeed", mainWeapon.ReloadSpeed.ToString());
             writer.WriteElementString("HealthRestore", mainWeapon.HealthRestore.ToString());
             writer.WriteElementString("HungerRestore", mainWeapon.HungerRestore.ToString());
             writer.WriteElementString("HydrateRestore", mainWeapon.HydrateRestore.ToString());
@@ -375,7 +385,9 @@ namespace Server.Classes
             writer.WriteElementString("Agility", mainWeapon.Agility.ToString());
             writer.WriteElementString("Endurance", mainWeapon.Endurance.ToString());
             writer.WriteElementString("Stamina", mainWeapon.Stamina.ToString());
+            writer.WriteElementString("AmmoType", mainWeapon.ammoType.ToString());
             writer.WriteEndElement();
+
             writer.WriteStartElement("OffWeaponData");
             writer.WriteElementString("Name", offWeapon.Name);
             writer.WriteElementString("Clip", offWeapon.Clip.ToString());
@@ -385,6 +397,7 @@ namespace Server.Classes
             writer.WriteElementString("Armor", offWeapon.Armor.ToString());
             writer.WriteElementString("Type", offWeapon.Type.ToString());
             writer.WriteElementString("AttackSpeed", offWeapon.AttackSpeed.ToString());
+            writer.WriteElementString("ReloadSpeed", offWeapon.ReloadSpeed.ToString());
             writer.WriteElementString("HealthRestore", offWeapon.HealthRestore.ToString());
             writer.WriteElementString("HungerRestore", offWeapon.HungerRestore.ToString());
             writer.WriteElementString("HydrateRestore", offWeapon.HydrateRestore.ToString());
@@ -392,6 +405,8 @@ namespace Server.Classes
             writer.WriteElementString("Agility", offWeapon.Agility.ToString());
             writer.WriteElementString("Endurance", offWeapon.Endurance.ToString());
             writer.WriteElementString("Stamina", offWeapon.Stamina.ToString());
+            writer.WriteElementString("AmmoType", offWeapon.ammoType.ToString());
+            writer.WriteEndElement();
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -467,6 +482,8 @@ namespace Server.Classes
             mainWeapon.Type = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("AttackSpeed");
             mainWeapon.AttackSpeed = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("ReloadSpeed");
+            mainWeapon.ReloadSpeed = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("HealthRestore");
             mainWeapon.HealthRestore = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("HungerRestore");
@@ -481,6 +498,8 @@ namespace Server.Classes
             mainWeapon.Endurance = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Stamina");
             mainWeapon.Stamina = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AmmoType");
+            mainWeapon.ammoType = reader.ReadElementContentAsInt();
             //Offweapon
             reader.ReadToFollowing("Name");
             offWeapon.Name = reader.ReadElementContentAsString();
@@ -498,6 +517,8 @@ namespace Server.Classes
             offWeapon.Type = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("AttackSpeed");
             offWeapon.AttackSpeed = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("ReloadSpeed");
+            offWeapon.ReloadSpeed = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("HealthRestore");
             offWeapon.HealthRestore = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("HungerRestore");
@@ -512,6 +533,8 @@ namespace Server.Classes
             offWeapon.Endurance = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("Stamina");
             offWeapon.Stamina = reader.ReadElementContentAsInt();
+            reader.ReadToFollowing("AmmoType");
+            offWeapon.ammoType = reader.ReadElementContentAsInt();
             reader.Close();
         }
     }
