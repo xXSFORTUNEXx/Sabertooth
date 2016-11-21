@@ -66,6 +66,11 @@ namespace Server.Classes
             mapProj[slot].Sprite = 1;
             mapProj[slot].Type = (int)ProjType.Bullet;
 
+            SendNewProjectileToAll(s_Server, slot);
+        }
+
+        void SendNewProjectileToAll(NetServer s_Server, int slot)
+        {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);

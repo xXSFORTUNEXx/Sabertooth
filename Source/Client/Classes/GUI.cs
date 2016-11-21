@@ -611,7 +611,7 @@ namespace Client.Classes
                 d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
                 d_Level.Text = "Level: " + c_Player[drawIndex].Level;
-                d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].maxHealth;
+                d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].MaxHealth;
                 d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
                 d_Hydration.Text = "Hydration: " + c_Player[drawIndex].Hydration + " / 100";
                 d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 500);

@@ -51,7 +51,7 @@ namespace Client.Classes
         public void DrawProjectile(RenderWindow c_Window)
         {
             c_Sprite.Texture = proj_Texture;
-            c_Sprite.TextureRect = new IntRect((Direction * 32), 32, 32, 32);
+            c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
             c_Sprite.Position = new Vector2f((X * 32), (Y * 32));
 
             c_Window.Draw(c_Sprite);
@@ -60,6 +60,7 @@ namespace Client.Classes
         public void CheckMovment(NetClient c_Client, RenderWindow c_Window, Map c_MoveMap, int slot)
         {
             if (Moved == true) { Moved = false; return; }
+            if (c_MoveMap.mapProj[slot] == null) { return; }
             switch (c_MoveMap.mapProj[slot].Direction)
             {
                 case (int)Directions.Down:

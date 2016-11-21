@@ -550,7 +550,6 @@ namespace Server.Classes
                         WriteLine("reload items - reloads all items from their bin files");
                         WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
                         WriteLine("info - shows the servers stat, hosts, ip, connections");
-                        WriteLine("uptime - shows the servers up time");
                         WriteLine("uptime - shows server uptime.");
                         WriteLine("save all - saves all players");
                         WriteLine("shutdown - shuts down the server");

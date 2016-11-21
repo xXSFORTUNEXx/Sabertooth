@@ -24,6 +24,7 @@ namespace Server.Classes
         public int Sprite { get; set; } //define sprite
         public int Level { get; set; }
         public int Health { get; set; }
+        public int MaxHealth { get; set; }
         public int Hunger { get; set; }
         public int Hydration { get; set; }
         public int Experience { get; set; }
@@ -34,7 +35,8 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
         public bool Attacking { get; set; }
-
+        public int Step;
+        
         //Create some default ones for testing
         //public Item mainWeapon = new Item("Assult Rifle", 1, 100, 0, (int)ItemType.RangedWeapon, 250, 0, 0, 0, 0, 0, 0, 0, 30, 30, (int)AmmoType.AssaultRifle);
         public Item mainWeapon = new Item();
@@ -45,8 +47,6 @@ namespace Server.Classes
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
 
-        public int Step;
-        public int maxHealth;
         public int hungerTick;
         public int hydrationTick;
         public int reloadTick;
@@ -74,7 +74,7 @@ namespace Server.Classes
             Stamina = sta;
             Connection = conn;
             FindMaxHealth();
-            Health = maxHealth;
+            Health = MaxHealth;
             hungerTick = TickCount;
             hydrationTick = TickCount;
             PistolAmmo = defaultAmmo;
@@ -107,7 +107,7 @@ namespace Server.Classes
             Endurance = end;
             Stamina = sta;
             FindMaxHealth();
-            Health = maxHealth;
+            Health = MaxHealth;
             PistolAmmo = defaultAmmo;
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
@@ -136,19 +136,19 @@ namespace Server.Classes
 
         public void FindMaxHealth()
         {
-            maxHealth = 100 + (Endurance * 5) + (Level * 10);
+            MaxHealth = 100 + (Endurance * 5) + (Level * 10);
         }
 
         public void RegenHealth()
         {
-            if (Health < maxHealth)
+            if (Health < MaxHealth)
             {
                 Health += (Stamina * 10);
             }
 
-            if (Health > maxHealth)
+            if (Health > MaxHealth)
             {
-                Health = maxHealth;
+                Health = MaxHealth;
             }
         }
 

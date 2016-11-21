@@ -465,7 +465,7 @@ namespace Client.Classes
             c_Player[clientIndex].Level = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Health = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Hunger = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].maxHealth = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].MaxHealth = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Hydration = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Experience = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Money = incMSG.ReadVariableInt32();
@@ -578,7 +578,7 @@ namespace Client.Classes
                 c_Player[i].Sprite = incMSG.ReadVariableInt32();
                 c_Player[i].Level = incMSG.ReadVariableInt32();
                 c_Player[i].Health = incMSG.ReadVariableInt32();
-                c_Player[i].maxHealth = incMSG.ReadVariableInt32();
+                c_Player[i].MaxHealth = incMSG.ReadVariableInt32();
                 c_Player[i].Hunger = incMSG.ReadVariableInt32();
                 c_Player[i].Hydration = incMSG.ReadVariableInt32();
                 c_Player[i].Experience = incMSG.ReadVariableInt32();

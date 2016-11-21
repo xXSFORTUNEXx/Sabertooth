@@ -18,12 +18,12 @@ namespace Client.Classes
         public int Direction { get; set; }  //define direction
         public int AimDirection { get; set; }
         public int Sprite { get; set; } //define player sprite
-        public int Step;    //the step at which the player is
-        public int maxHealth;
+        public int Step;    //the step at which the player is        
 
         //Primary attributes
         public int Level { get; set; }
         public int Health { get; set; }
+        public int MaxHealth { get; set; }
         public int Hunger { get; set; }
         public int Hydration { get; set; }
         public int Experience { get; set; }

@@ -74,12 +74,17 @@ namespace Server.Classes
             int owner = incMSG.ReadVariableInt32();
             int cMap = s_Player[owner].Map;
 
-            if (valid == false) { s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot); return; }
             if (s_Map[cMap].mapProj[slot] == null) { return; }
-
-            s_Map[cMap].mapProj[slot].X = incMSG.ReadVariableInt32();
-            s_Map[cMap].mapProj[slot].Y = incMSG.ReadVariableInt32();
-            s_Map[cMap].mapProj[slot].Direction = incMSG.ReadVariableInt32();
+            if (valid == true)
+            {
+                s_Map[cMap].mapProj[slot].X = incMSG.ReadVariableInt32();
+                s_Map[cMap].mapProj[slot].Y = incMSG.ReadVariableInt32();
+                s_Map[cMap].mapProj[slot].Direction = incMSG.ReadVariableInt32();
+            }
+            else
+            {
+                s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot);
+            }
         }
 
         //Handles when one of the players attacks
@@ -104,6 +109,28 @@ namespace Server.Classes
                 if (TickCount - s_Player[index].reloadTick < s_Player[index].mainWeapon.ReloadSpeed) { return; }
                 
                 if (TickCount - s_Player[index].attackTick < s_Player[index].mainWeapon.AttackSpeed) { return; }
+
+                switch (s_Player[index].mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        if (s_Player[index].PistolAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
+                        break;
+
+                    case (int)AmmoType.AssaultRifle:
+                        if (s_Player[index].AssaultAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
+                        break;
+
+                    case (int)AmmoType.Rocket:
+                        if (s_Player[index].RocketAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
+                        break;
+
+                    case (int)AmmoType.Grenade:
+                        if (s_Player[index].GrenadeAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
+                        break;
+
+                    default:
+                        return;
+                }
 
                 s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
             }
@@ -395,7 +422,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Sprite);
             outMSG.WriteVariableInt32(s_Player[index].Level);
             outMSG.WriteVariableInt32(s_Player[index].Health);
-            outMSG.WriteVariableInt32(s_Player[index].maxHealth);
+            outMSG.WriteVariableInt32(s_Player[index].MaxHealth);
             outMSG.WriteVariableInt32(s_Player[index].Hunger);
             outMSG.WriteVariableInt32(s_Player[index].Hydration);
             outMSG.WriteVariableInt32(s_Player[index].Experience);
@@ -511,7 +538,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].Sprite);
                 outMSG.WriteVariableInt32(s_Player[i].Level);
                 outMSG.WriteVariableInt32(s_Player[i].Health);
-                outMSG.WriteVariableInt32(s_Player[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Player[i].MaxHealth);
                 outMSG.WriteVariableInt32(s_Player[i].Hunger);
                 outMSG.WriteVariableInt32(s_Player[i].Hydration);
                 outMSG.WriteVariableInt32(s_Player[i].Experience);
