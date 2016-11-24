@@ -70,7 +70,7 @@ namespace Client.Classes
                         {
                             Direction = (int)Directions.Down;
                             Moved = false;
-                            SendUpdateProj(c_Client, slot, false);
+                            SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
                         Y += 1;
@@ -81,7 +81,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendUpdateProj(c_Client, slot, false);
+                        SendClearProjectile(c_Client, c_MoveMap, slot);
                         return;
                     }
                     break;
@@ -93,7 +93,7 @@ namespace Client.Classes
                         {
                             Direction = (int)Directions.Left;
                             Moved = false;
-                            SendUpdateProj(c_Client, slot, false);
+                            SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
                         X -= 1;
@@ -104,7 +104,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendUpdateProj(c_Client, slot, false);
+                        SendClearProjectile(c_Client, c_MoveMap, slot);
                         return;
                     }
                     break;
@@ -116,7 +116,7 @@ namespace Client.Classes
                         {
                             Direction = (int)Directions.Right;
                             Moved = false;
-                            SendUpdateProj(c_Client, slot, false);
+                            SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
                         X += 1;
@@ -127,7 +127,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendUpdateProj(c_Client, slot, false);
+                        SendClearProjectile(c_Client, c_MoveMap, slot);
                         return;
                     }
                     break;
@@ -139,7 +139,7 @@ namespace Client.Classes
                         {
                             Direction = (int)Directions.Up;
                             Moved = false;
-                            SendUpdateProj(c_Client, slot, false);
+                            SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
                         Y -= 1;
@@ -150,7 +150,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendUpdateProj(c_Client, slot, false);
+                        SendClearProjectile(c_Client, c_MoveMap, slot);
                         return;
                     }
                     break;
@@ -158,22 +158,17 @@ namespace Client.Classes
             if (Moved == true)
             {
                 Moved = false;
-                SendUpdateProj(c_Client, slot, true);
             }
         }
 
-        void SendUpdateProj(NetClient c_Client, int slot, bool valid)
+        void SendClearProjectile(NetClient c_Client, Map cMap, int slot)
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
-            outMSG.Write((byte)PacketTypes.UpdateProj);
+            outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.WriteVariableInt32(slot);
-            outMSG.Write(valid);
             outMSG.WriteVariableInt32(Owner);
-            outMSG.WriteVariableInt32(X);
-            outMSG.WriteVariableInt32(Y);
-            outMSG.WriteVariableInt32(Direction);
-
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 5);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 13);
+            cMap.mapProj[slot] = null;
         }
     }
 

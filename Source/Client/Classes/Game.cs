@@ -294,8 +294,8 @@ namespace Client.Classes
             {
                 if (c_Map.mapProj[i] != null)
                 {
-                    c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
                     c_Map.mapProj[i].DrawProjectile(c_Window);
+                    c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
                 }
             }
         }

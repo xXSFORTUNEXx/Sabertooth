@@ -53,8 +53,6 @@ namespace Server.Classes
 
             if (slot == 200) { WriteLine("Bullet max reached!"); return; }
 
-            s_Player[playerIndex].RemoveBulletFromClip(s_Server, s_Player, playerIndex);
-
             //For testing purposes
             mapProj[slot] = new MapProj();
             mapProj[slot].Name = "test";

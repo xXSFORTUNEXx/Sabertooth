@@ -37,8 +37,6 @@ namespace Server.Classes
         public bool Attacking { get; set; }
         public int Step;
         
-        //Create some default ones for testing
-        //public Item mainWeapon = new Item("Assult Rifle", 1, 100, 0, (int)ItemType.RangedWeapon, 250, 0, 0, 0, 0, 0, 0, 0, 30, 30, (int)AmmoType.AssaultRifle);
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
 
@@ -49,8 +47,6 @@ namespace Server.Classes
 
         public int hungerTick;
         public int hydrationTick;
-        public int reloadTick;
-        public int attackTick;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -178,158 +174,6 @@ namespace Server.Classes
                 {
                     Hydration -= 10;
                 }
-            }
-        }
-
-        public void RemoveBulletFromClip(NetServer s_Server, Player[] s_Player, int index)
-        {
-            if (mainWeapon.Clip > 0)
-            {
-                mainWeapon.Clip -= 1;
-                attackTick = TickCount;
-            }
-
-            if (mainWeapon.Clip == 0)
-            {
-                ReloadClip();
-                reloadTick = TickCount;
-            }
-
-            SendUpdateAmmo(s_Server, s_Player, index);
-        }
-
-        public void ReloadClip()
-        {
-            if (mainWeapon.Clip == 0)
-            {
-                switch (mainWeapon.ammoType)
-                {
-                    case (int)AmmoType.None:
-                        return;
-                    case (int)AmmoType.Pistol:
-                        if (PistolAmmo > mainWeapon.maxClip)
-                        {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            PistolAmmo -= mainWeapon.maxClip;                            
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = PistolAmmo;
-                            PistolAmmo = 0;
-                        }
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        if (AssaultAmmo > mainWeapon.maxClip)
-                        {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            AssaultAmmo -= mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = AssaultAmmo;
-                            AssaultAmmo = 0;
-                        }
-                        break;
-                    case (int)AmmoType.Rocket:
-                        if (RocketAmmo > mainWeapon.maxClip)
-                        {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            RocketAmmo = -mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = RocketAmmo;
-                            RocketAmmo = 0;
-                        }
-                        break;
-                    case (int)AmmoType.Grenade:
-                        if (GrenadeAmmo > mainWeapon.maxClip)
-                        {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            GrenadeAmmo = -mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = GrenadeAmmo;
-                            GrenadeAmmo = 0;
-                        }
-                        break;
-                }
-            }
-            else
-            {
-                switch (mainWeapon.ammoType)
-                {
-                    case (int)AmmoType.None:
-                        return;
-                    case (int)AmmoType.Pistol:
-                        if (PistolAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
-                        {
-                            PistolAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            reloadTick = TickCount;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip += PistolAmmo;
-                            PistolAmmo = 0;
-                            reloadTick = TickCount;
-                        }
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        if (AssaultAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
-                        {
-                            AssaultAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip += AssaultAmmo;
-                            AssaultAmmo = 0;
-                        }
-                        break;
-                    case (int)AmmoType.Rocket:
-                        if (AssaultAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
-                        {
-                            AssaultAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip += AssaultAmmo;
-                            AssaultAmmo = 0;
-                        }
-                        break;
-                    case (int)AmmoType.Grenade:
-                        if (GrenadeAmmo > (mainWeapon.maxClip - mainWeapon.Clip))
-                        {
-                            GrenadeAmmo -= (mainWeapon.maxClip - mainWeapon.Clip);
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip += GrenadeAmmo;
-                            GrenadeAmmo = 0;
-                        }
-                        break;
-                }
-            }
-        }
-
-        //Send updated ammo reserve and clip
-        public void SendUpdateAmmo(NetServer s_Server, Player[] s_Player, int index)
-        {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage();
-            if (s_Player[index].Connection != null)
-            {
-                outMSG.Write((byte)PacketTypes.UpdateAmmo);
-                outMSG.WriteVariableInt32(index);
-                outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Clip);
-                outMSG.WriteVariableInt32(s_Player[index].PistolAmmo);
-                outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
-                outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
-                outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
-                s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
             }
         }
 

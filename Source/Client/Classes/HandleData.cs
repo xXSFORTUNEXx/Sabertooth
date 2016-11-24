@@ -704,6 +704,7 @@ namespace Client.Classes
         CreateProj,
         ClearProj,
         UpdateProj,
-        UpdateWeapons
+        UpdateWeapons,
+        RangedAttack
     }
 }

@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
 using Gwen.Control;
+using static System.Environment;
 
 namespace Client.Classes
 {
@@ -48,6 +49,9 @@ namespace Client.Classes
 
         public bool Moved;  //if they have moved
         public bool Attacking;
+        public bool Reloading;
+        public int reloadTick;
+        public int attackTick;
         public int offsetX; //offset for center screen
         public int offsetY; //offset for center screen
         public int tempX;   //temp x that is saved for movement over packets
@@ -205,21 +209,13 @@ namespace Client.Classes
             }
         }
 
-        public void CheckAttack(NetClient c_Client, GUI c_GUI, Window c_Window, int index)
+        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
             if (Attacking == true) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-
-            bool isMelee = false;
-
-            //Melee
-            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
-            {
-                AimDirection = Direction;
-                Attacking = true;
-                isMelee = true;
-            }
+            if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
+            //Range Attack
             //Direction Up
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
@@ -247,21 +243,119 @@ namespace Client.Classes
 
             if (Attacking == true)
             {
-                SendUpdateDirection(c_Client, index);
-                SendAttackData(c_Client, index, isMelee);
-                SendMovementData(c_Client, index);
+                switch (mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        if (PistolAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        if (AssaultAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        break;
+                    case (int)AmmoType.Rocket:
+                        if (RocketAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        break;
+                    case (int)AmmoType.Grenade:
+                        if (GrenadeAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        break;
+                }
+                if (TickCount - attackTick < mainWeapon.AttackSpeed) { return; }                
+                SendCreateBullet(c_Client, index);
+                RemoveBulletFromClip(c_Client, index);
                 Attacking = false;
+                attackTick = TickCount;
             }
         }
 
-        void SendAttackData(NetClient c_Client, int index, bool melee)
+        public void RemoveBulletFromClip(NetClient c_Client, int index)
+        {
+            if (mainWeapon.Clip > 0)
+            {
+                mainWeapon.Clip -= 1;
+            }
+
+            if (mainWeapon.Clip == 0)
+            {
+                Reload();
+                reloadTick = TickCount;
+                SendUpdateAmmo(c_Client, index);
+            }
+        }
+
+        public void Reload()
+        {
+            switch (mainWeapon.ammoType)
+            {
+                case (int)AmmoType.Pistol:
+                    if (PistolAmmo > mainWeapon.maxClip)
+                    {
+                        mainWeapon.Clip = mainWeapon.maxClip;
+                        PistolAmmo -= mainWeapon.maxClip;
+                    }
+                    else
+                    {
+                        mainWeapon.Clip = PistolAmmo;
+                        PistolAmmo = 0;
+                    }
+                    break;
+                case (int)AmmoType.AssaultRifle:
+                    if (AssaultAmmo > mainWeapon.maxClip)
+                    {
+                        mainWeapon.Clip = mainWeapon.maxClip;
+                        AssaultAmmo -= mainWeapon.maxClip;
+                    }
+                    else
+                    {
+                        mainWeapon.Clip = AssaultAmmo;
+                        AssaultAmmo = 0;
+                    }
+                    break;
+                case (int)AmmoType.Rocket:
+                    if (RocketAmmo > mainWeapon.maxClip)
+                    {
+                        mainWeapon.Clip = mainWeapon.maxClip;
+                        RocketAmmo -= mainWeapon.maxClip;
+                    }
+                    else
+                    {
+                        mainWeapon.Clip = RocketAmmo;
+                        RocketAmmo = 0;
+                    }
+                    break;
+                case (int)AmmoType.Grenade:
+                    if (GrenadeAmmo > mainWeapon.maxClip)
+                    {
+                        mainWeapon.Clip = mainWeapon.maxClip;
+                        GrenadeAmmo -= mainWeapon.maxClip;
+                    }
+                    else
+                    {
+                        mainWeapon.Clip = GrenadeAmmo;
+                        GrenadeAmmo = 0;
+                    }
+                    break;
+            }            
+        }
+
+        void SendUpdateAmmo(NetClient c_Client, int index)
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
-            outMSG.Write((byte)PacketTypes.Attack);
+            outMSG.Write((byte)PacketTypes.UpdateAmmo);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(PistolAmmo);
+            outMSG.WriteVariableInt32(AssaultAmmo);
+            outMSG.WriteVariableInt32(RocketAmmo);
+            outMSG.WriteVariableInt32(GrenadeAmmo);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 10);
+        }
+
+        void SendCreateBullet(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.RangedAttack);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 3);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 11);
         }
 
         void SendMovementData(NetClient c_Client, int index)   //packet for sending data to the server

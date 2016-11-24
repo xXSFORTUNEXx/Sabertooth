@@ -48,13 +48,21 @@ namespace Server.Classes
                                 HandleDirectionData(incMSG, s_Server, s_Player);
                                 break;
 
-                            case (byte)PacketTypes.Attack:
-                                HandleAttackData(incMSG, s_Server, s_Player, s_Map);
+                            case (byte)PacketTypes.RangedAttack:
+                                HandleRangedAttack(incMSG, s_Server, s_Player, s_Map);
                                 break;
 
-                            case (byte)PacketTypes.UpdateProj:
-                                HandleUpdateProjectileData(incMSG, s_Server, s_Map, s_Player);
+                            case (byte)PacketTypes.UpdateAmmo:
+                                HandleUpdateAmmo(incMSG, s_Server, s_Player);
                                 break;
+
+                            case (byte)PacketTypes.ClearProj:
+                                HandleClearProjectile(incMSG, s_Server, s_Player, s_Map);
+                                break;
+
+                            //case (byte)PacketTypes.UpdateProj:
+                            //    HandleUpdateProjectileData(incMSG, s_Server, s_Map, s_Player);
+                            //    break;
                         }
                         break;
 
@@ -66,76 +74,37 @@ namespace Server.Classes
             s_Server.Recycle(incMSG);
         }
 
-        //Handle projectiledata
-        void HandleUpdateProjectileData(NetIncomingMessage incMSG, NetServer s_Server,  Map[] s_Map, Player[] s_Player)
+        void HandleClearProjectile(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
         {
             int slot = incMSG.ReadVariableInt32();
-            bool valid = incMSG.ReadBoolean();
             int owner = incMSG.ReadVariableInt32();
             int cMap = s_Player[owner].Map;
 
             if (s_Map[cMap].mapProj[slot] == null) { return; }
-            if (valid == true)
-            {
-                s_Map[cMap].mapProj[slot].X = incMSG.ReadVariableInt32();
-                s_Map[cMap].mapProj[slot].Y = incMSG.ReadVariableInt32();
-                s_Map[cMap].mapProj[slot].Direction = incMSG.ReadVariableInt32();
-            }
-            else
-            {
-                s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot);
-            }
+            s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot);
         }
 
-        //Handles when one of the players attacks
-        void HandleAttackData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
+        void HandleUpdateAmmo(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            s_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
+            s_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
+            s_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
+            s_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+        }
+
+        void HandleRangedAttack(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
         {
             int index = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
             int aimdirection = incMSG.ReadVariableInt32();
-
             int cMap = s_Player[index].Map;
+
             s_Player[index].Direction = direction;
             s_Player[index].AimDirection = aimdirection;
+            s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
 
-            if (s_Player[index].mainWeapon.Type == (int)ItemType.MeleeWeapon)
-            {
-                //Do a melee attack and update everyone
-                return;
-            }
-
-            if (s_Player[index].mainWeapon.Type == (int)ItemType.RangedWeapon)
-            {
-                if (TickCount - s_Player[index].reloadTick < s_Player[index].mainWeapon.ReloadSpeed) { return; }
-                
-                if (TickCount - s_Player[index].attackTick < s_Player[index].mainWeapon.AttackSpeed) { return; }
-
-                switch (s_Player[index].mainWeapon.ammoType)
-                {
-                    case (int)AmmoType.Pistol:
-                        if (s_Player[index].PistolAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
-                        break;
-
-                    case (int)AmmoType.AssaultRifle:
-                        if (s_Player[index].AssaultAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
-                        break;
-
-                    case (int)AmmoType.Rocket:
-                        if (s_Player[index].RocketAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
-                        break;
-
-                    case (int)AmmoType.Grenade:
-                        if (s_Player[index].GrenadeAmmo == 0 && s_Player[index].mainWeapon.Clip == 0) { return; }
-                        break;
-
-                    default:
-                        return;
-                }
-
-                s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
-            }
-
-            //update direction
             for (int i = 0; i < 5; i++)
             {
                 if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
@@ -182,9 +151,6 @@ namespace Server.Classes
             int aimdirection = incMSG.ReadVariableInt32();
 
             s_Player[index].AimDirection = aimdirection;
-
-            //if (direction == s_Player[index].Direction) { return; }
-
             s_Player[index].Direction = direction;
 
             for (int i = 0; i < 5; i++)
@@ -954,6 +920,7 @@ namespace Server.Classes
         CreateProj,
         ClearProj,
         UpdateProj,
-        UpdateWeapons
+        UpdateWeapons,
+        RangedAttack
     }
 }
