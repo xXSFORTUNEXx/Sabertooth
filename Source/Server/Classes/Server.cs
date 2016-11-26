@@ -207,16 +207,10 @@ namespace Server.Classes
 
             for (int i = 0; i < 50; i++)
             {
-                if (!Exists("Items/Item" + i + ".bin"))
-                {
-                    s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
-                    s_Item[i].SaveItem(i);
-                }
-                else
-                {
-                    s_Item[i] = new Item();
-                    s_Item[i].LoadItem(i);
-                }
+                //s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
+                //s_Item[i].CreateItemInDatabase();
+                s_Item[i] = new Item();
+                s_Item[i].LoadItemFromDatabase(i);
             }
         }
 
@@ -228,16 +222,10 @@ namespace Server.Classes
 
             for  (int i = 0; i < 10; i++)
             {
-                if (!Exists("Projectiles/Projectile" + i + ".bin"))
-                {
-                    s_Proj[i] = new Projectile("Bullet", 100, 50, 1, 0, (int)ProjType.Bullet, 150);
-                    s_Proj[i].SaveProjectile(i);
-                }
-                else
-                {
-                    s_Proj[i] = new Projectile();
-                    s_Proj[i].LoadProjectile(i);
-                }
+                //s_Proj[i] = new Projectile("Bullet", 100, 50, 1, 0, (int)ProjType.Bullet, 150);
+                //s_Proj[i].CreateProjectileInDatabase();
+                s_Proj[i] = new Projectile();
+                s_Proj[i].LoadProjectileFromDatabase(i);
             }
         }
 
@@ -249,16 +237,10 @@ namespace Server.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                if (!Exists("NPCS/Npc" + i + ".bin"))
-                {
-                    s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
-                    s_Npc[i].SaveNPC(i);
-                }
-                else
-                {
-                    s_Npc[i] = new NPC();
-                    s_Npc[i].LoadNPC(i);
-                }
+                //s_Npc[i] = new NPC("Default", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
+                //s_Npc[i].CreateNpcInDatabase();
+                s_Npc[i] = new NPC();
+                s_Npc[i].LoadNpcFromDatabase(i);
             }
 
             //Load in data we need for mapnpcs

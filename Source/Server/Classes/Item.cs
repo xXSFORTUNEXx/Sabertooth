@@ -3,11 +3,14 @@ using System;
 using System.IO;
 using static Microsoft.VisualBasic.Interaction;
 using Lidgren.Network;
+using System.Data.SQLite;
+using static System.Convert;
 
 namespace Server.Classes
 {
     class Item
     {
+        SQLiteConnection s_Database;
         public string Name { get; set; }
         public int Sprite { get; set; }
         public int Damage { get; set; }
@@ -57,62 +60,71 @@ namespace Server.Classes
             ammoType = ammotype;
         }
 
-        public void SaveItem(int itemNum)
+        public void CreateItemInDatabase()
         {
-            FileStream fileStream = File.OpenWrite("Items/Item" + itemNum + ".bin");
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
-            LogWriter.WriteLog("Saving default Items...", "Server");
-            binaryWriter.Write(Name);
-            binaryWriter.Write(Sprite);
-            binaryWriter.Write(Damage);
-            binaryWriter.Write(Armor);
-            binaryWriter.Write(Type);
-            binaryWriter.Write(AttackSpeed);
-            binaryWriter.Write(ReloadSpeed);
-            binaryWriter.Write(HealthRestore);
-            binaryWriter.Write(HungerRestore);
-            binaryWriter.Write(HydrateRestore);
-            binaryWriter.Write(Strength);
-            binaryWriter.Write(Agility);
-            binaryWriter.Write(Endurance);
-            binaryWriter.Write(Stamina);
-            binaryWriter.Write(Clip);
-            binaryWriter.Write(maxClip);
-            binaryWriter.Write(ammoType);
-            binaryWriter.Flush();
-            binaryWriter.Close();
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
+            sql = "INSERT INTO `ITEMS`";
+            sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
+            sql = sql + " VALUES ";
+            sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
+            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + maxClip + "','" + ammoType + "');";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+            s_Database.Close();
         }
 
-        public void LoadItem(int itemNum)
+        public void SaveItemToDatabase(int itemNum)
         {
-            FileStream fileStream = File.OpenRead("Items/Item" + itemNum + ".bin");
-            BinaryReader binaryReader = new BinaryReader(fileStream);
-            LogWriter.WriteLog("Loading item...", "Server");
-            try
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
+            sql = "UPDATE ITEMS SET ";
+            sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
+            sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
+            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + maxClip + "', AMMOTYPE = '" + ammoType + "' ";
+            sql = sql + "WHERE rowid = '" + itemNum + "';";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+            s_Database.Close();
+        }
+
+        public void LoadItemFromDatabase(int itemNum)
+        {
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+
+            sql = "SELECT * FROM `ITEMS` WHERE rowid = " + (itemNum + 1);
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
+
+            while (sql_Reader.Read())
             {
-                Name = binaryReader.ReadString();
-                Sprite = binaryReader.ReadInt32();
-                Damage = binaryReader.ReadInt32();
-                Armor = binaryReader.ReadInt32();
-                Type = binaryReader.ReadInt32();
-                AttackSpeed = binaryReader.ReadInt32();
-                ReloadSpeed = binaryReader.ReadInt32();
-                HealthRestore = binaryReader.ReadInt32();
-                HungerRestore = binaryReader.ReadInt32();
-                HydrateRestore = binaryReader.ReadInt32();
-                Strength = binaryReader.ReadInt32();
-                Agility = binaryReader.ReadInt32();
-                Endurance = binaryReader.ReadInt32();
-                Stamina = binaryReader.ReadInt32();
-                Clip = binaryReader.ReadInt32();
-                maxClip = binaryReader.ReadInt32();
-                ammoType = binaryReader.ReadInt32();
+                Name = sql_Reader["NAME"].ToString();
+                Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
+                Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
+                Armor = ToInt32(sql_Reader["ARMOR"].ToString());
+                Type = ToInt32(sql_Reader["TYPE"].ToString());
+                AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
+                ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
+                HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
+                HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
+                HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
+                Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
+                Agility = ToInt32(sql_Reader["AGILITY"].ToString());
+                Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
+                Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
+                Clip = ToInt32(sql_Reader["CLIP"].ToString());
+                maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
-            catch (Exception e)
-            {
-                MsgBox(e.GetType() + ": " + e.Message, MsgBoxStyle.Critical, "Error");
-            }
-            binaryReader.Close();
+            s_Database.Close();
         }
     }
 

@@ -339,7 +339,6 @@ namespace Server.Classes
                 offWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
                 offWeapon.ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
-
             s_Database.Close();
         }
     }
