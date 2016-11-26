@@ -45,6 +45,7 @@ namespace Client.Classes
         Label d_AssaultAmmo;
         Label d_AttackSpeed;
         Label d_ReloadSpeed;
+        Label d_Points;
 
         public WindowControl loadWindow;
         Label loadLabel;
@@ -474,7 +475,7 @@ namespace Client.Classes
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 345);
+            d_Window.SetSize(200, 355);
             d_Window.SetPosition(10, 10);
             d_Window.DisableResizing();
 
@@ -593,6 +594,10 @@ namespace Client.Classes
             d_ReloadSpeed = new Label(d_Window);
             d_ReloadSpeed.SetPosition(10, 290);
             d_ReloadSpeed.Text = "Reload Speed: ?";
+
+            d_Points = new Label(d_Window);
+            d_Points.SetPosition(10, 300);
+            d_Points.Text = "Points: ?";
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
@@ -626,6 +631,7 @@ namespace Client.Classes
                 d_AssaultAmmo.Text = "Assault Ammo: " + c_Player[drawIndex].AssaultAmmo;
                 d_AttackSpeed.Text = "Attack Speed: " + c_Player[drawIndex].mainWeapon.AttackSpeed;
                 d_ReloadSpeed.Text = "Reload Speed: " + c_Player[drawIndex].mainWeapon.ReloadSpeed;
+                d_Points.Text = "Points: " + c_Player[drawIndex].Points;
 
                 d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
                 d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();

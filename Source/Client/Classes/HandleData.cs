@@ -463,6 +463,7 @@ namespace Client.Classes
             c_Player[clientIndex].AimDirection = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Sprite = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Level = incMSG.ReadVariableInt32();
+            c_Player[clientIndex].Points = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Health = incMSG.ReadVariableInt32();
             c_Player[clientIndex].Hunger = incMSG.ReadVariableInt32();
             c_Player[clientIndex].MaxHealth = incMSG.ReadVariableInt32();
@@ -577,6 +578,7 @@ namespace Client.Classes
                 c_Player[i].AimDirection = incMSG.ReadVariableInt32();
                 c_Player[i].Sprite = incMSG.ReadVariableInt32();
                 c_Player[i].Level = incMSG.ReadVariableInt32();
+                c_Player[i].Points = incMSG.ReadVariableInt32();
                 c_Player[i].Health = incMSG.ReadVariableInt32();
                 c_Player[i].MaxHealth = incMSG.ReadVariableInt32();
                 c_Player[i].Hunger = incMSG.ReadVariableInt32();
@@ -705,6 +707,7 @@ namespace Client.Classes
         ClearProj,
         UpdateProj,
         UpdateWeapons,
-        RangedAttack
+        RangedAttack,
+        UpdateClip
     }
 }

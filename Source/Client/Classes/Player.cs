@@ -18,11 +18,9 @@ namespace Client.Classes
         public int Map { get; set; }    //define map
         public int Direction { get; set; }  //define direction
         public int AimDirection { get; set; }
-        public int Sprite { get; set; } //define player sprite
-        public int Step;    //the step at which the player is        
-
-        //Primary attributes
+        public int Sprite { get; set; } //define player sprite     
         public int Level { get; set; }
+        public int Points { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
         public int Hunger { get; set; }
@@ -30,12 +28,11 @@ namespace Client.Classes
         public int Experience { get; set; }
         public int Money { get; set; }
         public int Armor { get; set; }
-
-        //Stats
         public int Strength { get; set; }
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
+        public int Step;
 
         //Weapons
         public Item mainWeapon = new Item();
@@ -49,7 +46,6 @@ namespace Client.Classes
 
         public bool Moved;  //if they have moved
         public bool Attacking;
-        public bool Reloading;
         public int reloadTick;
         public int attackTick;
         public int offsetX; //offset for center screen
@@ -61,7 +57,7 @@ namespace Client.Classes
         public int tempStep;    //temp step that is saved for movement over packets
         Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
 
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int health, int exp, int money, int armor, int hunger, 
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)    //main player contructor if we have all the details
         {
             Name = name;
@@ -74,6 +70,7 @@ namespace Client.Classes
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
+            Points = points;
             Health = health;
             Experience = exp;
             Money = money;
@@ -242,7 +239,7 @@ namespace Client.Classes
             }
 
             if (Attacking == true)
-            {
+            {             
                 switch (mainWeapon.ammoType)
                 {
                     case (int)AmmoType.Pistol:
@@ -258,7 +255,7 @@ namespace Client.Classes
                         if (GrenadeAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
                         break;
                 }
-                if (TickCount - attackTick < mainWeapon.AttackSpeed) { return; }                
+                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
                 SendCreateBullet(c_Client, index);
                 RemoveBulletFromClip(c_Client, index);
                 Attacking = false;
@@ -334,6 +331,16 @@ namespace Client.Classes
                     }
                     break;
             }            
+        }
+
+        public void SendUpdateClip(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UpdateClip);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(mainWeapon.Clip);
+            outMSG.WriteVariableInt32(offWeapon.Clip);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendUpdateAmmo(NetClient c_Client, int index)

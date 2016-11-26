@@ -83,10 +83,12 @@ namespace Client.Classes
                 c_Window.Display();    //display everything we put on the screen
             }
 
+            c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);            
+
             //once the loop exits we will clean everything up
             c_Canvas.Dispose();    //dispose of the canvas
             skin.Dispose(); //dispose of the skin
-            gwenRenderer.Dispose(); //dispose of the renderer
+            gwenRenderer.Dispose(); //dispose of the renderer          
             c_Client.Shutdown("Shutting Down");    //run the shutdown void and give it an argument
             Thread.Sleep(500);  //thread needs to sleep before we close the application otherwise it wont
             Exit(0);    //exit the application with the code of 0 meaning everything went smooth

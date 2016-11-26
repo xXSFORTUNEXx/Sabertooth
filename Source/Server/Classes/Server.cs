@@ -299,7 +299,7 @@ namespace Server.Classes
                 {
                     if (s_Player[i].Name != null)
                     {
-                        s_Player[i].SavePlayerXML();
+                        s_Player[i].SavePlayerToDatabase();
                     }
                 }
                 saveTick = TickCount;
@@ -369,7 +369,7 @@ namespace Server.Classes
             {
                 if (s_Player[i].Name != null)
                 {
-                    s_Player[i].SavePlayerXML();
+                    s_Player[i].SavePlayerToDatabase();
                 }
             }
             WriteLine("Players saved!");
@@ -465,9 +465,9 @@ namespace Server.Classes
                             string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
                             if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
                             {
-                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 0,
+                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 0,
                                                               100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
-                                ac_Player.SavePlayerXML();  //Save it
+                                ac_Player.CreatePlayerInDatabase();
                                 WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know
                             }
                             else { WriteLine("USERNAME and PASSWORD must be 3 characters each!"); } //Dont fuck it up by making basic shit

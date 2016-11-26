@@ -5,6 +5,7 @@ using System.Xml;
 using static System.Convert;
 using static System.IO.File;
 using static System.Environment;
+using System.Data.SQLite;
 
 namespace Server.Classes
 {
@@ -60,9 +61,9 @@ namespace Server.Classes
                                 HandleClearProjectile(incMSG, s_Server, s_Player, s_Map);
                                 break;
 
-                            //case (byte)PacketTypes.UpdateProj:
-                            //    HandleUpdateProjectileData(incMSG, s_Server, s_Map, s_Player);
-                            //    break;
+                            case (byte)PacketTypes.UpdateClip:
+                                HandleUpdateClip(incMSG, s_Player);
+                                break;
                         }
                         break;
 
@@ -72,6 +73,16 @@ namespace Server.Classes
                 }
             }
             s_Server.Recycle(incMSG);
+        }
+
+        void HandleUpdateClip(NetIncomingMessage incMSG, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int mainClip = incMSG.ReadVariableInt32();
+            int offClip = incMSG.ReadVariableInt32();
+
+            s_Player[index].mainWeapon.Clip = mainClip;
+            s_Player[index].offWeapon.Clip = offClip;
         }
 
         void HandleClearProjectile(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
@@ -206,8 +217,9 @@ namespace Server.Classes
                     if (i < 5)
                     {
                         //s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 0, 1, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
-                        s_Player[i].SavePlayerXML();
+                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 0, 1, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
+                        //s_Player[i].SavePlayerXML();
+                        s_Player[i].CreatePlayerInDatabase();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
                         ClearSlot(incMSG.SenderConnection, s_Player);
@@ -245,7 +257,8 @@ namespace Server.Classes
                     if (i < 5)
                     {
                         s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        s_Player[i].LoadPlayerXML();
+                        //s_Player[i].LoadPlayerXML();
+                        s_Player[i].LoadPlayerFromDatabase();
                         int currentMap = s_Player[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
                         SendAcceptLogin(s_Server, s_Player, i);
@@ -387,6 +400,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].AimDirection);
             outMSG.WriteVariableInt32(s_Player[index].Sprite);
             outMSG.WriteVariableInt32(s_Player[index].Level);
+            outMSG.WriteVariableInt32(s_Player[index].Points);
             outMSG.WriteVariableInt32(s_Player[index].Health);
             outMSG.WriteVariableInt32(s_Player[index].MaxHealth);
             outMSG.WriteVariableInt32(s_Player[index].Hunger);
@@ -503,6 +517,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].AimDirection);
                 outMSG.WriteVariableInt32(s_Player[i].Sprite);
                 outMSG.WriteVariableInt32(s_Player[i].Level);
+                outMSG.WriteVariableInt32(s_Player[i].Points);
                 outMSG.WriteVariableInt32(s_Player[i].Health);
                 outMSG.WriteVariableInt32(s_Player[i].MaxHealth);
                 outMSG.WriteVariableInt32(s_Player[i].Hunger);
@@ -763,7 +778,8 @@ namespace Server.Classes
             {
                 if (s_Player[i].Name != null)
                 {
-                    s_Player[i].SavePlayerXML();
+                    //s_Player[i].SavePlayerXML();
+                    s_Player[i].SavePlayerToDatabase();
                 }
             }
         }
@@ -864,28 +880,46 @@ namespace Server.Classes
         //Check the password to make sure its correct
         static bool CheckPassword(string name, string pass)
         {
-            XmlReader reader = XmlReader.Create("Players/" + name + ".xml");
+            SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+            string compare;
+            sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
 
-            reader.ReadToFollowing("Password");
-            string comparePass = reader.ReadElementContentAsString();
-            reader.Close();
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
 
-            if (pass == comparePass)
+            while (sql_Reader.Read())
             {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                compare = sql_Reader["PASSWORD"].ToString();
+
+                if (pass == compare)
+                {
+                    return true;
+                }
+            }           
+            s_Database.Close();
+            return false;
         }
 
         //If creating an account check to see if it already exists
         static bool AccountExist(string name)
         {
-            if (Exists("Players/" + name + ".xml"))
+            SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+
+            sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
+
+            while (sql_Reader.Read())
             {
-                return true;
+                if (sql_Reader["NAME"].ToString() == name)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -921,6 +955,7 @@ namespace Server.Classes
         ClearProj,
         UpdateProj,
         UpdateWeapons,
-        RangedAttack
+        RangedAttack,
+        UpdateClip
     }
 }
