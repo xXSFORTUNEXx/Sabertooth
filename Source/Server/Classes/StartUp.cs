@@ -47,8 +47,8 @@ namespace Server.Classes
 
             WriteLine("Enabling message types...");
             CheckDirectories();
-            WriteLog("Checking directories...", "Server");
-            WriteLine("Checking directories...");
+            WriteLog("Checking directories and database...", "Server");
+            WriteLine("Checking directories and database...");
             s_Server = new NetServer(s_Config);
             s_Server.Start();
             WriteLine("Forwarding ports...");
@@ -66,29 +66,9 @@ namespace Server.Classes
         {
             bool exists = false;
 
-            if (!Exists("Players"))
-            {
-                CreateDirectory("Players");
-                exists = true;
-            }
             if (!Exists("Maps"))
             {
                 CreateDirectory("Maps");
-                exists = true;
-            }
-            if (!Exists("NPCS"))
-            {
-                CreateDirectory("NPCS");
-                exists = true;
-            }
-            if (!Exists("Items"))
-            {
-                CreateDirectory("Items");
-                exists = true;
-            }
-            if (!Exists("Projectiles"))
-            {
-                CreateDirectory("Projectiles");
                 exists = true;
             }
             if (!Exists("Database"))
@@ -98,7 +78,7 @@ namespace Server.Classes
             }
             if (exists)
             {
-                WriteLog("Directories created...", "Server");
+                WriteLog("Directories and database created...", "Server");
             }
         }
 
