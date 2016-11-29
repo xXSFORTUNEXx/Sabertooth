@@ -4,12 +4,14 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using static Microsoft.VisualBasic.Interaction;
-
+using System.Data.SQLite;
+using static System.Convert;
 
 namespace Editor.Classes
 {
     class NPC
     {
+        SQLiteConnection s_Database;
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -19,12 +21,15 @@ namespace Editor.Classes
         public int Owner { get; set; }
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
+        public int Health { get; set; }
+        public int maxHealth { get; set; }
+        public int Damage { get; set; }
         public Texture[] e_npcTectures = new Texture[200];
         public Sprite e_npcSprite = new Sprite();
 
         public NPC() { }
 
-        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
+        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
         {
             Name = name;
             X = x;
@@ -35,6 +40,9 @@ namespace Editor.Classes
             Owner = owner;
             Behavior = behavior;
             SpawnTime = spawnTime;
+            Health = health;
+            maxHealth = maxhealth;
+            Damage = damage;
         }
 
         public NPC(int x, int y)
@@ -48,68 +56,71 @@ namespace Editor.Classes
             Owner = 0;
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
+            Health = 100;
+            maxHealth = 100;
+            Damage = 10;
         }
 
-        public void SaveNPC()
+        public void CreateNpcInDatabase()
         {
-            SaveFileDialog saveNpcDialog = new SaveFileDialog();
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
 
-            saveNpcDialog.Filter = "Bin Files (*.bin)|*.bin";
-            saveNpcDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + "NPCS";
-            saveNpcDialog.FilterIndex = 1;
-            saveNpcDialog.ShowDialog();
-
-            if (saveNpcDialog.FileName != "")
-            {
-                FileStream npcStream = File.OpenWrite(saveNpcDialog.FileName);
-                BinaryWriter binaryWriter = new BinaryWriter(npcStream);
-
-                binaryWriter.Write(Name);
-                binaryWriter.Write(X);
-                binaryWriter.Write(Y);
-                binaryWriter.Write(Direction);
-                binaryWriter.Write(Sprite);
-                binaryWriter.Write(Step);
-                binaryWriter.Write(Owner);
-                binaryWriter.Write(Behavior);
-                binaryWriter.Write(SpawnTime);
-                binaryWriter.Flush();
-                binaryWriter.Close();
-            }
+            sql = "INSERT INTO `NPCS`";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`)";
+            sql = sql + " VALUES ";
+            sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + maxHealth + "','" + Damage + "');";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+            s_Database.Close();
         }
 
-        public void LoadNPC()
+        public void SaveNpcToDatabase(int npcNum)
         {
-            OpenFileDialog loadMapDialog = new OpenFileDialog();
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
 
-            loadMapDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + "NPCS";
-            loadMapDialog.Filter = "Bin Files (*.bin)|*.bin";
-            loadMapDialog.FilterIndex = 1;
-            loadMapDialog.ShowDialog();
+            sql = "UPDATE NPCS SET ";
+            sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
+            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + maxHealth + "', DAMAGE = '" + Damage + "' ";
+            sql = sql + "WHERE rowid = '" + npcNum + "';";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+            s_Database.Close();
+        }
 
-            try
+        public void LoadNpcFromDatabase(int npcNum)
+        {
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+
+            sql = "SELECT * FROM `NPCS` WHERE rowid = " + (npcNum + 1);
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
+
+            while (sql_Reader.Read())
             {
-                if (loadMapDialog.FileName != null)
-                {
-                    FileStream fileStream = File.OpenRead(loadMapDialog.FileName);
-                    BinaryReader binaryReader = new BinaryReader(fileStream);
-
-                    Name = binaryReader.ReadString();
-                    X = binaryReader.ReadInt32();
-                    Y = binaryReader.ReadInt32();
-                    Direction = binaryReader.ReadInt32();
-                    Sprite = binaryReader.ReadInt32();
-                    Step = binaryReader.ReadInt32();
-                    Owner = binaryReader.ReadInt32();
-                    Behavior = binaryReader.ReadInt32();
-                    SpawnTime = binaryReader.ReadInt32();
-                    binaryReader.Close();
-                }
+                Name = sql_Reader["NAME"].ToString();
+                X = ToInt32(sql_Reader["X"].ToString());
+                Y = ToInt32(sql_Reader["Y"].ToString());
+                Direction = ToInt32(sql_Reader["DIRECTION"].ToString());
+                Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
+                Step = ToInt32(sql_Reader["STEP"].ToString());
+                Owner = ToInt32(sql_Reader["OWNER"].ToString());
+                Behavior = ToInt32(sql_Reader["BEHAVIOR"].ToString());
+                SpawnTime = ToInt32(sql_Reader["SPAWNTIME"].ToString());
+                Health = ToInt32(sql_Reader["HEALTH"].ToString());
+                maxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
+                Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
             }
-            catch (Exception e)
-            {
-                MsgBox(e.GetType() + ": " + e.Message, MsgBoxStyle.Critical, "Error");
-            }
+            s_Database.Close();
         }
     }
 

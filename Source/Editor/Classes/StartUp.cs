@@ -2,6 +2,9 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Data.SQLite;
+using static System.Convert;
+using static System.IO.Directory;
 
 namespace Editor.Classes
 {
@@ -27,127 +30,82 @@ namespace Editor.Classes
             Console.Title = "Sabertooth Editor Suite";    //name the console window, eventually we wont have it anymore but until then its a debug gold
             Editor editor = new Editor();  //Create class for map editor
 
-            Console.WriteLine("Checking for existing map...");
-            if (!File.Exists("Maps/Map.bin"))   //check and see if the map file exists
-            {
-                DefaultMap(editor.e_Map);  //call the default map method
-            }
-            Console.WriteLine("Loading map...");
-            editor.e_Map.LoadDeafultMap();    //load the map.bin from /maps/
+            CheckDirectories(editor);
 
-            Console.WriteLine("Checking for npc directory...");
-            if (!Directory.Exists("NPCS"))
-            {
-                Directory.CreateDirectory("NPCS");
-            }
             Thread.Sleep(500);
             //ShowWindow(handle, SW_HIDE);
             editor.EditorLoop();  //like with any other game lets start the loop
         }
 
-        static void DefaultMap(Map newMap)  //void for creating a default map when one isnt present in our /maps/ directory
+        static void CheckDirectories(Editor e_Editor)
         {
-            Console.WriteLine("Creating default map...");   //let the debugging know whats the scoop
-
-            newMap.Name = "Home";   //name our map
-
-            //Create all of the tiles with new classes and make sure they all have values of 0
-            for (int x = 0; x < 50; x++)
+            if (!Exists("Maps"))
             {
-                for (int y = 0; y < 50; y++)
+                CreateDirectory("Maps");
+                Console.WriteLine("Checking for existing map...");
+                if (!File.Exists("Maps/Map.bin"))   //check and see if the map file exists
                 {
-                    newMap.Ground[x, y] = new Tile();
-                    newMap.Mask[x, y] = new Tile();
-                    newMap.Fringe[x, y] = new Tile();
-                    newMap.MaskA[x, y] = new Tile();
-                    newMap.FringeA[x, y] = new Tile();
-
-                    //Ground
-                    newMap.Ground[x, y].tileX = 0;
-                    newMap.Ground[x, y].tileY = 0;
-                    newMap.Ground[x, y].tileW = 0;
-                    newMap.Ground[x, y].tileH = 0;
-                    newMap.Ground[x, y].Tileset = 0;
-                    newMap.Ground[x, y].type = 0;
-                    newMap.Ground[x, y].spawnNum = 0;
-                    //Mask
-                    newMap.Mask[x, y].tileX = 0;
-                    newMap.Mask[x, y].tileY = 0;
-                    newMap.Mask[x, y].tileW = 0;
-                    newMap.Mask[x, y].tileH = 0;
-                    newMap.Mask[x, y].Tileset = 0;
-                    //Fringe
-                    newMap.Fringe[x, y].tileX = 0;
-                    newMap.Fringe[x, y].tileY = 0;
-                    newMap.Fringe[x, y].tileW = 0;
-                    newMap.Fringe[x, y].tileH = 0;
-                    newMap.Fringe[x, y].Tileset = 0;
-
-                    newMap.MaskA[x, y].tileX = 0;
-                    newMap.MaskA[x, y].tileY = 0;
-                    newMap.MaskA[x, y].tileW = 0;
-                    newMap.MaskA[x, y].tileH = 0;
-                    newMap.MaskA[x, y].Tileset = 0;
-
-                    newMap.FringeA[x, y].tileX = 0;
-                    newMap.FringeA[x, y].tileY = 0;
-                    newMap.FringeA[x, y].tileW = 0;
-                    newMap.FringeA[x, y].tileH = 0;
-                    newMap.FringeA[x, y].Tileset = 0;
+                    e_Editor.e_Map.CreateDefaultMap(e_Editor.e_Map);  //call the default map method
                 }
             }
-
-            SaveMap(newMap);   //save what we have made so it can be loaded once we are done here
+            else
+            {
+                Console.WriteLine("Loading map...");
+                e_Editor.e_Map.LoadDeafultMap();    //load the map.bin from /maps/
+            }
+            if (!Exists("Database"))
+            {
+                CreateDirectory("Database");
+                CreateDatabase();
+            }
         }
 
-        static void SaveMap(Map mapNum)
+        static void CreateDatabase()
         {
-            FileStream fileStream = File.OpenWrite("Maps/Map.bin");
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
+            SQLiteConnection.CreateFile("Database/Sabertooth.db");
+            SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            //s_Database.SetPassword("SabertoothData1379");
+            s_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
 
-            binaryWriter.Write(mapNum.Name);
+            sql = "CREATE TABLE `PLAYERS`";
+            sql = sql + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
+            sql = sql + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
+            sql = sql + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
+            sql = sql + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
 
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
-                {
-                    //Ground
-                    binaryWriter.Write(mapNum.Ground[x, y].tileX);
-                    binaryWriter.Write(mapNum.Ground[x, y].tileY);
-                    binaryWriter.Write(mapNum.Ground[x, y].tileW);
-                    binaryWriter.Write(mapNum.Ground[x, y].tileH);
-                    binaryWriter.Write(mapNum.Ground[x, y].Tileset);
-                    binaryWriter.Write(mapNum.Ground[x, y].type);
-                    binaryWriter.Write(mapNum.Ground[x, y].spawnNum);
-                    //Mask
-                    binaryWriter.Write(mapNum.Mask[x, y].tileX);
-                    binaryWriter.Write(mapNum.Mask[x, y].tileY);
-                    binaryWriter.Write(mapNum.Mask[x, y].tileW);
-                    binaryWriter.Write(mapNum.Mask[x, y].tileH);
-                    binaryWriter.Write(mapNum.Mask[x, y].Tileset);
-                    //Fringe
-                    binaryWriter.Write(mapNum.Fringe[x, y].tileX);
-                    binaryWriter.Write(mapNum.Fringe[x, y].tileY);
-                    binaryWriter.Write(mapNum.Fringe[x, y].tileW);
-                    binaryWriter.Write(mapNum.Fringe[x, y].tileH);
-                    binaryWriter.Write(mapNum.Fringe[x, y].Tileset);
+            sql = "CREATE TABLE `MAINWEAPONS`";
+            sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+            sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
 
-                    binaryWriter.Write(mapNum.MaskA[x, y].tileX);
-                    binaryWriter.Write(mapNum.MaskA[x, y].tileY);
-                    binaryWriter.Write(mapNum.MaskA[x, y].tileW);
-                    binaryWriter.Write(mapNum.MaskA[x, y].tileH);
-                    binaryWriter.Write(mapNum.MaskA[x, y].Tileset);
+            sql = "CREATE TABLE `SECONDARYWEAPONS`";
+            sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+            sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
 
-                    binaryWriter.Write(mapNum.FringeA[x, y].tileX);
-                    binaryWriter.Write(mapNum.FringeA[x, y].tileY);
-                    binaryWriter.Write(mapNum.FringeA[x, y].tileW);
-                    binaryWriter.Write(mapNum.FringeA[x, y].tileH);
-                    binaryWriter.Write(mapNum.FringeA[x, y].Tileset);
-                }
-            }
+            sql = "CREATE TABLE `ITEMS`";
+            sql = sql + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+            sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
 
-            binaryWriter.Flush();
-            binaryWriter.Close();
+            sql = "CREATE TABLE `NPCS`";
+            sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+
+            sql = "CREATE TABLE `PROJECTILES`";
+            sql = sql + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+
+            s_Database.Close();
         }
     }
 }

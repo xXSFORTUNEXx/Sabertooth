@@ -511,7 +511,7 @@ namespace Editor.Classes
         {
             if (e_Npc == null) { return; }
 
-            e_Npc.LoadNPC();
+            e_Npc.LoadNpcFromDatabase(1);
             if (npcWin.IsVisible != true) { CreateNpcEditWindow(sender.GetCanvas()); }
             LoadNpcDataIntoUI();
         }
@@ -728,7 +728,7 @@ namespace Editor.Classes
             e_Npc.Direction = (int)dirScroll.Value;
             e_Npc.Sprite = (int)spriteScroll.Value;
             e_Npc.SpawnTime = (int)spawntimeScroll.Value;
-            e_Npc.SaveNPC();
+            e_Npc.SaveNpcToDatabase(1);
             npcWin.Close();
         }
     }

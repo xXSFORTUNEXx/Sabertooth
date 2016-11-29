@@ -62,6 +62,9 @@ namespace Server.Classes
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
             isSpawned = false;
+            Health = 100;
+            maxHealth = 100;
+            Damage = 10;
         }
 
         public void NpcAI(int canMove, int dir, Map movementMap)

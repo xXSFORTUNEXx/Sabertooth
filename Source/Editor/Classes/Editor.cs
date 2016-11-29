@@ -9,11 +9,13 @@ using Microsoft.VisualBasic;
 using System.Threading;
 using static System.Environment;
 using Gwen.Control;
+using System.Data.SQLite;
 
 namespace Editor.Classes
 {
     class Editor
     {
+        SQLiteConnection s_Database;
         //Editor
         public RenderWindow e_Window;
         static GUI e_GUI;
@@ -29,7 +31,7 @@ namespace Editor.Classes
         RenderText e_Text = new RenderText();
         RectangleShape e_selectTile = new RectangleShape(new Vector2f(32, 32));
         //Npc editor
-        public NPC e_Npc;
+        public NPC[] e_Npc = new NPC[10];
         public bool inNpcEditor;
         //Editor
         public int viewX { get; set; }
@@ -136,6 +138,8 @@ namespace Editor.Classes
             e_Window.MouseButtonPressed += new EventHandler<MouseButtonEventArgs>(onMouseButton);
             e_Window.MouseButtonReleased += new EventHandler<MouseButtonEventArgs>(onMouseButtonRelease);
             e_Window.MouseWheelScrolled += new EventHandler<MouseWheelScrollEventArgs>(onMouseScroll);
+
+            PopulateDatabase();
 
             //setup gwen
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(e_Window);
@@ -808,6 +812,28 @@ namespace Editor.Classes
             return lastFrameRate;
         }
 
+        void PopulateDatabase()
+        {
+            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            s_Database.Open();
+            string sql;
+
+            sql = "SELECT COUNT(*) FROM `NPCS`";
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
+
+            if (result == 0)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    e_Npc[i] = new NPC("None", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
+                    e_Npc[i].CreateNpcInDatabase();
+                }
+            }
+
+        }
+
         void SetNewEditorValues()
         {
             editMode = e_GUI.editMode;
@@ -972,11 +998,11 @@ namespace Editor.Classes
 
             if (e_Npc == null)
             {
-                e_Npc = new NPC();
-                e_Npc.LoadNPC();
-                if (e_Npc.Name != null)
+                e_Npc[1] = new NPC();
+                e_Npc[1].LoadNpcFromDatabase(1);
+                if (e_Npc[1].Name != null)
                 {
-                    e_GUI.e_Npc = e_Npc;
+                    e_GUI.e_Npc = e_Npc[1];
                     e_GUI.CreateNpcToolWindow(e_Canvas);
                     e_GUI.CreateNpcEditWindow(e_Canvas);
                     e_GUI.LoadNpcDataIntoUI();

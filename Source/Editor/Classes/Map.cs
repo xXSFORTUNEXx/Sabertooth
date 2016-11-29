@@ -219,6 +219,127 @@ namespace Editor.Classes
             }
         }
 
+        public void CreateDefaultMap(Map newMap)
+        {
+            Console.WriteLine("Creating default map...");   //let the debugging know whats the scoop
+
+            newMap.Name = "Home";   //name our map
+            for (int i = 0; i < 10; i++)
+            {
+                mapNpc[i] = new MapNpc();
+                mapNpc[i].Name = "None";
+                mapNpc[i].X = 0;
+                mapNpc[i].Y = 0;
+                mapNpc[i].npcNum = 0;
+            }
+
+            //Create all of the tiles with new classes and make sure they all have values of 0
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    newMap.Ground[x, y] = new Tile();
+                    newMap.Mask[x, y] = new Tile();
+                    newMap.Fringe[x, y] = new Tile();
+                    newMap.MaskA[x, y] = new Tile();
+                    newMap.FringeA[x, y] = new Tile();
+
+                    //Ground
+                    newMap.Ground[x, y].tileX = 0;
+                    newMap.Ground[x, y].tileY = 0;
+                    newMap.Ground[x, y].tileW = 0;
+                    newMap.Ground[x, y].tileH = 0;
+                    newMap.Ground[x, y].Tileset = 0;
+                    newMap.Ground[x, y].type = 0;
+                    newMap.Ground[x, y].spawnNum = 0;
+                    //Mask
+                    newMap.Mask[x, y].tileX = 0;
+                    newMap.Mask[x, y].tileY = 0;
+                    newMap.Mask[x, y].tileW = 0;
+                    newMap.Mask[x, y].tileH = 0;
+                    newMap.Mask[x, y].Tileset = 0;
+                    //Fringe
+                    newMap.Fringe[x, y].tileX = 0;
+                    newMap.Fringe[x, y].tileY = 0;
+                    newMap.Fringe[x, y].tileW = 0;
+                    newMap.Fringe[x, y].tileH = 0;
+                    newMap.Fringe[x, y].Tileset = 0;
+
+                    newMap.MaskA[x, y].tileX = 0;
+                    newMap.MaskA[x, y].tileY = 0;
+                    newMap.MaskA[x, y].tileW = 0;
+                    newMap.MaskA[x, y].tileH = 0;
+                    newMap.MaskA[x, y].Tileset = 0;
+
+                    newMap.FringeA[x, y].tileX = 0;
+                    newMap.FringeA[x, y].tileY = 0;
+                    newMap.FringeA[x, y].tileW = 0;
+                    newMap.FringeA[x, y].tileH = 0;
+                    newMap.FringeA[x, y].Tileset = 0;
+                }
+            }
+
+            SaveDefaultMap(newMap);   //save what we have made so it can be loaded once we are done here
+        }
+
+        public void SaveDefaultMap(Map mapNum)
+        {
+            FileStream fileStream = File.OpenWrite("Maps/Map.bin");
+            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
+
+            binaryWriter.Write(mapNum.Name);
+
+            for (int i = 0; i < 10; i++)
+            {
+                binaryWriter.Write(mapNpc[i].Name);
+                binaryWriter.Write(mapNpc[i].X);
+                binaryWriter.Write(mapNpc[i].Y);
+                binaryWriter.Write(mapNpc[i].npcNum);
+            }
+
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    //Ground
+                    binaryWriter.Write(mapNum.Ground[x, y].tileX);
+                    binaryWriter.Write(mapNum.Ground[x, y].tileY);
+                    binaryWriter.Write(mapNum.Ground[x, y].tileW);
+                    binaryWriter.Write(mapNum.Ground[x, y].tileH);
+                    binaryWriter.Write(mapNum.Ground[x, y].Tileset);
+                    binaryWriter.Write(mapNum.Ground[x, y].type);
+                    binaryWriter.Write(mapNum.Ground[x, y].spawnNum);
+                    //Mask
+                    binaryWriter.Write(mapNum.Mask[x, y].tileX);
+                    binaryWriter.Write(mapNum.Mask[x, y].tileY);
+                    binaryWriter.Write(mapNum.Mask[x, y].tileW);
+                    binaryWriter.Write(mapNum.Mask[x, y].tileH);
+                    binaryWriter.Write(mapNum.Mask[x, y].Tileset);
+                    //Fringe
+                    binaryWriter.Write(mapNum.Fringe[x, y].tileX);
+                    binaryWriter.Write(mapNum.Fringe[x, y].tileY);
+                    binaryWriter.Write(mapNum.Fringe[x, y].tileW);
+                    binaryWriter.Write(mapNum.Fringe[x, y].tileH);
+                    binaryWriter.Write(mapNum.Fringe[x, y].Tileset);
+
+                    binaryWriter.Write(mapNum.MaskA[x, y].tileX);
+                    binaryWriter.Write(mapNum.MaskA[x, y].tileY);
+                    binaryWriter.Write(mapNum.MaskA[x, y].tileW);
+                    binaryWriter.Write(mapNum.MaskA[x, y].tileH);
+                    binaryWriter.Write(mapNum.MaskA[x, y].Tileset);
+
+                    binaryWriter.Write(mapNum.FringeA[x, y].tileX);
+                    binaryWriter.Write(mapNum.FringeA[x, y].tileY);
+                    binaryWriter.Write(mapNum.FringeA[x, y].tileW);
+                    binaryWriter.Write(mapNum.FringeA[x, y].tileH);
+                    binaryWriter.Write(mapNum.FringeA[x, y].Tileset);
+                }
+            }
+
+            binaryWriter.Flush();
+            binaryWriter.Close();
+        }
+
         public void LoadDeafultMap()
         {
             FileStream fileStream = File.OpenRead("Maps/Map.bin");

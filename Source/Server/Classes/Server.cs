@@ -171,38 +171,7 @@ namespace Server.Classes
         }
 
         ///Init methods
-        //Creates the player array for use when players join
-        void InitPlayerArray()
-        {
-            WriteLine("Creating player array...");
-            WriteLog("Creating player array...", "Server");
-            for (int i = 0; i < 5; i++)
-            {
-                s_Player[i] = new Player();
-            }
-        }
-
-        //Loads in our maps
-        void InitMap()
-        {
-            WriteLine("Loading maps...");
-            WriteLog("Loading maps...", "Server");
-            for (int i = 0; i < 10; i++)
-            {
-                if (!Exists("Maps/Map" + i + ".bin"))
-                {
-                    s_Map[i] = new Map();
-                    s_Map[i].GenerateMap(i);
-                    s_Map[i].SaveMap(i);
-                }
-                else
-                {
-                    s_Map[i] = new Map();
-                    s_Map[i].LoadMap(i);
-                }
-            }
-        }
-
+        //Populate an empty database
         void PopulateDatabase()
         {
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
@@ -248,6 +217,38 @@ namespace Server.Classes
                 {
                     s_Npc[i] = new NPC("None", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
                     s_Npc[i].CreateNpcInDatabase();
+                }
+            }
+        }
+
+        //Creates the player array for use when players join
+        void InitPlayerArray()
+        {
+            WriteLine("Creating player array...");
+            WriteLog("Creating player array...", "Server");
+            for (int i = 0; i < 5; i++)
+            {
+                s_Player[i] = new Player();
+            }
+        }
+
+        //Loads in our maps
+        void InitMap()
+        {
+            WriteLine("Loading maps...");
+            WriteLog("Loading maps...", "Server");
+            for (int i = 0; i < 10; i++)
+            {
+                if (!Exists("Maps/Map" + i + ".bin"))
+                {
+                    s_Map[i] = new Map();
+                    s_Map[i].GenerateMap(i);
+                    s_Map[i].SaveMap(i);
+                }
+                else
+                {
+                    s_Map[i] = new Map();
+                    s_Map[i].LoadMap(i);
                 }
             }
         }
