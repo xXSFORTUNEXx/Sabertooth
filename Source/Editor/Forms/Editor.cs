@@ -16,5 +16,10 @@ namespace Editor
         {
             InitializeComponent();
         }
+
+        private void Editor_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

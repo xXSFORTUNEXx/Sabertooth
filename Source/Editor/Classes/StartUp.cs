@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.Application;
 
 namespace Editor
 {
     static class StartUp
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Editor());
+            EnableVisualStyles();
+            SetCompatibleTextRenderingDefault(false);
+            Run(new Editor());
         }
     }
 }

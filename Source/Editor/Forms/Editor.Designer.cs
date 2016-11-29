@@ -37,6 +37,7 @@
             this.ClientSize = new System.Drawing.Size(284, 264);
             this.Name = "Editor";
             this.Text = "Editor";
+            this.Load += new System.EventHandler(this.Editor_Load);
             this.ResumeLayout(false);
 
         }
