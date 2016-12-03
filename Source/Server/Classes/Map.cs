@@ -106,36 +106,36 @@ namespace Server.Classes
                     MaskA[x, y] = new Tile();
                     FringeA[x, y] = new Tile();
 
-                    Ground[x, y].tileX = 0;
-                    Ground[x, y].tileY = 32;
-                    Ground[x, y].tileW = 32;
-                    Ground[x, y].tileH = 32;
+                    Ground[x, y].TileX = 0;
+                    Ground[x, y].TileY = 32;
+                    Ground[x, y].TileW = 32;
+                    Ground[x, y].TileH = 32;
                     Ground[x, y].Tileset = 0;
-                    Ground[x, y].type = (int)TileType.None;
-                    Ground[x, y].spawnNum = 0;
+                    Ground[x, y].Type = (int)TileType.None;
+                    Ground[x, y].SpawnNum = 0;
 
-                    Mask[x, y].tileX = 0;
-                    Mask[x, y].tileY = 0;
-                    Mask[x, y].tileW = 32;
-                    Mask[x, y].tileH = 32;
+                    Mask[x, y].TileX = 0;
+                    Mask[x, y].TileY = 0;
+                    Mask[x, y].TileW = 32;
+                    Mask[x, y].TileH = 32;
                     Mask[x, y].Tileset = 0;
 
-                    Fringe[x, y].tileX = 0;
-                    Fringe[x, y].tileY = 0;
-                    Fringe[x, y].tileW = 0;
-                    Fringe[x, y].tileH = 0;
+                    Fringe[x, y].TileX = 0;
+                    Fringe[x, y].TileY = 0;
+                    Fringe[x, y].TileW = 0;
+                    Fringe[x, y].TileH = 0;
                     Fringe[x, y].Tileset = 0;
 
-                    MaskA[x, y].tileX = 0;
-                    MaskA[x, y].tileY = 0;
-                    MaskA[x, y].tileW = 0;
-                    MaskA[x, y].tileH = 0;
+                    MaskA[x, y].TileX = 0;
+                    MaskA[x, y].TileY = 0;
+                    MaskA[x, y].TileW = 0;
+                    MaskA[x, y].TileH = 0;
                     MaskA[x, y].Tileset = 0;
 
-                    FringeA[x, y].tileX = 0;
-                    FringeA[x, y].tileY = 0;
-                    FringeA[x, y].tileW = 0;
-                    FringeA[x, y].tileH = 0;
+                    FringeA[x, y].TileX = 0;
+                    FringeA[x, y].TileY = 0;
+                    FringeA[x, y].TileW = 0;
+                    FringeA[x, y].TileH = 0;
                     FringeA[x, y].Tileset = 0;
                 }
             }
@@ -161,36 +161,36 @@ namespace Server.Classes
                 for (int y = 0; y < 50; y++)
                 {
                     //Ground
-                    binaryWriter.Write(Ground[x, y].tileX);
-                    binaryWriter.Write(Ground[x, y].tileY);
-                    binaryWriter.Write(Ground[x, y].tileW);
-                    binaryWriter.Write(Ground[x, y].tileH);
+                    binaryWriter.Write(Ground[x, y].TileX);
+                    binaryWriter.Write(Ground[x, y].TileY);
+                    binaryWriter.Write(Ground[x, y].TileW);
+                    binaryWriter.Write(Ground[x, y].TileH);
                     binaryWriter.Write(Ground[x, y].Tileset);
-                    binaryWriter.Write(Ground[x, y].type);
-                    binaryWriter.Write(Ground[x, y].spawnNum);
+                    binaryWriter.Write(Ground[x, y].Type);
+                    binaryWriter.Write(Ground[x, y].SpawnNum);
                     //Mask
-                    binaryWriter.Write(Mask[x, y].tileX);
-                    binaryWriter.Write(Mask[x, y].tileY);
-                    binaryWriter.Write(Mask[x, y].tileW);
-                    binaryWriter.Write(Mask[x, y].tileH);
+                    binaryWriter.Write(Mask[x, y].TileX);
+                    binaryWriter.Write(Mask[x, y].TileY);
+                    binaryWriter.Write(Mask[x, y].TileW);
+                    binaryWriter.Write(Mask[x, y].TileH);
                     binaryWriter.Write(Mask[x, y].Tileset);
                     //Fringe
-                    binaryWriter.Write(Fringe[x, y].tileX);
-                    binaryWriter.Write(Fringe[x, y].tileY);
-                    binaryWriter.Write(Fringe[x, y].tileW);
-                    binaryWriter.Write(Fringe[x, y].tileH);
+                    binaryWriter.Write(Fringe[x, y].TileX);
+                    binaryWriter.Write(Fringe[x, y].TileY);
+                    binaryWriter.Write(Fringe[x, y].TileW);
+                    binaryWriter.Write(Fringe[x, y].TileH);
                     binaryWriter.Write(Fringe[x, y].Tileset);
 
-                    binaryWriter.Write(MaskA[x, y].tileX);
-                    binaryWriter.Write(MaskA[x, y].tileY);
-                    binaryWriter.Write(MaskA[x, y].tileW);
-                    binaryWriter.Write(MaskA[x, y].tileH);
+                    binaryWriter.Write(MaskA[x, y].TileX);
+                    binaryWriter.Write(MaskA[x, y].TileY);
+                    binaryWriter.Write(MaskA[x, y].TileW);
+                    binaryWriter.Write(MaskA[x, y].TileH);
                     binaryWriter.Write(MaskA[x, y].Tileset);
 
-                    binaryWriter.Write(FringeA[x, y].tileX);
-                    binaryWriter.Write(FringeA[x, y].tileY);
-                    binaryWriter.Write(FringeA[x, y].tileW);
-                    binaryWriter.Write(FringeA[x, y].tileH);
+                    binaryWriter.Write(FringeA[x, y].TileX);
+                    binaryWriter.Write(FringeA[x, y].TileY);
+                    binaryWriter.Write(FringeA[x, y].TileW);
+                    binaryWriter.Write(FringeA[x, y].TileH);
                     binaryWriter.Write(FringeA[x, y].Tileset);
                 }
             }
@@ -228,36 +228,36 @@ namespace Server.Classes
                         FringeA[x, y] = new Tile();
 
                         //Ground
-                        Ground[x, y].tileX = binaryReader.ReadInt32();
-                        Ground[x, y].tileY = binaryReader.ReadInt32();
-                        Ground[x, y].tileW = binaryReader.ReadInt32();
-                        Ground[x, y].tileH = binaryReader.ReadInt32();
+                        Ground[x, y].TileX = binaryReader.ReadInt32();
+                        Ground[x, y].TileY = binaryReader.ReadInt32();
+                        Ground[x, y].TileW = binaryReader.ReadInt32();
+                        Ground[x, y].TileH = binaryReader.ReadInt32();
                         Ground[x, y].Tileset = binaryReader.ReadInt32();
-                        Ground[x, y].type = binaryReader.ReadInt32();
-                        Ground[x, y].spawnNum = binaryReader.ReadInt32();
+                        Ground[x, y].Type = binaryReader.ReadInt32();
+                        Ground[x, y].SpawnNum = binaryReader.ReadInt32();
                         //Mask
-                        Mask[x, y].tileX = binaryReader.ReadInt32();
-                        Mask[x, y].tileY = binaryReader.ReadInt32();
-                        Mask[x, y].tileW = binaryReader.ReadInt32();
-                        Mask[x, y].tileH = binaryReader.ReadInt32();
+                        Mask[x, y].TileX = binaryReader.ReadInt32();
+                        Mask[x, y].TileY = binaryReader.ReadInt32();
+                        Mask[x, y].TileW = binaryReader.ReadInt32();
+                        Mask[x, y].TileH = binaryReader.ReadInt32();
                         Mask[x, y].Tileset = binaryReader.ReadInt32();
                         //Fringe
-                        Fringe[x, y].tileX = binaryReader.ReadInt32();
-                        Fringe[x, y].tileY = binaryReader.ReadInt32();
-                        Fringe[x, y].tileW = binaryReader.ReadInt32();
-                        Fringe[x, y].tileH = binaryReader.ReadInt32();
+                        Fringe[x, y].TileX = binaryReader.ReadInt32();
+                        Fringe[x, y].TileY = binaryReader.ReadInt32();
+                        Fringe[x, y].TileW = binaryReader.ReadInt32();
+                        Fringe[x, y].TileH = binaryReader.ReadInt32();
                         Fringe[x, y].Tileset = binaryReader.ReadInt32();
 
-                        MaskA[x, y].tileX = binaryReader.ReadInt32();
-                        MaskA[x, y].tileY = binaryReader.ReadInt32();
-                        MaskA[x, y].tileW = binaryReader.ReadInt32();
-                        MaskA[x, y].tileH = binaryReader.ReadInt32();
+                        MaskA[x, y].TileX = binaryReader.ReadInt32();
+                        MaskA[x, y].TileY = binaryReader.ReadInt32();
+                        MaskA[x, y].TileW = binaryReader.ReadInt32();
+                        MaskA[x, y].TileH = binaryReader.ReadInt32();
                         MaskA[x, y].Tileset = binaryReader.ReadInt32();
 
-                        FringeA[x, y].tileX = binaryReader.ReadInt32();
-                        FringeA[x, y].tileY = binaryReader.ReadInt32();
-                        FringeA[x, y].tileW = binaryReader.ReadInt32();
-                        FringeA[x, y].tileH = binaryReader.ReadInt32();
+                        FringeA[x, y].TileX = binaryReader.ReadInt32();
+                        FringeA[x, y].TileY = binaryReader.ReadInt32();
+                        FringeA[x, y].TileW = binaryReader.ReadInt32();
+                        FringeA[x, y].TileH = binaryReader.ReadInt32();
                         FringeA[x, y].Tileset = binaryReader.ReadInt32();
                     }
                 }
@@ -302,28 +302,28 @@ namespace Server.Classes
 
     class Tile
     {
-        public int tileX { get; set; }
-        public int tileY { get; set; }
-        public int tileW { get; set; }
-        public int tileH { get; set; }
+        public int TileX { get; set; }
+        public int TileY { get; set; }
+        public int TileW { get; set; }
+        public int TileH { get; set; }
         public int Tileset { get; set; }
 
-        public int type { get; set; }
-        public bool flagged { get; set; }
+        public int Type { get; set; }
+        public bool Flagged { get; set; }
 
-        public int spawnNum { get; set; }
+        public int SpawnNum { get; set; }
 
         public Tile()
         {
-            tileX = 0;
-            tileY = 0;
-            tileW = 0;
-            tileH = 0;
+            TileX = 0;
+            TileY = 0;
+            TileW = 0;
+            TileH = 0;
 
             Tileset = 0;
-            type = (int)TileType.None;
-            flagged = false;
-            spawnNum = 0;
+            Type = (int)TileType.None;
+            Flagged = false;
+            SpawnNum = 0;
         }
     }
 

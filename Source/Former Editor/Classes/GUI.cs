@@ -664,7 +664,7 @@ namespace Editor.Classes
 
         private void ClickNextTilesetButton(Base control, ClickedEventArgs e)
         {
-            if (editTileset < 66)
+            if (editTileset < 67)
             {
                 editTileset += 1;
             }
@@ -682,7 +682,7 @@ namespace Editor.Classes
             }
             else
             {
-                editTileset = 66;
+                editTileset = 67;
             }
         }
 

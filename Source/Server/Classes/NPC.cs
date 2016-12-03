@@ -83,7 +83,7 @@ namespace Server.Classes
                         if (Y < 49)
                         {
                             //Check to see if the next tile is blocked
-                            if (movementMap.Ground[X, Y + 1].type == (int)TileType.Blocked)
+                            if (movementMap.Ground[X, Y + 1].Type == (int)TileType.Blocked)
                             {
                                 //just change the direction and exit
                                 Direction = (int)Directions.Down;
@@ -100,7 +100,7 @@ namespace Server.Classes
                     case (int)Directions.Left:
                         if (X > 1)
                         {
-                            if (movementMap.Ground[X - 1, Y].type == (int)TileType.Blocked)
+                            if (movementMap.Ground[X - 1, Y].Type == (int)TileType.Blocked)
                             {
                                 Direction = (int)Directions.Left;
                                 didMove = true;
@@ -115,7 +115,7 @@ namespace Server.Classes
                     case (int)Directions.Right:
                         if (X < 49)
                         {
-                            if (movementMap.Ground[X + 1, Y].type == (int)TileType.Blocked)
+                            if (movementMap.Ground[X + 1, Y].Type == (int)TileType.Blocked)
                             {
                                 Direction = (int)Directions.Right;
                                 didMove = true;
@@ -130,7 +130,7 @@ namespace Server.Classes
                     case (int)Directions.Up:
                         if (Y > 1)
                         {
-                            if (movementMap.Ground[X, Y - 1].type == (int)TileType.Blocked)
+                            if (movementMap.Ground[X, Y - 1].Type == (int)TileType.Blocked)
                             {
                                 Direction = (int)Directions.Up;
                                 didMove = true;

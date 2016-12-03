@@ -17,9 +17,11 @@ namespace Editor
             InitializeComponent();
         }
 
-        private void Editor_Load(object sender, EventArgs e)
+        private void btnUnlock_Click(object sender, EventArgs e)
         {
-
+            string unlockPass = txtUnlock.Text;
+            if (unlockPass == "fortune") { pnlLock.Visible = false; }
+            else { lblIncorrect.Visible = true; }            
         }
     }
 }

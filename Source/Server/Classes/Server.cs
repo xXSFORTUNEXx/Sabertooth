@@ -453,9 +453,9 @@ namespace Server.Classes
                     {
                         for (int y = 0; y < 50; y++)
                         {
-                            if (s_Map[i].Ground[x, y].type == (int)TileType.NPCSpawn)
+                            if (s_Map[i].Ground[x, y].Type == (int)TileType.NPCSpawn)
                             {
-                                int npcNum = s_Map[i].Ground[x, y].spawnNum;
+                                int npcNum = s_Map[i].Ground[x, y].SpawnNum;
 
                                 if (s_Map[i].mapNpc[npcNum].isSpawned == false)
                                 {
@@ -537,6 +537,13 @@ namespace Server.Classes
                     case "reload":  //Reload which actually requires a modifier but not any arguments like account
                         WriteLine("reload command needs argument (eg reload npcs)");    //If you dont provide a modifier
                         break;
+                    case "reload database":
+                        WriteLine("Reloading database...");
+                        InitNPC();
+                        InitMap();
+                        InitItems();
+                        InitProjectiles();
+                        break;
                     case "reload npcs": //Reload NPCS
                         WriteLine("Reloading Npcs..."); //Let the op know
                         InitNPC();  //The same void thats ran when we first load them from their BIN files
@@ -549,12 +556,16 @@ namespace Server.Classes
                         WriteLine("Reloading Items...");
                         InitItems();
                         break;
+                    case "reload projectiles":
+                        WriteLine("Reloading projectiles...");
+                        InitProjectiles();
+                        break;
                     case "info":
                         string hostName = Dns.GetHostName();
                         WriteLine("Statistics: ");
                         WriteLine(upTime);
                         WriteLine("Host Name: " + hostName);
-                        WriteLine("Ip Address: " + NetUtility.Resolve(hostName));
+                        WriteLine("Server Address: " + NetUtility.Resolve(hostName));
                         WriteLine("Port: " + s_Server.Port);
                         WriteLine(s_Server.Statistics.ToString());
                         WriteLine("Connections: ");
@@ -575,9 +586,11 @@ namespace Server.Classes
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");
-                        WriteLine("reload npcs - reloads all npcs from their bin files");
-                        WriteLine("reload maps - reloads all maps from their bin files");
-                        WriteLine("reload items - reloads all items from their bin files");
+                        WriteLine("reload npcs - reloads npcs from SQL database");
+                        WriteLine("reload maps - reloads maps from SQL database");
+                        WriteLine("reload items - reloads items from SQL database");
+                        WriteLine("reload projectiles - reloads projectiles from SQL database");
+                        WriteLine("reload database - reloads the entire SQL database except players");
                         WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
                         WriteLine("info - shows the servers stat, hosts, ip, connections");
                         WriteLine("uptime - shows server uptime.");

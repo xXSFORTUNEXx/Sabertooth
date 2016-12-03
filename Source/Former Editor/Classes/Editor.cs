@@ -24,7 +24,8 @@ namespace Editor.Classes
         View e_View = new View();
         //Map editor 
         public Map e_Map = new Map();
-        Texture[] e_Tileset = new Texture[67];
+        const int Max_Tilesets = 68;
+        Texture[] e_Tileset = new Texture[Max_Tilesets];
         Sprite e_Tiles = new Sprite();
         Sprite e_Tile = new Sprite();
         Sprite e_Grid = new Sprite();
@@ -85,7 +86,7 @@ namespace Editor.Classes
                 handle.Dispose();
             }
 
-            for (int i = 0; i < 67; i++)
+            for (int i = 0; i < 68; i++)
             {
                 e_Tileset[i].Dispose();
             }
@@ -112,7 +113,7 @@ namespace Editor.Classes
         public Editor()
         {
             Console.WriteLine("Loading tilesets...");
-            for (int i = 0; i < 67; i++)
+            for (int i = 0; i < 68; i++)
             {
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
@@ -1042,7 +1043,7 @@ namespace Editor.Classes
                         utiWindow = true;
                         inNpcEditor = false;
                         e_GUI.CreateToolWindow(e_Canvas);
-                        if (e_Npc != null) { e_GUI.npcWin.Hide(); e_GUI.npctoolWin.Hide(); }
+                        if (e_Npc != null && e_GUI.npcWin != null && e_GUI.npctoolWin != null) { e_GUI.npcWin.Hide(); e_GUI.npctoolWin.Hide(); }
                         storedViewX = viewX;
                         storedViewY = viewY;
                         viewX = 0;
@@ -1058,7 +1059,7 @@ namespace Editor.Classes
                     else
                     {
                         inNpcEditor = true;
-                        if (e_Npc != null) { e_GUI.npcWin.Show(); e_GUI.npctoolWin.Show(); }
+                        if (e_Npc != null && e_GUI.npcWin != null && e_GUI.npctoolWin != null) { e_GUI.npcWin.Show(); e_GUI.npctoolWin.Show(); }
 
                         utiWindow = false;
                         if (e_GUI.maptoolsWin != null) { e_GUI.maptoolsWin.Close(); }

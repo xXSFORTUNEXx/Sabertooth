@@ -20,7 +20,8 @@ namespace Editor.Classes
 
         public MapNpc[] mapNpc = new MapNpc[10];
 
-        Texture[] TileSet = new Texture[67];
+        const int Max_Tilesets = 68;
+        Texture[] TileSet = new Texture[Max_Tilesets];
         Sprite Tiles = new Sprite();
 
         public string Name { get; set; }
@@ -57,7 +58,7 @@ namespace Editor.Classes
 
         public Map()
         {
-            for (int i = 0; i < 67; i++)
+            for (int i = 0; i < Max_Tilesets; i++)
             {
                 TileSet[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }

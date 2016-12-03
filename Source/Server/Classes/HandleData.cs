@@ -719,36 +719,36 @@ namespace Server.Classes
                 for (int y = 0; y < 50; y++)
                 {
                     //ground
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileX);
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileY);
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileW);
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].TileX);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].TileY);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].TileW);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].TileH);
                     outMSG.WriteVariableInt32(s_Map.Ground[x, y].Tileset);
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].type);
-                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].spawnNum);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].Type);
+                    outMSG.WriteVariableInt32(s_Map.Ground[x, y].SpawnNum);
                     //mask
-                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileX);
-                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileY);
-                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileW);
-                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileX);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileY);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileW);
+                    outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileH);
                     outMSG.WriteVariableInt32(s_Map.Mask[x, y].Tileset);
                     //fringe
-                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileX);
-                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileY);
-                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileW);
-                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].TileX);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].TileY);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].TileW);
+                    outMSG.WriteVariableInt32(s_Map.Fringe[x, y].TileH);
                     outMSG.WriteVariableInt32(s_Map.Fringe[x, y].Tileset);
                     //mask a
-                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileX);
-                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileY);
-                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileW);
-                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].TileX);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].TileY);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].TileW);
+                    outMSG.WriteVariableInt32(s_Map.MaskA[x, y].TileH);
                     outMSG.WriteVariableInt32(s_Map.MaskA[x, y].Tileset);
                     //fringe a
-                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileX);
-                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileY);
-                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileW);
-                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].tileH);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].TileX);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].TileY);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].TileW);
+                    outMSG.WriteVariableInt32(s_Map.FringeA[x, y].TileH);
                     outMSG.WriteVariableInt32(s_Map.FringeA[x, y].Tileset);
                 }
             }
