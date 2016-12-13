@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using SFML.Window;
 using SFML.Graphics;
@@ -15,17 +15,22 @@ namespace Editor.Forms
 {
     public partial class MapEditor : Form
     {
+        DrawingSurface e_DrawSurf = new DrawingSurface();
+
         public MapEditor()
         {
             InitializeComponent();
+            Visible = true;
             MapLoop();
         }
 
         void MapLoop()
         {
-            RenderWindow e_Window = new RenderWindow(new VideoMode(800, 600), "Map");
-            e_Window.Closed += new EventHandler(onClose);
-
+            e_DrawSurf.Size = new Size(800, 600);
+            Controls.Add(e_DrawSurf);
+            e_DrawSurf.Location = new Point(172, 12);
+            RenderWindow e_Window = new RenderWindow(e_DrawSurf.Handle);
+            
             while (Visible)
             {
                 Application.DoEvents();
@@ -33,12 +38,21 @@ namespace Editor.Forms
                 e_Window.Clear(SFML.Graphics.Color.Yellow);
                 e_Window.Display();
             }
+            Visible = false;
         }
+    }
 
-        static void onClose(object sender, EventArgs e)
+    public class DrawingSurface : Control
+    {
+        protected override void OnPaint(PaintEventArgs e)
         {
-            RenderWindow editorWindow = (RenderWindow)sender;
-            editorWindow.Close();
+            // don't call base.OnPaint(e) to prevent forground painting
+            // base.OnPaint(e);
+        }
+        protected override void OnPaintBackground(PaintEventArgs pevent)
+        {
+            // don't call base.OnPaintBackground(e) to prevent background painting
+            //base.OnPaintBackground(pevent);
         }
     }
 }

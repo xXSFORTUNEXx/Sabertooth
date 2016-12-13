@@ -120,7 +120,6 @@ namespace Editor
         private void btnMapEditor_Click(object sender, EventArgs e)
         {
             MapEditor e_MapEditor = new MapEditor();
-            e_MapEditor.ShowDialog();
         }
     }
 }
