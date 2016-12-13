@@ -32,9 +32,9 @@
             this.lblIncorrect = new System.Windows.Forms.Label();
             this.txtUnlock = new System.Windows.Forms.TextBox();
             this.btnUnlock = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnMapEditor = new System.Windows.Forms.Button();
+            this.btnNpcEditor = new System.Windows.Forms.Button();
+            this.btnItemEditor = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
@@ -49,10 +49,11 @@
             this.pnlLock.Controls.Add(this.lblIncorrect);
             this.pnlLock.Controls.Add(this.txtUnlock);
             this.pnlLock.Controls.Add(this.btnUnlock);
-            this.pnlLock.Location = new System.Drawing.Point(12, 12);
+            this.pnlLock.Location = new System.Drawing.Point(12, 14);
             this.pnlLock.Name = "pnlLock";
             this.pnlLock.Size = new System.Drawing.Size(119, 226);
             this.pnlLock.TabIndex = 0;
+            this.pnlLock.Visible = false;
             // 
             // lblIncorrect
             // 
@@ -83,32 +84,35 @@
             this.btnUnlock.UseVisualStyleBackColor = true;
             this.btnUnlock.Click += new System.EventHandler(this.btnUnlock_Click);
             // 
-            // button1
+            // btnMapEditor
             // 
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Map Editor";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnMapEditor.Location = new System.Drawing.Point(12, 12);
+            this.btnMapEditor.Name = "btnMapEditor";
+            this.btnMapEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnMapEditor.TabIndex = 1;
+            this.btnMapEditor.Text = "Map Editor";
+            this.btnMapEditor.UseVisualStyleBackColor = true;
+            this.btnMapEditor.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
-            // button2
+            // btnNpcEditor
             // 
-            this.button2.Location = new System.Drawing.Point(12, 41);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(119, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "NPC Editor";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnNpcEditor.Location = new System.Drawing.Point(12, 41);
+            this.btnNpcEditor.Name = "btnNpcEditor";
+            this.btnNpcEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnNpcEditor.TabIndex = 2;
+            this.btnNpcEditor.Text = "NPC Editor";
+            this.btnNpcEditor.UseVisualStyleBackColor = true;
+            this.btnNpcEditor.Click += new System.EventHandler(this.btnNpcEditor_Click);
             // 
-            // button3
+            // btnItemEditor
             // 
-            this.button3.Location = new System.Drawing.Point(12, 70);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(119, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Item Editor";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnItemEditor.Location = new System.Drawing.Point(12, 70);
+            this.btnItemEditor.Name = "btnItemEditor";
+            this.btnItemEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnItemEditor.TabIndex = 3;
+            this.btnItemEditor.Text = "Item Editor";
+            this.btnItemEditor.UseVisualStyleBackColor = true;
+            this.btnItemEditor.Click += new System.EventHandler(this.btnItemEditor_Click);
             // 
             // button4
             // 
@@ -160,15 +164,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(144, 252);
-            this.Controls.Add(this.pnlLock);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnItemEditor);
+            this.Controls.Add(this.btnNpcEditor);
+            this.Controls.Add(this.btnMapEditor);
+            this.Controls.Add(this.pnlLock);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Editor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -185,9 +189,9 @@
         private System.Windows.Forms.TextBox txtUnlock;
         private System.Windows.Forms.Button btnUnlock;
         private System.Windows.Forms.Label lblIncorrect;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnMapEditor;
+        private System.Windows.Forms.Button btnNpcEditor;
+        private System.Windows.Forms.Button btnItemEditor;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;

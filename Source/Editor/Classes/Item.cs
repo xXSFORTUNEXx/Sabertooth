@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.IO;
-using static Microsoft.VisualBasic.Interaction;
-using Lidgren.Network;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Data.SQLite;
 using static System.Convert;
 
-namespace Server.Classes
+namespace Editor.Classes
 {
     class Item
     {
-        SQLiteConnection s_Database;
+        SQLiteConnection e_Database;
         public string Name { get; set; }
         public int Sprite { get; set; }
         public int Damage { get; set; }
@@ -26,42 +26,33 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
         public int Clip { get; set; }
-        public int maxClip { get; set; }
-        public int ammoType { get; set; }
+        public int MaxClip { get; set; }
+        public int ItemAmmoType { get; set; }
 
         public Item() { }
 
-        public Item(ItemType type)
-        {
-            Type = (int)type;
-        }
-
-        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype)
-        {
-            Name = name;
-            Sprite = sprite;
-            Damage = damage;
-            Armor = armor;
-            Type = type;
-            AttackSpeed = attackspeed;
-            ReloadSpeed = reloadspeed;
-            HealthRestore = healthRestore;
-            HungerRestore = foodRestore;
-            HydrateRestore = drinkRestore;
-            Strength = str;
-            Agility = agi;
-            Endurance = end;
-            Stamina = sta;
-            Clip = clip;
-            maxClip = maxclip;
-            ammoType = ammotype;
-        }
-
         public void CreateItemInDatabase()
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
+            Name = "Default";
+            Sprite = 1;
+            Damage = 0;
+            Armor = 0;
+            Type = (int)ItemType.None;
+            AttackSpeed = 0;
+            ReloadSpeed = 0;
+            HealthRestore = 0;
+            HungerRestore = 0;
+            HydrateRestore = 0;
+            Strength = 0;
+            Agility = 0;
+            Endurance = 0;
+            Stamina = 0;
+            Clip = 0;
+            MaxClip = 0;
+            ItemAmmoType = 0;
+
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
             string sql;
             SQLiteCommand sql_Command;
             sql = "INSERT INTO `ITEMS`";
@@ -69,37 +60,51 @@ namespace Server.Classes
             sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
-            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + maxClip + "','" + ammoType + "');";
-            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "');";
+            sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
-            s_Database.Close();
+            e_Database.Close();
         }
 
         public void SaveItemToDatabase(int itemNum)
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
             string sql;
             SQLiteCommand sql_Command;
             sql = "UPDATE ITEMS SET ";
             sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
             sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + maxClip + "', AMMOTYPE = '" + ammoType + "' ";
+            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "' ";
             sql = sql + "WHERE rowid = '" + itemNum + "';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
-            s_Database.Close();
+            e_Database.Close();
+        }
+
+        public void DeleteItemFromDatabase(int itemNum)
+        {
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
+            string sql;
+            SQLiteCommand sql_Command;
+
+            sql = "DELETE FROM ITEMS WHERE rowid = " + itemNum;
+
+            sql_Command = new SQLiteCommand(sql, e_Database);
+            sql_Command.ExecuteNonQuery();
+            e_Database.Close();
         }
 
         public void LoadItemFromDatabase(int itemNum)
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
             string sql;
 
-            sql = "SELECT * FROM `ITEMS` WHERE rowid = " + (itemNum + 1);
+            sql = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
 
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
             SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
 
             while (sql_Reader.Read())
@@ -119,10 +124,28 @@ namespace Server.Classes
                 Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
                 Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
                 Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
-            s_Database.Close();
+            e_Database.Close();
+        }
+
+        public void LoadNameFromDatabase(int itemNum)
+        {
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
+            string sql;
+
+            sql = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
+            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
+
+            while (sql_Reader.Read())
+            {
+                Name = sql_Reader["NAME"].ToString();
+            }
+            e_Database.Close();
         }
     }
 
