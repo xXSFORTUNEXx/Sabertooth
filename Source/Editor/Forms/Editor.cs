@@ -40,15 +40,11 @@ namespace Editor
             if (!Exists("Maps"))
             {
                 CreateDirectory("Maps");
-                Console.WriteLine("Checking for existing map...");
-                if (!File.Exists("Maps/Map.bin"))
-                {
-                    Console.WriteLine("Create default map");
-                }
             }
-            else
+            if (!File.Exists("Maps/Map.bin"))
             {
-                Console.WriteLine("Loading map...");
+                Map e_Map = new Map();
+                e_Map.CreateDefaultMap(e_Map);
             }
             if (!Exists("Database"))
             {
