@@ -12,6 +12,7 @@ using SFML.System;
 using static System.Environment;
 using Editor.Classes;
 using static System.Windows.Forms.Application;
+using System.Drawing;
 
 namespace Editor.Forms
 {
@@ -21,10 +22,24 @@ namespace Editor.Forms
         RenderText e_Text = new RenderText();
         Map e_Map = new Map();
         SFML.Graphics.View e_View = new SFML.Graphics.View();
-        public int ViewX { get; set; }
-        public int ViewY { get; set; }
-        public int CurX;
-        public int CurY;
+        Texture[] e_Tileset = new Texture[68];
+        Sprite e_SelectedTile = new Sprite();
+        Texture e_GridTexture = new Texture("Resources/Tilesets/Grid.png");
+        Sprite e_Grid = new Sprite();
+        int e_ViewX { get; set; }
+        int e_ViewY { get; set; }
+        int e_OffsetX = 25;
+        int e_OffsetY = 19;
+        int e_CursorX;
+        int e_CursorY;
+        int e_TileX;
+        int e_TileY;
+        int e_TileW = 1;
+        int e_TileH = 1;
+        int e_Layer;
+        int e_Type;
+        int e_SelectTileset;
+        int e_SpawnNumber;
         static int lastFrameRate;
         static int frameRate;
         static int lastTick;
@@ -33,62 +48,53 @@ namespace Editor.Forms
         {
             InitializeComponent();
             Visible = true;
-            KeyPress += new KeyPressEventHandler(EditorKeyPress);
+
+            picMap.KeyDown += new KeyEventHandler(EditorKeyDown);
+            picMap.MouseDown += new MouseEventHandler(EditorMouseDown);
+            picMap.MouseMove += new MouseEventHandler(EditorMouseMove);
+            picTileset.MouseDown += new MouseEventHandler(EditorTilesetMouseDown);
+            picTileset.Paint += new PaintEventHandler(EditorTilesetPaint);
+            picTileset.KeyDown += new KeyEventHandler(EditorTilesetKeyDown);
+
+            for (int i = 0; i < 68; i++)
+            {
+                cmbTileset.Items.Add("Tileset: " + (i + 1));
+                e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
+            }
+
             e_Map.LoadMap();
+
             MapEditorLoop();
         }
 
         void MapEditorLoop()
         {
             e_Window = new RenderWindow(picMap.Handle);
-            e_Window.SetFramerateLimit(25);
+            e_Window.SetFramerateLimit(40);
+            cmbTileset.SelectedIndex = 0;
+            e_Layer = (int)TileLayers.Ground;
+            e_Type = (int)TileType.None;
 
             while (Visible)
             {
+                if (tabTools.SelectedTab == tabTiles) { picTileset.Invalidate(); }
+                
                 e_View.Reset(new FloatRect(0, 0, 800, 600));
-                e_View.Move(new Vector2f(ViewX * 32, ViewY * 32));
+                e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
                 e_Window.SetView(e_View);
+
                 DoEvents();
                 e_Window.DispatchEvents();
+
                 e_Window.Clear();
                 DrawTiles();
+                DrawTypes();
+                DrawGrid();
                 Text = "Map Editor - FPS: " + CalculateFrameRate();                
                 e_Window.Display();
             }
-            Visible = false;
-        }
-
-        private void EditorKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 'w')
-            {
-                if (ViewY > 0)
-                {
-                    ViewY -= 1;
-                }
-            }
-            if (e.KeyChar == 's')
-            {
-                if (ViewY < 50)
-                {
-                    ViewY += 1;
-                }
-            }
-            if (e.KeyChar == 'a')
-            {
-                if (ViewX > 0)
-                {
-                    ViewX -= 1;
-                }
-            }
-
-            if (e.KeyChar == 'd')
-            {
-                if (ViewX < 50)
-                {
-                    ViewX += 1;
-                }
-            }
+            //Visible = false;
+            Exit();
         }
 
         void DrawTiles()
@@ -117,6 +123,614 @@ namespace Editor.Forms
                     }
                 }
             }
+
+            if (picMap.Focused)
+            {
+                DrawSelectTile(new Vector2f((e_CursorX * 32), (e_CursorY * 32)), (e_TileX * 32), (e_TileY * 32), (e_TileW * 32), (e_TileH * 32));
+            }
+        }
+
+        void DrawTypes()
+        {
+            if (tabTools.SelectedTab == tabTypes)
+            {
+                for (int x = 0; x < 50; x++)
+                {
+                    for (int y = 0; y < 50; y++)
+                    {
+                        if (e_Map.Ground[x, y].type != (int)TileType.None)
+                        {
+                            switch (e_Map.Ground[x, y].type)
+                            {
+                                case (int)TileType.Blocked:
+                                    e_Text.DrawText(e_Window, "B", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Red);
+                                    break;
+                                case (int)TileType.NPCSpawn:
+                                    e_Text.DrawText(e_Window, "N", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Yellow);
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void DrawGrid()
+        {
+            if (chkGrid.Checked)
+            {
+                e_Grid.Texture = e_GridTexture;
+
+                for (int x = 0; x < 25; x++)
+                {
+                    for (int y = 0; y < 19; y++)
+                    {
+                        e_Grid.TextureRect = new IntRect(0, 0, 32, 32);
+                        e_Grid.Position = new Vector2f(x * 32, y * 32);
+                        e_Window.Draw(e_Grid);
+                    }
+                }
+            }
+        }
+
+        void DrawSelectTile(Vector2f position, int x, int y, int w, int h)
+        {
+            if (tabTools.SelectedTab == tabTypes) { return; }
+            if (!picMap.Focused) { return; }
+            e_SelectedTile.Texture = e_Tileset[e_SelectTileset];
+            e_SelectedTile.TextureRect = new IntRect(x, y, w, h);
+            e_SelectedTile.Position = position;
+
+            e_Window.Draw(e_SelectedTile);
+        }
+
+        private void EditorKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.W:
+                    if (e_ViewY > 0)
+                    {
+                        e_ViewY -= 1;
+                    }
+                    break;
+                case Keys.S:
+                    if (e_ViewY < (50 - e_OffsetY))
+                    {
+                        e_ViewY += 1;
+                    }
+                    break;
+                case Keys.A:
+                    if (e_ViewX > 0)
+                    {
+                        e_ViewX -= 1;
+                    }
+                    break;
+                case Keys.D:
+                    if (e_ViewX < (50 - e_OffsetX))
+                    {
+                        e_ViewX += 1;
+                    }
+                    break;
+            }
+
+            lblViewX.Text = "View X: " + e_ViewX;
+            lblViewY.Text = "View Y: " + e_ViewY;
+        }
+
+        private void EditorMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            picMap.Focus();
+            e_CursorX = (e.X / 32) + e_ViewX;
+            e_CursorY = (e.Y / 32) + e_ViewY;
+            if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    switch (e_Layer)
+                    {
+                        case (int)TileLayers.Ground:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.Mask:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.MaskA:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.Fringe:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.FringeA:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                    }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    switch (e_Layer)
+                    {
+                        case (int)TileLayers.Ground:
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.Mask:
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.MaskA:
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.Fringe:
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.FringeA:
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                    }
+                }
+            }
+            else if (tabTools.SelectedTab == tabTypes)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
+                    if (e_Type == (int)TileType.NPCSpawn) { e_Map.Ground[e_CursorX, e_CursorY].spawnNum = e_SpawnNumber; }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].type = (int)TileType.None;
+                }
+            }
+            lblButtonDown.Text = "Button Down: " + e.Button.ToString();
+        }
+
+        private void EditorMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            picMap.Focus();
+            e_CursorX = (e.X / 32) + e_ViewX;
+            e_CursorY = (e.Y / 32) + e_ViewY;
+
+            if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    switch (e_Layer)
+                    {
+                        case (int)TileLayers.Ground:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Ground[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Ground[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.Mask:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Mask[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Mask[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.MaskA:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.MaskA[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.MaskA[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.Fringe:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.Fringe[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.Fringe[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                        case (int)TileLayers.FringeA:
+                            if (e_TileW > 1 || e_TileH > 1)
+                            {
+                                for (int x = 0; x < e_TileW; x++)
+                                {
+                                    for (int y = 0; y < e_TileH; y++)
+                                    {
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileX = (e_TileX + x) * 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileY = (e_TileY + y) * 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileW = 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].tileH = 32;
+                                        e_Map.FringeA[(e_CursorX + x), (e_CursorY + y)].Tileset = e_SelectTileset;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileX = (e_TileX * 32);
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileY = (e_TileY * 32);
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileW = 32;
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].tileH = 32;
+                                e_Map.FringeA[(e_CursorX), (e_CursorY)].Tileset = e_SelectTileset;
+                            }
+                            break;
+                    }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    switch (e_Layer)
+                    {
+                        case (int)TileLayers.Ground:
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Ground[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.Mask:
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Mask[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.MaskA:
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.MaskA[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.Fringe:
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.Fringe[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                        case (int)TileLayers.FringeA:
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileX = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileY = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileW = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].tileH = 0;
+                            e_Map.FringeA[(e_CursorX), (e_CursorY)].Tileset = 0;
+                            break;
+                    }
+                }
+            }
+            else if (tabTools.SelectedTab == tabTypes)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
+                    if (e_Type == (int)TileType.NPCSpawn) { e_Map.Ground[e_CursorX, e_CursorY].spawnNum = e_SpawnNumber; }
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].type = (int)TileType.None;
+                }
+            }
+            lblButtonDown.Text = "Button Down: " + e.Button.ToString();
+            lblMouseLoc.Text = "Mouse X: " + e_CursorX + ", Mouse Y: " + e_CursorY;
+        }
+
+        private void EditorTilesetKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.W:
+                    if (e_TileH > 1)
+                    {
+                        e_TileH -= 1;
+                    }
+                    break;
+                case Keys.S:
+                    e_TileH += 1;
+                    break;
+                case Keys.A:
+                    if (e_TileW > 1)
+                    {
+                        e_TileW -= 1;
+                    }
+                    break;
+                case Keys.D:
+                    e_TileW += 1;
+                    break;
+            }
+
+            lblSelectW.Text = "Select Tile W: " + e_TileW;
+            lblSelectH.Text = "Select Tile H: " + e_TileH;
+        }
+
+        private void EditorTilesetMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            picTileset.Focus();
+            if (e.Button == MouseButtons.Left)
+            {
+                e_TileX = (e.X / 32);
+                e_TileY = (e.Y / 32);
+            }
+
+            lblSelectX.Text = "Select Tile X: " + e_TileX;
+            lblSelectY.Text = "Select Tile Y: " + e_TileY;
+            lblButtonDown.Text = "Button Down: " + e.Button.ToString();
+        }
+
+        private void EditorTilesetPaint(object sender, PaintEventArgs e)
+        {
+            Graphics e_Graphics = e.Graphics;
+            Pen e_Pen = new Pen(System.Drawing.Color.Red, 1);
+            Rectangle e_SelectedTile = new Rectangle(new Point(e_TileX * 32, e_TileY * 32), new Size(e_TileW * 32, e_TileH * 32));
+            e_Graphics.DrawRectangle(e_Pen, e_SelectedTile);
+        }
+
+        private void cmbTileset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            picTileset.Image = System.Drawing.Image.FromFile("Resources/Tilesets/" + (cmbTileset.SelectedIndex + 1) + ".png");
+            picTileset.BackColor = System.Drawing.Color.HotPink;
+            e_SelectTileset = cmbTileset.SelectedIndex;
+        }
+
+        private void radGround_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Layer = (int)TileLayers.Ground;
+            lblLayer.Text = "Layer: Ground";
+        }
+
+        private void radMask_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Layer = (int)TileLayers.Mask;
+            lblLayer.Text = "Layer: Mask";
+        }
+
+        private void radMask2_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Layer = (int)TileLayers.MaskA;
+            lblLayer.Text = "Layer: Mask 2";
+        }
+
+        private void radFringe_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Layer = (int)TileLayers.Fringe;
+            lblLayer.Text = "Layer: Fringe";
+        }
+
+        private void radFringe2_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Layer = (int)TileLayers.FringeA;
+            lblLayer.Text = "Layer: Fringe A";
+        }
+
+        private void radNone_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.None;
+            lblType.Text = "Type: None";
+            pnlNpcSpawn.Visible = false;
+        }
+
+        private void radBlocked_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.Blocked;
+            lblType.Text = "Type: Blocked";
+            pnlNpcSpawn.Visible = false;
+        }
+
+        private void mnuOpen_Click(object sender, EventArgs e)
+        {
+            e_Map.LoadMap();
+        }
+
+        private void mnuSave_Click(object sender, EventArgs e)
+        {
+            e_Map.SaveMap();
+        }
+
+        private void mnuExit_Click(object sender, EventArgs e)
+        {
+            Visible = false;
+        }
+
+        private void radSpawnNpc_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.NPCSpawn;
+            lblType.Text = "Type: Npc Spawn";
+            e_SpawnNumber = 1;
+            pnlNpcSpawn.Visible = true;
+        }
+
+        private void scrlNpcNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_SpawnNumber = (scrlNpcNum.Value);
+            lblNpcSpawn.Text = "Npc Number: " + (scrlNpcNum.Value);
         }
 
         static int CalculateFrameRate()
@@ -134,16 +748,17 @@ namespace Editor.Forms
 
     public class RenderText
     {
-        Font e_Font = new Font("Resources/Fonts/Arial.ttf");
+        SFML.Graphics.Font e_Font = new SFML.Graphics.Font("Resources/Fonts/Arial.ttf");
         Text e_Text = new Text();
 
-        public void DrawText(RenderWindow e_Window, string eText, Vector2f position, uint e_Size, Color e_Color)
+        public void DrawText(RenderWindow e_Window, string eText, Vector2f position, uint e_Size, SFML.Graphics.Color e_Color)
         {
             e_Text.Font = e_Font; //set the font
             e_Text.CharacterSize = e_Size;  //set it size
             e_Text.Position = position;    //set its location on the screen
             e_Text.DisplayedString = eText;    //what is actually being displayed (text)
             e_Text.Color = e_Color; //the color of the text we are drawing
+            e_Text.Style = Text.Styles.Bold;
 
             e_Window.Draw(e_Text);  //window drawing function
         }
