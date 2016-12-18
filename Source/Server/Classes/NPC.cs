@@ -8,7 +8,7 @@ using static System.Convert;
 
 namespace Server.Classes
 {
-    class NPC
+    class Npc
     {
         SQLiteConnection s_Database;
         public string Name { get; set; }
@@ -29,10 +29,10 @@ namespace Server.Classes
         public bool didMove;
 
         //Empty NPC
-        public NPC() { }
+        public Npc() { }
 
         //Detailed NPC
-        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
         {
             Name = name;
             X = x;
@@ -50,7 +50,7 @@ namespace Server.Classes
         }
 
         //One with location but other default values as well
-        public NPC(int x, int y)
+        public Npc(int x, int y)
         {
             Name = "Default";
             X = x;

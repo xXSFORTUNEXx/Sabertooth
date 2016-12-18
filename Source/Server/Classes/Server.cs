@@ -16,7 +16,7 @@ namespace Server.Classes
     class Server
     {
         Player[] s_Player = new Player[5];
-        NPC[] s_Npc = new NPC[10];
+        Npc[] s_Npc = new Npc[10];
         Item[] s_Item = new Item[50];
         HandleData handleData = new HandleData();
         Projectile[] s_Proj = new Projectile[10];
@@ -45,7 +45,6 @@ namespace Server.Classes
 
         public void ServerLoop(NetServer s_Server)
         {
-            PopulateDatabase();
             InitPlayerArray();
             InitMap();
             InitItems();
@@ -60,8 +59,6 @@ namespace Server.Classes
             {
                 handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
                 SavePlayers();
-                CheckNPCSpawn(s_Server);
-                CheckNpcAI(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
                 CheckCommands(s_Server, s_Player);
@@ -170,57 +167,6 @@ namespace Server.Classes
             }
         }
 
-        ///Init methods
-        //Populate an empty database
-        void PopulateDatabase()
-        {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-
-            sql = "SELECT COUNT(*) FROM `ITEMS`";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
-            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
-
-            if (result == 0)
-            {
-                for (int i = 0; i < 50; i++)
-                {
-                    s_Item[i] = new Item("None", 1, 100, 0, (int)ItemType.None, 1000, 1500, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)AmmoType.None);
-                    s_Item[i].CreateItemInDatabase();
-                }
-            }
-
-            sql = "SELECT COUNT(*) FROM `PROJECTILES`";
-
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            result = int.Parse(sql_Command.ExecuteScalar().ToString());
-
-            if (result == 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    s_Proj[i] = new Projectile("None", 100, 50, 1, 0, (int)ProjType.Bullet, 150);
-                    s_Proj[i].CreateProjectileInDatabase();
-                }
-            }
-
-            sql = "SELECT COUNT(*) FROM `NPCS`";
-
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            result = int.Parse(sql_Command.ExecuteScalar().ToString());
-
-            if (result == 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    s_Npc[i] = new NPC("None", 10, 10, (int)Directions.Down, 0, 0, 0, (int)BehaviorType.Friendly, 5000, 100, 100, 10);
-                    s_Npc[i].CreateNpcInDatabase();
-                }
-            }
-        }
-
         //Creates the player array for use when players join
         void InitPlayerArray()
         {
@@ -287,7 +233,7 @@ namespace Server.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                s_Npc[i] = new NPC();
+                s_Npc[i] = new Npc();
                 s_Npc[i].LoadNpcFromDatabase(i);
             }
 
@@ -296,16 +242,19 @@ namespace Server.Classes
             {
                 for (int n = 0; n < 10; n++)
                 {
-                    int num = s_Map[i].mapNpc[n].npcNum;
-                    s_Map[i].mapNpc[n].Name = s_Npc[num].Name;
-                    s_Map[i].mapNpc[n].X = s_Npc[num].X;
-                    s_Map[i].mapNpc[n].Y = s_Npc[num].Y;
-                    s_Map[i].mapNpc[n].Direction = s_Npc[num].Direction;
-                    s_Map[i].mapNpc[n].Step = s_Npc[num].Step;
-                    s_Map[i].mapNpc[n].Sprite = s_Npc[num].Sprite;
-                    s_Map[i].mapNpc[n].Behavior = s_Npc[num].Behavior;
-                    s_Map[i].mapNpc[n].Owner = s_Npc[num].Owner;
-                    s_Map[i].mapNpc[n].isSpawned = s_Npc[num].isSpawned;
+                    int num = (s_Map[i].mapNpc[n].npcNum - 1);
+                    if (num > -1)
+                    {
+                        s_Map[i].mapNpc[n].Name = s_Npc[num].Name;
+                        s_Map[i].mapNpc[n].X = s_Npc[num].X;
+                        s_Map[i].mapNpc[n].Y = s_Npc[num].Y;
+                        s_Map[i].mapNpc[n].Direction = s_Npc[num].Direction;
+                        s_Map[i].mapNpc[n].Step = s_Npc[num].Step;
+                        s_Map[i].mapNpc[n].Sprite = s_Npc[num].Sprite;
+                        s_Map[i].mapNpc[n].Behavior = s_Npc[num].Behavior;
+                        s_Map[i].mapNpc[n].Owner = s_Npc[num].Owner;
+                        s_Map[i].mapNpc[n].isSpawned = s_Npc[num].isSpawned;
+                    }
                 }
             }
         }
@@ -403,80 +352,6 @@ namespace Server.Classes
                 }
             }
             WriteLine("Players saved!");
-        }
-
-        ///Regular check methods
-        //Run our AI script to get the npc's moving and killing shit
-        void CheckNpcAI(NetServer s_Server)
-        {
-            if (TickCount - aiTick > aiTime)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    for (int n = 0; n < 10; n++)
-                    {
-                        if (s_Map[i].mapNpc[n].isSpawned == true)
-                        {
-                            int canMove = RND.Next(0, 100);
-                            int dir = RND.Next(0, 3);
-
-                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i]);
-
-                            if (s_Map[i].mapNpc[n].didMove == true)
-                            {
-                                s_Map[i].mapNpc[n].didMove = false;
-                                
-                                for (int p = 0; p < 5; p++)
-                                {
-                                    if (s_Player[p].Connection != null && s_Player[p].Map == i)
-                                    {
-                                        handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                aiTick = TickCount;
-            }
-        }
-
-        //Check to see if we need to perhaps spawn an npc
-        void CheckNPCSpawn(NetServer s_Server)
-        {
-            //Check for map spawning
-            if (TickCount - spawnTick > spawnTime)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    for (int x = 0; x < 50; x++)
-                    {
-                        for (int y = 0; y < 50; y++)
-                        {
-                            if (s_Map[i].Ground[x, y].Type == (int)TileType.NPCSpawn)
-                            {
-                                int npcNum = s_Map[i].Ground[x, y].SpawnNum;
-
-                                if (s_Map[i].mapNpc[npcNum].isSpawned == false)
-                                {
-                                    s_Map[i].mapNpc[npcNum].X = x;
-                                    s_Map[i].mapNpc[npcNum].Y = y;
-                                    s_Map[i].mapNpc[npcNum].isSpawned = true;
-
-                                    for (int p = 0; p < 5; p++)
-                                    {
-                                        if (s_Player[p].Connection != null && i == s_Player[p].Map)
-                                        {
-                                            handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], npcNum);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            spawnTick = TickCount;
         }
 
         //Check to see if the user entered any commands

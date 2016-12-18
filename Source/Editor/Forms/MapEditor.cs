@@ -13,6 +13,7 @@ using static System.Environment;
 using Editor.Classes;
 using static System.Windows.Forms.Application;
 using System.Drawing;
+using System.Data.SQLite;
 
 namespace Editor.Forms
 {
@@ -26,6 +27,8 @@ namespace Editor.Forms
         Sprite e_SelectedTile = new Sprite();
         Texture e_GridTexture = new Texture("Resources/Tilesets/Grid.png");
         Sprite e_Grid = new Sprite();
+        SQLiteConnection e_Database;
+        Npc e_Npc = new Npc();
         int e_ViewX { get; set; }
         int e_ViewY { get; set; }
         int e_OffsetX = 25;
@@ -62,7 +65,44 @@ namespace Editor.Forms
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
 
+            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
+            e_Database.Open();
+            string sql;
+
+            sql = "SELECT COUNT(*) FROM NPCS";
+
+            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
+            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
+            e_Database.Close();
+
+            for (int i = 0; i < result; i++)
+            {
+                e_Npc.LoadNpcNameFromDatabase(i + 1);
+                cmbNpc1.Items.Add(e_Npc.Name);
+                cmbNpc2.Items.Add(e_Npc.Name);
+                cmbNpc3.Items.Add(e_Npc.Name);
+                cmbNpc4.Items.Add(e_Npc.Name);
+                cmbNpc5.Items.Add(e_Npc.Name);
+                cmbNpc6.Items.Add(e_Npc.Name);
+                cmbNpc7.Items.Add(e_Npc.Name);
+                cmbNpc8.Items.Add(e_Npc.Name);
+                cmbNpc9.Items.Add(e_Npc.Name);
+                cmbNpc10.Items.Add(e_Npc.Name);
+            }
+
             e_Map.LoadMap();
+
+            cmbNpc1.SelectedIndex = e_Map.mapNpc[0].npcNum;
+            cmbNpc2.SelectedIndex = e_Map.mapNpc[1].npcNum;
+            cmbNpc3.SelectedIndex = e_Map.mapNpc[2].npcNum;
+            cmbNpc4.SelectedIndex = e_Map.mapNpc[3].npcNum;
+            cmbNpc5.SelectedIndex = e_Map.mapNpc[4].npcNum;
+            cmbNpc6.SelectedIndex = e_Map.mapNpc[5].npcNum;
+            cmbNpc7.SelectedIndex = e_Map.mapNpc[6].npcNum;
+            cmbNpc8.SelectedIndex = e_Map.mapNpc[7].npcNum;
+            cmbNpc9.SelectedIndex = e_Map.mapNpc[8].npcNum;
+            cmbNpc10.SelectedIndex = e_Map.mapNpc[9].npcNum;
+            txtName.Text = e_Map.Name;
 
             MapEditorLoop();
         }
@@ -93,12 +133,14 @@ namespace Editor.Forms
                 Text = "Map Editor - FPS: " + CalculateFrameRate();                
                 e_Window.Display();
             }
-            //Visible = false;
-            Exit();
+            Visible = false;
+            //Exit();
         }
 
         void DrawTiles()
         {
+            if (pnlMapNpcs.Visible) { return; }
+
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -132,6 +174,7 @@ namespace Editor.Forms
 
         void DrawTypes()
         {
+            if (pnlMapNpcs.Visible) { return; }
             if (tabTools.SelectedTab == tabTypes)
             {
                 for (int x = 0; x < 50; x++)
@@ -160,6 +203,8 @@ namespace Editor.Forms
 
         void DrawGrid()
         {
+            if (pnlMapNpcs.Visible) { return; }
+
             if (chkGrid.Checked)
             {
                 e_Grid.Texture = e_GridTexture;
@@ -195,28 +240,31 @@ namespace Editor.Forms
                     if (e_ViewY > 0)
                     {
                         e_ViewY -= 1;
+                        scrlViewY.Value = e_ViewY;
                     }
                     break;
                 case Keys.S:
                     if (e_ViewY < (50 - e_OffsetY))
                     {
                         e_ViewY += 1;
+                        scrlViewY.Value = e_ViewY;
                     }
                     break;
                 case Keys.A:
                     if (e_ViewX > 0)
                     {
                         e_ViewX -= 1;
+                        scrlViewX.Value = e_ViewX;
                     }
                     break;
                 case Keys.D:
                     if (e_ViewX < (50 - e_OffsetX))
                     {
                         e_ViewX += 1;
+                        scrlViewX.Value = e_ViewX;
                     }
-                    break;
+                    break;               
             }
-
             lblViewX.Text = "View X: " + e_ViewX;
             lblViewY.Text = "View Y: " + e_ViewY;
         }
@@ -731,6 +779,167 @@ namespace Editor.Forms
         {
             e_SpawnNumber = (scrlNpcNum.Value);
             lblNpcSpawn.Text = "Npc Number: " + (scrlNpcNum.Value);
+        }
+
+        private void mnuFillLayer_Click(object sender, EventArgs e)
+        {
+            switch (e_Layer)
+            {
+                case (int)TileLayers.Ground:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Ground[x, y].tileX = (e_TileX * 32);
+                            e_Map.Ground[x, y].tileY = (e_TileY * 32);
+                            e_Map.Ground[x, y].tileW = 32;
+                            e_Map.Ground[x, y].tileH = 32;
+                            e_Map.Ground[x, y].Tileset = e_SelectTileset;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.Mask:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Mask[x, y].tileX = (e_TileX * 32);
+                            e_Map.Mask[x, y].tileY = (e_TileY * 32);
+                            e_Map.Mask[x, y].tileW = 32;
+                            e_Map.Mask[x, y].tileH = 32;
+                            e_Map.Mask[x, y].Tileset = e_SelectTileset;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.MaskA:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.MaskA[x, y].tileX = (e_TileX * 32);
+                            e_Map.MaskA[x, y].tileY = (e_TileY * 32);
+                            e_Map.MaskA[x, y].tileW = 32;
+                            e_Map.MaskA[x, y].tileH = 32;
+                            e_Map.MaskA[x, y].Tileset = e_SelectTileset;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.Fringe:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Fringe[x, y].tileX = (e_TileX * 32);
+                            e_Map.Fringe[x, y].tileY = (e_TileY * 32);
+                            e_Map.Fringe[x, y].tileW = 32;
+                            e_Map.Fringe[x, y].tileH = 32;
+                            e_Map.Fringe[x, y].Tileset = e_SelectTileset;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.FringeA:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.FringeA[x, y].tileX = (e_TileX * 32);
+                            e_Map.FringeA[x, y].tileY = (e_TileY * 32);
+                            e_Map.FringeA[x, y].tileW = 32;
+                            e_Map.FringeA[x, y].tileH = 32;
+                            e_Map.FringeA[x, y].Tileset = e_SelectTileset;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void btnCloseNpcs_Click(object sender, EventArgs e)
+        {
+            pnlMapNpcs.Visible = false;
+        }
+
+        private void mapNpcsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            pnlMapNpcs.Visible = true;
+        }
+
+        private void cmbNpc1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[0].npcNum = cmbNpc1.SelectedIndex;
+        }
+
+        private void cmbNpc2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[1].npcNum = cmbNpc2.SelectedIndex;
+        }
+
+        private void cmbNpc3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[2].npcNum = cmbNpc3.SelectedIndex;
+        }
+
+        private void cmbNpc4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[3].npcNum = cmbNpc4.SelectedIndex;
+        }
+
+        private void cmbNpc5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[4].npcNum = cmbNpc5.SelectedIndex;
+        }
+
+        private void cmbNpc6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[5].npcNum = cmbNpc6.SelectedIndex;
+        }
+
+        private void cmbNpc7_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[6].npcNum = cmbNpc7.SelectedIndex;
+        }
+
+        private void cmbNpc8_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[7].npcNum = cmbNpc8.SelectedIndex;
+        }
+
+        private void cmbNpc9_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[8].npcNum = cmbNpc9.SelectedIndex;
+        }
+
+        private void cmbNpc10_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            e_Map.mapNpc[9].npcNum = cmbNpc10.SelectedIndex;
+        }
+
+        private void scrlViewY_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_ViewY = scrlViewY.Value;
+            lblViewY.Text = "View Y: " + (scrlViewY.Value);
+            }
+
+        private void scrlViewX_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_ViewX = scrlViewX.Value;
+            lblViewX.Text = "View X: " + (scrlViewX.Value);
+        }
+
+        private void mnuDebug_Click(object sender, EventArgs e)
+        {
+            if (mnuDebug.Checked)
+            {
+                pnlDebug.Visible = true;
+            }
+            else
+            {
+                pnlDebug.Visible = false;
+            }
+        }
+
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+            e_Map.Name = txtName.Text;
         }
 
         static int CalculateFrameRate()

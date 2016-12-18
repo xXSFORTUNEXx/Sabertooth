@@ -11,7 +11,7 @@ namespace Server.Classes
 {
     class HandleData
     {
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             NetIncomingMessage incMSG;  //create incoming message
 
@@ -244,7 +244,7 @@ namespace Server.Classes
         }
 
         //Handle logging in requests for the server
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, NPC[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -625,7 +625,7 @@ namespace Server.Classes
         }
 
         //Send npc data to client
-        void SendNpcs(NetIncomingMessage incMSG, NetServer s_Server, NPC[] s_Npc)
+        void SendNpcs(NetIncomingMessage incMSG, NetServer s_Server, Npc[] s_Npc)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);

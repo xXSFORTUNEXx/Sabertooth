@@ -19,7 +19,7 @@ namespace Client.Classes
 
         //This is where we process the 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -272,7 +272,7 @@ namespace Client.Classes
         }
 
         //Handle incoming NPC data
-        void HandleNpcs(NetIncomingMessage incMSG, NPC[] c_Npc)
+        void HandleNpcs(NetIncomingMessage incMSG, Npc[] c_Npc)
         {
             for (int i = 0; i < 10; i++)
             {

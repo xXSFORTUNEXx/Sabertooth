@@ -20,7 +20,7 @@ namespace Client.Classes
         static GUI c_GUI;  //create the gui class
         HandleData handleData;  //create the handle data class (udp packet shit)
         Player[] c_Player = new Player[5]; //create player class array
-        NPC[] c_Npc = new NPC[10]; //create the npc class array
+        Npc[] c_Npc = new Npc[10]; //create the npc class array
         Item[] c_Item = new Item[50];   //Create item array
         Projectile[] c_Proj = new Projectile[10]; //create projectile array
         const int Max_Sprites = 200;
@@ -201,7 +201,7 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                c_Npc[i] = new NPC();
+                c_Npc[i] = new Npc();
             }
         }
 
@@ -367,7 +367,7 @@ namespace Client.Classes
             c_Canvas.RenderCanvas();   //draw the canvas so it doesnt move
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, NPC[] c_Npc, Item[] c_Item)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)
         {
             UpdateTitle(fps);   //update the title with the fps
             c_View.Reset(new FloatRect(0, 0, 800, 600));

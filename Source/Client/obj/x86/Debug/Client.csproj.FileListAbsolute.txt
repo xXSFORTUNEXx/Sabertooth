@@ -884,3 +884,7 @@ C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\ob
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\68.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\1.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\2.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\3.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\4.png

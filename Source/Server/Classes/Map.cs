@@ -270,7 +270,7 @@ namespace Server.Classes
         }
     }
 
-    class MapNpc : NPC
+    class MapNpc : Npc
     {
         public int npcNum { get; set; }
 

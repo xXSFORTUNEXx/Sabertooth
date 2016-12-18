@@ -3,7 +3,7 @@ using SFML.System;
 
 namespace Client.Classes
 {
-    class NPC
+    class Npc
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -22,9 +22,9 @@ namespace Client.Classes
 
         Sprite c_Sprite = new Sprite();
 
-        public NPC() { }
+        public Npc() { }
 
-        public NPC(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
         {
             Name = name;
             X = x;
@@ -37,7 +37,7 @@ namespace Client.Classes
             SpawnTime = spawnTime;
         }
 
-        public NPC(int x, int y)
+        public Npc(int x, int y)
         {
             Name = "Default";
             X = x;
