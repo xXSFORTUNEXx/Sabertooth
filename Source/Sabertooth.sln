@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9AB3F5D0-7B9E-4022-9C79-77E269D4EA7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Former Editor", "Former Editor\Former Editor.csproj", "{E322B58D-372D-447A-B8D0-87BD3567E3B6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{570DAC81-EF23-4070-8E96-0B44C2309966}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{9AB3F5D0-7B9E-4022-9C79-77E269D4EA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AB3F5D0-7B9E-4022-9C79-77E269D4EA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AB3F5D0-7B9E-4022-9C79-77E269D4EA7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E322B58D-372D-447A-B8D0-87BD3567E3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E322B58D-372D-447A-B8D0-87BD3567E3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E322B58D-372D-447A-B8D0-87BD3567E3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E322B58D-372D-447A-B8D0-87BD3567E3B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{570DAC81-EF23-4070-8E96-0B44C2309966}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{570DAC81-EF23-4070-8E96-0B44C2309966}.Debug|Any CPU.Build.0 = Debug|x86
 		{570DAC81-EF23-4070-8E96-0B44C2309966}.Release|Any CPU.ActiveCfg = Release|Any CPU

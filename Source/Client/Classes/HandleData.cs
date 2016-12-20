@@ -615,6 +615,11 @@ namespace Client.Classes
         {
             c_Map.Name = incMSG.ReadString();
 
+            for (int i = 0; i < 10; i++)
+            {
+                c_Map.mapNpc[i] = new MapNpc();
+            }
+
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)

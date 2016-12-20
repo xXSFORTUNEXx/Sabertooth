@@ -59,6 +59,7 @@ namespace Server.Classes
             {
                 handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
                 SavePlayers();
+                CheckNpcSpawn(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
                 CheckCommands(s_Server, s_Player);
@@ -243,6 +244,7 @@ namespace Server.Classes
                 for (int n = 0; n < 10; n++)
                 {
                     int num = (s_Map[i].mapNpc[n].npcNum - 1);
+
                     if (num > -1)
                     {
                         s_Map[i].mapNpc[n].Name = s_Npc[num].Name;
@@ -335,6 +337,43 @@ namespace Server.Classes
                         handleData.SendUpdateVitalData(s_Server, i, "water", s_Player[i].Hydration);
                     }
                     s_Player[i].hydrationTick = TickCount;
+                }
+            }
+        }
+
+        //Checks and spawns NPC's from the map
+        void CheckNpcSpawn(NetServer s_Server)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (s_Map[i] != null && s_Map[i].Name != null)
+                {
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            if (s_Map[i].Ground[x, y].Type == (int)TileType.NPCSpawn)
+                            {
+                                for (int c = 0; c < 10; c++)
+                                {
+                                    if (s_Map[i].Ground[x, y].SpawnNum == (c + 1) && !s_Map[i].mapNpc[c].isSpawned)
+                                    {
+                                        s_Map[i].mapNpc[c].X = x;
+                                        s_Map[i].mapNpc[c].Y = y;
+                                        s_Map[i].mapNpc[c].isSpawned = true;
+
+                                        for (int p = 0; p < 5; p++)
+                                        {
+                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                            {
+                                                handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                            }
+                                        }
+                                    }
+                                }                                
+                            }
+                        }
+                    }
                 }
             }
         }

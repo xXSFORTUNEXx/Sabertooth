@@ -267,8 +267,8 @@ namespace Server.Classes
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
                         SendProjectiles(incMSG, s_Server, s_Proj);
-                        SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
+                        SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                     }
                     else
                     {
