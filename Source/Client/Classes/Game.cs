@@ -286,7 +286,10 @@ namespace Client.Classes
             {
                 if (c_Map.mapNpc[i].isSpawned == true)
                 {
-                    c_Map.mapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.mapNpc[i].Sprite - 1)]);
+                    if (c_Map.mapNpc[i].Sprite > 0)
+                    {
+                        c_Map.mapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.mapNpc[i].Sprite - 1)]);
+                    }                   
                 }
             }
         }

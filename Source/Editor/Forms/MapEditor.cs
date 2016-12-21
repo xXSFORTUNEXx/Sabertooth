@@ -29,6 +29,7 @@ namespace Editor.Forms
         Sprite e_Grid = new Sprite();
         SQLiteConnection e_Database;
         Npc e_Npc = new Npc();
+        Texture[] e_Texture = new Texture[204];
         int e_ViewX { get; set; }
         int e_ViewY { get; set; }
         int e_OffsetX = 25;
@@ -63,6 +64,11 @@ namespace Editor.Forms
             {
                 cmbTileset.Items.Add("Tileset: " + (i + 1));
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
+            }
+
+            for (int s = 0; s < 204; s++)
+            {
+                e_Texture[s] = new Texture("Resources/Characters/" + (s + 1) + ".png");
             }
 
             e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
@@ -128,6 +134,7 @@ namespace Editor.Forms
 
                 e_Window.Clear();
                 DrawTiles();
+                DrawNpcs();
                 DrawTypes();
                 DrawGrid();
                 Text = "Map Editor - FPS: " + CalculateFrameRate();                
@@ -216,6 +223,26 @@ namespace Editor.Forms
                         e_Grid.TextureRect = new IntRect(0, 0, 32, 32);
                         e_Grid.Position = new Vector2f(x * 32, y * 32);
                         e_Window.Draw(e_Grid);
+                    }
+                }
+            }
+        }
+
+        void DrawNpcs()
+        {
+            if (tabTools.SelectedTab != tabTypes) { return; }
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    if (e_Map.Ground[x, y].type == (int)TileType.NPCSpawn)
+                    {
+                        if (e_Map.Ground[x, y].spawnNum > 0)
+                        {
+                            int npcNum = e_Map.Ground[x, y].spawnNum;
+                            e_Npc.LoadNpcFromDatabase(npcNum);
+                            e_Map.mapNpc[npcNum].DrawMapNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
+                        }
                     }
                 }
             }

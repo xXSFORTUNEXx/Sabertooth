@@ -3,6 +3,9 @@ using System;
 using System.IO;
 using System.Data.SQLite;
 using static System.Convert;
+using SFML.Graphics;
+using SFML.Window;
+using SFML.System;
 
 namespace Editor.Classes
 {
@@ -39,6 +42,7 @@ namespace Editor.Classes
             MaxHealth = maxhealth;
             Damage = damage;
         }
+
 
         public void CreateNpcInDatabase()
         {

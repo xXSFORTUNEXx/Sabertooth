@@ -406,6 +406,7 @@ namespace Editor.Classes
     class MapNpc : Npc
     {
         public int npcNum { get; set; }
+        Sprite e_Sprite = new Sprite();
 
         public MapNpc() { }
 
@@ -415,6 +416,15 @@ namespace Editor.Classes
             X = x;
             Y = y;
             npcnum = npcNum;
+        }
+
+        public void DrawMapNpc(RenderWindow e_Window, Texture e_Texture, int x, int y)
+        {
+            e_Sprite.Texture = e_Texture;
+            e_Sprite.TextureRect = new IntRect(0, 0, 32, 48);
+            e_Sprite.Position = new Vector2f(x * 32, (y * 32) - 16);
+
+            e_Window.Draw(e_Sprite);
         }
     }
 
