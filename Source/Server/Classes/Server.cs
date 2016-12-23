@@ -62,6 +62,7 @@ namespace Server.Classes
                 CheckNpcSpawn(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
+                CheckNpcAI(s_Server);
                 CheckCommands(s_Server, s_Player);
                 UpTime();
             }
@@ -341,7 +342,6 @@ namespace Server.Classes
             }
         }
 
-        //Checks and spawns NPC's from the map
         void CheckNpcSpawn(NetServer s_Server)
         {
             for (int i = 0; i < 10; i++)
@@ -375,6 +375,40 @@ namespace Server.Classes
                         }
                     }
                 }
+            }
+        }
+
+        void CheckNpcAI(NetServer s_Server)
+        {
+            if (TickCount - aiTick > aiTime)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    for (int n = 0; n < 10; n++)
+                    {
+                        if (s_Map[i].mapNpc[n].isSpawned)
+                        {
+                            int canMove = RND.Next(0, 100);
+                            int dir = RND.Next(0, 3);
+
+                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i]);
+
+                            if (s_Map[i].mapNpc[n].didMove)
+                            {
+                                s_Map[i].mapNpc[n].didMove = false;
+
+                                for (int p = 0; p < 5; p++)
+                                {
+                                    if (s_Player[p].Connection != null && s_Player[p].Map == i)
+                                    {
+                                        handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                aiTick = TickCount;
             }
         }
 

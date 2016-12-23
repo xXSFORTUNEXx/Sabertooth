@@ -230,18 +230,22 @@ namespace Editor.Forms
 
         void DrawNpcs()
         {
-            if (tabTools.SelectedTab != tabTypes) { return; }
-            for (int x = 0; x < 50; x++)
+            if (pnlMapNpcs.Visible) { return; }
+
+            if (chkNpc.Checked)
             {
-                for (int y = 0; y < 50; y++)
+                for (int x = 0; x < 50; x++)
                 {
-                    if (e_Map.Ground[x, y].type == (int)TileType.NPCSpawn)
+                    for (int y = 0; y < 50; y++)
                     {
-                        if (e_Map.Ground[x, y].spawnNum > 0)
+                        if (e_Map.Ground[x, y].type == (int)TileType.NPCSpawn)
                         {
-                            int npcNum = e_Map.Ground[x, y].spawnNum;
-                            e_Npc.LoadNpcFromDatabase(npcNum);
-                            e_Map.mapNpc[npcNum].DrawMapNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
+                            if (e_Map.Ground[x, y].spawnNum > 0)
+                            {
+                                int npcNum = e_Map.Ground[x, y].spawnNum;
+                                e_Npc.LoadNpcFromDatabase(npcNum);
+                                e_Map.mapNpc[npcNum].DrawMapNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
+                            }
                         }
                     }
                 }

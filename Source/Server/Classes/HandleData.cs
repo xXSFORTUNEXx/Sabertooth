@@ -679,7 +679,7 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
-            outMSG.Write(npcNum);
+            outMSG.WriteVariableInt32(npcNum);
             outMSG.Write(s_Map.mapNpc[npcNum].Name);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].X);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Y);

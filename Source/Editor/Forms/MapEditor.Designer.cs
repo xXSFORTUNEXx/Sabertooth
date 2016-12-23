@@ -87,6 +87,7 @@
             this.lblNpcs = new System.Windows.Forms.Label();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
+            this.chkNpc = new System.Windows.Forms.CheckBox();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -115,6 +116,7 @@
             // 
             // tabLayer
             // 
+            this.tabLayer.Controls.Add(this.chkNpc);
             this.tabLayer.Controls.Add(this.chkGrid);
             this.tabLayer.Controls.Add(this.radFringe);
             this.tabLayer.Controls.Add(this.radFringe2);
@@ -537,7 +539,7 @@
             // 
             this.mnuDebug.CheckOnClick = true;
             this.mnuDebug.Name = "mnuDebug";
-            this.mnuDebug.Size = new System.Drawing.Size(152, 22);
+            this.mnuDebug.Size = new System.Drawing.Size(128, 22);
             this.mnuDebug.Text = "Debug";
             this.mnuDebug.Click += new System.EventHandler(this.mnuDebug_Click);
             // 
@@ -720,6 +722,16 @@
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
             // 
+            // chkNpc
+            // 
+            this.chkNpc.AutoSize = true;
+            this.chkNpc.Location = new System.Drawing.Point(19, 171);
+            this.chkNpc.Name = "chkNpc";
+            this.chkNpc.Size = new System.Drawing.Size(79, 17);
+            this.chkNpc.TabIndex = 14;
+            this.chkNpc.Text = "Show npcs";
+            this.chkNpc.UseVisualStyleBackColor = true;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -821,5 +833,6 @@
         private System.Windows.Forms.TabPage tabProp;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkNpc;
     }
 }

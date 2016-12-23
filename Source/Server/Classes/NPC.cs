@@ -128,6 +128,82 @@ namespace Server.Classes
             }
             s_Database.Close();
         }
+
+        public void NpcAI(int canMove, int dir, Map movementMap)
+        {
+            didMove = false;
+
+            if (canMove > 80)
+            {
+                switch (dir)
+                {
+                    case (int)Directions.Down:
+                        if (Y < 49)
+                        {
+                            if (movementMap.Ground[X, Y + 1].Type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Down;
+                                didMove = true;
+                                return;
+                            }
+                            Y += 1;
+                            Direction = (int)Directions.Down;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Left:
+                        if (X > 1)
+                        {
+                            if (movementMap.Ground[X - 1, Y].Type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Left;
+                                didMove = true;
+                                return;
+                            }
+                            X -= 1;
+                            Direction = (int)Directions.Left;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Right:
+                        if (X < 49)
+                        {
+                            if (movementMap.Ground[X + 1, Y].Type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Right;
+                                didMove = true;
+                                return;
+                            }
+                            X += 1;
+                            Direction = (int)Directions.Right;
+                            didMove = true;
+                        }
+                        break;
+
+                    case (int)Directions.Up:
+                        if (Y > 1)
+                        {
+                            if (movementMap.Ground[X, Y - 1].Type == (int)TileType.Blocked)
+                            {
+                                Direction = (int)Directions.Up;
+                                didMove = true;
+                                return;
+                            }
+                            Y -= 1;
+                            Direction = (int)Directions.Up;
+                            didMove = true;
+                        }
+                        break;
+                }
+
+                if (didMove == true)
+                {
+                    if (Step == 3) { Step = 0; } else { Step += 1; }
+                }
+            }
+        }
     }
 
     public enum BehaviorType

@@ -284,7 +284,7 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                if (c_Map.mapNpc[i].isSpawned == true)
+                if (c_Map.mapNpc[i].isSpawned)
                 {
                     if (c_Map.mapNpc[i].Sprite > 0)
                     {
