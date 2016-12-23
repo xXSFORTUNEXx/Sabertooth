@@ -391,7 +391,7 @@ namespace Server.Classes
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
-                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i]);
+                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player);
 
                             if (s_Map[i].mapNpc[n].didMove)
                             {

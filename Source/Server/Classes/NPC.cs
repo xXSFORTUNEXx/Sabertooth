@@ -129,7 +129,7 @@ namespace Server.Classes
             s_Database.Close();
         }
 
-        public void NpcAI(int canMove, int dir, Map movementMap)
+        public void NpcAI(int canMove, int dir, Map movementMap, Player[] s_Player)
         {
             didMove = false;
 
@@ -146,6 +146,30 @@ namespace Server.Classes
                                 didMove = true;
                                 return;
                             }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
+                                {
+                                    if ((Y + 1) == movementMap.mapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((Y + 1) == s_Player[p].Y)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             Y += 1;
                             Direction = (int)Directions.Down;
                             didMove = true;
@@ -160,6 +184,30 @@ namespace Server.Classes
                                 Direction = (int)Directions.Left;
                                 didMove = true;
                                 return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
+                                {
+                                    if ((X - 1) == movementMap.mapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Left;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((X - 1) == s_Player[p].X)
+                                    {
+                                        Direction = (int)Directions.Left;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
                             }
                             X -= 1;
                             Direction = (int)Directions.Left;
@@ -176,6 +224,30 @@ namespace Server.Classes
                                 didMove = true;
                                 return;
                             }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
+                                {
+                                    if ((X + 1) == movementMap.mapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((X + 1) == s_Player[p].X)
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             X += 1;
                             Direction = (int)Directions.Right;
                             didMove = true;
@@ -190,6 +262,30 @@ namespace Server.Classes
                                 Direction = (int)Directions.Up;
                                 didMove = true;
                                 return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
+                                {
+                                    if ((Y - 1) == movementMap.mapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((Y - 1) == s_Player[p].Y)
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        didMove = true;
+                                        return;
+                                    }
+                                }
                             }
                             Y -= 1;
                             Direction = (int)Directions.Up;

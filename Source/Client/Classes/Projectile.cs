@@ -89,7 +89,7 @@ namespace Client.Classes
                 case (int)Directions.Left:
                     if (X > 1)
                     {
-                        if (c_MoveMap.Ground[(X + 1), Y].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[(X - 1), Y].type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Left;
                             Moved = false;
@@ -135,7 +135,7 @@ namespace Client.Classes
                 case (int)Directions.Up:
                     if (Y > 1)
                     {
-                        if (c_MoveMap.Ground[X, (Y + 1)].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[X, (Y - 1)].type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Up;
                             Moved = false;
