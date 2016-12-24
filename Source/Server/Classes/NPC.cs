@@ -21,18 +21,22 @@ namespace Server.Classes
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
         public int Health { get; set; }
-        public int maxHealth { get; set; }
+        public int MaxHealth { get; set; }
         public int Damage { get; set; }
+        public int DesX { get; set; }
+        public int DesY { get; set; }
 
         //Only needed on live server and client no editors
-        public bool isSpawned;
-        public bool didMove;
+        public bool IsSpawned;
+        public bool DidMove;
+        public int Target;
+        public double s_LastPoint;
 
         //Empty NPC
         public Npc() { }
 
         //Detailed NPC
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy)
         {
             Name = name;
             X = x;
@@ -43,10 +47,12 @@ namespace Server.Classes
             Owner = owner;
             Behavior = behavior;
             SpawnTime = spawnTime;
-            isSpawned = false;
+            IsSpawned = false;
             Health = health;
-            maxHealth = maxhealth;
+            MaxHealth = maxhealth;
             Damage = damage;
+            DesX = desx;
+            DesY = desy;
         }
 
         //One with location but other default values as well
@@ -61,24 +67,39 @@ namespace Server.Classes
             Owner = 0;
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
-            isSpawned = false;
+            IsSpawned = false;
             Health = 100;
-            maxHealth = 100;
+            MaxHealth = 100;
             Damage = 10;
         }
 
         public void CreateNpcInDatabase()
         {
+            Name = "Default";
+            X = 0;
+            Y = 0;
+            Direction = 0;
+            Sprite = 1;
+            Step = 0;
+            Owner = 0;
+            Behavior = 0;
+            SpawnTime = 0;
+            Health = 0;
+            MaxHealth = 0;
+            Damage = 0;
+            DesX = 0;
+            DesY = 0;
+
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             s_Database.Open();
             string sql;
             SQLiteCommand sql_Command;
 
-            sql = "INSERT INTO `NPCS`";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`)";
+            sql = "INSERT INTO NPCS";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + maxHealth + "','" + Damage + "');";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "');";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
@@ -93,8 +114,8 @@ namespace Server.Classes
 
             sql = "UPDATE NPCS SET ";
             sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + maxHealth + "', DAMAGE = '" + Damage + "' ";
-            sql = sql + "WHERE rowid = '" + npcNum + "';"; 
+            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "' ";
+            sql = sql + "WHERE rowid = '" + npcNum + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
@@ -106,7 +127,7 @@ namespace Server.Classes
             s_Database.Open();
             string sql;
 
-            sql = "SELECT * FROM `NPCS` WHERE rowid = " + (npcNum + 1);
+            sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
 
             SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
             SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
@@ -123,181 +144,293 @@ namespace Server.Classes
                 Behavior = ToInt32(sql_Reader["BEHAVIOR"].ToString());
                 SpawnTime = ToInt32(sql_Reader["SPAWNTIME"].ToString());
                 Health = ToInt32(sql_Reader["HEALTH"].ToString());
-                maxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
+                MaxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
                 Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
+                DesX = ToInt32(sql_Reader["DESX"].ToString());
+                DesY = ToInt32(sql_Reader["DESY"].ToString());
             }
             s_Database.Close();
         }
 
         public void NpcAI(int canMove, int dir, Map movementMap, Player[] s_Player)
         {
-            didMove = false;
+            DidMove = false;
 
-            if (canMove > 80)
+            switch (Behavior)
             {
-                switch (dir)
-                {
-                    case (int)Directions.Down:
-                        if (Y < 49)
-                        {
-                            if (movementMap.Ground[X, Y + 1].Type == (int)TileType.Blocked)
-                            {
-                                Direction = (int)Directions.Down;
-                                didMove = true;
-                                return;
-                            }
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
-                                {
-                                    if ((Y + 1) == movementMap.mapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Down;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((Y + 1) == s_Player[p].Y)
-                                    {
-                                        Direction = (int)Directions.Down;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            Y += 1;
-                            Direction = (int)Directions.Down;
-                            didMove = true;
-                        }
-                        break;
+                case (int)BehaviorType.Friendly:
 
-                    case (int)Directions.Left:
-                        if (X > 1)
+                    if (canMove > 80)
+                    {
+                        switch (dir)
                         {
-                            if (movementMap.Ground[X - 1, Y].Type == (int)TileType.Blocked)
-                            {
-                                Direction = (int)Directions.Left;
-                                didMove = true;
-                                return;
-                            }
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
+                            case (int)Directions.Down:
+                                if (Y < 49)
                                 {
-                                    if ((X - 1) == movementMap.mapNpc[i].X)
+                                    if (movementMap.Ground[X, Y + 1].Type == (int)TileType.Blocked)
                                     {
-                                        Direction = (int)Directions.Left;
-                                        didMove = true;
+                                        Direction = (int)Directions.Down;
+                                        DidMove = true;
                                         return;
                                     }
+                                    for (int i = 0; i < 10; i++)
+                                    {
+                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        {
+                                            if ((Y + 1) == movementMap.mapNpc[i].Y)
+                                            {
+                                                Direction = (int)Directions.Down;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (s_Player[p].Connection != null)
+                                        {
+                                            if ((Y + 1) == s_Player[p].Y)
+                                            {
+                                                Direction = (int)Directions.Down;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    Y += 1;
+                                    Direction = (int)Directions.Down;
+                                    DidMove = true;
                                 }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
+                                break;
+
+                            case (int)Directions.Left:
+                                if (X > 1)
                                 {
-                                    if ((X - 1) == s_Player[p].X)
+                                    if (movementMap.Ground[X - 1, Y].Type == (int)TileType.Blocked)
                                     {
                                         Direction = (int)Directions.Left;
-                                        didMove = true;
+                                        DidMove = true;
                                         return;
                                     }
+                                    for (int i = 0; i < 10; i++)
+                                    {
+                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        {
+                                            if ((X - 1) == movementMap.mapNpc[i].X)
+                                            {
+                                                Direction = (int)Directions.Left;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (s_Player[p].Connection != null)
+                                        {
+                                            if ((X - 1) == s_Player[p].X)
+                                            {
+                                                Direction = (int)Directions.Left;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    X -= 1;
+                                    Direction = (int)Directions.Left;
+                                    DidMove = true;
                                 }
+                                break;
+
+                            case (int)Directions.Right:
+                                if (X < 49)
+                                {
+                                    if (movementMap.Ground[X + 1, Y].Type == (int)TileType.Blocked)
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                    for (int i = 0; i < 10; i++)
+                                    {
+                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        {
+                                            if ((X + 1) == movementMap.mapNpc[i].X)
+                                            {
+                                                Direction = (int)Directions.Right;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (s_Player[p].Connection != null)
+                                        {
+                                            if ((X + 1) == s_Player[p].X)
+                                            {
+                                                Direction = (int)Directions.Right;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    X += 1;
+                                    Direction = (int)Directions.Right;
+                                    DidMove = true;
+                                }
+                                break;
+
+                            case (int)Directions.Up:
+                                if (Y > 1)
+                                {
+                                    if (movementMap.Ground[X, Y - 1].Type == (int)TileType.Blocked)
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                    for (int i = 0; i < 10; i++)
+                                    {
+                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        {
+                                            if ((Y - 1) == movementMap.mapNpc[i].Y)
+                                            {
+                                                Direction = (int)Directions.Up;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (s_Player[p].Connection != null)
+                                        {
+                                            if ((Y - 1) == s_Player[p].Y)
+                                            {
+                                                Direction = (int)Directions.Up;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    Y -= 1;
+                                    Direction = (int)Directions.Up;
+                                    DidMove = true;
+                                }
+                                break;
+                        }
+
+                        if (DidMove == true)
+                        {
+                            if (Step == 3) { Step = 0; } else { Step += 1; }
+                        }
+                    }
+                break;
+
+                case (int)BehaviorType.Passive:
+                        //Not really sure we have to do anything here
+                    break;
+
+                case (int)BehaviorType.Aggressive:
+
+                    for (int p = 0; p < 5; p++)
+                    {
+                        if (s_Player[p].Connection != null && s_Player[p].Name != null)
+                        {
+                            int s_PlayerX = s_Player[p].X + 12; //Maybe offset...
+                            int s_PlayerY = s_Player[p].Y + 9;
+                            double s_DisX = X - s_PlayerX;
+                            double s_DisY = Y - s_PlayerY;
+                            double s_Final = s_DisX * s_DisX + s_DisY * s_DisY;
+                            double s_DisPoint = Math.Sqrt(s_Final);
+
+                            if (s_DisPoint < s_LastPoint)
+                            {
+                                Target = p;                                
                             }
-                            X -= 1;
+
+                            s_LastPoint = s_DisPoint;
+                        }
+                    }
+
+                    if (X != s_Player[Target].X)
+                    {
+                        if (X > s_Player[Target].X + 12 && X > 0)
+                        {
                             Direction = (int)Directions.Left;
-                            didMove = true;
+                            X -= 1;
+                            DidMove = true;
                         }
-                        break;
-
-                    case (int)Directions.Right:
-                        if (X < 49)
+                        else if (X < s_Player[Target].X + 12 && X < 50)
                         {
-                            if (movementMap.Ground[X + 1, Y].Type == (int)TileType.Blocked)
-                            {
-                                Direction = (int)Directions.Right;
-                                didMove = true;
-                                return;
-                            }
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
-                                {
-                                    if ((X + 1) == movementMap.mapNpc[i].X)
-                                    {
-                                        Direction = (int)Directions.Right;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((X + 1) == s_Player[p].X)
-                                    {
-                                        Direction = (int)Directions.Right;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            X += 1;
                             Direction = (int)Directions.Right;
-                            didMove = true;
+                            X += 1;
+                            DidMove = true;
                         }
-                        break;
+                    }
 
-                    case (int)Directions.Up:
-                        if (Y > 1)
+                    if (Y != s_Player[Target].Y)
+                    {
+                        if (Y > s_Player[Target].Y + 9 && Y > 0)
                         {
-                            if (movementMap.Ground[X, Y - 1].Type == (int)TileType.Blocked)
-                            {
-                                Direction = (int)Directions.Up;
-                                didMove = true;
-                                return;
-                            }
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (movementMap.mapNpc[i].isSpawned && Name != movementMap.mapNpc[i].Name)
-                                {
-                                    if ((Y - 1) == movementMap.mapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Up;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((Y - 1) == s_Player[p].Y)
-                                    {
-                                        Direction = (int)Directions.Up;
-                                        didMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            Y -= 1;
                             Direction = (int)Directions.Up;
-                            didMove = true;
+                            Y -= 1;
+                            DidMove = true;
                         }
-                        break;
-                }
+                        else if (Y < s_Player[Target].Y + 9 && Y < 50)
+                        {
+                            Direction = (int)Directions.Down;
+                            Y += 1;
+                            DidMove = true;
+                        }
+                    }
 
-                if (didMove == true)
-                {
-                    if (Step == 3) { Step = 0; } else { Step += 1; }
-                }
+                    if (DidMove == true)
+                    {
+                        if (Step == 3) { Step = 0; } else { Step += 1; }
+                    }
+                    break;
+
+                case (int)BehaviorType.ToLocation:                   
+
+                    if (X != DesX)
+                    {
+                        if (X > DesX && X > 0)
+                        {
+                            Direction = (int)Directions.Left;
+                            X -= 1;
+                            DidMove = true;
+                        }
+                        else if (X < DesX && X < 50)
+                        {
+                            Direction = (int)Directions.Right;
+                            X += 1;
+                            DidMove = true;
+                        }
+                    }
+
+                    if (Y != DesY)
+                    {
+                        if (Y > DesY && Y > 0)
+                        {
+                            Direction = (int)Directions.Up;
+                            Y -= 1;
+                            DidMove = true;
+                        }
+                        else if (Y < DesY && Y < 50)
+                        {
+                            Direction = (int)Directions.Down;
+                            Y += 1;
+                            DidMove = true;
+                        }
+                    }
+
+                    if (DidMove == true)
+                    {
+                        if (Step == 3) { Step = 0; } else { Step += 1; }
+                    }
+                    break;
             }
         }
     }
@@ -306,6 +439,7 @@ namespace Server.Classes
     {
         Friendly,
         Passive,
-        Aggressive
+        Aggressive,
+        ToLocation
     }
 }

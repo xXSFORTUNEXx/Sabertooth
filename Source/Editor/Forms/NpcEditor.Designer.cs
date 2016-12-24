@@ -295,7 +295,8 @@
             this.cmbBehavior.Items.AddRange(new object[] {
             "Friendly",
             "Passive",
-            "Aggressive"});
+            "Aggressive",
+            "ToLocation"});
             this.cmbBehavior.Location = new System.Drawing.Point(215, 42);
             this.cmbBehavior.Name = "cmbBehavior";
             this.cmbBehavior.Size = new System.Drawing.Size(156, 21);

@@ -24,10 +24,12 @@ namespace Editor.Classes
         public int Health { get; set; }
         public int MaxHealth { get; set; }
         public int Damage { get; set; }
+        public int DesX { get; set; }
+        public int DesY { get; set; }
 
         public Npc() { }
 
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy)
         {
             Name = name;
             X = x;
@@ -41,6 +43,8 @@ namespace Editor.Classes
             Health = health;
             MaxHealth = maxhealth;
             Damage = damage;
+            DesX = desx;
+            DesY = desy;
         }
 
 
@@ -58,6 +62,8 @@ namespace Editor.Classes
             Health = 0;
             MaxHealth = 0;
             Damage = 0;
+            DesX = 0;
+            DesY = 0;
 
             e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             e_Database.Open();
@@ -65,10 +71,10 @@ namespace Editor.Classes
             SQLiteCommand sql_Command;
 
             sql = "INSERT INTO NPCS";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`)";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "');";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "');";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
             e_Database.Close();
@@ -83,7 +89,7 @@ namespace Editor.Classes
 
             sql = "UPDATE NPCS SET ";
             sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "' ";
+            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "' ";
             sql = sql + "WHERE rowid = '" + npcNum + "';";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
@@ -115,6 +121,8 @@ namespace Editor.Classes
                 Health = ToInt32(sql_Reader["HEALTH"].ToString());
                 MaxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
                 Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
+                DesX = ToInt32(sql_Reader["DESX"].ToString());
+                DesY = ToInt32(sql_Reader["DESY"].ToString());
             }
             e_Database.Close();
         }
@@ -143,6 +151,7 @@ namespace Editor.Classes
     {
         Friendly,
         Passive,
-        Aggressive
+        Aggressive,
+        ToLocation
     }
 }

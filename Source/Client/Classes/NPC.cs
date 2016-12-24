@@ -17,6 +17,8 @@ namespace Client.Classes
         public int Health { get; set; }
         public int maxHealth { get; set; }
         public int Damage { get; set; }
+        public int DesX { get; set; }
+        public int DesY { get; set; }
         //Only for live applications, no editors
         public bool isSpawned;
 
@@ -63,7 +65,8 @@ namespace Client.Classes
         {
             Friendly,
             Passive,
-            Aggressive
+            Aggressive,
+            ToLocation
         }
     }
 }

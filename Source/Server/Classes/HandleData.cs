@@ -641,9 +641,9 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Npc[i].Behavior);
                 outMSG.WriteVariableInt32(s_Npc[i].SpawnTime);
                 outMSG.WriteVariableInt32(s_Npc[i].Health);
-                outMSG.WriteVariableInt32(s_Npc[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Npc[i].MaxHealth);
                 outMSG.WriteVariableInt32(s_Npc[i].Damage);
-                outMSG.Write(s_Npc[i].isSpawned);
+                outMSG.Write(s_Npc[i].IsSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending NPS...");
@@ -667,9 +667,9 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].Behavior);
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].SpawnTime);
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].Health);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].maxHealth);
+                outMSG.WriteVariableInt32(s_Map.mapNpc[i].MaxHealth);
                 outMSG.WriteVariableInt32(s_Map.mapNpc[i].Damage);
-                outMSG.Write(s_Map.mapNpc[i].isSpawned);
+                outMSG.Write(s_Map.mapNpc[i].IsSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -690,9 +690,9 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Behavior);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].SpawnTime);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Health);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].maxHealth);
+            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].MaxHealth);
             outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Damage);
-            outMSG.Write(s_Map.mapNpc[npcNum].isSpawned);
+            outMSG.Write(s_Map.mapNpc[npcNum].IsSpawned);
 
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }

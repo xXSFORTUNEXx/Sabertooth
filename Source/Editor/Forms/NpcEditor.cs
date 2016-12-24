@@ -59,8 +59,8 @@ namespace Editor.Forms
             SelectedIndex = (lstIndex.SelectedIndex + 1);
             e_Npc.LoadNpcFromDatabase(SelectedIndex);
             txtName.Text = e_Npc.Name;
-            scrlX.Value = e_Npc.X;
-            scrlY.Value = e_Npc.Y;
+            scrlX.Value = e_Npc.DesX;
+            scrlY.Value = e_Npc.DesY;
             scrlDirection.Value = e_Npc.Direction;
             scrlSprite.Value = e_Npc.Sprite;
             scrlStep.Value = e_Npc.Step;
@@ -119,13 +119,13 @@ namespace Editor.Forms
         private void scrlX_Scroll(object sender, ScrollEventArgs e)
         {
             lblX.Text = "X: " + (scrlX.Value);
-            e_Npc.X = scrlX.Value;
+            e_Npc.DesX = scrlX.Value;
         }
 
         private void scrlY_Scroll(object sender, ScrollEventArgs e)
         {
             lblY.Text = "Y: " + (scrlY.Value);
-            e_Npc.Y = scrlY.Value;
+            e_Npc.DesY = scrlY.Value;
         }
 
         private void scrlDirection_Scroll(object sender, ScrollEventArgs e)

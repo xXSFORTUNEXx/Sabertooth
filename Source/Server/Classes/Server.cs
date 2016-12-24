@@ -128,7 +128,6 @@ namespace Server.Classes
             reader.Close();
         }
 
-        //Command window thread
         static void CommandWindow()
         {
             //WriteLine("Enter commands below, type help for commands:");
@@ -139,7 +138,6 @@ namespace Server.Classes
             } while (s_userCommand != null);
         }
 
-        //Servers uptime
         void UpTime()
         {
             if (TickCount - s_uptimeTick > 1000)
@@ -169,7 +167,6 @@ namespace Server.Classes
             }
         }
 
-        //Creates the player array for use when players join
         void InitPlayerArray()
         {
             WriteLine("Creating player array...");
@@ -180,7 +177,6 @@ namespace Server.Classes
             }
         }
 
-        //Loads in our maps
         void InitMap()
         {
             WriteLine("Loading maps...");
@@ -201,7 +197,6 @@ namespace Server.Classes
             }
         }
 
-        //Load in the items!
         void InitItems()
         {
             WriteLine("Loading items...");
@@ -214,7 +209,6 @@ namespace Server.Classes
             }
         }
 
-        //Load in the projectiles
         void InitProjectiles()
         {
             WriteLine("Loading projectiles...");
@@ -227,7 +221,6 @@ namespace Server.Classes
             }
         }
 
-        //Loads in our npcs
         void InitNPC()
         {
             WriteLine("Loading npcs...");
@@ -236,7 +229,7 @@ namespace Server.Classes
             for (int i = 0; i < 10; i++)
             {
                 s_Npc[i] = new Npc();
-                s_Npc[i].LoadNpcFromDatabase(i);
+                s_Npc[i].LoadNpcFromDatabase((i + 1));
             }
 
             //Load in data we need for mapnpcs
@@ -256,21 +249,21 @@ namespace Server.Classes
                         s_Map[i].mapNpc[n].Sprite = s_Npc[num].Sprite;
                         s_Map[i].mapNpc[n].Behavior = s_Npc[num].Behavior;
                         s_Map[i].mapNpc[n].Owner = s_Npc[num].Owner;
-                        s_Map[i].mapNpc[n].isSpawned = s_Npc[num].isSpawned;
+                        s_Map[i].mapNpc[n].IsSpawned = s_Npc[num].IsSpawned;
+                        s_Map[i].mapNpc[n].Damage = s_Npc[num].Damage;
+                        s_Map[i].mapNpc[n].DesX = s_Npc[num].DesX;
+                        s_Map[i].mapNpc[n].DesY = s_Npc[num].DesY;
                     }
                 }
             }
         }
 
-        //Final checks before we really get going
         void InitFinal()
         {
             WriteLine("Listening for connections...");
             WriteLog("Server is listening for connections...", "Server");
         }
 
-        ///Saving methods
-        //Saves all players online every 300000ms (5 Min)
         void SavePlayers()
         {
             if (TickCount - saveTick > saveTime)
@@ -288,7 +281,6 @@ namespace Server.Classes
             }
         }
 
-        //Check to see who needs health regen
         void CheckHealthRegen(NetServer s_Server)
         {
             if (TickCount - regenTick > regenTime)
@@ -308,7 +300,6 @@ namespace Server.Classes
             }
         }
 
-        //Check and see who needs to eat some food and drink some water
         void CheckVitalLoss(NetServer s_Server)
         {
             for (int i = 0; i < 5; i++)
@@ -356,11 +347,11 @@ namespace Server.Classes
                             {
                                 for (int c = 0; c < 10; c++)
                                 {
-                                    if (s_Map[i].Ground[x, y].SpawnNum == (c + 1) && !s_Map[i].mapNpc[c].isSpawned)
+                                    if (s_Map[i].Ground[x, y].SpawnNum == (c + 1) && !s_Map[i].mapNpc[c].IsSpawned)
                                     {
                                         s_Map[i].mapNpc[c].X = x;
                                         s_Map[i].mapNpc[c].Y = y;
-                                        s_Map[i].mapNpc[c].isSpawned = true;
+                                        s_Map[i].mapNpc[c].IsSpawned = true;
 
                                         for (int p = 0; p < 5; p++)
                                         {
@@ -386,16 +377,16 @@ namespace Server.Classes
                 {
                     for (int n = 0; n < 10; n++)
                     {
-                        if (s_Map[i].mapNpc[n].isSpawned)
+                        if (s_Map[i].mapNpc[n].IsSpawned)
                         {
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
                             s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player);
 
-                            if (s_Map[i].mapNpc[n].didMove)
+                            if (s_Map[i].mapNpc[n].DidMove)
                             {
-                                s_Map[i].mapNpc[n].didMove = false;
+                                s_Map[i].mapNpc[n].DidMove = false;
 
                                 for (int p = 0; p < 5; p++)
                                 {
@@ -412,7 +403,6 @@ namespace Server.Classes
             }
         }
 
-        //Saves all online for sever command
         void SaveAll()
         {
             WriteLine("Saving players...");
@@ -427,7 +417,6 @@ namespace Server.Classes
             WriteLine("Players saved!");
         }
 
-        //Check to see if the user entered any commands
         void CheckCommands(NetServer s_Server, Player[] s_Player)
         {
             if (s_userCommand != null)
@@ -553,7 +542,6 @@ namespace Server.Classes
             }
         }
 
-        //Account exist from our handledata class because we need it for account creation from CLI
         static bool AccountExist(string name)
         {
             if (Exists("Players/" + name + ".xml"))
