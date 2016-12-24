@@ -152,7 +152,7 @@ namespace Server.Classes
             s_Database.Close();
         }
 
-        public void NpcAI(int canMove, int dir, Map movementMap, Player[] s_Player)
+        public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player)
         {
             DidMove = false;
 
@@ -160,14 +160,14 @@ namespace Server.Classes
             {
                 case (int)BehaviorType.Friendly:
 
-                    if (canMove > 80)
+                    if (s_CanMove > 80)
                     {
-                        switch (dir)
+                        switch (s_Direction)
                         {
                             case (int)Directions.Down:
                                 if (Y < 49)
                                 {
-                                    if (movementMap.Ground[X, Y + 1].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X, Y + 1].Type == (int)TileType.Blocked)
                                     {
                                         Direction = (int)Directions.Down;
                                         DidMove = true;
@@ -175,9 +175,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
                                         {
-                                            if ((Y + 1) == movementMap.mapNpc[i].Y)
+                                            if ((Y + 1) == s_Map.mapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Down;
                                                 DidMove = true;
@@ -206,7 +206,7 @@ namespace Server.Classes
                             case (int)Directions.Left:
                                 if (X > 1)
                                 {
-                                    if (movementMap.Ground[X - 1, Y].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X - 1, Y].Type == (int)TileType.Blocked)
                                     {
                                         Direction = (int)Directions.Left;
                                         DidMove = true;
@@ -214,9 +214,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
                                         {
-                                            if ((X - 1) == movementMap.mapNpc[i].X)
+                                            if ((X - 1) == s_Map.mapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -245,7 +245,7 @@ namespace Server.Classes
                             case (int)Directions.Right:
                                 if (X < 49)
                                 {
-                                    if (movementMap.Ground[X + 1, Y].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X + 1, Y].Type == (int)TileType.Blocked)
                                     {
                                         Direction = (int)Directions.Right;
                                         DidMove = true;
@@ -253,9 +253,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
                                         {
-                                            if ((X + 1) == movementMap.mapNpc[i].X)
+                                            if ((X + 1) == s_Map.mapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Right;
                                                 DidMove = true;
@@ -284,7 +284,7 @@ namespace Server.Classes
                             case (int)Directions.Up:
                                 if (Y > 1)
                                 {
-                                    if (movementMap.Ground[X, Y - 1].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X, Y - 1].Type == (int)TileType.Blocked)
                                     {
                                         Direction = (int)Directions.Up;
                                         DidMove = true;
@@ -292,9 +292,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (movementMap.mapNpc[i].IsSpawned && Name != movementMap.mapNpc[i].Name)
+                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
                                         {
-                                            if ((Y - 1) == movementMap.mapNpc[i].Y)
+                                            if ((Y - 1) == s_Map.mapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
