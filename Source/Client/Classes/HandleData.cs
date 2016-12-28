@@ -713,6 +713,7 @@ namespace Client.Classes
         UpdateProj,
         UpdateWeapons,
         RangedAttack,
-        UpdateClip
+        UpdateClip,
+        AttackNpcProj
     }
 }

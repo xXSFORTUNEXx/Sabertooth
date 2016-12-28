@@ -63,6 +63,8 @@ namespace Server.Classes
             mapProj[slot].Owner = playerIndex;
             mapProj[slot].Sprite = 1;
             mapProj[slot].Type = (int)ProjType.Bullet;
+            //im setting this locally, dont really think the client needs it
+            mapProj[slot].Damage = s_Player[playerIndex].mainWeapon.Damage;
 
             SendNewProjectileToAll(s_Server, slot);
         }
@@ -282,6 +284,18 @@ namespace Server.Classes
             X = x;
             Y = y;
             npcnum = npcNum;
+        }
+
+        public void DamageNpc(int damage)
+        {
+            if (Health > 0)
+            {
+                Health -= damage;
+            }
+            else if (Health <= 0)
+            {
+                IsSpawned = false;
+            }
         }
     }
 

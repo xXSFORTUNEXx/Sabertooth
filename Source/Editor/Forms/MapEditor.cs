@@ -141,7 +141,6 @@ namespace Editor.Forms
                 e_Window.Display();
             }
             Visible = false;
-            //Exit();
         }
 
         void DrawTiles()
@@ -244,7 +243,7 @@ namespace Editor.Forms
                             {
                                 int npcNum = e_Map.Ground[x, y].spawnNum;
                                 e_Npc.LoadNpcFromDatabase(npcNum);
-                                e_Map.mapNpc[npcNum].DrawMapNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
+                                e_Npc.DrawNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
                             }
                         }
                     }

@@ -1,0 +1,7 @@
+Sequenced Channels:
+13 - Clear Projectile
+10 - Update Ammo
+11 - Create Bullet
+9 - Attack Npc w/ projectile
+1 - Movement Data
+2 - Update Direction Data

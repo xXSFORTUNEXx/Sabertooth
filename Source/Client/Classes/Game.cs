@@ -23,8 +23,7 @@ namespace Client.Classes
         Npc[] c_Npc = new Npc[10]; //create the npc class array
         Item[] c_Item = new Item[50];   //Create item array
         Projectile[] c_Proj = new Projectile[10]; //create projectile array
-        const int Max_Sprites = 200;
-        Texture[] c_Sprite = new Texture[Max_Sprites]; //set the players texture to a texture
+        Texture[] c_Sprite = new Texture[204]; //set the players texture to a texture
         Map c_Map = new Map(); //create map class
         View c_View = new View();  //create view for the plaer
         RenderText c_Text = new RenderText();
@@ -66,7 +65,7 @@ namespace Client.Classes
 
             handleData = new HandleData();  //create handle data 
 
-            for (int i = 0; i < Max_Sprites; i++)   //load our sprite textures
+            for (int i = 0; i < 204; i++)   //load our sprite textures
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }

@@ -35,6 +35,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlSprite = new System.Windows.Forms.HScrollBar();
             this.scrlDamage = new System.Windows.Forms.HScrollBar();
             this.lblDamage = new System.Windows.Forms.Label();
             this.scrlMaxHealth = new System.Windows.Forms.HScrollBar();
@@ -57,7 +58,6 @@
             this.lblX = new System.Windows.Forms.Label();
             this.picSprite = new System.Windows.Forms.PictureBox();
             this.lblSprite = new System.Windows.Forms.Label();
-            this.scrlSprite = new System.Windows.Forms.HScrollBar();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -130,6 +130,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlSprite);
             this.pnlMain.Controls.Add(this.scrlDamage);
             this.pnlMain.Controls.Add(this.lblDamage);
             this.pnlMain.Controls.Add(this.scrlMaxHealth);
@@ -152,7 +153,6 @@
             this.pnlMain.Controls.Add(this.lblX);
             this.pnlMain.Controls.Add(this.picSprite);
             this.pnlMain.Controls.Add(this.lblSprite);
-            this.pnlMain.Controls.Add(this.scrlSprite);
             this.pnlMain.Controls.Add(this.txtName);
             this.pnlMain.Controls.Add(this.lblName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
@@ -162,6 +162,16 @@
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlSprite
+            // 
+            this.scrlSprite.Location = new System.Drawing.Point(64, 84);
+            this.scrlSprite.Maximum = 205;
+            this.scrlSprite.Name = "scrlSprite";
+            this.scrlSprite.Size = new System.Drawing.Size(109, 17);
+            this.scrlSprite.TabIndex = 32;
+            this.scrlSprite.Value = 1;
+            this.scrlSprite.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSprite_Scroll);
             // 
             // scrlDamage
             // 
@@ -233,7 +243,9 @@
             // 
             // scrlOwner
             // 
+            this.scrlOwner.LargeChange = 1;
             this.scrlOwner.Location = new System.Drawing.Point(17, 257);
+            this.scrlOwner.Maximum = 5;
             this.scrlOwner.Name = "scrlOwner";
             this.scrlOwner.Size = new System.Drawing.Size(156, 17);
             this.scrlOwner.TabIndex = 23;
@@ -250,13 +262,12 @@
             // 
             // scrlStep
             // 
-            this.scrlStep.LargeChange = 6;
+            this.scrlStep.LargeChange = 1;
             this.scrlStep.Location = new System.Drawing.Point(17, 223);
-            this.scrlStep.Maximum = 5;
+            this.scrlStep.Maximum = 3;
             this.scrlStep.Name = "scrlStep";
             this.scrlStep.Size = new System.Drawing.Size(156, 17);
             this.scrlStep.TabIndex = 21;
-            this.scrlStep.Value = 1;
             this.scrlStep.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlStep_Scroll);
             // 
             // lblStep
@@ -270,13 +281,12 @@
             // 
             // scrlDirection
             // 
-            this.scrlDirection.LargeChange = 4;
+            this.scrlDirection.LargeChange = 1;
             this.scrlDirection.Location = new System.Drawing.Point(17, 193);
             this.scrlDirection.Maximum = 3;
             this.scrlDirection.Name = "scrlDirection";
             this.scrlDirection.Size = new System.Drawing.Size(156, 17);
             this.scrlDirection.TabIndex = 19;
-            this.scrlDirection.Value = 1;
             this.scrlDirection.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlDirection_Scroll);
             // 
             // lblDirection
@@ -315,6 +325,7 @@
             // scrlY
             // 
             this.scrlY.Location = new System.Drawing.Point(17, 163);
+            this.scrlY.Maximum = 50;
             this.scrlY.Name = "scrlY";
             this.scrlY.Size = new System.Drawing.Size(156, 17);
             this.scrlY.TabIndex = 13;
@@ -332,6 +343,7 @@
             // scrlX
             // 
             this.scrlX.Location = new System.Drawing.Point(17, 133);
+            this.scrlX.Maximum = 50;
             this.scrlX.Name = "scrlX";
             this.scrlX.Size = new System.Drawing.Size(156, 17);
             this.scrlX.TabIndex = 11;
@@ -363,17 +375,6 @@
             this.lblSprite.Size = new System.Drawing.Size(46, 13);
             this.lblSprite.TabIndex = 8;
             this.lblSprite.Text = "Sprite: 0";
-            // 
-            // scrlSprite
-            // 
-            this.scrlSprite.Location = new System.Drawing.Point(58, 84);
-            this.scrlSprite.Maximum = 204;
-            this.scrlSprite.Minimum = 1;
-            this.scrlSprite.Name = "scrlSprite";
-            this.scrlSprite.Size = new System.Drawing.Size(118, 17);
-            this.scrlSprite.TabIndex = 7;
-            this.scrlSprite.Value = 1;
-            this.scrlSprite.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSprite_Scroll);
             // 
             // txtName
             // 
@@ -442,8 +443,8 @@
         private System.Windows.Forms.Label lblX;
         private System.Windows.Forms.PictureBox picSprite;
         private System.Windows.Forms.Label lblSprite;
-        private System.Windows.Forms.HScrollBar scrlSprite;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.HScrollBar scrlSprite;
     }
 }

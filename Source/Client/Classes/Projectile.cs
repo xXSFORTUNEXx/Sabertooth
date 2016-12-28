@@ -73,6 +73,16 @@ namespace Client.Classes
                             SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (c_MoveMap.mapNpc[i].X == X && c_MoveMap.mapNpc[i].Y == (Y + 1))
+                            {
+                                Direction = (int)Directions.Down;
+                                Moved = false;
+                                SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i);
+                                return;
+                            }
+                        }
                         Y += 1;
                         Direction = (int)Directions.Down;
                         Moved = true;
@@ -95,6 +105,16 @@ namespace Client.Classes
                             Moved = false;
                             SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
+                        }
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (c_MoveMap.mapNpc[i].X == (X - 1) && c_MoveMap.mapNpc[i].Y == Y)
+                            {
+                                Direction = (int)Directions.Left;
+                                Moved = false;
+                                SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i);
+                                return;
+                            }
                         }
                         X -= 1;
                         Direction = (int)Directions.Left;
@@ -119,6 +139,16 @@ namespace Client.Classes
                             SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (c_MoveMap.mapNpc[i].X == (X + 1) && c_MoveMap.mapNpc[i].Y == Y)
+                            {
+                                Direction = (int)Directions.Right;
+                                Moved = false;
+                                SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i);
+                                return;
+                            }
+                        }
                         X += 1;
                         Direction = (int)Directions.Right;
                         Moved = true;
@@ -142,6 +172,16 @@ namespace Client.Classes
                             SendClearProjectile(c_Client, c_MoveMap, slot);
                             return;
                         }
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (c_MoveMap.mapNpc[i].X == X && c_MoveMap.mapNpc[i].Y == (Y - 1))
+                            {
+                                Direction = (int)Directions.Up;
+                                Moved = false;
+                                SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i);
+                                return;
+                            }
+                        }
                         Y -= 1;
                         Direction = (int)Directions.Up;
                         Moved = true;
@@ -161,14 +201,25 @@ namespace Client.Classes
             }
         }
 
-        void SendClearProjectile(NetClient c_Client, Map cMap, int slot)
+        void SendClearProjectile(NetClient c_Client, Map c_Map, int slot)
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(Owner);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 13);
-            cMap.mapProj[slot] = null;
+            c_Map.mapProj[slot] = null;
+        }
+
+        void SendProjectileAttackNpc(NetClient c_Client, Map c_Map, int slot, int npcNum)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.AttackNpcProj);
+            outMSG.WriteVariableInt32(slot);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(Owner);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 9);
+            c_Map.mapProj[slot] = null;
         }
     }
 

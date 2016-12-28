@@ -888,3 +888,7 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Ite
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\2.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\3.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\4.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\201.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\202.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\203.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\204.png

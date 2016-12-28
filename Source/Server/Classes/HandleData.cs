@@ -64,6 +64,10 @@ namespace Server.Classes
                             case (byte)PacketTypes.UpdateClip:
                                 HandleUpdateClip(incMSG, s_Player);
                                 break;
+
+                            case (byte)PacketTypes.AttackNpcProj:
+                                HandleAttackNpcProj(incMSG, s_Server, s_Player, s_Map);
+                                break;
                         }
                         break;
 
@@ -73,6 +77,21 @@ namespace Server.Classes
                 }
             }
             s_Server.Recycle(incMSG);
+        }
+
+        void HandleAttackNpcProj(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
+        {
+            int slot = incMSG.ReadVariableInt32();
+            int npc = incMSG.ReadVariableInt32();
+            int owner = incMSG.ReadVariableInt32();
+            int c_Map = s_Player[owner].Map;
+            int damage = s_Player[owner].mainWeapon.Damage;
+
+            if (s_Map[c_Map].mapNpc[npc].IsSpawned == false) { return; }
+            if (s_Map[c_Map].mapProj[slot] == null) { return; }
+
+            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
+            s_Map[c_Map].mapNpc[npc].DamageNpc(damage);
         }
 
         void HandleUpdateClip(NetIncomingMessage incMSG, Player[] s_Player)
@@ -89,10 +108,10 @@ namespace Server.Classes
         {
             int slot = incMSG.ReadVariableInt32();
             int owner = incMSG.ReadVariableInt32();
-            int cMap = s_Player[owner].Map;
+            int c_Map = s_Player[owner].Map;
 
-            if (s_Map[cMap].mapProj[slot] == null) { return; }
-            s_Map[cMap].ClearProjSlot(s_Server, s_Map, cMap, slot);
+            if (s_Map[c_Map].mapProj[slot] == null) { return; }
+            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);            
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -956,6 +975,7 @@ namespace Server.Classes
         UpdateProj,
         UpdateWeapons,
         RangedAttack,
-        UpdateClip
+        UpdateClip,
+        AttackNpcProj
     }
 }

@@ -347,7 +347,7 @@ namespace Server.Classes
                             {
                                 for (int c = 0; c < 10; c++)
                                 {
-                                    if (s_Map[i].Ground[x, y].SpawnNum == (c + 1) && !s_Map[i].mapNpc[c].IsSpawned)
+                                    if (!s_Map[i].mapNpc[c].IsSpawned && s_Map[i].mapNpc[c].Name != "None")
                                     {
                                         s_Map[i].mapNpc[c].X = x;
                                         s_Map[i].mapNpc[c].Y = y;
