@@ -11,6 +11,9 @@ namespace Server.Classes
 {
     class HandleData
     {
+
+        public string s_Version;
+
         public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             NetIncomingMessage incMSG;  //create incoming message
@@ -91,7 +94,8 @@ namespace Server.Classes
             if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
             s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
-            s_Map[c_Map].mapNpc[npc].DamageNpc(damage);
+            s_Map[c_Map].mapNpc[npc].DamageNpc(s_Player[owner], damage);
+            SendPlayerData(incMSG, s_Server, s_Player, owner);
         }
 
         void HandleUpdateClip(NetIncomingMessage incMSG, Player[] s_Player)
@@ -144,7 +148,6 @@ namespace Server.Classes
             }
         }
 
-        //Handle incoming packets for movement of the player
         void HandleMoveData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             int index = incMSG.ReadVariableInt32();
@@ -173,7 +176,6 @@ namespace Server.Classes
             }
         }
         
-        //Handles incoming direction data for players
         void HandleDirectionData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             int index = incMSG.ReadVariableInt32();
@@ -192,7 +194,6 @@ namespace Server.Classes
             }
         }
 
-        //Handles a discovery response from the server
         void HandleDiscoveryRequest(NetIncomingMessage incMSG, NetServer s_Server)
         {
             Console.WriteLine("Client discovered @ " + incMSG.SenderEndPoint.ToString());
@@ -201,7 +202,6 @@ namespace Server.Classes
             s_Server.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
         }
 
-        //Handles our connection getting approved from our server
         void HandleConnectionApproval(NetIncomingMessage incMSG, NetServer s_Server)
         {
             if (incMSG.ReadByte() == (byte)PacketTypes.Connection)
@@ -222,7 +222,6 @@ namespace Server.Classes
             }
         }
 
-        //Handles our registration requests to the server
         void HandleRegisterRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             string username = incMSG.ReadString();
@@ -262,11 +261,13 @@ namespace Server.Classes
             }
         }
 
-        //Handle logging in requests for the server
         void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
+            string version = incMSG.ReadString();
+
+            if (version != s_Version) { SendErrorMessage("Incorrect client version, please run the updater!", "Outdated Version!", incMSG, s_Server); return; }
 
             if (!AlreadyLogged(username, s_Player))
             {
@@ -308,7 +309,6 @@ namespace Server.Classes
             }
         }
         
-        //Handleing a chat message incoming
         void HandleChatMessage(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
         {
             string msg = incMSG.ReadString();
@@ -331,7 +331,6 @@ namespace Server.Classes
             }
         }
 
-        //Handle the status change of a client
         void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
@@ -348,7 +347,6 @@ namespace Server.Classes
             }
         }
 
-        //Sends a direction update to the client so it can be processed and sent to all connected
         void SendUpdateDirection(NetServer s_Server, NetConnection playerConn, int index, int direction, int aimdirection)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -359,7 +357,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 2);
         }
 
-        //Sending out the data for movement to be processed by everyone connected
         void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -374,7 +371,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 1);
         }
 
-        //Update health
         public void SendUpdateHealthData(NetServer s_Server, int index, int health)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -385,7 +381,6 @@ namespace Server.Classes
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Update the vital data
         public void SendUpdateVitalData(NetServer s_Server, int index, string vitalName, int vital)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -397,7 +392,6 @@ namespace Server.Classes
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Sending data letting the client know we are connected and data is coming
         void SendAcceptLogin(NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -405,7 +399,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send user data of the main index
         void SendPlayerData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -476,7 +469,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send weapons update
         void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -521,7 +513,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send user data to all
         void SendPlayers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -558,7 +549,6 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending players...", "Server");
         }
 
-        //Send projectile data
         void SendProjData(NetIncomingMessage incMSG, NetServer s_Server, Projectile[] s_Proj, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -591,7 +581,6 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending projectiles...", "Server");
         }
 
-        //Send item data
         void SendItemData(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -615,7 +604,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send item data to all
         void SendItems(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -643,7 +631,6 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending items...", "Server");
         }
 
-        //Send npc data to client
         void SendNpcs(NetIncomingMessage incMSG, NetServer s_Server, Npc[] s_Npc)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -669,7 +656,6 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
-        //Send map npcs to client
         void SendMapNpcs(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -693,7 +679,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send npc's associated with the map the player is currently on
         public void SendMapNpcData(NetServer s_Server, NetConnection playerConn, Map s_Map, int npcNum)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -716,7 +701,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Sends an error message to be processed by the client
         void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG, NetServer s_Server)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -726,7 +710,6 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        //Send the map to the client
         void SendMapData(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -776,7 +759,6 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending map...", "Server");
         }
 
-        //Clear the slot for other players to connect
         void ClearSlot(NetConnection conn, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -790,7 +772,6 @@ namespace Server.Classes
             }
         }
 
-        //Saves all players
         void SavePlayers(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -803,7 +784,6 @@ namespace Server.Classes
             }
         }
 
-        //Checks commands sent from the client
         void CheckCommand(string msg, int index, Player[] s_Player, NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
         {
             //Make sure it has lenghth and isnt just 1 forwardslash
@@ -850,7 +830,6 @@ namespace Server.Classes
             }
         }
 
-        //Check to see if the account is already logged in
         static bool AlreadyLogged(string name, Player[] s_Player)
         {
             if (name == null) return false;
@@ -870,7 +849,6 @@ namespace Server.Classes
             return false;
         }
 
-        //Check and assign and open slot if open
         static int OpenSlot(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -883,7 +861,6 @@ namespace Server.Classes
             return 5;
         }
 
-        //Get the players connection
         static int GetPlayerConnection(NetIncomingMessage incMSG, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -896,7 +873,6 @@ namespace Server.Classes
             return 5;
         }
 
-        //Check the password to make sure its correct
         static bool CheckPassword(string name, string pass)
         {
             SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
@@ -921,7 +897,6 @@ namespace Server.Classes
             return false;
         }
 
-        //If creating an account check to see if it already exists
         static bool AccountExist(string name)
         {
             SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");

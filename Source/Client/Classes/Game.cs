@@ -291,6 +291,17 @@ namespace Client.Classes
                     }                   
                 }
             }
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (c_Map.r_MapNpc[i].isSpawned)
+                {
+                    if (c_Map.r_MapNpc[i].Sprite > 0)
+                    {
+                        c_Map.r_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.r_MapNpc[i].Sprite - 1)]);
+                    }
+                }
+            }
         }
 
         void DrawProjectiles(NetClient c_Client)

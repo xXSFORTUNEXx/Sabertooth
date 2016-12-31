@@ -60,6 +60,10 @@
             this.lblSprite = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
+            this.lblExp = new System.Windows.Forms.Label();
+            this.lblMoney = new System.Windows.Forms.Label();
+            this.scrlExp = new System.Windows.Forms.HScrollBar();
+            this.scrlMoney = new System.Windows.Forms.HScrollBar();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -130,6 +134,10 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlMoney);
+            this.pnlMain.Controls.Add(this.scrlExp);
+            this.pnlMain.Controls.Add(this.lblMoney);
+            this.pnlMain.Controls.Add(this.lblExp);
             this.pnlMain.Controls.Add(this.scrlSprite);
             this.pnlMain.Controls.Add(this.scrlDamage);
             this.pnlMain.Controls.Add(this.lblDamage);
@@ -176,6 +184,7 @@
             // scrlDamage
             // 
             this.scrlDamage.Location = new System.Drawing.Point(215, 142);
+            this.scrlDamage.Maximum = 5000;
             this.scrlDamage.Name = "scrlDamage";
             this.scrlDamage.Size = new System.Drawing.Size(156, 17);
             this.scrlDamage.TabIndex = 31;
@@ -193,6 +202,7 @@
             // scrlMaxHealth
             // 
             this.scrlMaxHealth.Location = new System.Drawing.Point(215, 112);
+            this.scrlMaxHealth.Maximum = 1000;
             this.scrlMaxHealth.Name = "scrlMaxHealth";
             this.scrlMaxHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlMaxHealth.TabIndex = 29;
@@ -210,6 +220,7 @@
             // scrlHealth
             // 
             this.scrlHealth.Location = new System.Drawing.Point(215, 82);
+            this.scrlHealth.Maximum = 1000;
             this.scrlHealth.Name = "scrlHealth";
             this.scrlHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlHealth.TabIndex = 27;
@@ -393,6 +404,41 @@
             this.lblName.TabIndex = 5;
             this.lblName.Text = "Name:";
             // 
+            // lblExp
+            // 
+            this.lblExp.AutoSize = true;
+            this.lblExp.Location = new System.Drawing.Point(212, 167);
+            this.lblExp.Name = "lblExp";
+            this.lblExp.Size = new System.Drawing.Size(72, 13);
+            this.lblExp.TabIndex = 33;
+            this.lblExp.Text = "Experience: 0";
+            // 
+            // lblMoney
+            // 
+            this.lblMoney.AutoSize = true;
+            this.lblMoney.Location = new System.Drawing.Point(212, 198);
+            this.lblMoney.Name = "lblMoney";
+            this.lblMoney.Size = new System.Drawing.Size(51, 13);
+            this.lblMoney.TabIndex = 34;
+            this.lblMoney.Text = "Money: 0";
+            // 
+            // scrlExp
+            // 
+            this.scrlExp.Location = new System.Drawing.Point(215, 180);
+            this.scrlExp.Maximum = 1000;
+            this.scrlExp.Name = "scrlExp";
+            this.scrlExp.Size = new System.Drawing.Size(156, 17);
+            this.scrlExp.TabIndex = 35;
+            this.scrlExp.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlExp_Scroll);
+            // 
+            // scrlMoney
+            // 
+            this.scrlMoney.Location = new System.Drawing.Point(215, 211);
+            this.scrlMoney.Name = "scrlMoney";
+            this.scrlMoney.Size = new System.Drawing.Size(156, 17);
+            this.scrlMoney.TabIndex = 36;
+            this.scrlMoney.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMoney_Scroll);
+            // 
             // NpcEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -446,5 +492,9 @@
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.HScrollBar scrlSprite;
+        private System.Windows.Forms.HScrollBar scrlMoney;
+        private System.Windows.Forms.HScrollBar scrlExp;
+        private System.Windows.Forms.Label lblMoney;
+        private System.Windows.Forms.Label lblExp;
     }
 }

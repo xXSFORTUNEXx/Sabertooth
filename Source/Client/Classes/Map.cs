@@ -14,6 +14,7 @@ namespace Client.Classes
         public Tile[,] FringeA = new Tile[50, 50];
 
         public MapNpc[] mapNpc = new MapNpc[10];
+        public MapNpc[] r_MapNpc = new MapNpc[20];
 
         public MapProj[] mapProj = new MapProj[200];
 
@@ -117,7 +118,11 @@ namespace Client.Classes
                 mapNpc[i].X = binaryReader.ReadInt32();
                 mapNpc[i].Y = binaryReader.ReadInt32();
                 mapNpc[i].npcNum = binaryReader.ReadInt32();
+            }
 
+            for (int i = 0; i < 20; i++)
+            {
+                r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
             }
 
             for (int x = 0; x < 50; x++)

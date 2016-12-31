@@ -41,7 +41,7 @@ namespace Editor
             {
                 CreateDirectory("Maps");
             }
-            if (!File.Exists("Maps/Map.bin"))
+            if (!File.Exists("Maps/Map0.bin"))
             {
                 Map e_Map = new Map();
                 e_Map.CreateDefaultMap(e_Map);
@@ -89,7 +89,8 @@ namespace Editor
             sql_Command.ExecuteNonQuery();
 
             sql = "CREATE TABLE `NPCS`";
-            sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER)";
+            sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
+            sql = sql + "`EXP` INTEGER, `MONEY` INTEGER)";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
 

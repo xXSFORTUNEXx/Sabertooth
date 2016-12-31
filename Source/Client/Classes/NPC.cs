@@ -15,18 +15,19 @@ namespace Client.Classes
         public int Behavior { get; set; }
         public int SpawnTime { get; set; }
         public int Health { get; set; }
-        public int maxHealth { get; set; }
+        public int MaxHealth { get; set; }
         public int Damage { get; set; }
         public int DesX { get; set; }
         public int DesY { get; set; }
-        //Only for live applications, no editors
+        public int Exp { get; set; }
+        public int Money { get; set; }
         public bool isSpawned;
 
         Sprite c_Sprite = new Sprite();
 
         public Npc() { }
 
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxHealth, int damage, int desx, int desy, int exp, int money)
         {
             Name = name;
             X = x;
@@ -37,6 +38,13 @@ namespace Client.Classes
             Owner = owner;
             Behavior = behavior;
             SpawnTime = spawnTime;
+            Health = health;
+            MaxHealth = maxHealth;
+            Damage = damage;
+            DesX = desx;
+            DesY = desy;
+            Exp = exp;
+            Money = money;
         }
 
         public Npc(int x, int y)
@@ -50,6 +58,13 @@ namespace Client.Classes
             Owner = 0;
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
+            Health = 100;
+            MaxHealth = 100;
+            Damage = 10;
+            DesX = 0;
+            DesY = 0;
+            Exp = 0;
+            Money = 0;
         }
 
         public void DrawNpc(RenderWindow c_Window, Texture c_Texture)

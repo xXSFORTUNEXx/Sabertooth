@@ -16,6 +16,7 @@ namespace Client.Classes
         public string s_IPAddress; //So we can change the port XML instead of directly in the code
         public string s_Port;  //So we can change the port from XML and not directly in the code
         public int c_Index; //The index of this client
+        public string c_Version = "1.0";    //For now well make this hard coded
 
         //This is where we process the 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
@@ -288,7 +289,7 @@ namespace Client.Classes
                     c_Npc[i].Behavior = incMSG.ReadVariableInt32();
                     c_Npc[i].SpawnTime = incMSG.ReadVariableInt32();
                     c_Npc[i].Health = incMSG.ReadVariableInt32();
-                    c_Npc[i].maxHealth = incMSG.ReadVariableInt32();
+                    c_Npc[i].MaxHealth = incMSG.ReadVariableInt32();
                     c_Npc[i].Damage = incMSG.ReadVariableInt32();
                     c_Npc[i].isSpawned = incMSG.ReadBoolean();
                 }
@@ -313,7 +314,7 @@ namespace Client.Classes
                     c_Map.mapNpc[i].Behavior = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].Health = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].maxHealth = incMSG.ReadVariableInt32();
+                    c_Map.mapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].Damage = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
                 }
@@ -336,7 +337,7 @@ namespace Client.Classes
             c_Map.mapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].Health = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].maxHealth = incMSG.ReadVariableInt32();
+            c_Map.mapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
             Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
@@ -618,6 +619,11 @@ namespace Client.Classes
             for (int i = 0; i < 10; i++)
             {
                 c_Map.mapNpc[i] = new MapNpc();
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                c_Map.r_MapNpc[i] = new MapNpc();
             }
 
             for (int x = 0; x < 50; x++)

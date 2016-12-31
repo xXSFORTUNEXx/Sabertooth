@@ -182,6 +182,15 @@ namespace Server.Classes
             }
         }
 
+        public void CheckPlayerLevelUp()
+        {
+            if (Experience >= (Level * 1000))
+            {
+                Level += 1;
+                Experience = 0;
+            }
+        }
+
         public void CreatePlayerInDatabase()
         {
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");

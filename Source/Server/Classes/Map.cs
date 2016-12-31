@@ -19,6 +19,7 @@ namespace Server.Classes
         public Tile[,] FringeA = new Tile[50, 50];
 
         public MapNpc[] mapNpc = new MapNpc[10];
+        public MapNpc[] r_MapNpc = new MapNpc[20];
 
         public MapProj[] mapProj = new MapProj[200];
 
@@ -96,6 +97,11 @@ namespace Server.Classes
             for (int i = 0; i < 10; i++)
             {
                 mapNpc[i] = new MapNpc("None", 0, 0, 0);
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
             }
 
             for (int x = 0; x < 50; x++)
@@ -286,7 +292,7 @@ namespace Server.Classes
             npcnum = npcNum;
         }
 
-        public void DamageNpc(int damage)
+        public void DamageNpc(Player s_Player, int damage)
         {
             if (Health > 0)
             {
@@ -295,7 +301,15 @@ namespace Server.Classes
             else if (Health <= 0)
             {
                 IsSpawned = false;
+                GivePlayerRewards(s_Player);
             }
+        }
+
+        void GivePlayerRewards(Player s_Player)
+        {
+            s_Player.Experience += Exp;
+            s_Player.Money += Money;
+            s_Player.CheckPlayerLevelUp();
         }
     }
 

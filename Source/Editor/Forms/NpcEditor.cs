@@ -70,6 +70,8 @@ namespace Editor.Forms
             scrlHealth.Value = e_Npc.Health;
             scrlMaxHealth.Value = e_Npc.MaxHealth;
             scrlDamage.Value = e_Npc.Damage;
+            scrlExp.Value = e_Npc.Exp;
+            scrlMoney.Value = e_Npc.Money;
             lblX.Text = "X: " + (scrlX.Value);
             lblY.Text = "Y: " + (scrlY.Value);
             lblDirection.Text = "Direction: " + (scrlDirection.Value);
@@ -81,6 +83,8 @@ namespace Editor.Forms
             lblHealth.Text = "Health: " + (scrlHealth.Value);
             lblMaxHealth.Text = "Max Health: " + (scrlMaxHealth.Value);
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
+            lblExp.Text = "Experience: " + scrlExp.Value;
+            lblMoney.Text = "Money: " + scrlMoney.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
         }
@@ -173,6 +177,18 @@ namespace Editor.Forms
         private void cmbBehavior_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Npc.Behavior = cmbBehavior.SelectedIndex;
+        }
+
+        private void scrlExp_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblExp.Text = "Experience: " + scrlExp.Value;
+            e_Npc.Exp = scrlExp.Value;
+        }
+
+        private void scrlMoney_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblMoney.Text = "Money: " + scrlMoney.Value;
+            e_Npc.Money = scrlMoney.Value;
         }
     }
 }

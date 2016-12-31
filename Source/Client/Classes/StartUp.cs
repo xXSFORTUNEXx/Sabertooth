@@ -58,6 +58,7 @@ namespace Client.Classes
         public string saveCreds { get; set; }
         public string ipAddress { get; set; }
         public string port { get; set; }
+        public string version { get; set; }
 
         public ClientConfig()
         {
@@ -71,6 +72,7 @@ namespace Client.Classes
                 saveCreds = "0";
                 ipAddress = "127.0.0.1";
                 port = "14242";
+                version = "1.0";
                 SaveConfig();
             }
             LoadConfig();
@@ -89,6 +91,8 @@ namespace Client.Classes
             ipAddress = reader.ReadElementContentAsString();
             reader.ReadToFollowing("port");
             port = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("version");
+            version = reader.ReadElementContentAsString();
             reader.Close();
         }
 
@@ -104,6 +108,7 @@ namespace Client.Classes
             writer.WriteElementString("saveCreds", saveCreds);
             writer.WriteElementString("ipAddress", ipAddress);
             writer.WriteElementString("port", port);
+            writer.WriteElementString("version", version);
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();

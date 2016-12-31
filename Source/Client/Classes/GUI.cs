@@ -216,6 +216,7 @@ namespace Client.Classes
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
+                string version = c_Config.version;
 
                 if (c_Config.saveCreds == "1")
                 {
@@ -228,6 +229,7 @@ namespace Client.Classes
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
+                outMSG.Write(version);
                 c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
@@ -252,6 +254,7 @@ namespace Client.Classes
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
+                string version = c_Config.version;
 
                 if (c_Config.saveCreds == "1")
                 {
@@ -264,6 +267,7 @@ namespace Client.Classes
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
+                outMSG.Write(version);
                 c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }

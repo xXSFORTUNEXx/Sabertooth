@@ -283,7 +283,7 @@ namespace Editor.Classes
 
         public void SaveDefaultMap(Map mapNum)
         {
-            FileStream fileStream = File.OpenWrite("Maps/Map.bin");
+            FileStream fileStream = File.OpenWrite("Maps/Map0.bin");
             BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
             binaryWriter.Write(mapNum.Name);
@@ -341,7 +341,7 @@ namespace Editor.Classes
 
         public void LoadDeafultMap()
         {
-            FileStream fileStream = File.OpenRead("Maps/Map.bin");
+            FileStream fileStream = File.OpenRead("Maps/Map0.bin");
             BinaryReader binaryReader = new BinaryReader(fileStream);
 
             Name = binaryReader.ReadString();

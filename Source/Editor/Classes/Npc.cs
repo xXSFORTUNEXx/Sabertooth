@@ -27,10 +27,12 @@ namespace Editor.Classes
         public int Damage { get; set; }
         public int DesX { get; set; }
         public int DesY { get; set; }
+        public int Exp { get; set; }
+        public int Money { get; set; }
 
         public Npc() { }
 
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy, int exp, int money)
         {
             Name = name;
             X = x;
@@ -46,8 +48,29 @@ namespace Editor.Classes
             Damage = damage;
             DesX = desx;
             DesY = desy;
+            Exp = exp;
+            Money = money;
         }
 
+        public Npc(int x, int y)
+        {
+            Name = "Default";
+            X = x;
+            Y = y;
+            Direction = 0;
+            Sprite = 0;
+            Step = 0;
+            Owner = 0;
+            Behavior = (int)BehaviorType.Friendly;
+            SpawnTime = 5000;
+            Health = 100;
+            MaxHealth = 100;
+            Damage = 10;
+            DesX = 0;
+            DesY = 0;
+            Exp = 100;
+            Money = 0;
+        }
 
         public void CreateNpcInDatabase()
         {
@@ -65,6 +88,8 @@ namespace Editor.Classes
             Damage = 0;
             DesX = 0;
             DesY = 0;
+            Exp = 0;
+            Money = 0;
 
             e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             e_Database.Open();
@@ -72,10 +97,10 @@ namespace Editor.Classes
             SQLiteCommand sql_Command;
 
             sql = "INSERT INTO NPCS";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`)";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "');";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "');";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
             e_Database.Close();
@@ -90,7 +115,8 @@ namespace Editor.Classes
 
             sql = "UPDATE NPCS SET ";
             sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "' ";
+            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
+            sql = sql + "EXP = '" + Exp + "', MONEY = '" + Money + "' ";
             sql = sql + "WHERE rowid = '" + npcNum + "';";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
@@ -124,6 +150,8 @@ namespace Editor.Classes
                 Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
                 DesX = ToInt32(sql_Reader["DESX"].ToString());
                 DesY = ToInt32(sql_Reader["DESY"].ToString());
+                Exp = ToInt32(sql_Reader["EXP"].ToString());
+                Money = ToInt32(sql_Reader["MONEY"].ToString());
             }
             e_Database.Close();
         }

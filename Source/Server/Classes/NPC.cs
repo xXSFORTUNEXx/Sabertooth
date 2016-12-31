@@ -25,18 +25,17 @@ namespace Server.Classes
         public int Damage { get; set; }
         public int DesX { get; set; }
         public int DesY { get; set; }
+        public int Exp { get; set; }
+        public int Money { get; set; }
 
-        //Only needed on live server and client no editors
         public bool IsSpawned;
         public bool DidMove;
         public int Target;
         public double s_LastPoint;
 
-        //Empty NPC
         public Npc() { }
 
-        //Detailed NPC
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy, int exp, int money)
         {
             Name = name;
             X = x;
@@ -47,30 +46,33 @@ namespace Server.Classes
             Owner = owner;
             Behavior = behavior;
             SpawnTime = spawnTime;
-            IsSpawned = false;
             Health = health;
             MaxHealth = maxhealth;
             Damage = damage;
             DesX = desx;
             DesY = desy;
+            Exp = exp;
+            Money = money;
         }
 
-        //One with location but other default values as well
         public Npc(int x, int y)
         {
             Name = "Default";
             X = x;
             Y = y;
-            Direction = (int)Directions.Down;
+            Direction = 0;
             Sprite = 0;
             Step = 0;
             Owner = 0;
             Behavior = (int)BehaviorType.Friendly;
             SpawnTime = 5000;
-            IsSpawned = false;
             Health = 100;
             MaxHealth = 100;
             Damage = 10;
+            DesX = 0;
+            DesY = 0;
+            Exp = 100;
+            Money = 0;
         }
 
         public void CreateNpcInDatabase()
@@ -89,6 +91,8 @@ namespace Server.Classes
             Damage = 0;
             DesX = 0;
             DesY = 0;
+            Exp = 0;
+            Money = 0;
 
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             s_Database.Open();
@@ -96,10 +100,10 @@ namespace Server.Classes
             SQLiteCommand sql_Command;
 
             sql = "INSERT INTO NPCS";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`)";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "');";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "');";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
@@ -114,7 +118,8 @@ namespace Server.Classes
 
             sql = "UPDATE NPCS SET ";
             sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "' ";
+            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
+            sql = sql + "EXP = '" + Exp + "' MONEY = '" + Money + "' ";
             sql = sql + "WHERE rowid = '" + npcNum + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
@@ -148,6 +153,8 @@ namespace Server.Classes
                 Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
                 DesX = ToInt32(sql_Reader["DESX"].ToString());
                 DesY = ToInt32(sql_Reader["DESY"].ToString());
+                Exp = ToInt32(sql_Reader["EXP"].ToString());
+                Money = ToInt32(sql_Reader["MONEY"].ToString());
             }
             s_Database.Close();
         }
