@@ -162,7 +162,7 @@ namespace Server.Classes
                 binaryWriter.Write(mapNpc[i].Name);
                 binaryWriter.Write(mapNpc[i].X);
                 binaryWriter.Write(mapNpc[i].Y);
-                binaryWriter.Write(mapNpc[i].npcNum);
+                binaryWriter.Write(mapNpc[i].NpcNum);
             }
 
             for (int x = 0; x < 50; x++)
@@ -224,7 +224,7 @@ namespace Server.Classes
                     mapNpc[i].Name = binaryReader.ReadString();
                     mapNpc[i].X = binaryReader.ReadInt32();
                     mapNpc[i].Y = binaryReader.ReadInt32();
-                    mapNpc[i].npcNum = binaryReader.ReadInt32();
+                    mapNpc[i].NpcNum = binaryReader.ReadInt32();
                 }
 
                 for (int i = 0; i < 20; i++)
@@ -233,7 +233,7 @@ namespace Server.Classes
                     r_MapNpc[i].Name = "None";
                     r_MapNpc[i].X = 0;
                     r_MapNpc[i].Y = 0;
-                    r_MapNpc[i].npcNum = 0;
+                    r_MapNpc[i].NpcNum = 0;
                 }
 
                 for (int x = 0; x < 50; x++)
@@ -293,7 +293,9 @@ namespace Server.Classes
 
     class MapNpc : Npc
     {
-        public int npcNum { get; set; }
+        public int NpcNum { get; set; }
+        public int SpawnX;
+        public int SpawnY;
 
         public MapNpc() { }
 
@@ -302,10 +304,10 @@ namespace Server.Classes
             Name = name;
             X = x;
             Y = y;
-            npcnum = npcNum;
+            npcnum = NpcNum;
         }
 
-        public void DamageNpc(Player s_Player, int damage)
+        public void DamageNpc(Player s_Player, Map s_Map, int damage)
         {
             if (Health > 0)
             {
@@ -316,6 +318,10 @@ namespace Server.Classes
                 IsSpawned = false;
                 spawnTick = TickCount;
                 GivePlayerRewards(s_Player);
+                if (SpawnX > 0 && SpawnY > 0)
+                {
+                    s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;
+                }
             }
         }
 

@@ -257,7 +257,7 @@ namespace Server.Classes
             {
                 for (int n = 0; n < 10; n++)
                 {
-                    int num = (s_Map[i].mapNpc[n].npcNum - 1);
+                    int num = (s_Map[i].mapNpc[n].NpcNum - 1);
 
                     if (num > -1)
                     {
@@ -405,40 +405,45 @@ namespace Server.Classes
                                             {
                                                 if (!s_Map[i].r_MapNpc[n].IsSpawned)
                                                 {
-                                                    int num = (s_Map[i].Ground[x, y].SpawnNum - 1);
-
-                                                    if (num > -1)
+                                                    if (TickCount - s_Map[i].r_MapNpc[n].spawnTick > (s_Map[i].r_MapNpc[n].SpawnTime * 1000))
                                                     {
-                                                        s_Map[i].r_MapNpc[n].npcNum = num;
+                                                        int num = (s_Map[i].Ground[x, y].SpawnNum - 1);
 
-                                                        s_Map[i].r_MapNpc[n].Name = s_Npc[num].Name;
-                                                        s_Map[i].r_MapNpc[n].X = x;
-                                                        s_Map[i].r_MapNpc[n].Y = y;
-                                                        s_Map[i].r_MapNpc[n].Direction = s_Npc[num].Direction;
-                                                        s_Map[i].r_MapNpc[n].Step = s_Npc[num].Step;
-                                                        s_Map[i].r_MapNpc[n].Sprite = s_Npc[num].Sprite;
-                                                        s_Map[i].r_MapNpc[n].Behavior = s_Npc[num].Behavior;
-                                                        s_Map[i].r_MapNpc[n].Owner = s_Npc[num].Owner;
-                                                        s_Map[i].r_MapNpc[n].Damage = s_Npc[num].Damage;
-                                                        s_Map[i].r_MapNpc[n].DesX = s_Npc[num].DesX;
-                                                        s_Map[i].r_MapNpc[n].DesY = s_Npc[num].DesY;
-                                                        s_Map[i].r_MapNpc[n].Exp = s_Npc[num].Exp;
-                                                        s_Map[i].r_MapNpc[n].Money = s_Npc[num].Money;
-                                                        s_Map[i].r_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
-                                                        s_Map[i].r_MapNpc[n].IsSpawned = true;
-                                                        s_Map[i].Ground[x, y].CurrentSpawn += 1;
-
-                                                        for (int p = 0; p < 5; p++)
+                                                        if (num > -1)
                                                         {
-                                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                            s_Map[i].r_MapNpc[n].NpcNum = num;
+
+                                                            s_Map[i].r_MapNpc[n].Name = s_Npc[num].Name;
+                                                            s_Map[i].r_MapNpc[n].X = x;
+                                                            s_Map[i].r_MapNpc[n].Y = y;
+                                                            s_Map[i].r_MapNpc[n].SpawnX = x;
+                                                            s_Map[i].r_MapNpc[n].SpawnY = y;
+                                                            s_Map[i].r_MapNpc[n].Direction = s_Npc[num].Direction;
+                                                            s_Map[i].r_MapNpc[n].Step = s_Npc[num].Step;
+                                                            s_Map[i].r_MapNpc[n].Sprite = s_Npc[num].Sprite;
+                                                            s_Map[i].r_MapNpc[n].Behavior = s_Npc[num].Behavior;
+                                                            s_Map[i].r_MapNpc[n].Owner = s_Npc[num].Owner;
+                                                            s_Map[i].r_MapNpc[n].Damage = s_Npc[num].Damage;
+                                                            s_Map[i].r_MapNpc[n].DesX = s_Npc[num].DesX;
+                                                            s_Map[i].r_MapNpc[n].DesY = s_Npc[num].DesY;
+                                                            s_Map[i].r_MapNpc[n].Exp = s_Npc[num].Exp;
+                                                            s_Map[i].r_MapNpc[n].Money = s_Npc[num].Money;
+                                                            s_Map[i].r_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
+                                                            s_Map[i].r_MapNpc[n].IsSpawned = true;
+                                                            s_Map[i].Ground[x, y].CurrentSpawn += 1;
+
+                                                            for (int p = 0; p < 5; p++)
                                                             {
-                                                                handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                                                if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                                {
+                                                                    handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                                                }
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
+                                        }                                        
                                     }
                                     break;
                             }

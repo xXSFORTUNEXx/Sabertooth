@@ -87,17 +87,44 @@ namespace Server.Classes
             int slot = incMSG.ReadVariableInt32();
             int npc = incMSG.ReadVariableInt32();
             int owner = incMSG.ReadVariableInt32();
+            int type = incMSG.ReadVariableInt32();
             int c_Map = s_Player[owner].Map;
             int damage = s_Player[owner].mainWeapon.Damage;
 
-            if (s_Map[c_Map].mapNpc[npc].IsSpawned == false) { return; }
-            if (s_Map[c_Map].mapProj[slot] == null) { return; }
+            if (type == 0)
+            {
+                if (s_Map[c_Map].mapNpc[npc].IsSpawned == false) { return; }
+                if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
-            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
-            s_Map[c_Map].mapNpc[npc].DamageNpc(s_Player[owner], damage);
+                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
+                s_Map[c_Map].mapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
-            SendMapNpcData(s_Server, s_Player[owner].Connection, s_Map[c_Map], npc);
-            SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
+                for (int p = 0; p < 5; p++)
+                {
+                    if (s_Player[p].Connection != null && c_Map == s_Player[p].Map)
+                    {
+                        SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
+                    }
+                }
+                SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
+            }
+            else
+            {
+                if (s_Map[c_Map].r_MapNpc[npc].IsSpawned == false) { return; }
+                if (s_Map[c_Map].mapProj[slot] == null) { return; }
+
+                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
+                s_Map[c_Map].r_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
+
+                for (int p = 0; p < 5; p++)
+                {
+                    if (s_Player[p].Connection != null && c_Map == s_Player[p].Map)
+                    {
+                        SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
+                    }
+                }
+                SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
+            }
         }
 
         void HandleUpdateClip(NetIncomingMessage incMSG, Player[] s_Player)
