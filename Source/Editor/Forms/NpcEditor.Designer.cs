@@ -35,6 +35,10 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlMoney = new System.Windows.Forms.HScrollBar();
+            this.scrlExp = new System.Windows.Forms.HScrollBar();
+            this.lblMoney = new System.Windows.Forms.Label();
+            this.lblExp = new System.Windows.Forms.Label();
             this.scrlSprite = new System.Windows.Forms.HScrollBar();
             this.scrlDamage = new System.Windows.Forms.HScrollBar();
             this.lblDamage = new System.Windows.Forms.Label();
@@ -60,10 +64,6 @@
             this.lblSprite = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
-            this.lblExp = new System.Windows.Forms.Label();
-            this.lblMoney = new System.Windows.Forms.Label();
-            this.scrlExp = new System.Windows.Forms.HScrollBar();
-            this.scrlMoney = new System.Windows.Forms.HScrollBar();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -171,10 +171,46 @@
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
             // 
+            // scrlMoney
+            // 
+            this.scrlMoney.Location = new System.Drawing.Point(215, 211);
+            this.scrlMoney.Name = "scrlMoney";
+            this.scrlMoney.Size = new System.Drawing.Size(156, 17);
+            this.scrlMoney.TabIndex = 36;
+            this.scrlMoney.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMoney_Scroll);
+            // 
+            // scrlExp
+            // 
+            this.scrlExp.Location = new System.Drawing.Point(215, 180);
+            this.scrlExp.Maximum = 1000;
+            this.scrlExp.Name = "scrlExp";
+            this.scrlExp.Size = new System.Drawing.Size(156, 17);
+            this.scrlExp.TabIndex = 35;
+            this.scrlExp.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlExp_Scroll);
+            // 
+            // lblMoney
+            // 
+            this.lblMoney.AutoSize = true;
+            this.lblMoney.Location = new System.Drawing.Point(212, 198);
+            this.lblMoney.Name = "lblMoney";
+            this.lblMoney.Size = new System.Drawing.Size(51, 13);
+            this.lblMoney.TabIndex = 34;
+            this.lblMoney.Text = "Money: 0";
+            // 
+            // lblExp
+            // 
+            this.lblExp.AutoSize = true;
+            this.lblExp.Location = new System.Drawing.Point(212, 167);
+            this.lblExp.Name = "lblExp";
+            this.lblExp.Size = new System.Drawing.Size(72, 13);
+            this.lblExp.TabIndex = 33;
+            this.lblExp.Text = "Experience: 0";
+            // 
             // scrlSprite
             // 
+            this.scrlSprite.LargeChange = 1;
             this.scrlSprite.Location = new System.Drawing.Point(64, 84);
-            this.scrlSprite.Maximum = 205;
+            this.scrlSprite.Maximum = 204;
             this.scrlSprite.Name = "scrlSprite";
             this.scrlSprite.Size = new System.Drawing.Size(109, 17);
             this.scrlSprite.TabIndex = 32;
@@ -403,41 +439,6 @@
             this.lblName.Size = new System.Drawing.Size(38, 13);
             this.lblName.TabIndex = 5;
             this.lblName.Text = "Name:";
-            // 
-            // lblExp
-            // 
-            this.lblExp.AutoSize = true;
-            this.lblExp.Location = new System.Drawing.Point(212, 167);
-            this.lblExp.Name = "lblExp";
-            this.lblExp.Size = new System.Drawing.Size(72, 13);
-            this.lblExp.TabIndex = 33;
-            this.lblExp.Text = "Experience: 0";
-            // 
-            // lblMoney
-            // 
-            this.lblMoney.AutoSize = true;
-            this.lblMoney.Location = new System.Drawing.Point(212, 198);
-            this.lblMoney.Name = "lblMoney";
-            this.lblMoney.Size = new System.Drawing.Size(51, 13);
-            this.lblMoney.TabIndex = 34;
-            this.lblMoney.Text = "Money: 0";
-            // 
-            // scrlExp
-            // 
-            this.scrlExp.Location = new System.Drawing.Point(215, 180);
-            this.scrlExp.Maximum = 1000;
-            this.scrlExp.Name = "scrlExp";
-            this.scrlExp.Size = new System.Drawing.Size(156, 17);
-            this.scrlExp.TabIndex = 35;
-            this.scrlExp.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlExp_Scroll);
-            // 
-            // scrlMoney
-            // 
-            this.scrlMoney.Location = new System.Drawing.Point(215, 211);
-            this.scrlMoney.Name = "scrlMoney";
-            this.scrlMoney.Size = new System.Drawing.Size(156, 17);
-            this.scrlMoney.TabIndex = 36;
-            this.scrlMoney.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMoney_Scroll);
             // 
             // NpcEditor
             // 

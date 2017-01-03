@@ -115,7 +115,8 @@ namespace Editor.Classes
                             Ground[x, y].tileH = binaryReader.ReadInt32();
                             Ground[x, y].Tileset = binaryReader.ReadInt32();
                             Ground[x, y].type = binaryReader.ReadInt32();
-                            Ground[x, y].spawnNum = binaryReader.ReadInt32();
+                            Ground[x, y].SpawnNum = binaryReader.ReadInt32();
+                            Ground[x, y].SpawnAmount = binaryReader.ReadInt32();
                             //Mask
                             Mask[x, y].tileX = binaryReader.ReadInt32();
                             Mask[x, y].tileY = binaryReader.ReadInt32();
@@ -186,7 +187,8 @@ namespace Editor.Classes
                         binaryWriter.Write(Ground[x, y].tileH);
                         binaryWriter.Write(Ground[x, y].Tileset);
                         binaryWriter.Write(Ground[x, y].type);
-                        binaryWriter.Write(Ground[x, y].spawnNum);
+                        binaryWriter.Write(Ground[x, y].SpawnNum);
+                        binaryWriter.Write(Ground[x, y].SpawnAmount);
                         //Mask
                         binaryWriter.Write(Mask[x, y].tileX);
                         binaryWriter.Write(Mask[x, y].tileY);
@@ -250,7 +252,8 @@ namespace Editor.Classes
                     newMap.Ground[x, y].tileH = 0;
                     newMap.Ground[x, y].Tileset = 0;
                     newMap.Ground[x, y].type = 0;
-                    newMap.Ground[x, y].spawnNum = 0;
+                    newMap.Ground[x, y].SpawnNum = 0;
+                    newMap.Ground[x, y].SpawnAmount = 0;
                     //Mask
                     newMap.Mask[x, y].tileX = 0;
                     newMap.Mask[x, y].tileY = 0;
@@ -307,7 +310,8 @@ namespace Editor.Classes
                     binaryWriter.Write(mapNum.Ground[x, y].tileH);
                     binaryWriter.Write(mapNum.Ground[x, y].Tileset);
                     binaryWriter.Write(mapNum.Ground[x, y].type);
-                    binaryWriter.Write(mapNum.Ground[x, y].spawnNum);
+                    binaryWriter.Write(mapNum.Ground[x, y].SpawnNum);
+                    binaryWriter.Write(mapNum.Ground[x, y].SpawnAmount);
                     //Mask
                     binaryWriter.Write(mapNum.Mask[x, y].tileX);
                     binaryWriter.Write(mapNum.Mask[x, y].tileY);
@@ -372,7 +376,8 @@ namespace Editor.Classes
                     Ground[x, y].tileH = binaryReader.ReadInt32();
                     Ground[x, y].Tileset = binaryReader.ReadInt32();
                     Ground[x, y].type = binaryReader.ReadInt32();
-                    Ground[x, y].spawnNum = binaryReader.ReadInt32();
+                    Ground[x, y].SpawnNum = binaryReader.ReadInt32();
+                    Ground[x, y].SpawnAmount = binaryReader.ReadInt32();
                     //Mask
                     Mask[x, y].tileX = binaryReader.ReadInt32();
                     Mask[x, y].tileY = binaryReader.ReadInt32();
@@ -430,7 +435,9 @@ namespace Editor.Classes
         public int perk { get; set; }
         public bool flagged { get; set; }
 
-        public int spawnNum { get; set; }
+        public int SpawnNum { get; set; }
+        public int SpawnAmount { get; set; }
+        public int CurrentSpawn;
 
         public Tile()
         {
@@ -442,7 +449,7 @@ namespace Editor.Classes
             Tileset = 0;
             type = (int)TileType.None;
             flagged = false;
-            spawnNum = 0;
+            SpawnNum = 0;
         }
     }
 
@@ -450,7 +457,8 @@ namespace Editor.Classes
     {
         None,
         Blocked,
-        NPCSpawn
+        NpcSpawn,
+        SpawnPool
     }
 
     public enum TileLayers

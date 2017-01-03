@@ -15,16 +15,16 @@ namespace Server.Classes
 {
     class Player
     {
-        public string Name { get; set; }    //define name property
-        public string Pass { get; set; }    //define password
-        public NetConnection Connection;        //define network connection
+        public string Name { get; set; }
+        public string Pass { get; set; }
+        public NetConnection Connection;
         public SQLiteConnection s_Database;
-        public int X { get; set; }  //define x
-        public int Y { get; set; }  //define y
-        public int Map { get; set; }    //define map
-        public int Direction { get; set; }  //define direction
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Map { get; set; }
+        public int Direction { get; set; }
         public int AimDirection { get; set; }
-        public int Sprite { get; set; } //define sprite
+        public int Sprite { get; set; }
         public int Level { get; set; }
         public int Points { get; set; }
         public int Health { get; set; }
@@ -38,18 +38,17 @@ namespace Server.Classes
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
-        public int Step;
-        
+        public int Step { get; set; }        
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
-
         public int PistolAmmo { get; set; }
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
-
         public int hungerTick;
         public int hydrationTick;
+
+        Random RND = new Random();
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -82,7 +81,7 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
 
-            mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 1000, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
+            mainWeapon = new Item("Assault Rifle", 1, 50, 0, (int)ItemType.RangedWeapon, 150, 1000, 0, 0, 0, 0, 0, 0, 0, 30, 30, (int)AmmoType.AssaultRifle);
             offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
@@ -184,11 +183,37 @@ namespace Server.Classes
 
         public void CheckPlayerLevelUp()
         {
-            if (Experience >= (Level * 1000))
+            if (Experience == (Level * 1000))
             {
                 Level += 1;
                 Experience = 0;
+                Points += 100;
+                Hunger = 100;
+                Hydration = 100;
+                MaxHealth += (Level * 2);
+                Health = MaxHealth;
+                Money += 50;
+                Strength += RND.Next(1, 3);
+                Agility += RND.Next(1, 3);
+                Endurance += RND.Next(1, 3);
+                Stamina += RND.Next(1, 3);
             }
+            else if (Experience > (Level * 1000))
+            {
+                Level += 1;
+                Experience = (Experience - (Level * 1000));
+                Points += 100;
+                Hunger = 100;
+                Hydration = 100;
+                MaxHealth += (Level * 2);
+                Health = MaxHealth;
+                Money += 50;
+                Strength += RND.Next(1, 3);
+                Agility += RND.Next(1, 3);
+                Endurance += RND.Next(1, 3);
+                Stamina += RND.Next(1, 3);
+            }
+            else { return; }
         }
 
         public void CreatePlayerInDatabase()

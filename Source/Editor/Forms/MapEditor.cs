@@ -44,6 +44,7 @@ namespace Editor.Forms
         int e_Type;
         int e_SelectTileset;
         int e_SpawnNumber;
+        int e_SpawnAmount;
         static int lastFrameRate;
         static int frameRate;
         static int lastTick;
@@ -194,10 +195,12 @@ namespace Editor.Forms
                                 case (int)TileType.Blocked:
                                     e_Text.DrawText(e_Window, "B", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Red);
                                     break;
-                                case (int)TileType.NPCSpawn:
+                                case (int)TileType.NpcSpawn:
                                     e_Text.DrawText(e_Window, "N", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Yellow);
                                     break;
-
+                                case (int)TileType.SpawnPool:
+                                    e_Text.DrawText(e_Window, "S", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Green);
+                                    break;
                                 default:
                                     break;
                             }
@@ -237,11 +240,11 @@ namespace Editor.Forms
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        if (e_Map.Ground[x, y].type == (int)TileType.NPCSpawn)
+                        if (e_Map.Ground[x, y].type == (int)TileType.NpcSpawn)
                         {
-                            if (e_Map.Ground[x, y].spawnNum > 0)
+                            if (e_Map.Ground[x, y].SpawnNum > 0)
                             {
-                                int npcNum = e_Map.Ground[x, y].spawnNum;
+                                int npcNum = e_Map.Ground[x, y].SpawnNum;
                                 e_Npc.LoadNpcFromDatabase(npcNum);
                                 e_Npc.DrawNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
                             }
@@ -479,7 +482,8 @@ namespace Editor.Forms
                 if (e.Button == MouseButtons.Left)
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
-                    if (e_Type == (int)TileType.NPCSpawn) { e_Map.Ground[e_CursorX, e_CursorY].spawnNum = e_SpawnNumber; }
+                    if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
+                    if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -670,7 +674,7 @@ namespace Editor.Forms
                 if (e.Button == MouseButtons.Left)
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
-                    if (e_Type == (int)TileType.NPCSpawn) { e_Map.Ground[e_CursorX, e_CursorY].spawnNum = e_SpawnNumber; }
+                    if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -799,16 +803,34 @@ namespace Editor.Forms
 
         private void radSpawnNpc_CheckedChanged(object sender, EventArgs e)
         {
-            e_Type = (int)TileType.NPCSpawn;
+            e_Type = (int)TileType.NpcSpawn;
             lblType.Text = "Type: Npc Spawn";
             e_SpawnNumber = 1;
+            e_SpawnAmount = 1;
             pnlNpcSpawn.Visible = true;
+            scrlSpawnAmount.Enabled = false;
+        }
+
+        private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.SpawnPool;
+            lblType.Text = "Type: Spawn Pool";
+            e_SpawnNumber = 1;
+            e_SpawnAmount = 1;
+            pnlNpcSpawn.Visible = true;
+            scrlSpawnAmount.Enabled = true;
         }
 
         private void scrlNpcNum_Scroll(object sender, ScrollEventArgs e)
         {
             e_SpawnNumber = (scrlNpcNum.Value);
             lblNpcSpawn.Text = "Npc Number: " + (scrlNpcNum.Value);
+        }
+
+        private void scrlSpawnAmount_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_SpawnAmount = (scrlSpawnAmount.Value);
+            lblSpawnAmount.Text = "Amount: " + (scrlSpawnAmount.Value);
         }
 
         private void mnuFillLayer_Click(object sender, EventArgs e)

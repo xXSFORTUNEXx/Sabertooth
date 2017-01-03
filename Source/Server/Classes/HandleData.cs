@@ -95,7 +95,9 @@ namespace Server.Classes
 
             s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
             s_Map[c_Map].mapNpc[npc].DamageNpc(s_Player[owner], damage);
-            SendPlayerData(incMSG, s_Server, s_Player, owner);
+
+            SendMapNpcData(s_Server, s_Player[owner].Connection, s_Map[c_Map], npc);
+            SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
         }
 
         void HandleUpdateClip(NetIncomingMessage incMSG, Player[] s_Player)
@@ -289,6 +291,7 @@ namespace Server.Classes
                         SendProjectiles(incMSG, s_Server, s_Proj);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
+                        SendPoolMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                     }
                     else
                     {
@@ -466,7 +469,38 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Endurance);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Stamina);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ammoType);
-            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 3);
+        }
+
+        void SendUpdatePlayerStats(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UpdatePlayerStats);
+            //outMSG.Write(index);
+            outMSG.WriteVariableInt32(s_Player[index].Level);
+            outMSG.WriteVariableInt32(s_Player[index].Points);
+            outMSG.WriteVariableInt32(s_Player[index].Health);
+            outMSG.WriteVariableInt32(s_Player[index].MaxHealth);
+            outMSG.WriteVariableInt32(s_Player[index].Hunger);
+            outMSG.WriteVariableInt32(s_Player[index].Hydration);
+            outMSG.WriteVariableInt32(s_Player[index].Experience);
+            outMSG.WriteVariableInt32(s_Player[index].Money);
+            outMSG.WriteVariableInt32(s_Player[index].Armor);
+            outMSG.WriteVariableInt32(s_Player[index].Strength);
+            outMSG.WriteVariableInt32(s_Player[index].Agility);
+            outMSG.WriteVariableInt32(s_Player[index].Endurance);
+            outMSG.WriteVariableInt32(s_Player[index].Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].PistolAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Clip);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.maxClip);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Clip);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.maxClip);
+
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 4);
         }
 
         void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
@@ -656,6 +690,29 @@ namespace Server.Classes
             LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
+        void SendPoolMapNpcs(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PoolNpcs);
+            for (int i = 0; i < 20; i++)
+            {
+                outMSG.Write(s_Map.r_MapNpc[i].Name);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].X);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Y);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Direction);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Sprite);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Step);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Owner);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Behavior);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Health);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].MaxHealth);
+                outMSG.WriteVariableInt32(s_Map.r_MapNpc[i].Damage);
+                outMSG.Write(s_Map.r_MapNpc[i].IsSpawned);
+            }
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         void SendMapNpcs(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -677,6 +734,28 @@ namespace Server.Classes
                 outMSG.Write(s_Map.mapNpc[i].IsSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendPoolNpcData(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PoolNpcData);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.Write(s_Map.r_MapNpc[npcNum].Name);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Y);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Direction);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Sprite);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Step);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Owner);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Behavior);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].SpawnTime);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Health);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].MaxHealth);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Damage);
+            outMSG.Write(s_Map.r_MapNpc[npcNum].IsSpawned);
+
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendMapNpcData(NetServer s_Server, NetConnection playerConn, Map s_Map, int npcNum)
@@ -799,6 +878,7 @@ namespace Server.Classes
                         SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
                         SendPlayers(incMSG, s_Server, s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
+                        SendPoolMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
                         return;
                     }
@@ -951,6 +1031,9 @@ namespace Server.Classes
         UpdateWeapons,
         RangedAttack,
         UpdateClip,
-        AttackNpcProj
+        AttackNpcProj,
+        UpdatePlayerStats,
+        PoolNpcs,
+        PoolNpcData
     }
 }

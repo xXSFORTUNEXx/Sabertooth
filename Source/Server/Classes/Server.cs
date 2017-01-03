@@ -22,15 +22,13 @@ namespace Server.Classes
         Projectile[] s_Proj = new Projectile[10];
         Map[] s_Map = new Map[10];
         Random RND = new Random();
-        SQLiteConnection s_Database;
         static string s_userCommand;
         public bool isRunning;
         private int saveTick;
         private int aiTick;
-        private int spawnTick;
         private int regenTick;
         private int regenTime;
-        private int hungerTime;
+        private int hungerTime; 
         private int hydrationTime;
         private int saveTime;
         private int spawnTime;
@@ -64,7 +62,7 @@ namespace Server.Classes
                 CheckNpcSpawn(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
-                CheckNpcAI(s_Server);
+                CheckNpcAi(s_Server);
                 CheckCommands(s_Server, s_Player);
                 UpTime();
             }
@@ -277,6 +275,7 @@ namespace Server.Classes
                         s_Map[i].mapNpc[n].DesY = s_Npc[num].DesY;
                         s_Map[i].mapNpc[n].Exp = s_Npc[num].Exp;
                         s_Map[i].mapNpc[n].Money = s_Npc[num].Money;
+                        s_Map[i].mapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
                     }
                 }
             }
@@ -369,25 +368,79 @@ namespace Server.Classes
                     {
                         for (int y = 0; y < 50; y++)
                         {
-                            if (s_Map[i].Ground[x, y].Type == (int)TileType.NPCSpawn)
+                            switch (s_Map[i].Ground[x, y].Type)
                             {
-                                for (int c = 0; c < 10; c++)
-                                {
-                                    if (!s_Map[i].mapNpc[c].IsSpawned && s_Map[i].mapNpc[c].Name != "None")
+                                case (int)TileType.NpcSpawn:
+                                    for (int c = 0; c < 10; c++)
                                     {
-                                        s_Map[i].mapNpc[c].X = x;
-                                        s_Map[i].mapNpc[c].Y = y;
-                                        s_Map[i].mapNpc[c].IsSpawned = true;
-
-                                        for (int p = 0; p < 5; p++)
+                                        if (s_Map[i].Ground[x, y].SpawnNum == (c + 1))
                                         {
-                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                            if (!s_Map[i].mapNpc[c].IsSpawned && s_Map[i].mapNpc[c].Name != "None")
                                             {
-                                                handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                                if (TickCount - s_Map[i].mapNpc[c].spawnTick > (s_Map[i].mapNpc[c].SpawnTime * 1000))
+                                                {
+                                                    s_Map[i].mapNpc[c].X = x;
+                                                    s_Map[i].mapNpc[c].Y = y;
+                                                    s_Map[i].mapNpc[c].IsSpawned = true;
+
+                                                    for (int p = 0; p < 5; p++)
+                                                    {
+                                                        if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                        {
+                                                            handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                }                                
+                                    break;
+
+                                case (int)TileType.SpawnPool:
+                                    if (s_Map[i].Ground[x, y].SpawnNum > 0)
+                                    {
+                                        for (int n = 0; n < 20; n++)
+                                        {
+                                            if (s_Map[i].Ground[x, y].SpawnAmount > s_Map[i].Ground[x, y].CurrentSpawn)
+                                            {
+                                                if (!s_Map[i].r_MapNpc[n].IsSpawned)
+                                                {
+                                                    int num = (s_Map[i].Ground[x, y].SpawnNum - 1);
+
+                                                    if (num > -1)
+                                                    {
+                                                        s_Map[i].r_MapNpc[n].npcNum = num;
+
+                                                        s_Map[i].r_MapNpc[n].Name = s_Npc[num].Name;
+                                                        s_Map[i].r_MapNpc[n].X = x;
+                                                        s_Map[i].r_MapNpc[n].Y = y;
+                                                        s_Map[i].r_MapNpc[n].Direction = s_Npc[num].Direction;
+                                                        s_Map[i].r_MapNpc[n].Step = s_Npc[num].Step;
+                                                        s_Map[i].r_MapNpc[n].Sprite = s_Npc[num].Sprite;
+                                                        s_Map[i].r_MapNpc[n].Behavior = s_Npc[num].Behavior;
+                                                        s_Map[i].r_MapNpc[n].Owner = s_Npc[num].Owner;
+                                                        s_Map[i].r_MapNpc[n].Damage = s_Npc[num].Damage;
+                                                        s_Map[i].r_MapNpc[n].DesX = s_Npc[num].DesX;
+                                                        s_Map[i].r_MapNpc[n].DesY = s_Npc[num].DesY;
+                                                        s_Map[i].r_MapNpc[n].Exp = s_Npc[num].Exp;
+                                                        s_Map[i].r_MapNpc[n].Money = s_Npc[num].Money;
+                                                        s_Map[i].r_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
+                                                        s_Map[i].r_MapNpc[n].IsSpawned = true;
+                                                        s_Map[i].Ground[x, y].CurrentSpawn += 1;
+
+                                                        for (int p = 0; p < 5; p++)
+                                                        {
+                                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                            {
+                                                                handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
                             }
                         }
                     }
@@ -395,7 +448,7 @@ namespace Server.Classes
             }
         }
 
-        void CheckNpcAI(NetServer s_Server)
+        void CheckNpcAi(NetServer s_Server)
         {
             if (TickCount - aiTick > aiTime)
             {
@@ -419,6 +472,29 @@ namespace Server.Classes
                                     if (s_Player[p].Connection != null && s_Player[p].Map == i)
                                     {
                                         handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    for (int c = 0; c < 20; c++)
+                    {
+                        if (s_Map[i].r_MapNpc[c].IsSpawned)
+                        {
+                            int canMove = RND.Next(0, 100);
+                            int dir = RND.Next(0, 3);
+
+                            s_Map[i].r_MapNpc[c].NpcAI(canMove, dir, s_Map[i], s_Player);
+
+                            if (s_Map[i].r_MapNpc[c].DidMove)
+                            {
+                                s_Map[i].r_MapNpc[c].DidMove = false;
+
+                                for (int p = 0; p < 5; p++)
+                                {
+                                    if (s_Player[p].Connection != null && s_Player[p].Map == i)
+                                    {
+                                        handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
                                     }
                                 }
                             }

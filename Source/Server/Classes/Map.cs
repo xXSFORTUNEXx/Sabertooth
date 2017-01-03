@@ -121,6 +121,7 @@ namespace Server.Classes
                     Ground[x, y].Tileset = 0;
                     Ground[x, y].Type = (int)TileType.None;
                     Ground[x, y].SpawnNum = 0;
+                    Ground[x, y].SpawnAmount = 0;
 
                     Mask[x, y].TileX = 0;
                     Mask[x, y].TileY = 0;
@@ -176,6 +177,7 @@ namespace Server.Classes
                     binaryWriter.Write(Ground[x, y].Tileset);
                     binaryWriter.Write(Ground[x, y].Type);
                     binaryWriter.Write(Ground[x, y].SpawnNum);
+                    binaryWriter.Write(Ground[x, y].SpawnAmount);
                     //Mask
                     binaryWriter.Write(Mask[x, y].TileX);
                     binaryWriter.Write(Mask[x, y].TileY);
@@ -225,6 +227,15 @@ namespace Server.Classes
                     mapNpc[i].npcNum = binaryReader.ReadInt32();
                 }
 
+                for (int i = 0; i < 20; i++)
+                {
+                    r_MapNpc[i] = new MapNpc();
+                    r_MapNpc[i].Name = "None";
+                    r_MapNpc[i].X = 0;
+                    r_MapNpc[i].Y = 0;
+                    r_MapNpc[i].npcNum = 0;
+                }
+
                 for (int x = 0; x < 50; x++)
                 {
                     for (int y = 0; y < 50; y++)
@@ -243,6 +254,8 @@ namespace Server.Classes
                         Ground[x, y].Tileset = binaryReader.ReadInt32();
                         Ground[x, y].Type = binaryReader.ReadInt32();
                         Ground[x, y].SpawnNum = binaryReader.ReadInt32();
+                        Ground[x, y].SpawnAmount = binaryReader.ReadInt32();
+                        Ground[x, y].CurrentSpawn = 0;
                         //Mask
                         Mask[x, y].TileX = binaryReader.ReadInt32();
                         Mask[x, y].TileY = binaryReader.ReadInt32();
@@ -301,6 +314,7 @@ namespace Server.Classes
             else if (Health <= 0)
             {
                 IsSpawned = false;
+                spawnTick = TickCount;
                 GivePlayerRewards(s_Player);
             }
         }
@@ -310,6 +324,7 @@ namespace Server.Classes
             s_Player.Experience += Exp;
             s_Player.Money += Money;
             s_Player.CheckPlayerLevelUp();
+            s_Player.SavePlayerToDatabase();
         }
     }
 
@@ -340,6 +355,8 @@ namespace Server.Classes
         public bool Flagged { get; set; }
 
         public int SpawnNum { get; set; }
+        public int SpawnAmount { get; set; }
+        public int CurrentSpawn;
 
         public Tile()
         {
@@ -359,7 +376,8 @@ namespace Server.Classes
     {
         None,
         Blocked,
-        NPCSpawn
+        NpcSpawn,
+        SpawnPool
     }
 
     public enum TileLayers

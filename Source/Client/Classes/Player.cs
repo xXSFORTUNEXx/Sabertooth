@@ -268,12 +268,14 @@ namespace Client.Classes
             if (mainWeapon.Clip > 0)
             {
                 mainWeapon.Clip -= 1;
+                SendUpdateClip(c_Client, index);
             }
 
             if (mainWeapon.Clip == 0)
             {
                 Reload();
                 reloadTick = TickCount;
+                SendUpdateClip(c_Client, index);
                 SendUpdateAmmo(c_Client, index);
             }
         }

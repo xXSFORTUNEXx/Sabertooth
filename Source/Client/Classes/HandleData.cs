@@ -13,12 +13,11 @@ namespace Client.Classes
 {
     class HandleData
     {
-        public string s_IPAddress; //So we can change the port XML instead of directly in the code
-        public string s_Port;  //So we can change the port from XML and not directly in the code
-        public int c_Index; //The index of this client
-        public string c_Version = "1.0";    //For now well make this hard coded
+        public string s_IPAddress;
+        public string s_Port;
+        public int c_Index;
+        public string c_Version = "1.0";
 
-        //This is where we process the 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
             ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
         {
@@ -133,6 +132,18 @@ namespace Client.Classes
                             case (byte)PacketTypes.UpdateWeapons:
                                 HandleWeaponsUpdate(incMSG, c_Client, c_Player, c_Index);
                                 break;
+
+                            case (byte)PacketTypes.UpdatePlayerStats:
+                                HandleUpdatePlayerStats(incMSG, c_Client, c_Player, c_Index);
+                                break;
+
+                            case (byte)PacketTypes.PoolNpcs:
+                                HandlePoolNpcs(incMSG, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.PoolNpcData:
+                                HandlePoolNpcData(incMSG, c_Map);
+                                break;
                         }
                         break;
                 }
@@ -140,7 +151,6 @@ namespace Client.Classes
             c_Client.Recycle(incMSG);
         }
 
-        //Handle the server shutting down via commands
         void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
         {
             c_Canvas.Dispose();
@@ -148,7 +158,6 @@ namespace Client.Classes
             Exit(0);
         }
 
-        //Clear the projectile
         void HandleClearProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
         {
             string mapName = incMSG.ReadString();
@@ -158,7 +167,6 @@ namespace Client.Classes
             c_Map.mapProj[slot] = null;
         }
 
-        //Create a projectile
         void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
         {
             int slot = incMSG.ReadVariableInt32();
@@ -178,7 +186,6 @@ namespace Client.Classes
             c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
         }
 
-        //Update clip and remaining ammo
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
         {
             int index = incMSG.ReadVariableInt32();
@@ -190,7 +197,6 @@ namespace Client.Classes
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
         }
 
-        //Update all projectiles in the array
         void HandleProjectiles(NetIncomingMessage incMSG, Projectile[] c_Proj)
         {
             for (int i = 0; i < 10; i++)
@@ -207,7 +213,6 @@ namespace Client.Classes
             }
         }
 
-        //Handle one new piece of the projectile array
         void HandleProjData(NetIncomingMessage incMSG, Projectile[] c_Proj)
         {
             int index = incMSG.ReadVariableInt32();
@@ -220,7 +225,6 @@ namespace Client.Classes
             c_Proj[index].Speed = incMSG.ReadVariableInt32();
         }
 
-        //Handles data for incoming items
         void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
         {
             for (int i = 0; i < 50; i++)
@@ -248,7 +252,6 @@ namespace Client.Classes
             Console.WriteLine("Items data received from server! IP: " + incMSG.SenderConnection);
         }
 
-        //Handles data for incoming items
         void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
         {
             int index = incMSG.ReadVariableInt32();
@@ -272,7 +275,6 @@ namespace Client.Classes
             Console.WriteLine("Item data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
         }
 
-        //Handle incoming NPC data
         void HandleNpcs(NetIncomingMessage incMSG, Npc[] c_Npc)
         {
             for (int i = 0; i < 10; i++)
@@ -291,13 +293,35 @@ namespace Client.Classes
                     c_Npc[i].Health = incMSG.ReadVariableInt32();
                     c_Npc[i].MaxHealth = incMSG.ReadVariableInt32();
                     c_Npc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Npc[i].isSpawned = incMSG.ReadBoolean();
+                    c_Npc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
             Console.WriteLine("NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
-        //Handle incoming NPC data
+        void HandlePoolNpcs(NetIncomingMessage incMSG, Map c_Map)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                if (c_Map.r_MapNpc[i] != null)
+                {
+                    c_Map.r_MapNpc[i].Name = incMSG.ReadString();
+                    c_Map.r_MapNpc[i].X = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Y = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Direction = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Step = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Owner = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Health = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].Damage = incMSG.ReadVariableInt32();
+                    c_Map.r_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
+                }
+            }
+        }
+
         void HandleMapNpcs(NetIncomingMessage incMSG, Map c_Map)
         {
             for (int i = 0; i < 10; i++)
@@ -316,13 +340,31 @@ namespace Client.Classes
                     c_Map.mapNpc[i].Health = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
                     c_Map.mapNpc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].isSpawned = incMSG.ReadBoolean();
+                    c_Map.mapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
             Console.WriteLine("Map NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
-        //Handle incoming data for a single npc
+        void HandlePoolNpcData(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int npcNum = incMSG.ReadVariableInt32();
+
+            c_Map.r_MapNpc[npcNum].Name = incMSG.ReadString();
+            c_Map.r_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+        }
+
         void HandleNpcData(NetIncomingMessage incMSG, Map c_Map)
         {
             int npcNum = incMSG.ReadVariableInt32();
@@ -339,11 +381,10 @@ namespace Client.Classes
             c_Map.mapNpc[npcNum].Health = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
             c_Map.mapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].isSpawned = incMSG.ReadBoolean();
+            c_Map.mapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
             Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
         }
 
-        //Handle player direction packet
         void HandleUpdateDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
             int index = incMSG.ReadVariableInt32();
@@ -358,7 +399,6 @@ namespace Client.Classes
             //if (index == clientIndex) { return; }
         }
 
-        //handle incoming movement data
         void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
         {
             int index = incMSG.ReadVariableInt32();
@@ -380,7 +420,6 @@ namespace Client.Classes
             //if (step == c_Player[index].Step) { return; }
         }
 
-        //Discovery response sent from the server
         void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient c_Client)
         {
             Console.WriteLine("Found Server: " + incMSG.ReadString() + " @ " + incMSG.SenderEndPoint);
@@ -390,14 +429,12 @@ namespace Client.Classes
             c_Client.Connect(s_IPAddress, ToInt32(s_Port), outMSG);
         }
 
-        //Assuring we are connected to the server
         void HandleConnectionData(NetIncomingMessage incMSG, NetClient c_Client)
         {
             if (c_Client.ServerConnection != null) { return; }
             Console.WriteLine("Connected to server!");
         }
 
-        //Packet incoming for chat message
         void HandleChatMessage(NetIncomingMessage incMSG, GUI c_GUI)
         {
             string msg = incMSG.ReadString();
@@ -422,7 +459,6 @@ namespace Client.Classes
             Console.WriteLine("Chat data receievd from server! IP: " + incMSG.SenderConnection);
         }
 
-        //Packet for succesful login, after this is done we get all the maps, npc, other players the whole nine yards
         void HandleLoginData(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas, GUI c_GUI)
         {
             Console.WriteLine("Login successful! IP: " + incMSG.SenderConnection);
@@ -430,7 +466,6 @@ namespace Client.Classes
             c_GUI.CreateLoadingWindow(c_Canvas);
         }
 
-        //Handles incoming vital data
         void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
         {
             int index = incMSG.ReadVariableInt32();
@@ -443,7 +478,6 @@ namespace Client.Classes
             Console.WriteLine("Vital data received from server! Index: " + index + " Vital: " + vitalName +  "Amount: " + vital + " IP: " + incMSG.SenderConnection);
         }
 
-        //Handles incoming health data
         void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
         {
             int index = incMSG.ReadVariableInt32();
@@ -453,78 +487,103 @@ namespace Client.Classes
             Console.WriteLine("Health data received from server! Index:" + index + " Amount: " + health + " IP: " + incMSG.SenderConnection);
         }
 
-        //Player incoming data for the clients index
-        void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
-        {            
-            c_Player[clientIndex].Name = incMSG.ReadString();
-            c_Player[clientIndex].X = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Y = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Map = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Direction = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].AimDirection = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Sprite = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Level = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Points = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Health = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Hunger = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].MaxHealth = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Hydration = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Experience = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Money = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Armor = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Strength = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Agility = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Endurance = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].Stamina = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].PistolAmmo = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].AssaultAmmo = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].RocketAmmo = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offsetX = 12;
-            c_Player[clientIndex].offsetY = 9;
+        void HandleUpdatePlayerStats(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
+        {
+            c_Player[index].Level = incMSG.ReadVariableInt32();
+            c_Player[index].Points = incMSG.ReadVariableInt32();
+            c_Player[index].Health = incMSG.ReadVariableInt32();
+            c_Player[index].Hunger = incMSG.ReadVariableInt32();
+            c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
+            c_Player[index].Hydration = incMSG.ReadVariableInt32();
+            c_Player[index].Experience = incMSG.ReadVariableInt32();
+            c_Player[index].Money = incMSG.ReadVariableInt32();
+            c_Player[index].Armor = incMSG.ReadVariableInt32();
+            c_Player[index].Strength = incMSG.ReadVariableInt32();
+            c_Player[index].Agility = incMSG.ReadVariableInt32();
+            c_Player[index].Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
 
-            //Main Weapon
-            c_Player[clientIndex].mainWeapon.Name = incMSG.ReadString();
-            c_Player[clientIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.maxClip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.ammoType = incMSG.ReadVariableInt32();
-
-            //Secondary Weapon
-            c_Player[clientIndex].offWeapon.Name = incMSG.ReadString();
-            c_Player[clientIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.maxClip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.ammoType = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Player data received from server! Index: " + clientIndex + " Account Name: " + c_Player[clientIndex].Name + " IP: " + incMSG.SenderConnection);
+            Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
         }
 
-        //Handle incoming weapon data
+        void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
+        {            
+            c_Player[index].Name = incMSG.ReadString();
+            c_Player[index].X = incMSG.ReadVariableInt32();
+            c_Player[index].Y = incMSG.ReadVariableInt32();
+            c_Player[index].Map = incMSG.ReadVariableInt32();
+            c_Player[index].Direction = incMSG.ReadVariableInt32();
+            c_Player[index].AimDirection = incMSG.ReadVariableInt32();
+            c_Player[index].Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].Level = incMSG.ReadVariableInt32();
+            c_Player[index].Points = incMSG.ReadVariableInt32();
+            c_Player[index].Health = incMSG.ReadVariableInt32();
+            c_Player[index].Hunger = incMSG.ReadVariableInt32();
+            c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
+            c_Player[index].Hydration = incMSG.ReadVariableInt32();
+            c_Player[index].Experience = incMSG.ReadVariableInt32();
+            c_Player[index].Money = incMSG.ReadVariableInt32();
+            c_Player[index].Armor = incMSG.ReadVariableInt32();
+            c_Player[index].Strength = incMSG.ReadVariableInt32();
+            c_Player[index].Agility = incMSG.ReadVariableInt32();
+            c_Player[index].Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].offsetX = 12;
+            c_Player[index].offsetY = 9;
+
+            //Main Weapon
+            c_Player[index].mainWeapon.Name = incMSG.ReadString();
+            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+
+            //Secondary Weapon
+            c_Player[index].offWeapon.Name = incMSG.ReadString();
+            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ammoType = incMSG.ReadVariableInt32();
+
+            Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
+        }
+
         void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
         {
             //Main Weapon
@@ -566,7 +625,6 @@ namespace Client.Classes
             c_Player[clientIndex].offWeapon.ammoType = incMSG.ReadVariableInt32();
         }
 
-        //Handle the players on login, we just use the handleplayer for a single player or the client index this is all of the players currently connected
         void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
         {
             for (int i = 0; i < 5; i++)
@@ -601,7 +659,6 @@ namespace Client.Classes
             Console.WriteLine("Player data received from server! Index: All IP: " + incMSG.SenderConnection);
         }
 
-        //Error message handler
         void HandleErrorMessage(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas)
         {
             string msg = incMSG.ReadString();
@@ -611,7 +668,6 @@ namespace Client.Classes
             Console.WriteLine("Error message data received from server! IP: " + incMSG.SenderConnection);
         }
 
-        //Handle the incoming map data whether it be logging in or changing maps.
         void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
         {
             c_Map.Name = incMSG.ReadString();
@@ -643,7 +699,7 @@ namespace Client.Classes
                     c_Map.Ground[x, y].tileH = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].type = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].spawnNum = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].SpawnNum = incMSG.ReadVariableInt32();
                     //mask
                     c_Map.Mask[x, y].tileX = incMSG.ReadVariableInt32();
                     c_Map.Mask[x, y].tileY = incMSG.ReadVariableInt32();
@@ -677,7 +733,6 @@ namespace Client.Classes
             LoadMainGUI(c_GUI, c_Canvas);
         }
 
-        //Loads the main GUI once the loading is finished
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
             c_Canvas.DeleteAllChildren();
@@ -687,7 +742,6 @@ namespace Client.Classes
         }
     }
 
-    //Packet headers in the form of enumerations
     public enum PacketTypes
     {
         Connection,
@@ -720,6 +774,9 @@ namespace Client.Classes
         UpdateWeapons,
         RangedAttack,
         UpdateClip,
-        AttackNpcProj
+        AttackNpcProj,
+        UpdatePlayerStats,
+        PoolNpcs,
+        PoolNpcData
     }
 }

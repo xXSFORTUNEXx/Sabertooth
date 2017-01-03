@@ -21,7 +21,7 @@ namespace Client.Classes
         public int DesY { get; set; }
         public int Exp { get; set; }
         public int Money { get; set; }
-        public bool isSpawned;
+        public bool IsSpawned { get; set; }
 
         Sprite c_Sprite = new Sprite();
 

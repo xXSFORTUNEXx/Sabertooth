@@ -5,3 +5,5 @@ Sequenced Channels:
 9 - Attack Npc w/ projectile
 1 - Movement Data
 2 - Update Direction Data
+3 - Update player data, specific index
+4 - Update player stats, no location or key live data

@@ -72,7 +72,8 @@ namespace Client.Classes
                     binaryWriter.Write(Ground[x, y].tileH);
                     binaryWriter.Write(Ground[x, y].Tileset);
                     binaryWriter.Write(Ground[x, y].type);
-                    binaryWriter.Write(Ground[x, y].spawnNum);
+                    binaryWriter.Write(Ground[x, y].SpawnNum);
+                    binaryWriter.Write(Ground[x, y].SpawnAmount);
                     //Mask
                     binaryWriter.Write(Mask[x, y].tileX);
                     binaryWriter.Write(Mask[x, y].tileY);
@@ -142,7 +143,8 @@ namespace Client.Classes
                     Ground[x, y].tileH = binaryReader.ReadInt32();
                     Ground[x, y].Tileset = binaryReader.ReadInt32();
                     Ground[x, y].type = binaryReader.ReadInt32();
-                    Ground[x, y].spawnNum = binaryReader.ReadInt32();
+                    Ground[x, y].SpawnNum = binaryReader.ReadInt32();
+                    Ground[x, y].SpawnAmount = binaryReader.ReadInt32();
                     //Mask
                     Mask[x, y].tileX = binaryReader.ReadInt32();
                     Mask[x, y].tileY = binaryReader.ReadInt32();
@@ -214,7 +216,9 @@ namespace Client.Classes
         public int type { get; set; }
         public bool flagged { get; set; }
 
-        public int spawnNum { get; set; }
+        public int SpawnNum { get; set; }
+        public int SpawnAmount { get; set; }
+        public int CurrentSpawn;
 
         public Tile()
         {
@@ -226,7 +230,7 @@ namespace Client.Classes
             Tileset = 0;
             type = (int)TileType.None;
             flagged = false;
-            spawnNum = 0;
+            SpawnNum = 0;
         }
     }
 
@@ -234,7 +238,8 @@ namespace Client.Classes
     {
         None,
         Blocked,
-        NPCSpawn
+        NpcSpawn,
+        SpawnPool
     }
 
     public enum TileLayers

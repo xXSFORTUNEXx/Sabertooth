@@ -623,7 +623,7 @@ namespace Client.Classes
                 d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].MaxHealth;
                 d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
                 d_Hydration.Text = "Hydration: " + c_Player[drawIndex].Hydration + " / 100";
-                d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 500);
+                d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 1000);
                 d_Money.Text = "Money: " + c_Player[drawIndex].Money;
                 d_Armor.Text = "Armor: " + c_Player[drawIndex].Armor;
                 d_Strength.Text = "Strength: " + c_Player[drawIndex].Strength;

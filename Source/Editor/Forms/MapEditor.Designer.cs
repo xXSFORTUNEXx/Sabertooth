@@ -30,6 +30,7 @@
         {
             this.tabTools = new System.Windows.Forms.TabControl();
             this.tabLayer = new System.Windows.Forms.TabPage();
+            this.chkNpc = new System.Windows.Forms.CheckBox();
             this.chkGrid = new System.Windows.Forms.CheckBox();
             this.radFringe = new System.Windows.Forms.RadioButton();
             this.radFringe2 = new System.Windows.Forms.RadioButton();
@@ -48,7 +49,10 @@
             this.radMask = new System.Windows.Forms.RadioButton();
             this.radGround = new System.Windows.Forms.RadioButton();
             this.tabTypes = new System.Windows.Forms.TabPage();
+            this.radSpawnPool = new System.Windows.Forms.RadioButton();
             this.pnlNpcSpawn = new System.Windows.Forms.Panel();
+            this.scrlSpawnAmount = new System.Windows.Forms.HScrollBar();
+            this.lblSpawnAmount = new System.Windows.Forms.Label();
             this.scrlNpcNum = new System.Windows.Forms.HScrollBar();
             this.lblNpcSpawn = new System.Windows.Forms.Label();
             this.radSpawnNpc = new System.Windows.Forms.RadioButton();
@@ -87,7 +91,6 @@
             this.lblNpcs = new System.Windows.Forms.Label();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
-            this.chkNpc = new System.Windows.Forms.CheckBox();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -131,6 +134,16 @@
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
+            // 
+            // chkNpc
+            // 
+            this.chkNpc.AutoSize = true;
+            this.chkNpc.Location = new System.Drawing.Point(19, 171);
+            this.chkNpc.Name = "chkNpc";
+            this.chkNpc.Size = new System.Drawing.Size(79, 17);
+            this.chkNpc.TabIndex = 14;
+            this.chkNpc.Text = "Show npcs";
+            this.chkNpc.UseVisualStyleBackColor = true;
             // 
             // chkGrid
             // 
@@ -314,6 +327,7 @@
             // 
             // tabTypes
             // 
+            this.tabTypes.Controls.Add(this.radSpawnPool);
             this.tabTypes.Controls.Add(this.pnlNpcSpawn);
             this.tabTypes.Controls.Add(this.radSpawnNpc);
             this.tabTypes.Controls.Add(this.radBlocked);
@@ -326,19 +340,55 @@
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
             // 
+            // radSpawnPool
+            // 
+            this.radSpawnPool.AutoSize = true;
+            this.radSpawnPool.Location = new System.Drawing.Point(20, 92);
+            this.radSpawnPool.Name = "radSpawnPool";
+            this.radSpawnPool.Size = new System.Drawing.Size(82, 17);
+            this.radSpawnPool.TabIndex = 4;
+            this.radSpawnPool.TabStop = true;
+            this.radSpawnPool.Text = "Spawn Pool";
+            this.radSpawnPool.UseVisualStyleBackColor = true;
+            this.radSpawnPool.CheckedChanged += new System.EventHandler(this.radSpawnPool_CheckedChanged);
+            // 
             // pnlNpcSpawn
             // 
             this.pnlNpcSpawn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlNpcSpawn.Controls.Add(this.scrlSpawnAmount);
+            this.pnlNpcSpawn.Controls.Add(this.lblSpawnAmount);
             this.pnlNpcSpawn.Controls.Add(this.scrlNpcNum);
             this.pnlNpcSpawn.Controls.Add(this.lblNpcSpawn);
-            this.pnlNpcSpawn.Location = new System.Drawing.Point(20, 92);
+            this.pnlNpcSpawn.Location = new System.Drawing.Point(20, 115);
             this.pnlNpcSpawn.Name = "pnlNpcSpawn";
-            this.pnlNpcSpawn.Size = new System.Drawing.Size(200, 80);
+            this.pnlNpcSpawn.Size = new System.Drawing.Size(200, 129);
             this.pnlNpcSpawn.TabIndex = 3;
             this.pnlNpcSpawn.Visible = false;
             // 
+            // scrlSpawnAmount
+            // 
+            this.scrlSpawnAmount.Enabled = false;
+            this.scrlSpawnAmount.LargeChange = 1;
+            this.scrlSpawnAmount.Location = new System.Drawing.Point(19, 90);
+            this.scrlSpawnAmount.Maximum = 20;
+            this.scrlSpawnAmount.Name = "scrlSpawnAmount";
+            this.scrlSpawnAmount.Size = new System.Drawing.Size(161, 17);
+            this.scrlSpawnAmount.TabIndex = 3;
+            this.scrlSpawnAmount.Value = 1;
+            this.scrlSpawnAmount.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSpawnAmount_Scroll);
+            // 
+            // lblSpawnAmount
+            // 
+            this.lblSpawnAmount.AutoSize = true;
+            this.lblSpawnAmount.Location = new System.Drawing.Point(16, 71);
+            this.lblSpawnAmount.Name = "lblSpawnAmount";
+            this.lblSpawnAmount.Size = new System.Drawing.Size(55, 13);
+            this.lblSpawnAmount.TabIndex = 2;
+            this.lblSpawnAmount.Text = "Amount: 1";
+            // 
             // scrlNpcNum
             // 
+            this.scrlNpcNum.LargeChange = 1;
             this.scrlNpcNum.Location = new System.Drawing.Point(19, 37);
             this.scrlNpcNum.Maximum = 50;
             this.scrlNpcNum.Minimum = 1;
@@ -722,16 +772,6 @@
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
             // 
-            // chkNpc
-            // 
-            this.chkNpc.AutoSize = true;
-            this.chkNpc.Location = new System.Drawing.Point(19, 171);
-            this.chkNpc.Name = "chkNpc";
-            this.chkNpc.Size = new System.Drawing.Size(79, 17);
-            this.chkNpc.TabIndex = 14;
-            this.chkNpc.Text = "Show npcs";
-            this.chkNpc.UseVisualStyleBackColor = true;
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -834,5 +874,8 @@
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkNpc;
+        private System.Windows.Forms.RadioButton radSpawnPool;
+        private System.Windows.Forms.HScrollBar scrlSpawnAmount;
+        private System.Windows.Forms.Label lblSpawnAmount;
     }
 }

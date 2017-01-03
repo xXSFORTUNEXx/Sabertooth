@@ -32,6 +32,7 @@ namespace Server.Classes
         public bool DidMove;
         public int Target;
         public double s_LastPoint;
+        public int spawnTick;
 
         public Npc() { }
 

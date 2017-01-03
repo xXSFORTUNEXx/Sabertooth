@@ -14,84 +14,84 @@ namespace Client.Classes
 {
     class Game
     {
-        static RenderWindow c_Window;  //create our main sfml window
-        static Canvas c_Canvas;    //create the canvas
-        static Gwen.Input.SFML c_Input;    //create input class so gwen can access sfml's input
-        static GUI c_GUI;  //create the gui class
-        HandleData handleData;  //create the handle data class (udp packet shit)
-        Player[] c_Player = new Player[5]; //create player class array
-        Npc[] c_Npc = new Npc[10]; //create the npc class array
-        Item[] c_Item = new Item[50];   //Create item array
-        Projectile[] c_Proj = new Projectile[10]; //create projectile array
-        Texture[] c_Sprite = new Texture[204]; //set the players texture to a texture
-        Map c_Map = new Map(); //create map class
-        View c_View = new View();  //create view for the plaer
+        static RenderWindow c_Window;
+        static Canvas c_Canvas;    
+        static Gwen.Input.SFML c_Input;  
+        static GUI c_GUI;  
+        HandleData handleData; 
+        Player[] c_Player = new Player[5]; 
+        Npc[] c_Npc = new Npc[10]; 
+        Item[] c_Item = new Item[50];   
+        Projectile[] c_Proj = new Projectile[10]; 
+        Texture[] c_Sprite = new Texture[204]; 
+        Map c_Map = new Map();
+        View c_View = new View(); 
         RenderText c_Text = new RenderText();
         ClientConfig c_Config;
-        static int lastTick;    //timer for last tick fps
-        static int lastFrameRate;   //previous framerate from fps cycle
-        static int frameRate;   //current frame rate of fps cycle
-        static int fps; //current fps
-        static int discoverTick;    //timer to check for server discovery
-        static int walkTick;    //timer for walking
+        static int lastTick;
+        static int lastFrameRate;  
+        static int frameRate; 
+        static int fps; 
+        static int discoverTick;    
+        static int walkTick;
+        static int attackTick;
 
-        public void GameLoop(NetClient c_Client, ClientConfig c_Config)   //main game loop (loop contains all the must be processed to make the game work)
+        public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth");    //create the window, width and height
-            c_Window.Closed += new EventHandler(OnClose);  //event for if he window closes
-            c_Window.KeyReleased += window_KeyReleased;    //event for key releases
-            c_Window.KeyPressed += OnKeyPressed;   //event for key pressed
-            c_Window.MouseButtonPressed += window_MouseButtonPressed;  //event for mouse button pressed
-            c_Window.MouseButtonReleased += window_MouseButtonReleased;    //event for mouse button released
-            c_Window.MouseMoved += window_MouseMoved;  //event for mouse movement
-            c_Window.TextEntered += window_TextEntered;    //event for text being entered for gwen
-            c_Window.SetFramerateLimit(60);    //set the max framerate for our window
+            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth");    
+            c_Window.Closed += new EventHandler(OnClose);
+            c_Window.KeyReleased += window_KeyReleased;    
+            c_Window.KeyPressed += OnKeyPressed;  
+            c_Window.MouseButtonPressed += window_MouseButtonPressed; 
+            c_Window.MouseButtonReleased += window_MouseButtonReleased;
+            c_Window.MouseMoved += window_MouseMoved;  
+            c_Window.TextEntered += window_TextEntered;  
+            c_Window.SetFramerateLimit(65);    
             this.c_Config = c_Config;
-            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);    //create the renderer that allows gwen to access SFML
-            Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");  //load the texture for gwen's skin
-            Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");  //load the font for gwen
-            gwenRenderer.LoadFont(defaultFont); //Load the font
-            skin.SetDefaultFont(defaultFont.FaceName);  //set the default font
-            defaultFont.Dispose();  //dispose of the font
-            c_Canvas = new Canvas(skin);   //create the canvas with the skin we loaded
-            c_Canvas.SetSize(800, 600);    //set canvas size
-            c_Canvas.ShouldDrawBackground = true;  //should we draw the background
-            c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;   //draw the background but transparent
-            c_Canvas.KeyboardInputEnabled = true;  //enable input from the keyboard for gwen
-            c_Input = new Gwen.Input.SFML();   //attach gwen and sfml input classes
-            c_Input.Initialize(c_Canvas, c_Window);  //initalize the input both with the canvas and the window
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);   //create the gui class
-            c_GUI.CreateMainWindow(c_Canvas); //create the main window with our login controls
+            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);   
+            Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png"); 
+            Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");  
+            gwenRenderer.LoadFont(defaultFont);
+            skin.SetDefaultFont(defaultFont.FaceName);  
+            defaultFont.Dispose(); 
+            c_Canvas = new Canvas(skin);   
+            c_Canvas.SetSize(800, 600);    
+            c_Canvas.ShouldDrawBackground = true;  
+            c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;   
+            c_Canvas.KeyboardInputEnabled = true;  
+            c_Input = new Gwen.Input.SFML(); 
+            c_Input.Initialize(c_Canvas, c_Window); 
+            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);  
+            c_GUI.CreateMainWindow(c_Canvas); 
 
-            handleData = new HandleData();  //create handle data 
+            handleData = new HandleData(); 
 
-            for (int i = 0; i < 204; i++)   //load our sprite textures
+            for (int i = 0; i < 204; i++)   
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
 
-            SetupPlayerArray(); //create the player array
-            SetupNpcArray();    //create the npc array
-            SetupItemArray();   //create the item array
-            SetupProjectileArray(); //create the projectile array
+            SetupPlayerArray(); 
+            SetupNpcArray();    
+            SetupItemArray();  
+            SetupProjectileArray(); 
 
-            while (c_Window.IsOpen)    //the actual game loop runs as long as the window is open
+            while (c_Window.IsOpen)    
             {
-                CheckForConnection(c_Client);  //check for the server connection
-                UpdateView(c_Client, c_Config, c_Npc, c_Item);  //update the players view
-                DrawGraphics(c_Client);    //draw graphics like maps, players, npcs, items, sprites
-                c_Window.Display();    //display everything we put on the screen
+                CheckForConnection(c_Client);  
+                UpdateView(c_Client, c_Config, c_Npc, c_Item); 
+                DrawGraphics(c_Client);   
+                c_Window.Display();    
             }
 
             c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);            
 
-            //once the loop exits we will clean everything up
-            c_Canvas.Dispose();    //dispose of the canvas
-            skin.Dispose(); //dispose of the skin
-            gwenRenderer.Dispose(); //dispose of the renderer          
-            c_Client.Shutdown("Shutting Down");    //run the shutdown void and give it an argument
-            Thread.Sleep(500);  //thread needs to sleep before we close the application otherwise it wont
-            Exit(0);    //exit the application with the code of 0 meaning everything went smooth
+            c_Canvas.Dispose(); 
+            skin.Dispose();
+            gwenRenderer.Dispose();        
+            c_Client.Shutdown("Shutting Down");  
+            Thread.Sleep(500);  
+            Exit(0);  
         }
 
         static void OnClose(object sender, EventArgs args)
@@ -283,7 +283,7 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                if (c_Map.mapNpc[i].isSpawned)
+                if (c_Map.mapNpc[i].IsSpawned)
                 {
                     if (c_Map.mapNpc[i].Sprite > 0)
                     {
@@ -294,7 +294,7 @@ namespace Client.Classes
 
             for (int i = 0; i < 20; i++)
             {
-                if (c_Map.r_MapNpc[i].isSpawned)
+                if (c_Map.r_MapNpc[i].IsSpawned)
                 {
                     if (c_Map.r_MapNpc[i].Sprite > 0)
                     {
@@ -367,17 +367,22 @@ namespace Client.Classes
                 DrawIndexPlayer();
                 DrawProjectiles(c_Client);
                 DrawUpperLevelTiles();
+
                 if (TickCount - walkTick > 100)
                 {
                     c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
-                    c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
 
+                if (TickCount - attackTick > 25)
+                {
+                    c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    attackTick = TickCount;
+                }
             }
-            c_Window.SetView(c_Window.DefaultView);   //change the default view back
-            c_Canvas.RenderCanvas();   //draw the canvas so it doesnt move
+            c_Window.SetView(c_Window.DefaultView);
+            c_Canvas.RenderCanvas();
         }
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)
