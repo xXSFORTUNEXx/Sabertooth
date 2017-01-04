@@ -326,21 +326,21 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                if (c_Map.mapNpc[i] != null)
+                if (c_Map.m_MapNpc[i] != null)
                 {
-                    c_Map.mapNpc[i].Name = incMSG.ReadString();
-                    c_Map.mapNpc[i].X = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Y = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Direction = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Step = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Owner = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Behavior = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Health = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Map.mapNpc[i].IsSpawned = incMSG.ReadBoolean();
+                    c_Map.m_MapNpc[i].Name = incMSG.ReadString();
+                    c_Map.m_MapNpc[i].X = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Y = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Direction = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Step = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Owner = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Health = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].Damage = incMSG.ReadVariableInt32();
+                    c_Map.m_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
             Console.WriteLine("Map NPC data received from server! IP: " + incMSG.SenderConnection);
@@ -369,19 +369,19 @@ namespace Client.Classes
         {
             int npcNum = incMSG.ReadVariableInt32();
 
-            c_Map.mapNpc[npcNum].Name = incMSG.ReadString();
-            c_Map.mapNpc[npcNum].X = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Y = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Step = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Health = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.mapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+            c_Map.m_MapNpc[npcNum].Name = incMSG.ReadString();
+            c_Map.m_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
             Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
         }
 
@@ -674,7 +674,7 @@ namespace Client.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                c_Map.mapNpc[i] = new MapNpc();
+                c_Map.m_MapNpc[i] = new MapNpc();
             }
 
             for (int i = 0; i < 20; i++)

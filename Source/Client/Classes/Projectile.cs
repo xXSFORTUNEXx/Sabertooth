@@ -75,10 +75,17 @@ namespace Client.Classes
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.mapNpc[i].IsSpawned)
+                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.mapNpc[i].X == X && c_MoveMap.mapNpc[i].Y == (Y + 1))
+                                if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y + 1))
                                 {
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        Moved = false;
+                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        return;
+                                    }
                                     Direction = (int)Directions.Down;
                                     Moved = false;
                                     SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
@@ -124,10 +131,17 @@ namespace Client.Classes
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.mapNpc[i].IsSpawned)
+                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.mapNpc[i].X == (X - 1) && c_MoveMap.mapNpc[i].Y == Y)
+                                if (c_MoveMap.m_MapNpc[i].X == (X - 1) && c_MoveMap.m_MapNpc[i].Y == Y)
                                 {
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        Moved = false;
+                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        return;
+                                    }
                                     Direction = (int)Directions.Left;
                                     Moved = false;
                                     SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
@@ -173,10 +187,17 @@ namespace Client.Classes
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.mapNpc[i].IsSpawned)
+                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.mapNpc[i].X == (X + 1) && c_MoveMap.mapNpc[i].Y == Y)
+                                if (c_MoveMap.m_MapNpc[i].X == (X + 1) && c_MoveMap.m_MapNpc[i].Y == Y)
                                 {
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        Moved = false;
+                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        return;
+                                    }
                                     Direction = (int)Directions.Right;
                                     Moved = false;
                                     SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
@@ -222,10 +243,17 @@ namespace Client.Classes
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.mapNpc[i].IsSpawned)
+                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.mapNpc[i].X == X && c_MoveMap.mapNpc[i].Y == (Y - 1))
+                                if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y - 1))
                                 {
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        Moved = false;
+                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        return;
+                                    }
                                     Direction = (int)Directions.Up;
                                     Moved = false;
                                     SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
@@ -238,7 +266,7 @@ namespace Client.Classes
                             if (c_MoveMap.r_MapNpc[c].IsSpawned)
                             {
                                 if (c_MoveMap.r_MapNpc[c].X == X && c_MoveMap.r_MapNpc[c].Y == (Y - 1))
-                                {
+                                {                                    
                                     Direction = (int)Directions.Up;
                                     Moved = false;
                                     SendProjectileAttackNpc(c_Client, c_MoveMap, slot, c, 1);

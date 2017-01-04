@@ -619,6 +619,12 @@ namespace Client.Classes
                 d_Map.Text = "Map: " + c_Player[drawIndex].Map;
                 d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
+                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
+                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
+                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
+                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
+                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+
                 d_Level.Text = "Level: " + c_Player[drawIndex].Level;
                 d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].MaxHealth;
                 d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
@@ -636,12 +642,6 @@ namespace Client.Classes
                 d_AttackSpeed.Text = "Attack Speed: " + c_Player[drawIndex].mainWeapon.AttackSpeed;
                 d_ReloadSpeed.Text = "Reload Speed: " + c_Player[drawIndex].mainWeapon.ReloadSpeed;
                 d_Points.Text = "Points: " + c_Player[drawIndex].Points;
-
-                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
-                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
-                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
-                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
             } 
         }
     }

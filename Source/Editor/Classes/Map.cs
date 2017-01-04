@@ -437,7 +437,6 @@ namespace Editor.Classes
 
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
-        public int CurrentSpawn;
 
         public Tile()
         {

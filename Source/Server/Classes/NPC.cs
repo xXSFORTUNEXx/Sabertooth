@@ -14,6 +14,7 @@ namespace Server.Classes
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int Range { get; set; }
         public int Direction { get; set; }
         public int Sprite { get; set; }
         public int Step { get; set; }
@@ -36,7 +37,7 @@ namespace Server.Classes
 
         public Npc() { }
 
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy, int exp, int money)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy, int exp, int money, int range)
         {
             Name = name;
             X = x;
@@ -54,6 +55,7 @@ namespace Server.Classes
             DesY = desy;
             Exp = exp;
             Money = money;
+            Range = range;
         }
 
         public Npc(int x, int y)
@@ -74,6 +76,7 @@ namespace Server.Classes
             DesY = 0;
             Exp = 100;
             Money = 0;
+            Range = 0;
         }
 
         public void CreateNpcInDatabase()
@@ -94,6 +97,7 @@ namespace Server.Classes
             DesY = 0;
             Exp = 0;
             Money = 0;
+            Range = 0;
 
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             s_Database.Open();
@@ -101,10 +105,10 @@ namespace Server.Classes
             SQLiteCommand sql_Command;
 
             sql = "INSERT INTO NPCS";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`)";
+            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`,`RANGE`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "');";
+            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "','" + Range + "');";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
@@ -120,7 +124,7 @@ namespace Server.Classes
             sql = "UPDATE NPCS SET ";
             sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
             sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
-            sql = sql + "EXP = '" + Exp + "' MONEY = '" + Money + "' ";
+            sql = sql + "EXP = '" + Exp + "', MONEY = '" + Money + "', RANGE = '" + Range + "' ";
             sql = sql + "WHERE rowid = '" + npcNum + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
@@ -156,6 +160,7 @@ namespace Server.Classes
                 DesY = ToInt32(sql_Reader["DESY"].ToString());
                 Exp = ToInt32(sql_Reader["EXP"].ToString());
                 Money = ToInt32(sql_Reader["MONEY"].ToString());
+                Range = ToInt32(sql_Reader["RANGE"].ToString());
             }
             s_Database.Close();
         }
@@ -183,9 +188,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
                                         {
-                                            if ((Y + 1) == s_Map.mapNpc[i].Y)
+                                            if ((Y + 1) == s_Map.m_MapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Down;
                                                 DidMove = true;
@@ -222,9 +227,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
                                         {
-                                            if ((X - 1) == s_Map.mapNpc[i].X)
+                                            if ((X - 1) == s_Map.m_MapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -261,9 +266,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
                                         {
-                                            if ((X + 1) == s_Map.mapNpc[i].X)
+                                            if ((X + 1) == s_Map.m_MapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Right;
                                                 DidMove = true;
@@ -300,9 +305,9 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.mapNpc[i].IsSpawned && Name != s_Map.mapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
                                         {
-                                            if ((Y - 1) == s_Map.mapNpc[i].Y)
+                                            if ((Y - 1) == s_Map.m_MapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
@@ -346,7 +351,7 @@ namespace Server.Classes
                     {
                         if (s_Player[p].Connection != null && s_Player[p].Name != null)
                         {
-                            int s_PlayerX = s_Player[p].X + 12; //Maybe offset...
+                            int s_PlayerX = s_Player[p].X + 12; //Maybe offset...YUP most things need it because the player is insane and saves this negative value and posses it everywhere, but really its never in the location it says either
                             int s_PlayerY = s_Player[p].Y + 9;
                             double s_DisX = X - s_PlayerX;
                             double s_DisY = Y - s_PlayerY;
@@ -361,6 +366,8 @@ namespace Server.Classes
                             s_LastPoint = s_DisPoint;
                         }
                     }
+
+                    if ((X + Range) < (s_Player[Target].X + 12) || (X - Range) > (s_Player[Target].X + 12)) { return; }
 
                     if (X != s_Player[Target].X)
                     {
@@ -377,6 +384,8 @@ namespace Server.Classes
                             DidMove = true;
                         }
                     }
+
+                    if ((Y + Range) < (s_Player[Target].Y + 9) || (Y - Range) > (s_Player[Target].Y + 9)) { return; }
 
                     if (Y != s_Player[Target].Y)
                     {

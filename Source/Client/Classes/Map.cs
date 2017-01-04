@@ -13,7 +13,7 @@ namespace Client.Classes
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
 
-        public MapNpc[] mapNpc = new MapNpc[10];
+        public MapNpc[] m_MapNpc = new MapNpc[10];
         public MapNpc[] r_MapNpc = new MapNpc[20];
 
         public MapProj[] mapProj = new MapProj[200];
@@ -54,11 +54,11 @@ namespace Client.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                mapNpc[i] = new MapNpc("Cache", 0, 0, 0);
-                binaryWriter.Write(mapNpc[i].Name);
-                binaryWriter.Write(mapNpc[i].X);
-                binaryWriter.Write(mapNpc[i].Y);
-                binaryWriter.Write(mapNpc[i].npcNum);
+                m_MapNpc[i] = new MapNpc("Cache", 0, 0, 0);
+                binaryWriter.Write(m_MapNpc[i].Name);
+                binaryWriter.Write(m_MapNpc[i].X);
+                binaryWriter.Write(m_MapNpc[i].Y);
+                binaryWriter.Write(m_MapNpc[i].npcNum);
             }
 
             for (int x = 0; x < 50; x++)
@@ -114,11 +114,11 @@ namespace Client.Classes
 
             for (int i = 0; i < 10; i++)
             {
-                mapNpc[i] = new MapNpc();
-                mapNpc[i].Name = binaryReader.ReadString();
-                mapNpc[i].X = binaryReader.ReadInt32();
-                mapNpc[i].Y = binaryReader.ReadInt32();
-                mapNpc[i].npcNum = binaryReader.ReadInt32();
+                m_MapNpc[i] = new MapNpc();
+                m_MapNpc[i].Name = binaryReader.ReadString();
+                m_MapNpc[i].X = binaryReader.ReadInt32();
+                m_MapNpc[i].Y = binaryReader.ReadInt32();
+                m_MapNpc[i].npcNum = binaryReader.ReadInt32();
             }
 
             for (int i = 0; i < 20; i++)
@@ -218,7 +218,6 @@ namespace Client.Classes
 
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
-        public int CurrentSpawn;
 
         public Tile()
         {

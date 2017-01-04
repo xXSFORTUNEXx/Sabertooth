@@ -35,6 +35,8 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlRange = new System.Windows.Forms.HScrollBar();
+            this.lblRange = new System.Windows.Forms.Label();
             this.scrlMoney = new System.Windows.Forms.HScrollBar();
             this.scrlExp = new System.Windows.Forms.HScrollBar();
             this.lblMoney = new System.Windows.Forms.Label();
@@ -134,6 +136,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlRange);
+            this.pnlMain.Controls.Add(this.lblRange);
             this.pnlMain.Controls.Add(this.scrlMoney);
             this.pnlMain.Controls.Add(this.scrlExp);
             this.pnlMain.Controls.Add(this.lblMoney);
@@ -170,6 +174,25 @@
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlRange
+            // 
+            this.scrlRange.LargeChange = 1;
+            this.scrlRange.Location = new System.Drawing.Point(215, 259);
+            this.scrlRange.Maximum = 50;
+            this.scrlRange.Name = "scrlRange";
+            this.scrlRange.Size = new System.Drawing.Size(156, 17);
+            this.scrlRange.TabIndex = 38;
+            this.scrlRange.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRange_Scroll);
+            // 
+            // lblRange
+            // 
+            this.lblRange.AutoSize = true;
+            this.lblRange.Location = new System.Drawing.Point(212, 244);
+            this.lblRange.Name = "lblRange";
+            this.lblRange.Size = new System.Drawing.Size(51, 13);
+            this.lblRange.TabIndex = 37;
+            this.lblRange.Text = "Range: 0";
             // 
             // scrlMoney
             // 
@@ -497,5 +520,7 @@
         private System.Windows.Forms.HScrollBar scrlExp;
         private System.Windows.Forms.Label lblMoney;
         private System.Windows.Forms.Label lblExp;
+        private System.Windows.Forms.HScrollBar scrlRange;
+        private System.Windows.Forms.Label lblRange;
     }
 }

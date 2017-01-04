@@ -72,6 +72,7 @@ namespace Editor.Forms
             scrlDamage.Value = e_Npc.Damage;
             scrlExp.Value = e_Npc.Exp;
             scrlMoney.Value = e_Npc.Money;
+            scrlRange.Value = e_Npc.Range;
             lblX.Text = "X: " + (scrlX.Value);
             lblY.Text = "Y: " + (scrlY.Value);
             lblDirection.Text = "Direction: " + (scrlDirection.Value);
@@ -85,6 +86,7 @@ namespace Editor.Forms
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             lblExp.Text = "Experience: " + scrlExp.Value;
             lblMoney.Text = "Money: " + scrlMoney.Value;
+            lblRange.Text = "Range: " + scrlRange.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
         }
@@ -189,6 +191,12 @@ namespace Editor.Forms
         {
             lblMoney.Text = "Money: " + scrlMoney.Value;
             e_Npc.Money = scrlMoney.Value;
+        }
+
+        private void scrlRange_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblRange.Text = "Range: " + scrlRange.Value;
+            e_Npc.Range = scrlRange.Value;
         }
     }
 }

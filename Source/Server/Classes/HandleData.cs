@@ -93,11 +93,11 @@ namespace Server.Classes
 
             if (type == 0)
             {
-                if (s_Map[c_Map].mapNpc[npc].IsSpawned == false) { return; }
+                if (s_Map[c_Map].m_MapNpc[npc].IsSpawned == false) { return; }
                 if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
                 s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
-                s_Map[c_Map].mapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
+                s_Map[c_Map].m_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
                 for (int p = 0; p < 5; p++)
                 {
@@ -746,19 +746,19 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.MapNpc);
             for (int i = 0; i < 10; i++)
             {
-                outMSG.Write(s_Map.mapNpc[i].Name);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].X);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Y);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Direction);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Sprite);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Step);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Owner);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Behavior);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].SpawnTime);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Health);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].MaxHealth);
-                outMSG.WriteVariableInt32(s_Map.mapNpc[i].Damage);
-                outMSG.Write(s_Map.mapNpc[i].IsSpawned);
+                outMSG.Write(s_Map.m_MapNpc[i].Name);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].X);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Y);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Direction);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Sprite);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Step);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Owner);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Behavior);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].SpawnTime);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Health);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].MaxHealth);
+                outMSG.WriteVariableInt32(s_Map.m_MapNpc[i].Damage);
+                outMSG.Write(s_Map.m_MapNpc[i].IsSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -790,19 +790,19 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.WriteVariableInt32(npcNum);
-            outMSG.Write(s_Map.mapNpc[npcNum].Name);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].X);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Y);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Direction);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Sprite);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Step);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Owner);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Behavior);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].SpawnTime);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Health);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].MaxHealth);
-            outMSG.WriteVariableInt32(s_Map.mapNpc[npcNum].Damage);
-            outMSG.Write(s_Map.mapNpc[npcNum].IsSpawned);
+            outMSG.Write(s_Map.m_MapNpc[npcNum].Name);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Y);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Direction);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Sprite);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Step);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Owner);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Behavior);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].SpawnTime);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Health);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].MaxHealth);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Damage);
+            outMSG.Write(s_Map.m_MapNpc[npcNum].IsSpawned);
 
             s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }

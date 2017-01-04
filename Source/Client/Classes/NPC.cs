@@ -8,6 +8,7 @@ namespace Client.Classes
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int Range { get; set; }
         public int Direction { get; set; }
         public int Sprite { get; set; }
         public int Step { get; set; }
@@ -27,7 +28,7 @@ namespace Client.Classes
 
         public Npc() { }
 
-        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxHealth, int damage, int desx, int desy, int exp, int money)
+        public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxHealth, int damage, int desx, int desy, int exp, int money, int range)
         {
             Name = name;
             X = x;
@@ -45,6 +46,7 @@ namespace Client.Classes
             DesY = desy;
             Exp = exp;
             Money = money;
+            Range = range;
         }
 
         public Npc(int x, int y)
@@ -65,6 +67,7 @@ namespace Client.Classes
             DesY = 0;
             Exp = 0;
             Money = 0;
+            Range = 0;
         }
 
         public void DrawNpc(RenderWindow c_Window, Texture c_Texture)

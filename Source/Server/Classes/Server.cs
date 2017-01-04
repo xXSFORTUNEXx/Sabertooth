@@ -257,25 +257,26 @@ namespace Server.Classes
             {
                 for (int n = 0; n < 10; n++)
                 {
-                    int num = (s_Map[i].mapNpc[n].NpcNum - 1);
+                    int num = (s_Map[i].m_MapNpc[n].NpcNum - 1);
 
                     if (num > -1)
                     {
-                        s_Map[i].mapNpc[n].Name = s_Npc[num].Name;
-                        s_Map[i].mapNpc[n].X = s_Npc[num].X;
-                        s_Map[i].mapNpc[n].Y = s_Npc[num].Y;
-                        s_Map[i].mapNpc[n].Direction = s_Npc[num].Direction;
-                        s_Map[i].mapNpc[n].Step = s_Npc[num].Step;
-                        s_Map[i].mapNpc[n].Sprite = s_Npc[num].Sprite;
-                        s_Map[i].mapNpc[n].Behavior = s_Npc[num].Behavior;
-                        s_Map[i].mapNpc[n].Owner = s_Npc[num].Owner;
-                        s_Map[i].mapNpc[n].IsSpawned = s_Npc[num].IsSpawned;
-                        s_Map[i].mapNpc[n].Damage = s_Npc[num].Damage;
-                        s_Map[i].mapNpc[n].DesX = s_Npc[num].DesX;
-                        s_Map[i].mapNpc[n].DesY = s_Npc[num].DesY;
-                        s_Map[i].mapNpc[n].Exp = s_Npc[num].Exp;
-                        s_Map[i].mapNpc[n].Money = s_Npc[num].Money;
-                        s_Map[i].mapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
+                        s_Map[i].m_MapNpc[n].Name = s_Npc[num].Name;
+                        s_Map[i].m_MapNpc[n].X = s_Npc[num].X;
+                        s_Map[i].m_MapNpc[n].Y = s_Npc[num].Y;
+                        s_Map[i].m_MapNpc[n].Direction = s_Npc[num].Direction;
+                        s_Map[i].m_MapNpc[n].Step = s_Npc[num].Step;
+                        s_Map[i].m_MapNpc[n].Sprite = s_Npc[num].Sprite;
+                        s_Map[i].m_MapNpc[n].Behavior = s_Npc[num].Behavior;
+                        s_Map[i].m_MapNpc[n].Owner = s_Npc[num].Owner;
+                        s_Map[i].m_MapNpc[n].IsSpawned = s_Npc[num].IsSpawned;
+                        s_Map[i].m_MapNpc[n].Damage = s_Npc[num].Damage;
+                        s_Map[i].m_MapNpc[n].DesX = s_Npc[num].DesX;
+                        s_Map[i].m_MapNpc[n].DesY = s_Npc[num].DesY;
+                        s_Map[i].m_MapNpc[n].Exp = s_Npc[num].Exp;
+                        s_Map[i].m_MapNpc[n].Money = s_Npc[num].Money;
+                        s_Map[i].m_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
+                        s_Map[i].m_MapNpc[n].Range = s_Npc[num].Range;
                     }
                 }
             }
@@ -375,13 +376,13 @@ namespace Server.Classes
                                     {
                                         if (s_Map[i].Ground[x, y].SpawnNum == (c + 1))
                                         {
-                                            if (!s_Map[i].mapNpc[c].IsSpawned && s_Map[i].mapNpc[c].Name != "None")
+                                            if (!s_Map[i].m_MapNpc[c].IsSpawned && s_Map[i].m_MapNpc[c].Name != "None")
                                             {
-                                                if (TickCount - s_Map[i].mapNpc[c].spawnTick > (s_Map[i].mapNpc[c].SpawnTime * 1000))
+                                                if (TickCount - s_Map[i].m_MapNpc[c].spawnTick > (s_Map[i].m_MapNpc[c].SpawnTime * 1000))
                                                 {
-                                                    s_Map[i].mapNpc[c].X = x;
-                                                    s_Map[i].mapNpc[c].Y = y;
-                                                    s_Map[i].mapNpc[c].IsSpawned = true;
+                                                    s_Map[i].m_MapNpc[c].X = x;
+                                                    s_Map[i].m_MapNpc[c].Y = y;
+                                                    s_Map[i].m_MapNpc[c].IsSpawned = true;
 
                                                     for (int p = 0; p < 5; p++)
                                                     {
@@ -430,6 +431,7 @@ namespace Server.Classes
                                                             s_Map[i].r_MapNpc[n].Money = s_Npc[num].Money;
                                                             s_Map[i].r_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
                                                             s_Map[i].r_MapNpc[n].IsSpawned = true;
+                                                            s_Map[i].r_MapNpc[n].Range = s_Npc[num].Range;
                                                             s_Map[i].Ground[x, y].CurrentSpawn += 1;
 
                                                             for (int p = 0; p < 5; p++)
@@ -461,16 +463,16 @@ namespace Server.Classes
                 {
                     for (int n = 0; n < 10; n++)
                     {
-                        if (s_Map[i].mapNpc[n].IsSpawned)
+                        if (s_Map[i].m_MapNpc[n].IsSpawned)
                         {
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
-                            s_Map[i].mapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player);
+                            s_Map[i].m_MapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player);
 
-                            if (s_Map[i].mapNpc[n].DidMove)
+                            if (s_Map[i].m_MapNpc[n].DidMove)
                             {
-                                s_Map[i].mapNpc[n].DidMove = false;
+                                s_Map[i].m_MapNpc[n].DidMove = false;
 
                                 for (int p = 0; p < 5; p++)
                                 {

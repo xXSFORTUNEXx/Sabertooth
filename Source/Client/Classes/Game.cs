@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using Gwen.UnitTest;
 using System;
 using Tao.OpenGl;
 using static System.Environment;
@@ -58,7 +59,7 @@ namespace Client.Classes
             c_Canvas.SetSize(800, 600);    
             c_Canvas.ShouldDrawBackground = true;  
             c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;   
-            c_Canvas.KeyboardInputEnabled = true;  
+            c_Canvas.KeyboardInputEnabled = true;
             c_Input = new Gwen.Input.SFML(); 
             c_Input.Initialize(c_Canvas, c_Window); 
             c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);  
@@ -74,7 +75,7 @@ namespace Client.Classes
             SetupPlayerArray(); 
             SetupNpcArray();    
             SetupItemArray();  
-            SetupProjectileArray(); 
+            SetupProjectileArray();
 
             while (c_Window.IsOpen)    
             {
@@ -283,11 +284,11 @@ namespace Client.Classes
         {
             for (int i = 0; i < 10; i++)
             {
-                if (c_Map.mapNpc[i].IsSpawned)
+                if (c_Map.m_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.mapNpc[i].Sprite > 0)
+                    if (c_Map.m_MapNpc[i].Sprite > 0)
                     {
-                        c_Map.mapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.mapNpc[i].Sprite - 1)]);
+                        c_Map.m_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.m_MapNpc[i].Sprite - 1)]);
                     }                   
                 }
             }
