@@ -91,6 +91,7 @@
             this.lblNpcs = new System.Windows.Forms.Label();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
+            this.radNpcAvoid = new System.Windows.Forms.RadioButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -327,6 +328,7 @@
             // 
             // tabTypes
             // 
+            this.tabTypes.Controls.Add(this.radNpcAvoid);
             this.tabTypes.Controls.Add(this.radSpawnPool);
             this.tabTypes.Controls.Add(this.pnlNpcSpawn);
             this.tabTypes.Controls.Add(this.radSpawnNpc);
@@ -343,7 +345,7 @@
             // radSpawnPool
             // 
             this.radSpawnPool.AutoSize = true;
-            this.radSpawnPool.Location = new System.Drawing.Point(20, 92);
+            this.radSpawnPool.Location = new System.Drawing.Point(19, 113);
             this.radSpawnPool.Name = "radSpawnPool";
             this.radSpawnPool.Size = new System.Drawing.Size(82, 17);
             this.radSpawnPool.TabIndex = 4;
@@ -359,7 +361,7 @@
             this.pnlNpcSpawn.Controls.Add(this.lblSpawnAmount);
             this.pnlNpcSpawn.Controls.Add(this.scrlNpcNum);
             this.pnlNpcSpawn.Controls.Add(this.lblNpcSpawn);
-            this.pnlNpcSpawn.Location = new System.Drawing.Point(20, 115);
+            this.pnlNpcSpawn.Location = new System.Drawing.Point(20, 136);
             this.pnlNpcSpawn.Name = "pnlNpcSpawn";
             this.pnlNpcSpawn.Size = new System.Drawing.Size(200, 129);
             this.pnlNpcSpawn.TabIndex = 3;
@@ -410,7 +412,7 @@
             // radSpawnNpc
             // 
             this.radSpawnNpc.AutoSize = true;
-            this.radSpawnNpc.Location = new System.Drawing.Point(20, 69);
+            this.radSpawnNpc.Location = new System.Drawing.Point(19, 91);
             this.radSpawnNpc.Name = "radSpawnNpc";
             this.radSpawnNpc.Size = new System.Drawing.Size(81, 17);
             this.radSpawnNpc.TabIndex = 2;
@@ -772,6 +774,18 @@
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
             // 
+            // radNpcAvoid
+            // 
+            this.radNpcAvoid.AutoSize = true;
+            this.radNpcAvoid.Location = new System.Drawing.Point(20, 68);
+            this.radNpcAvoid.Name = "radNpcAvoid";
+            this.radNpcAvoid.Size = new System.Drawing.Size(75, 17);
+            this.radNpcAvoid.TabIndex = 5;
+            this.radNpcAvoid.TabStop = true;
+            this.radNpcAvoid.Text = "Npc Avoid";
+            this.radNpcAvoid.UseVisualStyleBackColor = true;
+            this.radNpcAvoid.CheckedChanged += new System.EventHandler(this.radNpcAvoid_CheckedChanged);
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -877,5 +891,6 @@
         private System.Windows.Forms.RadioButton radSpawnPool;
         private System.Windows.Forms.HScrollBar scrlSpawnAmount;
         private System.Windows.Forms.Label lblSpawnAmount;
+        private System.Windows.Forms.RadioButton radNpcAvoid;
     }
 }

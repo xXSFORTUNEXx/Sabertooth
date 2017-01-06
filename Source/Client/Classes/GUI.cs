@@ -4,6 +4,8 @@ using Lidgren.Network;
 using System.Drawing;
 using System.Threading;
 using System;
+using SFML.Graphics;
+using SFML.System;
 
 namespace Client.Classes
 {
@@ -14,6 +16,7 @@ namespace Client.Classes
         Gwen.Font c_Font;
         Player[] c_Player;
         ClientConfig c_Config;
+
         public WindowControl d_Window;
         public int g_Index;
         Label d_FPS;
@@ -28,24 +31,6 @@ namespace Client.Classes
         Label d_Latency;
         Label d_packetsIn;
         Label d_packetsOut;
-        Label d_Stats;
-        Label d_Level;
-        Label d_Health;
-        Label d_Hunger;
-        Label d_Hydration;
-        Label d_Exp;
-        Label d_Money;
-        Label d_Armor;
-        Label d_Strength;
-        Label d_Agility;
-        Label d_Endurance;
-        Label d_Stamina;
-        Label d_MainClip;
-        Label d_PistolAmmo;
-        Label d_AssaultAmmo;
-        Label d_AttackSpeed;
-        Label d_ReloadSpeed;
-        Label d_Points;
 
         public WindowControl loadWindow;
         Label loadLabel;
@@ -76,6 +61,148 @@ namespace Client.Classes
         public WindowControl chatWindow;
         public ListBox outputChat;
         public TextBox inputChat;
+
+        public WindowControl menuWindow;
+        TabControl menuTabs;
+
+        TabButton charTab;
+        Label charName;
+        Label charLevel;
+        Label charExp;
+        Label charMoney;
+        Label charPoints;
+        Label charHealth;
+        Label charHunger;
+        Label charHydration;
+        Label charArmor;
+        Label charStr;
+        Label charAgi;
+        Label charEnd;
+        Label charSta;
+
+        TabButton packTab;
+        TabButton equipTab;
+        TabButton skillsTab;
+        TabButton optionsTab;
+
+        RenderText hudClip = new RenderText();
+        RectangleShape healthBar = new RectangleShape();
+        string hudC;
+        float barLength;
+        Vector2f hudCPos;
+
+        public void UpdateHUD(Player c_Player, RenderWindow c_Window)
+        {
+            if (c_Player.Name != null)
+            {
+                barLength = ((float)c_Player.Health / c_Player.MaxHealth) * 150;
+                healthBar.Size = new Vector2f(barLength, 25);
+                healthBar.Position = new Vector2f(25, 25);
+                healthBar.FillColor = SFML.Graphics.Color.Red;
+                hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
+                hudCPos = new Vector2f(25, 50);
+                hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
+                c_Window.Draw(healthBar);
+            }
+        }
+
+        public void CreateMenuWindow(Base parent)
+        {
+            menuWindow = new WindowControl(parent.GetCanvas());
+            menuWindow.SetSize(350, 300);
+            menuWindow.Position(Gwen.Pos.Bottom);
+            menuWindow.DisableResizing();
+            menuWindow.Title = "Game Menu";
+            menuWindow.IsClosable = false;
+
+            menuTabs = new TabControl(menuWindow);
+            menuTabs.SetSize(330, 260);
+            menuTabs.SetPosition(5, 5);
+
+            charTab = menuTabs.AddPage("Character");
+
+            charName = new Label(charTab.Page);
+            charName.SetPosition(10, 5);
+            charName.Text = "Name: ?";
+
+            charLevel = new Label(charTab.Page);
+            charLevel.SetPosition(10, 20);
+            charLevel.Text = "Level: ?";
+
+            charExp = new Label(charTab.Page);
+            charExp.SetPosition(10, 30);
+            charExp.Text = "Experience: ?";
+
+            charMoney = new Label(charTab.Page);
+            charMoney.SetPosition(10, 40);
+            charMoney.Text = "Money: ?";
+
+            charPoints = new Label(charTab.Page);
+            charPoints.SetPosition(10, 50);
+            charPoints.Text = "Points: ?";
+
+            charHealth = new Label(charTab.Page);
+            charHealth.SetPosition(10, 65);
+            charHealth.Text = "Health: ?";
+
+            charHunger = new Label(charTab.Page);
+            charHunger.SetPosition(10, 75);
+            charHunger.Text = "Hunger: ?";
+
+            charHydration = new Label(charTab.Page);
+            charHydration.SetPosition(10, 85);
+            charHydration.Text = "Hydration: ?";
+
+            charArmor = new Label(charTab.Page);
+            charArmor.SetPosition(10, 100);
+            charArmor.Text = "Armor: ?";
+
+            charStr = new Label(charTab.Page);
+            charStr.SetPosition(10, 110);
+            charStr.Text = "Strength: ?";
+
+            charAgi = new Label(charTab.Page);
+            charAgi.SetPosition(10, 120);
+            charAgi.Text = "Agility: ?";
+
+            charEnd = new Label(charTab.Page);
+            charEnd.SetPosition(10, 130);
+            charEnd.Text = "Endurance: ?";
+
+            charSta = new Label(charTab.Page);
+            charSta.SetPosition(10, 140);
+            charSta.Text = "Stamina: ?";
+
+            packTab = menuTabs.AddPage("Backpack");
+
+            equipTab = menuTabs.AddPage("Equipment");
+
+            skillsTab = menuTabs.AddPage("Skills");
+
+            optionsTab = menuTabs.AddPage("Options");
+        }
+
+        public void UpdateMenuWindow(Player c_Player)
+        {
+            if (menuWindow != null && c_Player != null && menuWindow.IsVisible)
+            {
+                charName.Text = c_Player.Name;
+                charLevel.Text = "Level: " + c_Player.Level;
+                charExp.Text = "Experience: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
+                charMoney.Text = "Money: " + c_Player.Money;
+                charPoints.Text = "Points: " + c_Player.Points;
+
+                charHealth.Text = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
+                charHunger.Text = "Hunger: " + c_Player.Hunger + " / 100";
+                charHydration.Text = "Hydration: " + c_Player.Hydration + " / 100";
+
+                charArmor.Text = "Armor: " + c_Player.Armor;
+                charStr.Text = "Strength: " + c_Player.Strength;
+                charAgi.Text = "Agility: " + c_Player.Agility;
+                charEnd.Text = "Endurance: " + c_Player.Endurance;
+                charSta.Text = "Stamina: " + c_Player.Stamina;
+            }
+        }
 
         public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
         {
@@ -462,10 +589,19 @@ namespace Client.Classes
             {
                 logWindow.Position(Gwen.Pos.Center);
             }
+        }
+
+        public void UpdateUIWindowLoc()
+        {
             if (chatWindow != null)
             {
                 chatWindow.Position(Gwen.Pos.Bottom);
                 chatWindow.Position(Gwen.Pos.Left);
+            }
+            if (menuWindow != null)
+            {
+                menuWindow.Position(Gwen.Pos.Bottom);
+                menuWindow.Position(Gwen.Pos.Right);
             }
         }
 
@@ -479,7 +615,7 @@ namespace Client.Classes
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 355);
+            d_Window.SetSize(200, 165);
             d_Window.SetPosition(10, 10);
             d_Window.DisableResizing();
 
@@ -530,86 +666,12 @@ namespace Client.Classes
             d_packetsOut = new Label(d_Window);
             d_packetsOut.SetPosition(10, 115);
             d_packetsOut.Text = "Packets Out: ?";
-
-            d_Stats = new Label(d_Window);
-            d_Stats.SetPosition(10, 130);
-            d_Stats.Text = "Stats:";
-
-            d_Level = new Label(d_Window);
-            d_Level.SetPosition(10, 140);
-            d_Level.Text = "Level: ?";
-
-            d_Health = new Label(d_Window);
-            d_Health.SetPosition(10, 150);
-            d_Health.Text = "Health: ?";
-
-            d_Hunger = new Label(d_Window);
-            d_Hunger.SetPosition(10, 160);
-            d_Hunger.Text = "Hunger: ?";
-
-            d_Hydration = new Label(d_Window);
-            d_Hydration.SetPosition(10, 170);
-            d_Hydration.Text = "Hydration: ?";
-
-            d_Exp = new Label(d_Window);
-            d_Exp.SetPosition(10, 180);
-            d_Exp.Text = "Experience: ?";
-
-            d_Money = new Label(d_Window);
-            d_Money.SetPosition(10, 190);
-            d_Money.Text = "Money: ?";
-
-            d_Armor = new Label(d_Window);
-            d_Armor.SetPosition(10, 200);
-            d_Armor.Text = "Armor: ?";
-
-            d_Strength = new Label(d_Window);
-            d_Strength.SetPosition(10, 210);
-            d_Strength.Text = "Strength: ?";
-
-            d_Agility = new Label(d_Window);
-            d_Agility.SetPosition(10, 220);
-            d_Agility.Text = "Agility: ?";
-
-            d_Endurance = new Label(d_Window);
-            d_Endurance.SetPosition(10, 230);
-            d_Endurance.Text = "Endurance: ?";
-
-            d_Stamina = new Label(d_Window);
-            d_Stamina.SetPosition(10, 240);
-            d_Stamina.Text = "Stamina: ?";
-
-            d_MainClip = new Label(d_Window);
-            d_MainClip.SetPosition(10, 250);
-            d_MainClip.Text = "Clip: ?";
-
-            d_PistolAmmo = new Label(d_Window);
-            d_PistolAmmo.SetPosition(10, 260);
-            d_PistolAmmo.Text = "Pistol Ammo: ?";
-
-            d_AssaultAmmo = new Label(d_Window);
-            d_AssaultAmmo.SetPosition(10, 270);
-            d_AssaultAmmo.Text = "Assault Ammo: ?";
-
-            d_AttackSpeed = new Label(d_Window);
-            d_AttackSpeed.SetPosition(10, 280);
-            d_AttackSpeed.Text = "Attack Speed: ?";
-
-            d_ReloadSpeed = new Label(d_Window);
-            d_ReloadSpeed.SetPosition(10, 290);
-            d_ReloadSpeed.Text = "Reload Speed: ?";
-
-            d_Points = new Label(d_Window);
-            d_Points.SetPosition(10, 300);
-            d_Points.Text = "Points: ?";
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
         {
             if (d_Window != null && c_Player[drawIndex] != null)
             {
-                int p_level = c_Player[drawIndex].Level;
-
                 d_Window.Title = "Debug Window - Admin";
                 d_Window.SetPosition(0, 0);
                 d_FPS.Text = "FPS: " + fps;
@@ -624,24 +686,6 @@ namespace Client.Classes
                 d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.###") + "ms";
                 d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
                 d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
-
-                d_Level.Text = "Level: " + c_Player[drawIndex].Level;
-                d_Health.Text = "Health: " + c_Player[drawIndex].Health + " / " + c_Player[drawIndex].MaxHealth;
-                d_Hunger.Text = "Hunger: " + c_Player[drawIndex].Hunger + " / 100";
-                d_Hydration.Text = "Hydration: " + c_Player[drawIndex].Hydration + " / 100";
-                d_Exp.Text = "Experience: " + c_Player[drawIndex].Experience + " / " + (p_level * 1000);
-                d_Money.Text = "Money: " + c_Player[drawIndex].Money;
-                d_Armor.Text = "Armor: " + c_Player[drawIndex].Armor;
-                d_Strength.Text = "Strength: " + c_Player[drawIndex].Strength;
-                d_Agility.Text = "Agility: " + c_Player[drawIndex].Agility;
-                d_Endurance.Text = "Endurance: " + c_Player[drawIndex].Endurance;
-                d_Stamina.Text = "Stamina: " + c_Player[drawIndex].Stamina;
-                d_MainClip.Text = "Clip: " + c_Player[drawIndex].mainWeapon.Clip + " / " + c_Player[drawIndex].mainWeapon.maxClip;
-                d_PistolAmmo.Text = "Pistol Ammo: " + c_Player[drawIndex].PistolAmmo;
-                d_AssaultAmmo.Text = "Assault Ammo: " + c_Player[drawIndex].AssaultAmmo;
-                d_AttackSpeed.Text = "Attack Speed: " + c_Player[drawIndex].mainWeapon.AttackSpeed;
-                d_ReloadSpeed.Text = "Reload Speed: " + c_Player[drawIndex].mainWeapon.ReloadSpeed;
-                d_Points.Text = "Points: " + c_Player[drawIndex].Points;
             } 
         }
     }

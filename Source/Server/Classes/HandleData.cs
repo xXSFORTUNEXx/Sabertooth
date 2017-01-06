@@ -263,9 +263,7 @@ namespace Server.Classes
                     int i = OpenSlot(s_Player);
                     if (i < 5)
                     {
-                        //s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 0, 1, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
-                        //s_Player[i].SavePlayerXML();
+                        s_Player[i] = new Player(username, password, 0, 0, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         s_Player[i].CreatePlayerInDatabase();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG, s_Server);
@@ -306,7 +304,6 @@ namespace Server.Classes
                     if (i < 5)
                     {
                         s_Player[i] = new Player(username, password, incMSG.SenderConnection);
-                        //s_Player[i].LoadPlayerXML();
                         s_Player[i].LoadPlayerFromDatabase();
                         int currentMap = s_Player[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
@@ -497,7 +494,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Stamina);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ammoType);
 
-            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 3);
+            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 3);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 3);
         }
 
         void SendUpdatePlayerStats(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
@@ -527,7 +525,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Clip);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.maxClip);
 
-            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 4);
+            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 4);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
         }
 
         void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)

@@ -309,13 +309,12 @@ namespace Server.Classes
 
         public void DamageNpc(Player s_Player, Map s_Map, int damage)
         {
-            if (Health > 0)
-            {
-                Health -= damage;
-            }
-            else if (Health <= 0)
+            Health -= damage;
+
+            if (Health <= 0)
             {
                 IsSpawned = false;
+                Health = MaxHealth;
                 spawnTick = TickCount;
                 GivePlayerRewards(s_Player);
                 if (SpawnX > 0 && SpawnY > 0)
@@ -383,7 +382,8 @@ namespace Server.Classes
         None,
         Blocked,
         NpcSpawn,
-        SpawnPool
+        SpawnPool,
+        NpcAvoid
     }
 
     public enum TileLayers

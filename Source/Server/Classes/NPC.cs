@@ -180,7 +180,7 @@ namespace Server.Classes
                             case (int)Directions.Down:
                                 if (Y < 49)
                                 {
-                                    if (s_Map.Ground[X, Y + 1].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X, Y + 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                                     {
                                         Direction = (int)Directions.Down;
                                         DidMove = true;
@@ -188,9 +188,21 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned)
                                         {
-                                            if ((Y + 1) == s_Map.m_MapNpc[i].Y)
+                                            if ((Y + 1) == s_Map.m_MapNpc[i].Y && X == s_Map.m_MapNpc[i].X)
+                                            {
+                                                Direction = (int)Directions.Down;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < 20; i++)
+                                    {
+                                        if (s_Map.r_MapNpc[i].IsSpawned)
+                                        {
+                                            if ((Y + 1) == s_Map.r_MapNpc[i].Y && X == s_Map.r_MapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Down;
                                                 DidMove = true;
@@ -202,7 +214,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null)
                                         {
-                                            if ((Y + 1) == s_Player[p].Y)
+                                            if ((Y + 1) == (s_Player[p].Y + 9) && X == (s_Player[p].X + 12))
                                             {
                                                 Direction = (int)Directions.Down;
                                                 DidMove = true;
@@ -219,7 +231,7 @@ namespace Server.Classes
                             case (int)Directions.Left:
                                 if (X > 1)
                                 {
-                                    if (s_Map.Ground[X - 1, Y].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X - 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
                                     {
                                         Direction = (int)Directions.Left;
                                         DidMove = true;
@@ -227,9 +239,21 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned)
                                         {
-                                            if ((X - 1) == s_Map.m_MapNpc[i].X)
+                                            if ((X - 1) == s_Map.m_MapNpc[i].X && Y == s_Map.m_MapNpc[i].Y)
+                                            {
+                                                Direction = (int)Directions.Left;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < 20; i++)
+                                    {
+                                        if (s_Map.r_MapNpc[i].IsSpawned)
+                                        {
+                                            if ((X - 1) == s_Map.r_MapNpc[i].X && Y == s_Map.r_MapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -241,7 +265,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null)
                                         {
-                                            if ((X - 1) == s_Player[p].X)
+                                            if ((X - 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -258,7 +282,7 @@ namespace Server.Classes
                             case (int)Directions.Right:
                                 if (X < 49)
                                 {
-                                    if (s_Map.Ground[X + 1, Y].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X + 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                                     {
                                         Direction = (int)Directions.Right;
                                         DidMove = true;
@@ -266,9 +290,21 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned)
                                         {
-                                            if ((X + 1) == s_Map.m_MapNpc[i].X)
+                                            if ((X + 1) == s_Map.m_MapNpc[i].X && Y == s_Map.m_MapNpc[i].Y)
+                                            {
+                                                Direction = (int)Directions.Right;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < 20; i++)
+                                    {
+                                        if (s_Map.r_MapNpc[i].IsSpawned)
+                                        {
+                                            if ((X + 1) == s_Map.r_MapNpc[i].X && Y == s_Map.r_MapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Right;
                                                 DidMove = true;
@@ -280,7 +316,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null)
                                         {
-                                            if ((X + 1) == s_Player[p].X)
+                                            if ((X + 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
                                             {
                                                 Direction = (int)Directions.Right;
                                                 DidMove = true;
@@ -297,7 +333,7 @@ namespace Server.Classes
                             case (int)Directions.Up:
                                 if (Y > 1)
                                 {
-                                    if (s_Map.Ground[X, Y - 1].Type == (int)TileType.Blocked)
+                                    if (s_Map.Ground[X, Y - 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
                                     {
                                         Direction = (int)Directions.Up;
                                         DidMove = true;
@@ -305,9 +341,21 @@ namespace Server.Classes
                                     }
                                     for (int i = 0; i < 10; i++)
                                     {
-                                        if (s_Map.m_MapNpc[i].IsSpawned && Name != s_Map.m_MapNpc[i].Name)
+                                        if (s_Map.m_MapNpc[i].IsSpawned)
                                         {
-                                            if ((Y - 1) == s_Map.m_MapNpc[i].Y)
+                                            if ((Y - 1) == s_Map.m_MapNpc[i].Y && X == s_Map.m_MapNpc[i].X)
+                                            {
+                                                Direction = (int)Directions.Up;
+                                                DidMove = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                    for (int i = 0; i < 20; i++)
+                                    {
+                                        if (s_Map.r_MapNpc[i].IsSpawned)
+                                        {
+                                            if ((Y - 1) == s_Map.r_MapNpc[i].Y && X == s_Map.r_MapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
@@ -319,7 +367,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null)
                                         {
-                                            if ((Y - 1) == s_Player[p].Y)
+                                            if ((Y - 1) == (s_Player[p].Y  + 9) && X == (s_Player[p].X + 12))
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
@@ -351,7 +399,7 @@ namespace Server.Classes
                     {
                         if (s_Player[p].Connection != null && s_Player[p].Name != null)
                         {
-                            int s_PlayerX = s_Player[p].X + 12; //Maybe offset...YUP most things need it because the player is insane and saves this negative value and posses it everywhere, but really its never in the location it says either
+                            int s_PlayerX = s_Player[p].X + 12;
                             int s_PlayerY = s_Player[p].Y + 9;
                             double s_DisX = X - s_PlayerX;
                             double s_DisY = Y - s_PlayerY;
@@ -367,36 +415,203 @@ namespace Server.Classes
                         }
                     }
 
-                    if ((X + Range) < (s_Player[Target].X + 12) || (X - Range) > (s_Player[Target].X + 12)) { return; }
+                    if ((X + Range) < (s_Player[Target].X + 12) || (X - Range) > (s_Player[Target].X + 12)) { goto case (int)BehaviorType.Friendly; }
+                    if ((Y + Range) < (s_Player[Target].Y + 9) || (Y - Range) > (s_Player[Target].Y + 9)) { goto case (int)BehaviorType.Friendly; }
 
                     if (X != s_Player[Target].X)
                     {
                         if (X > s_Player[Target].X + 12 && X > 0)
                         {
+                            if (s_Map.Ground[X - 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
+                            {
+                                Direction = (int)Directions.Left;
+                                DidMove = true;
+                                return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (s_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if ((X - 1) == s_Map.m_MapNpc[i].X && Y == s_Map.m_MapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Left;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (s_Map.r_MapNpc[i].IsSpawned)
+                                {
+                                    if ((X - 1) == s_Map.r_MapNpc[i].X && Y == s_Map.r_MapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Left;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((X - 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
+                                    {
+                                        Direction = (int)Directions.Left;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             Direction = (int)Directions.Left;
                             X -= 1;
                             DidMove = true;
                         }
                         else if (X < s_Player[Target].X + 12 && X < 50)
                         {
+                            if (s_Map.Ground[X + 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
+                            {
+                                Direction = (int)Directions.Right;
+                                DidMove = true;
+                                return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (s_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if ((X + 1) == s_Map.m_MapNpc[i].X && Y == s_Map.m_MapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (s_Map.r_MapNpc[i].IsSpawned)
+                                {
+                                    if ((X + 1) == s_Map.r_MapNpc[i].X && Y == s_Map.r_MapNpc[i].Y)
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((X + 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
+                                    {
+                                        Direction = (int)Directions.Right;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             Direction = (int)Directions.Right;
                             X += 1;
                             DidMove = true;
                         }
                     }
 
-                    if ((Y + Range) < (s_Player[Target].Y + 9) || (Y - Range) > (s_Player[Target].Y + 9)) { return; }
-
                     if (Y != s_Player[Target].Y)
                     {
                         if (Y > s_Player[Target].Y + 9 && Y > 0)
                         {
+                            if (s_Map.Ground[X, Y - 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
+                            {
+                                Direction = (int)Directions.Up;
+                                DidMove = true;
+                                return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (s_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if ((Y - 1) == s_Map.m_MapNpc[i].Y && X == s_Map.m_MapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (s_Map.r_MapNpc[i].IsSpawned)
+                                {
+                                    if ((Y - 1) == s_Map.r_MapNpc[i].Y && X == s_Map.r_MapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((Y - 1) == (s_Player[p].Y + 9) && X == (s_Player[p].X + 12))
+                                    {
+                                        Direction = (int)Directions.Up;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             Direction = (int)Directions.Up;
                             Y -= 1;
                             DidMove = true;
                         }
                         else if (Y < s_Player[Target].Y + 9 && Y < 50)
                         {
+                            if (s_Map.Ground[X, Y + 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
+                            {
+                                Direction = (int)Directions.Down;
+                                DidMove = true;
+                                return;
+                            }
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (s_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if ((Y + 1) == s_Map.m_MapNpc[i].Y && X == s_Map.m_MapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (s_Map.r_MapNpc[i].IsSpawned)
+                                {
+                                    if ((Y + 1) == s_Map.r_MapNpc[i].Y && X == s_Map.r_MapNpc[i].X)
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
+                            for (int p = 0; p < 5; p++)
+                            {
+                                if (s_Player[p].Connection != null)
+                                {
+                                    if ((Y + 1) == (s_Player[p].Y + 9) && X == (s_Player[p].X + 12))
+                                    {
+                                        Direction = (int)Directions.Down;
+                                        DidMove = true;
+                                        return;
+                                    }
+                                }
+                            }
                             Direction = (int)Directions.Down;
                             Y += 1;
                             DidMove = true;

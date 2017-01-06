@@ -264,6 +264,8 @@ namespace Server.Classes
                         s_Map[i].m_MapNpc[n].Name = s_Npc[num].Name;
                         s_Map[i].m_MapNpc[n].X = s_Npc[num].X;
                         s_Map[i].m_MapNpc[n].Y = s_Npc[num].Y;
+                        s_Map[i].m_MapNpc[n].Health = s_Npc[num].Health;
+                        s_Map[i].m_MapNpc[n].MaxHealth = s_Npc[num].MaxHealth;
                         s_Map[i].m_MapNpc[n].Direction = s_Npc[num].Direction;
                         s_Map[i].m_MapNpc[n].Step = s_Npc[num].Step;
                         s_Map[i].m_MapNpc[n].Sprite = s_Npc[num].Sprite;
@@ -413,10 +415,13 @@ namespace Server.Classes
                                                         if (num > -1)
                                                         {
                                                             s_Map[i].r_MapNpc[n].NpcNum = num;
-
+                                                            int genX = (x + RND.Next(1, 3));
+                                                            int genY = (y + RND.Next(1, 3));
                                                             s_Map[i].r_MapNpc[n].Name = s_Npc[num].Name;
-                                                            s_Map[i].r_MapNpc[n].X = x;
-                                                            s_Map[i].r_MapNpc[n].Y = y;
+                                                            s_Map[i].r_MapNpc[n].X = genX;
+                                                            s_Map[i].r_MapNpc[n].Y = genY;
+                                                            s_Map[i].r_MapNpc[n].Health = s_Npc[num].Health;
+                                                            s_Map[i].r_MapNpc[n].MaxHealth = s_Npc[num].MaxHealth;
                                                             s_Map[i].r_MapNpc[n].SpawnX = x;
                                                             s_Map[i].r_MapNpc[n].SpawnY = y;
                                                             s_Map[i].r_MapNpc[n].Direction = s_Npc[num].Direction;
@@ -541,7 +546,7 @@ namespace Server.Classes
                             string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
                             if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
                             {
-                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 0,
+                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
                                                               100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
                                 ac_Player.CreatePlayerInDatabase();
                                 WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know

@@ -201,6 +201,9 @@ namespace Editor.Forms
                                 case (int)TileType.SpawnPool:
                                     e_Text.DrawText(e_Window, "S", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Green);
                                     break;
+                                case (int)TileType.NpcAvoid:
+                                    e_Text.DrawText(e_Window, "A", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.White);
+                                    break;
                                 default:
                                     break;
                             }
@@ -674,7 +677,9 @@ namespace Editor.Forms
                 if (e.Button == MouseButtons.Left)
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
+                    e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
+                    if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -809,6 +814,13 @@ namespace Editor.Forms
             e_SpawnAmount = 1;
             pnlNpcSpawn.Visible = true;
             scrlSpawnAmount.Enabled = false;
+        }
+
+        private void radNpcAvoid_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.NpcAvoid;
+            lblType.Text = "Type: Npc Avoid";
+            pnlNpcSpawn.Visible = false;
         }
 
         private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
@@ -1005,6 +1017,8 @@ namespace Editor.Forms
             frameRate++;
             return lastFrameRate;
         }
+
+
     }
 
     public class RenderText

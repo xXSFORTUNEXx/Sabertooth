@@ -457,7 +457,8 @@ namespace Editor.Classes
         None,
         Blocked,
         NpcSpawn,
-        SpawnPool
+        SpawnPool,
+        NpcAvoid
     }
 
     public enum TileLayers

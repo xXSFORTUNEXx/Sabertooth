@@ -81,8 +81,9 @@ namespace Client.Classes
             {
                 CheckForConnection(c_Client);  
                 UpdateView(c_Client, c_Config, c_Npc, c_Item); 
-                DrawGraphics(c_Client);   
-                c_Window.Display();    
+                DrawGraphics(c_Client);
+                UpdateOverlay();
+                c_Window.Display(); 
             }
 
             c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);            
@@ -163,16 +164,77 @@ namespace Client.Classes
 
             if (e.Code == Keyboard.Key.Tab)
             {
-                if (c_GUI.chatWindow == null || c_GUI.d_Window == null) { return; }
-                if (c_GUI.chatWindow.IsVisible == true || c_GUI.d_Window.IsVisible == true)
+                if (c_GUI.chatWindow != null)
                 {
-                    c_GUI.chatWindow.Hide();
-                    c_GUI.d_Window.Hide();
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
+                    if (c_GUI.chatWindow.IsVisible)
+                    {
+                        c_GUI.chatWindow.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.chatWindow.Show();
+                    }
                 }
-                else if (c_GUI.d_Window.IsVisible == false || c_GUI.d_Window.IsVisible == false)
+                if (c_GUI.d_Window != null)
                 {
-                    c_GUI.chatWindow.Show();
-                    c_GUI.d_Window.Show();
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
+                    if (c_GUI.d_Window.IsVisible)
+                    {
+                        c_GUI.d_Window.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.d_Window.Show();
+                    }
+                }
+                if (c_GUI.menuWindow != null)
+                {
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
+                    if (c_GUI.menuWindow.IsVisible)
+                    {
+                        c_GUI.menuWindow.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.menuWindow.Show();
+                    }
+                }
+            }
+
+            if (e.Code == Keyboard.Key.M)
+            {
+                if (c_GUI.menuWindow != null)
+                {
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
+                    if (c_GUI.menuWindow.IsVisible)
+                    {
+                        c_GUI.menuWindow.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.menuWindow.Show();
+                    }
+                }
+            }
+
+            if (e.Code == Keyboard.Key.C)
+            {
+                if (c_GUI.inputChat.HasFocus) { return; }
+                if (c_GUI.chatWindow != null)
+                {
+                    if (c_GUI.chatWindow.IsVisible)
+                    {
+                        c_GUI.chatWindow.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.chatWindow.Show();
+                    }
                 }
             }
         }
@@ -399,6 +461,13 @@ namespace Client.Classes
             c_Window.SetView(c_View);
             fps = CalculateFrameRate();
             c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
+            c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]);
+            c_GUI.UpdateUIWindowLoc();
+        }
+
+        void UpdateOverlay()
+        {
+            c_GUI.UpdateHUD(c_Player[handleData.c_Index], c_Window);
         }
     }
 }

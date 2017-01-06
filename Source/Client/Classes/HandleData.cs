@@ -492,8 +492,8 @@ namespace Client.Classes
             c_Player[index].Level = incMSG.ReadVariableInt32();
             c_Player[index].Points = incMSG.ReadVariableInt32();
             c_Player[index].Health = incMSG.ReadVariableInt32();
-            c_Player[index].Hunger = incMSG.ReadVariableInt32();
             c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
+            c_Player[index].Hunger = incMSG.ReadVariableInt32();
             c_Player[index].Hydration = incMSG.ReadVariableInt32();
             c_Player[index].Experience = incMSG.ReadVariableInt32();
             c_Player[index].Money = incMSG.ReadVariableInt32();
@@ -526,8 +526,8 @@ namespace Client.Classes
             c_Player[index].Level = incMSG.ReadVariableInt32();
             c_Player[index].Points = incMSG.ReadVariableInt32();
             c_Player[index].Health = incMSG.ReadVariableInt32();
-            c_Player[index].Hunger = incMSG.ReadVariableInt32();
             c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
+            c_Player[index].Hunger = incMSG.ReadVariableInt32();
             c_Player[index].Hydration = incMSG.ReadVariableInt32();
             c_Player[index].Experience = incMSG.ReadVariableInt32();
             c_Player[index].Money = incMSG.ReadVariableInt32();
@@ -736,8 +736,11 @@ namespace Client.Classes
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
             c_Canvas.DeleteAllChildren();
-            c_GUI.CreateDebugWindow(c_Canvas);
+            //c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.CreateMenuWindow(c_Canvas);
+            c_GUI.menuWindow.Hide();
             c_GUI.CreateChatWindow(c_Canvas);
+            c_GUI.chatWindow.Hide();
             c_GUI.AddText("Welcome to Sabertooth!");
         }
     }

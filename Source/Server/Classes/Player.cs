@@ -50,7 +50,7 @@ namespace Server.Classes
 
         Random RND = new Random();
 
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, 
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
@@ -72,7 +72,7 @@ namespace Server.Classes
             Endurance = end;
             Stamina = sta;
             Connection = conn;
-            FindMaxHealth();
+            MaxHealth = maxhealth;
             Health = MaxHealth;
             hungerTick = TickCount;
             hydrationTick = TickCount;
@@ -85,7 +85,7 @@ namespace Server.Classes
             offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
         }
 
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money,
+        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money,
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo)
         {
             Name = name;
@@ -106,7 +106,7 @@ namespace Server.Classes
             Agility = agi;
             Endurance = end;
             Stamina = sta;
-            FindMaxHealth();
+            MaxHealth = maxhealth;
             Health = MaxHealth;
             PistolAmmo = defaultAmmo;
             AssaultAmmo = defaultAmmo;
@@ -122,7 +122,6 @@ namespace Server.Classes
             Name = name;
             Pass = pass;
             Connection = conn;
-            FindMaxHealth();
             hungerTick = TickCount;
             hydrationTick = TickCount;
         }
@@ -133,11 +132,6 @@ namespace Server.Classes
         }
 
         public Player() { }
-
-        public void FindMaxHealth()
-        {
-            MaxHealth = 100 + (Endurance * 5) + (Level * 10);
-        }
 
         public void RegenHealth()
         {
@@ -190,13 +184,13 @@ namespace Server.Classes
                 Points += 100;
                 Hunger = 100;
                 Hydration = 100;
-                MaxHealth += (Level * 2);
+                MaxHealth += (Level * 5) + RND.Next(0, 100);
                 Health = MaxHealth;
                 Money += 50;
                 Strength += RND.Next(1, 3);
                 Agility += RND.Next(1, 3);
                 Endurance += RND.Next(1, 3);
-                Stamina += RND.Next(1, 3);
+                Stamina += RND.Next(1, 3);                
             }
             else if (Experience > (Level * 1000))
             {
@@ -205,7 +199,7 @@ namespace Server.Classes
                 Points += 100;
                 Hunger = 100;
                 Hydration = 100;
-                MaxHealth += (Level * 2);
+                MaxHealth += (Level * 5) + RND.Next(0, 100);
                 Health = MaxHealth;
                 Money += 50;
                 Strength += RND.Next(1, 3);
@@ -223,11 +217,11 @@ namespace Server.Classes
             string sql;
             SQLiteCommand sql_Command;
             sql = "INSERT INTO `PLAYERS`";
-            sql = sql + "(`NAME`,`PASSWORD`,`X`,`Y`,`MAP`,`DIRECTION`,`AIMDIRECTION`,`SPRITE`,`LEVEL`,`POINTS`,`HEALTH`,`EXPERIENCE`,`MONEY`,`ARMOR`,";
+            sql = sql + "(`NAME`,`PASSWORD`,`X`,`Y`,`MAP`,`DIRECTION`,`AIMDIRECTION`,`SPRITE`,`LEVEL`,`POINTS`,`HEALTH`,`MAXHEALTH`,`EXPERIENCE`,`MONEY`,`ARMOR`,";
             sql = sql + "`HUNGER`,`HYDRATION`,`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`PISTOLAMMO`,`ASSAULTAMMO`,`ROCKETAMMO`,`GRENADEAMMO`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + Pass + "','" + X + "','" + Y + "','" + Map + "','" + Direction + "','" + AimDirection + "','" + Sprite + "','" + Level + "',";
-            sql = sql + "'" + Points + "','" + Health + "','" + Experience + "','" + Money + "','" + Armor + "','" + Hunger + "','" + Hydration + "','" + Strength + "','" + Agility + "',";
+            sql = sql + "'" + Points + "','" + Health + "','" + MaxHealth + "','" + Experience + "','" + Money + "','" + Armor + "','" + Hunger + "','" + Hydration + "','" + Strength + "','" + Agility + "',";
             sql = sql + "'" + Endurance + "','" + Stamina + "','" + PistolAmmo + "','" + AssaultAmmo + "','" + RocketAmmo + "','" + GrenadeAmmo + "')";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
@@ -262,7 +256,7 @@ namespace Server.Classes
             SQLiteCommand sql_Command;
             sql = "UPDATE PLAYERS SET ";
             sql = sql + "NAME = '" + Name + "', PASSWORD = '" + Pass + "', X = '" + X + "', Y = '" + Y + "', MAP = '" + Map + "', DIRECTION = '" + Direction + "', ";
-            sql = sql + "AIMDIRECTION = '" + AimDirection + "', SPRITE = '" + Sprite + "', LEVEL = '" + Level + "', POINTS = '" + Points + "', HEALTH = '" + Health + "', EXPERIENCE = '" + Experience + "', ";
+            sql = sql + "AIMDIRECTION = '" + AimDirection + "', SPRITE = '" + Sprite + "', LEVEL = '" + Level + "', POINTS = '" + Points + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', EXPERIENCE = '" + Experience + "', ";
             sql = sql + "MONEY = '" + Money + "', ARMOR = '" + Armor + "', HUNGER = '" + Hunger + "', HYDRATION = '" + Hydration + "', STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', ";
             sql = sql + "STAMINA = '" + Stamina + "', PISTOLAMMO = '" + PistolAmmo + "', ASSAULTAMMO = '" + AssaultAmmo + "', ROCKETAMMO = '" + RocketAmmo + "', GRENADEAMMO = '" + GrenadeAmmo + "' ";
             sql = sql + "WHERE NAME = '" + Name + "';";
@@ -307,6 +301,7 @@ namespace Server.Classes
                 Level = ToInt32(sql_Reader["LEVEL"].ToString());
                 Points = ToInt32(sql_Reader["POINTS"].ToString());
                 Health = ToInt32(sql_Reader["HEALTH"].ToString());
+                MaxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
                 Experience = ToInt32(sql_Reader["EXPERIENCE"].ToString());
                 Money = ToInt32(sql_Reader["MONEY"].ToString());
                 Armor = ToInt32(sql_Reader["ARMOR"].ToString());

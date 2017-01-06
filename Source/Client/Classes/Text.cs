@@ -44,6 +44,7 @@ namespace Client.Classes
             defaultText.Position = position;    //set its location on the screen
             defaultText.DisplayedString = c_Text;    //what is actually being displayed (text)
             defaultText.Color = c_Color; //the color of the text we are drawing
+            defaultText.Style = Text.Styles.Bold;
 
             c_Window.Draw(defaultText);  //window drawing function
         }
