@@ -5,6 +5,7 @@ using static Microsoft.VisualBasic.Interaction;
 using Lidgren.Network;
 using System.Data.SQLite;
 using static System.Convert;
+using static System.Environment;
 
 namespace Server.Classes
 {
@@ -34,6 +35,10 @@ namespace Server.Classes
         public int Target;
         public double s_LastPoint;
         public int spawnTick;
+        public int SpawnX;
+        public int SpawnY;
+
+        HandleData sendData = new HandleData();
 
         public Npc() { }
 
@@ -165,7 +170,51 @@ namespace Server.Classes
             s_Database.Close();
         }
 
-        public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player)
+        public void DamageNpc(Player s_Player, Map s_Map, int damage)
+        {
+            Health -= damage;
+
+            if (Health <= 0)
+            {
+                IsSpawned = false;
+                Health = MaxHealth;
+                spawnTick = TickCount;
+                GivePlayerRewards(s_Player);
+                if (SpawnX > 0 && SpawnY > 0)
+                {
+                    s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;
+                }
+            }
+        }
+
+        public void AttackPlayer(NetServer s_Server, Player[] s_Player, int index)
+        {
+            s_Player[index].Health -= Damage;
+
+            if (s_Player[index].Health <= 0)
+            {
+                s_Player[index].Health = s_Player[index].MaxHealth;
+                s_Player[index].X = 0;
+                s_Player[index].Y = 0;
+                sendData.SendPlayers(s_Server, s_Player);
+                string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
+                sendData.SendServerMessage(s_Server, deathMsg);
+            }
+            else
+            {
+                sendData.SendUpdatePlayerStats(s_Server, s_Player, index);
+            }
+        }
+
+        void GivePlayerRewards(Player s_Player)
+        {
+            s_Player.Experience += Exp;
+            s_Player.Money += Money;
+            s_Player.CheckPlayerLevelUp();
+            s_Player.SavePlayerToDatabase();
+        }
+
+        public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player, NetServer s_Server)
         {
             DidMove = false;
 
@@ -460,6 +509,7 @@ namespace Server.Classes
                                     {
                                         Direction = (int)Directions.Left;
                                         DidMove = true;
+                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }                             
                                         return;
                                     }
                                 }
@@ -508,6 +558,7 @@ namespace Server.Classes
                                     {
                                         Direction = (int)Directions.Right;
                                         DidMove = true;
+                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
                                         return;
                                     }
                                 }
@@ -560,6 +611,7 @@ namespace Server.Classes
                                     {
                                         Direction = (int)Directions.Up;
                                         DidMove = true;
+                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
                                         return;
                                     }
                                 }
@@ -608,6 +660,7 @@ namespace Server.Classes
                                     {
                                         Direction = (int)Directions.Down;
                                         DidMove = true;
+                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
                                         return;
                                     }
                                 }

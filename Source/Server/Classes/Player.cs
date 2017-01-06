@@ -15,10 +15,15 @@ namespace Server.Classes
 {
     class Player
     {
-        public string Name { get; set; }
-        public string Pass { get; set; }
         public NetConnection Connection;
         public SQLiteConnection s_Database;
+        public Item mainWeapon = new Item();
+        public Item offWeapon = new Item();
+        public Item[] Backpack = new Item[25];
+        Random RND = new Random();
+
+        public string Name { get; set; }
+        public string Pass { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Map { get; set; }
@@ -39,16 +44,12 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
         public int Step { get; set; }        
-        public Item mainWeapon = new Item();
-        public Item offWeapon = new Item();
         public int PistolAmmo { get; set; }
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
         public int hungerTick;
         public int hydrationTick;
-
-        Random RND = new Random();
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -83,6 +84,11 @@ namespace Server.Classes
 
             mainWeapon = new Item("Assault Rifle", 1, 50, 0, (int)ItemType.RangedWeapon, 150, 1000, 0, 0, 0, 0, 0, 0, 0, 30, 30, (int)AmmoType.AssaultRifle);
             offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
         }
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money,
@@ -115,6 +121,11 @@ namespace Server.Classes
 
             mainWeapon = new Item("Pistol", 1, 50, 0, (int)ItemType.RangedWeapon, 750, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol);
             offWeapon = new Item("Knife", 1, 100, 0, (int)ItemType.MeleeWeapon, 650, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None);
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -246,6 +257,18 @@ namespace Server.Classes
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
+        }
+
+        static int FindOpenInvSlot(Item[] s_Backpack)
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                if (s_Backpack[i].Name == "None")
+                {
+                    return i;
+                }
+            }
+            return 25;
         }
 
         public void SavePlayerToDatabase()

@@ -237,6 +237,23 @@ namespace Client.Classes
                     }
                 }
             }
+
+            if (e.Code == Keyboard.Key.B)
+            {
+                if (c_GUI.d_Window != null)
+                {
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
+                    if (c_GUI.d_Window.IsVisible)
+                    {
+                        c_GUI.d_Window.Hide();
+                    }
+                    else
+                    {
+                        c_GUI.d_Window.Show();
+                    }
+                }
+            }
         }
 
         static int CalculateFrameRate()

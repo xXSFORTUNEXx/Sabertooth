@@ -11,7 +11,6 @@ namespace Server.Classes
 {
     class HandleData
     {
-
         public string s_Version;
 
         public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
@@ -106,7 +105,7 @@ namespace Server.Classes
                         SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
                     }
                 }
-                SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
+                SendUpdatePlayerStats(s_Server, s_Player, owner);
             }
             else
             {
@@ -123,7 +122,7 @@ namespace Server.Classes
                         SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
                     }
                 }
-                SendUpdatePlayerStats(incMSG, s_Server, s_Player, owner);
+                SendUpdatePlayerStats(s_Server, s_Player, owner);
             }
         }
 
@@ -309,13 +308,15 @@ namespace Server.Classes
                         Console.WriteLine("Account login by: " + username + ", " + password);
                         SendAcceptLogin(s_Server, s_Player, i);
                         SendPlayerData(incMSG, s_Server, s_Player, i);
-                        SendPlayers(incMSG, s_Server, s_Player);
+                        SendPlayers(s_Server, s_Player);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
                         SendProjectiles(incMSG, s_Server, s_Proj);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[currentMap]);
+                        string welcomeMsg = username + " has joined Sabertooth!";
+                        SendServerMessage(s_Server, welcomeMsg);
                     }
                     else
                     {
@@ -358,6 +359,14 @@ namespace Server.Classes
             }
         }
 
+        public void SendServerMessage(NetServer s_Server, string message)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ChatMessage);
+            outMSG.Write(message);
+            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        } 
+
         void HandleStatusChange(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
         {
             Console.WriteLine(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
@@ -370,7 +379,7 @@ namespace Server.Classes
                 LogWriter.WriteLog("Saving player...", "Server");
                 SavePlayers(s_Player);
                 ClearSlot(incMSG.SenderConnection, s_Player);
-                SendPlayers(incMSG, s_Server, s_Player);
+                SendPlayers(s_Server, s_Player);
             }
         }
 
@@ -498,7 +507,7 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 3);
         }
 
-        void SendUpdatePlayerStats(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, int index)
+        public void SendUpdatePlayerStats(NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdatePlayerStats);
@@ -573,7 +582,7 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendPlayers(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        public void SendPlayers(NetServer s_Server, Player[] s_Player)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.Players);
@@ -902,7 +911,7 @@ namespace Server.Classes
                         int mapNum = ToInt32(msg.Substring(5, 1));
                         s_Player[index].Map = mapNum;
                         SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
-                        SendPlayers(incMSG, s_Server, s_Player);
+                        SendPlayers(s_Server, s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
@@ -929,7 +938,7 @@ namespace Server.Classes
                         spriteNum = ToInt32(msg.Substring(8, 1));
                     }
                     s_Player[index].Sprite = spriteNum;
-                    SendPlayers(incMSG, s_Server, s_Player);
+                    SendPlayers(s_Server, s_Player);
                     Console.WriteLine("Command:" + msg + " Spritenum: " + spriteNum);
                     return;
                 }

@@ -473,7 +473,7 @@ namespace Server.Classes
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
-                            s_Map[i].m_MapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player);
+                            s_Map[i].m_MapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player, s_Server);
 
                             if (s_Map[i].m_MapNpc[n].DidMove)
                             {
@@ -496,7 +496,7 @@ namespace Server.Classes
                             int canMove = RND.Next(0, 100);
                             int dir = RND.Next(0, 3);
 
-                            s_Map[i].r_MapNpc[c].NpcAI(canMove, dir, s_Map[i], s_Player);
+                            s_Map[i].r_MapNpc[c].NpcAI(canMove, dir, s_Map[i], s_Player, s_Server);
 
                             if (s_Map[i].r_MapNpc[c].DidMove)
                             {

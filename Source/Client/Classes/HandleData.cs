@@ -454,8 +454,9 @@ namespace Client.Classes
             {
                 c_GUI.outputChat.AddRow(msg);
             }
+            if (!c_GUI.chatWindow.IsVisible) { c_GUI.chatWindow.Show(); }
             c_GUI.outputChat.ScrollToBottom();
-            c_GUI.outputChat.UnselectAll();
+            c_GUI.outputChat.UnselectAll();            
             Console.WriteLine("Chat data receievd from server! IP: " + incMSG.SenderConnection);
         }
 

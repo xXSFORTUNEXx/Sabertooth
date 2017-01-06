@@ -9,16 +9,20 @@ namespace Client.Classes
 {
     class Player
     {
-        public string Name { get; set; }    //define player name
-        public string Pass { get; set; }    //define player password
-        public NetConnection Connection;    //create network connection
+        public NetConnection Connection;
         RenderText c_Text = new RenderText();
-        public int X { get; set; }  //define x
-        public int Y { get; set; }  //define y
-        public int Map { get; set; }    //define map
-        public int Direction { get; set; }  //define direction
+        public Item mainWeapon = new Item();
+        public Item offWeapon = new Item();
+        Sprite c_Sprite = new Sprite();
+
+        public string Name { get; set; }
+        public string Pass { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Map { get; set; }
+        public int Direction { get; set; }
         public int AimDirection { get; set; }
-        public int Sprite { get; set; } //define player sprite     
+        public int Sprite { get; set; }     
         public int Level { get; set; }
         public int Points { get; set; }
         public int Health { get; set; }
@@ -32,33 +36,25 @@ namespace Client.Classes
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
-        public int Step;
-
-        //Weapons
-        public Item mainWeapon = new Item();
-        public Item offWeapon = new Item();
-
-        //Player ammo
         public int PistolAmmo { get; set; }
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
-
-        public bool Moved;  //if they have moved
+        public bool Moved;
         public bool Attacking;
         public int reloadTick;
         public int attackTick;
-        public int offsetX; //offset for center screen
-        public int offsetY; //offset for center screen
-        public int tempX;   //temp x that is saved for movement over packets
-        public int tempY;   //temp y that is saved for movement over packets
-        public int tempDir; //temp direction that is saved for movement over packets
+        public int offsetX;
+        public int offsetY;
+        public int tempX;
+        public int tempY;
+        public int tempDir;
         public int tempaimDir;
-        public int tempStep;    //temp step that is saved for movement over packets
-        Sprite c_Sprite = new Sprite();    //define a sprite for which the above texture with be reference from
+        public int tempStep;
+        public int Step;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
-                      int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)    //main player contructor if we have all the details
+                      int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
             Pass = pass;

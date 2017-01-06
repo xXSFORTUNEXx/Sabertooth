@@ -294,8 +294,6 @@ namespace Server.Classes
     class MapNpc : Npc
     {
         public int NpcNum { get; set; }
-        public int SpawnX;
-        public int SpawnY;
 
         public MapNpc() { }
 
@@ -305,31 +303,6 @@ namespace Server.Classes
             X = x;
             Y = y;
             npcnum = NpcNum;
-        }
-
-        public void DamageNpc(Player s_Player, Map s_Map, int damage)
-        {
-            Health -= damage;
-
-            if (Health <= 0)
-            {
-                IsSpawned = false;
-                Health = MaxHealth;
-                spawnTick = TickCount;
-                GivePlayerRewards(s_Player);
-                if (SpawnX > 0 && SpawnY > 0)
-                {
-                    s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;
-                }
-            }
-        }
-
-        void GivePlayerRewards(Player s_Player)
-        {
-            s_Player.Experience += Exp;
-            s_Player.Money += Money;
-            s_Player.CheckPlayerLevelUp();
-            s_Player.SavePlayerToDatabase();
         }
     }
 
