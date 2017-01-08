@@ -309,6 +309,7 @@ namespace Server.Classes
                         SendAcceptLogin(s_Server, s_Player, i);
                         SendPlayerData(incMSG, s_Server, s_Player, i);
                         SendPlayers(s_Server, s_Player);
+                        SendPlayerInv(s_Server, s_Player, i);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
                         SendProjectiles(incMSG, s_Server, s_Proj);
@@ -536,6 +537,33 @@ namespace Server.Classes
 
             //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 4);
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
+        }
+
+        public void SendPlayerInv(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PlayerInv);
+            //outMSG.Write(index);
+            for (int i = 0; i < 25; i++)
+            {
+                outMSG.Write(s_Player[index].Backpack[i].Name);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Sprite);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Damage);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Armor);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Type);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HealthRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HungerRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HydrateRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Strength);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Agility);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Endurance);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Stamina);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Clip);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].maxClip);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ammoType);
+            }
+            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 5);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 5);
         }
 
         void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
@@ -1069,6 +1097,7 @@ namespace Server.Classes
         AttackNpcProj,
         UpdatePlayerStats,
         PoolNpcs,
-        PoolNpcData
+        PoolNpcData,
+        PlayerInv
     }
 }

@@ -135,6 +135,11 @@ namespace Server.Classes
             Connection = conn;
             hungerTick = TickCount;
             hydrationTick = TickCount;
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
         }
 
         public Player(NetConnection conn)
@@ -142,7 +147,13 @@ namespace Server.Classes
             Connection = conn;
         }
 
-        public Player() { }
+        public Player()
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+        }
 
         public void RegenHealth()
         {
@@ -297,6 +308,25 @@ namespace Server.Classes
             sql = sql + "WHERE OWNER = '" + Name + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
+
+            sql = "DELETE FROM INVENTORY WHERE OWNER = '" + Name + "'";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+
+            for (int i = 0; i < 25; i++)
+            {
+                if (Backpack[i].Name != "None")
+                {
+                    sql = "INSERT INTO `INVENTORY`";
+                    sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+                    sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
+                    sql = sql + " VALUES ";
+                    sql = sql + "('" + Name + "','" + i + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
+                    sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].maxClip + "','" + Backpack[i].ammoType + "');";
+                    sql_Command = new SQLiteCommand(sql, s_Database);
+                    sql_Command.ExecuteNonQuery();
+                }
+            }
             s_Database.Close();
         }
 
@@ -391,6 +421,43 @@ namespace Server.Classes
                 offWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
                 offWeapon.ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
+
+            sql = "SELECT COUNT(*) FROM `INVENTORY` WHERE OWNER = '" + Name + "'";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
+
+            if (result > 0)
+            {
+                for (int i = 0; i < result; i++)
+                {
+                    sql = "SELECT * FROM `INVENTORY` WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
+
+                    sql_Command = new SQLiteCommand(sql, s_Database);
+                    sql_Reader = sql_Command.ExecuteReader();
+
+                    while (sql_Reader.Read())
+                    {
+                        Backpack[i].Name = sql_Reader["NAME"].ToString();
+                        Backpack[i].Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
+                        Backpack[i].Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
+                        Backpack[i].Armor = ToInt32(sql_Reader["ARMOR"].ToString());
+                        Backpack[i].Type = ToInt32(sql_Reader["TYPE"].ToString());
+                        Backpack[i].AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
+                        Backpack[i].ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
+                        Backpack[i].HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
+                        Backpack[i].HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
+                        Backpack[i].HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
+                        Backpack[i].Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
+                        Backpack[i].Agility = ToInt32(sql_Reader["AGILITY"].ToString());
+                        Backpack[i].Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
+                        Backpack[i].Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
+                        Backpack[i].Clip = ToInt32(sql_Reader["CLIP"].ToString());
+                        Backpack[i].maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                        Backpack[i].ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                    }
+                }
+            }
+
             s_Database.Close();
         }
     }

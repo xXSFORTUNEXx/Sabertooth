@@ -46,7 +46,7 @@ namespace Client.Classes
             c_Client.Start();  //start the client
             Console.WriteLine("Client started..."); //let the user know whats up
             Game c_Game = new Game();  //create game class
-                ShowWindow(handle, SW_HIDE);
+            ShowWindow(handle, SW_HIDE);
             c_Game.GameLoop(c_Client, cConfig);    //start game loop
         }
     }

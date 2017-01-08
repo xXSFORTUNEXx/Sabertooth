@@ -13,6 +13,7 @@ namespace Client.Classes
         RenderText c_Text = new RenderText();
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
+        public Item[] Backpack = new Item[25];
         Sprite c_Sprite = new Sprite();
 
         public string Name { get; set; }
@@ -103,7 +104,13 @@ namespace Client.Classes
             Connection = conn;
         }
 
-        public Player() { }     //An emply player contructor, this is only needed to setup a blank player array for information to be stored appon login
+        public Player()
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+        }
 
         public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)  // draws the player to the screen
         {

@@ -587,7 +587,6 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-graph
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-system-2.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-window-2.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Tao.OpenGl.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\1.png
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\2.png
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\3.png
@@ -892,3 +891,4 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Cha
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\202.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\203.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\204.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache

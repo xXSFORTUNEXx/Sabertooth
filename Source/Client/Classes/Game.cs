@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
 using Gwen.UnitTest;
+using System.IO;
 using System;
 using Tao.OpenGl;
 using static System.Environment;
@@ -139,11 +140,13 @@ namespace Client.Classes
                 {
                     MessageBox.Show("Failed to capture window");
                 }
-                string path = String.Format("screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute,
-                                            DateTime.Now.Second);
+                if (!Directory.Exists("Screenshots")) { Directory.CreateDirectory("Screenshots"); }
+                string path = string.Format("Screenshots/Screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                 if (!img.SaveToFile(path))
+                {
                     MessageBox.Show(path, "Failed to save screenshot");
-                img.Dispose();
+                    img.Dispose();
+                }
             }
             else
             {
@@ -218,6 +221,7 @@ namespace Client.Classes
                     else
                     {
                         c_GUI.menuWindow.Show();
+                        c_GUI.charTab.Focus();
                     }
                 }
             }
@@ -479,12 +483,14 @@ namespace Client.Classes
             fps = CalculateFrameRate();
             c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
             c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]);
-            c_GUI.UpdateUIWindowLoc();
         }
 
         void UpdateOverlay()
         {
-            c_GUI.UpdateHUD(c_Player[handleData.c_Index], c_Window);
+            if (c_Player[handleData.c_Index].Name != null && c_Player[handleData.c_Index].mainWeapon.Name != null)
+            {
+                c_GUI.UpdateHUD(c_Player[handleData.c_Index], c_Window);
+            }
         }
     }
 }

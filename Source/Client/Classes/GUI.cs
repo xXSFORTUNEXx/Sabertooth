@@ -65,7 +65,7 @@ namespace Client.Classes
         public WindowControl menuWindow;
         TabControl menuTabs;
 
-        TabButton charTab;
+        public TabButton charTab;
         Label charName;
         Label charLevel;
         Label charExp;
@@ -81,9 +81,29 @@ namespace Client.Classes
         Label charSta;
 
         TabButton packTab;
+        ImagePanel[] invPic = new ImagePanel[25];
+        GroupBox packStats;
+        Label packName;
+        Label packDamage;
+        Label packArmor;
+        Label packHeRestore;
+        Label packHuRestore;
+        Label packHyRestore;
+        Label packStr;
+        Label packAgi;
+        Label packEdu;
+        Label packSta;
+        Label packClip;
+        Label packMClip;        
+
         TabButton equipTab;
+
         TabButton skillsTab;
+
+        TabButton missionTab;
+
         TabButton optionsTab;
+        Button optLog;
 
         RenderText hudClip = new RenderText();
         RectangleShape healthBar = new RectangleShape();
@@ -91,19 +111,25 @@ namespace Client.Classes
         float barLength;
         Vector2f hudCPos;
 
+        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
+        {
+            GUI.c_Client = c_Client;
+            this.c_Canvas = c_Canvas;
+            this.c_Font = c_Font;
+            this.c_Player = c_Player;
+            this.c_Config = c_Config;
+        }
+
         public void UpdateHUD(Player c_Player, RenderWindow c_Window)
         {
-            if (c_Player.Name != null)
-            {
-                barLength = ((float)c_Player.Health / c_Player.MaxHealth) * 150;
-                healthBar.Size = new Vector2f(barLength, 25);
-                healthBar.Position = new Vector2f(25, 25);
-                healthBar.FillColor = SFML.Graphics.Color.Red;
-                hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
-                hudCPos = new Vector2f(25, 50);
-                hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
-                c_Window.Draw(healthBar);
-            }
+            barLength = ((float)c_Player.Health / c_Player.MaxHealth) * 150;
+            healthBar.Size = new Vector2f(barLength, 25);
+            healthBar.Position = new Vector2f(25, 25);
+            healthBar.FillColor = SFML.Graphics.Color.Red;
+            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
+            hudCPos = new Vector2f(25, 50);
+            hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
+            c_Window.Draw(healthBar);
         }
 
         public void CreateMenuWindow(Base parent)
@@ -111,6 +137,7 @@ namespace Client.Classes
             menuWindow = new WindowControl(parent.GetCanvas());
             menuWindow.SetSize(350, 300);
             menuWindow.Position(Gwen.Pos.Bottom);
+            menuWindow.Position(Gwen.Pos.Right);
             menuWindow.DisableResizing();
             menuWindow.Title = "Game Menu";
             menuWindow.IsClosable = false;
@@ -175,42 +202,157 @@ namespace Client.Classes
 
             packTab = menuTabs.AddPage("Backpack");
 
+            int n = 0;
+            int c = 0;
+            for (int i = 0; i < 25; i++)
+            {
+                invPic[i] = new ImagePanel(packTab.Page);
+                invPic[i].SetSize(32, 32);
+                invPic[i].RenderColor = System.Drawing.Color.Gray;
+                invPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));    
+                c += 1;
+                if (c > 4) { c = 0; }
+                if (i == 4 || i == 9 || i == 14 || i == 19) { n += 1; }
+            }
+
+            packStats = new GroupBox(packTab.Page);
+            packStats.SetPosition(200, 10);
+            packStats.SetSize(115, 155);
+            packStats.Text = "Stats";
+
+            packName = new Label(packStats);
+            packName.SetPosition(3, 5);
+            packName.Text = "Name: ?";
+            packName.BringToFront();
+
+            packDamage = new Label(packStats);
+            packDamage.SetPosition(3, 15);
+            packDamage.Text = "Damage: ?";
+
+            packArmor = new Label(packStats);
+            packArmor.SetPosition(3, 25);
+            packArmor.Text = "Armor: ?";
+
+            packHeRestore = new Label(packStats);
+            packHeRestore.SetPosition(3, 35);
+            packHeRestore.Text = "Health Restore: ?";
+
+            packHuRestore = new Label(packStats);
+            packHuRestore.SetPosition(3, 45);
+            packHuRestore.Text = "Hunger Restore: ?";
+
+            packHyRestore = new Label(packStats);
+            packHyRestore.SetPosition(3, 55);
+            packHyRestore.Text = "Hydration Restore: ?";
+
+            packStr = new Label(packStats);
+            packStr.SetPosition(3, 65);
+            packStr.Text = "Strength: ?";
+
+            packAgi = new Label(packStats);
+            packAgi.SetPosition(3, 75);
+            packAgi.Text = "Agility: ?";
+
+            packEdu = new Label(packStats);
+            packEdu.SetPosition(3, 85);
+            packEdu.Text = "Endurance: ?";
+
+            packSta = new Label(packStats);
+            packSta.SetPosition(3, 95);
+            packSta.Text = "Stamina: ?";
+
+            packClip = new Label(packStats);
+            packClip.SetPosition(3, 105);
+            packClip.Text = "Clip: ?";
+
+            packMClip = new Label(packStats);
+            packMClip.SetPosition(3, 115);
+            packMClip.Text = "Max Clip: ?";
+
             equipTab = menuTabs.AddPage("Equipment");
 
             skillsTab = menuTabs.AddPage("Skills");
 
+            missionTab = menuTabs.AddPage("Missions");
+
             optionsTab = menuTabs.AddPage("Options");
+
+            optLog = new Button(optionsTab.Page);
+            optLog.SetPosition(105, 100);
+            optLog.Text = "Log Out";
+            optLog.Clicked += CheckLogOutSubmit;
+        }
+
+        private void CheckLogOutSubmit(Base control, ClickedEventArgs e)
+        {
+            c_Canvas.Dispose();
+            c_Client.Shutdown("Shutting Down");
+            Thread.Sleep(500);
+            Exit(0);
         }
 
         public void UpdateMenuWindow(Player c_Player)
         {
             if (menuWindow != null && c_Player != null && menuWindow.IsVisible)
             {
-                charName.Text = c_Player.Name;
-                charLevel.Text = "Level: " + c_Player.Level;
-                charExp.Text = "Experience: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
-                charMoney.Text = "Money: " + c_Player.Money;
-                charPoints.Text = "Points: " + c_Player.Points;
+                if (charTab.HasFocus)
+                {
+                    charName.Text = c_Player.Name;
+                    charLevel.Text = "Level: " + c_Player.Level;
+                    charExp.Text = "Experience: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
+                    charMoney.Text = "Money: " + c_Player.Money;
+                    charPoints.Text = "Points: " + c_Player.Points;
 
-                charHealth.Text = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
-                charHunger.Text = "Hunger: " + c_Player.Hunger + " / 100";
-                charHydration.Text = "Hydration: " + c_Player.Hydration + " / 100";
+                    charHealth.Text = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
+                    charHunger.Text = "Hunger: " + c_Player.Hunger + " / 100";
+                    charHydration.Text = "Hydration: " + c_Player.Hydration + " / 100";
 
-                charArmor.Text = "Armor: " + c_Player.Armor;
-                charStr.Text = "Strength: " + c_Player.Strength;
-                charAgi.Text = "Agility: " + c_Player.Agility;
-                charEnd.Text = "Endurance: " + c_Player.Endurance;
-                charSta.Text = "Stamina: " + c_Player.Stamina;
+                    charArmor.Text = "Armor: " + c_Player.Armor;
+                    charStr.Text = "Strength: " + c_Player.Strength;
+                    charAgi.Text = "Agility: " + c_Player.Agility;
+                    charEnd.Text = "Endurance: " + c_Player.Endurance;
+                    charSta.Text = "Stamina: " + c_Player.Stamina;
+                }
+                if (packTab.HasFocus)
+                {
+                    for (int i = 0; i < 25; i++)
+                    {
+                        if (c_Player.Backpack[i].Name != "None" && c_Player.Backpack[i].Sprite > 0)
+                        {
+                            invPic[i].ImageName = "Resources/Items/" + c_Player.Backpack[i].Sprite + ".png";
+                            invPic[i].Show();                    
+                        } 
+                        else
+                        {
+                            invPic[i].Hide();
+                        }
+                        if (invPic[i].IsHovered)
+                        {
+                            if (c_Player.Backpack[i].Name != "None")
+                            {
+                                packName.Text = c_Player.Backpack[i].Name;
+                                packDamage.Text = "Damage: " + c_Player.Backpack[i].Damage;
+                                packArmor.Text = "Armor: " + c_Player.Backpack[i].Armor;
+                                packHeRestore.Text = "Health Restore: " + c_Player.Backpack[i].HealthRestore;
+                                packHuRestore.Text = "Hunger Restore: " + c_Player.Backpack[i].HungerRestore;
+                                packHyRestore.Text = "Hydration Restore: " + c_Player.Backpack[i].HydrateRestore;
+                                packStr.Text = "Strength: " + c_Player.Backpack[i].Strength;
+                                packAgi.Text = "Agility: " + c_Player.Backpack[i].Agility;
+                                packEdu.Text = "Endurance: " + c_Player.Backpack[i].Endurance;
+                                packSta.Text = "Stamina: " + c_Player.Backpack[i].Stamina;
+                                packClip.Text = "Clip: " + c_Player.Backpack[i].Clip;
+                                packMClip.Text = "Max Clip: " + c_Player.Backpack[i].maxClip;
+                                packStats.Show();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            packStats.Hide();
+                        }
+                    }
+                }
             }
-        }
-
-        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
-        {
-            GUI.c_Client = c_Client;
-            this.c_Canvas = c_Canvas;
-            this.c_Font = c_Font;
-            this.c_Player = c_Player;
-            this.c_Config = c_Config;
         }
 
         public void CreateLoadingWindow(Base parent)
@@ -575,36 +717,6 @@ namespace Client.Classes
             outputChat.UnselectAll();
         }
 
-        public void UpdateWindowPositions(Player[] c_Player, int index)
-        {
-            if (mainWindow != null)
-            {
-                mainWindow.Position(Gwen.Pos.Center);
-            }
-            if (regWindow != null)
-            {
-                regWindow.Position(Gwen.Pos.Center);
-            }
-            if (logWindow != null)
-            {
-                logWindow.Position(Gwen.Pos.Center);
-            }
-        }
-
-        public void UpdateUIWindowLoc()
-        {
-            if (chatWindow != null)
-            {
-                chatWindow.Position(Gwen.Pos.Bottom);
-                chatWindow.Position(Gwen.Pos.Left);
-            }
-            if (menuWindow != null)
-            {
-                menuWindow.Position(Gwen.Pos.Bottom);
-                menuWindow.Position(Gwen.Pos.Right);
-            }
-        }
-
         public void MsgBox(string msg, string caption, Canvas c_Canvas)
         {
             MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
@@ -616,7 +728,8 @@ namespace Client.Classes
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
             d_Window.SetSize(200, 165);
-            d_Window.SetPosition(10, 10);
+            d_Window.Position(Gwen.Pos.Top);
+            d_Window.Position(Gwen.Pos.Right);
             d_Window.DisableResizing();
 
             d_FPS = new Label(d_Window);
@@ -673,7 +786,6 @@ namespace Client.Classes
             if (d_Window != null && c_Player[drawIndex] != null)
             {
                 d_Window.Title = "Debug Window - Admin";
-                d_Window.SetPosition(0, 0);
                 d_FPS.Text = "FPS: " + fps;
                 d_Name.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
                 d_X.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);

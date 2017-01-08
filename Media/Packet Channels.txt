@@ -7,3 +7,4 @@ Sequenced Channels:
 2 - Update Direction Data
 3 - Update player data, specific index
 4 - Update player stats, no location or key live data
+5 - Player inventory

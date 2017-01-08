@@ -129,7 +129,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(119, 23);
             this.button5.TabIndex = 5;
-            this.button5.Text = "Quest Editor";
+            this.button5.Text = "Mission Editor";
             this.button5.UseVisualStyleBackColor = true;
             // 
             // button6

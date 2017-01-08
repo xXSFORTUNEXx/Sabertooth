@@ -144,6 +144,10 @@ namespace Client.Classes
                             case (byte)PacketTypes.PoolNpcData:
                                 HandlePoolNpcData(incMSG, c_Map);
                                 break;
+
+                            case (byte)PacketTypes.PlayerInv:
+                                HandlePlayerInv(incMSG, c_Player, c_Index);
+                                break;
                         }
                         break;
                 }
@@ -156,6 +160,31 @@ namespace Client.Classes
             c_Canvas.Dispose();
             c_Client.Shutdown("Disconnect");
             Exit(0);
+        }
+
+        void HandlePlayerInv(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                if (c_Player[index].Backpack[i] != null)
+                {
+                    c_Player[index].Backpack[i].Name = incMSG.ReadString();
+                    c_Player[index].Backpack[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Damage = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Armor = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Type = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].HungerRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Strength = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Agility = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Endurance = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Stamina = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Clip = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].maxClip = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].ammoType = incMSG.ReadVariableInt32();
+                }
+            }
         }
 
         void HandleClearProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
@@ -737,7 +766,8 @@ namespace Client.Classes
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
             c_Canvas.DeleteAllChildren();
-            //c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.d_Window.Hide();
             c_GUI.CreateMenuWindow(c_Canvas);
             c_GUI.menuWindow.Hide();
             c_GUI.CreateChatWindow(c_Canvas);
@@ -781,6 +811,7 @@ namespace Client.Classes
         AttackNpcProj,
         UpdatePlayerStats,
         PoolNpcs,
-        PoolNpcData
+        PoolNpcData,
+        PlayerInv
     }
 }
