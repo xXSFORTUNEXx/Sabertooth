@@ -26,8 +26,9 @@ namespace Server.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
         public int Clip { get; set; }
-        public int maxClip { get; set; }
-        public int ammoType { get; set; }
+        public int MaxClip { get; set; }
+        public int ItemAmmoType { get; set; }
+        public int Value { get; set; }
 
         public Item() { }
 
@@ -54,8 +55,8 @@ namespace Server.Classes
             Endurance = end;
             Stamina = sta;
             Clip = clip;
-            maxClip = maxclip;
-            ammoType = ammotype;
+            MaxClip = maxclip;
+            ItemAmmoType = ammotype;
         }
 
         public void CreateItemInDatabase()
@@ -66,10 +67,10 @@ namespace Server.Classes
             SQLiteCommand sql_Command;
             sql = "INSERT INTO `ITEMS`";
             sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
+            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
-            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + maxClip + "','" + ammoType + "');";
+            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "');";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
@@ -84,7 +85,8 @@ namespace Server.Classes
             sql = "UPDATE ITEMS SET ";
             sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
             sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + maxClip + "', AMMOTYPE = '" + ammoType + "' ";
+            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "', ";
+            sql = sql + "VALUE = '" + Value + "' ";
             sql = sql + "WHERE rowid = '" + itemNum + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
@@ -97,7 +99,7 @@ namespace Server.Classes
             s_Database.Open();
             string sql;
 
-            sql = "SELECT * FROM `ITEMS` WHERE rowid = " + (itemNum + 1);
+            sql = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
 
             SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
             SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
@@ -119,8 +121,9 @@ namespace Server.Classes
                 Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
                 Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
                 Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                Value = ToInt32(sql_Reader["VALUE"].ToString());
             }
             s_Database.Close();
         }

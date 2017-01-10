@@ -18,6 +18,8 @@ namespace Client.Classes
 
         public MapProj[] mapProj = new MapProj[200];
 
+        public MapItem[] mapItem = new MapItem[20];
+
         const int Max_Tilesets = 68;
         Texture[] TileSet = new Texture[Max_Tilesets];
         Sprite Tiles = new Sprite();
@@ -59,6 +61,15 @@ namespace Client.Classes
                 binaryWriter.Write(m_MapNpc[i].X);
                 binaryWriter.Write(m_MapNpc[i].Y);
                 binaryWriter.Write(m_MapNpc[i].npcNum);
+            }
+
+            for (int p = 0; p < 20; p++)
+            {
+                mapItem[p] = new MapItem("Cache", 0, 0, 0);
+                binaryWriter.Write(mapItem[p].Name);
+                binaryWriter.Write(mapItem[p].X);
+                binaryWriter.Write(mapItem[p].Y);
+                binaryWriter.Write(mapItem[p].ItemNum);
             }
 
             for (int x = 0; x < 50; x++)
@@ -124,6 +135,15 @@ namespace Client.Classes
             for (int i = 0; i < 20; i++)
             {
                 r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
+            }
+
+            for (int p = 0; p < 20; p++)
+            {
+                mapItem[p] = new MapItem();
+                mapItem[p].Name = binaryReader.ReadString();
+                mapItem[p].X = binaryReader.ReadInt32();
+                mapItem[p].Y = binaryReader.ReadInt32();
+                mapItem[p].ItemNum = binaryReader.ReadInt32();
             }
 
             for (int x = 0; x < 50; x++)
@@ -205,6 +225,35 @@ namespace Client.Classes
         }
     }
 
+    class MapItem : Item
+    {
+        public int ItemNum { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool IsSpawned;
+
+        Sprite ItemSprite = new Sprite();
+
+        public MapItem() { }
+
+        public MapItem(string name, int x, int y, int itemnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            ItemNum = itemnum;
+        }
+
+        public void DrawItem(RenderWindow e_Window, Texture c_Texture)
+        {
+            ItemSprite.Texture = c_Texture;
+            ItemSprite.TextureRect = new IntRect(0, 0, 32, 32);
+            ItemSprite.Position = new Vector2f(X * 32, Y * 32);
+
+            e_Window.Draw(ItemSprite);
+        }
+    }
+
     class Tile
     {
         public int tileX { get; set; }
@@ -239,7 +288,8 @@ namespace Client.Classes
         Blocked,
         NpcSpawn,
         SpawnPool,
-        NpcAvoid
+        NpcAvoid,
+        MapItem
     }
 
     public enum TileLayers

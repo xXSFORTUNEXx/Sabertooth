@@ -53,6 +53,8 @@ namespace Client.Classes
         public int tempaimDir;
         public int tempStep;
         public int Step;
+        public int DirectionTick;
+        public int PickupTick;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -209,35 +211,57 @@ namespace Client.Classes
             }
         }
 
-        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            if (Attacking == true) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.O))
+            {
+                SendPickupItem(c_Client, index);
+                PickupTick = TickCount;
+            }
+        }
+                
+        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        {
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+
+            if (TickCount - DirectionTick > 200)
+            {
+                if (Keyboard.IsKeyPressed(Keyboard.Key.I))
+                {
+                    AimDirection = (int)Directions.Up;
+                    SendUpdateDirection(c_Client, index);
+                    DirectionTick = TickCount;
+                }
+                else if (Keyboard.IsKeyPressed(Keyboard.Key.K))
+                {
+                    AimDirection = (int)Directions.Down;
+                    SendUpdateDirection(c_Client, index);
+                    DirectionTick = TickCount;
+                }
+                else if (Keyboard.IsKeyPressed(Keyboard.Key.J))
+                {
+                    AimDirection = (int)Directions.Left;
+                    SendUpdateDirection(c_Client, index);
+                    DirectionTick = TickCount;
+                }
+                else if (Keyboard.IsKeyPressed(Keyboard.Key.L))
+                {
+                    AimDirection = (int)Directions.Right;
+                    SendUpdateDirection(c_Client, index);
+                    DirectionTick = TickCount;
+                }
+            }
+
+            if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
-            //Range Attack
-            //Direction Up
-            if (Keyboard.IsKeyPressed(Keyboard.Key.I))
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
-                AimDirection = (int)Directions.Up;
-                Attacking = true;
-            }
-            //Direction Down
-            if (Keyboard.IsKeyPressed(Keyboard.Key.K))
-            {
-                AimDirection = (int)Directions.Down;
-                Attacking = true;
-            }
-            //Direction Left
-            if (Keyboard.IsKeyPressed(Keyboard.Key.J))
-            {
-                AimDirection = (int)Directions.Left;
-                Attacking = true;
-            }
-            //Direction Right
-            if (Keyboard.IsKeyPressed(Keyboard.Key.L))
-            {
-                AimDirection = (int)Directions.Right;
                 Attacking = true;
             }
 
@@ -246,16 +270,16 @@ namespace Client.Classes
                 switch (mainWeapon.ammoType)
                 {
                     case (int)AmmoType.Pistol:
-                        if (PistolAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        if (PistolAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.AssaultRifle:
-                        if (AssaultAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        if (AssaultAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.Rocket:
-                        if (RocketAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        if (RocketAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.Grenade:
-                        if (GrenadeAmmo == 0) { Attacking = false; SendUpdateDirection(c_Client, index); return; }
+                        if (GrenadeAmmo == 0) { Attacking = false; return; }
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
@@ -391,6 +415,14 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(Direction);    //current index direction
             outMSG.WriteVariableInt32(AimDirection);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);   //send the packet in reliable order
+        }
+
+        void SendPickupItem(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ItemPickup);
+            outMSG.WriteVariableInt32(index);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
     }
 

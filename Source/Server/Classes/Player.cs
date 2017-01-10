@@ -232,6 +232,65 @@ namespace Server.Classes
             else { return; }
         }
 
+        public void CheckPickup(NetServer s_Server, Map s_Map, Player[] s_Player, Item[] s_Item, int index)
+        {
+            for (int c = 0; c < 20; c++)
+            {
+                if (s_Map.mapItem[c] != null && s_Map.mapItem[c].IsSpawned)
+                {
+                    if ((X + 12) == s_Map.mapItem[c].X && (Y + 9) == s_Map.mapItem[c].Y)
+                    {
+                        HandleData hData = new HandleData();
+                        int TileX = s_Map.mapItem[c].X;
+                        int TileY = s_Map.mapItem[c].Y;
+                        s_Map.mapItem[c].IsSpawned = false;
+                        //s_Map.Ground[TileX, TileY].NeedsSpawned = false;
+                        s_Map.mapItem[c].SpawnTick = TickCount;
+                        PickUpItem(s_Server, s_Player, s_Map.mapItem[c], s_Map, index, c);
+                        break;
+                    }
+                }
+            }
+        }
+
+        void PickUpItem(NetServer s_Server, Player[] s_Player, Item s_Item, Map s_Map, int index, int itemNum)
+        {
+            HandleData hData = new HandleData();
+            int itemSlot = FindOpenInvSlot(Backpack);
+
+            if (itemSlot < 25)
+            {
+                Backpack[itemSlot].Name = s_Item.Name;
+                Backpack[itemSlot].Sprite = s_Item.Sprite;
+                hData.SendPlayerInv(s_Server, s_Player, index);
+
+                for (int p = 0; p < 5; p++)
+                {
+                    if (s_Player[p].Connection != null && Map == s_Player[p].Map)
+                    {
+                        hData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map, itemNum);
+                    }
+                }
+            }
+            else
+            {
+                hData.SendServerMessage(s_Server, "Inventory is full!");
+                return;
+            }
+        }
+
+        static int FindOpenInvSlot(Item[] s_Backpack)
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                if (s_Backpack[i].Name == "None")
+                {
+                    return i;
+                }
+            }
+            return 25;
+        }
+
         public void CreatePlayerInDatabase()
         {
             s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
@@ -252,9 +311,9 @@ namespace Server.Classes
             sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
             sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`)";
             sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + mainWeapon.Name + "','" + mainWeapon.Clip + "','" + mainWeapon.maxClip + "','" + mainWeapon.Sprite + "','" + mainWeapon.Damage + "','" + mainWeapon.Armor + "',";
+            sql = sql + "('" + Name + "','" + mainWeapon.Name + "','" + mainWeapon.Clip + "','" + mainWeapon.MaxClip + "','" + mainWeapon.Sprite + "','" + mainWeapon.Damage + "','" + mainWeapon.Armor + "',";
             sql = sql + "'" + mainWeapon.Type + "','" + mainWeapon.AttackSpeed + "','" + mainWeapon.ReloadSpeed + "','" + mainWeapon.HealthRestore + "','" + mainWeapon.HungerRestore + "','" + mainWeapon.HydrateRestore + "',";
-            sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ammoType + "')";
+            sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ItemAmmoType + "')";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
 
@@ -262,24 +321,12 @@ namespace Server.Classes
             sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
             sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`)";
             sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + offWeapon.Name + "','" + offWeapon.Clip + "','" + offWeapon.maxClip + "','" + offWeapon.Sprite + "','" + offWeapon.Damage + "','" + offWeapon.Armor + "',";
+            sql = sql + "('" + Name + "','" + offWeapon.Name + "','" + offWeapon.Clip + "','" + offWeapon.MaxClip + "','" + offWeapon.Sprite + "','" + offWeapon.Damage + "','" + offWeapon.Armor + "',";
             sql = sql + "'" + offWeapon.Type + "','" + offWeapon.AttackSpeed + "','" + offWeapon.ReloadSpeed + "','" + offWeapon.HealthRestore + "','" + offWeapon.HungerRestore + "','" + offWeapon.HydrateRestore + "',";
-            sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ammoType + "')";
+            sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ItemAmmoType + "')";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
             s_Database.Close();
-        }
-
-        static int FindOpenInvSlot(Item[] s_Backpack)
-        {
-            for (int i = 0; i < 25; i++)
-            {
-                if (s_Backpack[i].Name == "None")
-                {
-                    return i;
-                }
-            }
-            return 25;
         }
 
         public void SavePlayerToDatabase()
@@ -322,7 +369,7 @@ namespace Server.Classes
                     sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
                     sql = sql + " VALUES ";
                     sql = sql + "('" + Name + "','" + i + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
-                    sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].maxClip + "','" + Backpack[i].ammoType + "');";
+                    sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].MaxClip + "','" + Backpack[i].ItemAmmoType + "');";
                     sql_Command = new SQLiteCommand(sql, s_Database);
                     sql_Command.ExecuteNonQuery();
                 }
@@ -379,7 +426,7 @@ namespace Server.Classes
             {
                 mainWeapon.Name = sql_Reader["NAME"].ToString();
                 mainWeapon.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                mainWeapon.maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                mainWeapon.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
                 mainWeapon.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
                 mainWeapon.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
                 mainWeapon.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
@@ -393,7 +440,7 @@ namespace Server.Classes
                 mainWeapon.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
                 mainWeapon.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
                 mainWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                mainWeapon.ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                mainWeapon.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
 
             sql = "SELECT * FROM `SECONDARYWEAPONS` WHERE OWNER = '" + Name + "'";
@@ -405,7 +452,7 @@ namespace Server.Classes
             {
                 offWeapon.Name = sql_Reader["NAME"].ToString();
                 offWeapon.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                offWeapon.maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                offWeapon.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
                 offWeapon.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
                 offWeapon.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
                 offWeapon.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
@@ -419,7 +466,7 @@ namespace Server.Classes
                 offWeapon.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
                 offWeapon.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
                 offWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                offWeapon.ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                offWeapon.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
             }
 
             sql = "SELECT COUNT(*) FROM `INVENTORY` WHERE OWNER = '" + Name + "'";
@@ -452,8 +499,8 @@ namespace Server.Classes
                         Backpack[i].Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
                         Backpack[i].Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
                         Backpack[i].Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                        Backpack[i].maxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                        Backpack[i].ammoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                        Backpack[i].MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
+                        Backpack[i].ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
                     }
                 }
             }

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using static System.Convert;
+using SFML.Graphics;
+using SFML.System;
+using SFML.Window;
 
 namespace Editor.Classes
 {
@@ -28,8 +31,28 @@ namespace Editor.Classes
         public int Clip { get; set; }
         public int MaxClip { get; set; }
         public int ItemAmmoType { get; set; }
+        public int Value { get; set; }
 
-        public Item() { }
+        const int Max_ItemPics = 4;
+        Texture[] ItemPic = new Texture[Max_ItemPics];
+        Sprite ItemSprite = new Sprite();
+
+        public Item()
+        {
+            for (int p = 0; p < Max_ItemPics; p++)
+            {
+                ItemPic[p] = new Texture("Resources/Items/" + (p + 1) + ".png");
+            }
+        }        
+
+        public void DrawItem(RenderWindow e_Window, int itemPic, int x, int y)
+        {
+            ItemSprite.Texture = ItemPic[itemPic];
+            ItemSprite.TextureRect = new IntRect(0, 0, 32, 32);
+            ItemSprite.Position = new Vector2f(x * 32, y * 32);
+
+            e_Window.Draw(ItemSprite);
+        }
 
         public void CreateItemInDatabase()
         {
@@ -50,6 +73,7 @@ namespace Editor.Classes
             Clip = 0;
             MaxClip = 0;
             ItemAmmoType = 0;
+            Value = 0;
 
             e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             e_Database.Open();
@@ -57,10 +81,10 @@ namespace Editor.Classes
             SQLiteCommand sql_Command;
             sql = "INSERT INTO `ITEMS`";
             sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`)";
+            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
-            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "');";
+            sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "');";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
             e_Database.Close();
@@ -75,7 +99,8 @@ namespace Editor.Classes
             sql = "UPDATE ITEMS SET ";
             sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
             sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "' ";
+            sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "', ";
+            sql = sql + "VALUE = '" + Value + "' ";
             sql = sql + "WHERE rowid = '" + itemNum + "';";
             sql_Command = new SQLiteCommand(sql, e_Database);
             sql_Command.ExecuteNonQuery();
@@ -126,6 +151,7 @@ namespace Editor.Classes
                 Clip = ToInt32(sql_Reader["CLIP"].ToString());
                 MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
                 ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
+                Value = ToInt32(sql_Reader["VALUE"].ToString());
             }
             e_Database.Close();
         }

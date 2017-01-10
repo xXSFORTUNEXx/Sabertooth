@@ -425,7 +425,7 @@
             // 
             // scrlSprite
             // 
-            this.scrlSprite.LargeChange = 4;
+            this.scrlSprite.LargeChange = 1;
             this.scrlSprite.Location = new System.Drawing.Point(58, 84);
             this.scrlSprite.Maximum = 4;
             this.scrlSprite.Minimum = 1;

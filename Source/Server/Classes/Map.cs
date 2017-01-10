@@ -23,6 +23,8 @@ namespace Server.Classes
 
         public MapProj[] mapProj = new MapProj[200];
 
+        public MapItem[] mapItem = new MapItem[20];
+
         public int FindOpenProjSlot()
         {
             for (int i = 0; i < 200; i++)
@@ -104,6 +106,11 @@ namespace Server.Classes
                 r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
             }
 
+            for (int i = 0; i < 20; i++)
+            {
+                mapItem[i] = new MapItem("None", 0, 0, 0);
+            }
+
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -163,6 +170,14 @@ namespace Server.Classes
                 binaryWriter.Write(m_MapNpc[i].X);
                 binaryWriter.Write(m_MapNpc[i].Y);
                 binaryWriter.Write(m_MapNpc[i].NpcNum);
+            }
+
+            for (int p = 0; p < 20; p++)
+            {
+                binaryWriter.Write(mapItem[p].Name);
+                binaryWriter.Write(mapItem[p].X);
+                binaryWriter.Write(mapItem[p].Y);
+                binaryWriter.Write(mapItem[p].ItemNum);
             }
 
             for (int x = 0; x < 50; x++)
@@ -234,6 +249,15 @@ namespace Server.Classes
                     r_MapNpc[i].X = 0;
                     r_MapNpc[i].Y = 0;
                     r_MapNpc[i].NpcNum = 0;
+                }
+
+                for (int p = 0; p < 20; p++)
+                {
+                    mapItem[p] = new MapItem();
+                    mapItem[p].Name = binaryReader.ReadString();
+                    mapItem[p].X = binaryReader.ReadInt32();
+                    mapItem[p].Y = binaryReader.ReadInt32();
+                    mapItem[p].ItemNum = binaryReader.ReadInt32();
                 }
 
                 for (int x = 0; x < 50; x++)
@@ -321,6 +345,26 @@ namespace Server.Classes
         }
     }
 
+    class MapItem : Item
+    {
+        public int ItemNum { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public int SpawnTick;
+        public bool IsSpawned;
+
+        public MapItem() { }
+
+        public MapItem(string name, int x, int y, int itemnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            ItemNum = itemnum;
+        }
+    }
+
     class Tile
     {
         public int TileX { get; set; }
@@ -335,6 +379,7 @@ namespace Server.Classes
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
         public int CurrentSpawn;
+        public bool NeedsSpawned;
 
         public Tile()
         {
@@ -356,7 +401,8 @@ namespace Server.Classes
         Blocked,
         NpcSpawn,
         SpawnPool,
-        NpcAvoid
+        NpcAvoid,
+        MapItem
     }
 
     public enum TileLayers

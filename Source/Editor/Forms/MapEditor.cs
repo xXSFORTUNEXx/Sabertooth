@@ -29,9 +29,10 @@ namespace Editor.Forms
         Sprite e_Grid = new Sprite();
         SQLiteConnection e_Database;
         Npc e_Npc = new Npc();
+        Item e_Item = new Item();
         Texture[] e_Texture = new Texture[204];
-        int e_ViewX { get; set; }
-        int e_ViewY { get; set; }
+        public int e_ViewX { get; set; }
+        public int e_ViewY { get; set; }
         int e_OffsetX = 25;
         int e_OffsetY = 19;
         int e_CursorX;
@@ -99,16 +100,16 @@ namespace Editor.Forms
 
             e_Map.LoadMap();
 
-            cmbNpc1.SelectedIndex = e_Map.mapNpc[0].npcNum;
-            cmbNpc2.SelectedIndex = e_Map.mapNpc[1].npcNum;
-            cmbNpc3.SelectedIndex = e_Map.mapNpc[2].npcNum;
-            cmbNpc4.SelectedIndex = e_Map.mapNpc[3].npcNum;
-            cmbNpc5.SelectedIndex = e_Map.mapNpc[4].npcNum;
-            cmbNpc6.SelectedIndex = e_Map.mapNpc[5].npcNum;
-            cmbNpc7.SelectedIndex = e_Map.mapNpc[6].npcNum;
-            cmbNpc8.SelectedIndex = e_Map.mapNpc[7].npcNum;
-            cmbNpc9.SelectedIndex = e_Map.mapNpc[8].npcNum;
-            cmbNpc10.SelectedIndex = e_Map.mapNpc[9].npcNum;
+            cmbNpc1.SelectedIndex = e_Map.mapNpc[0].NpcNum;
+            cmbNpc2.SelectedIndex = e_Map.mapNpc[1].NpcNum;
+            cmbNpc3.SelectedIndex = e_Map.mapNpc[2].NpcNum;
+            cmbNpc4.SelectedIndex = e_Map.mapNpc[3].NpcNum;
+            cmbNpc5.SelectedIndex = e_Map.mapNpc[4].NpcNum;
+            cmbNpc6.SelectedIndex = e_Map.mapNpc[5].NpcNum;
+            cmbNpc7.SelectedIndex = e_Map.mapNpc[6].NpcNum;
+            cmbNpc8.SelectedIndex = e_Map.mapNpc[7].NpcNum;
+            cmbNpc9.SelectedIndex = e_Map.mapNpc[8].NpcNum;
+            cmbNpc10.SelectedIndex = e_Map.mapNpc[9].NpcNum;
             txtName.Text = e_Map.Name;
 
             MapEditorLoop();
@@ -136,6 +137,7 @@ namespace Editor.Forms
                 e_Window.Clear();
                 DrawTiles();
                 DrawNpcs();
+                DrawItems();
                 DrawTypes();
                 DrawGrid();
                 Text = "Map Editor - FPS: " + CalculateFrameRate();                
@@ -200,9 +202,20 @@ namespace Editor.Forms
                                     break;
                                 case (int)TileType.SpawnPool:
                                     e_Text.DrawText(e_Window, "S", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Green);
+                                    if (e_Map.Ground[x, y].SpawnAmount > 1)
+                                    {
+                                        e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnAmount.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Cyan);
+                                    }
                                     break;
                                 case (int)TileType.NpcAvoid:
                                     e_Text.DrawText(e_Window, "A", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.White);
+                                    break;
+                                case (int)TileType.MapItem:
+                                    e_Text.DrawText(e_Window, "I", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Cyan);
+                                    if (e_Map.Ground[x, y].SpawnAmount > 1)
+                                    {
+                                        e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnAmount.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Green);
+                                    }
                                     break;
                                 default:
                                     break;
@@ -221,9 +234,9 @@ namespace Editor.Forms
             {
                 e_Grid.Texture = e_GridTexture;
 
-                for (int x = 0; x < 25; x++)
+                for (int x = 0; x < 50; x++)
                 {
-                    for (int y = 0; y < 19; y++)
+                    for (int y = 0; y < 50; y++)
                     {
                         e_Grid.TextureRect = new IntRect(0, 0, 32, 32);
                         e_Grid.Position = new Vector2f(x * 32, y * 32);
@@ -251,6 +264,27 @@ namespace Editor.Forms
                                 e_Npc.LoadNpcFromDatabase(npcNum);
                                 e_Npc.DrawNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        void DrawItems()
+        {
+            if (pnlMapNpcs.Visible) { return; }
+
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    if (e_Map.Ground[x, y].type == (int)TileType.MapItem)
+                    {
+                        if (e_Map.Ground[x, y].SpawnNum > 0)
+                        {
+                            int itemNum = e_Map.Ground[x, y].SpawnNum;
+                            e_Item.LoadItemFromDatabase(itemNum);
+                            e_Item.DrawItem(e_Window, (e_Item.Sprite - 1), x, y);
                         }
                     }
                 }
@@ -487,6 +521,7 @@ namespace Editor.Forms
                     e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
                     if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -495,6 +530,7 @@ namespace Editor.Forms
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
         }
+
 
         private void EditorMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -680,6 +716,7 @@ namespace Editor.Forms
                     e_Map.Ground[e_CursorX, e_CursorY].type = e_Type;
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
                     if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -782,6 +819,7 @@ namespace Editor.Forms
             e_Type = (int)TileType.None;
             lblType.Text = "Type: None";
             pnlNpcSpawn.Visible = false;
+            pnlMapItem.Visible = false;
         }
 
         private void radBlocked_CheckedChanged(object sender, EventArgs e)
@@ -789,6 +827,7 @@ namespace Editor.Forms
             e_Type = (int)TileType.Blocked;
             lblType.Text = "Type: Blocked";
             pnlNpcSpawn.Visible = false;
+            pnlMapItem.Visible = false;
         }
 
         private void mnuOpen_Click(object sender, EventArgs e)
@@ -814,6 +853,7 @@ namespace Editor.Forms
             e_SpawnAmount = 1;
             pnlNpcSpawn.Visible = true;
             scrlSpawnAmount.Enabled = false;
+            pnlMapItem.Visible = false;
         }
 
         private void radNpcAvoid_CheckedChanged(object sender, EventArgs e)
@@ -821,6 +861,7 @@ namespace Editor.Forms
             e_Type = (int)TileType.NpcAvoid;
             lblType.Text = "Type: Npc Avoid";
             pnlNpcSpawn.Visible = false;
+            pnlMapItem.Visible = false;
         }
 
         private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
@@ -831,6 +872,29 @@ namespace Editor.Forms
             e_SpawnAmount = 1;
             pnlNpcSpawn.Visible = true;
             scrlSpawnAmount.Enabled = true;
+            pnlMapItem.Visible = false;
+        }
+
+        private void radMapItem_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.MapItem;
+            lblType.Text = "Type: Map Item";
+            e_SpawnNumber = 1;
+            e_SpawnAmount = 1;
+            pnlMapItem.Visible = true;
+            pnlNpcSpawn.Visible = false;
+        }
+
+        private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_SpawnNumber = scrlItemNum.Value;            
+            lblItemNum.Text = "Item Number: " + scrlItemNum.Value;
+        }
+
+        private void scrlItemAmount_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_SpawnAmount = scrlItemAmount.Value;
+            lblItemAmount.Text = "Amount: " + scrlItemAmount.Value;
         }
 
         private void scrlNpcNum_Scroll(object sender, ScrollEventArgs e)
@@ -929,52 +993,52 @@ namespace Editor.Forms
 
         private void cmbNpc1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[0].npcNum = cmbNpc1.SelectedIndex;
+            e_Map.mapNpc[0].NpcNum = cmbNpc1.SelectedIndex;
         }
 
         private void cmbNpc2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[1].npcNum = cmbNpc2.SelectedIndex;
+            e_Map.mapNpc[1].NpcNum = cmbNpc2.SelectedIndex;
         }
 
         private void cmbNpc3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[2].npcNum = cmbNpc3.SelectedIndex;
+            e_Map.mapNpc[2].NpcNum = cmbNpc3.SelectedIndex;
         }
 
         private void cmbNpc4_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[3].npcNum = cmbNpc4.SelectedIndex;
+            e_Map.mapNpc[3].NpcNum = cmbNpc4.SelectedIndex;
         }
 
         private void cmbNpc5_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[4].npcNum = cmbNpc5.SelectedIndex;
+            e_Map.mapNpc[4].NpcNum = cmbNpc5.SelectedIndex;
         }
 
         private void cmbNpc6_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[5].npcNum = cmbNpc6.SelectedIndex;
+            e_Map.mapNpc[5].NpcNum = cmbNpc6.SelectedIndex;
         }
 
         private void cmbNpc7_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[6].npcNum = cmbNpc7.SelectedIndex;
+            e_Map.mapNpc[6].NpcNum = cmbNpc7.SelectedIndex;
         }
 
         private void cmbNpc8_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[7].npcNum = cmbNpc8.SelectedIndex;
+            e_Map.mapNpc[7].NpcNum = cmbNpc8.SelectedIndex;
         }
 
         private void cmbNpc9_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[8].npcNum = cmbNpc9.SelectedIndex;
+            e_Map.mapNpc[8].NpcNum = cmbNpc9.SelectedIndex;
         }
 
         private void cmbNpc10_SelectedIndexChanged(object sender, EventArgs e)
         {
-            e_Map.mapNpc[9].npcNum = cmbNpc10.SelectedIndex;
+            e_Map.mapNpc[9].NpcNum = cmbNpc10.SelectedIndex;
         }
 
         private void scrlViewY_Scroll(object sender, ScrollEventArgs e)
@@ -1017,8 +1081,6 @@ namespace Editor.Forms
             frameRate++;
             return lastFrameRate;
         }
-
-
     }
 
     public class RenderText

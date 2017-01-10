@@ -148,6 +148,14 @@ namespace Client.Classes
                             case (byte)PacketTypes.PlayerInv:
                                 HandlePlayerInv(incMSG, c_Player, c_Index);
                                 break;
+
+                            case (byte)PacketTypes.MapItems:
+                                HandleMapItems(incMSG, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.MapItemData:
+                                 HandleMapItemData(incMSG, c_Map);
+                                break;
                         }
                         break;
                 }
@@ -349,6 +357,57 @@ namespace Client.Classes
                     c_Map.r_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
+        }
+
+        void HandleMapItems(NetIncomingMessage incMSG, Map c_Map)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                c_Map.mapItem[i].Name = incMSG.ReadString();
+                c_Map.mapItem[i].X = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Y = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Sprite = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Damage = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Armor = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Type = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].HealthRestore = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].HungerRestore = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Strength = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Agility = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Endurance = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Stamina = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Clip = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].maxClip = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].ammoType = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].Value = incMSG.ReadVariableInt32();
+                c_Map.mapItem[i].IsSpawned = incMSG.ReadBoolean();
+            }
+        }
+
+        void HandleMapItemData(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int itemNum = incMSG.ReadVariableInt32();
+
+            c_Map.mapItem[itemNum].Name = incMSG.ReadString();
+            c_Map.mapItem[itemNum].X = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Y = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Damage = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Armor = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Type = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Strength = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Agility = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Clip = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].maxClip = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].ammoType = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].Value = incMSG.ReadVariableInt32();
+            c_Map.mapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
         void HandleMapNpcs(NetIncomingMessage incMSG, Map c_Map)
@@ -710,6 +769,7 @@ namespace Client.Classes
             for (int i = 0; i < 20; i++)
             {
                 c_Map.r_MapNpc[i] = new MapNpc();
+                c_Map.mapItem[i] = new MapItem();
             }
 
             for (int x = 0; x < 50; x++)
@@ -812,6 +872,9 @@ namespace Client.Classes
         UpdatePlayerStats,
         PoolNpcs,
         PoolNpcData,
-        PlayerInv
+        PlayerInv,
+        MapItems,
+        MapItemData,
+        ItemPickup
     }
 }

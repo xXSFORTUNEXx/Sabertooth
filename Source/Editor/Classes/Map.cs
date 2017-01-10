@@ -18,6 +18,8 @@ namespace Editor.Classes
 
         public MapNpc[] mapNpc = new MapNpc[10];
 
+        public MapItem[] mapItem = new MapItem[20];
+
         const int Max_Tilesets = 68;
         Texture[] TileSet = new Texture[Max_Tilesets];
         Sprite Tiles = new Sprite();
@@ -43,7 +45,7 @@ namespace Editor.Classes
                 handle.Dispose();
             }
 
-            for (int i = 0; i < 67; i++)
+            for (int i = 0; i < Max_Tilesets; i++)
             {
                 TileSet[i].Dispose();
             }
@@ -95,7 +97,16 @@ namespace Editor.Classes
                         mapNpc[i].Name = binaryReader.ReadString();
                         mapNpc[i].X = binaryReader.ReadInt32();
                         mapNpc[i].Y = binaryReader.ReadInt32();
-                        mapNpc[i].npcNum = binaryReader.ReadInt32();
+                        mapNpc[i].NpcNum = binaryReader.ReadInt32();
+                    }
+
+                    for (int p = 0; p < 20; p++)
+                    {
+                        mapItem[p] = new MapItem();
+                        mapItem[p].Name = binaryReader.ReadString();
+                        mapItem[p].X = binaryReader.ReadInt32();
+                        mapItem[p].Y = binaryReader.ReadInt32();
+                        mapItem[p].ItemNum = binaryReader.ReadInt32();
                     }
 
                     for (int x = 0; x < 50; x++)
@@ -173,7 +184,15 @@ namespace Editor.Classes
                     binaryWriter.Write(mapNpc[i].Name);
                     binaryWriter.Write(mapNpc[i].X);
                     binaryWriter.Write(mapNpc[i].Y);
-                    binaryWriter.Write(mapNpc[i].npcNum);
+                    binaryWriter.Write(mapNpc[i].NpcNum);
+                }
+
+                for (int p = 0; p < 20; p++)
+                {
+                    binaryWriter.Write(mapItem[p].Name);
+                    binaryWriter.Write(mapItem[p].X);
+                    binaryWriter.Write(mapItem[p].Y);
+                    binaryWriter.Write(mapItem[p].ItemNum);
                 }
 
                 for (int x = 0; x < 50; x++)
@@ -231,7 +250,15 @@ namespace Editor.Classes
                 mapNpc[i].Name = "None";
                 mapNpc[i].X = 0;
                 mapNpc[i].Y = 0;
-                mapNpc[i].npcNum = 0;
+                mapNpc[i].NpcNum = 0;
+            }
+            for (int p = 0; p < 20; p++)
+            {
+                mapItem[p] = new MapItem();
+                mapItem[p].Name = "None";
+                mapItem[p].X = 0;
+                mapItem[p].Y = 0;
+                mapItem[p].ItemNum = 0;
             }
 
             //Create all of the tiles with new classes and make sure they all have values of 0
@@ -296,7 +323,15 @@ namespace Editor.Classes
                 binaryWriter.Write(mapNpc[i].Name);
                 binaryWriter.Write(mapNpc[i].X);
                 binaryWriter.Write(mapNpc[i].Y);
-                binaryWriter.Write(mapNpc[i].npcNum);
+                binaryWriter.Write(mapNpc[i].NpcNum);
+            }
+
+            for (int p = 0; p < 20; p++)
+            {
+                binaryWriter.Write(mapItem[p].Name);
+                binaryWriter.Write(mapItem[p].X);
+                binaryWriter.Write(mapItem[p].Y);
+                binaryWriter.Write(mapItem[p].ItemNum);
             }
 
             for (int x = 0; x < 50; x++)
@@ -356,7 +391,16 @@ namespace Editor.Classes
                 mapNpc[i].Name = binaryReader.ReadString();
                 mapNpc[i].X = binaryReader.ReadInt32();
                 mapNpc[i].Y = binaryReader.ReadInt32();
-                mapNpc[i].npcNum = binaryReader.ReadInt32();
+                mapNpc[i].NpcNum = binaryReader.ReadInt32();
+            }
+
+            for (int p = 0; p < 20; p++)
+            {
+                mapItem[p] = new MapItem();
+                mapItem[p].Name = binaryReader.ReadString();
+                mapItem[p].X = binaryReader.ReadInt32();
+                mapItem[p].Y = binaryReader.ReadInt32();
+                mapItem[p].ItemNum = binaryReader.ReadInt32();
             }
 
             for (int x = 0; x < 50; x++)
@@ -410,7 +454,7 @@ namespace Editor.Classes
 
     class MapNpc : Npc
     {
-        public int npcNum { get; set; }
+        public int NpcNum { get; set; }
 
         public MapNpc() { }
 
@@ -419,7 +463,24 @@ namespace Editor.Classes
             Name = name;
             X = x;
             Y = y;
-            npcnum = npcNum;
+            NpcNum = NpcNum;
+        }
+    }
+
+    class MapItem : Item
+    {
+        public int ItemNum { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public MapItem() { }
+
+        public MapItem(string name, int x, int y, int itemnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            ItemNum = itemnum;
         }
     }
 
@@ -458,7 +519,8 @@ namespace Editor.Classes
         Blocked,
         NpcSpawn,
         SpawnPool,
-        NpcAvoid
+        NpcAvoid,
+        MapItem
     }
 
     public enum TileLayers

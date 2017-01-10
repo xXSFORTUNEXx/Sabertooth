@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SFML.Graphics;
+using SFML.System;
+using SFML.Window;
 
 namespace Client.Classes
 {
@@ -18,15 +21,14 @@ namespace Client.Classes
         public int HealthRestore { get; set; }
         public int HungerRestore { get; set; }
         public int HydrateRestore { get; set; }
-
         public int Strength { get; set; }
         public int Agility { get; set; }
         public int Endurance { get; set; }
         public int Stamina { get; set; }
-
         public int Clip { get; set; }
         public int maxClip { get; set; }
         public int ammoType { get; set; }
+        public int Value { get; set; }
 
         public Item() { }
 

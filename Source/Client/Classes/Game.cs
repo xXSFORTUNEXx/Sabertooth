@@ -25,7 +25,8 @@ namespace Client.Classes
         Npc[] c_Npc = new Npc[10]; 
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10]; 
-        Texture[] c_Sprite = new Texture[204]; 
+        Texture[] c_Sprite = new Texture[204];
+        Texture[] c_ItemSprite = new Texture[4];
         Map c_Map = new Map();
         View c_View = new View(); 
         RenderText c_Text = new RenderText();
@@ -37,6 +38,7 @@ namespace Client.Classes
         static int discoverTick;    
         static int walkTick;
         static int attackTick;
+        static int pickupTick;
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
@@ -71,6 +73,10 @@ namespace Client.Classes
             for (int i = 0; i < 204; i++)   
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
+            for (int i =0; i < 4; i++)
+            {
+                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
             }
 
             SetupPlayerArray(); 
@@ -388,6 +394,20 @@ namespace Client.Classes
             }
         }
 
+        void DrawMapItems()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                if (c_Map.mapItem[i].IsSpawned)
+                {
+                    if (c_Map.mapItem[i].Sprite > 0)
+                    {
+                        c_Map.mapItem[i].DrawItem(c_Window, c_ItemSprite[c_Map.mapItem[i].Sprite - 1]);
+                    }
+                }
+            }
+        }
+
         void DrawProjectiles(NetClient c_Client)
         {
             for (int i = 0; i < 200; i++)
@@ -446,6 +466,7 @@ namespace Client.Classes
             if (c_Map.Name != null)
             {
                 DrawLowLevelTiles();
+                DrawMapItems();
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
@@ -463,6 +484,12 @@ namespace Client.Classes
                 {
                     c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
+                }
+
+                if (TickCount - pickupTick > 100)
+                {
+                    c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    pickupTick = TickCount;
                 }
             }
             c_Window.SetView(c_Window.DefaultView);
