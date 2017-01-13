@@ -479,13 +479,12 @@ namespace Client.Classes
                     ProcessMovement();
                     walkTick = TickCount;
                 }
-
                 if (TickCount - attackTick > 25)
                 {
                     c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
                 }
-
                 if (TickCount - pickupTick > 100)
                 {
                     c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);

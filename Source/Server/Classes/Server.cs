@@ -54,13 +54,14 @@ namespace Server.Classes
 
             Thread s_Command = new Thread(CommandWindow);
             s_Command.Start();
+
             isRunning = true;
             while (isRunning)
             {
                 handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
                 SavePlayers();
                 CheckNpcSpawn(s_Server);
-                CheckItemSpawn(s_Server);
+                //CheckItemSpawn(s_Server);
                 CheckHealthRegen(s_Server);
                 CheckVitalLoss(s_Server);
                 CheckNpcAi(s_Server);
@@ -376,45 +377,48 @@ namespace Server.Classes
                             {                                
                                 if (s_Map[i].Ground[x, y].SpawnNum > 0)
                                 {
-                                    int slot = FindOpenMapItemSlot(s_Map[i]);
-                                    if (slot < 20)
+                                    if (!s_Map[i].Ground[x, y].NeedsSpawned)
                                     {
-                                        if (!s_Map[i].mapItem[slot].IsSpawned && !s_Map[i].Ground[x, y].NeedsSpawned)
+                                        int slot = FindOpenMapItemSlot(s_Map[i]);
+                                        if (slot < 20)
                                         {
-                                            int itemNum = s_Map[i].Ground[x, y].SpawnNum - 1;
-                                            s_Map[i].mapItem[slot].ItemNum = itemNum + 1;
-                                            s_Map[i].mapItem[slot].Name = s_Item[itemNum].Name;
-                                            s_Map[i].mapItem[slot].X = x;
-                                            s_Map[i].mapItem[slot].Y = y;
-                                            s_Map[i].mapItem[slot].Sprite = s_Item[itemNum].Sprite;
-                                            s_Map[i].mapItem[slot].Damage = s_Item[itemNum].Damage;
-                                            s_Map[i].mapItem[slot].Armor = s_Item[itemNum].Armor;
-                                            s_Map[i].mapItem[slot].Type = s_Item[itemNum].Type;
-                                            s_Map[i].mapItem[slot].AttackSpeed = s_Item[itemNum].AttackSpeed;
-                                            s_Map[i].mapItem[slot].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
-                                            s_Map[i].mapItem[slot].HealthRestore = s_Item[itemNum].HealthRestore;
-                                            s_Map[i].mapItem[slot].HungerRestore = s_Item[itemNum].HungerRestore;
-                                            s_Map[i].mapItem[slot].HydrateRestore = s_Item[itemNum].HydrateRestore;
-                                            s_Map[i].mapItem[slot].Strength = s_Item[itemNum].Strength;
-                                            s_Map[i].mapItem[slot].Agility = s_Item[itemNum].Agility;
-                                            s_Map[i].mapItem[slot].Endurance = s_Item[itemNum].Endurance;
-                                            s_Map[i].mapItem[slot].Stamina = s_Item[itemNum].Stamina;
-                                            s_Map[i].mapItem[slot].Clip = s_Item[itemNum].Clip;
-                                            s_Map[i].mapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
-                                            s_Map[i].mapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
-                                            s_Map[i].mapItem[slot].Value = s_Item[itemNum].Value;
-                                            s_Map[i].mapItem[slot].IsSpawned = true;
-                                            s_Map[i].Ground[x, y].NeedsSpawned = true;
-
-                                            for (int p = 0; p < 5; p++)
+                                            if (!s_Map[i].mapItem[slot].IsSpawned)
                                             {
-                                                if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                int itemNum = s_Map[i].Ground[x, y].SpawnNum - 1;
+                                                s_Map[i].mapItem[slot].ItemNum = itemNum + 1;
+                                                s_Map[i].mapItem[slot].Name = s_Item[itemNum].Name;
+                                                s_Map[i].mapItem[slot].X = x;
+                                                s_Map[i].mapItem[slot].Y = y;
+                                                s_Map[i].mapItem[slot].Sprite = s_Item[itemNum].Sprite;
+                                                s_Map[i].mapItem[slot].Damage = s_Item[itemNum].Damage;
+                                                s_Map[i].mapItem[slot].Armor = s_Item[itemNum].Armor;
+                                                s_Map[i].mapItem[slot].Type = s_Item[itemNum].Type;
+                                                s_Map[i].mapItem[slot].AttackSpeed = s_Item[itemNum].AttackSpeed;
+                                                s_Map[i].mapItem[slot].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
+                                                s_Map[i].mapItem[slot].HealthRestore = s_Item[itemNum].HealthRestore;
+                                                s_Map[i].mapItem[slot].HungerRestore = s_Item[itemNum].HungerRestore;
+                                                s_Map[i].mapItem[slot].HydrateRestore = s_Item[itemNum].HydrateRestore;
+                                                s_Map[i].mapItem[slot].Strength = s_Item[itemNum].Strength;
+                                                s_Map[i].mapItem[slot].Agility = s_Item[itemNum].Agility;
+                                                s_Map[i].mapItem[slot].Endurance = s_Item[itemNum].Endurance;
+                                                s_Map[i].mapItem[slot].Stamina = s_Item[itemNum].Stamina;
+                                                s_Map[i].mapItem[slot].Clip = s_Item[itemNum].Clip;
+                                                s_Map[i].mapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
+                                                s_Map[i].mapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
+                                                s_Map[i].mapItem[slot].Value = s_Item[itemNum].Value;
+                                                s_Map[i].mapItem[slot].IsSpawned = true;
+                                                s_Map[i].Ground[x, y].NeedsSpawned = true;
+
+                                                for (int p = 0; p < 5; p++)
                                                 {
-                                                    handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], slot);
+                                                    if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                    {
+                                                        handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], slot);
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
+                                    }                                    
                                 }
                             }
                         }
@@ -433,82 +437,6 @@ namespace Server.Classes
                 }
             }
             return 20;
-        }
-
-        void CheckItemSpawn2(NetServer s_Server)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (s_Map[i] != null && s_Map[i].Name != null)
-                {
-                    for (int x = 0; x < 50; x++)
-                    {
-                        for (int y = 0; y < 50; y++)
-                        {
-                            if (s_Map[i].Ground[x, y].Type == (int)TileType.MapItem)
-                            {
-                                if (s_Map[i].Ground[x, y].SpawnNum > 0)
-                                {
-                                    for (int c = 0; c < 20; c++)
-                                    {
-                                        if (s_Map[i].Ground[x, y].NeedsSpawned && TickCount - s_Map[i].mapItem[c].SpawnTick > 30000)
-                                        {
-                                            if (s_Map[i].mapItem[c].Name != "None")
-                                            {
-                                                s_Map[i].Ground[x, y].NeedsSpawned = false;
-                                                s_Map[i].mapItem[c].IsSpawned = true;
-
-                                                for (int p = 0; p < 5; p++)
-                                                {
-                                                    if (s_Player[p].Connection != null && i == s_Player[p].Map)
-                                                    {
-                                                        handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], c);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (!s_Map[i].mapItem[c].IsSpawned && !s_Map[i].Ground[x, y].NeedsSpawned)
-                                        {
-                                            int itemNum = s_Map[i].Ground[x, y].SpawnNum - 1;
-                                            s_Map[i].mapItem[c].ItemNum = itemNum + 1;
-                                            s_Map[i].mapItem[c].Name = s_Item[itemNum].Name;
-                                            s_Map[i].mapItem[c].X = x;
-                                            s_Map[i].mapItem[c].Y = y;
-                                            s_Map[i].mapItem[c].Sprite = s_Item[itemNum].Sprite;
-                                            s_Map[i].mapItem[c].Damage = s_Item[itemNum].Damage;
-                                            s_Map[i].mapItem[c].Armor = s_Item[itemNum].Armor;
-                                            s_Map[i].mapItem[c].Type = s_Item[itemNum].Type;
-                                            s_Map[i].mapItem[c].AttackSpeed = s_Item[itemNum].AttackSpeed;
-                                            s_Map[i].mapItem[c].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
-                                            s_Map[i].mapItem[c].HealthRestore = s_Item[itemNum].HealthRestore;
-                                            s_Map[i].mapItem[c].HungerRestore = s_Item[itemNum].HungerRestore;
-                                            s_Map[i].mapItem[c].HydrateRestore = s_Item[itemNum].HydrateRestore;
-                                            s_Map[i].mapItem[c].Strength = s_Item[itemNum].Strength;
-                                            s_Map[i].mapItem[c].Agility = s_Item[itemNum].Agility;
-                                            s_Map[i].mapItem[c].Endurance = s_Item[itemNum].Endurance;
-                                            s_Map[i].mapItem[c].Stamina = s_Item[itemNum].Stamina;
-                                            s_Map[i].mapItem[c].Clip = s_Item[itemNum].Clip;
-                                            s_Map[i].mapItem[c].MaxClip = s_Item[itemNum].MaxClip;
-                                            s_Map[i].mapItem[c].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
-                                            s_Map[i].mapItem[c].Value = s_Item[itemNum].Value;
-                                            s_Map[i].mapItem[c].IsSpawned = true;
-                                            s_Map[i].Ground[x, y].NeedsSpawned = true;
-
-                                            for (int p = 0; p < 5; p++)
-                                            {
-                                                if (s_Player[p].Connection != null && i == s_Player[p].Map)
-                                                {
-                                                    handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], c);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         void CheckNpcSpawn(NetServer s_Server)

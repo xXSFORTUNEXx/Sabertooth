@@ -299,7 +299,7 @@ namespace Client.Classes
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(Owner);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 13);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);
             c_Map.mapProj[slot] = null;
         }
 
@@ -311,7 +311,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(Owner);
             outMSG.WriteVariableInt32(spawntype);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 9);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
             c_Map.mapProj[slot] = null;
         }
     }

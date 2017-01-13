@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic;
+﻿   using Microsoft.VisualBasic;
 using System;
 using System.IO;
 using static Microsoft.VisualBasic.Interaction;
@@ -37,20 +37,31 @@ namespace Server.Classes
             return 200;
         }
 
-        public void ClearProjSlot(NetServer s_Server, Map[] s_Map, int mapIndex, int slot)
+        public void ClearProjSlot(NetServer s_Server, Map[] s_Map, Player[] s_Player, int mapIndex, int slot)
         {
             if (mapProj[slot] != null)
             {
                 mapProj[slot] = null;
-                NetOutgoingMessage outMSG = s_Server.CreateMessage();
-                outMSG.Write((byte)PacketTypes.ClearProj);
-                outMSG.Write(s_Map[mapIndex].Name);
-                outMSG.WriteVariableInt32(slot);                
-                s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+                for (int i = 0; i < 5; i++)
+                {
+                    if (s_Player[i].Connection != null && s_Player[i].Map == mapIndex)
+                    {
+                        SendClearProjectileToAll(s_Server, s_Player[i].Connection, s_Map, mapIndex, slot);
+                    }
+                }
             }
         }
 
-        public void CreateProjectile(NetServer s_Server, Player[] s_Player, int playerIndex)
+        void SendClearProjectileToAll(NetServer s_Server, NetConnection pConn, Map[] s_Map, int mapIndex, int slot)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ClearProj);
+            outMSG.Write(s_Map[mapIndex].Name);
+            outMSG.WriteVariableInt32(slot);
+            s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void CreateProjectile(NetServer s_Server, Player[] s_Player, int mapIndex, int playerIndex)
         {
             int slot = FindOpenProjSlot();
 
@@ -69,10 +80,16 @@ namespace Server.Classes
             //im setting this locally, dont really think the client needs it
             mapProj[slot].Damage = s_Player[playerIndex].mainWeapon.Damage;
 
-            SendNewProjectileToAll(s_Server, slot);
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i].Connection != null && s_Player[i].Map == mapIndex)
+                {
+                    SendNewProjectileToAll(s_Server, s_Player[i].Connection, mapIndex, slot);
+                }
+            }
         }
 
-        void SendNewProjectileToAll(NetServer s_Server, int slot)
+        void SendNewProjectileToAll(NetServer s_Server, NetConnection pConn, int mapIndex, int slot)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
@@ -87,7 +104,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(mapProj[slot].Sprite);
             outMSG.WriteVariableInt32(mapProj[slot].Type);
 
-            s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+           s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void GenerateMap(int mapNum)
@@ -351,8 +368,9 @@ namespace Server.Classes
         public int X { get; set; }
         public int Y { get; set; }
 
-        public int SpawnTick;
         public bool IsSpawned;
+        public int SpawnTick;
+        public bool IsPickedUp;
 
         public MapItem() { }
 

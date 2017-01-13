@@ -240,12 +240,10 @@ namespace Server.Classes
                 {
                     if ((X + 12) == s_Map.mapItem[c].X && (Y + 9) == s_Map.mapItem[c].Y)
                     {
-                        HandleData hData = new HandleData();
                         int TileX = s_Map.mapItem[c].X;
                         int TileY = s_Map.mapItem[c].Y;
-                        s_Map.mapItem[c].IsSpawned = false;
-                        //s_Map.Ground[TileX, TileY].NeedsSpawned = false;
-                        s_Map.mapItem[c].SpawnTick = TickCount;
+                        s_Map.mapItem[c].IsSpawned = true;
+                        s_Map.Ground[TileX, TileY].NeedsSpawned = true;
                         PickUpItem(s_Server, s_Player, s_Map.mapItem[c], s_Map, index, c);
                         break;
                     }

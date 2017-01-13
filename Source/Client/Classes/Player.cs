@@ -53,7 +53,6 @@ namespace Client.Classes
         public int tempaimDir;
         public int tempStep;
         public int Step;
-        public int DirectionTick;
         public int PickupTick;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
@@ -224,39 +223,37 @@ namespace Client.Classes
             }
         }
                 
-        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
 
-            if (TickCount - DirectionTick > 200)
+            if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
-                if (Keyboard.IsKeyPressed(Keyboard.Key.I))
-                {
-                    AimDirection = (int)Directions.Up;
-                    SendUpdateDirection(c_Client, index);
-                    DirectionTick = TickCount;
-                }
-                else if (Keyboard.IsKeyPressed(Keyboard.Key.K))
-                {
-                    AimDirection = (int)Directions.Down;
-                    SendUpdateDirection(c_Client, index);
-                    DirectionTick = TickCount;
-                }
-                else if (Keyboard.IsKeyPressed(Keyboard.Key.J))
-                {
-                    AimDirection = (int)Directions.Left;
-                    SendUpdateDirection(c_Client, index);
-                    DirectionTick = TickCount;
-                }
-                else if (Keyboard.IsKeyPressed(Keyboard.Key.L))
-                {
-                    AimDirection = (int)Directions.Right;
-                    SendUpdateDirection(c_Client, index);
-                    DirectionTick = TickCount;
-                }
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection(c_Client, index);
             }
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.K))
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection(c_Client, index);
+            }
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.J))
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection(c_Client, index);
+            }
+            else if (Keyboard.IsKeyPressed(Keyboard.Key.L))
+            {
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection(c_Client, index);
+            }
+        }
 
+        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        {
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
 
@@ -381,7 +378,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(AssaultAmmo);
             outMSG.WriteVariableInt32(RocketAmmo);
             outMSG.WriteVariableInt32(GrenadeAmmo);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 10);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendCreateBullet(NetClient c_Client, int index)
@@ -391,30 +388,30 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 11);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendMovementData(NetClient c_Client, int index)   //packet for sending data to the server
+        void SendMovementData(NetClient c_Client, int index)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to write out data going out to the server
-            outMSG.Write((byte)PacketTypes.MoveData);   //packet header name
-            outMSG.WriteVariableInt32(index);    //current user's index
-            outMSG.WriteVariableInt32(X);    //write the x of the current index
-            outMSG.WriteVariableInt32(Y);    //write the y of the current index
-            outMSG.WriteVariableInt32(Direction);    //write the direction of the current index
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.MoveData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(X);
+            outMSG.WriteVariableInt32(Y);
+            outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
-            outMSG.WriteVariableInt32(Step); //write the step of the current index
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);   //send the packet to the server in reliable order so its not jumbled when the server gets it
+            outMSG.WriteVariableInt32(Step);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendUpdateDirection(NetClient c_Client, int index)    //packet for updateing the direction
+        void SendUpdateDirection(NetClient c_Client, int index)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();  //create the message we will use to wirte out data going to the server
-            outMSG.Write((byte)PacketTypes.UpdateDirection);    //packet header name
-            outMSG.WriteVariableInt32(index);    //current clients index
-            outMSG.WriteVariableInt32(Direction);    //current index direction
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UpdateDirection);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);   //send the packet in reliable order
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendPickupItem(NetClient c_Client, int index)
@@ -426,17 +423,15 @@ namespace Client.Classes
         }
     }
 
-    public enum Directions  //enumeration for directions
+    public enum Directions
     {
-        Down,   //down is 0
-        Left,   //left is 1
-        Right,  //right is 2
-        Up,  //up is 3
+        Down,
+        Left,
+        Right,
+        Up,
         DownLeft,
         DownRight,
         UpLeft,
         UpRight
     }
-
-    //Channels
 }

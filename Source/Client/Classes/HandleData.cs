@@ -201,6 +201,7 @@ namespace Client.Classes
             if (mapName != c_Map.Name) { return; }
 
             int slot = incMSG.ReadVariableInt32();
+            if (c_Map.mapProj[slot] != null) { return; }
             c_Map.mapProj[slot] = null;
         }
 
@@ -595,10 +596,6 @@ namespace Client.Classes
             c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
             c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
 
             Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
         }

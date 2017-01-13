@@ -107,7 +107,7 @@ namespace Server.Classes
                 if (s_Map[c_Map].m_MapNpc[npc].IsSpawned == false) { return; }
                 if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
-                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
+                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
                 s_Map[c_Map].m_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
                 for (int p = 0; p < 5; p++)
@@ -124,7 +124,7 @@ namespace Server.Classes
                 if (s_Map[c_Map].r_MapNpc[npc].IsSpawned == false) { return; }
                 if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
-                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);
+                s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
                 s_Map[c_Map].r_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
                 for (int p = 0; p < 5; p++)
@@ -155,7 +155,7 @@ namespace Server.Classes
             int c_Map = s_Player[owner].Map;
 
             if (s_Map[c_Map].mapProj[slot] == null) { return; }
-            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, c_Map, slot);            
+            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);            
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -177,11 +177,11 @@ namespace Server.Classes
 
             s_Player[index].Direction = direction;
             s_Player[index].AimDirection = aimdirection;
-            s_Map[cMap].CreateProjectile(s_Server, s_Player, index);
+            s_Map[cMap].CreateProjectile(s_Server, s_Player, cMap, index);
 
             for (int i = 0; i < 5; i++)
             {
-                if (s_Player[i].Connection != null && s_Player[i].Map == s_Player[index].Map)
+                if (s_Player[i].Connection != null && s_Player[i].Map == cMap)
                 {
                     SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction, aimdirection);
                 }
@@ -404,7 +404,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(direction);
             outMSG.WriteVariableInt32(aimdirection);
-            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 2);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
@@ -418,7 +418,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(aimdirection);
             outMSG.WriteVariableInt32(step);
 
-            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableSequenced, 1);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendUpdateHealthData(NetServer s_Server, int index, int health)
@@ -517,8 +517,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Stamina);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ItemAmmoType);
 
-            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 3);
-            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 3);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendUpdatePlayerStats(NetServer s_Server, Player[] s_Player, int index)
@@ -543,13 +542,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
             outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
             outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
-            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Clip);
-            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.MaxClip);
-            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Clip);
-            outMSG.WriteVariableInt32(s_Player[index].offWeapon.MaxClip);
 
-            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 4);
-            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 4);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendPlayerInv(NetServer s_Server, Player[] s_Player, int index)
@@ -575,8 +569,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].MaxClip);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ItemAmmoType);
             }
-            //s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableSequenced, 5);
-            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableSequenced, 5);
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
