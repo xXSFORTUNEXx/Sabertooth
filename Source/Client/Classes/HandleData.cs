@@ -163,6 +163,7 @@ namespace Client.Classes
             c_Client.Recycle(incMSG);
         }
 
+        #region Handle Incoming Data
         void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
         {
             c_Canvas.Dispose();
@@ -821,6 +822,7 @@ namespace Client.Classes
             //Loading is complete after the map
             LoadMainGUI(c_GUI, c_Canvas);
         }
+        #endregion
 
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
@@ -884,6 +886,8 @@ namespace Client.Classes
         MapItemData,
         ItemPickup,
         RequestInv,
-        UnequipItem
+        UnequipItem,
+        EquipItem,
+        DropItem
     }
 }

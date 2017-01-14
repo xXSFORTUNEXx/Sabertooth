@@ -367,6 +367,7 @@ namespace Server.Classes
         public int ItemNum { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int ExpireTick;
 
         public bool IsSpawned;
 

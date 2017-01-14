@@ -6,16 +6,19 @@ using System.Threading;
 using System;
 using SFML.Graphics;
 using SFML.System;
+using static System.Convert;
 
 namespace Client.Classes
 {
     class GUI
     {
+        #region Main Classes
         static NetClient c_Client;
         Canvas c_Canvas;
         Gwen.Font c_Font;
         Player[] c_Player;
         ClientConfig c_Config;
+        #endregion
 
         #region DebugWindow
         public WindowControl d_Window;
@@ -62,12 +65,14 @@ namespace Client.Classes
         Button canlogButton;
         #endregion
 
+        #region Chat and Menu Window including Tab Diag
         public WindowControl chatWindow;
         public ListBox outputChat;
         public TextBox inputChat;
 
         public WindowControl menuWindow;
         TabControl menuTabs;
+        #endregion
 
         #region CharTab
         public TabButton charTab;
@@ -123,8 +128,10 @@ namespace Client.Classes
 
         TabButton missionTab;
 
+        #region OptionsTab
         TabButton optionsTab;
         Button optLog;
+        #endregion
 
         #region HUD
         RectangleShape clipBar = new RectangleShape();
@@ -153,6 +160,7 @@ namespace Client.Classes
             this.c_Config = c_Config;
         }
 
+        #region Update Voids
         public void UpdateHUD(Player c_Player, RenderWindow c_Window)
         {
             barLength = ((float)c_Player.Health / c_Player.MaxHealth) * 150;
@@ -186,244 +194,6 @@ namespace Client.Classes
             hudHealth.DrawText(c_Window, hudH, hudHPos, 16, SFML.Graphics.Color.White);
             hudExp.DrawText(c_Window, hudE, hudEPos, 16, SFML.Graphics.Color.White);
             hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
-        }
-
-        public void CreateMenuWindow(Base parent)
-        {
-            menuWindow = new WindowControl(parent.GetCanvas());
-            menuWindow.SetSize(350, 300);
-            menuWindow.Position(Gwen.Pos.Bottom);
-            menuWindow.Position(Gwen.Pos.Right);
-            menuWindow.DisableResizing();
-            menuWindow.Title = "Game Menu";
-            menuWindow.IsClosable = false;
-
-            menuTabs = new TabControl(menuWindow);
-            menuTabs.SetSize(330, 260);
-            menuTabs.SetPosition(5, 5);
-
-            #region Stats Window
-            statWindow = new WindowControl(parent.GetCanvas());
-            statWindow.SetPosition(200, 10);
-            statWindow.SetSize(155, 180);
-            statWindow.IsClosable = false;
-            statWindow.Title = "Item Name";
-            statWindow.DisableResizing();            
-            statWindow.Hide();
-
-            statPic = new ImagePanel(statWindow);
-            statPic.SetPosition(105, 5);
-            statPic.SetSize(32, 32);
-
-            packName = new Label(statWindow);
-            packName.SetPosition(3, 5);
-            packName.Text = "Name: ?";
-            packName.BringToFront();
-
-            packDamage = new Label(statWindow);
-            packDamage.SetPosition(3, 15);
-            packDamage.Text = "Damage: ?";
-
-            packArmor = new Label(statWindow);
-            packArmor.SetPosition(3, 25);
-            packArmor.Text = "Armor: ?";
-
-            packHeRestore = new Label(statWindow);
-            packHeRestore.SetPosition(3, 35);
-            packHeRestore.Text = "Health Restore: ?";
-
-            packHuRestore = new Label(statWindow);
-            packHuRestore.SetPosition(3, 45);
-            packHuRestore.Text = "Hunger Restore: ?";
-
-            packHyRestore = new Label(statWindow);
-            packHyRestore.SetPosition(3, 55);
-            packHyRestore.Text = "Hydration Restore: ?";
-
-            packStr = new Label(statWindow);
-            packStr.SetPosition(3, 65);
-            packStr.Text = "Strength: ?";
-
-            packAgi = new Label(statWindow);
-            packAgi.SetPosition(3, 75);
-            packAgi.Text = "Agility: ?";
-
-            packEdu = new Label(statWindow);
-            packEdu.SetPosition(3, 85);
-            packEdu.Text = "Endurance: ?";
-
-            packSta = new Label(statWindow);
-            packSta.SetPosition(3, 95);
-            packSta.Text = "Stamina: ?";
-
-            packClip = new Label(statWindow);
-            packClip.SetPosition(3, 105);
-            packClip.Text = "Clip: ?";
-
-            packMClip = new Label(statWindow);
-            packMClip.SetPosition(3, 115);
-            packMClip.Text = "Max Clip: ?";
-
-            packASpeed = new Label(statWindow);
-            packASpeed.SetPosition(3, 125);
-            packASpeed.Text = "Attack Speed: ?";
-
-            packRSpeed = new Label(statWindow);
-            packRSpeed.SetPosition(3, 135);
-            packRSpeed.Text = "Reload Speed: ?";
-            #endregion
-
-            charTab = menuTabs.AddPage("Character");
-
-            #region Character
-            charName = new Label(charTab.Page);
-            charName.SetPosition(10, 5);
-            charName.Text = "Name: ?";
-
-            charLevel = new Label(charTab.Page);
-            charLevel.SetPosition(10, 20);
-            charLevel.Text = "Level: ?";
-
-            charExp = new Label(charTab.Page);
-            charExp.SetPosition(10, 30);
-            charExp.Text = "Experience: ?";
-
-            charMoney = new Label(charTab.Page);
-            charMoney.SetPosition(10, 40);
-            charMoney.Text = "Money: ?";
-
-            charPoints = new Label(charTab.Page);
-            charPoints.SetPosition(10, 50);
-            charPoints.Text = "Points: ?";
-
-            charHealth = new Label(charTab.Page);
-            charHealth.SetPosition(10, 65);
-            charHealth.Text = "Health: ?";
-
-            charHunger = new Label(charTab.Page);
-            charHunger.SetPosition(10, 75);
-            charHunger.Text = "Hunger: ?";
-
-            charHydration = new Label(charTab.Page);
-            charHydration.SetPosition(10, 85);
-            charHydration.Text = "Hydration: ?";
-
-            charArmor = new Label(charTab.Page);
-            charArmor.SetPosition(10, 100);
-            charArmor.Text = "Armor: ?";
-
-            charStr = new Label(charTab.Page);
-            charStr.SetPosition(10, 110);
-            charStr.Text = "Strength: ?";
-
-            charAgi = new Label(charTab.Page);
-            charAgi.SetPosition(10, 120);
-            charAgi.Text = "Agility: ?";
-
-            charEnd = new Label(charTab.Page);
-            charEnd.SetPosition(10, 130);
-            charEnd.Text = "Endurance: ?";
-
-            charSta = new Label(charTab.Page);
-            charSta.SetPosition(10, 140);
-            charSta.Text = "Stamina: ?";
-            #endregion
-
-            packTab = menuTabs.AddPage("Backpack");
-
-            #region Backpack
-            int n = 0;
-            int c = 0;
-            for (int i = 0; i < 25; i++)
-            {
-                invPic[i] = new ImagePanel(packTab.Page);
-                invPic[i].SetSize(32, 32);
-                invPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));    
-                c += 1;
-                if (c > 4) { c = 0; }
-                if (i == 4 || i == 9 || i == 14 || i == 19) { n += 1; }
-            }
-            #endregion
-
-            equipTab = menuTabs.AddPage("Equipment");
-
-            #region Equipment
-            equipMain = new ImagePanel(equipTab.Page);
-            equipMain.SetPosition(20, 5);
-            equipMain.SetSize(32, 32);
-            equipMain.DoubleClicked += EquipMain_DoubleClicked;
-
-            equipOff = new ImagePanel(equipTab.Page);
-            equipOff.SetPosition(65, 5);
-            equipOff.SetSize(32, 32);
-            equipOff.DoubleClicked += EquipOff_DoubleClicked;
-
-            equipAmmo = new GroupBox(equipTab.Page);
-            equipAmmo.SetPosition(190, 10);
-            equipAmmo.SetSize(115, 75);
-            equipAmmo.Text = "Ammo Supply:";
-
-            pistolAmmo = new Label(equipAmmo);
-            pistolAmmo.SetPosition(3, 5);
-            pistolAmmo.Text = "Pistol Ammo: ?";
-
-            assaultAmmo = new Label(equipAmmo);
-            assaultAmmo.SetPosition(3, 15);
-            assaultAmmo.Text = "Assault Ammo: ?";
-
-            rocketAmmo = new Label(equipAmmo);
-            rocketAmmo.SetPosition(3, 25);
-            rocketAmmo.Text = "Rocket Ammo: ?";
-
-            grenadeAmmo = new Label(equipAmmo);
-            grenadeAmmo.SetPosition(3, 35);
-            grenadeAmmo.Text = "Grenade Ammo: ?";
-            #endregion
-
-            skillsTab = menuTabs.AddPage("Skills");
-
-            missionTab = menuTabs.AddPage("Missions");
-
-            optionsTab = menuTabs.AddPage("Options");
-
-            #region Options
-            optLog = new Button(optionsTab.Page);
-            optLog.SetPosition(105, 100);
-            optLog.Text = "Log Out";
-            optLog.Clicked += CheckLogOutSubmit;
-            #endregion
-        }
-
-        private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
-        {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
-
-            if (c_Player[index].offWeapon.Name != "None")
-            {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
-                outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
-                outMSG.WriteVariableInt32((int)EquipSlots.OffWeapon);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-            }
-            equipTab.Focus();
-        }
-
-        private void EquipMain_DoubleClicked(Base sender, ClickedEventArgs arguments)
-        {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
-
-            if (c_Player[index].mainWeapon.Name != "None")
-            {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
-                outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
-                outMSG.WriteVariableInt32((int)EquipSlots.MainWeapon);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-            }
-            equipTab.Focus();
         }
 
         public void UpdateMenuWindow(Player c_Player)
@@ -485,10 +255,20 @@ namespace Client.Classes
                     if (c_Player.mainWeapon.Name != "None")
                     {
                         equipMain.ImageName = "Resources/Items/" + c_Player.mainWeapon.Sprite + ".png";
+                        equipMain.Show();
+                    }
+                    else
+                    {
+                        equipMain.Hide();
                     }
                     if (c_Player.offWeapon.Name != "None")
                     {
                         equipOff.ImageName = "Resources/Items/" + c_Player.offWeapon.Sprite + ".png";
+                        equipOff.Show();
+                    }
+                    else
+                    {
+                        equipOff.Hide();
                     }
                     if (equipMain.IsHovered)
                     {
@@ -511,6 +291,26 @@ namespace Client.Classes
                 }
             }
             if (statWindow != null && !statWindow.IsOnTop) { statWindow.Hide(); }
+        }
+
+        public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
+        {
+            if (d_Window != null && c_Player[drawIndex] != null)
+            {
+                d_Window.Title = "Debug Window - Admin";
+                d_FPS.Text = "FPS: " + fps;
+                d_Name.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
+                d_X.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
+                d_Y.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
+                d_Map.Text = "Map: " + c_Player[drawIndex].Map;
+                d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
+                d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
+                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
+                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
+                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.##") + " ms";
+                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
+                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+            }
         }
 
         void SetStatWindow(int x, int y, Item statItem)
@@ -648,54 +448,15 @@ namespace Client.Classes
             statWindow.SetPosition(200, 10);
             statWindow.Hide();
         }
+        #endregion
 
+        #region Menu Events
         private void CheckLogOutSubmit(Base control, ClickedEventArgs e)
         {
             c_Canvas.Dispose();
             c_Client.Shutdown("Shutting Down");
             Thread.Sleep(500);
             Exit(0);
-        }
-
-        public void CreateLoadingWindow(Base parent)
-        {
-            loadWindow = new WindowControl(parent.GetCanvas());
-            loadWindow.SetSize(250, 75);
-            loadWindow.Position(Gwen.Pos.Center);
-            loadWindow.DisableResizing();
-            loadWindow.IsClosable = false;
-
-            loadLabel = new Label(loadWindow);
-            loadLabel.SetPosition(70, 15);
-            loadLabel.Text = "Loading...Please Wait...";
-        }
-
-        public void CreateMainWindow(Base parent)
-        {
-            mainWindow = new WindowControl(parent.GetCanvas());
-            mainWindow.Title = "Main Menu";
-            mainWindow.SetSize(200, 200);
-            mainWindow.Position(Gwen.Pos.Center);
-            mainWindow.DisableResizing();
-            mainWindow.IsClosable = false;
-
-            mainbuttonReg = new Button(mainWindow);
-            mainbuttonReg.SetSize(100, 25);
-            mainbuttonReg.SetPosition(45, 45);
-            mainbuttonReg.Text = "Register";
-            mainbuttonReg.Clicked += CheckMainWindowRegister;
-
-            mainbuttonLog = new Button(mainWindow);
-            mainbuttonLog.SetSize(100, 25);
-            mainbuttonLog.SetPosition(45, 80);
-            mainbuttonLog.Text = "Login";
-            mainbuttonLog.Clicked += CheckMainWindowLogin;
-
-            mainbuttonExit = new Button(mainWindow);
-            mainbuttonExit.SetSize(100, 25);
-            mainbuttonExit.SetPosition(45, 115);
-            mainbuttonExit.Text = "Exit";
-            mainbuttonExit.Clicked += CheckMainWindowExit;
         }
 
         private void CheckMainWindowLogin(Base control, ClickedEventArgs e)
@@ -715,55 +476,6 @@ namespace Client.Classes
             c_Client.Disconnect("Shutting Down");
             Thread.Sleep(500);
             Exit(0);
-        }
-
-        public void CreateLoginWindow(Base parent, ClientConfig c_Config)
-        {
-            logWindow = new WindowControl(parent.GetCanvas());
-            logWindow.Title = "Login";
-            logWindow.SetSize(200, 200);
-            logWindow.Position(Gwen.Pos.Center);
-            logWindow.IsClosable = false;
-            logWindow.DisableResizing();
-            logWindow.KeyboardInputEnabled = true;
-
-            unlogLabel = new Label(logWindow);
-            unlogLabel.SetPosition(25, 15);
-            unlogLabel.Text = "Username:";
-
-            unlogBox = new TextBox(logWindow);
-            unlogBox.SetPosition(25, 35);
-            unlogBox.SetSize(140, 25);
-            unlogBox.Focus();
-            if (this.c_Config.saveCreds == "1")
-            {
-                unlogBox.Text = c_Config.savedUser;
-            }
-            pwloglabel = new Label(logWindow);
-            pwloglabel.SetPosition(25, 75);
-            pwloglabel.Text = "Password:";
-
-            pwlogBox = new TextBoxPassword(logWindow);
-            pwlogBox.SetPosition(25, 95);
-            pwlogBox.SetSize(140, 25);
-            if (this.c_Config.saveCreds == "1")
-            {
-                pwlogBox.Text = c_Config.savedPass;
-            }
-            //pwlogBox.Focus();
-            pwlogBox.SubmitPressed += CheckLogWindowSubmit;
-
-            logButton = new Button(logWindow);
-            logButton.SetPosition(25, 135);
-            logButton.SetSize(60, 25);
-            logButton.Text = "Login";
-            logButton.Clicked += CheckLogWindowLogin;
-
-            canlogButton = new Button(logWindow);
-            canlogButton.SetPosition(105, 135);
-            canlogButton.SetSize(60, 25);
-            canlogButton.Text = "Cancel";
-            canlogButton.Clicked += CheckLogWindowCancel;
         }
 
         private void CheckLogWindowCancel(Base control, ClickedEventArgs e)
@@ -849,55 +561,6 @@ namespace Client.Classes
             }
         }
 
-        public void CreateRegisterWindow(Base parent)
-        {
-            regWindow = new WindowControl(parent.GetCanvas());
-            regWindow.Title = "Register";
-            regWindow.SetSize(200, 300);
-            regWindow.Position(Gwen.Pos.Center);
-            regWindow.IsClosable = false;
-            regWindow.DisableResizing();
-            regWindow.KeyboardInputEnabled = true;
-
-            unregLabel = new Label(regWindow);
-            unregLabel.SetPosition(25, 15);
-            unregLabel.Text = "Username:";
-
-            unregBox = new TextBox(regWindow);
-            unregBox.SetPosition(25, 35);
-            unregBox.SetSize(140, 25);
-            unregBox.Focus();
-
-            pwregLabel = new Label(regWindow);
-            pwregLabel.SetPosition(25, 75);
-            pwregLabel.Text = "Password:";
-
-            pwregBox = new TextBoxPassword(regWindow);
-            pwregBox.SetPosition(25, 95);
-            pwregBox.SetSize(140, 25);
-
-            repwLabel = new Label(regWindow);
-            repwLabel.SetPosition(25, 135);
-            repwLabel.Text = "Re-type Password:";
-
-            repwBox = new TextBoxPassword(regWindow);
-            repwBox.SetPosition(25, 155);
-            repwBox.SetSize(140, 25);
-            repwBox.SubmitPressed += CheckRegWindowSubmit;
-
-            regButton = new Button(regWindow);
-            regButton.SetPosition(25, 200);
-            regButton.SetSize(60, 25);
-            regButton.Text = "Register";
-            regButton.Clicked += CheckRegWindowRegister;
-
-            canregButton = new Button(regWindow);
-            canregButton.SetPosition(105, 200);
-            canregButton.SetSize(60, 25);
-            canregButton.Text = "Cancel";
-            canregButton.Clicked += CheckRegWindowCancel;
-        }
-
         private void CheckRegWindowCancel(Base control, ClickedEventArgs e)
         {
             Base parent = control.Parent;
@@ -978,6 +641,438 @@ namespace Client.Classes
             }
         }
 
+        private void CheckChatWindowSubmit(Base control, EventArgs e)
+        {
+            if (inputChat.Text != "")
+            {
+                string msg = inputChat.Text;
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.ChatMessage);
+                outMSG.Write(msg);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                inputChat.Text = "";
+            }
+        }
+
+        private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].offWeapon.Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.UnequipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32((int)EquipSlots.OffWeapon);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            equipTab.Focus();
+        }
+
+        private void EquipMain_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].mainWeapon.Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.UnequipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32((int)EquipSlots.MainWeapon);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            equipTab.Focus();
+        }
+
+        private void InvPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel invPicE = (ImagePanel)sender;
+            int itemSlot = ToInt32(invPicE.Name);
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].Backpack[itemSlot].Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.EquipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(itemSlot);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            packTab.Focus();
+        }
+
+        private void InvPic_RightClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel invPicE = (ImagePanel)sender;
+            int itemSlot = ToInt32(invPicE.Name);
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].Backpack[itemSlot].Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.DropItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(itemSlot);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            packTab.Focus(); 
+        }
+        #endregion
+
+        #region Window Creation
+        public void CreateMenuWindow(Base parent)
+        {
+            menuWindow = new WindowControl(parent.GetCanvas());
+            menuWindow.SetSize(350, 300);
+            menuWindow.Position(Gwen.Pos.Bottom);
+            menuWindow.Position(Gwen.Pos.Right);
+            menuWindow.DisableResizing();
+            menuWindow.Title = "Game Menu";
+            menuWindow.IsClosable = false;
+
+            menuTabs = new TabControl(menuWindow);
+            menuTabs.SetSize(330, 260);
+            menuTabs.SetPosition(5, 5);
+
+            #region Stats Window
+            statWindow = new WindowControl(parent.GetCanvas());
+            statWindow.SetPosition(200, 10);
+            statWindow.SetSize(155, 180);
+            statWindow.IsClosable = false;
+            statWindow.Title = "Item Name";
+            statWindow.DisableResizing();
+            statWindow.Hide();
+
+            statPic = new ImagePanel(statWindow);
+            statPic.SetPosition(105, 5);
+            statPic.SetSize(32, 32);
+
+            packName = new Label(statWindow);
+            packName.SetPosition(3, 5);
+            packName.Text = "Name: ?";
+            packName.BringToFront();
+
+            packDamage = new Label(statWindow);
+            packDamage.SetPosition(3, 15);
+            packDamage.Text = "Damage: ?";
+
+            packArmor = new Label(statWindow);
+            packArmor.SetPosition(3, 25);
+            packArmor.Text = "Armor: ?";
+
+            packHeRestore = new Label(statWindow);
+            packHeRestore.SetPosition(3, 35);
+            packHeRestore.Text = "Health Restore: ?";
+
+            packHuRestore = new Label(statWindow);
+            packHuRestore.SetPosition(3, 45);
+            packHuRestore.Text = "Hunger Restore: ?";
+
+            packHyRestore = new Label(statWindow);
+            packHyRestore.SetPosition(3, 55);
+            packHyRestore.Text = "Hydration Restore: ?";
+
+            packStr = new Label(statWindow);
+            packStr.SetPosition(3, 65);
+            packStr.Text = "Strength: ?";
+
+            packAgi = new Label(statWindow);
+            packAgi.SetPosition(3, 75);
+            packAgi.Text = "Agility: ?";
+
+            packEdu = new Label(statWindow);
+            packEdu.SetPosition(3, 85);
+            packEdu.Text = "Endurance: ?";
+
+            packSta = new Label(statWindow);
+            packSta.SetPosition(3, 95);
+            packSta.Text = "Stamina: ?";
+
+            packClip = new Label(statWindow);
+            packClip.SetPosition(3, 105);
+            packClip.Text = "Clip: ?";
+
+            packMClip = new Label(statWindow);
+            packMClip.SetPosition(3, 115);
+            packMClip.Text = "Max Clip: ?";
+
+            packASpeed = new Label(statWindow);
+            packASpeed.SetPosition(3, 125);
+            packASpeed.Text = "Attack Speed: ?";
+
+            packRSpeed = new Label(statWindow);
+            packRSpeed.SetPosition(3, 135);
+            packRSpeed.Text = "Reload Speed: ?";
+            #endregion
+
+            charTab = menuTabs.AddPage("Character");
+
+            #region Character
+            charName = new Label(charTab.Page);
+            charName.SetPosition(10, 5);
+            charName.Text = "Name: ?";
+
+            charLevel = new Label(charTab.Page);
+            charLevel.SetPosition(10, 20);
+            charLevel.Text = "Level: ?";
+
+            charExp = new Label(charTab.Page);
+            charExp.SetPosition(10, 30);
+            charExp.Text = "Experience: ?";
+
+            charMoney = new Label(charTab.Page);
+            charMoney.SetPosition(10, 40);
+            charMoney.Text = "Money: ?";
+
+            charPoints = new Label(charTab.Page);
+            charPoints.SetPosition(10, 50);
+            charPoints.Text = "Points: ?";
+
+            charHealth = new Label(charTab.Page);
+            charHealth.SetPosition(10, 65);
+            charHealth.Text = "Health: ?";
+
+            charHunger = new Label(charTab.Page);
+            charHunger.SetPosition(10, 75);
+            charHunger.Text = "Hunger: ?";
+
+            charHydration = new Label(charTab.Page);
+            charHydration.SetPosition(10, 85);
+            charHydration.Text = "Hydration: ?";
+
+            charArmor = new Label(charTab.Page);
+            charArmor.SetPosition(10, 100);
+            charArmor.Text = "Armor: ?";
+
+            charStr = new Label(charTab.Page);
+            charStr.SetPosition(10, 110);
+            charStr.Text = "Strength: ?";
+
+            charAgi = new Label(charTab.Page);
+            charAgi.SetPosition(10, 120);
+            charAgi.Text = "Agility: ?";
+
+            charEnd = new Label(charTab.Page);
+            charEnd.SetPosition(10, 130);
+            charEnd.Text = "Endurance: ?";
+
+            charSta = new Label(charTab.Page);
+            charSta.SetPosition(10, 140);
+            charSta.Text = "Stamina: ?";
+            #endregion
+
+            packTab = menuTabs.AddPage("Backpack");
+
+            #region Backpack
+            int n = 0;
+            int c = 0;
+            for (int i = 0; i < 25; i++)
+            {
+                invPic[i] = new ImagePanel(packTab.Page);
+                invPic[i].SetSize(32, 32);
+                invPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));
+                invPic[i].Name = i.ToString();
+                invPic[i].DoubleClicked += InvPic_DoubleClicked;
+                invPic[i].RightClicked += InvPic_RightClicked;
+
+                c += 1;
+                if (c > 4) { c = 0; }
+                if (i == 4 || i == 9 || i == 14 || i == 19) { n += 1; }
+            }
+            #endregion
+
+            equipTab = menuTabs.AddPage("Equipment");
+
+            #region Equipment
+            equipMain = new ImagePanel(equipTab.Page);
+            equipMain.SetPosition(20, 5);
+            equipMain.SetSize(32, 32);
+            equipMain.DoubleClicked += EquipMain_DoubleClicked;
+
+            equipOff = new ImagePanel(equipTab.Page);
+            equipOff.SetPosition(65, 5);
+            equipOff.SetSize(32, 32);
+            equipOff.DoubleClicked += EquipOff_DoubleClicked;
+
+            equipAmmo = new GroupBox(equipTab.Page);
+            equipAmmo.SetPosition(190, 10);
+            equipAmmo.SetSize(115, 75);
+            equipAmmo.Text = "Ammo Supply:";
+
+            pistolAmmo = new Label(equipAmmo);
+            pistolAmmo.SetPosition(3, 5);
+            pistolAmmo.Text = "Pistol Ammo: ?";
+
+            assaultAmmo = new Label(equipAmmo);
+            assaultAmmo.SetPosition(3, 15);
+            assaultAmmo.Text = "Assault Ammo: ?";
+
+            rocketAmmo = new Label(equipAmmo);
+            rocketAmmo.SetPosition(3, 25);
+            rocketAmmo.Text = "Rocket Ammo: ?";
+
+            grenadeAmmo = new Label(equipAmmo);
+            grenadeAmmo.SetPosition(3, 35);
+            grenadeAmmo.Text = "Grenade Ammo: ?";
+            #endregion
+
+            skillsTab = menuTabs.AddPage("Skills");
+
+            missionTab = menuTabs.AddPage("Missions");
+
+            optionsTab = menuTabs.AddPage("Options");
+
+            #region Options
+            optLog = new Button(optionsTab.Page);
+            optLog.SetPosition(105, 100);
+            optLog.Text = "Log Out";
+            optLog.Clicked += CheckLogOutSubmit;
+            #endregion
+        }
+
+        public void CreateLoadingWindow(Base parent)
+        {
+            loadWindow = new WindowControl(parent.GetCanvas());
+            loadWindow.SetSize(250, 75);
+            loadWindow.Position(Gwen.Pos.Center);
+            loadWindow.DisableResizing();
+            loadWindow.IsClosable = false;
+
+            loadLabel = new Label(loadWindow);
+            loadLabel.SetPosition(70, 15);
+            loadLabel.Text = "Loading...Please Wait...";
+        }
+
+        public void CreateMainWindow(Base parent)
+        {
+            mainWindow = new WindowControl(parent.GetCanvas());
+            mainWindow.Title = "Main Menu";
+            mainWindow.SetSize(200, 200);
+            mainWindow.Position(Gwen.Pos.Center);
+            mainWindow.DisableResizing();
+            mainWindow.IsClosable = false;
+
+            mainbuttonReg = new Button(mainWindow);
+            mainbuttonReg.SetSize(100, 25);
+            mainbuttonReg.SetPosition(45, 45);
+            mainbuttonReg.Text = "Register";
+            mainbuttonReg.Clicked += CheckMainWindowRegister;
+
+            mainbuttonLog = new Button(mainWindow);
+            mainbuttonLog.SetSize(100, 25);
+            mainbuttonLog.SetPosition(45, 80);
+            mainbuttonLog.Text = "Login";
+            mainbuttonLog.Clicked += CheckMainWindowLogin;
+
+            mainbuttonExit = new Button(mainWindow);
+            mainbuttonExit.SetSize(100, 25);
+            mainbuttonExit.SetPosition(45, 115);
+            mainbuttonExit.Text = "Exit";
+            mainbuttonExit.Clicked += CheckMainWindowExit;
+        }
+
+        public void CreateLoginWindow(Base parent, ClientConfig c_Config)
+        {
+            logWindow = new WindowControl(parent.GetCanvas());
+            logWindow.Title = "Login";
+            logWindow.SetSize(200, 200);
+            logWindow.Position(Gwen.Pos.Center);
+            logWindow.IsClosable = false;
+            logWindow.DisableResizing();
+            logWindow.KeyboardInputEnabled = true;
+
+            unlogLabel = new Label(logWindow);
+            unlogLabel.SetPosition(25, 15);
+            unlogLabel.Text = "Username:";
+
+            unlogBox = new TextBox(logWindow);
+            unlogBox.SetPosition(25, 35);
+            unlogBox.SetSize(140, 25);
+            unlogBox.Focus();
+            if (this.c_Config.saveCreds == "1")
+            {
+                unlogBox.Text = c_Config.savedUser;
+            }
+            pwloglabel = new Label(logWindow);
+            pwloglabel.SetPosition(25, 75);
+            pwloglabel.Text = "Password:";
+
+            pwlogBox = new TextBoxPassword(logWindow);
+            pwlogBox.SetPosition(25, 95);
+            pwlogBox.SetSize(140, 25);
+            if (this.c_Config.saveCreds == "1")
+            {
+                pwlogBox.Text = c_Config.savedPass;
+            }
+            //pwlogBox.Focus();
+            pwlogBox.SubmitPressed += CheckLogWindowSubmit;
+
+            logButton = new Button(logWindow);
+            logButton.SetPosition(25, 135);
+            logButton.SetSize(60, 25);
+            logButton.Text = "Login";
+            logButton.Clicked += CheckLogWindowLogin;
+
+            canlogButton = new Button(logWindow);
+            canlogButton.SetPosition(105, 135);
+            canlogButton.SetSize(60, 25);
+            canlogButton.Text = "Cancel";
+            canlogButton.Clicked += CheckLogWindowCancel;
+        }
+
+        public void CreateRegisterWindow(Base parent)
+        {
+            regWindow = new WindowControl(parent.GetCanvas());
+            regWindow.Title = "Register";
+            regWindow.SetSize(200, 300);
+            regWindow.Position(Gwen.Pos.Center);
+            regWindow.IsClosable = false;
+            regWindow.DisableResizing();
+            regWindow.KeyboardInputEnabled = true;
+
+            unregLabel = new Label(regWindow);
+            unregLabel.SetPosition(25, 15);
+            unregLabel.Text = "Username:";
+
+            unregBox = new TextBox(regWindow);
+            unregBox.SetPosition(25, 35);
+            unregBox.SetSize(140, 25);
+            unregBox.Focus();
+
+            pwregLabel = new Label(regWindow);
+            pwregLabel.SetPosition(25, 75);
+            pwregLabel.Text = "Password:";
+
+            pwregBox = new TextBoxPassword(regWindow);
+            pwregBox.SetPosition(25, 95);
+            pwregBox.SetSize(140, 25);
+
+            repwLabel = new Label(regWindow);
+            repwLabel.SetPosition(25, 135);
+            repwLabel.Text = "Re-type Password:";
+
+            repwBox = new TextBoxPassword(regWindow);
+            repwBox.SetPosition(25, 155);
+            repwBox.SetSize(140, 25);
+            repwBox.SubmitPressed += CheckRegWindowSubmit;
+
+            regButton = new Button(regWindow);
+            regButton.SetPosition(25, 200);
+            regButton.SetSize(60, 25);
+            regButton.Text = "Register";
+            regButton.Clicked += CheckRegWindowRegister;
+
+            canregButton = new Button(regWindow);
+            canregButton.SetPosition(105, 200);
+            canregButton.SetSize(60, 25);
+            canregButton.Text = "Cancel";
+            canregButton.Clicked += CheckRegWindowCancel;
+        }
+
         public void CreateChatWindow(Base parent)
         {
             chatWindow = new WindowControl(parent.GetCanvas());
@@ -996,33 +1091,6 @@ namespace Client.Classes
             inputChat.SetPosition(0, 145);
             inputChat.SetSize(392, 25);
             inputChat.SubmitPressed += CheckChatWindowSubmit;
-        }
-
-        private void CheckChatWindowSubmit(Base control, EventArgs e)
-        {
-            if (inputChat.Text != "")
-            {
-                string msg = inputChat.Text;
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
-                outMSG.Write((byte)PacketTypes.ChatMessage);
-                outMSG.Write(msg);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-                inputChat.Text = "";
-            }
-        }
-
-        public void AddText(string msg)
-        {
-            if (outputChat == null) { return; }
-            outputChat.AddRow(msg);
-            outputChat.ScrollToBottom();
-            outputChat.UnselectAll();
-        }
-
-        public void MsgBox(string msg, string caption, Canvas c_Canvas)
-        {
-            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
-            msgBox.Position(Gwen.Pos.Center);
         }
 
         public void CreateDebugWindow(Base parent)
@@ -1082,25 +1150,22 @@ namespace Client.Classes
             d_packetsOut.SetPosition(10, 115);
             d_packetsOut.Text = "Packets Out: ?";
         }
+        #endregion
 
-        public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
+        #region Other Voids
+        public void AddText(string msg)
         {
-            if (d_Window != null && c_Player[drawIndex] != null)
-            {
-                d_Window.Title = "Debug Window - Admin";
-                d_FPS.Text = "FPS: " + fps;
-                d_Name.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
-                d_X.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
-                d_Y.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
-                d_Map.Text = "Map: " + c_Player[drawIndex].Map;
-                d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
-                d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
-                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
-                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.##") +  " ms";
-                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
-                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
-            } 
+            if (outputChat == null) { return; }
+            outputChat.AddRow(msg);
+            outputChat.ScrollToBottom();
+            outputChat.UnselectAll();
         }
+
+        public void MsgBox(string msg, string caption, Canvas c_Canvas)
+        {
+            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
+            msgBox.Position(Gwen.Pos.Center);
+        }
+        #endregion
     }
 }

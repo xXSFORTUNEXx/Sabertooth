@@ -9,13 +9,16 @@ namespace Client.Classes
 {
     class Player
     {
+        #region Main Classes
         public NetConnection Connection;
         RenderText c_Text = new RenderText();
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[25];
         Sprite c_Sprite = new Sprite();
+        #endregion
 
+        #region Stats
         public string Name { get; set; }
         public string Pass { get; set; }
         public int X { get; set; }
@@ -41,6 +44,9 @@ namespace Client.Classes
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
+        #endregion
+
+        #region Local Variables
         public bool Moved;
         public bool Attacking;
         public int reloadTick;
@@ -55,7 +61,9 @@ namespace Client.Classes
         public int Step;
         public int PickupTick;
         public int equipTick;
+        #endregion
 
+        #region Class Constructors
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
@@ -113,7 +121,9 @@ namespace Client.Classes
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             }
         }
+        #endregion
 
+        #region Voids
         public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)
         {
             c_Sprite.Texture = c_Texture;
@@ -479,6 +489,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(index);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
+        #endregion
     }
 
     public enum EquipSlots
