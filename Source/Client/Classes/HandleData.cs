@@ -181,6 +181,8 @@ namespace Client.Classes
                     c_Player[index].Backpack[i].Damage = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Armor = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Type = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].AttackSpeed = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].ReloadSpeed = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].HungerRestore = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].HydrateRestore = incMSG.ReadVariableInt32();
@@ -670,45 +672,45 @@ namespace Client.Classes
             Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
         }
 
-        void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int clientIndex)
+        void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
         {
             //Main Weapon
-            c_Player[clientIndex].mainWeapon.Name = incMSG.ReadString();
-            c_Player[clientIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.maxClip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Name = incMSG.ReadString();
+            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ammoType = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
-            c_Player[clientIndex].offWeapon.Name = incMSG.ReadString();
-            c_Player[clientIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.maxClip = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[clientIndex].offWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Name = incMSG.ReadString();
+            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Type = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ammoType = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
@@ -831,6 +833,14 @@ namespace Client.Classes
             c_GUI.chatWindow.Hide();
             c_GUI.AddText("Welcome to Sabertooth!");
         }
+
+        public void RequestInventory(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.RequestInv);
+            outMSG.WriteVariableInt32(index);      
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
     }
 
     public enum PacketTypes
@@ -872,6 +882,8 @@ namespace Client.Classes
         PlayerInv,
         MapItems,
         MapItemData,
-        ItemPickup
+        ItemPickup,
+        RequestInv,
+        UnequipItem
     }
 }

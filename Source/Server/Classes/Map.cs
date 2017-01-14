@@ -369,8 +369,6 @@ namespace Server.Classes
         public int Y { get; set; }
 
         public bool IsSpawned;
-        public int SpawnTick;
-        public bool IsPickedUp;
 
         public MapItem() { }
 
@@ -397,7 +395,10 @@ namespace Server.Classes
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
         public int CurrentSpawn;
+
         public bool NeedsSpawned;
+        public int NeedsSpawnedTick;
+
 
         public Tile()
         {

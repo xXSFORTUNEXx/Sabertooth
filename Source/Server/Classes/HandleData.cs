@@ -74,6 +74,14 @@ namespace Server.Classes
                             case (byte)PacketTypes.ItemPickup:
                                 HandleItemPickup(incMSG, s_Server, s_Player, s_Map, s_Item);
                                 break;
+
+                            case (byte)PacketTypes.RequestInv:
+                                HandleRequestInvUpdate(incMSG, s_Server, s_Player);
+                                break;
+
+                            case (byte)PacketTypes.UnequipItem:
+                                HandleUnequipItem(incMSG, s_Server, s_Player);
+                                break;
                         }
                         break;
 
@@ -83,6 +91,92 @@ namespace Server.Classes
                 }
             }
             s_Server.Recycle(incMSG);
+        }
+
+        void HandleUnequipItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int equip = incMSG.ReadVariableInt32();
+
+            switch (equip)
+            {
+                case (int)EquipSlots.MainWeapon:
+                    int itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    if (itemSlot < 25)
+                    {
+                        s_Player[index].Backpack[itemSlot].Name = s_Player[index].mainWeapon.Name;
+                        s_Player[index].Backpack[itemSlot].Sprite = s_Player[index].mainWeapon.Sprite;
+                        s_Player[index].Backpack[itemSlot].Damage = s_Player[index].mainWeapon.Damage;
+                        s_Player[index].Backpack[itemSlot].Armor = s_Player[index].mainWeapon.Armor;
+                        s_Player[index].Backpack[itemSlot].Type = s_Player[index].mainWeapon.Type;
+                        s_Player[index].Backpack[itemSlot].AttackSpeed = s_Player[index].mainWeapon.AttackSpeed;
+                        s_Player[index].Backpack[itemSlot].ReloadSpeed = s_Player[index].mainWeapon.ReloadSpeed;
+                        s_Player[index].Backpack[itemSlot].HealthRestore = s_Player[index].mainWeapon.HealthRestore;
+                        s_Player[index].Backpack[itemSlot].HungerRestore = s_Player[index].mainWeapon.HungerRestore;
+                        s_Player[index].Backpack[itemSlot].HydrateRestore = s_Player[index].mainWeapon.HydrateRestore;
+                        s_Player[index].Backpack[itemSlot].Strength = s_Player[index].mainWeapon.Strength;
+                        s_Player[index].Backpack[itemSlot].Agility = s_Player[index].mainWeapon.Agility;
+                        s_Player[index].Backpack[itemSlot].Endurance = s_Player[index].mainWeapon.Endurance;
+                        s_Player[index].Backpack[itemSlot].Stamina = s_Player[index].mainWeapon.Stamina;
+                        s_Player[index].Backpack[itemSlot].Clip = s_Player[index].mainWeapon.Clip;
+                        s_Player[index].Backpack[itemSlot].MaxClip = s_Player[index].mainWeapon.MaxClip;
+                        s_Player[index].Backpack[itemSlot].ItemAmmoType = s_Player[index].mainWeapon.ItemAmmoType;
+                        s_Player[index].Backpack[itemSlot].Value = s_Player[index].mainWeapon.Value;
+
+                        s_Player[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+                        SendWeaponsUpdate(s_Server, s_Player, index);
+                        SendPlayerInv(s_Server, s_Player, index);
+                    }
+                    else
+                    {
+                        SendServerMessage(s_Server, "Inventory is full!");
+                        return;
+                    }
+                    break;
+
+                case (int)EquipSlots.OffWeapon:
+                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    if (itemSlot < 25)
+                    {
+                        s_Player[index].Backpack[itemSlot].Name = s_Player[index].offWeapon.Name;
+                        s_Player[index].Backpack[itemSlot].Sprite = s_Player[index].offWeapon.Sprite;
+                        s_Player[index].Backpack[itemSlot].Damage = s_Player[index].offWeapon.Damage;
+                        s_Player[index].Backpack[itemSlot].Armor = s_Player[index].offWeapon.Armor;
+                        s_Player[index].Backpack[itemSlot].Type = s_Player[index].offWeapon.Type;
+                        s_Player[index].Backpack[itemSlot].AttackSpeed = s_Player[index].offWeapon.AttackSpeed;
+                        s_Player[index].Backpack[itemSlot].ReloadSpeed = s_Player[index].offWeapon.ReloadSpeed;
+                        s_Player[index].Backpack[itemSlot].HealthRestore = s_Player[index].offWeapon.HealthRestore;
+                        s_Player[index].Backpack[itemSlot].HungerRestore = s_Player[index].offWeapon.HungerRestore;
+                        s_Player[index].Backpack[itemSlot].HydrateRestore = s_Player[index].offWeapon.HydrateRestore;
+                        s_Player[index].Backpack[itemSlot].Strength = s_Player[index].offWeapon.Strength;
+                        s_Player[index].Backpack[itemSlot].Agility = s_Player[index].offWeapon.Agility;
+                        s_Player[index].Backpack[itemSlot].Endurance = s_Player[index].offWeapon.Endurance;
+                        s_Player[index].Backpack[itemSlot].Stamina = s_Player[index].offWeapon.Stamina;
+                        s_Player[index].Backpack[itemSlot].Clip = s_Player[index].offWeapon.Clip;
+                        s_Player[index].Backpack[itemSlot].MaxClip = s_Player[index].offWeapon.MaxClip;
+                        s_Player[index].Backpack[itemSlot].ItemAmmoType = s_Player[index].offWeapon.ItemAmmoType;
+                        s_Player[index].Backpack[itemSlot].Value = s_Player[index].offWeapon.Value;
+
+                        s_Player[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+                        SendWeaponsUpdate(s_Server, s_Player, index);
+                        SendPlayerInv(s_Server, s_Player, index);
+                    }
+                    else
+                    {
+                        SendServerMessage(s_Server, "Inventory is full!");
+                        return;
+                    }
+                    break;
+            }
+        }
+
+        void HandleRequestInvUpdate(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            SendPlayerInv(s_Server, s_Player, index);
         }
 
         void HandleItemPickup(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Item[] s_Item)
@@ -558,6 +652,8 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Damage);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Armor);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Type);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].AttackSpeed);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ReloadSpeed);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HealthRestore);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HungerRestore);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].HydrateRestore);
@@ -1164,6 +1260,8 @@ namespace Server.Classes
         PlayerInv,
         MapItems,
         MapItemData,
-        ItemPickup
+        ItemPickup,
+        RequestInv,
+        UnequipItem
     }
 }

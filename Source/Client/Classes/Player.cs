@@ -54,6 +54,7 @@ namespace Client.Classes
         public int tempStep;
         public int Step;
         public int PickupTick;
+        public int equipTick;
 
         public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
@@ -86,7 +87,7 @@ namespace Client.Classes
             GrenadeAmmo = 3;
         }
 
-        public Player(string name, string pass, NetConnection conn) //player contructor if we are missing a few key setails
+        public Player(string name, string pass, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -95,12 +96,12 @@ namespace Client.Classes
             offsetY = 9;
         }
 
-        public Player(string name)  //for creating a player array with just the name defined
+        public Player(string name)
         {
             Name = name;
         }
 
-        public Player(NetConnection conn)   //for creating a player array with just the server connection defined
+        public Player(NetConnection conn)
         {
             Connection = conn;
         }
@@ -113,13 +114,13 @@ namespace Client.Classes
             }
         }
 
-        public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)  // draws the player to the screen
+        public void DrawPlayer(RenderWindow c_Window, Texture c_Texture)
         {
-            c_Sprite.Texture = c_Texture; //set the sprites texture
-            c_Sprite.TextureRect = new IntRect((Step * 32), (AimDirection * 48), 32, 48); //define what are we want to draw from the texture using a intrect (rectangle)
-            c_Sprite.Position = new Vector2f(((X * 32) + (offsetX * 32)), (((Y * 32) + (offsetY * 32) - 16))); //Define the actual location on the screen
+            c_Sprite.Texture = c_Texture;
+            c_Sprite.TextureRect = new IntRect((Step * 32), (AimDirection * 48), 32, 48);
+            c_Sprite.Position = new Vector2f(((X * 32) + (offsetX * 32)), (((Y * 32) + (offsetY * 32) - 16)));
 
-            c_Window.Draw(c_Sprite);  //draw the player to the define window using the above sprite array
+            c_Window.Draw(c_Sprite);
         }
 
         public void DrawPlayerName(RenderWindow c_Window)
@@ -127,86 +128,86 @@ namespace Client.Classes
             c_Text.DrawText(c_Window, Name, new Vector2f((X * 32) + ((offsetX * 32) - Name.Length / 2), (Y * 32) + (offsetY * 32) - 32), 12, Color.White);
         }
 
-        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map movementMap, GUI c_GUI)   //Check for player movement
+        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map movementMap, GUI c_GUI)
         {
-            if (Moved == true) { Moved = false; return; }   //check and see if they are already moving and if so we return and exit the void
+            if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }  //we need to make sure that when a button is pressed our game window has focus otherwise we dont want to process the button press
+            if (!c_Window.HasFocus()) { return; }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W))  //check for w
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
-                if (Y > 1 - offsetY)    //make sure we are not out of bounds of the screen
+                if (Y > 1 - offsetY)
                 {
-                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked) //check for a blocked tile
+                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
                     {
-                        Direction = (int)Directions.Up; //set the direction to up
-                        Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(c_Client, index);  //send the update direction packet
-                        return; //exit this bitch
+                        Direction = (int)Directions.Up;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
-                    Y -= 1; //move the player up
-                    Direction = (int)Directions.Up; //change their direction to up
-                    Moved = true;   //register that we have moved
+                    Y -= 1;
+                    Direction = (int)Directions.Up; 
+                    Moved = true; 
                 }
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S))  //check for s
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Y < 49 - offsetY)   //make sure we are not out of bounds of the screen
+                if (Y < 49 - offsetY)  
                 {
-                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked) //check for a blocked tile
+                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
                     {
-                        Direction = (int)Directions.Down; //set the direction to down
-                        Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(c_Client, index);  //send the update direction packet
-                        return; //exit this bitch
+                        Direction = (int)Directions.Down;
+                        Moved = false; 
+                        SendUpdateDirection(c_Client, index);
+                        return; 
                     }
-                    Y += 1; //move the player down
-                    Direction = (int)Directions.Down;   //change their direction to up
-                    Moved = true;   //register that we have moved
+                    Y += 1;
+                    Direction = (int)Directions.Down;
+                    Moved = true;
                 }
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A))  //check for a
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) 
             {
-                if (X > 1 - offsetX)    //make sure we are not out of bounds of the screen
+                if (X > 1 - offsetX)
                 {
-                    if (movementMap.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked) //check for a blocked tile
+                    if (movementMap.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
                     {
-                        Direction = (int)Directions.Left; //set the direction to left
-                        Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(c_Client, index);  //send the update direction packet
-                        return; //exit this bitch
+                        Direction = (int)Directions.Left;
+                        Moved = false; 
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
-                    X -= 1; //move player to the left
-                    Direction = (int)Directions.Left;   //set player direction to left
-                    Moved = true;   //register that we have moved
+                    X -= 1;
+                    Direction = (int)Directions.Left;
+                    Moved = true;
                 }
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D))  //check for d
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                if (X < 49 - offsetX)   //make sure we are not out of bounds of the screen
+                if (X < 49 - offsetX) 
                 {
-                    if (movementMap.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked) //check for a blocked tile
+                    if (movementMap.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked) 
                     {
-                        Direction = (int)Directions.Right; //set the direction to right
-                        Moved = false;  //we cant move but we can still change direction
-                        SendUpdateDirection(c_Client, index);  //send the update direction packet
-                        return; //exit this bitch
+                        Direction = (int)Directions.Right;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
-                    X += 1; //move player to the right
-                    Direction = (int)Directions.Right;  //set player direction to right
-                    Moved = true;   //register that we have moved
+                    X += 1;
+                    Direction = (int)Directions.Right;
+                    Moved = true;
                 }
             }
 
-            if (Moved == true)  //check and see if we moved
+            if (Moved == true)
             {
-                Step += 1;  //add a step if so
-                if (Step == 4) { Step = 0; }    //if we have reached the make amount of steps then we need to start over
-                Moved = false;  //we moved so let make sure it knows we can move again
-                SendMovementData(c_Client, index); //send movement data to the server
+                Step += 1;
+                if (Step == 4) { Step = 0; }
+                Moved = false;
+                SendMovementData(c_Client, index);
             }
         }
 
@@ -250,16 +251,37 @@ namespace Client.Classes
             }
         }
 
+        public void CheckReload(NetClient c_Client, int index)
+        {
+            if (Keyboard.IsKeyPressed(Keyboard.Key.R))
+            {
+                Reload();
+                reloadTick = TickCount;
+                SendUpdateClip(c_Client, index);
+                SendUpdateAmmo(c_Client, index);
+            }
+        }
+
         public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
+            if (TickCount - equipTick < 5000) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
-                Attacking = true;
+                if (mainWeapon.Name != "None")
+                {
+                    Attacking = true;
+                }
+                else
+                {
+                    c_GUI.AddText("You need a weapon equiped to attack!");
+                    equipTick = TickCount;
+                    return;
+                }
             }
 
             if (Attacking == true)
@@ -267,16 +289,16 @@ namespace Client.Classes
                 switch (mainWeapon.ammoType)
                 {
                     case (int)AmmoType.Pistol:
-                        if (PistolAmmo == 0) { Attacking = false; return; }
+                        if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.AssaultRifle:
-                        if (AssaultAmmo == 0) { Attacking = false; return; }
+                        if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.Rocket:
-                        if (RocketAmmo == 0) { Attacking = false; return; }
+                        if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
                         break;
                     case (int)AmmoType.Grenade:
-                        if (GrenadeAmmo == 0) { Attacking = false; return; }
+                        if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
@@ -311,8 +333,17 @@ namespace Client.Classes
                 case (int)AmmoType.Pistol:
                     if (PistolAmmo > mainWeapon.maxClip)
                     {
-                        mainWeapon.Clip = mainWeapon.maxClip;
-                        PistolAmmo -= mainWeapon.maxClip;
+                        if (mainWeapon.Clip > 0)
+                        {
+                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            PistolAmmo -= leftOver;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            PistolAmmo -= mainWeapon.maxClip;
+                        }
                     }
                     else
                     {
@@ -323,8 +354,17 @@ namespace Client.Classes
                 case (int)AmmoType.AssaultRifle:
                     if (AssaultAmmo > mainWeapon.maxClip)
                     {
-                        mainWeapon.Clip = mainWeapon.maxClip;
-                        AssaultAmmo -= mainWeapon.maxClip;
+                        if (mainWeapon.Clip > 0)
+                        {
+                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            AssaultAmmo -= leftOver;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            AssaultAmmo -= mainWeapon.maxClip;
+                        }
                     }
                     else
                     {
@@ -335,8 +375,17 @@ namespace Client.Classes
                 case (int)AmmoType.Rocket:
                     if (RocketAmmo > mainWeapon.maxClip)
                     {
-                        mainWeapon.Clip = mainWeapon.maxClip;
-                        RocketAmmo -= mainWeapon.maxClip;
+                        if (mainWeapon.Clip > 0)
+                        {
+                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            RocketAmmo -= leftOver;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            RocketAmmo -= mainWeapon.maxClip;
+                        }
                     }
                     else
                     {
@@ -347,8 +396,17 @@ namespace Client.Classes
                 case (int)AmmoType.Grenade:
                     if (GrenadeAmmo > mainWeapon.maxClip)
                     {
-                        mainWeapon.Clip = mainWeapon.maxClip;
-                        GrenadeAmmo -= mainWeapon.maxClip;
+                        if (mainWeapon.Clip > 0)
+                        {
+                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            GrenadeAmmo -= leftOver;
+                        }
+                        else
+                        {
+                            mainWeapon.Clip = mainWeapon.maxClip;
+                            GrenadeAmmo -= mainWeapon.maxClip;
+                        }
                     }
                     else
                     {
@@ -421,6 +479,12 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(index);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
+    }
+
+    public enum EquipSlots
+    {
+        MainWeapon,
+        OffWeapon
     }
 
     public enum Directions

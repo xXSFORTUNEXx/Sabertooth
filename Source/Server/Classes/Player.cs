@@ -240,10 +240,6 @@ namespace Server.Classes
                 {
                     if ((X + 12) == s_Map.mapItem[c].X && (Y + 9) == s_Map.mapItem[c].Y)
                     {
-                        int TileX = s_Map.mapItem[c].X;
-                        int TileY = s_Map.mapItem[c].Y;
-                        s_Map.mapItem[c].IsSpawned = true;
-                        s_Map.Ground[TileX, TileY].NeedsSpawned = true;
                         PickUpItem(s_Server, s_Player, s_Map.mapItem[c], s_Map, index, c);
                         break;
                     }
@@ -260,7 +256,28 @@ namespace Server.Classes
             {
                 Backpack[itemSlot].Name = s_Item.Name;
                 Backpack[itemSlot].Sprite = s_Item.Sprite;
-                hData.SendPlayerInv(s_Server, s_Player, index);
+                Backpack[itemSlot].Damage = s_Item.Damage;
+                Backpack[itemSlot].Armor = s_Item.Armor;
+                Backpack[itemSlot].Type = s_Item.Type;
+                Backpack[itemSlot].AttackSpeed = s_Item.AttackSpeed;
+                Backpack[itemSlot].ReloadSpeed = s_Item.ReloadSpeed;
+                Backpack[itemSlot].HealthRestore = s_Item.HealthRestore;
+                Backpack[itemSlot].HungerRestore = s_Item.HungerRestore;
+                Backpack[itemSlot].HydrateRestore = s_Item.HydrateRestore;
+                Backpack[itemSlot].Strength = s_Item.Strength;
+                Backpack[itemSlot].Agility = s_Item.Agility;
+                Backpack[itemSlot].Endurance = s_Item.Endurance;
+                Backpack[itemSlot].Stamina = s_Item.Stamina;
+                Backpack[itemSlot].Clip = s_Item.Clip;
+                Backpack[itemSlot].MaxClip = s_Item.MaxClip;
+                Backpack[itemSlot].ItemAmmoType = s_Item.ItemAmmoType;
+                Backpack[itemSlot].Value = s_Item.Value;
+
+                int TileX = s_Map.mapItem[itemNum].X;
+                int TileY = s_Map.mapItem[itemNum].Y;
+                s_Map.Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
+                s_Map.mapItem[itemNum].Name = "None";
+                s_Map.mapItem[itemNum].IsSpawned = false;
 
                 for (int p = 0; p < 5; p++)
                 {
@@ -269,6 +286,7 @@ namespace Server.Classes
                         hData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map, itemNum);
                     }
                 }
+                hData.SendPlayerInv(s_Server, s_Player, index);
             }
             else
             {
@@ -277,7 +295,7 @@ namespace Server.Classes
             }
         }
 
-        static int FindOpenInvSlot(Item[] s_Backpack)
+        public int FindOpenInvSlot(Item[] s_Backpack)
         {
             for (int i = 0; i < 25; i++)
             {
@@ -505,6 +523,12 @@ namespace Server.Classes
 
             s_Database.Close();
         }
+    }
+
+    public enum EquipSlots
+    {
+        MainWeapon,
+        OffWeapon
     }
 
     public enum Directions

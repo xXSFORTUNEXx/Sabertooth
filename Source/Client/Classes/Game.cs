@@ -66,7 +66,7 @@ namespace Client.Classes
             c_Input = new Gwen.Input.SFML(); 
             c_Input.Initialize(c_Canvas, c_Window); 
             c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);  
-            c_GUI.CreateMainWindow(c_Canvas); 
+            c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData(); 
 
@@ -88,7 +88,7 @@ namespace Client.Classes
             {
                 CheckForConnection(c_Client);  
                 UpdateView(c_Client, c_Config, c_Npc, c_Item); 
-                DrawGraphics(c_Client);
+                DrawGraphics(c_Client, c_Player);
                 UpdateOverlay();
                 c_Window.Display(); 
             }
@@ -310,11 +310,16 @@ namespace Client.Classes
             }
         }
 
-        void DrawLowLevelTiles()
+        void DrawLowLevelTiles(Player c_Player)
         {
-            for (int x = 0; x < 50; x++)
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
+            for (int x = minX; x < maxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = minY; y < maxY; y++)
                 {
                     if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
@@ -333,11 +338,16 @@ namespace Client.Classes
             }
         }
 
-        void DrawUpperLevelTiles()
+        void DrawUpperLevelTiles(Player c_Player)
         {
-            for (int x = 0; x < 50; x++)
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
+            for (int x = minX; x < maxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = minY; y < maxY; y++)
                 {
                     if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
@@ -369,16 +379,27 @@ namespace Client.Classes
             }
         }
 
-        void DrawNpcs()
+        void DrawNpcs(Player c_Player)
         {
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
             for (int i = 0; i < 10; i++)
             {
                 if (c_Map.m_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.m_MapNpc[i].Sprite > 0)
+                    if (c_Map.m_MapNpc[i].X - 12 < minX && c_Map.m_MapNpc[i].X + 12 > maxX)
                     {
-                        c_Map.m_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.m_MapNpc[i].Sprite - 1)]);
-                    }                   
+                        if (c_Map.m_MapNpc[i].Y - 9 < minY && c_Map.m_MapNpc[i].Y + 9 > maxY)
+                        {
+                            if (c_Map.m_MapNpc[i].Sprite > 0)
+                            {
+                                c_Map.m_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.m_MapNpc[i].Sprite - 1)]);
+                            }
+                        }
+                    }     
                 }
             }
 
@@ -386,35 +407,63 @@ namespace Client.Classes
             {
                 if (c_Map.r_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.r_MapNpc[i].Sprite > 0)
+                    if (c_Map.r_MapNpc[i].X > minX && c_Map.r_MapNpc[i].X < maxX)
                     {
-                        c_Map.r_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.r_MapNpc[i].Sprite - 1)]);
+                        if (c_Map.r_MapNpc[i].Y > minY && c_Map.r_MapNpc[i].Y < maxY)
+                        {
+                            if (c_Map.r_MapNpc[i].Sprite > 0)
+                            {
+                                c_Map.r_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.r_MapNpc[i].Sprite - 1)]);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        void DrawMapItems()
+        void DrawMapItems(Player c_Player)
         {
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
             for (int i = 0; i < 20; i++)
             {
                 if (c_Map.mapItem[i].IsSpawned)
                 {
-                    if (c_Map.mapItem[i].Sprite > 0)
+                    if (c_Map.mapItem[i].X > minX && c_Map.mapItem[i].X < maxX)
                     {
-                        c_Map.mapItem[i].DrawItem(c_Window, c_ItemSprite[c_Map.mapItem[i].Sprite - 1]);
+                        if (c_Map.mapItem[i].Y > minY && c_Map.mapItem[i].Y < maxY)
+                        {
+                            if (c_Map.mapItem[i].Sprite > 0)
+                            {
+                                c_Map.mapItem[i].DrawItem(c_Window, c_ItemSprite[c_Map.mapItem[i].Sprite - 1]);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        void DrawProjectiles(NetClient c_Client)
+        void DrawProjectiles(NetClient c_Client, Player c_Player)
         {
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
             for (int i = 0; i < 200; i++)
             {
                 if (c_Map.mapProj[i] != null)
                 {
-                    c_Map.mapProj[i].DrawProjectile(c_Window);
+                    if (c_Map.mapProj[i].X > minX && c_Map.mapProj[i].X < maxX)
+                    {
+                        if (c_Map.mapProj[i].Y > minY && c_Map.mapProj[i].Y < maxY)
+                        {
+                            c_Map.mapProj[i].DrawProjectile(c_Window);
+                        }
+                    }
                     c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
                 }
             }
@@ -461,33 +510,34 @@ namespace Client.Classes
             }
         }
 
-        void DrawGraphics(NetClient c_Client)
+        void DrawGraphics(NetClient c_Client, Player[] c_Player)
         {
             if (c_Map.Name != null)
             {
-                DrawLowLevelTiles();
-                DrawMapItems();
-                DrawNpcs();
+                DrawLowLevelTiles(c_Player[handleData.c_Index]);
+                DrawMapItems(c_Player[handleData.c_Index]);
+                DrawNpcs(c_Player[handleData.c_Index]);
                 DrawPlayers();
                 DrawIndexPlayer();
-                DrawProjectiles(c_Client);
-                DrawUpperLevelTiles();
+                DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
+                DrawUpperLevelTiles(c_Player[handleData.c_Index]);
 
                 if (TickCount - walkTick > 100)
                 {
-                    c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
                 if (TickCount - attackTick > 25)
                 {
-                    c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
                 }
                 if (TickCount - pickupTick > 100)
                 {
-                    c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
                     pickupTick = TickCount;
                 }
             }
