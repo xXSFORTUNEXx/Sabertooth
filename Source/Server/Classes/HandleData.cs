@@ -112,51 +112,7 @@ namespace Server.Classes
             int slot = incMSG.ReadVariableInt32();
             int mapNum = s_Player[index].Map;
 
-            if (s_Player[index].Backpack[slot].Name != "None")
-            {
-                Server server = new Server();
-                int mapSlot = server.FindOpenMapItemSlot(s_Map[mapNum]);
-                if (mapSlot < 20)
-                {
-                    s_Map[mapNum].mapItem[mapSlot].Name = s_Player[index].Backpack[slot].Name;
-                    s_Map[mapNum].mapItem[mapSlot].X = s_Player[index].X + 12;
-                    s_Map[mapNum].mapItem[mapSlot].Y = s_Player[index].Y + 9;
-                    s_Map[mapNum].mapItem[mapSlot].Sprite = s_Player[index].Backpack[slot].Sprite;
-                    s_Map[mapNum].mapItem[mapSlot].Damage = s_Player[index].Backpack[slot].Damage;
-                    s_Map[mapNum].mapItem[mapSlot].Armor = s_Player[index].Backpack[slot].Armor;
-                    s_Map[mapNum].mapItem[mapSlot].Type = s_Player[index].Backpack[slot].Type;
-                    s_Map[mapNum].mapItem[mapSlot].AttackSpeed = s_Player[index].Backpack[slot].AttackSpeed;
-                    s_Map[mapNum].mapItem[mapSlot].ReloadSpeed = s_Player[index].Backpack[slot].ReloadSpeed;
-                    s_Map[mapNum].mapItem[mapSlot].HealthRestore = s_Player[index].Backpack[slot].HealthRestore;
-                    s_Map[mapNum].mapItem[mapSlot].HungerRestore = s_Player[index].Backpack[slot].HungerRestore;
-                    s_Map[mapNum].mapItem[mapSlot].HydrateRestore = s_Player[index].Backpack[slot].HydrateRestore;
-                    s_Map[mapNum].mapItem[mapSlot].Strength = s_Player[index].Backpack[slot].Strength;
-                    s_Map[mapNum].mapItem[mapSlot].Agility = s_Player[index].Backpack[slot].Agility;
-                    s_Map[mapNum].mapItem[mapSlot].Endurance = s_Player[index].Backpack[slot].Endurance;
-                    s_Map[mapNum].mapItem[mapSlot].Stamina = s_Player[index].Backpack[slot].Stamina;
-                    s_Map[mapNum].mapItem[mapSlot].Clip = s_Player[index].Backpack[slot].Clip;
-                    s_Map[mapNum].mapItem[mapSlot].MaxClip = s_Player[index].Backpack[slot].MaxClip;
-                    s_Map[mapNum].mapItem[mapSlot].ItemAmmoType = s_Player[index].Backpack[slot].ItemAmmoType;
-                    s_Map[mapNum].mapItem[mapSlot].Value = s_Player[index].Backpack[slot].Value;
-                    s_Map[mapNum].mapItem[mapSlot].IsSpawned = true;
-                    s_Map[mapNum].mapItem[mapSlot].ExpireTick = TickCount;
-
-                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                    SendPlayerInv(s_Server, s_Player, index);
-
-                    for (int p = 0; p < 5; p++)
-                    {
-                        if (s_Player[p].Connection != null && mapNum == s_Player[p].Map)
-                        {
-                            SendMapItemData(s_Server, s_Player[p].Connection, s_Map[mapNum], mapSlot);
-                        }
-                    }
-                }
-                else
-                {
-                    SendServerMessage(s_Server, "All map item slots are filled!");
-                }
-            }
+            s_Player[index].DropItem(s_Server, s_Map, s_Player, index, slot, mapNum);
         }
 
         void HandleEquipItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -164,30 +120,7 @@ namespace Server.Classes
             int index = incMSG.ReadVariableInt32();
             int slot = incMSG.ReadVariableInt32();
 
-            if (s_Player[index].Backpack[slot].Name != "None")
-            {
-                switch (s_Player[index].Backpack[slot].Type)
-                {
-                    case (int)ItemType.RangedWeapon:
-                        if (s_Player[index].mainWeapon.Name == "None")
-                        {
-                            s_Player[index].mainWeapon = s_Player[index].Backpack[slot];
-                            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                        }
-                        else if (s_Player[index].offWeapon.Name == "None")
-                        {
-                            s_Player[index].mainWeapon = s_Player[index].Backpack[slot];
-                            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                        }
-                        else
-                        {
-                            SendServerMessage(s_Server, "Please unequip a weapon to equip another!");
-                        }
-                        SendWeaponsUpdate(s_Server, s_Player, index);
-                        SendPlayerInv(s_Server, s_Player, index);
-                        break;
-                }
-            }
+            s_Player[index].EquipItem(s_Server, s_Player, index, slot);
         }
 
         void HandleUnequipItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -195,41 +128,7 @@ namespace Server.Classes
             int index = incMSG.ReadVariableInt32();
             int equip = incMSG.ReadVariableInt32();
 
-            switch (equip)
-            {
-                case (int)EquipSlots.MainWeapon:
-                    int itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
-                    if (itemSlot < 25)
-                    {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].mainWeapon;
-                        s_Player[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-                        SendWeaponsUpdate(s_Server, s_Player, index);
-                        SendPlayerInv(s_Server, s_Player, index);
-                    }
-                    else
-                    {
-                        SendServerMessage(s_Server, "Inventory is full!");
-                        return;
-                    }
-                    break;
-
-                case (int)EquipSlots.OffWeapon:
-                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
-                    if (itemSlot < 25)
-                    {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].offWeapon;
-                        s_Player[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                        SendWeaponsUpdate(s_Server, s_Player, index);
-                        SendPlayerInv(s_Server, s_Player, index);
-                    }
-                    else
-                    {
-                        SendServerMessage(s_Server, "Inventory is full!");
-                        return;
-                    }
-                    break;
-            }
+            s_Player[index].UnequipItem(s_Server, s_Player, index, equip);
         }
 
         void HandleRequestInvUpdate(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -476,6 +375,7 @@ namespace Server.Classes
                         SendPlayerData(incMSG, s_Server, s_Player, i);
                         SendPlayers(s_Server, s_Player);
                         SendPlayerInv(s_Server, s_Player, i);
+                        SendPlayerEquipment(s_Server, s_Player, i);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
                         SendProjectiles(incMSG, s_Server, s_Proj);
@@ -706,7 +606,6 @@ namespace Server.Classes
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerInv);
-            //outMSG.Write(index);
             for (int i = 0; i < 25; i++)
             {
                 outMSG.Write(s_Player[index].Backpack[i].Name);
@@ -726,11 +625,77 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Clip);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].MaxClip);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ItemAmmoType);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Value);
             }
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
+        public void SendPlayerEquipment(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PlayerEquip);
+
+            outMSG.Write(s_Player[index].Chest.Name);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Sprite);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Damage);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Armor);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Type);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.ReloadSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.HealthRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.HungerRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.HydrateRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Strength);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Agility);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Endurance);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Clip);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.MaxClip);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.ItemAmmoType);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Value);
+
+            outMSG.Write(s_Player[index].Legs.Name);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Sprite);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Damage);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Armor);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Type);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.ReloadSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.HealthRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.HungerRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.HydrateRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Strength);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Agility);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Endurance);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Clip);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.MaxClip);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.ItemAmmoType);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Value);
+
+            outMSG.Write(s_Player[index].Feet.Name);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Sprite);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Damage);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Armor);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Type);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.AttackSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.ReloadSpeed);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.HealthRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.HungerRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.HydrateRestore);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Strength);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Agility);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Endurance);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Stamina);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Clip);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.MaxClip);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.ItemAmmoType);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Value);
+
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendWeaponsUpdate(NetServer s_Server, Player[] s_Player, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateWeapons);
@@ -1196,7 +1161,7 @@ namespace Server.Classes
             }
         }
 
-        static bool AlreadyLogged(string name, Player[] s_Player)
+        bool AlreadyLogged(string name, Player[] s_Player)
         {
             if (name == null) return false;
 
@@ -1215,7 +1180,7 @@ namespace Server.Classes
             return false;
         }
 
-        static int OpenSlot(Player[] s_Player)
+        int OpenSlot(Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -1227,7 +1192,7 @@ namespace Server.Classes
             return 5;
         }
 
-        static int GetPlayerConnection(NetIncomingMessage incMSG, Player[] s_Player)
+        int GetPlayerConnection(NetIncomingMessage incMSG, Player[] s_Player)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -1239,7 +1204,7 @@ namespace Server.Classes
             return 5;
         }
 
-        static bool CheckPassword(string name, string pass)
+        bool CheckPassword(string name, string pass)
         {
             SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             s_Database.Open();
@@ -1263,7 +1228,7 @@ namespace Server.Classes
             return false;
         }
 
-        static bool AccountExist(string name)
+        bool AccountExist(string name)
         {
             SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
             s_Database.Open();
@@ -1329,6 +1294,7 @@ namespace Server.Classes
         RequestInv,
         UnequipItem,
         EquipItem,
-        DropItem
+        DropItem,
+        PlayerEquip
     }
 }

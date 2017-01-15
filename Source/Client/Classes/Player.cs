@@ -15,6 +15,9 @@ namespace Client.Classes
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[25];
+        public Item Chest = new Item();
+        public Item Legs = new Item();
+        public Item Feet = new Item();
         Sprite c_Sprite = new Sprite();
         #endregion
 
@@ -489,13 +492,106 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(index);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
+
+        public int ArmorBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Armor;
+            }
+
+            bonus += mainWeapon.Armor;
+            bonus += offWeapon.Armor;
+            bonus += Chest.Armor;
+            bonus += Legs.Armor;
+            bonus += Feet.Armor;
+
+            return bonus;
+        }
+
+        public int StrengthBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Strength;
+            }
+
+            bonus += mainWeapon.Strength;
+            bonus += offWeapon.Strength;
+            bonus += Chest.Strength;
+            bonus += Legs.Strength;
+            bonus += Feet.Strength;
+
+            return bonus;
+        }
+
+        public int AgilityBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Agility;
+            }
+
+            bonus += mainWeapon.Agility;
+            bonus += offWeapon.Agility;
+            bonus += Chest.Agility;
+            bonus += Legs.Agility;
+            bonus += Feet.Agility;
+
+            return bonus;
+        }
+
+        public int EnduranceBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Endurance;
+            }
+
+            bonus += mainWeapon.Endurance;
+            bonus += offWeapon.Endurance;
+            bonus += Chest.Endurance;
+            bonus += Legs.Endurance;
+            bonus += Feet.Endurance;
+
+            return bonus;
+        }
+
+        public int StaminaBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Stamina;
+            }
+
+            bonus += mainWeapon.Stamina;
+            bonus += offWeapon.Stamina;
+            bonus += Chest.Stamina;
+            bonus += Legs.Stamina;
+            bonus += Feet.Stamina;
+
+            return bonus;
+        }
         #endregion
     }
 
     public enum EquipSlots
     {
         MainWeapon,
-        OffWeapon
+        OffWeapon,
+        Chest,
+        Legs,
+        Feet
     }
 
     public enum Directions

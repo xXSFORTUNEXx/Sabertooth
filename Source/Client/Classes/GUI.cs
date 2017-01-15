@@ -111,17 +111,32 @@ namespace Client.Classes
         Label packMClip;
         Label packASpeed;
         Label packRSpeed;
+        Label packAmmo;
+        Label packType;
+        Label packValue;
         #endregion
 
         #region EquipTab
         ImagePanel equipMain;
         ImagePanel equipOff;
+        ImagePanel equipChest;
+        ImagePanel equipLegs;
+        ImagePanel equipFeet;
         TabButton equipTab;
         GroupBox equipAmmo;
         Label pistolAmmo;
         Label assaultAmmo;
         Label rocketAmmo;
         Label grenadeAmmo;
+
+        GroupBox equipBonus;
+        Label equipArmor;
+        Label equipMDamage;
+        Label equipODamage;
+        Label equipStr;
+        Label equipAgi;
+        Label equipEnd;
+        Label equipSta;
         #endregion
 
         TabButton skillsTab;
@@ -163,7 +178,9 @@ namespace Client.Classes
         #region Update Voids
         public void UpdateHUD(Player c_Player, RenderWindow c_Window)
         {
-            barLength = ((float)c_Player.Health / c_Player.MaxHealth) * 150;
+            int fullSize = 175;
+
+            barLength = ((float)c_Player.Health / c_Player.MaxHealth) * fullSize;
             healthBar.Size = new Vector2f(barLength, 25);
             healthBar.Position = new Vector2f(25, 25);
             healthBar.FillColor = SFML.Graphics.Color.Red;
@@ -172,7 +189,7 @@ namespace Client.Classes
             hudHPos = new Vector2f(28, 28);
 
             float NextLevel = c_Player.Level * 1000;
-            expbarLength = (c_Player.Experience / NextLevel) * 150;
+            expbarLength = (c_Player.Experience / NextLevel) * fullSize;
             expBar.Size = new Vector2f(expbarLength, 25);
             expBar.Position = new Vector2f(25, 55);
             expBar.FillColor = SFML.Graphics.Color.Green;
@@ -180,13 +197,39 @@ namespace Client.Classes
             hudE = "XP: " + c_Player.Experience + " / " + NextLevel;
             hudEPos = new Vector2f(28, 58);
 
-            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
-            hudCPos = new Vector2f(28, 88);
+            if (c_Player.mainWeapon.Name != "None")
+            {
+                switch (c_Player.mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.PistolAmmo;
+                        break;
 
-            clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * 150;
+                    case (int)AmmoType.AssaultRifle:
+                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.AssaultAmmo;
+                        break;
+
+                    case (int)AmmoType.Rocket:
+                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.RocketAmmo;
+                        break;
+
+                    case (int)AmmoType.Grenade:
+                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.GrenadeAmmo;
+                        break;
+                }
+                clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * fullSize;
+
+            }
+            else
+            {
+                hudC = "None";
+                clipbarLength = fullSize;
+            }
+
             clipBar.Size = new Vector2f(clipbarLength, 25);
             clipBar.Position = new Vector2f(25, 85);
             clipBar.FillColor = SFML.Graphics.Color.Blue;
+            hudCPos = new Vector2f(28, 88);
 
             c_Window.Draw(healthBar);
             c_Window.Draw(expBar);
@@ -261,6 +304,7 @@ namespace Client.Classes
                     {
                         equipMain.Hide();
                     }
+
                     if (c_Player.offWeapon.Name != "None")
                     {
                         equipOff.ImageName = "Resources/Items/" + c_Player.offWeapon.Sprite + ".png";
@@ -270,6 +314,37 @@ namespace Client.Classes
                     {
                         equipOff.Hide();
                     }
+
+                    if (c_Player.Chest.Name != "None")
+                    {
+                        equipChest.ImageName = "Resources/Items/" + c_Player.Chest.Sprite + ".png";
+                        equipChest.Show();
+                    }
+                    else
+                    {
+                        equipChest.Hide();
+                    }
+
+                    if (c_Player.Legs.Name != "None")
+                    {
+                        equipLegs.ImageName = "Resources/Items/" + c_Player.Legs.Sprite + ".png";
+                        equipLegs.Show();
+                    }
+                    else
+                    {
+                        equipLegs.Hide();
+                    }
+
+                    if (c_Player.Feet.Name != "None")
+                    {
+                        equipFeet.ImageName = "Resources/Items/" + c_Player.Feet.Sprite + ".png";
+                        equipFeet.Show();
+                    }
+                    else
+                    {
+                        equipFeet.Hide();
+                    }
+
                     if (equipMain.IsHovered)
                     {
                         SetStatWindow(equipMain.X, equipMain.Y, c_Player.mainWeapon);
@@ -277,6 +352,18 @@ namespace Client.Classes
                     else if (equipOff.IsHovered)
                     {
                         SetStatWindow(equipMain.X, equipMain.Y, c_Player.offWeapon);
+                    }
+                    else if (equipChest.IsHovered)
+                    {
+                        SetStatWindow(equipChest.X, equipChest.Y, c_Player.Chest);
+                    }
+                    else if (equipLegs.IsHovered)
+                    {
+                        SetStatWindow(equipLegs.X, equipLegs.Y, c_Player.Legs);
+                    }
+                    else if (equipFeet.IsHovered)
+                    {
+                        SetStatWindow(equipFeet.X, equipFeet.Y, c_Player.Feet);
                     }
                     else
                     {
@@ -287,6 +374,14 @@ namespace Client.Classes
                     assaultAmmo.Text = "Assault Ammo: " + c_Player.AssaultAmmo;
                     rocketAmmo.Text = "Rocket Ammo: " + c_Player.RocketAmmo;
                     grenadeAmmo.Text = "Grenade Ammo: " + c_Player.GrenadeAmmo;
+
+                    equipMDamage.Text = "Main Damage: " + c_Player.mainWeapon.Damage;
+                    equipODamage.Text = "Off Damage: " + c_Player.offWeapon.Damage;
+                    equipArmor.Text = "Armor: " + c_Player.ArmorBonus(true);
+                    equipStr.Text = "Strength: " + c_Player.StrengthBonus(true);
+                    equipAgi.Text = "Agility: " + c_Player.AgilityBonus(true);
+                    equipEnd.Text = "Endurance: " + c_Player.EnduranceBonus(true);
+                    equipSta.Text = "Stamina: " + c_Player.StaminaBonus(true);
                     #endregion
                 }
             }
@@ -334,8 +429,37 @@ namespace Client.Classes
             packMClip.Hide();
             packASpeed.Hide();
             packRSpeed.Hide();
+            packType.Hide();
+            packAmmo.Hide();
+            packValue.Hide();
 
-            int n = 5;
+            int n = 15;
+            packType.SetPosition(3, n);
+            switch (statItem.Type)
+            {
+                case (int)ItemType.RangedWeapon:
+                    packType.Text = "Ranged Weapon";
+                    break;
+                case (int)ItemType.MeleeWeapon:
+                    packType.Text = "Melee Weapon";
+                    break;
+                case (int)ItemType.Currency:
+                    packType.Text = "Currency";
+                    break;
+                case (int)ItemType.Food:
+                    packType.Text = "Food";
+                    break;
+                case (int)ItemType.Drink:
+                    packType.Text = "Drink";
+                    break;
+                case (int)ItemType.FirstAid:
+                    packType.Text = "First Aid";
+                    break;
+                default:
+                    packType.Text = "Other";
+                    break;
+            }
+            packType.Show();
             if (statItem.Damage > 0)
             {
                 n += 10;
@@ -424,6 +548,31 @@ namespace Client.Classes
                 packMClip.Show();
             }
 
+            if (statItem.ammoType > 0)
+            {
+                n += 10;
+                packAmmo.SetPosition(3, n);
+                switch (statItem.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        packAmmo.Text = "Pistol Ammo";
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        packAmmo.Text = "Assault Ammo";
+                        break;
+                    case (int)AmmoType.Rocket:
+                        packAmmo.Text = "Rocket Ammo";
+                        break;
+                    case (int)AmmoType.Grenade:
+                        packAmmo.Text = "Grenade Ammo";
+                        break;
+                    default:
+                        packAmmo.Text = "None";
+                        break;
+                }
+                packAmmo.Show();
+            }
+
             if (statItem.AttackSpeed > 0)
             {
                 n += 10;
@@ -438,6 +587,14 @@ namespace Client.Classes
                 packRSpeed.SetPosition(3, n);
                 packRSpeed.Text = "Reload Speed: " + ((float)statItem.ReloadSpeed / 1000).ToString("#.##") + " s";
                 packRSpeed.Show();
+            }
+
+            if (statItem.Value > 1)
+            {
+                n += 10;
+                packValue.SetPosition(3, n);
+                packValue.Text = "Value: " + statItem.Value;
+                packValue.Show();
             }
 
             statWindow.Show();
@@ -686,6 +843,54 @@ namespace Client.Classes
             equipTab.Focus();
         }
 
+        private void EquipChest_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].Chest.Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.UnequipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32((int)EquipSlots.Chest);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            equipTab.Focus();
+        }
+
+        private void EquipLegs_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].Legs.Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.UnequipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32((int)EquipSlots.Legs);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            equipTab.Focus();
+        }
+
+        private void EquipFeet_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            if (c_Player[index].Feet.Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.UnequipItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32((int)EquipSlots.Feet);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+            equipTab.Focus();
+        }
+
         private void InvPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
             ImagePanel invPicE = (ImagePanel)sender;
@@ -807,6 +1012,18 @@ namespace Client.Classes
             packRSpeed = new Label(statWindow);
             packRSpeed.SetPosition(3, 135);
             packRSpeed.Text = "Reload Speed: ?";
+
+            packType = new Label(statWindow);
+            packType.SetPosition(3, 145);
+            packType.Text = "Type: ?";
+
+            packAmmo = new Label(statWindow);
+            packAmmo.SetPosition(3, 155);
+            packAmmo.Text = "Ammo Type: ?";
+
+            packValue = new Label(statWindow);
+            packValue.SetPosition(3, 160);
+            packValue.Text = "Value: ?";
             #endregion
 
             charTab = menuTabs.AddPage("Character");
@@ -898,6 +1115,21 @@ namespace Client.Classes
             equipOff.SetSize(32, 32);
             equipOff.DoubleClicked += EquipOff_DoubleClicked;
 
+            equipChest = new ImagePanel(equipTab.Page);
+            equipChest.SetPosition(45, 50);
+            equipChest.SetSize(32, 32);
+            equipChest.DoubleClicked += EquipChest_DoubleClicked;
+
+            equipLegs = new ImagePanel(equipTab.Page);
+            equipLegs.SetPosition(45, 95);
+            equipLegs.SetSize(32, 32);
+            equipLegs.DoubleClicked += EquipLegs_DoubleClicked;
+
+            equipFeet = new ImagePanel(equipTab.Page);
+            equipFeet.SetPosition(45, 140);
+            equipFeet.SetSize(32, 32);
+            equipFeet.DoubleClicked += EquipFeet_DoubleClicked;
+
             equipAmmo = new GroupBox(equipTab.Page);
             equipAmmo.SetPosition(190, 10);
             equipAmmo.SetSize(115, 75);
@@ -918,6 +1150,39 @@ namespace Client.Classes
             grenadeAmmo = new Label(equipAmmo);
             grenadeAmmo.SetPosition(3, 35);
             grenadeAmmo.Text = "Grenade Ammo: ?";
+
+            equipBonus = new GroupBox(equipTab.Page);
+            equipBonus.SetPosition(190, 95);
+            equipBonus.SetSize(115, 105);
+            equipBonus.Text = "Item Bonuses:";
+
+            equipMDamage = new Label(equipBonus);
+            equipMDamage.SetPosition(3, 5);
+            equipMDamage.Text = "Main Damage: ?";
+
+            equipODamage = new Label(equipBonus);
+            equipODamage.SetPosition(3, 15);
+            equipODamage.Text = "Off Damage: ?";
+
+            equipArmor = new Label(equipBonus);
+            equipArmor.SetPosition(3, 25);
+            equipArmor.Text = "Armor: ?";
+
+            equipStr = new Label(equipBonus);
+            equipStr.SetPosition(3, 35);
+            equipStr.Text = "Strength: ?";
+
+            equipAgi = new Label(equipBonus);
+            equipAgi.SetPosition(3, 45);
+            equipAgi.Text = "Agility: ?";
+
+            equipEnd = new Label(equipBonus);
+            equipEnd.SetPosition(3, 55);
+            equipEnd.Text = "Endurnace: ?";
+
+            equipSta = new Label(equipBonus);
+            equipSta.SetPosition(3, 65);
+            equipSta.Text = "Stamina: ?";
             #endregion
 
             skillsTab = menuTabs.AddPage("Skills");

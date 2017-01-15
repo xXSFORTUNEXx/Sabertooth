@@ -156,6 +156,10 @@ namespace Client.Classes
                             case (byte)PacketTypes.MapItemData:
                                  HandleMapItemData(incMSG, c_Map);
                                 break;
+
+                            case (byte)PacketTypes.PlayerEquip:
+                                HandlePlayerEquipment(incMSG, c_Player, c_Index);
+                                break;
                         }
                         break;
                 }
@@ -169,6 +173,66 @@ namespace Client.Classes
             c_Canvas.Dispose();
             c_Client.Shutdown("Disconnect");
             Exit(0);
+        }
+
+        void HandlePlayerEquipment(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        {
+            c_Player[index].Chest.Name = incMSG.ReadString();
+            c_Player[index].Chest.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Type = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Value = incMSG.ReadVariableInt32();
+
+            c_Player[index].Legs.Name = incMSG.ReadString();
+            c_Player[index].Legs.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Type = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Value = incMSG.ReadVariableInt32();
+
+            c_Player[index].Feet.Name = incMSG.ReadString();
+            c_Player[index].Feet.Sprite = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Damage = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Armor = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Type = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.AttackSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.ReloadSpeed = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.HealthRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.HungerRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.HydrateRestore = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Strength = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Agility = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Endurance = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Stamina = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Clip = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Value = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayerInv(NetIncomingMessage incMSG, Player[] c_Player, int index)
@@ -194,6 +258,7 @@ namespace Client.Classes
                     c_Player[index].Backpack[i].Clip = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].maxClip = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].ammoType = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Value = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -888,6 +953,7 @@ namespace Client.Classes
         RequestInv,
         UnequipItem,
         EquipItem,
-        DropItem
+        DropItem,
+        PlayerEquip
     }
 }
