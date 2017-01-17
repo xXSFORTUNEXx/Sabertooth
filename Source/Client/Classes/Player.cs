@@ -268,6 +268,7 @@ namespace Client.Classes
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.R))
             {
+                if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip(c_Client, index);

@@ -42,30 +42,30 @@ namespace Client.Classes
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth");    
+            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Close);
             c_Window.Closed += new EventHandler(OnClose);
-            c_Window.KeyReleased += window_KeyReleased;    
-            c_Window.KeyPressed += OnKeyPressed;  
-            c_Window.MouseButtonPressed += window_MouseButtonPressed; 
+            c_Window.KeyReleased += window_KeyReleased;
+            c_Window.KeyPressed += OnKeyPressed;
+            c_Window.MouseButtonPressed += window_MouseButtonPressed;
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
-            c_Window.MouseMoved += window_MouseMoved;  
-            c_Window.TextEntered += window_TextEntered;  
-            c_Window.SetFramerateLimit(65);    
+            c_Window.MouseMoved += window_MouseMoved;
+            c_Window.TextEntered += window_TextEntered;
+            c_Window.SetFramerateLimit(65);
             this.c_Config = c_Config;
-            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);   
-            Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png"); 
-            Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");  
+            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
+            Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
+            Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
             gwenRenderer.LoadFont(defaultFont);
-            skin.SetDefaultFont(defaultFont.FaceName);  
-            defaultFont.Dispose(); 
-            c_Canvas = new Canvas(skin);   
-            c_Canvas.SetSize(800, 600);    
-            c_Canvas.ShouldDrawBackground = true;  
-            c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;   
+            skin.SetDefaultFont(defaultFont.FaceName);
+            defaultFont.Dispose();
+            c_Canvas = new Canvas(skin);
+            c_Canvas.SetSize(800, 600);
+            c_Canvas.ShouldDrawBackground = true;
+            c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;
             c_Canvas.KeyboardInputEnabled = true;
-            c_Input = new Gwen.Input.SFML(); 
-            c_Input.Initialize(c_Canvas, c_Window); 
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);  
+            c_Input = new Gwen.Input.SFML();
+            c_Input.Initialize(c_Canvas, c_Window);
+            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);
             c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData(); 

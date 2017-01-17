@@ -186,7 +186,7 @@ namespace Client.Classes
             healthBar.FillColor = SFML.Graphics.Color.Red;
 
             hudH = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
-            hudHPos = new Vector2f(28, 28);
+            hudHPos = new Vector2f(32, 28);
 
             float NextLevel = c_Player.Level * 1000;
             expbarLength = (c_Player.Experience / NextLevel) * fullSize;
@@ -195,30 +195,37 @@ namespace Client.Classes
             expBar.FillColor = SFML.Graphics.Color.Green;
 
             hudE = "XP: " + c_Player.Experience + " / " + NextLevel;
-            hudEPos = new Vector2f(28, 58);
+            hudEPos = new Vector2f(32, 58);
 
             if (c_Player.mainWeapon.Name != "None")
             {
-                switch (c_Player.mainWeapon.ammoType)
+                if (TickCount - c_Player.reloadTick < c_Player.mainWeapon.ReloadSpeed)
                 {
-                    case (int)AmmoType.Pistol:
-                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.PistolAmmo;
-                        break;
-
-                    case (int)AmmoType.AssaultRifle:
-                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.AssaultAmmo;
-                        break;
-
-                    case (int)AmmoType.Rocket:
-                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.RocketAmmo;
-                        break;
-
-                    case (int)AmmoType.Grenade:
-                        hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.GrenadeAmmo;
-                        break;
+                    hudC = "Reloading...";
+                    clipbarLength = ((float)(TickCount - c_Player.reloadTick) / c_Player.mainWeapon.ReloadSpeed) * fullSize;
                 }
-                clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * fullSize;
+                else
+                {
+                    switch (c_Player.mainWeapon.ammoType)
+                    {
+                        case (int)AmmoType.Pistol:
+                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.PistolAmmo;
+                            break;
 
+                        case (int)AmmoType.AssaultRifle:
+                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.AssaultAmmo;
+                            break;
+
+                        case (int)AmmoType.Rocket:
+                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.RocketAmmo;
+                            break;
+
+                        case (int)AmmoType.Grenade:
+                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.GrenadeAmmo;
+                            break;
+                    }
+                    clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * fullSize;
+                }
             }
             else
             {
@@ -229,7 +236,7 @@ namespace Client.Classes
             clipBar.Size = new Vector2f(clipbarLength, 25);
             clipBar.Position = new Vector2f(25, 85);
             clipBar.FillColor = SFML.Graphics.Color.Blue;
-            hudCPos = new Vector2f(28, 88);
+            hudCPos = new Vector2f(32, 88);
 
             c_Window.Draw(healthBar);
             c_Window.Draw(expBar);
@@ -1415,7 +1422,7 @@ namespace Client.Classes
             d_packetsOut.SetPosition(10, 115);
             d_packetsOut.Text = "Packets Out: ?";
         }
-        #endregion
+        #endregion 
 
         #region Other Voids
         public void AddText(string msg)
