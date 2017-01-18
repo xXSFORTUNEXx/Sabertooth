@@ -477,7 +477,7 @@ namespace Server.Classes
                                 DidMove = true;
                                 return;
                             }
-                            for (int i = 0; i < 10; i++)
+                            /*for (int i = 0; i < 10; i++)
                             {
                                 if (s_Map.m_MapNpc[i].IsSpawned)
                                 {
@@ -513,7 +513,7 @@ namespace Server.Classes
                                         return;
                                     }
                                 }
-                            }
+                            }*/
                             Direction = (int)Directions.Left;
                             X -= 1;
                             DidMove = true;
@@ -526,7 +526,7 @@ namespace Server.Classes
                                 DidMove = true;
                                 return;
                             }
-                            for (int i = 0; i < 10; i++)
+                            /*for (int i = 0; i < 10; i++)
                             {
                                 if (s_Map.m_MapNpc[i].IsSpawned)
                                 {
@@ -562,7 +562,7 @@ namespace Server.Classes
                                         return;
                                     }
                                 }
-                            }
+                            }*/
                             Direction = (int)Directions.Right;
                             X += 1;
                             DidMove = true;
@@ -579,7 +579,7 @@ namespace Server.Classes
                                 DidMove = true;
                                 return;
                             }
-                            for (int i = 0; i < 10; i++)
+                            /*for (int i = 0; i < 10; i++)
                             {
                                 if (s_Map.m_MapNpc[i].IsSpawned)
                                 {
@@ -615,7 +615,7 @@ namespace Server.Classes
                                         return;
                                     }
                                 }
-                            }
+                            }*/
                             Direction = (int)Directions.Up;
                             Y -= 1;
                             DidMove = true;
@@ -628,7 +628,7 @@ namespace Server.Classes
                                 DidMove = true;
                                 return;
                             }
-                            for (int i = 0; i < 10; i++)
+                            /*for (int i = 0; i < 10; i++)
                             {
                                 if (s_Map.m_MapNpc[i].IsSpawned)
                                 {
@@ -664,7 +664,7 @@ namespace Server.Classes
                                         return;
                                     }
                                 }
-                            }
+                            }*/
                             Direction = (int)Directions.Down;
                             Y += 1;
                             DidMove = true;

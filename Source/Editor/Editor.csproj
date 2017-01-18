@@ -88,6 +88,7 @@
     <Compile Include="Classes\Map.cs" />
     <Compile Include="Classes\Npc.cs" />
     <Compile Include="Classes\Projectile.cs" />
+    <Compile Include="Classes\Shop.cs" />
     <Compile Include="Forms\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +114,12 @@
     <Compile Include="Forms\NpcEditor.Designer.cs">
       <DependentUpon>NpcEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ShopEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShopEditor.Designer.cs">
+      <DependentUpon>ShopEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
@@ -125,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NpcEditor.resx">
       <DependentUpon>NpcEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShopEditor.resx">
+      <DependentUpon>ShopEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

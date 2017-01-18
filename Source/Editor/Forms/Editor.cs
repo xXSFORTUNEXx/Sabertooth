@@ -117,6 +117,16 @@ namespace Editor
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
 
+            sql = "CREATE TABLE `SHOPS`";
+            sql = sql + "(`NAME` TEXT, ";
+            for (int i = 0; i < 24; i++)
+            {
+                sql = sql + "`SHOPITEMID" + i + "` INTEGER, ";
+            }
+            sql = sql + "`SHOPITEMID24` INTEGER)";
+            sql_Command = new SQLiteCommand(sql, s_Database);
+            sql_Command.ExecuteNonQuery();
+
             s_Database.Close();
         }
 

@@ -155,15 +155,25 @@ namespace Client.Classes
         RenderText hudHealth = new RenderText();
         RectangleShape expBar = new RectangleShape();
         RenderText hudExp = new RenderText();
+        RectangleShape waterBar = new RectangleShape();
+        RenderText hudWater = new RenderText();
+        RectangleShape foodBar = new RectangleShape();
+        RenderText hudFood = new RenderText();
         string hudC;
         string hudH;
         string hudE;
+        string hudW;
+        string hudF;
         float barLength;
         float expbarLength;
         float clipbarLength;
+        float waterbarLength;
+        float foodbarLength;
         Vector2f hudCPos;
         Vector2f hudHPos;
         Vector2f hudEPos;
+        Vector2f hudWPos;
+        Vector2f hudFPos;
         #endregion
 
         public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
@@ -192,7 +202,7 @@ namespace Client.Classes
             expbarLength = (c_Player.Experience / NextLevel) * fullSize;
             expBar.Size = new Vector2f(expbarLength, 25);
             expBar.Position = new Vector2f(25, 55);
-            expBar.FillColor = SFML.Graphics.Color.Green;
+            expBar.FillColor = SFML.Graphics.Color.Yellow;
 
             hudE = "XP: " + c_Player.Experience + " / " + NextLevel;
             hudEPos = new Vector2f(32, 58);
@@ -235,15 +245,35 @@ namespace Client.Classes
 
             clipBar.Size = new Vector2f(clipbarLength, 25);
             clipBar.Position = new Vector2f(25, 85);
-            clipBar.FillColor = SFML.Graphics.Color.Blue;
+            clipBar.FillColor = SFML.Graphics.Color.Magenta;
             hudCPos = new Vector2f(32, 88);
+
+            waterbarLength = ((float)c_Player.Hydration / 100) * fullSize;
+            waterBar.Size = new Vector2f(waterbarLength, 25);
+            waterBar.Position = new Vector2f(25, 115);
+            waterBar.FillColor = SFML.Graphics.Color.Blue;
+
+            hudW = "Hydration: " + c_Player.Hydration + " / 100";
+            hudWPos = new Vector2f(32, 118);
+
+            foodbarLength = ((float)c_Player.Hunger / 100) * fullSize;
+            foodBar.Size = new Vector2f(foodbarLength, 25);
+            foodBar.Position = new Vector2f(25, 145);
+            foodBar.FillColor = SFML.Graphics.Color.Green;
+
+            hudF = "Hunger: " + c_Player.Hunger + " / 100";
+            hudFPos = new Vector2f(32, 148);
 
             c_Window.Draw(healthBar);
             c_Window.Draw(expBar);
             c_Window.Draw(clipBar);
+            c_Window.Draw(waterBar);
+            c_Window.Draw(foodBar);
             hudHealth.DrawText(c_Window, hudH, hudHPos, 16, SFML.Graphics.Color.White);
-            hudExp.DrawText(c_Window, hudE, hudEPos, 16, SFML.Graphics.Color.White);
+            hudExp.DrawText(c_Window, hudE, hudEPos, 16, SFML.Graphics.Color.Black);
             hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
+            hudWater.DrawText(c_Window, hudW, hudWPos, 16, SFML.Graphics.Color.White);
+            hudFood.DrawText(c_Window, hudF, hudFPos, 16, SFML.Graphics.Color.White);
         }
 
         public void UpdateMenuWindow(Player c_Player)
