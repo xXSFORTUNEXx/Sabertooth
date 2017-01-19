@@ -37,6 +37,8 @@
             this.pnlMain = new System.Windows.Forms.GroupBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
+            this.lblRandomItem = new System.Windows.Forms.Label();
+            this.scrlRandomItems = new System.Windows.Forms.HScrollBar();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -103,6 +105,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlRandomItems);
+            this.pnlMain.Controls.Add(this.lblRandomItem);
             this.pnlMain.Controls.Add(this.txtName);
             this.pnlMain.Controls.Add(this.lblName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
@@ -127,6 +131,22 @@
             this.lblName.Size = new System.Drawing.Size(38, 13);
             this.lblName.TabIndex = 7;
             this.lblName.Text = "Name:";
+            // 
+            // lblRandomItem
+            // 
+            this.lblRandomItem.AutoSize = true;
+            this.lblRandomItem.Location = new System.Drawing.Point(20, 71);
+            this.lblRandomItem.Name = "lblRandomItem";
+            this.lblRandomItem.Size = new System.Drawing.Size(87, 13);
+            this.lblRandomItem.TabIndex = 9;
+            this.lblRandomItem.Text = "Random Items: 0";
+            // 
+            // scrlRandomItems
+            // 
+            this.scrlRandomItems.Location = new System.Drawing.Point(20, 84);
+            this.scrlRandomItems.Name = "scrlRandomItems";
+            this.scrlRandomItems.Size = new System.Drawing.Size(156, 17);
+            this.scrlRandomItems.TabIndex = 10;
             // 
             // ShopEditor
             // 
@@ -155,5 +175,7 @@
         private System.Windows.Forms.GroupBox pnlMain;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.HScrollBar scrlRandomItems;
+        private System.Windows.Forms.Label lblRandomItem;
     }
 }

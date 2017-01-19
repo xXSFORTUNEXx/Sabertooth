@@ -23,6 +23,7 @@ namespace Editor.Forms
         {
             InitializeComponent();
             picSprite.Image = Image.FromFile("Resources/Characters/1.png");
+            scrlSprite.Maximum = 8;
             LoadNpcList();
         }
 

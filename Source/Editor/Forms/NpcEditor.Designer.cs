@@ -236,7 +236,7 @@
             this.scrlSprite.Maximum = 204;
             this.scrlSprite.Name = "scrlSprite";
             this.scrlSprite.Size = new System.Drawing.Size(109, 17);
-            this.scrlSprite.TabIndex = 32;
+            this.scrlSprite.TabIndex = 8;
             this.scrlSprite.Value = 1;
             this.scrlSprite.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSprite_Scroll);
             // 

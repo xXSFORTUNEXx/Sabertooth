@@ -20,7 +20,7 @@ namespace Editor.Classes
 
         public MapItem[] mapItem = new MapItem[20];
 
-        const int Max_Tilesets = 68;
+        const int Max_Tilesets = 2;
         Texture[] TileSet = new Texture[Max_Tilesets];
         Sprite Tiles = new Sprite();
 

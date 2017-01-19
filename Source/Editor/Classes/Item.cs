@@ -33,7 +33,7 @@ namespace Editor.Classes
         public int ItemAmmoType { get; set; }
         public int Value { get; set; }
 
-        const int Max_ItemPics = 4;
+        const int Max_ItemPics = 8;
         Texture[] ItemPic = new Texture[Max_ItemPics];
         Sprite ItemSprite = new Sprite();
 

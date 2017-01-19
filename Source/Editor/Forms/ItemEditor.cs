@@ -23,6 +23,7 @@ namespace Editor.Forms
         {
             InitializeComponent();
             picSprite.Image = Image.FromFile("Resources/Items/1.png");
+            scrlSprite.Maximum = 8;
             LoadItemList();
         }
 
@@ -142,7 +143,7 @@ namespace Editor.Forms
 
         private void scrlAttackSpeed_Scroll(object sender, ScrollEventArgs e)
         {
-            lblAttackSpeed.Text = "Attack Speed: : " + (scrlAttackSpeed.Value);
+            lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);
             e_Item.AttackSpeed = scrlAttackSpeed.Value;
             UnModSave = true;
         }

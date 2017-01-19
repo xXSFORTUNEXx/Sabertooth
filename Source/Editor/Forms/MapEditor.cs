@@ -23,14 +23,14 @@ namespace Editor.Forms
         RenderText e_Text = new RenderText();
         Map e_Map = new Map();
         SFML.Graphics.View e_View = new SFML.Graphics.View();
-        Texture[] e_Tileset = new Texture[68];
+        Texture[] e_Tileset = new Texture[2];
         Sprite e_SelectedTile = new Sprite();
         Texture e_GridTexture = new Texture("Resources/Tilesets/Grid.png");
         Sprite e_Grid = new Sprite();
         SQLiteConnection e_Database;
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
-        Texture[] e_Texture = new Texture[204];
+        Texture[] e_Texture = new Texture[8];
         public int e_ViewX { get; set; }
         public int e_ViewY { get; set; }
         int e_OffsetX = 25;
@@ -62,13 +62,13 @@ namespace Editor.Forms
             picTileset.Paint += new PaintEventHandler(EditorTilesetPaint);
             picTileset.KeyDown += new KeyEventHandler(EditorTilesetKeyDown);
 
-            for (int i = 0; i < 68; i++)
+            for (int i = 0; i < 2; i++)
             {
                 cmbTileset.Items.Add("Tileset: " + (i + 1));
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
 
-            for (int s = 0; s < 204; s++)
+            for (int s = 0; s < 8; s++)
             {
                 e_Texture[s] = new Texture("Resources/Characters/" + (s + 1) + ".png");
             }

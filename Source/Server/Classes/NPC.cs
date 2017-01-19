@@ -671,6 +671,11 @@ namespace Server.Classes
                         }
                     }
 
+                    if (X == s_Player[Target].X + 12 && Y == s_Player[Target].Y + 9)
+                    {
+                        AttackPlayer(s_Server, s_Player, Target);
+                    }
+
                     if (DidMove == true)
                     {
                         if (Step == 3) { Step = 0; } else { Step += 1; }

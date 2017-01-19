@@ -280,7 +280,7 @@
             this.scrlReloadSpeed.Maximum = 5000;
             this.scrlReloadSpeed.Name = "scrlReloadSpeed";
             this.scrlReloadSpeed.Size = new System.Drawing.Size(156, 17);
-            this.scrlReloadSpeed.SmallChange = 10;
+            this.scrlReloadSpeed.SmallChange = 100;
             this.scrlReloadSpeed.TabIndex = 21;
             this.scrlReloadSpeed.Value = 1;
             this.scrlReloadSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlReloadSpeed_Scroll);
@@ -301,7 +301,7 @@
             this.scrlAttackSpeed.Maximum = 5000;
             this.scrlAttackSpeed.Name = "scrlAttackSpeed";
             this.scrlAttackSpeed.Size = new System.Drawing.Size(156, 17);
-            this.scrlAttackSpeed.SmallChange = 10;
+            this.scrlAttackSpeed.SmallChange = 100;
             this.scrlAttackSpeed.TabIndex = 19;
             this.scrlAttackSpeed.Value = 1;
             this.scrlAttackSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAttackSpeed_Scroll);

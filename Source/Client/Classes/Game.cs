@@ -25,8 +25,8 @@ namespace Client.Classes
         Npc[] c_Npc = new Npc[10]; 
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10]; 
-        Texture[] c_Sprite = new Texture[204];
-        Texture[] c_ItemSprite = new Texture[4];
+        Texture[] c_Sprite = new Texture[8];
+        Texture[] c_ItemSprite = new Texture[8];
         Map c_Map = new Map();
         View c_View = new View(); 
         RenderText c_Text = new RenderText();
@@ -70,11 +70,11 @@ namespace Client.Classes
 
             handleData = new HandleData(); 
 
-            for (int i = 0; i < 204; i++)   
+            for (int i = 0; i < 8; i++)   
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
-            for (int i =0; i < 4; i++)
+            for (int i =0; i < 8; i++)
             {
                 c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
             }
