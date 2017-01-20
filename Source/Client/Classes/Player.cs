@@ -163,213 +163,199 @@ namespace Client.Classes
             * Y Axis - Left Stick
             * D Pad - PovX, PovY
             */
-            if (Joystick.IsConnected(0))
+            if (Moved == true) { Moved = false; return; }
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+
+            float deadZone = 35;
+            float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
+            float y = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.Y), deadZone);
+
+            c_GUI.d_Controller.Text = "X: " + x + " / Y: " + y;
+
+            if (x > deadZone)
             {
-                if (Moved == true) { Moved = false; return; }
-                if (c_GUI.inputChat.HasFocus == true) { return; }
-                if (!c_Window.HasFocus()) { return; }
-
-                float deadZone = 35;
-                float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
-                float y = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.Y), deadZone);
-
-                c_GUI.d_Controller.Text = "X: " + x + " / Y: " + y;
-
-                if (x > deadZone)
+                if (X < 49 - offsetX)
                 {
-                    if (X < 49 - offsetX)
+                    if (c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked)
                     {
-                        if (c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked)
-                        {
-                            Direction = (int)Directions.Right;
-                            Moved = false;
-                            SendUpdateDirection(c_Client, index);
-                            return;
-                        }
-                        X += 1;
                         Direction = (int)Directions.Right;
-                        Moved = true;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
+                    X += 1;
+                    Direction = (int)Directions.Right;
+                    Moved = true;
                 }
+            }
 
-                if (x < -deadZone)
+            if (x < -deadZone)
+            {
+                if (X > 1 - offsetX)
                 {
-                    if (X > 1 - offsetX)
+                    if (c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
                     {
-                        if (c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
-                        {
-                            Direction = (int)Directions.Left;
-                            Moved = false;
-                            SendUpdateDirection(c_Client, index);
-                            return;
-                        }
-                        X -= 1;
                         Direction = (int)Directions.Left;
-                        Moved = true;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
+                    X -= 1;
+                    Direction = (int)Directions.Left;
+                    Moved = true;
                 }
+            }
 
-                if (y > deadZone)
+            if (y > deadZone)
+            {
+                if (Y < 49 - offsetY)
                 {
-                    if (Y < 49 - offsetY)
+                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
                     {
-                        if (c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
-                        {
-                            Direction = (int)Directions.Down;
-                            Moved = false;
-                            SendUpdateDirection(c_Client, index);
-                            return;
-                        }
-                        Y += 1;
                         Direction = (int)Directions.Down;
-                        Moved = true;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
+                    Y += 1;
+                    Direction = (int)Directions.Down;
+                    Moved = true;
                 }
+            }
 
-                if (y < -deadZone)
+            if (y < -deadZone)
+            {
+                if (Y > 1 - offsetY)
                 {
-                    if (Y > 1 - offsetY)
+                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
                     {
-                        if (c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
-                        {
-                            Direction = (int)Directions.Up;
-                            Moved = false;
-                            SendUpdateDirection(c_Client, index);
-                            return;
-                        }
-                        Y -= 1;
                         Direction = (int)Directions.Up;
-                        Moved = true;
+                        Moved = false;
+                        SendUpdateDirection(c_Client, index);
+                        return;
                     }
+                    Y -= 1;
+                    Direction = (int)Directions.Up;
+                    Moved = true;
                 }
+            }
 
-                if (Moved == true)
-                {
-                    Step += 1;
-                    if (Step == 4) { Step = 0; }
-                    Moved = false;
-                    SendMovementData(c_Client, index);
-                }
+            if (Moved == true)
+            {
+                Step += 1;
+                if (Step == 4) { Step = 0; }
+                Moved = false;
+                SendMovementData(c_Client, index);
             }
         }
 
         public void CheckControllerChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            if (Joystick.IsConnected(0))
+            
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+
+            float deadZone = 35;
+            float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
+            float r = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.R), deadZone);
+
+            c_GUI.d_ConDir.Text = "Direction: " + AimDirection;
+
+            if (u > deadZone)
             {
-                if (c_GUI.inputChat.HasFocus == true) { return; }
-                if (!c_Window.HasFocus()) { return; }
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection(c_Client, index);
+            }
 
-                float deadZone = 35;
-                float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
-                float r = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.R), deadZone);
+            if (u < -deadZone)
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection(c_Client, index);
+            }
 
-                c_GUI.d_ConDir.Text = "Direction: " + AimDirection;
+            if (r > deadZone)
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection(c_Client, index);
+            }
 
-                if (u > deadZone)
-                {
-                    AimDirection = (int)Directions.Right;
-                    SendUpdateDirection(c_Client, index);
-                }
-
-                if (u < -deadZone)
-                {
-                    AimDirection = (int)Directions.Left;
-                    SendUpdateDirection(c_Client, index);
-                }
-
-                if (r > deadZone)
-                {
-                    AimDirection = (int)Directions.Down;
-                    SendUpdateDirection(c_Client, index);
-                }
-
-                if (r < -deadZone)
-                {
-                    AimDirection = (int)Directions.Up;
-                    SendUpdateDirection(c_Client, index);
-                }
+            if (r < -deadZone)
+            {
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection(c_Client, index);
             }
         }
 
         public void CheckControllerAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            if (Joystick.IsConnected(0))
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+            if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
+            if (TickCount - equipTick < 5000) { return; }
+
+            if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
             {
-                if (c_GUI.inputChat.HasFocus == true) { return; }
-                if (!c_Window.HasFocus()) { return; }
-                if (Attacking == true) { return; }
-                if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
-                if (TickCount - equipTick < 5000) { return; }
-
-                if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
+                if (mainWeapon.Name != "None")
                 {
-                    if (mainWeapon.Name != "None")
-                    {
-                        Attacking = true;
-                    }
-                    else
-                    {
-                        c_GUI.AddText("You need a weapon equiped to attack!");
-                        equipTick = TickCount;
-                        return;
-                    }
+                    Attacking = true;
                 }
-
-                if (Attacking == true)
+                else
                 {
-                    switch (mainWeapon.ammoType)
-                    {
-                        case (int)AmmoType.Pistol:
-                            if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.AssaultRifle:
-                            if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Rocket:
-                            if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Grenade:
-                            if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
-                            break;
-                    }
-                    if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                    SendCreateBullet(c_Client, index);
-                    RemoveBulletFromClip(c_Client, index);
-                    Attacking = false;
-                    attackTick = TickCount;
+                    c_GUI.AddText("You need a weapon equiped to attack!");
+                    equipTick = TickCount;
+                    return;
                 }
+            }
+
+            if (Attacking == true)
+            {
+                switch (mainWeapon.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
+                        break;
+                    case (int)AmmoType.Rocket:
+                        if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
+                        break;
+                    case (int)AmmoType.Grenade:
+                        if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
+                        break;
+                }
+                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
+                SendCreateBullet(c_Client, index);
+                RemoveBulletFromClip(c_Client, index);
+                Attacking = false;
+                attackTick = TickCount;
             }
         }
 
         public void CheckControllerReload(NetClient c_Client, int index)
         {
-            if (Joystick.IsConnected(0))
+            if (Joystick.IsButtonPressed(0, 2))
             {
-                if (Joystick.IsButtonPressed(0, 2))
-                {
-                    if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
-                    Reload();
-                    reloadTick = TickCount;
-                    SendUpdateClip(c_Client, index);
-                    SendUpdateAmmo(c_Client, index);
-                }
+                if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
+                Reload();
+                reloadTick = TickCount;
+                SendUpdateClip(c_Client, index);
+                SendUpdateAmmo(c_Client, index);
             }
         }
 
         public void CheckControllerItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            if (Joystick.IsConnected(0))
-            {
-                if (c_GUI.inputChat.HasFocus == true) { return; }
-                if (!c_Window.HasFocus()) { return; }
-                if (Attacking == true) { return; }
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
 
-                if (Joystick.IsButtonPressed(0, 0))
-                {
-                    SendPickupItem(c_Client, index);
-                    PickupTick = TickCount;
-                }
+            if (Joystick.IsButtonPressed(0, 0))
+            {
+                SendPickupItem(c_Client, index);
+                PickupTick = TickCount;
             }
         }
 

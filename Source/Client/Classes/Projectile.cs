@@ -61,7 +61,7 @@ namespace Client.Classes
             int rndX = RND.Next(0, 10);
             int rndY = RND.Next(0, 10);
 
-            c_Sprite.Texture = proj_Texture[Sprite - 1];
+            c_Sprite.Texture = proj_Texture[Sprite + 1];
             c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
             c_Sprite.Position = new Vector2f((X * 32) + rndX, (Y * 32) + rndY);
 

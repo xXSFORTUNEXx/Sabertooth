@@ -61,24 +61,24 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void CreateProjectile(NetServer s_Server, Player[] s_Player, int mapIndex, int playerIndex)
+        public void CreateProjectile(NetServer s_Server, Player[] s_Player, Projectile[] s_Proj, int mapIndex, int playerIndex)
         {
             int slot = FindOpenProjSlot();
 
             if (slot == 200) { WriteLine("Bullet max reached!"); return; }
 
-            //For testing purposes
+            int projNum = s_Player[playerIndex].mainWeapon.ProjectileNumber;
+            int damage = s_Player[playerIndex].mainWeapon.Damage + s_Proj[projNum].Damage;
             mapProj[slot] = new MapProj();
-            mapProj[slot].Name = "Bullet";
+            mapProj[slot].Name = s_Proj[projNum].Name;
+            mapProj[slot].Sprite = s_Proj[projNum].Sprite;
+            mapProj[slot].Type = s_Proj[projNum].Type;
+            mapProj[slot].Speed = s_Proj[projNum].Speed;
+            mapProj[slot].Damage = damage;
             mapProj[slot].X = (s_Player[playerIndex].X + 12);
             mapProj[slot].Y = (s_Player[playerIndex].Y + 9);
-            mapProj[slot].Direction = s_Player[playerIndex].AimDirection;
-            mapProj[slot].Speed = 250;
             mapProj[slot].Owner = playerIndex;
-            mapProj[slot].Sprite = 2;
-            mapProj[slot].Type = (int)ProjType.Bullet;
-            //im setting this locally, dont really think the client needs it
-            mapProj[slot].Damage = s_Player[playerIndex].mainWeapon.Damage;
+            mapProj[slot].Direction = s_Player[playerIndex].AimDirection;
 
             for (int i = 0; i < 5; i++)
             {

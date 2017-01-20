@@ -348,7 +348,8 @@ namespace Server.Classes
                                                 s_Map[i].mapItem[slot].Clip = s_Item[itemNum].Clip;
                                                 s_Map[i].mapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
                                                 s_Map[i].mapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
-                                                s_Map[i].mapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;
+                                                s_Map[i].mapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
+                                                s_Map[i].mapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                                
                                                 s_Map[i].mapItem[slot].IsSpawned = true;
                                                 s_Map[i].Ground[x, y].NeedsSpawned = true;
 

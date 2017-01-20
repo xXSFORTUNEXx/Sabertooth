@@ -114,6 +114,12 @@
     <Compile Include="Forms\NpcEditor.Designer.cs">
       <DependentUpon>NpcEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ProjectileEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProjectileEditor.Designer.cs">
+      <DependentUpon>ProjectileEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShopEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NpcEditor.resx">
       <DependentUpon>NpcEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProjectileEditor.resx">
+      <DependentUpon>ProjectileEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShopEditor.resx">
       <DependentUpon>ShopEditor.cs</DependentUpon>

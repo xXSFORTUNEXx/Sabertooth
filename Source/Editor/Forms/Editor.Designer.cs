@@ -35,7 +35,7 @@
             this.btnMapEditor = new System.Windows.Forms.Button();
             this.btnNpcEditor = new System.Windows.Forms.Button();
             this.btnItemEditor = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnProjectileEditor = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
@@ -114,14 +114,15 @@
             this.btnItemEditor.UseVisualStyleBackColor = true;
             this.btnItemEditor.Click += new System.EventHandler(this.btnItemEditor_Click);
             // 
-            // button4
+            // btnProjectileEditor
             // 
-            this.button4.Location = new System.Drawing.Point(12, 99);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(119, 23);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Projectile Editor";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnProjectileEditor.Location = new System.Drawing.Point(12, 99);
+            this.btnProjectileEditor.Name = "btnProjectileEditor";
+            this.btnProjectileEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnProjectileEditor.TabIndex = 4;
+            this.btnProjectileEditor.Text = "Projectile Editor";
+            this.btnProjectileEditor.UseVisualStyleBackColor = true;
+            this.btnProjectileEditor.Click += new System.EventHandler(this.btnProjectileEditor_Click);
             // 
             // button5
             // 
@@ -168,7 +169,7 @@
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btnProjectileEditor);
             this.Controls.Add(this.btnItemEditor);
             this.Controls.Add(this.btnNpcEditor);
             this.Controls.Add(this.btnMapEditor);
@@ -192,7 +193,7 @@
         private System.Windows.Forms.Button btnMapEditor;
         private System.Windows.Forms.Button btnNpcEditor;
         private System.Windows.Forms.Button btnItemEditor;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnProjectileEditor;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;

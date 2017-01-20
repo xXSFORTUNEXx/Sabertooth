@@ -29,6 +29,7 @@ namespace Server.Classes
         public int MaxClip { get; set; }
         public int ItemAmmoType { get; set; }
         public int Value { get; set; }
+        public int ProjectileNumber { get; set; }
 
         public Item() { }
 
@@ -38,7 +39,7 @@ namespace Server.Classes
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype)
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype, int value, int projNum)
         {
             Name = name;
             Sprite = sprite;
@@ -57,6 +58,8 @@ namespace Server.Classes
             Clip = clip;
             MaxClip = maxclip;
             ItemAmmoType = ammotype;
+            Value = value;
+            ProjectileNumber = projNum;
         }
 
         public void CreateItemInDatabase()
@@ -67,7 +70,7 @@ namespace Server.Classes
             SQLiteCommand sql_Command;
             sql = "INSERT INTO `ITEMS`";
             sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`)";
+            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
             sql = sql + " VALUES ";
             sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
             sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "');";
@@ -86,7 +89,7 @@ namespace Server.Classes
             sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
             sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
             sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "', ";
-            sql = sql + "VALUE = '" + Value + "' ";
+            sql = sql + "VALUE = '" + Value + "', PROJ = '" + ProjectileNumber + "' ";
             sql = sql + "WHERE rowid = '" + itemNum + "';";
             sql_Command = new SQLiteCommand(sql, s_Database);
             sql_Command.ExecuteNonQuery();
@@ -124,6 +127,7 @@ namespace Server.Classes
                 MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
                 ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
                 Value = ToInt32(sql_Reader["VALUE"].ToString());
+                ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
             }
             s_Database.Close();
         }

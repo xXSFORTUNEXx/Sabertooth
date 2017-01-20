@@ -29,6 +29,7 @@ namespace Client.Classes
         public int maxClip { get; set; }
         public int ammoType { get; set; }
         public int Value { get; set; }
+        public int ProjectileNumber { get; set; }
 
         public Item() { }
 

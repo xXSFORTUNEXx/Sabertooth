@@ -24,6 +24,7 @@ namespace Editor.Forms
             InitializeComponent();
             picSprite.Image = Image.FromFile("Resources/Items/1.png");
             scrlSprite.Maximum = 8;
+            scrlProjNum.Maximum = 2;
             LoadItemList();
         }
 
@@ -46,79 +47,6 @@ namespace Editor.Forms
             }
         }
 
-        private void lstIndex_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (UnModSave == true)
-            {
-                string w_Message = "Are you sure you want to load a different item? All unsaved progress will be lost.";
-                string w_Caption = "Unsaved data";
-                MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
-                DialogResult w_Result;
-                w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
-                if (w_Result == DialogResult.No) { return; }
-            }
-            SelectedIndex = (lstIndex.SelectedIndex + 1);
-            e_Item.LoadItemFromDatabase(SelectedIndex);
-            txtName.Text = e_Item.Name;
-            scrlSprite.Value = e_Item.Sprite;
-            scrlDamage.Value = e_Item.Damage;
-            scrlArmor.Value = e_Item.Armor;
-            scrlAttackSpeed.Value = e_Item.AttackSpeed;
-            scrlReloadSpeed.Value = e_Item.ReloadSpeed;
-            scrlHealthRestore.Value = e_Item.HealthRestore;
-            scrlHungerRestore.Value = e_Item.HungerRestore;
-            scrlHydrateRestore.Value = e_Item.HydrateRestore;
-            scrlStrength.Value = e_Item.Strength;
-            scrlAgility.Value = e_Item.Agility;
-            scrlEndurance.Value = e_Item.Endurance;
-            scrlStamina.Value = e_Item.Stamina;
-            scrlClip.Value = e_Item.Clip;
-            scrlMaxClip.Value = e_Item.MaxClip;
-            cmbType.SelectedIndex = e_Item.Type;
-            cmbAmmoType.SelectedIndex = e_Item.ItemAmmoType;
-            lblSprite.Text = "Sprite: " + (scrlSprite.Value);
-            picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
-            lblDamage.Text = "Damage: " + (scrlDamage.Value);
-            lblArmor.Text = "Armor: " + (scrlArmor.Value);
-            lblAttackSpeed.Text = "Attack Speed: : " + (scrlAttackSpeed.Value);
-            lblReloadSpeed.Text = "Reload Speed: " + (scrlReloadSpeed.Value);
-            lblHealthRestore.Text = "Health Restore: " + (scrlHealthRestore.Value);
-            lblHungerRestore.Text = "Hunger Restore: " + (scrlHungerRestore.Value);
-            lblHydrateRestore.Text = "Hydrate Restore: " + (scrlHydrateRestore.Value);
-            lblStrength.Text = "Strength: " + (scrlStrength.Value);
-            lblAgility.Text = "Agility: " + (scrlAgility.Value);
-            lblEndurance.Text = "Endurance: " + (scrlEndurance.Value);
-            lblStamina.Text = "Stamina: " + (scrlStamina.Value);
-            lblClip.Text = "Clip: " + (scrlClip.Value);
-            lblMaxClip.Text = "Max Clip: " + (scrlMaxClip.Value);
-            UnModSave = false;
-            if (pnlMain.Visible == false) { pnlMain.Visible = true; }
-        }
-
-        private void btnNewItem_Click(object sender, EventArgs e)
-        {
-            e_Item.CreateItemInDatabase();
-            lstIndex.Items.Add(e_Item.Name);
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Visible = false;
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            e_Item.SaveItemToDatabase(SelectedIndex);
-            LoadItemList();
-            UnModSave = false;
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            e_Item.DeleteItemFromDatabase(SelectedIndex);
-            LoadItemList();
-        }
-
         private void scrlSprite_Scroll(object sender, ScrollEventArgs e)
         {
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
@@ -127,7 +55,7 @@ namespace Editor.Forms
             UnModSave = true;
         }
 
-        private void scrlDamage_Scroll(object sender, ScrollEventArgs e)
+        private void scrlDamage_Scroll_1(object sender, ScrollEventArgs e)
         {
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             e_Item.Damage = scrlDamage.Value;
@@ -222,6 +150,10 @@ namespace Editor.Forms
         {
             e_Item.Type = (cmbType.SelectedIndex);
             UnModSave = true;
+            if (cmbType.SelectedIndex == (int)ItemType.RangedWeapon) { pnlRanged.Visible = true; }
+            else { pnlRanged.Visible = false; }
+            if (cmbType.SelectedIndex == (int)ItemType.Food || cmbType.SelectedIndex == (int)ItemType.Drink || cmbType.SelectedIndex == (int)ItemType.FirstAid) { pnlConsume.Visible = true; }
+            else { pnlConsume.Visible = false; }
         }
 
         private void cmbAmmoType_SelectedIndexChanged(object sender, EventArgs e)
@@ -234,6 +166,91 @@ namespace Editor.Forms
         {
             e_Item.Name = txtName.Text;
             UnModSave = true;
+        }
+
+        private void scrlProjNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
+            e_Item.ProjectileNumber = scrlProjNum.Value;
+            UnModSave = true;
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
+        }
+
+        private void btnNewItem_Click(object sender, EventArgs e)
+        {
+            e_Item.CreateItemInDatabase();
+            lstIndex.Items.Add(e_Item.Name);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            e_Item.DeleteItemFromDatabase(SelectedIndex);
+            LoadItemList();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            e_Item.SaveItemToDatabase(SelectedIndex);
+            LoadItemList();
+            UnModSave = false;
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Visible = false;
+        }
+
+        private void lstIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (UnModSave == true)
+            {
+                string w_Message = "Are you sure you want to load a different item? All unsaved progress will be lost.";
+                string w_Caption = "Unsaved data";
+                MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
+                DialogResult w_Result;
+                w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
+                if (w_Result == DialogResult.No) { return; }
+            }
+            SelectedIndex = (lstIndex.SelectedIndex + 1);
+            e_Item.LoadItemFromDatabase(SelectedIndex);
+            txtName.Text = e_Item.Name;
+            scrlSprite.Value = e_Item.Sprite;
+            scrlDamage.Value = e_Item.Damage;
+            scrlArmor.Value = e_Item.Armor;
+            scrlAttackSpeed.Value = e_Item.AttackSpeed;
+            scrlReloadSpeed.Value = e_Item.ReloadSpeed;
+            scrlHealthRestore.Value = e_Item.HealthRestore;
+            scrlHungerRestore.Value = e_Item.HungerRestore;
+            scrlHydrateRestore.Value = e_Item.HydrateRestore;
+            scrlStrength.Value = e_Item.Strength;
+            scrlAgility.Value = e_Item.Agility;
+            scrlEndurance.Value = e_Item.Endurance;
+            scrlStamina.Value = e_Item.Stamina;
+            scrlClip.Value = e_Item.Clip;
+            scrlMaxClip.Value = e_Item.MaxClip;
+            cmbType.SelectedIndex = e_Item.Type;
+            cmbAmmoType.SelectedIndex = e_Item.ItemAmmoType;
+            scrlProjNum.Value = e_Item.ProjectileNumber;
+            lblSprite.Text = "Sprite: " + (scrlSprite.Value);
+            picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
+            lblDamage.Text = "Damage: " + (scrlDamage.Value);
+            lblArmor.Text = "Armor: " + (scrlArmor.Value);
+            lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);
+            lblReloadSpeed.Text = "Reload Speed: " + (scrlReloadSpeed.Value);
+            lblHealthRestore.Text = "Health Restore: " + (scrlHealthRestore.Value);
+            lblHungerRestore.Text = "Hunger Restore: " + (scrlHungerRestore.Value);
+            lblHydrateRestore.Text = "Hydrate Restore: " + (scrlHydrateRestore.Value);
+            lblStrength.Text = "Strength: " + (scrlStrength.Value);
+            lblAgility.Text = "Agility: " + (scrlAgility.Value);
+            lblEndurance.Text = "Endurance: " + (scrlEndurance.Value);
+            lblStamina.Text = "Stamina: " + (scrlStamina.Value);
+            lblClip.Text = "Clip: " + (scrlClip.Value);
+            lblMaxClip.Text = "Max Clip: " + (scrlMaxClip.Value);
+            lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
+            UnModSave = false;
+            if (pnlMain.Visible == false) { pnlMain.Visible = true; }
+            if (pnlStats.Visible == false) { pnlStats.Visible = true; }
         }
     }
 }
