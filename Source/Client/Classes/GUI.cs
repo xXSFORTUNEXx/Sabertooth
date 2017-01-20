@@ -23,6 +23,8 @@ namespace Client.Classes
         #region DebugWindow
         public WindowControl d_Window;
         public int g_Index;
+        public Label d_Controller;
+        public Label d_ConDir;
         Label d_FPS;
         Label d_Name;
         Label d_X;
@@ -248,21 +250,21 @@ namespace Client.Classes
             clipBar.FillColor = SFML.Graphics.Color.Magenta;
             hudCPos = new Vector2f(32, 88);
 
-            waterbarLength = ((float)c_Player.Hydration / 100) * fullSize;
-            waterBar.Size = new Vector2f(waterbarLength, 25);
-            waterBar.Position = new Vector2f(25, 115);
-            waterBar.FillColor = SFML.Graphics.Color.Blue;
-
-            hudW = "Hydration: " + c_Player.Hydration + " / 100";
-            hudWPos = new Vector2f(32, 118);
-
             foodbarLength = ((float)c_Player.Hunger / 100) * fullSize;
             foodBar.Size = new Vector2f(foodbarLength, 25);
-            foodBar.Position = new Vector2f(25, 145);
+            foodBar.Position = new Vector2f(25, 115);
             foodBar.FillColor = SFML.Graphics.Color.Green;
 
             hudF = "Hunger: " + c_Player.Hunger + " / 100";
-            hudFPos = new Vector2f(32, 148);
+            hudFPos = new Vector2f(32, 118);
+
+            waterbarLength = ((float)c_Player.Hydration / 100) * fullSize;
+            waterBar.Size = new Vector2f(waterbarLength, 25);
+            waterBar.Position = new Vector2f(25, 145);
+            waterBar.FillColor = SFML.Graphics.Color.Blue;
+
+            hudW = "Hydration: " + c_Player.Hydration + " / 100";
+            hudWPos = new Vector2f(32, 148);
 
             c_Window.Draw(healthBar);
             c_Window.Draw(expBar);
@@ -1399,7 +1401,7 @@ namespace Client.Classes
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 165);
+            d_Window.SetSize(200, 185);
             d_Window.Position(Gwen.Pos.Top);
             d_Window.Position(Gwen.Pos.Right);
             d_Window.DisableResizing();
@@ -1451,6 +1453,14 @@ namespace Client.Classes
             d_packetsOut = new Label(d_Window);
             d_packetsOut.SetPosition(10, 115);
             d_packetsOut.Text = "Packets Out: ?";
+
+            d_Controller = new Label(d_Window);
+            d_Controller.SetPosition(10, 125);
+            d_Controller.Text = "Controller: ?";
+
+            d_ConDir = new Label(d_Window);
+            d_ConDir.SetPosition(10, 135);
+            d_ConDir.Text = "Dir: ?";
         }
         #endregion 
 

@@ -174,8 +174,27 @@ namespace Server.Classes
         #endregion
 
         #region Voids
-        public void RegenHealth()
+        public void RegenHealth(NetServer s_Server)
         {
+            HandleData hData = new HandleData();
+            string msg;
+
+            if (Hydration == 0)
+            {
+                Health -= 50;
+                msg = "You are dying from dehydration!";
+                hData.SendServerMessage(s_Server, msg);
+                return;
+            }
+
+            if (Hunger == 0)
+            {
+                Health -= 100;
+                msg = "You are dying from starvation!";
+                hData.SendServerMessage(s_Server, msg);
+                return;
+            }
+
             if (Health < MaxHealth)
             {
                 Health += (Stamina * 10);
@@ -193,7 +212,7 @@ namespace Server.Classes
             {
                 if (Hunger <= 0)
                 {
-                    //Basically we start die
+                    Hunger = 0;
                     Console.WriteLine("We start to die...");
                 }
                 else
@@ -206,7 +225,7 @@ namespace Server.Classes
             {
                 if (Hydration <= 0)
                 {
-                    //Basically we start die
+                    Hydration = 0;
                     Console.WriteLine("We start to die...");
                 }
                 else
@@ -235,8 +254,9 @@ namespace Server.Classes
             }
             else if (Experience > (Level * 1000))
             {
+                int remaining = Experience - (Level * 1000);
                 Level += 1;
-                Experience = (Experience - (Level * 1000));
+                Experience = remaining;
                 Points += 100;
                 Hunger = 100;
                 Hydration = 100;

@@ -522,22 +522,29 @@ namespace Client.Classes
                 DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
                 DrawUpperLevelTiles(c_Player[handleData.c_Index]);
 
+                Joystick.Update();
+
                 if (TickCount - walkTick > 100)
                 {
                     this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
                 if (TickCount - attackTick > 25)
                 {
                     this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
                 }
                 if (TickCount - pickupTick > 100)
                 {
                     this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
                     pickupTick = TickCount;
                 }
             }

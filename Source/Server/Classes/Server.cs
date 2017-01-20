@@ -202,7 +202,7 @@ namespace Server.Classes
         #region Server Check Voids
         void CheckHealthRegen(NetServer s_Server)
         {
-            if (TickCount - regenTick > regenTime)
+            if (TickCount - regenTick >= regenTime)
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -211,7 +211,7 @@ namespace Server.Classes
                         WriteLine("Checking for health regen...");
                         WriteLog("Checking for health regin...", "Server");
 
-                        s_Player[i].RegenHealth();
+                        s_Player[i].RegenHealth(s_Server);
                         handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
                     }
                 }
@@ -223,31 +223,29 @@ namespace Server.Classes
         {
             for (int i = 0; i < 5; i++)
             {
-                //Check for hunger
-                if (TickCount - s_Player[i].hungerTick > hungerTime)
+                if (s_Player[i].Name != null)
                 {
-                    if (s_Player[i].Name != null)
+                    //Check for hunger
+                    if (TickCount - s_Player[i].hungerTick > hungerTime)
                     {
                         WriteLine("Checking for hunger loss...");
                         WriteLog("Checking for hunger loss...", "Server");
 
                         s_Player[i].VitalLoss("food");
                         handleData.SendUpdateVitalData(s_Server, i, "food", s_Player[i].Hunger);
+                        s_Player[i].hungerTick = TickCount;
                     }
-                    s_Player[i].hungerTick = TickCount;
-                }
 
-                if (TickCount - s_Player[i].hydrationTick > hydrationTime)
-                {
-                    if (s_Player[i].Name != null)
+                    if (TickCount - s_Player[i].hydrationTick > hydrationTime)
                     {
+
                         WriteLine("Checking for hydration loss...");
                         WriteLog("Checking for hydration loss...", "Server");
 
                         s_Player[i].VitalLoss("water");
                         handleData.SendUpdateVitalData(s_Server, i, "water", s_Player[i].Hydration);
+                        s_Player[i].hydrationTick = TickCount;
                     }
-                    s_Player[i].hydrationTick = TickCount;
                 }
             }
         }

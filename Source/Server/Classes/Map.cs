@@ -69,13 +69,13 @@ namespace Server.Classes
 
             //For testing purposes
             mapProj[slot] = new MapProj();
-            mapProj[slot].Name = "test";
+            mapProj[slot].Name = "Bullet";
             mapProj[slot].X = (s_Player[playerIndex].X + 12);
             mapProj[slot].Y = (s_Player[playerIndex].Y + 9);
             mapProj[slot].Direction = s_Player[playerIndex].AimDirection;
             mapProj[slot].Speed = 250;
             mapProj[slot].Owner = playerIndex;
-            mapProj[slot].Sprite = 1;
+            mapProj[slot].Sprite = 2;
             mapProj[slot].Type = (int)ProjType.Bullet;
             //im setting this locally, dont really think the client needs it
             mapProj[slot].Damage = s_Player[playerIndex].mainWeapon.Damage;

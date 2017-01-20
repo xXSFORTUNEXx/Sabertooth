@@ -24,10 +24,18 @@ namespace Client.Classes
         public int Speed { get; set; }
         public bool Moved;
 
+        const int maxprojSprites = 2;
         Sprite c_Sprite = new Sprite();
-        Texture proj_Texture = new Texture("Resources/Projectiles/1.png");
+        Texture[] proj_Texture = new Texture[maxprojSprites];
+        Random RND = new Random();
 
-        public Projectile() { }
+        public Projectile()
+        {
+            for (int i = 0; i < maxprojSprites; i++)
+            {
+                proj_Texture[i] = new Texture("Resources/Projectiles/" + (i + 1) + ".png");
+            }
+        }
 
         public Projectile(string name, int x, int y, int direction)
         {
@@ -50,9 +58,12 @@ namespace Client.Classes
 
         public void DrawProjectile(RenderWindow c_Window)
         {
-            c_Sprite.Texture = proj_Texture;
+            int rndX = RND.Next(0, 10);
+            int rndY = RND.Next(0, 10);
+
+            c_Sprite.Texture = proj_Texture[Sprite - 1];
             c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
-            c_Sprite.Position = new Vector2f((X * 32), (Y * 32));
+            c_Sprite.Position = new Vector2f((X * 32) + rndX, (Y * 32) + rndY);
 
             c_Window.Draw(c_Sprite);
         }

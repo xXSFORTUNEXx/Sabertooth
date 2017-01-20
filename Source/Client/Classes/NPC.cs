@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using System;
 
 namespace Client.Classes
 {
