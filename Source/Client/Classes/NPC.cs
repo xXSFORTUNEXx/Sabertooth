@@ -26,6 +26,8 @@ namespace Client.Classes
         public bool IsSpawned { get; set; }
 
         Sprite c_Sprite = new Sprite();
+        VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
+        RenderStates rStates = new RenderStates();
 
         public Npc() { }
 
@@ -73,11 +75,22 @@ namespace Client.Classes
 
         public void DrawNpc(RenderWindow c_Window, Texture c_Texture)
         {
-            c_Sprite.Texture = c_Texture;
+            /*c_Sprite.Texture = c_Texture;
             c_Sprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48);
             c_Sprite.Position = new Vector2f((X * 32), ((Y * 32) - 16));
+            c_Window.Draw(c_Sprite);*/
 
-            c_Window.Draw(c_Sprite);
+            int x = (X * 32);
+            int y = (Y * 32) - 16;
+            int step = (Step * 32);
+            int dir = (Direction * 48);
+            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
+            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32,  dir + 48));
+            spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
+            rStates = new RenderStates(c_Texture);
+
+            c_Window.Draw(spritePic, rStates);
         }
 
         public enum BehaviorType

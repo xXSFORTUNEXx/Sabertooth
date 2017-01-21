@@ -50,7 +50,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
             c_Window.MouseMoved += window_MouseMoved;
             c_Window.TextEntered += window_TextEntered;
-            c_Window.SetFramerateLimit(65);
+            c_Window.SetFramerateLimit(75);
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
@@ -323,15 +323,15 @@ namespace Client.Classes
                 {
                     if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
-                        c_Map.DrawTile(c_Window, new Vector2f(x * 32, y * 32), c_Map.Ground[x, y].tileX, c_Map.Ground[x, y].tileY, c_Map.Ground[x, y].tileW, c_Map.Ground[x, y].tileH, c_Map.Ground[x, y].Tileset);
+                        c_Map.DrawTile(c_Window, x, y, c_Map.Ground[x, y].tileX, c_Map.Ground[x, y].tileY, c_Map.Ground[x, y].tileW, c_Map.Ground[x, y].tileH, c_Map.Ground[x, y].Tileset);
 
                         if (c_Map.Mask[x, y].tileX > 0 || c_Map.Mask[x, y].tileY > 0)
                         {
-                            c_Map.DrawTile(c_Window, new Vector2f(x * 32, y * 32), c_Map.Mask[x, y].tileX, c_Map.Mask[x, y].tileY, c_Map.Mask[x, y].tileW, c_Map.Mask[x, y].tileH, c_Map.Mask[x, y].Tileset);
+                            c_Map.DrawTile(c_Window, x, y, c_Map.Mask[x, y].tileX, c_Map.Mask[x, y].tileY, c_Map.Mask[x, y].tileW, c_Map.Mask[x, y].tileH, c_Map.Mask[x, y].Tileset);
                         }
                         if (c_Map.MaskA[x, y].tileX > 0 || c_Map.MaskA[x, y].tileY > 0)
                         {
-                            c_Map.DrawTile(c_Window, new Vector2f(x * 32, y * 32), c_Map.MaskA[x, y].tileX, c_Map.MaskA[x, y].tileY, c_Map.MaskA[x, y].tileW, c_Map.MaskA[x, y].tileH, c_Map.MaskA[x, y].Tileset);
+                            c_Map.DrawTile(c_Window, x, y, c_Map.MaskA[x, y].tileX, c_Map.MaskA[x, y].tileY, c_Map.MaskA[x, y].tileW, c_Map.MaskA[x, y].tileH, c_Map.MaskA[x, y].Tileset);
                         }
                     }
                 }
@@ -353,11 +353,11 @@ namespace Client.Classes
                     {
                         if (c_Map.Fringe[x, y].tileX > 0 || c_Map.Fringe[x, y].tileY > 0)
                         {
-                            c_Map.DrawTile(c_Window, new Vector2f(x * 32, y * 32), c_Map.Fringe[x, y].tileX, c_Map.Fringe[x, y].tileY, c_Map.Fringe[x, y].tileW, c_Map.Fringe[x, y].tileH, c_Map.Fringe[x, y].Tileset);
+                            c_Map.DrawTile(c_Window, x, y, c_Map.Fringe[x, y].tileX, c_Map.Fringe[x, y].tileY, c_Map.Fringe[x, y].tileW, c_Map.Fringe[x, y].tileH, c_Map.Fringe[x, y].Tileset);
                         }
                         if (c_Map.FringeA[x, y].tileX > 0 || c_Map.FringeA[x, y].tileY > 0)
                         {
-                            c_Map.DrawTile(c_Window, new Vector2f(x * 32, y * 32), c_Map.FringeA[x, y].tileX, c_Map.FringeA[x, y].tileY, c_Map.FringeA[x, y].tileW, c_Map.FringeA[x, y].tileH, c_Map.FringeA[x, y].Tileset);
+                            c_Map.DrawTile(c_Window, x, y, c_Map.FringeA[x, y].tileX, c_Map.FringeA[x, y].tileY, c_Map.FringeA[x, y].tileW, c_Map.FringeA[x, y].tileH, c_Map.FringeA[x, y].Tileset);
                         }
                     }
                 }

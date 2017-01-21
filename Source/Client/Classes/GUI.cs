@@ -176,6 +176,7 @@ namespace Client.Classes
         Vector2f hudEPos;
         Vector2f hudWPos;
         Vector2f hudFPos;
+        const int fullSize = 175;
         #endregion
 
         public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
@@ -190,24 +191,16 @@ namespace Client.Classes
         #region Update Voids
         public void UpdateHUD(Player c_Player, RenderWindow c_Window)
         {
-            int fullSize = 175;
-
             barLength = ((float)c_Player.Health / c_Player.MaxHealth) * fullSize;
             healthBar.Size = new Vector2f(barLength, 25);
-            healthBar.Position = new Vector2f(25, 25);
-            healthBar.FillColor = SFML.Graphics.Color.Red;
 
             hudH = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
-            hudHPos = new Vector2f(32, 28);
 
             float NextLevel = c_Player.Level * 1000;
             expbarLength = (c_Player.Experience / NextLevel) * fullSize;
             expBar.Size = new Vector2f(expbarLength, 25);
-            expBar.Position = new Vector2f(25, 55);
-            expBar.FillColor = SFML.Graphics.Color.Yellow;
 
             hudE = "XP: " + c_Player.Experience + " / " + NextLevel;
-            hudEPos = new Vector2f(32, 58);
 
             if (c_Player.mainWeapon.Name != "None")
             {
@@ -218,24 +211,7 @@ namespace Client.Classes
                 }
                 else
                 {
-                    switch (c_Player.mainWeapon.ammoType)
-                    {
-                        case (int)AmmoType.Pistol:
-                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.PistolAmmo;
-                            break;
-
-                        case (int)AmmoType.AssaultRifle:
-                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.AssaultAmmo;
-                            break;
-
-                        case (int)AmmoType.Rocket:
-                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.RocketAmmo;
-                            break;
-
-                        case (int)AmmoType.Grenade:
-                            hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip + " / " + c_Player.GrenadeAmmo;
-                            break;
-                    }
+                    hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
                     clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * fullSize;
                 }
             }
@@ -246,25 +222,16 @@ namespace Client.Classes
             }
 
             clipBar.Size = new Vector2f(clipbarLength, 25);
-            clipBar.Position = new Vector2f(25, 85);
-            clipBar.FillColor = SFML.Graphics.Color.Magenta;
-            hudCPos = new Vector2f(32, 88);
 
             foodbarLength = ((float)c_Player.Hunger / 100) * fullSize;
             foodBar.Size = new Vector2f(foodbarLength, 25);
-            foodBar.Position = new Vector2f(25, 115);
-            foodBar.FillColor = SFML.Graphics.Color.Green;
 
             hudF = "Hunger: " + c_Player.Hunger + " / 100";
-            hudFPos = new Vector2f(32, 118);
 
             waterbarLength = ((float)c_Player.Hydration / 100) * fullSize;
             waterBar.Size = new Vector2f(waterbarLength, 25);
-            waterBar.Position = new Vector2f(25, 145);
-            waterBar.FillColor = SFML.Graphics.Color.Blue;
 
             hudW = "Hydration: " + c_Player.Hydration + " / 100";
-            hudWPos = new Vector2f(32, 148);
 
             c_Window.Draw(healthBar);
             c_Window.Draw(expBar);
@@ -968,6 +935,29 @@ namespace Client.Classes
         #endregion
 
         #region Window Creation
+        public void CreateHUD()
+        {
+            healthBar.Position = new Vector2f(25, 25);
+            healthBar.FillColor = SFML.Graphics.Color.Red;
+            hudHPos = new Vector2f(32, 28);
+
+            expBar.Position = new Vector2f(25, 55);
+            expBar.FillColor = SFML.Graphics.Color.Yellow;
+            hudEPos = new Vector2f(32, 58);
+
+            clipBar.Position = new Vector2f(25, 85);
+            clipBar.FillColor = SFML.Graphics.Color.Magenta;
+            hudCPos = new Vector2f(32, 88);
+
+            foodBar.Position = new Vector2f(25, 115);
+            foodBar.FillColor = SFML.Graphics.Color.Green;
+            hudFPos = new Vector2f(32, 118);
+
+            waterBar.Position = new Vector2f(25, 145);
+            waterBar.FillColor = SFML.Graphics.Color.Blue;
+            hudWPos = new Vector2f(32, 148);
+        }
+
         public void CreateMenuWindow(Base parent)
         {
             menuWindow = new WindowControl(parent.GetCanvas());

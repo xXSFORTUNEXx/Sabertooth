@@ -34,11 +34,11 @@ namespace Client.Classes
             }
         }
 
-        public void DrawTile(RenderWindow c_Window, Vector2f position, int x, int y, int w, int h, int tileSet)
+        public void DrawTile(RenderWindow c_Window, int px, int py, int x, int y, int w, int h, int tileSet)
         {
             Tiles.Texture = TileSet[tileSet];
             Tiles.TextureRect = new IntRect(x, y, w, h);
-            Tiles.Position = position;
+            Tiles.Position = new Vector2f(px * 32, py * 32);
 
             c_Window.Draw(Tiles);
         }
@@ -232,7 +232,8 @@ namespace Client.Classes
         public int Y { get; set; }
         public bool IsSpawned;
 
-        Sprite ItemSprite = new Sprite();
+        VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
+        RenderStates rStates = new RenderStates();
 
         public MapItem() { }
 
@@ -244,13 +245,15 @@ namespace Client.Classes
             ItemNum = itemnum;
         }
 
-        public void DrawItem(RenderWindow e_Window, Texture c_Texture)
+        public void DrawItem(RenderWindow c_Window, Texture c_Texture)
         {
-            ItemSprite.Texture = c_Texture;
-            ItemSprite.TextureRect = new IntRect(0, 0, 32, 32);
-            ItemSprite.Position = new Vector2f(X * 32, Y * 32);
+            itemPic[0] = new Vertex(new Vector2f((X * 32), (Y * 32)), new Vector2f(0, 0));
+            itemPic[1] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32)), new Vector2f(32, 0));
+            itemPic[2] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32) + 32), new Vector2f(32, 32));
+            itemPic[3] = new Vertex(new Vector2f((X * 32), (Y * 32) + 32), new Vector2f(0, 32));
+            rStates = new RenderStates(c_Texture);
 
-            e_Window.Draw(ItemSprite);
+            c_Window.Draw(itemPic, rStates);
         }
     }
 

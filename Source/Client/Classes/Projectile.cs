@@ -28,6 +28,8 @@ namespace Client.Classes
 
         const int maxprojSprites = 2;
         Sprite c_Sprite = new Sprite();
+        VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
+        RenderStates rStates = new RenderStates();
         Texture[] proj_Texture = new Texture[maxprojSprites];
         Random RND = new Random();
 
@@ -63,11 +65,21 @@ namespace Client.Classes
             int rndX = RND.Next(0, 10);
             int rndY = RND.Next(0, 10);
 
-            c_Sprite.Texture = proj_Texture[sprite];
+            /*c_Sprite.Texture = proj_Texture[sprite];
             c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
             c_Sprite.Position = new Vector2f((X * 32) + rndX, (Y * 32) + rndY);
+            c_Window.Draw(c_Sprite);*/
 
-            c_Window.Draw(c_Sprite);
+            int x = (X * 32) + rndX;
+            int y = (Y * 32) + rndY;
+            int dir = (Direction * 32);
+            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(dir, 0));
+            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(dir + 32, 0));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 32), new Vector2f(dir + 32, 32));
+            spritePic[3] = new Vertex(new Vector2f(x, y + 32), new Vector2f(dir, 32));
+            rStates = new RenderStates(proj_Texture[sprite]);
+
+            c_Window.Draw(spritePic, rStates);
         }
 
         public void CheckMovment(NetClient c_Client, RenderWindow c_Window, Map c_MoveMap, int slot)
