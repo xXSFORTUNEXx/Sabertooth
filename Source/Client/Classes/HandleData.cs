@@ -294,6 +294,7 @@ namespace Client.Classes
             c_Map.mapProj[slot].Owner = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Sprite = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Range = incMSG.ReadVariableInt32();
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)

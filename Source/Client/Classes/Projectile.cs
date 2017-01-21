@@ -24,6 +24,8 @@ namespace Client.Classes
         public int Speed { get; set; }
         public bool Moved;
 
+        public int RangeCounter;     
+
         const int maxprojSprites = 2;
         Sprite c_Sprite = new Sprite();
         Texture[] proj_Texture = new Texture[maxprojSprites];
@@ -56,12 +58,12 @@ namespace Client.Classes
             Speed = speed;
         }
 
-        public void DrawProjectile(RenderWindow c_Window)
+        public void DrawProjectile(RenderWindow c_Window, int sprite)
         {
             int rndX = RND.Next(0, 10);
             int rndY = RND.Next(0, 10);
 
-            c_Sprite.Texture = proj_Texture[Sprite + 1];
+            c_Sprite.Texture = proj_Texture[sprite];
             c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
             c_Sprite.Position = new Vector2f((X * 32) + rndX, (Y * 32) + rndY);
 
@@ -72,6 +74,9 @@ namespace Client.Classes
         {
             if (Moved == true) { Moved = false; return; }
             if (c_MoveMap.mapProj[slot] == null) { return; }
+
+            if (RangeCounter > Range) { Direction = (int)Directions.Down; Moved = false; SendClearProjectile(c_Client, c_MoveMap, slot); return; }
+
             switch (c_MoveMap.mapProj[slot].Direction)
             {
                 case (int)Directions.Down:
@@ -118,6 +123,7 @@ namespace Client.Classes
                             }
                         }
                         Y += 1;
+                        RangeCounter += 1;
                         Direction = (int)Directions.Down;
                         Moved = true;
                     }
@@ -174,6 +180,7 @@ namespace Client.Classes
                             }
                         }
                         X -= 1;
+                        RangeCounter += 1;
                         Direction = (int)Directions.Left;
                         Moved = true;
                     }
@@ -230,6 +237,7 @@ namespace Client.Classes
                             }
                         }
                         X += 1;
+                        RangeCounter += 1;
                         Direction = (int)Directions.Right;
                         Moved = true;
                     }

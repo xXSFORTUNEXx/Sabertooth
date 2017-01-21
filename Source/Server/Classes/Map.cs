@@ -1,4 +1,4 @@
-﻿   using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using System;
 using System.IO;
 using static Microsoft.VisualBasic.Interaction;
@@ -67,14 +67,15 @@ namespace Server.Classes
 
             if (slot == 200) { WriteLine("Bullet max reached!"); return; }
 
-            int projNum = s_Player[playerIndex].mainWeapon.ProjectileNumber;
+            int projNum = s_Player[playerIndex].mainWeapon.ProjectileNumber - 1;
             int damage = s_Player[playerIndex].mainWeapon.Damage + s_Proj[projNum].Damage;
             mapProj[slot] = new MapProj();
             mapProj[slot].Name = s_Proj[projNum].Name;
             mapProj[slot].Sprite = s_Proj[projNum].Sprite;
             mapProj[slot].Type = s_Proj[projNum].Type;
-            mapProj[slot].Speed = s_Proj[projNum].Speed;
+            mapProj[slot].Speed = s_Proj[projNum].Speed; 
             mapProj[slot].Damage = damage;
+            mapProj[slot].Range = s_Proj[projNum].Range;
             mapProj[slot].X = (s_Player[playerIndex].X + 12);
             mapProj[slot].Y = (s_Player[playerIndex].Y + 9);
             mapProj[slot].Owner = playerIndex;
@@ -103,8 +104,9 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(mapProj[slot].Owner);
             outMSG.WriteVariableInt32(mapProj[slot].Sprite);
             outMSG.WriteVariableInt32(mapProj[slot].Type);
+            outMSG.WriteVariableInt32(mapProj[slot].Range);
 
-           s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void GenerateMap(int mapNum)

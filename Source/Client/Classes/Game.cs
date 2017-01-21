@@ -461,7 +461,7 @@ namespace Client.Classes
                     {
                         if (c_Map.mapProj[i].Y > minY && c_Map.mapProj[i].Y < maxY)
                         {
-                            c_Map.mapProj[i].DrawProjectile(c_Window);
+                            c_Map.mapProj[i].DrawProjectile(c_Window, c_Map.mapProj[i].Sprite - 1);
                         }
                     }
                     c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
