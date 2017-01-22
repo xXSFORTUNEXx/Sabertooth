@@ -902,7 +902,8 @@ namespace Client.Classes
             }
             c_Map.SaveMap();
             Console.WriteLine("Map data received from server! IP: " + incMSG.SenderConnection);
-
+            c_Map.t_Map.Load(c_Map);
+            c_Map.p_Map.Load(c_Map);
             //Loading is complete after the map
             LoadMainGUI(c_GUI, c_Canvas);
         }

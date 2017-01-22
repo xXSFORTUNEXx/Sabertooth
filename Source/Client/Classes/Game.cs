@@ -513,44 +513,38 @@ namespace Client.Classes
         void DrawGraphics(NetClient c_Client, Player[] c_Player)
         {
             if (c_Map.Name != null)
-            {
-                DrawLowLevelTiles(c_Player[handleData.c_Index]);
+            {             
+                c_Window.Draw(c_Map.t_Map);
                 DrawMapItems(c_Player[handleData.c_Index]);
                 DrawNpcs(c_Player[handleData.c_Index]);
                 DrawPlayers();
                 DrawIndexPlayer();
                 DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
-                DrawUpperLevelTiles(c_Player[handleData.c_Index]);
+                c_Window.Draw(c_Map.p_Map);
 
                 if (TickCount - walkTick > 100)
                 {
-                    if (Joystick.IsConnected(0))
-                    {
-                        this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
-                        this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                        this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
-                    }
-                    else
-                    {
-                        this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
-                        this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                        this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);
-                    }
+                    this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);                    
+                    this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
 
                 if (TickCount - attackTick > 25)
                 {
-                    if (Joystick.IsConnected(0)) { this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index); }
-                    else { this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index); }
+                    this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
                 }
 
                 if (TickCount - pickupTick > 100)
-                {
-                    if (Joystick.IsConnected(0)) { this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index); }
-                    else { this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index); }
+                {                    
+                    this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
                     pickupTick = TickCount;
                 }
             }
@@ -560,18 +554,25 @@ namespace Client.Classes
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)
         {
-            UpdateTitle(fps);   //update the title with the fps
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
+
             handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj); 
+
             c_Window.SetActive();
             c_Window.DispatchEvents();
             c_Window.Clear();
-            Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
+            //Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
+
             c_Window.SetView(c_View);
+
             fps = CalculateFrameRate();
+
             c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
             c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]);
+
+            //UpdateTitle(fps);
+
             Joystick.Update();
         }
 

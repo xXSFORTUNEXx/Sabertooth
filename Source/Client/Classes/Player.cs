@@ -163,6 +163,7 @@ namespace Client.Classes
             * Y Axis - Left Stick
             * D Pad - PovX, PovY
             */
+            if (!Joystick.IsConnected(0)) { return; }
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
@@ -252,7 +253,7 @@ namespace Client.Classes
 
         public void CheckControllerChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            
+            if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
 
@@ -289,6 +290,7 @@ namespace Client.Classes
 
         public void CheckControllerAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
+            if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
@@ -336,6 +338,7 @@ namespace Client.Classes
 
         public void CheckControllerReload(NetClient c_Client, int index)
         {
+            if (!Joystick.IsConnected(0)) { return; }
             if (Joystick.IsButtonPressed(0, 2))
             {
                 if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
@@ -348,6 +351,7 @@ namespace Client.Classes
 
         public void CheckControllerItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
+            if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }

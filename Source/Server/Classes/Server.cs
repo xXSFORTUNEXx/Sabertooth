@@ -42,6 +42,10 @@ namespace Server.Classes
         public int s_uptimeTick;
         public string upTime;
         public string s_Version;
+        static int lastTick;
+        static int lastFrameRate;
+        static int frameRate;
+        static int fps;
 
         public void ServerLoop(NetServer s_Server)
         {
@@ -69,6 +73,8 @@ namespace Server.Classes
                 CheckNpcAi(s_Server);
                 CheckCommands(s_Server, s_Player);
                 UpTime();
+                UpdateTitle();
+                Thread.Sleep(30);
             }
             DisconnectClients(s_Server);
             WriteLine("Disconnecting clients...");
@@ -657,6 +663,24 @@ namespace Server.Classes
                 }
                 s_userCommand = null;   //Clear the command
             }
+        }
+
+        static int CalculateFrameRate()
+        {
+            if (TickCount - lastTick >= 1000)
+            {
+                lastFrameRate = frameRate;
+                frameRate = 0;
+                lastTick = TickCount;
+            }
+            frameRate++;
+            return lastFrameRate;
+        }
+
+        void UpdateTitle()
+        {
+            fps = CalculateFrameRate();
+            Console.Title = "Sabertooth Server CPS: " + fps;
         }
         #endregion
 
