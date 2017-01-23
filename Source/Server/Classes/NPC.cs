@@ -170,7 +170,7 @@ namespace Server.Classes
             s_Database.Close();
         }
 
-        public void DamageNpc(Player s_Player, Map s_Map, int damage)
+        public bool DamageNpc(Player s_Player, Map s_Map, int damage)
         {
             Health -= damage;
 
@@ -179,12 +179,17 @@ namespace Server.Classes
                 IsSpawned = false;
                 Health = MaxHealth;
                 spawnTick = TickCount;
-                GivePlayerRewards(s_Player);
+                s_Player.Experience += Exp;
+                s_Player.Money += Money;
+                s_Player.CheckPlayerLevelUp();
+                s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)
                 {
                     s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;
                 }
+                return true;
             }
+            return false;
         }
 
         public void AttackPlayer(NetServer s_Server, Player[] s_Player, int index)
@@ -204,14 +209,6 @@ namespace Server.Classes
             {
                 sendData.SendUpdatePlayerStats(s_Server, s_Player, index);
             }
-        }
-
-        void GivePlayerRewards(Player s_Player)
-        {
-            s_Player.Experience += Exp;
-            s_Player.Money += Money;
-            s_Player.CheckPlayerLevelUp();
-            s_Player.SavePlayerToDatabase();
         }
 
         public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player, NetServer s_Server)

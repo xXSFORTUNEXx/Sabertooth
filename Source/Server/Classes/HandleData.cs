@@ -68,7 +68,7 @@ namespace Server.Classes
                                 break;
 
                             case (byte)PacketTypes.AttackNpcProj:
-                                HandleAttackNpcProj(incMSG, s_Server, s_Player, s_Map);
+                                HandleAttackNpcProj(incMSG, s_Server, s_Player, s_Map, s_Proj);
                                 break;
 
                             case (byte)PacketTypes.ItemPickup:
@@ -146,14 +146,14 @@ namespace Server.Classes
             s_Player[index].CheckPickup(s_Server, s_Map[pMap], s_Player, s_Item, index);
         }
 
-        void HandleAttackNpcProj(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
+        void HandleAttackNpcProj(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Projectile[] s_Proj)
         {
             int slot = incMSG.ReadVariableInt32();
             int npc = incMSG.ReadVariableInt32();
             int owner = incMSG.ReadVariableInt32();
             int type = incMSG.ReadVariableInt32();
             int c_Map = s_Player[owner].Map;
-            int damage = s_Player[owner].mainWeapon.Damage;
+            int damage = s_Player[owner].mainWeapon.Damage + s_Proj[s_Player[owner].mainWeapon.ProjectileNumber].Damage;
 
             if (type == 0)
             {
@@ -161,16 +161,16 @@ namespace Server.Classes
                 if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
                 s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
-                s_Map[c_Map].m_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
+                bool updatePlayer = s_Map[c_Map].m_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
                 for (int p = 0; p < 5; p++)
                 {
                     if (s_Player[p].Connection != null && c_Map == s_Player[p].Map)
                     {
-                        SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
+                        SendNpcVitalData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
                     }
                 }
-                SendUpdatePlayerStats(s_Server, s_Player, owner);
+                if (updatePlayer) { SendUpdatePlayerStats(s_Server, s_Player, owner); }
             }
             else
             {
@@ -178,16 +178,16 @@ namespace Server.Classes
                 if (s_Map[c_Map].mapProj[slot] == null) { return; }
 
                 s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
-                s_Map[c_Map].r_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
+                bool updatePlayer = s_Map[c_Map].r_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
 
                 for (int p = 0; p < 5; p++)
                 {
                     if (s_Player[p].Connection != null && c_Map == s_Player[p].Map)
                     {
-                        SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
+                        SendPoolNpcVitalData(s_Server, s_Player[p].Connection, s_Map[c_Map], npc);
                     }
                 }
-                SendUpdatePlayerStats(s_Server, s_Player, owner);
+                if (updatePlayer) { SendUpdatePlayerStats(s_Server, s_Player, owner); }
             }
         }
 
@@ -224,21 +224,9 @@ namespace Server.Classes
         void HandleRangedAttack(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Projectile[] s_Proj, Map[] s_Map)
         {
             int index = incMSG.ReadVariableInt32();
-            int direction = incMSG.ReadVariableInt32();
-            int aimdirection = incMSG.ReadVariableInt32();
             int cMap = s_Player[index].Map;
 
-            s_Player[index].Direction = direction;
-            s_Player[index].AimDirection = aimdirection;
             s_Map[cMap].CreateProjectile(s_Server, s_Player, s_Proj, cMap, index);
-
-            for (int i = 0; i < 5; i++)
-            {
-                if (s_Player[i].Connection != null && s_Player[i].Map == cMap)
-                {
-                    SendUpdateDirection(s_Server, s_Player[i].Connection, index, direction, aimdirection);
-                }
-            }
         }
 
         void HandleMoveData(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -575,8 +563,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Stamina);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Value);
-            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);
-
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);       
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -967,6 +954,18 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public void SendUpdatePoolNpcLoc(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PoolNpcDirecion);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Y);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Direction);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Step);
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public void SendMapNpcData(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -986,6 +985,38 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Damage);
             outMSG.Write(s_Map.m_MapNpc[npcNum].IsSpawned);
 
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdateNpcLoc(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.NpcDirection);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Y);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Direction);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Step);
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendNpcVitalData(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.NpcVitals);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Health);
+            outMSG.Write(s_Map.m_MapNpc[npcNum].IsSpawned);
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendPoolNpcVitalData(NetServer s_Server, NetConnection p_Conn, Map s_Map, int npcNum)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PoolNpcVitals);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Health);
+            outMSG.Write(s_Map.r_MapNpc[npcNum].IsSpawned);
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1314,6 +1345,10 @@ namespace Server.Classes
         UnequipItem,
         EquipItem,
         DropItem,
-        PlayerEquip
+        PlayerEquip,
+        NpcDirection,
+        PoolNpcDirecion,
+        NpcVitals,
+        PoolNpcVitals
     }
 }

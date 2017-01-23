@@ -689,8 +689,6 @@ namespace Client.Classes
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.RangedAttack);
             outMSG.WriteVariableInt32(index);
-            outMSG.WriteVariableInt32(Direction);
-            outMSG.WriteVariableInt32(AimDirection);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 

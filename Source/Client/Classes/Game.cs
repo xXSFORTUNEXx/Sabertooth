@@ -571,7 +571,7 @@ namespace Client.Classes
             c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
             c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]);
 
-            //UpdateTitle(fps);
+            UpdateTitle(fps);
 
             Joystick.Update();
         }

@@ -92,7 +92,7 @@ namespace Server.Classes
 
         void SendNewProjectileToAll(NetServer s_Server, NetConnection pConn, int mapIndex, int slot)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage(23);
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.Write(Name);

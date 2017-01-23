@@ -74,7 +74,7 @@ namespace Server.Classes
                 CheckCommands(s_Server, s_Player);
                 UpTime();
                 UpdateTitle();
-                Thread.Sleep(30);
+                Thread.Sleep(10);
             }
             DisconnectClients(s_Server);
             WriteLine("Disconnecting clients...");
@@ -504,7 +504,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null && s_Player[p].Map == i)
                                         {
-                                            handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                            handleData.SendUpdateNpcLoc(s_Server, s_Player[p].Connection, s_Map[i], n);
                                         }
                                     }
                                 }
@@ -527,7 +527,7 @@ namespace Server.Classes
                                     {
                                         if (s_Player[p].Connection != null && s_Player[p].Map == i)
                                         {
-                                            handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                            handleData.SendUpdatePoolNpcLoc(s_Server, s_Player[p].Connection, s_Map[i], c);
                                         }
                                     }
                                 }

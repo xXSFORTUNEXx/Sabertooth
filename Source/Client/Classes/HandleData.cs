@@ -160,6 +160,23 @@ namespace Client.Classes
                             case (byte)PacketTypes.PlayerEquip:
                                 HandlePlayerEquipment(incMSG, c_Player, c_Index);
                                 break;
+
+                            case (byte)PacketTypes.NpcDirection:
+                                HandleNpcDirection(incMSG, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.PoolNpcDirecion:
+                                HandleNpcPoolDirection(incMSG, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.NpcVitals:
+                                HandleNpcVitals(incMSG, c_Map);
+                                break;
+
+                            case (byte)PacketTypes.PoolNpcVitals:
+                                HandlePoolNpcVitals(incMSG, c_Map);
+                                break;
+
                         }
                         break;
                 }
@@ -295,6 +312,8 @@ namespace Client.Classes
             c_Map.mapProj[slot].Sprite = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Range = incMSG.ReadVariableInt32();
+
+            Console.WriteLine("Creating projectile!");
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
@@ -334,6 +353,8 @@ namespace Client.Classes
             c_Proj[index].Sprite = incMSG.ReadVariableInt32();
             c_Proj[index].Type = incMSG.ReadVariableInt32();
             c_Proj[index].Speed = incMSG.ReadVariableInt32();
+
+            Console.WriteLine("Updating projectile!");
         }
 
         void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
@@ -531,6 +552,42 @@ namespace Client.Classes
             c_Map.r_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
             c_Map.r_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
             c_Map.r_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+        }
+
+        void HandleNpcDirection(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Map.m_MapNpc[index].X = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[index].Direction = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[index].Step = incMSG.ReadVariableInt32();
+        }
+
+        void HandleNpcPoolDirection(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[index].Direction = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[index].Step = incMSG.ReadVariableInt32();
+        }
+
+        void HandleNpcVitals(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Map.m_MapNpc[index].Health = incMSG.ReadVariableInt32();
+            c_Map.m_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
+        }
+
+        void HandlePoolNpcVitals(NetIncomingMessage incMSG, Map c_Map)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Map.r_MapNpc[index].Health = incMSG.ReadVariableInt32();
+            c_Map.r_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
         }
 
         void HandleNpcData(NetIncomingMessage incMSG, Map c_Map)
@@ -975,6 +1032,10 @@ namespace Client.Classes
         UnequipItem,
         EquipItem,
         DropItem,
-        PlayerEquip
+        PlayerEquip,
+        NpcDirection,
+        PoolNpcDirecion,
+        NpcVitals,
+        PoolNpcVitals
     }
 }

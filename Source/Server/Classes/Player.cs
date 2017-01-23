@@ -235,7 +235,7 @@ namespace Server.Classes
             }
         }
 
-        public void CheckPlayerLevelUp()
+        public bool CheckPlayerLevelUp()
         {
             if (Experience == (Level * 1000))
             {
@@ -250,7 +250,8 @@ namespace Server.Classes
                 Strength += RND.Next(1, 3);
                 Agility += RND.Next(1, 3);
                 Endurance += RND.Next(1, 3);
-                Stamina += RND.Next(1, 3);                
+                Stamina += RND.Next(1, 3);
+                return true;              
             }
             else if (Experience > (Level * 1000))
             {
@@ -267,8 +268,9 @@ namespace Server.Classes
                 Agility += RND.Next(1, 3);
                 Endurance += RND.Next(1, 3);
                 Stamina += RND.Next(1, 3);
+                return true;
             }
-            else { return; }
+            return false;
         }
 
         public void EquipItem(NetServer s_Server, Player[] s_Player, int index, int slot)
