@@ -54,7 +54,7 @@ namespace Server.Classes
 
         void SendClearProjectileToAll(NetServer s_Server, NetConnection pConn, Map[] s_Map, int mapIndex, int slot)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage(7);
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.Write(s_Map[mapIndex].Name);
             outMSG.WriteVariableInt32(slot);

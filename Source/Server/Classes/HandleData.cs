@@ -11,11 +11,12 @@ namespace Server.Classes
 {
     class HandleData
     {
+        public const bool S_DEBUG = false;
         public string s_Version;
 
         public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
-            NetIncomingMessage incMSG;  //create incoming message
+            NetIncomingMessage incMSG;
 
             if ((incMSG = s_Server.ReadMessage()) != null)
             {
@@ -73,10 +74,6 @@ namespace Server.Classes
 
                             case (byte)PacketTypes.ItemPickup:
                                 HandleItemPickup(incMSG, s_Server, s_Player, s_Map, s_Item);
-                                break;
-
-                            case (byte)PacketTypes.RequestInv:
-                                HandleRequestInvUpdate(incMSG, s_Server, s_Player);
                                 break;
 
                             case (byte)PacketTypes.UnequipItem:
@@ -208,7 +205,7 @@ namespace Server.Classes
             int c_Map = s_Player[owner].Map;
 
             if (s_Map[c_Map].mapProj[slot] == null) { return; }
-            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);            
+            s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
@@ -448,7 +445,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(direction);
             outMSG.WriteVariableInt32(aimdirection);
-            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
         }
 
         void SendUpdateMovementData(NetServer s_Server, NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
@@ -462,7 +459,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(aimdirection);
             outMSG.WriteVariableInt32(step);
 
-            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
         }
 
         public void SendUpdateHealthData(NetServer s_Server, int index, int health)
@@ -771,8 +768,6 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].GrenadeAmmo);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Sending players...");
-            LogWriter.WriteLog("Sending players...", "Server");
         }
 
         void SendProjData(NetIncomingMessage incMSG, NetServer s_Server, Projectile[] s_Proj, int index)
@@ -803,8 +798,6 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Proj[i].Sprite);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Sending projectiles...");
-            LogWriter.WriteLog("Sending projectiles...", "Server");
         }
 
         void SendItemData(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item, int index)
@@ -857,8 +850,6 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Item[i].ProjectileNumber);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Sending items...");
-            LogWriter.WriteLog("Sending items...", "Server");
         }
 
         void SendNpcs(NetIncomingMessage incMSG, NetServer s_Server, Npc[] s_Npc)
@@ -882,8 +873,6 @@ namespace Server.Classes
                 outMSG.Write(s_Npc[i].IsSpawned);
             }
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Sending NPS...");
-            LogWriter.WriteLog("Sending npcs...", "Server");
         }
 
         void SendPoolMapNpcs(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map)
@@ -996,7 +985,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].X);
             outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Y);
             outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Direction);
-            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Step);
+            outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Step);            
+
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1006,7 +996,8 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.NpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(s_Map.m_MapNpc[npcNum].Health);
-            outMSG.Write(s_Map.m_MapNpc[npcNum].IsSpawned);
+            outMSG.Write(s_Map.m_MapNpc[npcNum].IsSpawned);            
+
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1016,7 +1007,8 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.PoolNpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(s_Map.r_MapNpc[npcNum].Health);
-            outMSG.Write(s_Map.r_MapNpc[npcNum].IsSpawned);
+            outMSG.Write(s_Map.r_MapNpc[npcNum].IsSpawned);            
+
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1046,7 +1038,8 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Map.mapItem[i].Value);
                 outMSG.WriteVariableInt32(s_Map.mapItem[i].ProjectileNumber);
                 outMSG.Write(s_Map.mapItem[i].IsSpawned);
-            }
+            }            
+
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1074,7 +1067,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ItemAmmoType);
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Value);
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ProjectileNumber);
-            outMSG.Write(s_Map.mapItem[itemNum].IsSpawned);
+            outMSG.Write(s_Map.mapItem[itemNum].IsSpawned);            
 
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1084,13 +1077,13 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.ErrorMessage);
             outMSG.Write(message);
-            outMSG.Write(caption);
+            outMSG.Write(caption);            
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendMapData(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map, Player[] s_Player)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            NetOutgoingMessage outMSG = s_Server.CreateMessage(67529);
             outMSG.Write((byte)PacketTypes.MapData);
             outMSG.Write(s_Map.Name);
 
@@ -1132,6 +1125,7 @@ namespace Server.Classes
                     outMSG.WriteVariableInt32(s_Map.FringeA[x, y].Tileset);
                 }
             }
+            
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
             Console.WriteLine("Sending map...");
             LogWriter.WriteLog("Sending map...", "Server");
@@ -1301,7 +1295,7 @@ namespace Server.Classes
         #endregion
     }
 
-    public enum PacketTypes
+    public enum PacketTypes : byte
     {
         Connection,
         Register,
@@ -1341,7 +1335,6 @@ namespace Server.Classes
         MapItems,
         MapItemData,
         ItemPickup,
-        RequestInv,
         UnequipItem,
         EquipItem,
         DropItem,

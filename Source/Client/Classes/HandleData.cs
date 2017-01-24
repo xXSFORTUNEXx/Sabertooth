@@ -312,8 +312,6 @@ namespace Client.Classes
             c_Map.mapProj[slot].Sprite = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Range = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Creating projectile!");
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
@@ -353,8 +351,6 @@ namespace Client.Classes
             c_Proj[index].Sprite = incMSG.ReadVariableInt32();
             c_Proj[index].Type = incMSG.ReadVariableInt32();
             c_Proj[index].Speed = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Updating projectile!");
         }
 
         void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
@@ -382,8 +378,6 @@ namespace Client.Classes
                     c_Item[i].ProjectileNumber = incMSG.ReadVariableInt32();
                 }
             }
-
-            Console.WriteLine("Items data received from server! IP: " + incMSG.SenderConnection);
         }
 
         void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
@@ -407,8 +401,6 @@ namespace Client.Classes
             c_Item[index].ammoType = incMSG.ReadVariableInt32();
             c_Item[index].Value = incMSG.ReadVariableInt32();
             c_Item[index].ProjectileNumber = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Item data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
         }
 
         void HandleNpcs(NetIncomingMessage incMSG, Npc[] c_Npc)
@@ -432,7 +424,6 @@ namespace Client.Classes
                     c_Npc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
-            Console.WriteLine("NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
         void HandlePoolNpcs(NetIncomingMessage incMSG, Map c_Map)
@@ -532,7 +523,6 @@ namespace Client.Classes
                     c_Map.m_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
-            Console.WriteLine("Map NPC data received from server! IP: " + incMSG.SenderConnection);
         }
 
         void HandlePoolNpcData(NetIncomingMessage incMSG, Map c_Map)
@@ -607,7 +597,6 @@ namespace Client.Classes
             c_Map.m_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
             c_Map.m_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
             c_Map.m_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
-            Console.WriteLine("NPC data received from server! Index: " + npcNum + " IP: " + incMSG.SenderConnection);
         }
 
         void HandleUpdateDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
@@ -616,12 +605,8 @@ namespace Client.Classes
             int direction = incMSG.ReadVariableInt32();
             int aimdirection = incMSG.ReadVariableInt32();
 
-            Console.WriteLine("Direction data received from server! Index: " + index + " IP: " + incMSG.SenderConnection);
-
             c_Player[index].Direction = direction;
             c_Player[index].AimDirection = aimdirection;
-
-            //if (index == clientIndex) { return; }
         }
 
         void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
@@ -633,16 +618,11 @@ namespace Client.Classes
             int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
 
-            Console.WriteLine("Move data recieved from server! Index: " + index + " IP: " + incMSG.SenderConnection);
-
             c_Player[index].tempX = x;
             c_Player[index].tempY = y;
             c_Player[index].tempDir = direction;
             c_Player[index].tempaimDir = aimdirection;
             c_Player[index].tempStep = step;
-
-            //if (index == clientIndex) { return; }
-            //if (step == c_Player[index].Step) { return; }
         }
 
         void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient c_Client)
@@ -657,8 +637,7 @@ namespace Client.Classes
         void HandleConnectionData(NetIncomingMessage incMSG, NetClient c_Client)
         {
             if (c_Client.ServerConnection != null) { return; }
-            Console.WriteLine("Connected to server!");
-        }
+            Console.WriteLine("Connected to server!");        }
 
         void HandleChatMessage(NetIncomingMessage incMSG, GUI c_GUI)
         {
@@ -681,8 +660,7 @@ namespace Client.Classes
             }
             if (!c_GUI.chatWindow.IsVisible) { c_GUI.chatWindow.Show(); }
             c_GUI.outputChat.ScrollToBottom();
-            c_GUI.outputChat.UnselectAll();            
-            Console.WriteLine("Chat data receievd from server! IP: " + incMSG.SenderConnection);
+            c_GUI.outputChat.UnselectAll();
         }
 
         void HandleLoginData(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas, GUI c_GUI)
@@ -700,8 +678,6 @@ namespace Client.Classes
 
             if (vitalName == "food") { c_Player[index].Hunger = vital; }
             if (vitalName == "water") { c_Player[index].Hydration = vital; }
-
-            Console.WriteLine("Vital data received from server! Index: " + index + " Vital: " + vitalName +  "Amount: " + vital + " IP: " + incMSG.SenderConnection);
         }
 
         void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
@@ -710,7 +686,6 @@ namespace Client.Classes
             int health = incMSG.ReadVariableInt32();
 
             c_Player[index].Health = health;
-            Console.WriteLine("Health data received from server! Index:" + index + " Amount: " + health + " IP: " + incMSG.SenderConnection);
         }
 
         void HandleUpdatePlayerStats(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
@@ -732,8 +707,6 @@ namespace Client.Classes
             c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
             c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
         }
 
         void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
@@ -806,8 +779,6 @@ namespace Client.Classes
             c_Player[index].offWeapon.ammoType = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-
-            Console.WriteLine("Player data received from server! Index: " + index + " Account Name: " + c_Player[index].Name + " IP: " + incMSG.SenderConnection);
         }
 
         void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
@@ -886,7 +857,6 @@ namespace Client.Classes
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
-            Console.WriteLine("Player data received from server! Index: All IP: " + incMSG.SenderConnection);
         }
 
         void HandleErrorMessage(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas)
@@ -895,7 +865,6 @@ namespace Client.Classes
             string caption = incMSG.ReadString();
             MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
-            Console.WriteLine("Error message data received from server! IP: " + incMSG.SenderConnection);
         }
 
         void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
@@ -957,11 +926,10 @@ namespace Client.Classes
                     c_Map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
+            
             c_Map.SaveMap();
-            Console.WriteLine("Map data received from server! IP: " + incMSG.SenderConnection);
             c_Map.t_Map.Load(c_Map);
             c_Map.p_Map.Load(c_Map);
-            //Loading is complete after the map
             LoadMainGUI(c_GUI, c_Canvas);
         }
         #endregion
@@ -978,17 +946,9 @@ namespace Client.Classes
             c_GUI.CreateHUD();
             c_GUI.AddText("Welcome to Sabertooth!");
         }
+    } 
 
-        public void RequestInventory(NetClient c_Client, int index)
-        {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
-            outMSG.Write((byte)PacketTypes.RequestInv);
-            outMSG.WriteVariableInt32(index);      
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-    }
-
-    public enum PacketTypes
+    public enum PacketTypes : byte
     {
         Connection,
         Register,
@@ -1028,7 +988,6 @@ namespace Client.Classes
         MapItems,
         MapItemData,
         ItemPickup,
-        RequestInv,
         UnequipItem,
         EquipItem,
         DropItem,

@@ -95,13 +95,15 @@ namespace Server.Classes
                 s_Player[i] = new Player();
             }
 
-            WriteLine("Array created successfully!");
+            WriteLine("Player Array created successfully!");
+            WriteLog("Player array loaded successfully", "Server");
         }
 
         void InitMap()
         {
             bool exists = true;
-
+            WriteLine("Loading maps...");
+            WriteLog("Loading maps...", "Server");
             for (int i = 0; i < 10; i++)
             {
                 if (!Exists("Maps/Map" + i + ".bin"))
@@ -123,9 +125,8 @@ namespace Server.Classes
                 WriteLine("Saving maps...");
                 WriteLog("Saving maps...", "Server");
             }
-            WriteLine("Loading maps...");
-            WriteLog("Loading maps...", "Server");
             WriteLine("Maps loaded successfully!");
+            WriteLog("Maps loaded successfully", "Server");
         }
 
         void InitItems()
@@ -139,6 +140,7 @@ namespace Server.Classes
                 s_Item[i].LoadItemFromDatabase(i + 1);
             }
             WriteLine("Items loaded successfully!");
+            WriteLog("Items loaded successfully", "Server");
         }
 
         void InitProjectiles()
@@ -152,6 +154,7 @@ namespace Server.Classes
                 s_Proj[i].LoadProjectileFromDatabase(i);
             }
             WriteLine("Projectiles loaded successfully!");
+            WriteLog("Projectiles loaded successfully", "Server");
         }
 
         void InitNPC()
@@ -196,6 +199,7 @@ namespace Server.Classes
                 }
             }
             WriteLine("Npcs loaded successfully!");
+            WriteLog("Npcs loaded successfully", "Server");
         }
 
         void InitFinal()
@@ -206,23 +210,23 @@ namespace Server.Classes
         #endregion
 
         #region Server Check Voids
-        void CheckHealthRegen(NetServer s_Server)
+        bool CheckHealthRegen(NetServer s_Server)
         {
-            if (TickCount - regenTick >= regenTime)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    if (s_Player[i].Name != null)
-                    {
-                        WriteLine("Checking for health regen...");
-                        WriteLog("Checking for health regin...", "Server");
+            if (TickCount - regenTick < regenTime) { return false; }
 
-                        s_Player[i].RegenHealth(s_Server);
-                        handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
-                    }
+            for (int i = 0; i < 5; i++)
+            {
+                if (s_Player[i].Name != null)
+                {
+                    WriteLine("Checking for health regen...");
+                    WriteLog("Checking for health regin...", "Server");
+
+                    s_Player[i].RegenHealth(s_Server);
+                    handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
                 }
-                regenTick = TickCount;
             }
+            regenTick = TickCount;
+            return true;
         }
 
         void CheckVitalLoss(NetServer s_Server)
@@ -232,7 +236,7 @@ namespace Server.Classes
                 if (s_Player[i].Name != null)
                 {
                     //Check for hunger
-                    if (TickCount - s_Player[i].hungerTick > hungerTime)
+                    if (TickCount - s_Player[i].hungerTick >= hungerTime)
                     {
                         WriteLine("Checking for hunger loss...");
                         WriteLog("Checking for hunger loss...", "Server");
@@ -242,7 +246,7 @@ namespace Server.Classes
                         s_Player[i].hungerTick = TickCount;
                     }
 
-                    if (TickCount - s_Player[i].hydrationTick > hydrationTime)
+                    if (TickCount - s_Player[i].hydrationTick >= hydrationTime)
                     {
 
                         WriteLine("Checking for hydration loss...");
@@ -268,30 +272,29 @@ namespace Server.Classes
             return false;
         }
 
-        void CheckClearMapItem(NetServer s_Server)
+        bool CheckClearMapItem(NetServer s_Server)
         {
-            if (TickCount - removeTime > 1000)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    if (s_Map[i] != null && s_Map[i].Name != null)
-                    {
-                        if (CheckIfMapHasPlayers(i, s_Player))
-                        {
-                            for (int n = 0; n < 20; n++)
-                            {
-                                if (s_Map[i].mapItem[n].ExpireTick > 0 && s_Map[i].mapItem[n].IsSpawned)
-                                {
-                                    if (TickCount - s_Map[i].mapItem[n].ExpireTick > 300000)
-                                    {
-                                        s_Map[i].mapItem[n] = new MapItem("None", 0, 0, 0);
+            if (TickCount - removeTime < 1000) { return false; }
 
-                                        for (int p = 0; p < 5; p++)
+            for (int i = 0; i < 10; i++)
+            {
+                if (s_Map[i] != null && s_Map[i].Name != null)
+                {
+                    if (CheckIfMapHasPlayers(i, s_Player))
+                    {
+                        for (int n = 0; n < 20; n++)
+                        {
+                            if (s_Map[i].mapItem[n].ExpireTick > 0 && s_Map[i].mapItem[n].IsSpawned)
+                            {
+                                if (TickCount - s_Map[i].mapItem[n].ExpireTick > 300000)
+                                {
+                                    s_Map[i].mapItem[n] = new MapItem("None", 0, 0, 0);
+
+                                    for (int p = 0; p < 5; p++)
+                                    {
+                                        if (s_Player[p].Connection != null && i == s_Player[p].Map)
                                         {
-                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
-                                            {
-                                                handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], n);
-                                            }
+                                            handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], n);
                                         }
                                     }
                                 }
@@ -299,8 +302,9 @@ namespace Server.Classes
                         }
                     }
                 }
-                removeTime = TickCount;
             }
+            removeTime = TickCount;
+            return true;
         }
 
         void CheckItemSpawn(NetServer s_Server)
@@ -699,22 +703,22 @@ namespace Server.Classes
             WriteLine("Players saved!");
         }
 
-        void SavePlayers()
+        bool SavePlayers()
         {
-            if (TickCount - saveTick > saveTime)
+            if (TickCount - saveTick < saveTime) { return false; }
+            WriteLine("Saving players...");
+            WriteLog("Saving players...", "Server");
+            for (int i = 0; i < 5; i++)
             {
-                WriteLine("Saving players...");
-                WriteLog("Saving players...", "Server");
-                for (int i = 0; i < 5; i++)
+                if (s_Player[i].Name != null)
                 {
-                    if (s_Player[i].Name != null)
-                    {
-                        s_Player[i].SavePlayerToDatabase();
-                    }
+                    s_Player[i].SavePlayerToDatabase();
                 }
-                saveTick = TickCount;
-                WriteLine("Players saved successfully!");
             }
+            saveTick = TickCount;
+            WriteLine("Players saved successfully!");
+            WriteLog("Players saved successfully!", "Server");
+            return true;
         }
 
         static bool AccountExist(string name)
@@ -836,6 +840,5 @@ namespace Server.Classes
             }
         }
         #endregion
-
     }
 }

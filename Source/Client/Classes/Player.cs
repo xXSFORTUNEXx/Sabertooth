@@ -686,10 +686,11 @@ namespace Client.Classes
 
         void SendCreateBullet(NetClient c_Client, int index)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = c_Client.CreateMessage(2);
             outMSG.Write((byte)PacketTypes.RangedAttack);
             outMSG.WriteVariableInt32(index);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Create Bullet - Size: " + outMSG.LengthBytes.ToString() + " bytes, " + outMSG.LengthBits.ToString() + " bytes");
         }
 
         void SendMovementData(NetClient c_Client, int index)
