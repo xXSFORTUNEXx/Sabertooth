@@ -11,8 +11,8 @@ namespace Server.Classes
 {
     class HandleData
     {
-        public const bool S_DEBUG = false;
         public string s_Version;
+        const bool packet_info = false;
 
         public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
         {
@@ -98,6 +98,7 @@ namespace Server.Classes
                         HandleStatusChange(incMSG, s_Server, s_Player);
                         break;
                 }
+                if (packet_info) { Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " Bytes, " + incMSG.LengthBits + " bits"); }
             }
             s_Server.Recycle(incMSG);
         }

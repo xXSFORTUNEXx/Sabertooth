@@ -17,6 +17,7 @@ namespace Client.Classes
         public string s_Port;
         public int c_Index;
         public string c_Version = "1.0";
+        const bool packet_info = false;
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
             ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
@@ -122,7 +123,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.CreateProj:
-                                HandleCreateProjectile(incMSG, c_Player, c_Map);
+                                HandleCreateProjectile(incMSG, c_Player, c_Map, c_Proj);
                                 break;
 
                             case (byte)PacketTypes.ClearProj:
@@ -180,6 +181,7 @@ namespace Client.Classes
                         }
                         break;
                 }
+                if (packet_info) { Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString()); }
             }
             c_Client.Recycle(incMSG);
         }
@@ -294,24 +296,21 @@ namespace Client.Classes
             c_Map.mapProj[slot] = null;
         }
 
-        void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
+        void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map, Projectile[] c_Proj)
         {
             int slot = incMSG.ReadVariableInt32();
-            string mapName = incMSG.ReadString();
-            
-            if (mapName != c_Map.Name) { return; }
+            int proj = incMSG.ReadVariableInt32();
 
             c_Map.mapProj[slot] = new MapProj();
 
-            c_Map.mapProj[slot].Name = incMSG.ReadString();
             c_Map.mapProj[slot].X = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Y = incMSG.ReadVariableInt32();
             c_Map.mapProj[slot].Direction = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Speed = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Owner = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Sprite = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Type = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Range = incMSG.ReadVariableInt32();
+            c_Map.mapProj[slot].Name = c_Proj[proj].Name;
+            c_Map.mapProj[slot].Speed = c_Proj[proj].Speed;
+            c_Map.mapProj[slot].Type = c_Proj[proj].Type;
+            c_Map.mapProj[slot].Sprite = c_Proj[proj].Sprite;
+            c_Map.mapProj[slot].Range = c_Proj[proj].Range;
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)

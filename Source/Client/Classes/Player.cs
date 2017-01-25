@@ -690,7 +690,6 @@ namespace Client.Classes
             outMSG.Write((byte)PacketTypes.RangedAttack);
             outMSG.WriteVariableInt32(index);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Create Bullet - Size: " + outMSG.LengthBytes.ToString() + " bytes, " + outMSG.LengthBits.ToString() + " bytes");
         }
 
         void SendMovementData(NetClient c_Client, int index)

@@ -407,8 +407,8 @@ namespace Client.Classes
                 d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
                 d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
-                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.##") + " ms";
+                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();                
+                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.##") + " s";
                 d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
                 d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
             }

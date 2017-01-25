@@ -41,19 +41,12 @@ namespace Server.Classes
             s_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             s_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
             s_Config.UseMessageRecycling = true;
-            s_Config.MaximumTransmissionUnit = 1500;
             s_Config.MaximumConnections = 5;
-            s_Config.EnableUPnP = true;
-
-            WriteLine("Enabling message types...");
+            s_Config.EnableUPnP = false;
             CheckDirectories();
-            WriteLog("Checking directories and database...", "Server");
-            WriteLine("Checking directories and database...");
             s_Server = new NetServer(s_Config);
             s_Server.Start();
-            WriteLine("Forwarding ports...");
-            WriteLog("Forwarding ports...", "Server");
-            s_Server.UPnP.ForwardPort(14242, "Sabertooth");
+            //s_Server.UPnP.ForwardPort(14242, "Sabertooth");
             Server srvrServer = new Server();
             WriteLine("Server Started...");
             WriteLog("Server started...", "Server");

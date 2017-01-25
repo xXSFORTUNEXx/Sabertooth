@@ -5,6 +5,7 @@ using static Microsoft.VisualBasic.Interaction;
 using static System.Console;
 using Lidgren.Network;
 using static System.Environment;
+using System.Collections.Generic;
 
 namespace Server.Classes
 {
@@ -52,13 +53,13 @@ namespace Server.Classes
             }
         }
 
-        void SendClearProjectileToAll(NetServer s_Server, NetConnection pConn, Map[] s_Map, int mapIndex, int slot)
+        void SendClearProjectileToAll(NetServer s_Server, NetConnection p_Conn, Map[] s_Map, int mapIndex, int slot)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage(7);
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.Write(s_Map[mapIndex].Name);
             outMSG.WriteVariableInt32(slot);
-            s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void CreateProjectile(NetServer s_Server, Player[] s_Player, Projectile[] s_Proj, int mapIndex, int playerIndex)
@@ -85,28 +86,21 @@ namespace Server.Classes
             {
                 if (s_Player[i].Connection != null && s_Player[i].Map == mapIndex)
                 {
-                    SendNewProjectileToAll(s_Server, s_Player[i].Connection, mapIndex, slot);
+                    SendNewProjectileToAll(s_Server, s_Player[i].Connection, mapIndex, slot, projNum);
                 }
             }
         }
 
-        void SendNewProjectileToAll(NetServer s_Server, NetConnection pConn, int mapIndex, int slot)
+        void SendNewProjectileToAll(NetServer s_Server, NetConnection p_Conn, int mapIndex, int slot, int projNum)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage(23);
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);
-            outMSG.Write(Name);
-            outMSG.Write(mapProj[slot].Name);
+            outMSG.WriteVariableInt32(mapProj[slot].projNum);
             outMSG.WriteVariableInt32(mapProj[slot].X);
             outMSG.WriteVariableInt32(mapProj[slot].Y);
-            outMSG.WriteVariableInt32(mapProj[slot].Direction);
-            outMSG.WriteVariableInt32(mapProj[slot].Speed);
-            outMSG.WriteVariableInt32(mapProj[slot].Owner);
-            outMSG.WriteVariableInt32(mapProj[slot].Sprite);
-            outMSG.WriteVariableInt32(mapProj[slot].Type);
-            outMSG.WriteVariableInt32(mapProj[slot].Range);
-
-            s_Server.SendMessage(outMSG, pConn, NetDeliveryMethod.ReliableOrdered);
+            outMSG.WriteVariableInt32(mapProj[slot].Direction);            
+            s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void GenerateMap(int mapNum)
