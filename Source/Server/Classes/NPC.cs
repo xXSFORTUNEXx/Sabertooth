@@ -188,7 +188,7 @@ namespace Server.Classes
                 s_Player.Experience += Exp;
                 s_Player.Money += Money;
                 s_Player.CheckPlayerLevelUp();
-                s_Player.SavePlayerToDatabase();
+                //s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)
                 {
                     s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;

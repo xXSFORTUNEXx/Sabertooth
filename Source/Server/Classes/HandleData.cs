@@ -427,6 +427,8 @@ namespace Server.Classes
                 SavePlayers(s_Player);
                 ClearSlot(incMSG.SenderConnection, s_Player);
                 SendPlayers(s_Server, s_Player);
+                Console.WriteLine("Player saved!");
+                LogWriter.WriteLog("Player saved...", "Server");
             }
         }
         #endregion

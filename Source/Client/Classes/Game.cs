@@ -555,6 +555,8 @@ namespace Client.Classes
                 p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
                 c_Window.Draw(p_HUD);
             }
         }

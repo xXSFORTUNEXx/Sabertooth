@@ -1379,6 +1379,14 @@ namespace Client.Classes
         Text c_Text = new Text();
         float c_barLength;
 
+        VertexArray hu_Bar = new VertexArray();
+        Text hu_Text = new Text();
+        float hu_barLength;
+
+        VertexArray hy_Bar = new VertexArray();
+        Text hy_Text = new Text();
+        float hy_barLength;
+
         const int f_Size = 175;
 
         public HUD()
@@ -1390,7 +1398,7 @@ namespace Client.Classes
             h_Text.CharacterSize = 16;
             h_Text.Color = Color.White;
             h_Text.Style = Text.Styles.Bold;
-            h_Text.Position = new Vector2f(13, 13);
+            h_Text.Position = new Vector2f(13, 14);
 
             e_Bar.PrimitiveType = PrimitiveType.Quads;
             e_Bar.Resize(4);
@@ -1399,7 +1407,7 @@ namespace Client.Classes
             e_Text.CharacterSize = 16;
             e_Text.Color = Color.Black;
             e_Text.Style = Text.Styles.Bold;
-            e_Text.Position = new Vector2f(13, 48);
+            e_Text.Position = new Vector2f(13, 49);
 
             c_Bar.PrimitiveType = PrimitiveType.Quads;
             c_Bar.Resize(4);
@@ -1408,7 +1416,25 @@ namespace Client.Classes
             c_Text.CharacterSize = 16;
             c_Text.Color = Color.White;
             c_Text.Style = Text.Styles.Bold;
-            c_Text.Position = new Vector2f(13, 83);
+            c_Text.Position = new Vector2f(13, 84);
+
+            hu_Bar.PrimitiveType = PrimitiveType.Quads;
+            hu_Bar.Resize(4);
+
+            hu_Text.Font = d_Font;
+            hu_Text.CharacterSize = 16;
+            hu_Text.Color = Color.White;
+            hu_Text.Style = Text.Styles.Bold;
+            hu_Text.Position = new Vector2f(13, 119);
+
+            hy_Bar.PrimitiveType = PrimitiveType.Quads;
+            hy_Bar.Resize(4);
+
+            hy_Text.Font = d_Font;
+            hy_Text.CharacterSize = 16;
+            hy_Text.Color = Color.White;
+            hy_Text.Style = Text.Styles.Bold;
+            hy_Text.Position = new Vector2f(13, 154);
         }
 
         public void UpdateHealthBar(Player c_Player)
@@ -1416,8 +1442,8 @@ namespace Client.Classes
             h_barLength = ((float)c_Player.Health / c_Player.MaxHealth) * f_Size;
 
             h_Bar[0] = new Vertex(new Vector2f(10, 10), Color.Red);
-            h_Bar[1] = new Vertex(new Vector2f(h_barLength, 10), Color.Red);
-            h_Bar[2] = new Vertex(new Vector2f(h_barLength, 40), Color.Red);
+            h_Bar[1] = new Vertex(new Vector2f(h_barLength + 10, 10), Color.Red);
+            h_Bar[2] = new Vertex(new Vector2f(h_barLength + 10, 40), Color.Red);
             h_Bar[3] = new Vertex(new Vector2f(10, 40), Color.Red);
 
             h_Text.DisplayedString = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
@@ -1430,8 +1456,8 @@ namespace Client.Classes
             e_barLength = ((float)c_Player.Experience / (c_Player.Level * 1000)) * f_Size;
 
             e_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Yellow);
-            e_Bar[1] = new Vertex(new Vector2f(e_barLength, 45), Color.Yellow);
-            e_Bar[2] = new Vertex(new Vector2f(e_barLength, 75), Color.Yellow);
+            e_Bar[1] = new Vertex(new Vector2f(e_barLength + 10, 45), Color.Yellow);
+            e_Bar[2] = new Vertex(new Vector2f(e_barLength + 10, 75), Color.Yellow);
             e_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Yellow);
         }
 
@@ -1452,9 +1478,33 @@ namespace Client.Classes
             }
 
             c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Magenta);
-            c_Bar[1] = new Vertex(new Vector2f(c_barLength, 80), Color.Magenta);
-            c_Bar[2] = new Vertex(new Vector2f(c_barLength, 105), Color.Magenta);
-            c_Bar[3] = new Vertex(new Vector2f(10, 105), Color.Magenta);
+            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.Magenta);
+            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.Magenta);
+            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Magenta);
+        }
+
+        public void UpdateHungerBar(Player c_Player)
+        {
+            hu_Text.DisplayedString = "Hunger: " + c_Player.Hunger + " / 100";
+
+            hu_barLength = ((float)c_Player.Hunger / 100) * f_Size;
+
+            hu_Bar[0] = new Vertex(new Vector2f(10, 115), Color.Green);
+            hu_Bar[1] = new Vertex(new Vector2f(hu_barLength + 10, 115), Color.Green);
+            hu_Bar[2] = new Vertex(new Vector2f(hu_barLength + 10, 145), Color.Green);
+            hu_Bar[3] = new Vertex(new Vector2f(10, 145), Color.Green);
+        }
+
+        public void UpdateHydrationBar(Player c_Player)
+        {
+            hy_Text.DisplayedString = "Hydration: " + c_Player.Hydration + " / 100";
+
+            hy_barLength = ((float)c_Player.Hydration / 100) * f_Size;
+
+            hy_Bar[0] = new Vertex(new Vector2f(10, 150), Color.Blue);
+            hy_Bar[1] = new Vertex(new Vector2f(hy_barLength + 10, 150), Color.Blue);
+            hy_Bar[2] = new Vertex(new Vector2f(hy_barLength + 10, 180), Color.Blue);
+            hy_Bar[3] = new Vertex(new Vector2f(10, 180), Color.Blue);
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
@@ -1462,9 +1512,13 @@ namespace Client.Classes
             target.Draw(h_Bar, states);
             target.Draw(e_Bar, states);
             target.Draw(c_Bar, states);
+            target.Draw(hu_Bar, states);
+            target.Draw(hy_Bar, states);
             target.Draw(h_Text);
             target.Draw(e_Text);
             target.Draw(c_Text);
+            target.Draw(hu_Text);
+            target.Draw(hy_Text);
         }
     }
 }
