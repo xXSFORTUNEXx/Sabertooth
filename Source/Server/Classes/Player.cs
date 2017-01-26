@@ -17,7 +17,6 @@ namespace Server.Classes
     {
         #region Main Classes
         public NetConnection Connection;
-        public SQLiteConnection s_Database;
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[25];
@@ -628,366 +627,443 @@ namespace Server.Classes
         #region Database
         public void CreatePlayerInDatabase()
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-            SQLiteCommand sql_Command;
-            sql = "INSERT INTO `PLAYERS`";
-            sql = sql + "(`NAME`,`PASSWORD`,`X`,`Y`,`MAP`,`DIRECTION`,`AIMDIRECTION`,`SPRITE`,`LEVEL`,`POINTS`,`HEALTH`,`MAXHEALTH`,`EXPERIENCE`,`MONEY`,`ARMOR`,";
-            sql = sql + "`HUNGER`,`HYDRATION`,`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`PISTOLAMMO`,`ASSAULTAMMO`,`ROCKETAMMO`,`GRENADEAMMO`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + Pass + "','" + X + "','" + Y + "','" + Map + "','" + Direction + "','" + AimDirection + "','" + Sprite + "','" + Level + "',";
-            sql = sql + "'" + Points + "','" + Health + "','" + MaxHealth + "','" + Experience + "','" + Money + "','" + Armor + "','" + Hunger + "','" + Hydration + "','" + Strength + "','" + Agility + "',";
-            sql = sql + "'" + Endurance + "','" + Stamina + "','" + PistolAmmo + "','" + AssaultAmmo + "','" + RocketAmmo + "','" + GrenadeAmmo + "')";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+                sql = "INSERT INTO `PLAYERS`";
+                sql = sql + "(`NAME`,`PASSWORD`,`X`,`Y`,`MAP`,`DIRECTION`,`AIMDIRECTION`,`SPRITE`,`LEVEL`,`POINTS`,`HEALTH`,`MAXHEALTH`,`EXPERIENCE`,`MONEY`,`ARMOR`,";
+                sql = sql + "`HUNGER`,`HYDRATION`,`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`PISTOLAMMO`,`ASSAULTAMMO`,`ROCKETAMMO`,`GRENADEAMMO`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + Pass + "','" + X + "','" + Y + "','" + Map + "','" + Direction + "','" + AimDirection + "','" + Sprite + "','" + Level + "',";
+                sql = sql + "'" + Points + "','" + Health + "','" + MaxHealth + "','" + Experience + "','" + Money + "','" + Armor + "','" + Hunger + "','" + Hydration + "','" + Strength + "','" + Agility + "',";
+                sql = sql + "'" + Endurance + "','" + Stamina + "','" + PistolAmmo + "','" + AssaultAmmo + "','" + RocketAmmo + "','" + GrenadeAmmo + "')";
 
-            sql = "INSERT INTO `MAINWEAPONS`";
-            sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
-            sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + mainWeapon.Name + "','" + mainWeapon.Clip + "','" + mainWeapon.MaxClip + "','" + mainWeapon.Sprite + "','" + mainWeapon.Damage + "','" + mainWeapon.Armor + "',";
-            sql = sql + "'" + mainWeapon.Type + "','" + mainWeapon.AttackSpeed + "','" + mainWeapon.ReloadSpeed + "','" + mainWeapon.HealthRestore + "','" + mainWeapon.HungerRestore + "','" + mainWeapon.HydrateRestore + "',";
-            sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ItemAmmoType + "','" + mainWeapon.Value + "','" + mainWeapon.ProjectileNumber + "')";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
 
-            sql = "INSERT INTO `SECONDARYWEAPONS`";
-            sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
-            sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + offWeapon.Name + "','" + offWeapon.Clip + "','" + offWeapon.MaxClip + "','" + offWeapon.Sprite + "','" + offWeapon.Damage + "','" + offWeapon.Armor + "',";
-            sql = sql + "'" + offWeapon.Type + "','" + offWeapon.AttackSpeed + "','" + offWeapon.ReloadSpeed + "','" + offWeapon.HealthRestore + "','" + offWeapon.HungerRestore + "','" + offWeapon.HydrateRestore + "',";
-            sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ItemAmmoType + "','" + offWeapon.Value + "','" + offWeapon.ProjectileNumber + "')";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
+                sql = "INSERT INTO `MAINWEAPONS`";
+                sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
+                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + mainWeapon.Name + "','" + mainWeapon.Clip + "','" + mainWeapon.MaxClip + "','" + mainWeapon.Sprite + "','" + mainWeapon.Damage + "','" + mainWeapon.Armor + "',";
+                sql = sql + "'" + mainWeapon.Type + "','" + mainWeapon.AttackSpeed + "','" + mainWeapon.ReloadSpeed + "','" + mainWeapon.HealthRestore + "','" + mainWeapon.HungerRestore + "','" + mainWeapon.HydrateRestore + "',";
+                sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ItemAmmoType + "','" + mainWeapon.Value + "','" + mainWeapon.ProjectileNumber + "')";
 
-            sql = "INSERT INTO `EQUIPMENT`";
-            sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + 0 + "','" + Chest.Name + "','" + Chest.Sprite + "','" + Chest.Damage + "','" + Chest.Armor + "','" + Chest.Type + "','" + Chest.AttackSpeed + "','" + Chest.ReloadSpeed + "','" + Chest.HealthRestore + "','" + Chest.HungerRestore + "',";
-            sql = sql + "'" + Chest.HydrateRestore + "','" + Chest.Strength + "','" + Chest.Agility + "','" + Chest.Endurance + "','" + Chest.Stamina + "','" + Chest.Clip + "','" + Chest.MaxClip + "','" + Chest.ItemAmmoType + "',";
-            sql = sql + "'" + Chest.Value + "','" + Chest.ProjectileNumber + "');";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
 
-            sql = "INSERT INTO `EQUIPMENT`";
-            sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + 1 + "','" + Legs.Name + "','" + Legs.Sprite + "','" + Legs.Damage + "','" + Legs.Armor + "','" + Legs.Type + "','" + Legs.AttackSpeed + "','" + Legs.ReloadSpeed + "','" + Legs.HealthRestore + "','" + Legs.HungerRestore + "',";
-            sql = sql + "'" + Legs.HydrateRestore + "','" + Legs.Strength + "','" + Legs.Agility + "','" + Legs.Endurance + "','" + Legs.Stamina + "','" + Legs.Clip + "','" + Legs.MaxClip + "','" + Legs.ItemAmmoType + "',";
-            sql = sql + "'" + Legs.Value + "','" + Legs.ProjectileNumber + "');";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
+                sql = "INSERT INTO `SECONDARYWEAPONS`";
+                sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
+                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + offWeapon.Name + "','" + offWeapon.Clip + "','" + offWeapon.MaxClip + "','" + offWeapon.Sprite + "','" + offWeapon.Damage + "','" + offWeapon.Armor + "',";
+                sql = sql + "'" + offWeapon.Type + "','" + offWeapon.AttackSpeed + "','" + offWeapon.ReloadSpeed + "','" + offWeapon.HealthRestore + "','" + offWeapon.HungerRestore + "','" + offWeapon.HydrateRestore + "',";
+                sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ItemAmmoType + "','" + offWeapon.Value + "','" + offWeapon.ProjectileNumber + "')";
 
-            sql = "INSERT INTO `EQUIPMENT`";
-            sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-            sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + 2 + "','" + Feet.Name + "','" + Feet.Sprite + "','" + Feet.Damage + "','" + Feet.Armor + "','" + Feet.Type + "','" + Feet.AttackSpeed + "','" + Feet.ReloadSpeed + "','" + Feet.HealthRestore + "','" + Feet.HungerRestore + "',";
-            sql = sql + "'" + Feet.HydrateRestore + "','" + Feet.Strength + "','" + Feet.Agility + "','" + Feet.Endurance + "','" + Feet.Stamina + "','" + Feet.Clip + "','" + Feet.MaxClip + "','" + Feet.ItemAmmoType + "',";
-            sql = sql + "'" + Feet.Value + "','" + Feet.ProjectileNumber + "');";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-            s_Database.Close();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "INSERT INTO `EQUIPMENT`";
+                sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + 0 + "','" + Chest.Name + "','" + Chest.Sprite + "','" + Chest.Damage + "','" + Chest.Armor + "','" + Chest.Type + "','" + Chest.AttackSpeed + "','" + Chest.ReloadSpeed + "','" + Chest.HealthRestore + "','" + Chest.HungerRestore + "',";
+                sql = sql + "'" + Chest.HydrateRestore + "','" + Chest.Strength + "','" + Chest.Agility + "','" + Chest.Endurance + "','" + Chest.Stamina + "','" + Chest.Clip + "','" + Chest.MaxClip + "','" + Chest.ItemAmmoType + "',";
+                sql = sql + "'" + Chest.Value + "','" + Chest.ProjectileNumber + "');";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "INSERT INTO `EQUIPMENT`";
+                sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + 1 + "','" + Legs.Name + "','" + Legs.Sprite + "','" + Legs.Damage + "','" + Legs.Armor + "','" + Legs.Type + "','" + Legs.AttackSpeed + "','" + Legs.ReloadSpeed + "','" + Legs.HealthRestore + "','" + Legs.HungerRestore + "',";
+                sql = sql + "'" + Legs.HydrateRestore + "','" + Legs.Strength + "','" + Legs.Agility + "','" + Legs.Endurance + "','" + Legs.Stamina + "','" + Legs.Clip + "','" + Legs.MaxClip + "','" + Legs.ItemAmmoType + "',";
+                sql = sql + "'" + Legs.Value + "','" + Legs.ProjectileNumber + "');";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "INSERT INTO `EQUIPMENT`";
+                sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + 2 + "','" + Feet.Name + "','" + Feet.Sprite + "','" + Feet.Damage + "','" + Feet.Armor + "','" + Feet.Type + "','" + Feet.AttackSpeed + "','" + Feet.ReloadSpeed + "','" + Feet.HealthRestore + "','" + Feet.HungerRestore + "',";
+                sql = sql + "'" + Feet.HydrateRestore + "','" + Feet.Strength + "','" + Feet.Agility + "','" + Feet.Endurance + "','" + Feet.Stamina + "','" + Feet.Clip + "','" + Feet.MaxClip + "','" + Feet.ItemAmmoType + "',";
+                sql = sql + "'" + Feet.Value + "','" + Feet.ProjectileNumber + "');";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void SavePlayerToDatabase()
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-            SQLiteCommand sql_Command;
-            sql = "UPDATE PLAYERS SET ";
-            sql = sql + "NAME = '" + Name + "', PASSWORD = '" + Pass + "', X = '" + X + "', Y = '" + Y + "', MAP = '" + Map + "', DIRECTION = '" + Direction + "', ";
-            sql = sql + "AIMDIRECTION = '" + AimDirection + "', SPRITE = '" + Sprite + "', LEVEL = '" + Level + "', POINTS = '" + Points + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', EXPERIENCE = '" + Experience + "', ";
-            sql = sql + "MONEY = '" + Money + "', ARMOR = '" + Armor + "', HUNGER = '" + Hunger + "', HYDRATION = '" + Hydration + "', STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', ";
-            sql = sql + "STAMINA = '" + Stamina + "', PISTOLAMMO = '" + PistolAmmo + "', ASSAULTAMMO = '" + AssaultAmmo + "', ROCKETAMMO = '" + RocketAmmo + "', GRENADEAMMO = '" + GrenadeAmmo + "' ";
-            sql = sql + "WHERE NAME = '" + Name + "';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "UPDATE MAINWEAPONS SET ";
-            sql = sql + "NAME = '" + mainWeapon.Name + "', CLIP = '" + mainWeapon.Clip + "', MAXCLIP = '" + mainWeapon.MaxClip + "', SPRITE = '" + mainWeapon.Sprite + "', DAMAGE = '" + mainWeapon.Damage + "', ARMOR = '" + mainWeapon.Armor + "', ";
-            sql = sql + "TYPE = '" + mainWeapon.Type + "', ATTACKSPEED = '" + mainWeapon.AttackSpeed + "', RELOADSPEED = '" + mainWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + mainWeapon.HealthRestore + "', HUNGERRESTORE = '" + mainWeapon.HungerRestore + "', ";
-            sql = sql + "HYDRATERESTORE = '" + mainWeapon.HydrateRestore + "', STRENGTH = '" + mainWeapon.Strength + "', AGILITY = '" + mainWeapon.Agility + "', ENDURANCE = '" + mainWeapon.Endurance + "', STAMINA = '" + mainWeapon.Stamina + "', ";
-            sql = sql + "AMMOTYPE = '" + mainWeapon.ItemAmmoType + "',  VALUE = '" + mainWeapon.Value + "', PROJ = '" + mainWeapon.ProjectileNumber + "' "; 
-            sql = sql + "WHERE OWNER = '" + Name + "';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "UPDATE SECONDARYWEAPONS SET ";
-            sql = sql + "NAME = '" + offWeapon.Name + "', CLIP = '" + offWeapon.Clip + "', MAXCLIP = '" + offWeapon.MaxClip + "', SPRITE = '" + offWeapon.Sprite + "', DAMAGE = '" + offWeapon.Damage + "', ARMOR = '" + offWeapon.Armor + "', ";
-            sql = sql + "TYPE = '" + offWeapon.Type + "', ATTACKSPEED = '" + offWeapon.AttackSpeed + "', RELOADSPEED = '" + offWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + offWeapon.HealthRestore + "', HUNGERRESTORE = '" + offWeapon.HungerRestore + "', ";
-            sql = sql + "HYDRATERESTORE = '" + offWeapon.HydrateRestore + "', STRENGTH = '" + offWeapon.Strength + "', AGILITY = '" + offWeapon.Agility + "', ENDURANCE = '" + offWeapon.Endurance + "', STAMINA = '" + offWeapon.Stamina + "', ";
-            sql = sql + "AMMOTYPE = '" + offWeapon.ItemAmmoType + "',  VALUE = '" + offWeapon.Value + "', PROJ = '" + offWeapon.ProjectileNumber + "' ";
-            sql = sql + "WHERE OWNER = '" + Name + "';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "UPDATE EQUIPMENT SET ";
-            sql = sql + "NAME = '" + Chest.Name + "', SPRITE = '" + Chest.Sprite + "', DAMAGE = '" + Chest.Damage + "', ARMOR = '" + Chest.Armor + "', TYPE = '" + Chest.Type + "', ATTACKSPEED = '" + Chest.AttackSpeed + "', ";
-            sql = sql + "RELOADSPEED = '" + Chest.ReloadSpeed + "', HEALTHRESTORE = '" + Chest.HealthRestore + "', HUNGERRESTORE = '" + Chest.HungerRestore + "', HYDRATERESTORE = '" + Chest.HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Chest.Strength + "', AGILITY = '" + Chest.Agility + "', ENDURANCE = '" + Chest.Endurance + "', STAMINA = '" + Chest.Stamina + "', CLIP = '" + Chest.Clip + "', MAXCLIP = '" + Chest.MaxClip + "', AMMOTYPE = '" + Chest.ItemAmmoType + "', ";
-            sql = sql + "VALUE = '" + Chest.Value + "', PROJ = '" + Chest.ProjectileNumber + "' ";
-            sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '0';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "UPDATE EQUIPMENT SET ";
-            sql = sql + "NAME = '" + Legs.Name + "', SPRITE = '" + Legs.Sprite + "', DAMAGE = '" + Legs.Damage + "', ARMOR = '" + Legs.Armor + "', TYPE = '" + Legs.Type + "', ATTACKSPEED = '" + Legs.AttackSpeed + "', ";
-            sql = sql + "RELOADSPEED = '" + Legs.ReloadSpeed + "', HEALTHRESTORE = '" + Legs.HealthRestore + "', HUNGERRESTORE = '" + Legs.HungerRestore + "', HYDRATERESTORE = '" + Legs.HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Legs.Strength + "', AGILITY = '" + Legs.Agility + "', ENDURANCE = '" + Legs.Endurance + "', STAMINA = '" + Legs.Stamina + "', CLIP = '" + Legs.Clip + "', MAXCLIP = '" + Legs.MaxClip + "', AMMOTYPE = '" + Legs.ItemAmmoType + "', ";
-            sql = sql + "VALUE = '" + Legs.Value + "', PROJ = '" + Legs.ProjectileNumber + "' ";
-            sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '1';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "UPDATE EQUIPMENT SET ";
-            sql = sql + "NAME = '" + Feet.Name + "', SPRITE = '" + Feet.Sprite + "', DAMAGE = '" + Feet.Damage + "', ARMOR = '" + Feet.Armor + "', TYPE = '" + Feet.Type + "', ATTACKSPEED = '" + Feet.AttackSpeed + "', ";
-            sql = sql + "RELOADSPEED = '" + Feet.ReloadSpeed + "', HEALTHRESTORE = '" + Feet.HealthRestore + "', HUNGERRESTORE = '" + Feet.HungerRestore + "', HYDRATERESTORE = '" + Feet.HydrateRestore + "', ";
-            sql = sql + "STRENGTH = '" + Feet.Strength + "', AGILITY = '" + Feet.Agility + "', ENDURANCE = '" + Feet.Endurance + "', STAMINA = '" + Feet.Stamina + "', CLIP = '" + Feet.Clip + "', MAXCLIP = '" + Feet.MaxClip + "', AMMOTYPE = '" + Feet.ItemAmmoType + "', ";
-            sql = sql + "VALUE = '" + Feet.Value + "', PROJ = '" + Feet.ProjectileNumber + "' ";
-            sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '2';";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            sql = "DELETE FROM INVENTORY WHERE OWNER = '" + Name + "'";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Command.ExecuteNonQuery();
-
-            for (int i = 0; i < 25; i++)
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                if (Backpack[i].Name != "None")
+                conn.Open();
+                string sql;
+
+                sql = "UPDATE PLAYERS SET ";
+                sql = sql + "NAME = '" + Name + "', PASSWORD = '" + Pass + "', X = '" + X + "', Y = '" + Y + "', MAP = '" + Map + "', DIRECTION = '" + Direction + "', ";
+                sql = sql + "AIMDIRECTION = '" + AimDirection + "', SPRITE = '" + Sprite + "', LEVEL = '" + Level + "', POINTS = '" + Points + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', EXPERIENCE = '" + Experience + "', ";
+                sql = sql + "MONEY = '" + Money + "', ARMOR = '" + Armor + "', HUNGER = '" + Hunger + "', HYDRATION = '" + Hydration + "', STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', ";
+                sql = sql + "STAMINA = '" + Stamina + "', PISTOLAMMO = '" + PistolAmmo + "', ASSAULTAMMO = '" + AssaultAmmo + "', ROCKETAMMO = '" + RocketAmmo + "', GRENADEAMMO = '" + GrenadeAmmo + "' ";
+                sql = sql + "WHERE NAME = '" + Name + "';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
-                    sql = "INSERT INTO `INVENTORY`";
-                    sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                    sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
-                    sql = sql + " VALUES ";
-                    sql = sql + "('" + Name + "','" + i + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
-                    sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].MaxClip + "','" + Backpack[i].ItemAmmoType + "',";
-                    sql = sql + "'" + Backpack[i].Value + "','" + Backpack[i].ProjectileNumber + "');";
-                    sql_Command = new SQLiteCommand(sql, s_Database);
-                    sql_Command.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "UPDATE MAINWEAPONS SET ";
+                sql = sql + "NAME = '" + mainWeapon.Name + "', CLIP = '" + mainWeapon.Clip + "', MAXCLIP = '" + mainWeapon.MaxClip + "', SPRITE = '" + mainWeapon.Sprite + "', DAMAGE = '" + mainWeapon.Damage + "', ARMOR = '" + mainWeapon.Armor + "', ";
+                sql = sql + "TYPE = '" + mainWeapon.Type + "', ATTACKSPEED = '" + mainWeapon.AttackSpeed + "', RELOADSPEED = '" + mainWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + mainWeapon.HealthRestore + "', HUNGERRESTORE = '" + mainWeapon.HungerRestore + "', ";
+                sql = sql + "HYDRATERESTORE = '" + mainWeapon.HydrateRestore + "', STRENGTH = '" + mainWeapon.Strength + "', AGILITY = '" + mainWeapon.Agility + "', ENDURANCE = '" + mainWeapon.Endurance + "', STAMINA = '" + mainWeapon.Stamina + "', ";
+                sql = sql + "AMMOTYPE = '" + mainWeapon.ItemAmmoType + "',  VALUE = '" + mainWeapon.Value + "', PROJ = '" + mainWeapon.ProjectileNumber + "' ";
+                sql = sql + "WHERE OWNER = '" + Name + "';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "UPDATE SECONDARYWEAPONS SET ";
+                sql = sql + "NAME = '" + offWeapon.Name + "', CLIP = '" + offWeapon.Clip + "', MAXCLIP = '" + offWeapon.MaxClip + "', SPRITE = '" + offWeapon.Sprite + "', DAMAGE = '" + offWeapon.Damage + "', ARMOR = '" + offWeapon.Armor + "', ";
+                sql = sql + "TYPE = '" + offWeapon.Type + "', ATTACKSPEED = '" + offWeapon.AttackSpeed + "', RELOADSPEED = '" + offWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + offWeapon.HealthRestore + "', HUNGERRESTORE = '" + offWeapon.HungerRestore + "', ";
+                sql = sql + "HYDRATERESTORE = '" + offWeapon.HydrateRestore + "', STRENGTH = '" + offWeapon.Strength + "', AGILITY = '" + offWeapon.Agility + "', ENDURANCE = '" + offWeapon.Endurance + "', STAMINA = '" + offWeapon.Stamina + "', ";
+                sql = sql + "AMMOTYPE = '" + offWeapon.ItemAmmoType + "',  VALUE = '" + offWeapon.Value + "', PROJ = '" + offWeapon.ProjectileNumber + "' ";
+                sql = sql + "WHERE OWNER = '" + Name + "';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "UPDATE EQUIPMENT SET ";
+                sql = sql + "NAME = '" + Chest.Name + "', SPRITE = '" + Chest.Sprite + "', DAMAGE = '" + Chest.Damage + "', ARMOR = '" + Chest.Armor + "', TYPE = '" + Chest.Type + "', ATTACKSPEED = '" + Chest.AttackSpeed + "', ";
+                sql = sql + "RELOADSPEED = '" + Chest.ReloadSpeed + "', HEALTHRESTORE = '" + Chest.HealthRestore + "', HUNGERRESTORE = '" + Chest.HungerRestore + "', HYDRATERESTORE = '" + Chest.HydrateRestore + "', ";
+                sql = sql + "STRENGTH = '" + Chest.Strength + "', AGILITY = '" + Chest.Agility + "', ENDURANCE = '" + Chest.Endurance + "', STAMINA = '" + Chest.Stamina + "', CLIP = '" + Chest.Clip + "', MAXCLIP = '" + Chest.MaxClip + "', AMMOTYPE = '" + Chest.ItemAmmoType + "', ";
+                sql = sql + "VALUE = '" + Chest.Value + "', PROJ = '" + Chest.ProjectileNumber + "' ";
+                sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '0';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "UPDATE EQUIPMENT SET ";
+                sql = sql + "NAME = '" + Legs.Name + "', SPRITE = '" + Legs.Sprite + "', DAMAGE = '" + Legs.Damage + "', ARMOR = '" + Legs.Armor + "', TYPE = '" + Legs.Type + "', ATTACKSPEED = '" + Legs.AttackSpeed + "', ";
+                sql = sql + "RELOADSPEED = '" + Legs.ReloadSpeed + "', HEALTHRESTORE = '" + Legs.HealthRestore + "', HUNGERRESTORE = '" + Legs.HungerRestore + "', HYDRATERESTORE = '" + Legs.HydrateRestore + "', ";
+                sql = sql + "STRENGTH = '" + Legs.Strength + "', AGILITY = '" + Legs.Agility + "', ENDURANCE = '" + Legs.Endurance + "', STAMINA = '" + Legs.Stamina + "', CLIP = '" + Legs.Clip + "', MAXCLIP = '" + Legs.MaxClip + "', AMMOTYPE = '" + Legs.ItemAmmoType + "', ";
+                sql = sql + "VALUE = '" + Legs.Value + "', PROJ = '" + Legs.ProjectileNumber + "' ";
+                sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '1';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "UPDATE EQUIPMENT SET ";
+                sql = sql + "NAME = '" + Feet.Name + "', SPRITE = '" + Feet.Sprite + "', DAMAGE = '" + Feet.Damage + "', ARMOR = '" + Feet.Armor + "', TYPE = '" + Feet.Type + "', ATTACKSPEED = '" + Feet.AttackSpeed + "', ";
+                sql = sql + "RELOADSPEED = '" + Feet.ReloadSpeed + "', HEALTHRESTORE = '" + Feet.HealthRestore + "', HUNGERRESTORE = '" + Feet.HungerRestore + "', HYDRATERESTORE = '" + Feet.HydrateRestore + "', ";
+                sql = sql + "STRENGTH = '" + Feet.Strength + "', AGILITY = '" + Feet.Agility + "', ENDURANCE = '" + Feet.Endurance + "', STAMINA = '" + Feet.Stamina + "', CLIP = '" + Feet.Clip + "', MAXCLIP = '" + Feet.MaxClip + "', AMMOTYPE = '" + Feet.ItemAmmoType + "', ";
+                sql = sql + "VALUE = '" + Feet.Value + "', PROJ = '" + Feet.ProjectileNumber + "' ";
+                sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '2';";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "DELETE FROM INVENTORY WHERE OWNER = '" + Name + "'";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                for (int i = 0; i < 25; i++)
+                {
+                    if (Backpack[i].Name != "None")
+                    {
+                        sql = "INSERT INTO `INVENTORY`";
+                        sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
+                        sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
+                        sql = sql + " VALUES ";
+                        sql = sql + "('" + Name + "','" + i + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
+                        sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].MaxClip + "','" + Backpack[i].ItemAmmoType + "',";
+                        sql = sql + "'" + Backpack[i].Value + "','" + Backpack[i].ProjectileNumber + "');";
+
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
-            s_Database.Close();
         }
 
         public void LoadPlayerFromDatabase()
         {
-            s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-
-            sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + Name + "'";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
-            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                Name = sql_Reader["NAME"].ToString();
-                Pass = sql_Reader["PASSWORD"].ToString();
-                X = ToInt32(sql_Reader["X"].ToString());
-                Y = ToInt32(sql_Reader["Y"].ToString());
-                Map = ToInt32(sql_Reader["MAP"].ToString());
-                Direction = ToInt32(sql_Reader["DIRECTION"].ToString());
-                AimDirection = ToInt32(sql_Reader["AIMDIRECTION"].ToString());
-                Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                Level = ToInt32(sql_Reader["LEVEL"].ToString());
-                Points = ToInt32(sql_Reader["POINTS"].ToString());
-                Health = ToInt32(sql_Reader["HEALTH"].ToString());
-                MaxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
-                Experience = ToInt32(sql_Reader["EXPERIENCE"].ToString());
-                Money = ToInt32(sql_Reader["MONEY"].ToString());
-                Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                Hunger = ToInt32(sql_Reader["HUNGER"].ToString());
-                Hydration = ToInt32(sql_Reader["HYDRATION"].ToString());
-                Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                PistolAmmo = ToInt32(sql_Reader["PISTOLAMMO"].ToString());
-                AssaultAmmo = ToInt32(sql_Reader["ASSAULTAMMO"].ToString());
-                RocketAmmo = ToInt32(sql_Reader["ROCKETAMMO"].ToString());
-                GrenadeAmmo = ToInt32(sql_Reader["GRENADEAMMO"].ToString());
-            }
+                conn.Open();
+                string sql;
 
-            sql = "SELECT * FROM `MAINWEAPONS` WHERE OWNER = '" + Name + "'";
+                sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + Name + "'";
 
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
-            {
-                mainWeapon.Name = sql_Reader["NAME"].ToString();
-                mainWeapon.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                mainWeapon.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                mainWeapon.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                mainWeapon.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                mainWeapon.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                mainWeapon.Type = ToInt32(sql_Reader["TYPE"].ToString());
-                mainWeapon.AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                mainWeapon.ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                mainWeapon.HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                mainWeapon.HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                mainWeapon.HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                mainWeapon.Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                mainWeapon.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                mainWeapon.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                mainWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                mainWeapon.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                mainWeapon.Value = ToInt32(sql_Reader["VALUE"].ToString());
-                mainWeapon.ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
-            }
-
-            sql = "SELECT * FROM `SECONDARYWEAPONS` WHERE OWNER = '" + Name + "'";
-
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
-            {
-                offWeapon.Name = sql_Reader["NAME"].ToString();
-                offWeapon.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                offWeapon.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                offWeapon.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                offWeapon.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                offWeapon.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                offWeapon.Type = ToInt32(sql_Reader["TYPE"].ToString());
-                offWeapon.AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                offWeapon.ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                offWeapon.HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                offWeapon.HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                offWeapon.HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                offWeapon.Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                offWeapon.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                offWeapon.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                offWeapon.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                offWeapon.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                offWeapon.Value = ToInt32(sql_Reader["VALUE"].ToString());
-                offWeapon.ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
-            }
-
-            sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 0 + ";";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Reader = sql_Command.ExecuteReader();
-            while (sql_Reader.Read())
-            {
-                Chest.Name = sql_Reader["NAME"].ToString();
-                Chest.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                Chest.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                Chest.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                Chest.Type = ToInt32(sql_Reader["TYPE"].ToString());
-                Chest.AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                Chest.ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                Chest.HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                Chest.HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                Chest.HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                Chest.Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                Chest.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                Chest.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                Chest.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                Chest.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                Chest.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                Chest.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                Chest.Value = ToInt32(sql_Reader["VALUE"].ToString());
-                Chest.ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
-            }
-
-            sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 1 + ";";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Reader = sql_Command.ExecuteReader();
-            while (sql_Reader.Read())
-            {
-                Legs.Name = sql_Reader["NAME"].ToString();
-                Legs.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                Legs.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                Legs.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                Legs.Type = ToInt32(sql_Reader["TYPE"].ToString());
-                Legs.AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                Legs.ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                Legs.HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                Legs.HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                Legs.HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                Legs.Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                Legs.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                Legs.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                Legs.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                Legs.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                Legs.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                Legs.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                Legs.Value = ToInt32(sql_Reader["VALUE"].ToString());
-                Legs.ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
-            }
-
-            sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 2 + ";";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            sql_Reader = sql_Command.ExecuteReader();
-            while (sql_Reader.Read())
-            {
-                Feet.Name = sql_Reader["NAME"].ToString();
-                Feet.Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                Feet.Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                Feet.Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                Feet.Type = ToInt32(sql_Reader["TYPE"].ToString());
-                Feet.AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                Feet.ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                Feet.HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                Feet.HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                Feet.HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                Feet.Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                Feet.Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                Feet.Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                Feet.Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                Feet.Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                Feet.MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                Feet.ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                Feet.Value = ToInt32(sql_Reader["VALUE"].ToString());
-                Feet.ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
-            }
-            sql = "SELECT COUNT(*) FROM `INVENTORY` WHERE OWNER = '" + Name + "'";
-            sql_Command = new SQLiteCommand(sql, s_Database);
-            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
-
-            if (result > 0)
-            {
-                for (int i = 0; i < result; i++)
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
-                    sql = "SELECT * FROM `INVENTORY` WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
-
-                    sql_Command = new SQLiteCommand(sql, s_Database);
-                    sql_Reader = sql_Command.ExecuteReader();
-
-                    while (sql_Reader.Read())
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
                     {
-                        Backpack[i].Name = sql_Reader["NAME"].ToString();
-                        Backpack[i].Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                        Backpack[i].Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                        Backpack[i].Armor = ToInt32(sql_Reader["ARMOR"].ToString());
-                        Backpack[i].Type = ToInt32(sql_Reader["TYPE"].ToString());
-                        Backpack[i].AttackSpeed = ToInt32(sql_Reader["ATTACKSPEED"].ToString());
-                        Backpack[i].ReloadSpeed = ToInt32(sql_Reader["RELOADSPEED"].ToString());
-                        Backpack[i].HealthRestore = ToInt32(sql_Reader["HEALTHRESTORE"].ToString());
-                        Backpack[i].HungerRestore = ToInt32(sql_Reader["HUNGERRESTORE"].ToString());
-                        Backpack[i].HydrateRestore = ToInt32(sql_Reader["HYDRATERESTORE"].ToString());
-                        Backpack[i].Strength = ToInt32(sql_Reader["STRENGTH"].ToString());
-                        Backpack[i].Agility = ToInt32(sql_Reader["AGILITY"].ToString());
-                        Backpack[i].Endurance = ToInt32(sql_Reader["ENDURANCE"].ToString());
-                        Backpack[i].Stamina = ToInt32(sql_Reader["STAMINA"].ToString());
-                        Backpack[i].Clip = ToInt32(sql_Reader["CLIP"].ToString());
-                        Backpack[i].MaxClip = ToInt32(sql_Reader["MAXCLIP"].ToString());
-                        Backpack[i].ItemAmmoType = ToInt32(sql_Reader["AMMOTYPE"].ToString());
-                        Backpack[i].Value = ToInt32(sql_Reader["VALUE"].ToString());
-                        Backpack[i].ProjectileNumber = ToInt32(sql_Reader["PROJ"].ToString());
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
+                            Pass = read["PASSWORD"].ToString();
+                            X = ToInt32(read["X"].ToString());
+                            Y = ToInt32(read["Y"].ToString());
+                            Map = ToInt32(read["MAP"].ToString());
+                            Direction = ToInt32(read["DIRECTION"].ToString());
+                            AimDirection = ToInt32(read["AIMDIRECTION"].ToString());
+                            Sprite = ToInt32(read["SPRITE"].ToString());
+                            Level = ToInt32(read["LEVEL"].ToString());
+                            Points = ToInt32(read["POINTS"].ToString());
+                            Health = ToInt32(read["HEALTH"].ToString());
+                            MaxHealth = ToInt32(read["MAXHEALTH"].ToString());
+                            Experience = ToInt32(read["EXPERIENCE"].ToString());
+                            Money = ToInt32(read["MONEY"].ToString());
+                            Armor = ToInt32(read["ARMOR"].ToString());
+                            Hunger = ToInt32(read["HUNGER"].ToString());
+                            Hydration = ToInt32(read["HYDRATION"].ToString());
+                            Strength = ToInt32(read["STRENGTH"].ToString());
+                            Agility = ToInt32(read["AGILITY"].ToString());
+                            Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            Stamina = ToInt32(read["STAMINA"].ToString());
+                            PistolAmmo = ToInt32(read["PISTOLAMMO"].ToString());
+                            AssaultAmmo = ToInt32(read["ASSAULTAMMO"].ToString());
+                            RocketAmmo = ToInt32(read["ROCKETAMMO"].ToString());
+                            GrenadeAmmo = ToInt32(read["GRENADEAMMO"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT * FROM `MAINWEAPONS` WHERE OWNER = '" + Name + "'";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            mainWeapon.Name = read["NAME"].ToString();
+                            mainWeapon.Clip = ToInt32(read["CLIP"].ToString());
+                            mainWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                            mainWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
+                            mainWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
+                            mainWeapon.Armor = ToInt32(read["ARMOR"].ToString());
+                            mainWeapon.Type = ToInt32(read["TYPE"].ToString());
+                            mainWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                            mainWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                            mainWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                            mainWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                            mainWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                            mainWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
+                            mainWeapon.Agility = ToInt32(read["AGILITY"].ToString());
+                            mainWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            mainWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
+                            mainWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                            mainWeapon.Value = ToInt32(read["VALUE"].ToString());
+                            mainWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT * FROM `SECONDARYWEAPONS` WHERE OWNER = '" + Name + "'";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            offWeapon.Name = read["NAME"].ToString();
+                            offWeapon.Clip = ToInt32(read["CLIP"].ToString());
+                            offWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                            offWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
+                            offWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
+                            offWeapon.Armor = ToInt32(read["ARMOR"].ToString());
+                            offWeapon.Type = ToInt32(read["TYPE"].ToString());
+                            offWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                            offWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                            offWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                            offWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                            offWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                            offWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
+                            offWeapon.Agility = ToInt32(read["AGILITY"].ToString());
+                            offWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            offWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
+                            offWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                            offWeapon.Value = ToInt32(read["VALUE"].ToString());
+                            offWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 0 + ";";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Chest.Name = read["NAME"].ToString();
+                            Chest.Sprite = ToInt32(read["SPRITE"].ToString());
+                            Chest.Damage = ToInt32(read["DAMAGE"].ToString());
+                            Chest.Armor = ToInt32(read["ARMOR"].ToString());
+                            Chest.Type = ToInt32(read["TYPE"].ToString());
+                            Chest.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                            Chest.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                            Chest.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                            Chest.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                            Chest.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                            Chest.Strength = ToInt32(read["STRENGTH"].ToString());
+                            Chest.Agility = ToInt32(read["AGILITY"].ToString());
+                            Chest.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            Chest.Stamina = ToInt32(read["STAMINA"].ToString());
+                            Chest.Clip = ToInt32(read["CLIP"].ToString());
+                            Chest.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                            Chest.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                            Chest.Value = ToInt32(read["VALUE"].ToString());
+                            Chest.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 1 + ";";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Legs.Name = read["NAME"].ToString();
+                            Legs.Sprite = ToInt32(read["SPRITE"].ToString());
+                            Legs.Damage = ToInt32(read["DAMAGE"].ToString());
+                            Legs.Armor = ToInt32(read["ARMOR"].ToString());
+                            Legs.Type = ToInt32(read["TYPE"].ToString());
+                            Legs.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                            Legs.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                            Legs.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                            Legs.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                            Legs.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                            Legs.Strength = ToInt32(read["STRENGTH"].ToString());
+                            Legs.Agility = ToInt32(read["AGILITY"].ToString());
+                            Legs.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            Legs.Stamina = ToInt32(read["STAMINA"].ToString());
+                            Legs.Clip = ToInt32(read["CLIP"].ToString());
+                            Legs.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                            Legs.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                            Legs.Value = ToInt32(read["VALUE"].ToString());
+                            Legs.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT * FROM `EQUIPMENT` WHERE OWNER = '" + Name + "' AND ID = " + 2 + ";";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Feet.Name = read["NAME"].ToString();
+                            Feet.Sprite = ToInt32(read["SPRITE"].ToString());
+                            Feet.Damage = ToInt32(read["DAMAGE"].ToString());
+                            Feet.Armor = ToInt32(read["ARMOR"].ToString());
+                            Feet.Type = ToInt32(read["TYPE"].ToString());
+                            Feet.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                            Feet.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                            Feet.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                            Feet.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                            Feet.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                            Feet.Strength = ToInt32(read["STRENGTH"].ToString());
+                            Feet.Agility = ToInt32(read["AGILITY"].ToString());
+                            Feet.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                            Feet.Stamina = ToInt32(read["STAMINA"].ToString());
+                            Feet.Clip = ToInt32(read["CLIP"].ToString());
+                            Feet.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                            Feet.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                            Feet.Value = ToInt32(read["VALUE"].ToString());
+                            Feet.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                        }
+                    }
+                }
+
+                sql = "SELECT COUNT(*) FROM `INVENTORY` WHERE OWNER = '" + Name + "'";
+
+                object queue;
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    queue = cmd.ExecuteScalar(); 
+                }
+
+                int result = ToInt32(queue);
+
+                if (result > 0)
+                {
+                    for (int i = 0; i < result; i++)
+                    {
+                        sql = "SELECT * FROM `INVENTORY` WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
+
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            using (SQLiteDataReader read = cmd.ExecuteReader())
+                            {
+                                while (read.Read())
+                                {
+                                    Backpack[i].Name = read["NAME"].ToString();
+                                    Backpack[i].Sprite = ToInt32(read["SPRITE"].ToString());
+                                    Backpack[i].Damage = ToInt32(read["DAMAGE"].ToString());
+                                    Backpack[i].Armor = ToInt32(read["ARMOR"].ToString());
+                                    Backpack[i].Type = ToInt32(read["TYPE"].ToString());
+                                    Backpack[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                    Backpack[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                    Backpack[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                    Backpack[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                    Backpack[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                    Backpack[i].Strength = ToInt32(read["STRENGTH"].ToString());
+                                    Backpack[i].Agility = ToInt32(read["AGILITY"].ToString());
+                                    Backpack[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                    Backpack[i].Stamina = ToInt32(read["STAMINA"].ToString());
+                                    Backpack[i].Clip = ToInt32(read["CLIP"].ToString());
+                                    Backpack[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                    Backpack[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                    Backpack[i].Value = ToInt32(read["VALUE"].ToString());
+                                    Backpack[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            s_Database.Close();
         }
         #endregion
     }

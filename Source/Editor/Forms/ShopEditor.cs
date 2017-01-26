@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Editor.Classes;
 using System.Data.SQLite;
+using static System.Convert;
 
 namespace Editor.Forms
 {
     public partial class ShopEditor : Form
     {
-        SQLiteConnection e_Database;
         Shop e_Shop = new Shop();
         int SelectedIndex;
         bool UnModSave;
@@ -26,20 +26,26 @@ namespace Editor.Forms
 
         private void LoadItemList()
         {
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
 
-            sql = "SELECT COUNT(*) FROM SHOPS";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
-            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
-            e_Database.Close();
-            lstIndex.Items.Clear();
-            for (int i = 0; i < result; i++)
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                e_Shop.LoadShopNameFromDatabase(i + 1);
-                lstIndex.Items.Add(e_Shop.Name);
+                conn.Open();
+                string sql;
+
+                sql = "SELECT COUNT(*) FROM SHOPS";
+
+                object queue;
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    queue = cmd.ExecuteScalar();
+                }
+                int result = ToInt32(queue);
+                lstIndex.Items.Clear();
+                for (int i = 0; i < result; i++)
+                {
+                    e_Shop.LoadShopNameFromDatabase(i + 1);
+                    lstIndex.Items.Add(e_Shop.Name);
+                }
             }
         }
 

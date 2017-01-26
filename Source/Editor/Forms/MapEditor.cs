@@ -14,6 +14,7 @@ using Editor.Classes;
 using static System.Windows.Forms.Application;
 using System.Drawing;
 using System.Data.SQLite;
+using static System.Convert;
 
 namespace Editor.Forms
 {
@@ -73,29 +74,34 @@ namespace Editor.Forms
                 e_Texture[s] = new Texture("Resources/Characters/" + (s + 1) + ".png");
             }
 
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-
-            sql = "SELECT COUNT(*) FROM NPCS";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
-            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
-            e_Database.Close();
-
-            for (int i = 0; i < result; i++)
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                e_Npc.LoadNpcNameFromDatabase(i + 1);
-                cmbNpc1.Items.Add(e_Npc.Name);
-                cmbNpc2.Items.Add(e_Npc.Name);
-                cmbNpc3.Items.Add(e_Npc.Name);
-                cmbNpc4.Items.Add(e_Npc.Name);
-                cmbNpc5.Items.Add(e_Npc.Name);
-                cmbNpc6.Items.Add(e_Npc.Name);
-                cmbNpc7.Items.Add(e_Npc.Name);
-                cmbNpc8.Items.Add(e_Npc.Name);
-                cmbNpc9.Items.Add(e_Npc.Name);
-                cmbNpc10.Items.Add(e_Npc.Name);
+                conn.Open();
+                string sql;
+
+                sql = "SELECT COUNT(*) FROM NPCS";
+
+                object queue;
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    queue = cmd.ExecuteScalar();
+                }
+                int result = ToInt32(queue);
+
+                for (int i = 0; i < result; i++)
+                {
+                    e_Npc.LoadNpcNameFromDatabase(i + 1);
+                    cmbNpc1.Items.Add(e_Npc.Name);
+                    cmbNpc2.Items.Add(e_Npc.Name);
+                    cmbNpc3.Items.Add(e_Npc.Name);
+                    cmbNpc4.Items.Add(e_Npc.Name);
+                    cmbNpc5.Items.Add(e_Npc.Name);
+                    cmbNpc6.Items.Add(e_Npc.Name);
+                    cmbNpc7.Items.Add(e_Npc.Name);
+                    cmbNpc8.Items.Add(e_Npc.Name);
+                    cmbNpc9.Items.Add(e_Npc.Name);
+                    cmbNpc10.Items.Add(e_Npc.Name);
+                }
             }
 
             e_Map.LoadMap();

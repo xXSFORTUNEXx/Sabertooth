@@ -369,6 +369,7 @@ namespace Server.Classes
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendMapItems(incMSG, s_Server, s_Map[currentMap]);
+                        Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
                         string welcomeMsg = username + " has joined Sabertooth!";
                         SendServerMessage(s_Server, welcomeMsg);
                     }
@@ -1128,8 +1129,6 @@ namespace Server.Classes
             }
             
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("Sending map...");
-            LogWriter.WriteLog("Sending map...", "Server");
         }
         #endregion
 
@@ -1251,47 +1250,56 @@ namespace Server.Classes
 
         bool CheckPassword(string name, string pass)
         {
-            SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-            string compare;
-            sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
-            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                compare = sql_Reader["PASSWORD"].ToString();
+                conn.Open();
+                string sql;
 
-                if (pass == compare)
+                sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
-                    return true;
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            string compare = read["PASSWORD"].ToString();
+
+                            if (pass == compare)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
                 }
-            }           
-            s_Database.Close();
-            return false;
+            }
         }
 
         bool AccountExist(string name)
         {
-            SQLiteConnection s_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            s_Database.Open();
-            string sql;
-
-            sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, s_Database);
-            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                if (sql_Reader["NAME"].ToString() == name)
+                conn.Open();
+                string sql;
+
+                sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
-                    return true;
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            if (read["NAME"].ToString() == name)
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
                 }
             }
-            return false;
         }
         #endregion
     }

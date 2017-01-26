@@ -19,7 +19,8 @@ namespace Client.Classes
         static RenderWindow c_Window;
         static Canvas c_Canvas;    
         static Gwen.Input.SFML c_Input;  
-        static GUI c_GUI;  
+        static GUI c_GUI;
+        HUD p_HUD = new HUD();
         HandleData handleData; 
         Player[] c_Player = new Player[5]; 
         Npc[] c_Npc = new Npc[10]; 
@@ -89,7 +90,6 @@ namespace Client.Classes
                 CheckForConnection(c_Client);  
                 UpdateView(c_Client, c_Config, c_Npc, c_Item); 
                 DrawGraphics(c_Client, c_Player);
-                UpdateOverlay();
                 c_Window.Display(); 
             }
 
@@ -550,6 +550,13 @@ namespace Client.Classes
             }
             c_Window.SetView(c_Window.DefaultView);
             c_Canvas.RenderCanvas();
+            if (c_Map.Name != null)
+            {
+                p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);
+                c_Window.Draw(p_HUD);
+            }
         }
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)
@@ -574,14 +581,6 @@ namespace Client.Classes
             UpdateTitle(fps);
 
             Joystick.Update();
-        }
-
-        void UpdateOverlay()
-        {
-            if (c_Player[handleData.c_Index].Name != null && c_Player[handleData.c_Index].mainWeapon.Name != null)
-            {
-                c_GUI.UpdateHUD(c_Player[handleData.c_Index], c_Window);
-            }
         }
     }
 }

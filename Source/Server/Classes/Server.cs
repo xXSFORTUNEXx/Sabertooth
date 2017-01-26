@@ -73,7 +73,7 @@ namespace Server.Classes
                 CheckNpcAi(s_Server);
                 CheckCommands(s_Server, s_Player);
                 UpTime();
-                UpdateTitle();
+                fps = CalculateFrameRate();
                 Thread.Sleep(10);
             }
             DisconnectClients(s_Server);
@@ -628,6 +628,7 @@ namespace Server.Classes
                         WriteLine("Statistics: ");
                         WriteLine("Version: " + s_Version);
                         WriteLine(upTime);
+                        WriteLine("CPS: " + fps);
                         WriteLine("Host Name: " + hostName);
                         WriteLine("Server Address: " + NetUtility.Resolve(hostName));
                         WriteLine("Port: " + s_Server.Port);
@@ -681,11 +682,6 @@ namespace Server.Classes
             return lastFrameRate;
         }
 
-        void UpdateTitle()
-        {
-            fps = CalculateFrameRate();
-            Console.Title = "Sabertooth Server CPS: " + fps;
-        }
         #endregion
 
         #region Server Voids

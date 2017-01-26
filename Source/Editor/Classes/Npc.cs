@@ -11,7 +11,6 @@ namespace Editor.Classes
 {
     class Npc
     {
-        SQLiteConnection e_Database;
         Sprite e_Sprite = new Sprite();
         public string Name { get; set; }
         public int X { get; set; }
@@ -95,89 +94,99 @@ namespace Editor.Classes
             Money = 0;
             Range = 0;
 
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-            SQLiteCommand sql_Command;
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+                sql = "INSERT INTO NPCS";
+                sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`,`RANGE`)";
+                sql = sql + " VALUES ";
+                sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
+                sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "','" + Range + "');";
 
-            sql = "INSERT INTO NPCS";
-            sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`,`RANGE`)";
-            sql = sql + " VALUES ";
-            sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-            sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "','" + Range + "');";
-            sql_Command = new SQLiteCommand(sql, e_Database);
-            sql_Command.ExecuteNonQuery();
-            e_Database.Close();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void SaveNpcToDatabase(int npcNum)
         {
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-            SQLiteCommand sql_Command;
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+                sql = "UPDATE NPCS SET ";
+                sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
+                sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
+                sql = sql + "EXP = '" + Exp + "', MONEY = '" + Money + "', RANGE = '" + Range + "' ";
+                sql = sql + "WHERE rowid = '" + npcNum + "';";
 
-            sql = "UPDATE NPCS SET ";
-            sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-            sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
-            sql = sql + "EXP = '" + Exp + "', MONEY = '" + Money + "', RANGE = '" + Range + "' ";
-            sql = sql + "WHERE rowid = '" + npcNum + "';";
-            sql_Command = new SQLiteCommand(sql, e_Database);
-            sql_Command.ExecuteNonQuery();
-            e_Database.Close();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void LoadNpcFromDatabase(int npcNum)
         {
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-
-            sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
-            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                Name = sql_Reader["NAME"].ToString();
-                X = ToInt32(sql_Reader["X"].ToString());
-                Y = ToInt32(sql_Reader["Y"].ToString());
-                Direction = ToInt32(sql_Reader["DIRECTION"].ToString());
-                Sprite = ToInt32(sql_Reader["SPRITE"].ToString());
-                Step = ToInt32(sql_Reader["STEP"].ToString());
-                Owner = ToInt32(sql_Reader["OWNER"].ToString());
-                Behavior = ToInt32(sql_Reader["BEHAVIOR"].ToString());
-                SpawnTime = ToInt32(sql_Reader["SPAWNTIME"].ToString());
-                Health = ToInt32(sql_Reader["HEALTH"].ToString());
-                MaxHealth = ToInt32(sql_Reader["MAXHEALTH"].ToString());
-                Damage = ToInt32(sql_Reader["DAMAGE"].ToString());
-                DesX = ToInt32(sql_Reader["DESX"].ToString());
-                DesY = ToInt32(sql_Reader["DESY"].ToString());
-                Exp = ToInt32(sql_Reader["EXP"].ToString());
-                Money = ToInt32(sql_Reader["MONEY"].ToString());
-                Range = ToInt32(sql_Reader["RANGE"].ToString());
+                conn.Open();
+                string sql;
+                sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
+                            X = ToInt32(read["X"].ToString());
+                            Y = ToInt32(read["Y"].ToString());
+                            Direction = ToInt32(read["DIRECTION"].ToString());
+                            Sprite = ToInt32(read["SPRITE"].ToString());
+                            Step = ToInt32(read["STEP"].ToString());
+                            Owner = ToInt32(read["OWNER"].ToString());
+                            Behavior = ToInt32(read["BEHAVIOR"].ToString());
+                            SpawnTime = ToInt32(read["SPAWNTIME"].ToString());
+                            Health = ToInt32(read["HEALTH"].ToString());
+                            MaxHealth = ToInt32(read["MAXHEALTH"].ToString());
+                            Damage = ToInt32(read["DAMAGE"].ToString());
+                            DesX = ToInt32(read["DESX"].ToString());
+                            DesY = ToInt32(read["DESY"].ToString());
+                            Exp = ToInt32(read["EXP"].ToString());
+                            Money = ToInt32(read["MONEY"].ToString());
+                            Range = ToInt32(read["RANGE"].ToString());
+                        }
+                    }
+                }
             }
-            e_Database.Close();
         }
 
         public void LoadNpcNameFromDatabase(int npcNum)
         {
 
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-
-            sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
-            SQLiteDataReader sql_Reader = sql_Command.ExecuteReader();
-
-            while (sql_Reader.Read())
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                Name = sql_Reader["NAME"].ToString();
+                conn.Open();
+                string sql;
+                sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
+                        }
+                    }
+                }
             }
-            e_Database.Close();
         }
 
         public void DrawNpc(RenderWindow e_Window, Texture e_Texture, int x, int y)

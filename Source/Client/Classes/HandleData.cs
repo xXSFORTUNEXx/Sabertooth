@@ -942,7 +942,6 @@ namespace Client.Classes
             c_GUI.menuWindow.Hide();
             c_GUI.CreateChatWindow(c_Canvas);
             c_GUI.chatWindow.Hide();
-            c_GUI.CreateHUD();
             c_GUI.AddText("Welcome to Sabertooth!");
         }
     } 

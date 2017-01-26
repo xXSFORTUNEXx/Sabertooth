@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Editor.Classes;
 using System.Data.SQLite;
+using static System.Convert;
 
 namespace Editor.Forms
 {
@@ -30,20 +31,25 @@ namespace Editor.Forms
 
         private void LoadItemList()
         {
-            e_Database = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;");
-            e_Database.Open();
-            string sql;
-
-            sql = "SELECT COUNT(*) FROM ITEMS";
-
-            SQLiteCommand sql_Command = new SQLiteCommand(sql, e_Database);
-            int result = int.Parse(sql_Command.ExecuteScalar().ToString());
-            e_Database.Close();
-            lstIndex.Items.Clear();
-            for (int i = 0; i < result; i++)
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                e_Item.LoadNameFromDatabase(i + 1);
-                lstIndex.Items.Add(e_Item.Name);
+                conn.Open();
+                string sql;
+
+                sql = "SELECT COUNT(*) FROM ITEMS";
+
+                object queue;
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    queue = cmd.ExecuteScalar();
+                }
+                int result = ToInt32(queue);
+                lstIndex.Items.Clear();
+                for (int i = 0; i < result; i++)
+                {
+                    e_Item.LoadNameFromDatabase(i + 1);
+                    lstIndex.Items.Add(e_Item.Name);
+                }
             }
         }
 
@@ -184,7 +190,7 @@ namespace Editor.Forms
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            e_Item.DeleteItemFromDatabase(SelectedIndex);
+            //e_Item.DeleteItemFromDatabase(SelectedIndex);
             LoadItemList();
         }
 

@@ -1,7 +1,6 @@
 ﻿using Gwen.Control;
 using static System.Environment;
 using Lidgren.Network;
-using System.Drawing;
 using System.Threading;
 using System;
 using SFML.Graphics;
@@ -150,34 +149,6 @@ namespace Client.Classes
         Button optLog;
         #endregion
 
-        #region HUD
-        RectangleShape clipBar = new RectangleShape();
-        RenderText hudClip = new RenderText();
-        RectangleShape healthBar = new RectangleShape();
-        RenderText hudHealth = new RenderText();
-        RectangleShape expBar = new RectangleShape();
-        RenderText hudExp = new RenderText();
-        RectangleShape waterBar = new RectangleShape();
-        RenderText hudWater = new RenderText();
-        RectangleShape foodBar = new RectangleShape();
-        RenderText hudFood = new RenderText();
-        string hudC;
-        string hudH;
-        string hudE;
-        string hudW;
-        string hudF;
-        float barLength;
-        float expbarLength;
-        float clipbarLength;
-        float waterbarLength;
-        float foodbarLength;
-        Vector2f hudCPos;
-        Vector2f hudHPos;
-        Vector2f hudEPos;
-        Vector2f hudWPos;
-        Vector2f hudFPos;
-        const int fullSize = 175;
-        #endregion
 
         public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
         {
@@ -189,62 +160,6 @@ namespace Client.Classes
         }
 
         #region Update Voids
-        public void UpdateHUD(Player c_Player, RenderWindow c_Window)
-        {
-            barLength = ((float)c_Player.Health / c_Player.MaxHealth) * fullSize;
-            healthBar.Size = new Vector2f(barLength, 25);
-
-            hudH = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
-
-            float NextLevel = c_Player.Level * 1000;
-            expbarLength = (c_Player.Experience / NextLevel) * fullSize;
-            expBar.Size = new Vector2f(expbarLength, 25);
-
-            hudE = "XP: " + c_Player.Experience + " / " + NextLevel;
-
-            if (c_Player.mainWeapon.Name != "None")
-            {
-                if (TickCount - c_Player.reloadTick < c_Player.mainWeapon.ReloadSpeed)
-                {
-                    hudC = "Reloading...";
-                    clipbarLength = ((float)(TickCount - c_Player.reloadTick) / c_Player.mainWeapon.ReloadSpeed) * fullSize;
-                }
-                else
-                {
-                    hudC = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
-                    clipbarLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * fullSize;
-                }
-            }
-            else
-            {
-                hudC = "None";
-                clipbarLength = fullSize;
-            }
-
-            clipBar.Size = new Vector2f(clipbarLength, 25);
-
-            foodbarLength = ((float)c_Player.Hunger / 100) * fullSize;
-            foodBar.Size = new Vector2f(foodbarLength, 25);
-
-            hudF = "Hunger: " + c_Player.Hunger + " / 100";
-
-            waterbarLength = ((float)c_Player.Hydration / 100) * fullSize;
-            waterBar.Size = new Vector2f(waterbarLength, 25);
-
-            hudW = "Hydration: " + c_Player.Hydration + " / 100";
-
-            c_Window.Draw(healthBar);
-            c_Window.Draw(expBar);
-            c_Window.Draw(clipBar);
-            c_Window.Draw(waterBar);
-            c_Window.Draw(foodBar);
-            hudHealth.DrawText(c_Window, hudH, hudHPos, 16, SFML.Graphics.Color.White);
-            hudExp.DrawText(c_Window, hudE, hudEPos, 16, SFML.Graphics.Color.Black);
-            hudClip.DrawText(c_Window, hudC, hudCPos, 16, SFML.Graphics.Color.White);
-            hudWater.DrawText(c_Window, hudW, hudWPos, 16, SFML.Graphics.Color.White);
-            hudFood.DrawText(c_Window, hudF, hudFPos, 16, SFML.Graphics.Color.White);
-        }
-
         public void UpdateMenuWindow(Player c_Player)
         {
             if (menuWindow != null && c_Player != null && menuWindow.IsVisible)
@@ -935,29 +850,6 @@ namespace Client.Classes
         #endregion
 
         #region Window Creation
-        public void CreateHUD()
-        {
-            healthBar.Position = new Vector2f(25, 25);
-            healthBar.FillColor = SFML.Graphics.Color.Red;
-            hudHPos = new Vector2f(32, 28);
-
-            expBar.Position = new Vector2f(25, 55);
-            expBar.FillColor = SFML.Graphics.Color.Yellow;
-            hudEPos = new Vector2f(32, 58);
-
-            clipBar.Position = new Vector2f(25, 85);
-            clipBar.FillColor = SFML.Graphics.Color.Magenta;
-            hudCPos = new Vector2f(32, 88);
-
-            foodBar.Position = new Vector2f(25, 115);
-            foodBar.FillColor = SFML.Graphics.Color.Green;
-            hudFPos = new Vector2f(32, 118);
-
-            waterBar.Position = new Vector2f(25, 145);
-            waterBar.FillColor = SFML.Graphics.Color.Blue;
-            hudWPos = new Vector2f(32, 148);
-        }
-
         public void CreateMenuWindow(Base parent)
         {
             menuWindow = new WindowControl(parent.GetCanvas());
@@ -1469,5 +1361,110 @@ namespace Client.Classes
             msgBox.Position(Gwen.Pos.Center);
         }
         #endregion
+    }
+
+    class HUD : Drawable
+    {
+        Font d_Font = new Font("Resources/Fonts/Arial.ttf");
+
+        VertexArray h_Bar = new VertexArray();
+        Text h_Text = new Text();
+        float h_barLength;
+
+        VertexArray e_Bar = new VertexArray();
+        Text e_Text = new Text();
+        float e_barLength;
+
+        VertexArray c_Bar = new VertexArray();
+        Text c_Text = new Text();
+        float c_barLength;
+
+        const int f_Size = 175;
+
+        public HUD()
+        {
+            h_Bar.PrimitiveType = PrimitiveType.Quads;
+            h_Bar.Resize(4);
+
+            h_Text.Font = d_Font;
+            h_Text.CharacterSize = 16;
+            h_Text.Color = Color.White;
+            h_Text.Style = Text.Styles.Bold;
+            h_Text.Position = new Vector2f(13, 13);
+
+            e_Bar.PrimitiveType = PrimitiveType.Quads;
+            e_Bar.Resize(4);
+
+            e_Text.Font = d_Font;
+            e_Text.CharacterSize = 16;
+            e_Text.Color = Color.Black;
+            e_Text.Style = Text.Styles.Bold;
+            e_Text.Position = new Vector2f(13, 48);
+
+            c_Bar.PrimitiveType = PrimitiveType.Quads;
+            c_Bar.Resize(4);
+
+            c_Text.Font = d_Font;
+            c_Text.CharacterSize = 16;
+            c_Text.Color = Color.White;
+            c_Text.Style = Text.Styles.Bold;
+            c_Text.Position = new Vector2f(13, 83);
+        }
+
+        public void UpdateHealthBar(Player c_Player)
+        {
+            h_barLength = ((float)c_Player.Health / c_Player.MaxHealth) * f_Size;
+
+            h_Bar[0] = new Vertex(new Vector2f(10, 10), Color.Red);
+            h_Bar[1] = new Vertex(new Vector2f(h_barLength, 10), Color.Red);
+            h_Bar[2] = new Vertex(new Vector2f(h_barLength, 40), Color.Red);
+            h_Bar[3] = new Vertex(new Vector2f(10, 40), Color.Red);
+
+            h_Text.DisplayedString = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
+        }
+
+        public void UpdateExpBar(Player c_Player)
+        {
+            e_Text.DisplayedString = "XP: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
+
+            e_barLength = ((float)c_Player.Experience / (c_Player.Level * 1000)) * f_Size;
+
+            e_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Yellow);
+            e_Bar[1] = new Vertex(new Vector2f(e_barLength, 45), Color.Yellow);
+            e_Bar[2] = new Vertex(new Vector2f(e_barLength, 75), Color.Yellow);
+            e_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Yellow);
+        }
+
+        public void UpdateClipBar(Player c_Player)
+        {
+            if (c_Player.mainWeapon.Name != "None")
+            {
+                if (TickCount - c_Player.reloadTick < c_Player.mainWeapon.ReloadSpeed)
+                {
+                    c_Text.DisplayedString = "Reloading...";
+                    c_barLength = ((float)(TickCount - c_Player.reloadTick) / c_Player.mainWeapon.ReloadSpeed) * f_Size;
+                }
+                else
+                {
+                    c_Text.DisplayedString = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
+                    c_barLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * f_Size;
+                }
+            }
+
+            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Magenta);
+            c_Bar[1] = new Vertex(new Vector2f(c_barLength, 80), Color.Magenta);
+            c_Bar[2] = new Vertex(new Vector2f(c_barLength, 105), Color.Magenta);
+            c_Bar[3] = new Vertex(new Vector2f(10, 105), Color.Magenta);
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            target.Draw(h_Bar, states);
+            target.Draw(e_Bar, states);
+            target.Draw(c_Bar, states);
+            target.Draw(h_Text);
+            target.Draw(e_Text);
+            target.Draw(c_Text);
+        }
     }
 }
