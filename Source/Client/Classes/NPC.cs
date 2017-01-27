@@ -4,7 +4,7 @@ using System;
 
 namespace Client.Classes
 {
-    class Npc
+    class Npc : Drawable
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -24,12 +24,17 @@ namespace Client.Classes
         public int Exp { get; set; }
         public int Money { get; set; }
         public bool IsSpawned { get; set; }
-
-        Sprite c_Sprite = new Sprite();
+        const int spriteTextures = 8;
+        Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
-        RenderStates rStates = new RenderStates();
 
-        public Npc() { }
+        public Npc()
+        {
+            for (int i = 0; i < spriteTextures; i++)
+            {
+                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
+        }
 
         public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxHealth, int damage, int desx, int desy, int exp, int money, int range)
         {
@@ -50,6 +55,10 @@ namespace Client.Classes
             Exp = exp;
             Money = money;
             Range = range;
+            for (int i = 0; i < spriteTextures; i++)
+            {
+                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
         }
 
         public Npc(int x, int y)
@@ -71,34 +80,32 @@ namespace Client.Classes
             Exp = 0;
             Money = 0;
             Range = 0;
+            for (int i = 0; i < spriteTextures; i++)
+            {
+                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
         }
 
-        public void DrawNpc(RenderWindow c_Window, Texture c_Texture)
+        public virtual void Draw(RenderTarget target, RenderStates state)
         {
-            /*c_Sprite.Texture = c_Texture;
-            c_Sprite.TextureRect = new IntRect((Step * 32), (Direction * 48), 32, 48);
-            c_Sprite.Position = new Vector2f((X * 32), ((Y * 32) - 16));
-            c_Window.Draw(c_Sprite);*/
-
             int x = (X * 32);
             int y = (Y * 32) - 16;
             int step = (Step * 32);
             int dir = (Direction * 48);
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
-            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32,  dir + 48));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
             spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
-            rStates = new RenderStates(c_Texture);
-
-            c_Window.Draw(spritePic, rStates);
+            state.Texture = c_Sprite[Sprite - 1];
+            target.Draw(spritePic, state);
         }
+    }
 
-        public enum BehaviorType
-        {
-            Friendly,
-            Passive,
-            Aggressive,
-            ToLocation
-        }
+    public enum BehaviorType
+    {
+        Friendly,
+        Passive,
+        Aggressive,
+        ToLocation
     }
 }

@@ -181,7 +181,9 @@ namespace Client.Classes
                         }
                         break;
                 }
+#pragma warning disable CS0162 // Unreachable code detected
                 if (packet_info) { Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString()); }
+#pragma warning restore CS0162 // Unreachable code detected
             }
             c_Client.Recycle(incMSG);
         }

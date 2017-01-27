@@ -1476,6 +1476,7 @@ namespace Client.Classes
                     c_barLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * f_Size;
                 }
             }
+            else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }
 
             c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Magenta);
             c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.Magenta);

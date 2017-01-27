@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Lidgren.Network;
 using SFML.Graphics;
-using SFML.Window;
 using SFML.System;
-using Lidgren.Network;
+using System;
 
 namespace Client.Classes
 {
-    class Projectile
+    class Projectile : Drawable
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -23,13 +18,9 @@ namespace Client.Classes
         public int Type { get; set; }
         public int Speed { get; set; }
         public bool Moved;
-
-        public int RangeCounter;     
-
+        public int RangeCounter;
         const int maxprojSprites = 2;
-        Sprite c_Sprite = new Sprite();
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
-        RenderStates rStates = new RenderStates();
         Texture[] proj_Texture = new Texture[maxprojSprites];
         Random RND = new Random();
 
@@ -60,28 +51,6 @@ namespace Client.Classes
             Speed = speed;
         }
 
-        public void DrawProjectile(RenderWindow c_Window, int sprite)
-        {
-            int rndX = RND.Next(0, 10);
-            int rndY = RND.Next(0, 10);
-
-            /*c_Sprite.Texture = proj_Texture[sprite];
-            c_Sprite.TextureRect = new IntRect((Direction * 32), 0, 32, 32);
-            c_Sprite.Position = new Vector2f((X * 32) + rndX, (Y * 32) + rndY);
-            c_Window.Draw(c_Sprite);*/
-
-            int x = (X * 32) + rndX;
-            int y = (Y * 32) + rndY;
-            int dir = (Direction * 32);
-            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(dir, 0));
-            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(dir + 32, 0));
-            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 32), new Vector2f(dir + 32, 32));
-            spritePic[3] = new Vertex(new Vector2f(x, y + 32), new Vector2f(dir, 32));
-            rStates = new RenderStates(proj_Texture[sprite]);
-
-            c_Window.Draw(spritePic, rStates);
-        }
-
         public void CheckMovment(NetClient c_Client, RenderWindow c_Window, Map c_MoveMap, int slot)
         {
             if (Moved == true) { Moved = false; return; }
@@ -107,7 +76,7 @@ namespace Client.Classes
                             {
                                 if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y + 1))
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
@@ -164,7 +133,7 @@ namespace Client.Classes
                             {
                                 if (c_MoveMap.m_MapNpc[i].X == (X - 1) && c_MoveMap.m_MapNpc[i].Y == Y)
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
@@ -221,7 +190,7 @@ namespace Client.Classes
                             {
                                 if (c_MoveMap.m_MapNpc[i].X == (X + 1) && c_MoveMap.m_MapNpc[i].Y == Y)
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
@@ -278,7 +247,7 @@ namespace Client.Classes
                             {
                                 if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y - 1))
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)Npc.BehaviorType.Passive)
+                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
@@ -344,6 +313,23 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(spawntype);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
             c_Map.mapProj[slot] = null;
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            int rndX = RND.Next(0, 10);
+            int rndY = RND.Next(0, 10);
+
+            int x = (X * 32) + rndX;
+            int y = (Y * 32) + rndY;
+            int dir = (Direction * 32);
+            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(dir, 0));
+            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(dir + 32, 0));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 32), new Vector2f(dir + 32, 32));
+            spritePic[3] = new Vertex(new Vector2f(x, y + 32), new Vector2f(dir, 32));
+
+            states.Texture = proj_Texture[Sprite - 1];
+            target.Draw(spritePic, states);
         }
     }
 

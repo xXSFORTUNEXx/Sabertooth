@@ -25,9 +25,8 @@ namespace Client.Classes
         Player[] c_Player = new Player[5]; 
         Npc[] c_Npc = new Npc[10]; 
         Item[] c_Item = new Item[50];   
-        Projectile[] c_Proj = new Projectile[10]; 
+        Projectile[] c_Proj = new Projectile[10];
         Texture[] c_Sprite = new Texture[8];
-        Texture[] c_ItemSprite = new Texture[8];
         Map c_Map = new Map();
         View c_View = new View(); 
         RenderText c_Text = new RenderText();
@@ -75,15 +74,8 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
-            for (int i =0; i < 8; i++)
-            {
-                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
-            }
 
-            SetupPlayerArray(); 
-            SetupNpcArray();    
-            SetupItemArray();  
-            SetupProjectileArray();
+            InitArrays();
 
             while (c_Window.IsOpen)    
             {
@@ -278,89 +270,26 @@ namespace Client.Classes
             return lastFrameRate;
         }
 
-        private void SetupPlayerArray()
+        private void InitArrays()
         {
             for (int i = 0; i < 5; i++)
             {
                 c_Player[i] = new Player();
             }
-        }
 
-        private void SetupNpcArray()
-        {
             for (int i = 0; i < 10; i++)
             {
                 c_Npc[i] = new Npc();
             }
-        }
 
-        private void SetupItemArray()
-        {
             for (int i = 0; i < 50; i++)
             {
                 c_Item[i] = new Item();
             }
-        }
 
-        private void SetupProjectileArray()
-        {
             for (int i = 0; i < 10; i++)
             {
                 c_Proj[i] = new Projectile();
-            }
-        }
-
-        void DrawLowLevelTiles(Player c_Player)
-        {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
-
-            for (int x = minX; x < maxX; x++)
-            {
-                for (int y = minY; y < maxY; y++)
-                {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
-                    {
-                        c_Map.DrawTile(c_Window, x, y, c_Map.Ground[x, y].tileX, c_Map.Ground[x, y].tileY, c_Map.Ground[x, y].tileW, c_Map.Ground[x, y].tileH, c_Map.Ground[x, y].Tileset);
-
-                        if (c_Map.Mask[x, y].tileX > 0 || c_Map.Mask[x, y].tileY > 0)
-                        {
-                            c_Map.DrawTile(c_Window, x, y, c_Map.Mask[x, y].tileX, c_Map.Mask[x, y].tileY, c_Map.Mask[x, y].tileW, c_Map.Mask[x, y].tileH, c_Map.Mask[x, y].Tileset);
-                        }
-                        if (c_Map.MaskA[x, y].tileX > 0 || c_Map.MaskA[x, y].tileY > 0)
-                        {
-                            c_Map.DrawTile(c_Window, x, y, c_Map.MaskA[x, y].tileX, c_Map.MaskA[x, y].tileY, c_Map.MaskA[x, y].tileW, c_Map.MaskA[x, y].tileH, c_Map.MaskA[x, y].Tileset);
-                        }
-                    }
-                }
-            }
-        }
-
-        void DrawUpperLevelTiles(Player c_Player)
-        {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
-
-            for (int x = minX; x < maxX; x++)
-            {
-                for (int y = minY; y < maxY; y++)
-                {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
-                    {
-                        if (c_Map.Fringe[x, y].tileX > 0 || c_Map.Fringe[x, y].tileY > 0)
-                        {
-                            c_Map.DrawTile(c_Window, x, y, c_Map.Fringe[x, y].tileX, c_Map.Fringe[x, y].tileY, c_Map.Fringe[x, y].tileW, c_Map.Fringe[x, y].tileH, c_Map.Fringe[x, y].Tileset);
-                        }
-                        if (c_Map.FringeA[x, y].tileX > 0 || c_Map.FringeA[x, y].tileY > 0)
-                        {
-                            c_Map.DrawTile(c_Window, x, y, c_Map.FringeA[x, y].tileX, c_Map.FringeA[x, y].tileY, c_Map.FringeA[x, y].tileW, c_Map.FringeA[x, y].tileH, c_Map.FringeA[x, y].Tileset);
-                        }
-                    }
-                }
             }
         }
 
@@ -396,7 +325,7 @@ namespace Client.Classes
                         {
                             if (c_Map.m_MapNpc[i].Sprite > 0)
                             {
-                                c_Map.m_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.m_MapNpc[i].Sprite - 1)]);
+                                c_Window.Draw(c_Map.m_MapNpc[i]);
                             }
                         }
                     }     
@@ -413,7 +342,7 @@ namespace Client.Classes
                         {
                             if (c_Map.r_MapNpc[i].Sprite > 0)
                             {
-                                c_Map.r_MapNpc[i].DrawNpc(c_Window, c_Sprite[(c_Map.r_MapNpc[i].Sprite - 1)]);
+                                c_Window.Draw(c_Map.r_MapNpc[i]);
                             }
                         }
                     }
@@ -438,7 +367,7 @@ namespace Client.Classes
                         {
                             if (c_Map.mapItem[i].Sprite > 0)
                             {
-                                c_Map.mapItem[i].DrawItem(c_Window, c_ItemSprite[c_Map.mapItem[i].Sprite - 1]);
+                                c_Window.Draw(c_Map.mapItem[i]);
                             }
                         }
                     }
@@ -461,7 +390,7 @@ namespace Client.Classes
                     {
                         if (c_Map.mapProj[i].Y > minY && c_Map.mapProj[i].Y < maxY)
                         {
-                            c_Map.mapProj[i].DrawProjectile(c_Window, c_Map.mapProj[i].Sprite - 1);
+                            c_Window.Draw(c_Map.mapProj[i]);
                         }
                     }
                     c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);

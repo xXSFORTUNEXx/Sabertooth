@@ -98,7 +98,9 @@ namespace Server.Classes
                         HandleStatusChange(incMSG, s_Server, s_Player);
                         break;
                 }
+#pragma warning disable CS0162 // Unreachable code detected
                 if (packet_info) { Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " Bytes, " + incMSG.LengthBits + " bits"); }
+#pragma warning restore CS0162 // Unreachable code detected
             }
             s_Server.Recycle(incMSG);
         }

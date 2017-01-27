@@ -25,9 +25,6 @@ namespace Client.Classes
 
         const int Max_Tilesets = 2;
         Texture[] TileSet = new Texture[Max_Tilesets];
-        Sprite Tiles = new Sprite();
-        VertexArray vTiles = new VertexArray(PrimitiveType.Quads, 4);
-        RenderStates rStates = new RenderStates();
 
         public string Name { get; set; }
 
@@ -37,17 +34,6 @@ namespace Client.Classes
             {
                 TileSet[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
-        }
-
-        public void DrawTile(RenderWindow c_Window, int px, int py, int x, int y, int w, int h, int tileSet)
-        {
-            vTiles[0] = new Vertex(new Vector2f((px * 32), (py * 32)), new Vector2f(x, y));
-            vTiles[1] = new Vertex(new Vector2f((px * 32) + w, (py * 32)), new Vector2f(x + w, y));
-            vTiles[2] = new Vertex(new Vector2f((px * 32) + w, (py * 32) + h), new Vector2f(x + w, y + h));
-            vTiles[3] = new Vertex(new Vector2f((px * 32), (py * 32) + h), new Vector2f(x, y + h));
-            rStates = new RenderStates(TileSet[tileSet]);
-
-            c_Window.Draw(vTiles, rStates);
         }
 
         public void SaveMap()
@@ -363,17 +349,23 @@ namespace Client.Classes
         }
     }
 
-    class MapItem : Item
+    class MapItem : Item, Drawable
     {
         public int ItemNum { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public bool IsSpawned;
-
+        const int spritePics = 8;
         VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
-        RenderStates rStates = new RenderStates();
+        Texture[] c_ItemSprite = new Texture[spritePics];
 
-        public MapItem() { }
+        public MapItem()
+        {
+            for (int i = 0; i < spritePics; i++)
+            {
+                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
+            }
+        }
 
         public MapItem(string name, int x, int y, int itemnum)
         {
@@ -381,17 +373,22 @@ namespace Client.Classes
             X = x;
             Y = y;
             ItemNum = itemnum;
+
+            for (int i = 0; i < spritePics; i++)
+            {
+                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
+            }
         }
 
-        public void DrawItem(RenderWindow c_Window, Texture c_Texture)
+        public virtual void Draw(RenderTarget target, RenderStates states)
         {
             itemPic[0] = new Vertex(new Vector2f((X * 32), (Y * 32)), new Vector2f(0, 0));
             itemPic[1] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32)), new Vector2f(32, 0));
             itemPic[2] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32) + 32), new Vector2f(32, 32));
             itemPic[3] = new Vertex(new Vector2f((X * 32), (Y * 32) + 32), new Vector2f(0, 32));
-            rStates = new RenderStates(c_Texture);
 
-            c_Window.Draw(itemPic, rStates);
+            states.Texture = c_ItemSprite[Sprite - 1];
+            target.Draw(itemPic, states);
         }
     }
 
@@ -417,6 +414,7 @@ namespace Client.Classes
             tileH = 0;
 
             Tileset = 0;
+            SpawnAmount = 0;
             type = (int)TileType.None;
             flagged = false;
             SpawnNum = 0;

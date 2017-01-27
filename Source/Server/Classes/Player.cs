@@ -172,7 +172,7 @@ namespace Server.Classes
         }
         #endregion
 
-        #region Voids
+        #region Methods
         public void RegenHealth(NetServer s_Server)
         {
             HandleData hData = new HandleData();
@@ -796,7 +796,7 @@ namespace Server.Classes
                 {
                     cmd.ExecuteNonQuery();
                 }
-
+                int n = 0;
                 for (int i = 0; i < 25; i++)
                 {
                     if (Backpack[i].Name != "None")
@@ -805,10 +805,10 @@ namespace Server.Classes
                         sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
                         sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
                         sql = sql + " VALUES ";
-                        sql = sql + "('" + Name + "','" + i + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
+                        sql = sql + "('" + Name + "','" + n + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
                         sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].MaxClip + "','" + Backpack[i].ItemAmmoType + "',";
                         sql = sql + "'" + Backpack[i].Value + "','" + Backpack[i].ProjectileNumber + "');";
-
+                        n = n + 1;
                         using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                         {
                             cmd.ExecuteNonQuery();
