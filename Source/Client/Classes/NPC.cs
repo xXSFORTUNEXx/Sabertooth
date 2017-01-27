@@ -27,6 +27,8 @@ namespace Client.Classes
         const int spriteTextures = 8;
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
+        float barLength;
 
         public Npc()
         {
@@ -96,8 +98,19 @@ namespace Client.Classes
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
             spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
+
+            barLength = ((float)Health / MaxHealth) * 35;
+
+            x = (X * 32);
+            y = (Y * 32) - 20;
+            healthBar[0] = new Vertex(new Vector2f(x, y), Color.Red);
+            healthBar[1] = new Vertex(new Vector2f(barLength + x, y), Color.Red);
+            healthBar[2] = new Vertex(new Vector2f(barLength + x, y + 5), Color.Red);
+            healthBar[3] = new Vertex(new Vector2f(x, y + 5), Color.Red);
+
             state.Texture = c_Sprite[Sprite - 1];
             target.Draw(spritePic, state);
+            target.Draw(healthBar);
         }
     }
 

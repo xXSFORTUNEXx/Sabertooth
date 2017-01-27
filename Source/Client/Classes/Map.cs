@@ -252,7 +252,9 @@ namespace Client.Classes
         VertexArray g_vertices = new VertexArray();
         VertexArray m_vertices = new VertexArray();
         VertexArray m2_vertices = new VertexArray();
-        Texture TileSet = new Texture("Resources/Tilesets/1.png");
+        RenderStates rStates = new RenderStates();
+        const int tileSets = 2;
+        Texture[] TileSet = new Texture[tileSets];
 
         public LowerMap()
         {
@@ -262,6 +264,11 @@ namespace Client.Classes
             m_vertices.Resize(50 * 50 * 32);
             m2_vertices.PrimitiveType = PrimitiveType.Quads;
             m2_vertices.Resize(50 * 50 * 32);
+
+            for (int i = 0; i < tileSets; i++)
+            {
+                TileSet[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
+            }
         }
 
         public void Load(Map c_Map)
@@ -275,11 +282,11 @@ namespace Client.Classes
                     int fx = (x * 32);
                     int fy = (y * 32);
                     int index = (x + y * 50) * 4;
-
                     int tx = (c_Map.Ground[x, y].tileX);
                     int ty = (c_Map.Ground[x, y].tileY);
                     int w = (c_Map.Ground[x, y].tileW);
                     int h = (c_Map.Ground[x, y].tileH);
+                    rStates.Texture = new Texture(TileSet[c_Map.Ground[x, y].Tileset]);
 
                     g_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
                     g_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
@@ -290,6 +297,7 @@ namespace Client.Classes
                     int my = (c_Map.Mask[x, y].tileY);
                     int mw = (c_Map.Mask[x, y].tileW);
                     int mh = (c_Map.Mask[x, y].tileH);
+                    rStates.Texture = new Texture(TileSet[c_Map.Mask[x, y].Tileset]);
 
                     m_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(mx, my));
                     m_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + mw, fy), new Vector2f(mx + mw, my));
@@ -300,6 +308,7 @@ namespace Client.Classes
                     int m2y = (c_Map.MaskA[x, y].tileY);
                     int m2w = (c_Map.MaskA[x, y].tileW);
                     int m2h = (c_Map.MaskA[x, y].tileH);
+                    rStates.Texture = new Texture(TileSet[c_Map.MaskA[x, y].Tileset]);
 
                     m2_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(m2x, m2y));
                     m2_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + m2w, fy), new Vector2f(m2x + m2w, m2y));
@@ -311,11 +320,10 @@ namespace Client.Classes
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            states.Texture = TileSet;
 
-            target.Draw(g_vertices, states);
-            target.Draw(m_vertices, states);
-            target.Draw(m2_vertices, states);
+            target.Draw(g_vertices, rStates);
+            target.Draw(m_vertices, rStates);
+            target.Draw(m2_vertices, rStates);
         }
     }
 

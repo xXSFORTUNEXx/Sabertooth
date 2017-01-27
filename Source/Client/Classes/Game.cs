@@ -26,7 +26,6 @@ namespace Client.Classes
         Npc[] c_Npc = new Npc[10]; 
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10];
-        Texture[] c_Sprite = new Texture[8];
         Map c_Map = new Map();
         View c_View = new View(); 
         RenderText c_Text = new RenderText();
@@ -70,11 +69,6 @@ namespace Client.Classes
 
             handleData = new HandleData(); 
 
-            for (int i = 0; i < 8; i++)   
-            {
-                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
-            }
-
             InitArrays();
 
             while (c_Window.IsOpen)    
@@ -89,8 +83,9 @@ namespace Client.Classes
 
             c_Canvas.Dispose(); 
             skin.Dispose();
-            gwenRenderer.Dispose();        
-            c_Client.Shutdown("Shutting Down");  
+            gwenRenderer.Dispose();
+            c_Client.Disconnect("bye");
+            c_Client.Shutdown("adios");
             Thread.Sleep(500);  
             Exit(0);  
         }
@@ -301,7 +296,7 @@ namespace Client.Classes
                 {
                     if (i != handleData.c_Index && c_Player[i].Map == c_Player[handleData.c_Index].Map)
                     {
-                        c_Player[i].DrawPlayer(c_Window, c_Sprite[c_Player[i].Sprite]);
+                        c_Window.Draw(c_Player[i]);
                         c_Player[i].DrawPlayerName(c_Window);
                     }
                 }
@@ -400,7 +395,7 @@ namespace Client.Classes
 
         void DrawIndexPlayer()
         {
-            c_Player[handleData.c_Index].DrawPlayer(c_Window, c_Sprite[c_Player[handleData.c_Index].Sprite]);
+            c_Window.Draw(c_Player[handleData.c_Index]);
             c_Player[handleData.c_Index].DrawPlayerName(c_Window);
         }
 

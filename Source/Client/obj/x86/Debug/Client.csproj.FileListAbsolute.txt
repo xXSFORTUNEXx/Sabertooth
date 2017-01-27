@@ -304,8 +304,6 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Cha
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\6.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\7.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\8.png
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\1.png
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\2.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-audio-2.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-graphics-2.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-system-2.dll
@@ -633,6 +631,8 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Ite
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\6.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\7.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\8.png
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Grid.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\1.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\2.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\1.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\2.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Grid.png
