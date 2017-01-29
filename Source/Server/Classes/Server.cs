@@ -1,18 +1,190 @@
 ﻿using Lidgren.Network;
 using System;
-using System.IO;
+using System.Net;
 using System.Threading;
 using System.Xml;
 using static Server.Classes.LogWriter;
 using static System.Console;
 using static System.Environment;
 using static System.IO.File;
-using System.Net;
+using System.IO;
 using System.Data.SQLite;
-using static System.Convert;
 
 namespace Server.Classes
 {
+    class StartUp
+    {
+
+        // Run to check how many lines of code my project has
+        //Ctrl+Shift+F, use regular expression, ^(?([^\r\n])\s)*[^\s+?/]+[^\n]*$
+
+        static NetServer s_Server;
+        static NetPeerConfiguration s_Config;
+
+        static void Main(string[] args)
+        {
+            Title = "Sabertooth Server";
+            WriteLine(@"  _____       _               _              _   _     ");
+            WriteLine(@" / ____|     | |             | |            | | | |    ");
+            WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            WriteLine(@"                              Created by Steven Fortune");
+            WriteLine("Loading...Please wait...");
+            WriteLog("Loading...Please wait...", "Server");
+
+            s_Config = new NetPeerConfiguration("sabertooth");
+            s_Config.Port = 14242;
+            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            s_Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            s_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            s_Config.DisableMessageType(NetIncomingMessageType.Error);
+            s_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            s_Config.DisableMessageType(NetIncomingMessageType.Receipt);
+            s_Config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            s_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            s_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            s_Config.UseMessageRecycling = true;
+            s_Config.MaximumConnections = 5;
+            s_Config.EnableUPnP = false;
+            CheckDirectories();
+            s_Server = new NetServer(s_Config);
+            s_Server.Start();
+            //s_Server.UPnP.ForwardPort(14242, "Sabertooth");
+            Server srvrServer = new Server();
+            WriteLine("Server Started...");
+            WriteLog("Server started...", "Server");
+            srvrServer.LoadServerConfig();
+            srvrServer.ServerLoop(s_Server);
+        }
+
+        static void CheckDirectories()
+        {
+            bool exists = false;
+
+            if (!Directory.Exists("Maps"))
+            {
+                Directory.CreateDirectory("Maps");
+                exists = true;
+            }
+            if (!Directory.Exists("Database"))
+            {
+                Directory.CreateDirectory("Database");
+                CreateDatabase();
+            }
+            if (exists)
+            {
+                WriteLog("Directories and database created...", "Server");
+            }
+        }
+
+        static void CreateDatabase()
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+
+                sql = "CREATE TABLE `PLAYERS`";
+                sql = sql + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
+                sql = sql + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
+                sql = sql + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
+                sql = sql + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `MAINWEAPONS`";
+                sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `SECONDARYWEAPONS`";
+                sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `EQUIPMENT`";
+                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `INVENTORY`";
+                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `BANK`";
+                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `ITEMS`";
+                sql = sql + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, `PROJ` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `NPCS`";
+                sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
+                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `PROJECTILES`";
+                sql = sql + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                sql = "CREATE TABLE `SHOPS`";
+                sql = sql + "(`NAME` TEXT, ";
+                for (int i = 0; i < 24; i++)
+                {
+                    sql = sql + "`SHOPITEMID" + i + "` INTEGER, ";
+                }
+                sql = sql + "`SHOPITEMID24` INTEGER)";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+
     class Server
     {
         Player[] s_Player = new Player[5];
@@ -33,7 +205,6 @@ namespace Server.Classes
         private int saveTime;
         private int spawnTime;
         private int aiTime;
-
         private int removeTime;
         public int s_Second;
         public int s_Minute;
@@ -50,12 +221,7 @@ namespace Server.Classes
         public void ServerLoop(NetServer s_Server)
         {
             handleData.s_Version = s_Version;
-            InitPlayerArray();
-            InitMap();
-            InitItems();
-            InitNPC();
-            InitProjectiles();
-            InitFinal();
+            InitArrays();
 
             Thread s_Command = new Thread(CommandWindow);
             s_Command.Start();
@@ -85,22 +251,18 @@ namespace Server.Classes
             Exit(0);
         }
 
-        #region Server Init Voids
-        void InitPlayerArray()
+        private void InitArrays()
         {
+            //players
             WriteLine("Creating player array...");
             WriteLog("Creating player array...", "Server");
             for (int i = 0; i < 5; i++)
             {
                 s_Player[i] = new Player();
             }
-
             WriteLine("Player Array created successfully!");
             WriteLog("Player array loaded successfully", "Server");
-        }
-
-        void InitMap()
-        {
+            //maps
             bool exists = true;
             WriteLine("Loading maps...");
             WriteLog("Loading maps...", "Server");
@@ -119,21 +281,16 @@ namespace Server.Classes
                     s_Map[i].LoadMap(i);
                 }
             }
-
             if (!exists)
-            { 
+            {
                 WriteLine("Saving maps...");
                 WriteLog("Saving maps...", "Server");
             }
             WriteLine("Maps loaded successfully!");
             WriteLog("Maps loaded successfully", "Server");
-        }
-
-        void InitItems()
-        {
+            //items
             WriteLine("Loading items...");
             WriteLog("Loading npcs...", "Server");
-
             for (int i = 0; i < 50; i++)
             {
                 s_Item[i] = new Item();
@@ -141,34 +298,24 @@ namespace Server.Classes
             }
             WriteLine("Items loaded successfully!");
             WriteLog("Items loaded successfully", "Server");
-        }
-
-        void InitProjectiles()
-        {
+            //projectiles
             WriteLine("Loading projectiles...");
             WriteLog("Loading projectiles...", "Server");
-
-            for  (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 s_Proj[i] = new Projectile();
                 s_Proj[i].LoadProjectileFromDatabase(i);
             }
             WriteLine("Projectiles loaded successfully!");
             WriteLog("Projectiles loaded successfully", "Server");
-        }
-
-        void InitNPC()
-        {
+            //npcs
             WriteLine("Loading npcs...");
             WriteLog("Loading npcs...", "Server");
-
             for (int i = 0; i < 10; i++)
             {
                 s_Npc[i] = new Npc();
                 s_Npc[i].LoadNpcFromDatabase((i + 1));
             }
-
-            //Load in data we need for mapnpcs
             for (int i = 0; i < 10; i++)
             {
                 for (int n = 0; n < 10; n++)
@@ -200,14 +347,10 @@ namespace Server.Classes
             }
             WriteLine("Npcs loaded successfully!");
             WriteLog("Npcs loaded successfully", "Server");
-        }
-
-        void InitFinal()
-        {
+            //final
             WriteLine("Listening for connections...Waiting...");
             WriteLog("Server is listening for connections...", "Server");
         }
-        #endregion
 
         #region Server Check Voids
         bool CheckHealthRegen(NetServer s_Server)
@@ -597,32 +740,6 @@ namespace Server.Classes
                     case "save all":    //Save all players (online) which just saves all accounts to their respective XML files
                         SaveAll();  //The void for this command
                         break;
-                    case "reload":  //Reload which actually requires a modifier but not any arguments like account
-                        WriteLine("reload command needs argument (eg reload npcs)");    //If you dont provide a modifier
-                        break;
-                    case "reload database":
-                        WriteLine("Reloading database...");
-                        InitNPC();
-                        InitMap();
-                        InitItems();
-                        InitProjectiles();
-                        break;
-                    case "reload npcs": //Reload NPCS
-                        WriteLine("Reloading Npcs..."); //Let the op know
-                        InitNPC();  //The same void thats ran when we first load them from their BIN files
-                        break;
-                    case "reload maps": //Reloads maps
-                        WriteLine("Reloading Maps..."); //Let the op know
-                        InitMap();  //Same on that loads when the server boots just like npcs
-                        break;
-                    case "reload items":    //Reload items
-                        WriteLine("Reloading Items...");
-                        InitItems();
-                        break;
-                    case "reload projectiles":
-                        WriteLine("Reloading projectiles...");
-                        InitProjectiles();
-                        break;
                     case "info":
                         string hostName = Dns.GetHostName();
                         WriteLine("Statistics: ");
@@ -651,11 +768,6 @@ namespace Server.Classes
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");
-                        WriteLine("reload npcs - reloads npcs from SQL database");
-                        WriteLine("reload maps - reloads maps from SQL database");
-                        WriteLine("reload items - reloads items from SQL database");
-                        WriteLine("reload projectiles - reloads projectiles from SQL database");
-                        WriteLine("reload database - reloads the entire SQL database except players");
                         WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
                         WriteLine("info - shows the servers stat, hosts, ip, connections");
                         WriteLine("uptime - shows server uptime.");
@@ -681,7 +793,6 @@ namespace Server.Classes
             frameRate++;
             return lastFrameRate;
         }
-
         #endregion
 
         #region Server Voids

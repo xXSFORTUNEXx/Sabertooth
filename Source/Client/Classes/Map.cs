@@ -252,7 +252,6 @@ namespace Client.Classes
         VertexArray g_vertices = new VertexArray();
         VertexArray m_vertices = new VertexArray();
         VertexArray m2_vertices = new VertexArray();
-        RenderStates rStates = new RenderStates();
         const int tileSets = 2;
         Texture[] TileSet = new Texture[tileSets];
 
@@ -286,7 +285,6 @@ namespace Client.Classes
                     int ty = (c_Map.Ground[x, y].tileY);
                     int w = (c_Map.Ground[x, y].tileW);
                     int h = (c_Map.Ground[x, y].tileH);
-                    rStates.Texture = new Texture(TileSet[c_Map.Ground[x, y].Tileset]);
 
                     g_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
                     g_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
@@ -297,7 +295,6 @@ namespace Client.Classes
                     int my = (c_Map.Mask[x, y].tileY);
                     int mw = (c_Map.Mask[x, y].tileW);
                     int mh = (c_Map.Mask[x, y].tileH);
-                    rStates.Texture = new Texture(TileSet[c_Map.Mask[x, y].Tileset]);
 
                     m_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(mx, my));
                     m_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + mw, fy), new Vector2f(mx + mw, my));
@@ -308,7 +305,6 @@ namespace Client.Classes
                     int m2y = (c_Map.MaskA[x, y].tileY);
                     int m2w = (c_Map.MaskA[x, y].tileW);
                     int m2h = (c_Map.MaskA[x, y].tileH);
-                    rStates.Texture = new Texture(TileSet[c_Map.MaskA[x, y].Tileset]);
 
                     m2_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(m2x, m2y));
                     m2_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + m2w, fy), new Vector2f(m2x + m2w, m2y));
@@ -320,10 +316,10 @@ namespace Client.Classes
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-
-            target.Draw(g_vertices, rStates);
-            target.Draw(m_vertices, rStates);
-            target.Draw(m2_vertices, rStates);
+            states.Texture = TileSet[0];
+            target.Draw(g_vertices, states);
+            target.Draw(m_vertices, states);
+            target.Draw(m2_vertices, states);
         }
     }
 

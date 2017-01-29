@@ -12,13 +12,13 @@ namespace Client.Classes
     {
         #region Main Classes
         public NetConnection Connection;
-        RenderText c_Text = new RenderText();
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[25];
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
+        RenderText rText = new RenderText();
         const int spriteTextures = 8;
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] c_Sprite = new Texture[spriteTextures];
@@ -168,7 +168,7 @@ namespace Client.Classes
         {
             int x = (X * 32) + (offsetX * 32) - (Name.Length * 2);
             int y = (Y * 32) + (offsetY * 32) - 32;
-            c_Text.DrawText(c_Window, Name, new Vector2f(x, y), 12, Color.White);
+            rText.DrawText(c_Window, Name, new Vector2f(x, y), 12, Color.White);
         }
 
         public void CheckControllerMovement(NetClient c_Client, RenderWindow c_Window, Map c_Map, GUI c_GUI, int index)
