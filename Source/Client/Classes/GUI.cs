@@ -532,7 +532,7 @@ namespace Client.Classes
         private void CheckLogOutSubmit(Base control, ClickedEventArgs e)
         {
             c_Canvas.Dispose();
-            c_Client.Shutdown("Shutting Down");
+            c_Client.Disconnect("bye");
             Thread.Sleep(500);
             Exit(0);
         }
@@ -1363,6 +1363,116 @@ namespace Client.Classes
         #endregion
     }
 
+    class MiniMap : Drawable
+    {
+        VertexArray m_Map;
+
+        public void UpdateMiniMap(Player c_Player, Map c_Map)
+        {
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+            m_Map = new VertexArray();
+            m_Map.PrimitiveType = PrimitiveType.Quads;
+            m_Map.Resize((uint)maxX * (uint)maxY * 12);
+
+            for (int x = minX; x < maxX; x++)
+            {
+                for (int y = minY; y < maxY; y++)
+                {
+                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    {
+                        int fx = (x * 12) - (minX * 12) + 500;
+                        int fy = (y * 12) - (minY * 12);
+                        int index = (x + y * (maxX + maxY)) * 4;
+                        int tx = 0;
+                        int ty = 0;
+                        int w = 12;
+                        int h = 12;
+
+                        if (c_Map.Ground[x, y].type == (int)TileType.Blocked)
+                        {
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Red, new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Red, new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Red, new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Red, new Vector2f(tx, ty + h));
+                        }
+                        if (c_Map.Ground[x, y].type == (int)TileType.NpcSpawn)
+                        {
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Blue, new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue, new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                        }
+                        if (c_Map.Ground[x, y].type == (int)TileType.SpawnPool)
+                        {
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                        }
+                        if (c_Map.Ground[x, y].type == (int)TileType.NpcAvoid)
+                        {
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Black, new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Black, new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                        }
+                        for (int i = 0; i < 20; i++)
+                        {
+                            if (i < 10)
+                            {
+                                if (c_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (c_Map.m_MapNpc[i].X == x && c_Map.m_MapNpc[i].Y == y)
+                                    {
+                                        m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
+                                        m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
+                                        m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
+                                        m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                    }
+                                }
+                            }
+                            if (c_Map.r_MapNpc[i].IsSpawned)
+                            {
+                                if (c_Map.r_MapNpc[i].X == x && c_Map.r_MapNpc[i].Y == y)
+                                {
+                                    m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
+                                    m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
+                                    m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
+                                    m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                }
+                            }
+                            if (c_Map.mapItem[i].IsSpawned)
+                            {
+                                if (c_Map.mapItem[i].X == x && c_Map.mapItem[i].Y == y)
+                                {
+                                    m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
+                                    m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Magenta, new Vector2f(tx + w, ty));
+                                    m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
+                                    m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Magenta, new Vector2f(tx, ty + h));
+                                }
+                            }
+                        }
+                        if ((c_Player.X + 12) == x && (c_Player.Y + 9) == y)
+                        {
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.White, new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.White, new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.White, new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.White, new Vector2f(tx, ty + h));
+                        }
+                    }
+                }
+            }
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            target.Draw(m_Map, states);
+        }
+    }
+
     class HUD : Drawable
     {
         Font d_Font = new Font("Resources/Fonts/Arial.ttf");
@@ -1478,10 +1588,10 @@ namespace Client.Classes
             }
             else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }
 
-            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Magenta);
-            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.Magenta);
-            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.Magenta);
-            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Magenta);
+            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Green);
+            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.Red);
+            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.Yellow);
+            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Blue);
         }
 
         public void UpdateHungerBar(Player c_Player)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.IO;
-using static Microsoft.VisualBasic.Interaction;
 using static System.Console;
 using Lidgren.Network;
 using static System.Environment;
@@ -322,7 +321,7 @@ namespace Server.Classes
             }
             catch (Exception e)
             {
-                MsgBox(e.GetType() + ": " + e.Message, MsgBoxStyle.Critical, "Error");
+                Console.WriteLine("Error: " + e.ToString());
             }
             binaryReader.Close();
         }

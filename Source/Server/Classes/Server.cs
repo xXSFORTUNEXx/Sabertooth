@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿#undef DEBUG
+using Lidgren.Network;
 using System;
 using System.Net;
 using System.Threading;
@@ -247,7 +248,7 @@ namespace Server.Classes
             Thread.Sleep(2500);
             s_Server.Shutdown("Shutting down");
             WriteLine("Shutting down...");
-            Thread.Sleep(2500);
+            Thread.Sleep(500);
             Exit(0);
         }
 

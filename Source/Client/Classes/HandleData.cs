@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using Gwen.Control;
 using Lidgren.Network;
-using Gwen.Control;
-using System.Drawing;
-using static System.Environment;
+using System;
 using static System.Convert;
+using static System.Environment;
 
 namespace Client.Classes
 {
@@ -17,7 +12,6 @@ namespace Client.Classes
         public string s_Port;
         public int c_Index;
         public string c_Version = "1.0";
-        const bool packet_info = false;
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
             ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
@@ -181,10 +175,10 @@ namespace Client.Classes
                         }
                         break;
                 }
-#pragma warning disable CS0162 // Unreachable code detected
-                if (packet_info) { Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString()); }
-#pragma warning restore CS0162 // Unreachable code detected
-            }
+                #if DEBUG
+                Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString());
+                #endif
+        }
             c_Client.Recycle(incMSG);
         }
 

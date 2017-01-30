@@ -1,4 +1,5 @@
-﻿using Gwen.Control;
+﻿#undef DEBUG
+using Gwen.Control;
 using Lidgren.Network;
 using SFML.Graphics;
 using SFML.System;
@@ -32,12 +33,12 @@ namespace Client.Classes
         static void Main(string[] args)
         {
             var handle = GetConsoleWindow();
-            Console.Title = "Sabertooth Console - Debug Info";  //set console title
-            Console.WriteLine("Initializing client...");    //inform the user whats going on
-            ClientConfig cConfig = new ClientConfig();  //load client configuration
-            c_Config = new NetPeerConfiguration("sabertooth");    //create a new peer config
-            c_Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse); //enable message type for discovery response
-            c_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);  //enable message for latency
+            Console.Title = "Sabertooth Console - Debug Info";
+            Console.WriteLine("Initializing client...");
+            ClientConfig cConfig = new ClientConfig();
+            c_Config = new NetPeerConfiguration("sabertooth");
+            c_Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            c_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
             c_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
             c_Config.DisableMessageType(NetIncomingMessageType.Error);
             c_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
@@ -47,14 +48,16 @@ namespace Client.Classes
             c_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
             c_Config.UseMessageRecycling = true;
             c_Config.MaximumTransmissionUnit = 1500;
-            Console.WriteLine("Enabling message types..."); //inform the user whats going on
-            c_Client = new NetClient(c_Config);  //create the client with the peer config
-            Console.WriteLine("Loading config..."); //inform the user whats going on
-            c_Client.Start();  //start the client
-            Console.WriteLine("Client started..."); //let the user know whats up
-            Game c_Game = new Game();  //create game class
+            Console.WriteLine("Enabling message types...");
+            c_Client = new NetClient(c_Config);
+            Console.WriteLine("Loading config...");
+            c_Client.Start();
+            Console.WriteLine("Client started...");
+            Game c_Game = new Game();
+            #if !DEBUG
             ShowWindow(handle, SW_HIDE);
-            c_Game.GameLoop(c_Client, cConfig);    //start game loop
+            #endif
+            c_Game.GameLoop(c_Client, cConfig);
         }
     }
 
@@ -136,7 +139,7 @@ namespace Client.Classes
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10];
         Map c_Map = new Map();
-        View c_View = new View(); 
+        View c_View = new View();
         ClientConfig c_Config;
         static int lastTick;
         static int lastFrameRate;  
@@ -193,9 +196,8 @@ namespace Client.Classes
             skin.Dispose();
             gwenRenderer.Dispose();
             c_Client.Disconnect("bye");
-            c_Client.Shutdown("adios");
-            Thread.Sleep(500);  
-            Exit(0);  
+            Thread.Sleep(500);
+            Exit(0);
         }
 
         static void OnClose(object sender, EventArgs args)
@@ -405,7 +407,6 @@ namespace Client.Classes
                     if (i != handleData.c_Index && c_Player[i].Map == c_Player[handleData.c_Index].Map)
                     {
                         c_Window.Draw(c_Player[i]);
-                        c_Player[i].DrawPlayerName(c_Window);
                     }
                 }
             }
@@ -504,7 +505,6 @@ namespace Client.Classes
         void DrawIndexPlayer()
         {
             c_Window.Draw(c_Player[handleData.c_Index]);
-            c_Player[handleData.c_Index].DrawPlayerName(c_Window);
         }
 
         void ProcessMovement()
@@ -563,6 +563,7 @@ namespace Client.Classes
                     this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);                    
                     this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
                     ProcessMovement();
+                    c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
                     walkTick = TickCount;
                 }
 
@@ -590,6 +591,7 @@ namespace Client.Classes
                 p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
                 c_Window.Draw(p_HUD);
+                c_Window.Draw(c_Map.m_Map);
             }
         }
 

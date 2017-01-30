@@ -22,6 +22,8 @@ namespace Client.Classes
         const int spriteTextures = 8;
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] c_Sprite = new Texture[spriteTextures];
+        Font font = new Font("Resources/Fonts/Arial.ttf");
+        Text p_Name = new Text();
         #endregion
 
         #region Stats
@@ -103,6 +105,10 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+            p_Name.Font = font;
+            p_Name.CharacterSize = 12;
+            p_Name.Color = Color.White;
+            p_Name.Style = Text.Styles.Bold;
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -116,6 +122,10 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+            p_Name.Font = font;
+            p_Name.CharacterSize = 12;
+            p_Name.Color = Color.White;
+            p_Name.Style = Text.Styles.Bold;
         }
 
         public Player(string name)
@@ -125,6 +135,10 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+            p_Name.Font = font;
+            p_Name.CharacterSize = 12;
+            p_Name.Color = Color.White;
+            p_Name.Style = Text.Styles.Bold;
         }
 
         public Player(NetConnection conn)
@@ -134,6 +148,10 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+            p_Name.Font = font;
+            p_Name.CharacterSize = 12;
+            p_Name.Color = Color.White;
+            p_Name.Style = Text.Styles.Bold;
         }
 
         public Player()
@@ -146,29 +164,31 @@ namespace Client.Classes
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+            p_Name.Font = font;
+            p_Name.CharacterSize = 12;
+            p_Name.Color = Color.White;
+            p_Name.Style = Text.Styles.Bold;
         }
         #endregion
 
         #region Voids
         public virtual void Draw(RenderTarget target, RenderStates states)
-        {
+        {            
             int x = (X * 32) + (offsetX * 32);
             int y = (Y * 32) + (offsetY * 32) - 16;
             int step = (Step * 32);
             int dir = (AimDirection * 48);
+            int name_x = (X * 32) + (offsetX * 32) - (Name.Length / 2);
+            int name_y = (Y * 32) + (offsetY * 32) - 32;
+            p_Name.Position = new Vector2f(name_x, name_y);
+            p_Name.DisplayedString = Name;
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
             spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
             states.Texture = c_Sprite[Sprite];
             target.Draw(spritePic, states);
-        }
-
-        public void DrawPlayerName(RenderWindow c_Window)
-        {
-            int x = (X * 32) + (offsetX * 32) - (Name.Length * 2);
-            int y = (Y * 32) + (offsetY * 32) - 32;
-            rText.DrawText(c_Window, Name, new Vector2f(x, y), 12, Color.White);
+            target.Draw(p_Name);
         }
 
         public void CheckControllerMovement(NetClient c_Client, RenderWindow c_Window, Map c_Map, GUI c_GUI, int index)
