@@ -28,7 +28,6 @@ namespace Editor.Forms
         Sprite e_SelectedTile = new Sprite();
         Texture e_GridTexture = new Texture("Resources/Tilesets/Grid.png");
         Sprite e_Grid = new Sprite();
-        SQLiteConnection e_Database;
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
         Texture[] e_Texture = new Texture[8];

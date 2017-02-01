@@ -109,6 +109,7 @@
     <Compile Include="Classes\Npc.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Projectile.cs" />
+    <Compile Include="Classes\Shop.cs" />
     <Compile Include="Classes\Text.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

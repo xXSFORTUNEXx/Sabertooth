@@ -15,7 +15,6 @@ namespace Editor.Forms
 {
     public partial class ItemEditor : Form
     {
-        SQLiteConnection e_Database;
         Item e_Item = new Item();
         int SelectedIndex;
         bool UnModSave;
@@ -152,6 +151,13 @@ namespace Editor.Forms
             UnModSave = true;
         }
 
+        private void scrlPrice_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblPrice.Text = "Price: " + scrlPrice.Value;
+            e_Item.Price = scrlPrice.Value;
+            UnModSave = true;
+        }
+
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Item.Type = (cmbType.SelectedIndex);
@@ -237,6 +243,7 @@ namespace Editor.Forms
             cmbType.SelectedIndex = e_Item.Type;
             cmbAmmoType.SelectedIndex = e_Item.ItemAmmoType;
             scrlProjNum.Value = e_Item.ProjectileNumber;
+            scrlPrice.Value = e_Item.Price;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
             picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
@@ -254,6 +261,7 @@ namespace Editor.Forms
             lblClip.Text = "Clip: " + (scrlClip.Value);
             lblMaxClip.Text = "Max Clip: " + (scrlMaxClip.Value);
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
+            lblPrice.Text = "Price: " + scrlPrice.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }

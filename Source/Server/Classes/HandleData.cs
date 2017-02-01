@@ -1,8 +1,10 @@
-﻿using Lidgren.Network;
+﻿#undef DEBUG
+using Lidgren.Network;
 using System;
 using System.Data.SQLite;
 using System.Threading;
 using static System.Convert;
+
 namespace Server.Classes
 {
     class HandleData
@@ -94,7 +96,7 @@ namespace Server.Classes
                         break;
                 }
                 #if DEBUG
-                Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " Bytes, " + incMSG.LengthBits + " bits");
+                Console.WriteLine("Packet Size: " + incMSG.LengthBytes + " Bytes, " + incMSG.LengthBits + " bits");
                 #endif
             }
             s_Server.Recycle(incMSG);
@@ -541,6 +543,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
 
             //Secondary weapon
             outMSG.Write(s_Player[index].offWeapon.Name);
@@ -561,7 +564,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Stamina);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Value);
-            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);       
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Price);
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -617,6 +621,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ItemAmmoType);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Value);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Price);
             }
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -645,6 +650,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Chest.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].Chest.Value);
             outMSG.WriteVariableInt32(s_Player[index].Chest.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Price);
 
             outMSG.Write(s_Player[index].Legs.Name);
             outMSG.WriteVariableInt32(s_Player[index].Legs.Sprite);
@@ -665,6 +671,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Legs.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].Legs.Value);
             outMSG.WriteVariableInt32(s_Player[index].Legs.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Price);
 
             outMSG.Write(s_Player[index].Feet.Name);
             outMSG.WriteVariableInt32(s_Player[index].Feet.Sprite);
@@ -685,6 +692,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Feet.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].Feet.Value);
             outMSG.WriteVariableInt32(s_Player[index].Feet.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Price);
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -713,6 +721,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
 
             //Secondary weapon
             outMSG.Write(s_Player[index].offWeapon.Name);
@@ -734,6 +743,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -823,6 +833,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Item[index].ItemAmmoType);
             outMSG.WriteVariableInt32(s_Item[index].Value);
             outMSG.WriteVariableInt32(s_Item[index].ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Item[index].Price);
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -849,6 +860,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Item[i].ItemAmmoType);
                 outMSG.WriteVariableInt32(s_Item[i].Value);
                 outMSG.WriteVariableInt32(s_Item[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(s_Item[i].Price);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1038,6 +1050,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Map.mapItem[i].ItemAmmoType);
                 outMSG.WriteVariableInt32(s_Map.mapItem[i].Value);
                 outMSG.WriteVariableInt32(s_Map.mapItem[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(s_Map.mapItem[i].Price);
                 outMSG.Write(s_Map.mapItem[i].IsSpawned);
             }            
 
@@ -1068,6 +1081,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ItemAmmoType);
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Value);
             outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Price);
             outMSG.Write(s_Map.mapItem[itemNum].IsSpawned);            
 
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);

@@ -15,7 +15,6 @@ namespace Editor.Forms
 {
     public partial class NpcEditor : Form
     {
-        SQLiteConnection e_Database;
         Npc e_Npc = new Npc();
         int SelectedIndex;
         bool UnModSave;
@@ -80,6 +79,7 @@ namespace Editor.Forms
             scrlExp.Value = e_Npc.Exp;
             scrlMoney.Value = e_Npc.Money;
             scrlRange.Value = e_Npc.Range;
+            scrlShopNum.Value = e_Npc.ShopNum;
             lblX.Text = "X: " + (scrlX.Value);
             lblY.Text = "Y: " + (scrlY.Value);
             lblDirection.Text = "Direction: " + (scrlDirection.Value);
@@ -94,6 +94,7 @@ namespace Editor.Forms
             lblExp.Text = "Experience: " + scrlExp.Value;
             lblMoney.Text = "Money: " + scrlMoney.Value;
             lblRange.Text = "Range: " + scrlRange.Value;
+            lblShopNum.Text = "Shop: " + scrlShopNum.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
         }
@@ -204,6 +205,12 @@ namespace Editor.Forms
         {
             lblRange.Text = "Range: " + scrlRange.Value;
             e_Npc.Range = scrlRange.Value;
+        }
+
+        private void scrlShopNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblShopNum.Text = "Shop: " + scrlShopNum.Value;
+            e_Npc.ShopNum = scrlShopNum.Value;
         }
     }
 }

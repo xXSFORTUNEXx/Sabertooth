@@ -30,6 +30,7 @@ namespace Client.Classes
         public int ammoType { get; set; }
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
+        public int Price { get; set; }
 
         public Item() { }
 
@@ -39,7 +40,7 @@ namespace Client.Classes
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype)
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype, int price)
         {
             Name = name;
             Sprite = sprite;
@@ -56,6 +57,7 @@ namespace Client.Classes
             Endurance = end;
             Stamina = sta;
             ammoType = ammotype;
+            Price = price;
         }
     }
 

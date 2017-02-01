@@ -15,7 +15,6 @@ namespace Editor.Forms
 {
     public partial class ProjectileEditor : Form
     {
-        SQLiteConnection e_Database;
         Projectile e_Proj = new Projectile();
         int SelectedIndex;
         bool UnModSave;

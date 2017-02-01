@@ -115,6 +115,7 @@ namespace Client.Classes
         Label packAmmo;
         Label packType;
         Label packValue;
+        Label packPrice;
         #endregion
 
         #region EquipTab
@@ -353,6 +354,7 @@ namespace Client.Classes
             packType.Hide();
             packAmmo.Hide();
             packValue.Hide();
+            packPrice.Hide();
 
             int n = 15;
             packType.SetPosition(3, n);
@@ -516,6 +518,14 @@ namespace Client.Classes
                 packValue.SetPosition(3, n);
                 packValue.Text = "Value: " + statItem.Value;
                 packValue.Show();
+            }
+
+            if (statItem.Price > 0)
+            {
+                n += 10;
+                packPrice.SetPosition(3, n);
+                packPrice.Text = "Price: " + statItem.Price;
+                packPrice.Show();
             }
 
             statWindow.Show();
@@ -945,6 +955,10 @@ namespace Client.Classes
             packValue = new Label(statWindow);
             packValue.SetPosition(3, 160);
             packValue.Text = "Value: ?";
+
+            packPrice = new Label(statWindow);
+            packPrice.SetPosition(3, 160);
+            packPrice.Text = "Price: ?";
             #endregion
 
             charTab = menuTabs.AddPage("Character");
@@ -1366,6 +1380,7 @@ namespace Client.Classes
     class MiniMap : Drawable
     {
         VertexArray m_Map;
+        Texture t_Mini = new Texture("Resources/Tilesets/minimap.png");
 
         public void UpdateMiniMap(Player c_Player, Map c_Map)
         {
@@ -1393,32 +1408,33 @@ namespace Client.Classes
 
                         if (c_Map.Ground[x, y].type == (int)TileType.Blocked)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Red, new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Red, new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Red, new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Red, new Vector2f(tx, ty + h));
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
                         }
                         if (c_Map.Ground[x, y].type == (int)TileType.NpcSpawn)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Blue, new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue, new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Blue);
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue);
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                         }
                         if (c_Map.Ground[x, y].type == (int)TileType.SpawnPool)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta);
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta);
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                         }
                         if (c_Map.Ground[x, y].type == (int)TileType.NpcAvoid)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Black, new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent, new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Black, new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent, new Vector2f(tx, ty + h));
+                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Black);
+                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Black);
+                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                         }
+                        tx = 12;
                         for (int i = 0; i < 20; i++)
                         {
                             if (i < 10)
@@ -1448,6 +1464,7 @@ namespace Client.Classes
                             {
                                 if (c_Map.mapItem[i].X == x && c_Map.mapItem[i].Y == y)
                                 {
+                                    tx = 48;
                                     m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
                                     m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Magenta, new Vector2f(tx + w, ty));
                                     m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
@@ -1455,6 +1472,7 @@ namespace Client.Classes
                                 }
                             }
                         }
+                        tx = 60;
                         if ((c_Player.X + 12) == x && (c_Player.Y + 9) == y)
                         {
                             m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.White, new Vector2f(tx, ty));
@@ -1469,6 +1487,7 @@ namespace Client.Classes
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
+            states.Texture = t_Mini;
             target.Draw(m_Map, states);
         }
     }

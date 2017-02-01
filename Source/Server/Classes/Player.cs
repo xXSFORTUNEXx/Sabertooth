@@ -92,15 +92,15 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
 
-            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1);
-            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1);
-            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
-            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
-            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1);
+            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1);
+            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
             }
         }
 
@@ -132,15 +132,15 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
 
-            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1);
-            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1);
-            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
-            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
-            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1);
+            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1);
+            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
+            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
             }
         }
 
@@ -154,7 +154,7 @@ namespace Server.Classes
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Server.Classes
         {
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
             }
         }
         #endregion
@@ -395,7 +395,7 @@ namespace Server.Classes
                         }
                         break;
                 }
-                s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                 hData.SendWeaponsUpdate(s_Server, s_Player, index);
                 hData.SendPlayerInv(s_Server, s_Player, index);
                 hData.SendUpdatePlayerStats(s_Server, s_Player, index);
@@ -414,7 +414,7 @@ namespace Server.Classes
                     if (itemSlot < 25)
                     {
                         s_Player[index].Backpack[itemSlot] = s_Player[index].mainWeapon;
-                        s_Player[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                        s_Player[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
 
                         hData.SendWeaponsUpdate(s_Server, s_Player, index);
                         hData.SendPlayerInv(s_Server, s_Player, index);
@@ -432,7 +432,7 @@ namespace Server.Classes
                     if (itemSlot < 25)
                     {
                         s_Player[index].Backpack[itemSlot] = s_Player[index].offWeapon;
-                        s_Player[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                        s_Player[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                         hData.SendWeaponsUpdate(s_Server, s_Player, index);
                         hData.SendPlayerInv(s_Server, s_Player, index);
                         hData.SendPlayerEquipment(s_Server, s_Player, index);
@@ -449,7 +449,7 @@ namespace Server.Classes
                     if (itemSlot < 25)
                     {
                         s_Player[index].Backpack[itemSlot] = s_Player[index].Chest;
-                        s_Player[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                        s_Player[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                         hData.SendWeaponsUpdate(s_Server, s_Player, index);
                         hData.SendPlayerInv(s_Server, s_Player, index);
                         hData.SendPlayerEquipment(s_Server, s_Player, index);
@@ -466,7 +466,7 @@ namespace Server.Classes
                     if (itemSlot < 25)
                     {
                         s_Player[index].Backpack[itemSlot] = s_Player[index].Legs;
-                        s_Player[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                        s_Player[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                         hData.SendWeaponsUpdate(s_Server, s_Player, index);
                         hData.SendPlayerInv(s_Server, s_Player, index);
                         hData.SendPlayerEquipment(s_Server, s_Player, index);
@@ -483,7 +483,7 @@ namespace Server.Classes
                     if (itemSlot < 25)
                     {
                         s_Player[index].Backpack[itemSlot] = s_Player[index].Feet;
-                        s_Player[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                        s_Player[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                         hData.SendWeaponsUpdate(s_Server, s_Player, index);
                         hData.SendPlayerInv(s_Server, s_Player, index);
                         hData.SendPlayerEquipment(s_Server, s_Player, index);
@@ -527,10 +527,12 @@ namespace Server.Classes
                     s_Map[mapNum].mapItem[mapSlot].MaxClip = s_Player[index].Backpack[slot].MaxClip;
                     s_Map[mapNum].mapItem[mapSlot].ItemAmmoType = s_Player[index].Backpack[slot].ItemAmmoType;
                     s_Map[mapNum].mapItem[mapSlot].Value = s_Player[index].Backpack[slot].Value;
+                    s_Map[mapNum].mapItem[mapSlot].ProjectileNumber = s_Player[index].Backpack[slot].ProjectileNumber;
+                    s_Map[mapNum].mapItem[mapSlot].Price = s_Player[index].Backpack[slot].Price;
                     s_Map[mapNum].mapItem[mapSlot].IsSpawned = true;
                     s_Map[mapNum].mapItem[mapSlot].ExpireTick = TickCount;
 
-                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1);
+                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                     hData.SendPlayerInv(s_Server, s_Player, index);
 
                     for (int p = 0; p < 5; p++)
@@ -588,6 +590,8 @@ namespace Server.Classes
                 Backpack[itemSlot].MaxClip = s_Item.MaxClip;
                 Backpack[itemSlot].ItemAmmoType = s_Item.ItemAmmoType;
                 Backpack[itemSlot].Value = s_Item.Value;
+                Backpack[itemSlot].ProjectileNumber = s_Item.ProjectileNumber;
+                Backpack[itemSlot].Price = s_Item.Price;
 
                 int TileX = s_Map.mapItem[itemNum].X;
                 int TileY = s_Map.mapItem[itemNum].Y;
@@ -646,11 +650,12 @@ namespace Server.Classes
 
                 sql = "INSERT INTO `MAINWEAPONS`";
                 sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
-                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + mainWeapon.Name + "','" + mainWeapon.Clip + "','" + mainWeapon.MaxClip + "','" + mainWeapon.Sprite + "','" + mainWeapon.Damage + "','" + mainWeapon.Armor + "',";
                 sql = sql + "'" + mainWeapon.Type + "','" + mainWeapon.AttackSpeed + "','" + mainWeapon.ReloadSpeed + "','" + mainWeapon.HealthRestore + "','" + mainWeapon.HungerRestore + "','" + mainWeapon.HydrateRestore + "',";
-                sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ItemAmmoType + "','" + mainWeapon.Value + "','" + mainWeapon.ProjectileNumber + "')";
+                sql = sql + "'" + mainWeapon.Strength + "','" + mainWeapon.Agility + "','" + mainWeapon.Endurance + "','" + mainWeapon.Stamina + "','" + mainWeapon.ItemAmmoType + "','" + mainWeapon.Value + "','" + mainWeapon.ProjectileNumber + "',";
+                sql = sql + "'" + mainWeapon.Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -659,11 +664,12 @@ namespace Server.Classes
 
                 sql = "INSERT INTO `SECONDARYWEAPONS`";
                 sql = sql + "(`OWNER`,`NAME`,`CLIP`,`MAXCLIP`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,`STRENGTH`,";
-                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + "`AGILITY`,`ENDURANCE`,`STAMINA`,`AMMOTYPE`, `VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + offWeapon.Name + "','" + offWeapon.Clip + "','" + offWeapon.MaxClip + "','" + offWeapon.Sprite + "','" + offWeapon.Damage + "','" + offWeapon.Armor + "',";
                 sql = sql + "'" + offWeapon.Type + "','" + offWeapon.AttackSpeed + "','" + offWeapon.ReloadSpeed + "','" + offWeapon.HealthRestore + "','" + offWeapon.HungerRestore + "','" + offWeapon.HydrateRestore + "',";
-                sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ItemAmmoType + "','" + offWeapon.Value + "','" + offWeapon.ProjectileNumber + "')";
+                sql = sql + "'" + offWeapon.Strength + "','" + offWeapon.Agility + "','" + offWeapon.Endurance + "','" + offWeapon.Stamina + "','" + offWeapon.ItemAmmoType + "','" + offWeapon.Value + "','" + offWeapon.ProjectileNumber + "',";
+                sql = sql + "'" + offWeapon.Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -672,11 +678,11 @@ namespace Server.Classes
 
                 sql = "INSERT INTO `EQUIPMENT`";
                 sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + 0 + "','" + Chest.Name + "','" + Chest.Sprite + "','" + Chest.Damage + "','" + Chest.Armor + "','" + Chest.Type + "','" + Chest.AttackSpeed + "','" + Chest.ReloadSpeed + "','" + Chest.HealthRestore + "','" + Chest.HungerRestore + "',";
                 sql = sql + "'" + Chest.HydrateRestore + "','" + Chest.Strength + "','" + Chest.Agility + "','" + Chest.Endurance + "','" + Chest.Stamina + "','" + Chest.Clip + "','" + Chest.MaxClip + "','" + Chest.ItemAmmoType + "',";
-                sql = sql + "'" + Chest.Value + "','" + Chest.ProjectileNumber + "');";
+                sql = sql + "'" + Chest.Value + "','" + Chest.ProjectileNumber + "','" + Chest.Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -685,11 +691,11 @@ namespace Server.Classes
 
                 sql = "INSERT INTO `EQUIPMENT`";
                 sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + 1 + "','" + Legs.Name + "','" + Legs.Sprite + "','" + Legs.Damage + "','" + Legs.Armor + "','" + Legs.Type + "','" + Legs.AttackSpeed + "','" + Legs.ReloadSpeed + "','" + Legs.HealthRestore + "','" + Legs.HungerRestore + "',";
                 sql = sql + "'" + Legs.HydrateRestore + "','" + Legs.Strength + "','" + Legs.Agility + "','" + Legs.Endurance + "','" + Legs.Stamina + "','" + Legs.Clip + "','" + Legs.MaxClip + "','" + Legs.ItemAmmoType + "',";
-                sql = sql + "'" + Legs.Value + "','" + Legs.ProjectileNumber + "');";
+                sql = sql + "'" + Legs.Value + "','" + Legs.ProjectileNumber + "','" + Legs.Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -698,11 +704,11 @@ namespace Server.Classes
 
                 sql = "INSERT INTO `EQUIPMENT`";
                 sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`)";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`, `VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + 2 + "','" + Feet.Name + "','" + Feet.Sprite + "','" + Feet.Damage + "','" + Feet.Armor + "','" + Feet.Type + "','" + Feet.AttackSpeed + "','" + Feet.ReloadSpeed + "','" + Feet.HealthRestore + "','" + Feet.HungerRestore + "',";
                 sql = sql + "'" + Feet.HydrateRestore + "','" + Feet.Strength + "','" + Feet.Agility + "','" + Feet.Endurance + "','" + Feet.Stamina + "','" + Feet.Clip + "','" + Feet.MaxClip + "','" + Feet.ItemAmmoType + "',";
-                sql = sql + "'" + Feet.Value + "','" + Feet.ProjectileNumber + "');";
+                sql = sql + "'" + Feet.Value + "','" + Feet.ProjectileNumber + "','" + Feet.Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -734,7 +740,7 @@ namespace Server.Classes
                 sql = sql + "NAME = '" + mainWeapon.Name + "', CLIP = '" + mainWeapon.Clip + "', MAXCLIP = '" + mainWeapon.MaxClip + "', SPRITE = '" + mainWeapon.Sprite + "', DAMAGE = '" + mainWeapon.Damage + "', ARMOR = '" + mainWeapon.Armor + "', ";
                 sql = sql + "TYPE = '" + mainWeapon.Type + "', ATTACKSPEED = '" + mainWeapon.AttackSpeed + "', RELOADSPEED = '" + mainWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + mainWeapon.HealthRestore + "', HUNGERRESTORE = '" + mainWeapon.HungerRestore + "', ";
                 sql = sql + "HYDRATERESTORE = '" + mainWeapon.HydrateRestore + "', STRENGTH = '" + mainWeapon.Strength + "', AGILITY = '" + mainWeapon.Agility + "', ENDURANCE = '" + mainWeapon.Endurance + "', STAMINA = '" + mainWeapon.Stamina + "', ";
-                sql = sql + "AMMOTYPE = '" + mainWeapon.ItemAmmoType + "',  VALUE = '" + mainWeapon.Value + "', PROJ = '" + mainWeapon.ProjectileNumber + "' ";
+                sql = sql + "AMMOTYPE = '" + mainWeapon.ItemAmmoType + "',  VALUE = '" + mainWeapon.Value + "', PROJ = '" + mainWeapon.ProjectileNumber + "', PRICE = '" + mainWeapon.Price + "' ";
                 sql = sql + "WHERE OWNER = '" + Name + "';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -746,7 +752,7 @@ namespace Server.Classes
                 sql = sql + "NAME = '" + offWeapon.Name + "', CLIP = '" + offWeapon.Clip + "', MAXCLIP = '" + offWeapon.MaxClip + "', SPRITE = '" + offWeapon.Sprite + "', DAMAGE = '" + offWeapon.Damage + "', ARMOR = '" + offWeapon.Armor + "', ";
                 sql = sql + "TYPE = '" + offWeapon.Type + "', ATTACKSPEED = '" + offWeapon.AttackSpeed + "', RELOADSPEED = '" + offWeapon.ReloadSpeed + "', HEALTHRESTORE = '" + offWeapon.HealthRestore + "', HUNGERRESTORE = '" + offWeapon.HungerRestore + "', ";
                 sql = sql + "HYDRATERESTORE = '" + offWeapon.HydrateRestore + "', STRENGTH = '" + offWeapon.Strength + "', AGILITY = '" + offWeapon.Agility + "', ENDURANCE = '" + offWeapon.Endurance + "', STAMINA = '" + offWeapon.Stamina + "', ";
-                sql = sql + "AMMOTYPE = '" + offWeapon.ItemAmmoType + "',  VALUE = '" + offWeapon.Value + "', PROJ = '" + offWeapon.ProjectileNumber + "' ";
+                sql = sql + "AMMOTYPE = '" + offWeapon.ItemAmmoType + "',  VALUE = '" + offWeapon.Value + "', PROJ = '" + offWeapon.ProjectileNumber + "', PRICE = '" + offWeapon.Price + "' ";
                 sql = sql + "WHERE OWNER = '" + Name + "';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -758,7 +764,7 @@ namespace Server.Classes
                 sql = sql + "NAME = '" + Chest.Name + "', SPRITE = '" + Chest.Sprite + "', DAMAGE = '" + Chest.Damage + "', ARMOR = '" + Chest.Armor + "', TYPE = '" + Chest.Type + "', ATTACKSPEED = '" + Chest.AttackSpeed + "', ";
                 sql = sql + "RELOADSPEED = '" + Chest.ReloadSpeed + "', HEALTHRESTORE = '" + Chest.HealthRestore + "', HUNGERRESTORE = '" + Chest.HungerRestore + "', HYDRATERESTORE = '" + Chest.HydrateRestore + "', ";
                 sql = sql + "STRENGTH = '" + Chest.Strength + "', AGILITY = '" + Chest.Agility + "', ENDURANCE = '" + Chest.Endurance + "', STAMINA = '" + Chest.Stamina + "', CLIP = '" + Chest.Clip + "', MAXCLIP = '" + Chest.MaxClip + "', AMMOTYPE = '" + Chest.ItemAmmoType + "', ";
-                sql = sql + "VALUE = '" + Chest.Value + "', PROJ = '" + Chest.ProjectileNumber + "' ";
+                sql = sql + "VALUE = '" + Chest.Value + "', PROJ = '" + Chest.ProjectileNumber + "', PRICE = '" + Chest.Price + "' ";
                 sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '0';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -770,7 +776,7 @@ namespace Server.Classes
                 sql = sql + "NAME = '" + Legs.Name + "', SPRITE = '" + Legs.Sprite + "', DAMAGE = '" + Legs.Damage + "', ARMOR = '" + Legs.Armor + "', TYPE = '" + Legs.Type + "', ATTACKSPEED = '" + Legs.AttackSpeed + "', ";
                 sql = sql + "RELOADSPEED = '" + Legs.ReloadSpeed + "', HEALTHRESTORE = '" + Legs.HealthRestore + "', HUNGERRESTORE = '" + Legs.HungerRestore + "', HYDRATERESTORE = '" + Legs.HydrateRestore + "', ";
                 sql = sql + "STRENGTH = '" + Legs.Strength + "', AGILITY = '" + Legs.Agility + "', ENDURANCE = '" + Legs.Endurance + "', STAMINA = '" + Legs.Stamina + "', CLIP = '" + Legs.Clip + "', MAXCLIP = '" + Legs.MaxClip + "', AMMOTYPE = '" + Legs.ItemAmmoType + "', ";
-                sql = sql + "VALUE = '" + Legs.Value + "', PROJ = '" + Legs.ProjectileNumber + "' ";
+                sql = sql + "VALUE = '" + Legs.Value + "', PROJ = '" + Legs.ProjectileNumber + "', PRICE = '" + Legs.Price + "' ";
                 sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '1';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -782,7 +788,7 @@ namespace Server.Classes
                 sql = sql + "NAME = '" + Feet.Name + "', SPRITE = '" + Feet.Sprite + "', DAMAGE = '" + Feet.Damage + "', ARMOR = '" + Feet.Armor + "', TYPE = '" + Feet.Type + "', ATTACKSPEED = '" + Feet.AttackSpeed + "', ";
                 sql = sql + "RELOADSPEED = '" + Feet.ReloadSpeed + "', HEALTHRESTORE = '" + Feet.HealthRestore + "', HUNGERRESTORE = '" + Feet.HungerRestore + "', HYDRATERESTORE = '" + Feet.HydrateRestore + "', ";
                 sql = sql + "STRENGTH = '" + Feet.Strength + "', AGILITY = '" + Feet.Agility + "', ENDURANCE = '" + Feet.Endurance + "', STAMINA = '" + Feet.Stamina + "', CLIP = '" + Feet.Clip + "', MAXCLIP = '" + Feet.MaxClip + "', AMMOTYPE = '" + Feet.ItemAmmoType + "', ";
-                sql = sql + "VALUE = '" + Feet.Value + "', PROJ = '" + Feet.ProjectileNumber + "' ";
+                sql = sql + "VALUE = '" + Feet.Value + "', PROJ = '" + Feet.ProjectileNumber + "', PRICE = '" + Feet.Price + "' ";
                 sql = sql + "WHERE OWNER = '" + Name + "' AND ID = '2';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
@@ -803,11 +809,11 @@ namespace Server.Classes
                     {
                         sql = "INSERT INTO `INVENTORY`";
                         sql = sql + "(`OWNER`,`ID`,`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                        sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
+                        sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`,`PRICE`)";
                         sql = sql + " VALUES ";
                         sql = sql + "('" + Name + "','" + n + "','" + Backpack[i].Name + "','" + Backpack[i].Sprite + "','" + Backpack[i].Damage + "','" + Backpack[i].Armor + "','" + Backpack[i].Type + "','" + Backpack[i].AttackSpeed + "','" + Backpack[i].ReloadSpeed + "','" + Backpack[i].HealthRestore + "','" + Backpack[i].HungerRestore + "',";
                         sql = sql + "'" + Backpack[i].HydrateRestore + "','" + Backpack[i].Strength + "','" + Backpack[i].Agility + "','" + Backpack[i].Endurance + "','" + Backpack[i].Stamina + "','" + Backpack[i].Clip + "','" + Backpack[i].MaxClip + "','" + Backpack[i].ItemAmmoType + "',";
-                        sql = sql + "'" + Backpack[i].Value + "','" + Backpack[i].ProjectileNumber + "');";
+                        sql = sql + "'" + Backpack[i].Value + "','" + Backpack[i].ProjectileNumber + "','" + Backpack[i].Price + "');";
                         n = n + 1;
                         using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                         {
@@ -889,6 +895,7 @@ namespace Server.Classes
                             mainWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                             mainWeapon.Value = ToInt32(read["VALUE"].ToString());
                             mainWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                            mainWeapon.Price = ToInt32(read["PRICE"].ToString());
                         }
                     }
                 }
@@ -920,6 +927,7 @@ namespace Server.Classes
                             offWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                             offWeapon.Value = ToInt32(read["VALUE"].ToString());
                             offWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                            offWeapon.Price = ToInt32(read["PRICE"].ToString());
                         }
                     }
                 }
@@ -951,6 +959,7 @@ namespace Server.Classes
                             Chest.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                             Chest.Value = ToInt32(read["VALUE"].ToString());
                             Chest.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                            Chest.Price = ToInt32(read["PRICE"].ToString());
                         }
                     }
                 }
@@ -982,6 +991,7 @@ namespace Server.Classes
                             Legs.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                             Legs.Value = ToInt32(read["VALUE"].ToString());
                             Legs.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                            Legs.Price = ToInt32(read["PRICE"].ToString());
                         }
                     }
                 }
@@ -1013,6 +1023,7 @@ namespace Server.Classes
                             Feet.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                             Feet.Value = ToInt32(read["VALUE"].ToString());
                             Feet.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                            Feet.Price = ToInt32(read["PRICE"].ToString());
                         }
                     }
                 }
@@ -1058,6 +1069,7 @@ namespace Server.Classes
                                     Backpack[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
                                     Backpack[i].Value = ToInt32(read["VALUE"].ToString());
                                     Backpack[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                    Backpack[i].Price = ToInt32(read["PRICE"].ToString());
                                 }
                             }
                         }

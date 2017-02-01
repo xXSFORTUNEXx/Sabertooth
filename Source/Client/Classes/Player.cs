@@ -158,7 +158,7 @@ namespace Client.Classes
         {
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
             }
             for (int i = 0; i < spriteTextures; i++)
             {

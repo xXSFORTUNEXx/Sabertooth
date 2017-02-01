@@ -3,10 +3,10 @@ using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Editor.Classes
+namespace Server.Classes
 {
     class Shop
-    {        
+    {
         public ShopItem[] shopItem = new ShopItem[25];
 
         public string Name { get; set; }
@@ -107,25 +107,6 @@ namespace Editor.Classes
                             byte[] buffer = (byte[])read["ITEMDATA"];
                             object load = ByteArrayToObject(buffer);
                             shopItem = (ShopItem[])load;
-                        }
-                    }
-                }
-            }            
-        }
-
-        public void LoadShopNameFromDatabase(int shopNum)
-        {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-            {
-                using (var cmd = new SQLiteCommand(conn))
-                {
-                    conn.Open();
-                    cmd.CommandText = "SELECT * FROM SHOPS WHERE rowid = " + shopNum;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            Name = read["NAME"].ToString();
                         }
                     }
                 }

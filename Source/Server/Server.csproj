@@ -67,6 +67,7 @@
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Projectile.cs" />
     <Compile Include="Classes\Server.cs" />
+    <Compile Include="Classes\Shop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

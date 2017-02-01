@@ -76,6 +76,8 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
+            this.lblPrice = new System.Windows.Forms.Label();
+            this.scrlPrice = new System.Windows.Forms.HScrollBar();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -87,6 +89,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlPrice);
+            this.pnlMain.Controls.Add(this.lblPrice);
             this.pnlMain.Controls.Add(this.scrlAttackSpeed);
             this.pnlMain.Controls.Add(this.lblAttackSpeed);
             this.pnlMain.Controls.Add(this.cmbType);
@@ -145,7 +149,7 @@
             "Pants",
             "Shoes",
             "Other"});
-            this.cmbType.Location = new System.Drawing.Point(20, 219);
+            this.cmbType.Location = new System.Drawing.Point(17, 259);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(156, 21);
             this.cmbType.TabIndex = 15;
@@ -154,7 +158,7 @@
             // lblType
             // 
             this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(17, 204);
+            this.lblType.Location = new System.Drawing.Point(17, 242);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(34, 13);
             this.lblType.TabIndex = 14;
@@ -588,6 +592,26 @@
             this.lblStrength.TabIndex = 36;
             this.lblStrength.Text = "Strength: 0";
             // 
+            // lblPrice
+            // 
+            this.lblPrice.AutoSize = true;
+            this.lblPrice.Location = new System.Drawing.Point(17, 201);
+            this.lblPrice.Name = "lblPrice";
+            this.lblPrice.Size = new System.Drawing.Size(43, 13);
+            this.lblPrice.TabIndex = 20;
+            this.lblPrice.Text = "Price: 1";
+            // 
+            // scrlPrice
+            // 
+            this.scrlPrice.LargeChange = 1;
+            this.scrlPrice.Location = new System.Drawing.Point(17, 215);
+            this.scrlPrice.Maximum = 50000;
+            this.scrlPrice.Name = "scrlPrice";
+            this.scrlPrice.Size = new System.Drawing.Size(156, 17);
+            this.scrlPrice.TabIndex = 21;
+            this.scrlPrice.Value = 1;
+            this.scrlPrice.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlPrice_Scroll);
+            // 
             // ItemEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -667,5 +691,7 @@
         private System.Windows.Forms.Label lblAgility;
         private System.Windows.Forms.HScrollBar scrlStrength;
         private System.Windows.Forms.Label lblStrength;
+        private System.Windows.Forms.HScrollBar scrlPrice;
+        private System.Windows.Forms.Label lblPrice;
     }
 }

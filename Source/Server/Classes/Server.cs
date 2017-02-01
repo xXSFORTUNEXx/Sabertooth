@@ -1,5 +1,4 @@
-﻿#undef DEBUG
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using System;
 using System.Net;
 using System.Threading;
@@ -101,7 +100,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `MAINWEAPONS`";
                 sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -110,7 +110,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `SECONDARYWEAPONS`";
                 sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -119,7 +120,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `EQUIPMENT`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -128,8 +130,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `INVENTORY`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
-
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -137,8 +139,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `BANK`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER)";
-
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -146,7 +148,8 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `ITEMS`";
                 sql = sql + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, `PROJ` INTEGER)";
+                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, `PROJ` INTEGER, ";
+                sql = sql + "`PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -155,7 +158,7 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `NPCS`";
                 sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
-                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER)";
+                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -171,12 +174,7 @@ namespace Server.Classes
                 }
 
                 sql = "CREATE TABLE `SHOPS`";
-                sql = sql + "(`NAME` TEXT, ";
-                for (int i = 0; i < 24; i++)
-                {
-                    sql = sql + "`SHOPITEMID" + i + "` INTEGER, ";
-                }
-                sql = sql + "`SHOPITEMID24` INTEGER)";
+                sql = sql + "(`NAME` TEXT, `ITEMDATA` BLOB)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -194,6 +192,7 @@ namespace Server.Classes
         HandleData handleData = new HandleData();
         Projectile[] s_Proj = new Projectile[10];
         Map[] s_Map = new Map[10];
+        Shop[] s_Shop = new Shop[10];
         Random RND = new Random();
         static string s_userCommand;
         public bool isRunning;
@@ -348,6 +347,16 @@ namespace Server.Classes
             }
             WriteLine("Npcs loaded successfully!");
             WriteLog("Npcs loaded successfully", "Server");
+            //shops
+            WriteLine("Loading shops...");
+            WriteLog("Loading shops...", "Server");
+            for (int i = 0; i < 10; i++)
+            {
+                s_Shop[i] = new Shop();
+                s_Shop[i].LoadShopFromDatabase(i + 1);
+            }
+            WriteLine("Shops loaded successfully!");
+            WriteLog("Shops loaded successfully", "Server");
             //final
             WriteLine("Listening for connections...Waiting...");
             WriteLog("Server is listening for connections...", "Server");
@@ -503,7 +512,8 @@ namespace Server.Classes
                                                 s_Map[i].mapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
                                                 s_Map[i].mapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
                                                 s_Map[i].mapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
-                                                s_Map[i].mapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                                
+                                                s_Map[i].mapItem[slot].Price = s_Item[itemNum].Price;
+                                                s_Map[i].mapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                           
                                                 s_Map[i].mapItem[slot].IsSpawned = true;
                                                 s_Map[i].Ground[x, y].NeedsSpawned = true;
 

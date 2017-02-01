@@ -553,7 +553,6 @@ namespace Client.Classes
                 DrawIndexPlayer();
                 DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
                 c_Window.Draw(c_Map.p_Map);
-
                 if (TickCount - walkTick > 100)
                 {
                     this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
@@ -566,14 +565,12 @@ namespace Client.Classes
                     c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
                     walkTick = TickCount;
                 }
-
                 if (TickCount - attackTick > 25)
                 {
                     this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
                     attackTick = TickCount;
                 }
-
                 if (TickCount - pickupTick > 100)
                 {                    
                     this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
@@ -582,7 +579,6 @@ namespace Client.Classes
                 }
             }
             c_Window.SetView(c_Window.DefaultView);
-            c_Canvas.RenderCanvas();
             if (c_Map.Name != null)
             {
                 p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
@@ -593,6 +589,7 @@ namespace Client.Classes
                 c_Window.Draw(p_HUD);
                 c_Window.Draw(c_Map.m_Map);
             }
+            c_Canvas.RenderCanvas();
         }
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)

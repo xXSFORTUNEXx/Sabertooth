@@ -35,10 +35,15 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.txtCustomCost = new System.Windows.Forms.TextBox();
+            this.lblCost = new System.Windows.Forms.Label();
+            this.cmbItemsToAdd = new System.Windows.Forms.ComboBox();
+            this.lblAddItem = new System.Windows.Forms.Label();
+            this.btnAddItem = new System.Windows.Forms.Button();
+            this.lblItemList = new System.Windows.Forms.Label();
+            this.lstItemsSold = new System.Windows.Forms.ListBox();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.lblName = new System.Windows.Forms.Label();
-            this.lblRandomItem = new System.Windows.Forms.Label();
-            this.scrlRandomItems = new System.Windows.Forms.HScrollBar();
+            this.lblShopName = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -75,6 +80,7 @@
             this.btnNewItem.TabIndex = 6;
             this.btnNewItem.Text = "New";
             this.btnNewItem.UseVisualStyleBackColor = true;
+            this.btnNewItem.Click += new System.EventHandler(this.btnNewItem_Click);
             // 
             // btnExit
             // 
@@ -84,6 +90,7 @@
             this.btnExit.TabIndex = 5;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnSave
             // 
@@ -93,6 +100,7 @@
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // lstIndex
             // 
@@ -105,16 +113,86 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.scrlRandomItems);
-            this.pnlMain.Controls.Add(this.lblRandomItem);
+            this.pnlMain.Controls.Add(this.txtCustomCost);
+            this.pnlMain.Controls.Add(this.lblCost);
+            this.pnlMain.Controls.Add(this.cmbItemsToAdd);
+            this.pnlMain.Controls.Add(this.lblAddItem);
+            this.pnlMain.Controls.Add(this.btnAddItem);
+            this.pnlMain.Controls.Add(this.lblItemList);
+            this.pnlMain.Controls.Add(this.lstItemsSold);
             this.pnlMain.Controls.Add(this.txtName);
-            this.pnlMain.Controls.Add(this.lblName);
+            this.pnlMain.Controls.Add(this.lblShopName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(450, 380);
+            this.pnlMain.Size = new System.Drawing.Size(372, 286);
             this.pnlMain.TabIndex = 9;
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
+            this.pnlMain.Visible = false;
+            // 
+            // txtCustomCost
+            // 
+            this.txtCustomCost.Location = new System.Drawing.Point(194, 110);
+            this.txtCustomCost.Name = "txtCustomCost";
+            this.txtCustomCost.Size = new System.Drawing.Size(156, 20);
+            this.txtCustomCost.TabIndex = 15;
+            this.txtCustomCost.Text = "1";
+            // 
+            // lblCost
+            // 
+            this.lblCost.AutoSize = true;
+            this.lblCost.Location = new System.Drawing.Point(191, 94);
+            this.lblCost.Name = "lblCost";
+            this.lblCost.Size = new System.Drawing.Size(66, 13);
+            this.lblCost.TabIndex = 14;
+            this.lblCost.Text = "Custom Cost";
+            // 
+            // cmbItemsToAdd
+            // 
+            this.cmbItemsToAdd.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbItemsToAdd.FormattingEnabled = true;
+            this.cmbItemsToAdd.Location = new System.Drawing.Point(194, 34);
+            this.cmbItemsToAdd.MaxDropDownItems = 100;
+            this.cmbItemsToAdd.Name = "cmbItemsToAdd";
+            this.cmbItemsToAdd.Size = new System.Drawing.Size(156, 21);
+            this.cmbItemsToAdd.TabIndex = 13;
+            // 
+            // lblAddItem
+            // 
+            this.lblAddItem.AutoSize = true;
+            this.lblAddItem.Location = new System.Drawing.Point(191, 19);
+            this.lblAddItem.Name = "lblAddItem";
+            this.lblAddItem.Size = new System.Drawing.Size(64, 13);
+            this.lblAddItem.TabIndex = 12;
+            this.lblAddItem.Text = "Item to Add:";
+            // 
+            // btnAddItem
+            // 
+            this.btnAddItem.Location = new System.Drawing.Point(275, 61);
+            this.btnAddItem.Name = "btnAddItem";
+            this.btnAddItem.Size = new System.Drawing.Size(75, 23);
+            this.btnAddItem.TabIndex = 11;
+            this.btnAddItem.Text = "Add Item";
+            this.btnAddItem.UseVisualStyleBackColor = true;
+            this.btnAddItem.Click += new System.EventHandler(this.btnAddItem_Click);
+            // 
+            // lblItemList
+            // 
+            this.lblItemList.AutoSize = true;
+            this.lblItemList.Location = new System.Drawing.Point(17, 58);
+            this.lblItemList.Name = "lblItemList";
+            this.lblItemList.Size = new System.Drawing.Size(35, 13);
+            this.lblItemList.TabIndex = 10;
+            this.lblItemList.Text = "Stock";
+            // 
+            // lstItemsSold
+            // 
+            this.lstItemsSold.FormattingEnabled = true;
+            this.lstItemsSold.Location = new System.Drawing.Point(20, 74);
+            this.lstItemsSold.Name = "lstItemsSold";
+            this.lstItemsSold.Size = new System.Drawing.Size(156, 199);
+            this.lstItemsSold.TabIndex = 9;
+            this.lstItemsSold.DoubleClick += new System.EventHandler(this.lstItemsSold_DoubleClicked);
             // 
             // txtName
             // 
@@ -122,40 +200,26 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(156, 20);
             this.txtName.TabIndex = 8;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
-            // lblName
+            // lblShopName
             // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(17, 19);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(38, 13);
-            this.lblName.TabIndex = 7;
-            this.lblName.Text = "Name:";
-            // 
-            // lblRandomItem
-            // 
-            this.lblRandomItem.AutoSize = true;
-            this.lblRandomItem.Location = new System.Drawing.Point(20, 71);
-            this.lblRandomItem.Name = "lblRandomItem";
-            this.lblRandomItem.Size = new System.Drawing.Size(87, 13);
-            this.lblRandomItem.TabIndex = 9;
-            this.lblRandomItem.Text = "Random Items: 0";
-            // 
-            // scrlRandomItems
-            // 
-            this.scrlRandomItems.Location = new System.Drawing.Point(20, 84);
-            this.scrlRandomItems.Name = "scrlRandomItems";
-            this.scrlRandomItems.Size = new System.Drawing.Size(156, 17);
-            this.scrlRandomItems.TabIndex = 10;
+            this.lblShopName.AutoSize = true;
+            this.lblShopName.Location = new System.Drawing.Point(17, 19);
+            this.lblShopName.Name = "lblShopName";
+            this.lblShopName.Size = new System.Drawing.Size(66, 13);
+            this.lblShopName.TabIndex = 7;
+            this.lblShopName.Text = "Shop Name:";
             // 
             // ShopEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(621, 403);
+            this.ClientSize = new System.Drawing.Size(548, 405);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.groupBox1);
             this.Name = "ShopEditor";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ShopEditor";
             this.groupBox1.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
@@ -174,8 +238,13 @@
         private System.Windows.Forms.ListBox lstIndex;
         private System.Windows.Forms.GroupBox pnlMain;
         private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.HScrollBar scrlRandomItems;
-        private System.Windows.Forms.Label lblRandomItem;
+        private System.Windows.Forms.Label lblShopName;
+        private System.Windows.Forms.Label lblCost;
+        private System.Windows.Forms.Label lblAddItem;
+        private System.Windows.Forms.Button btnAddItem;
+        private System.Windows.Forms.Label lblItemList;
+        private System.Windows.Forms.ListBox lstItemsSold;
+        private System.Windows.Forms.TextBox txtCustomCost;
+        private System.Windows.Forms.ComboBox cmbItemsToAdd;
     }
 }
