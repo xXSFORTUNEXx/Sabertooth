@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Server.Classes
 {
-    class Shop
+    public class Shop
     {
         public ShopItem[] shopItem = new ShopItem[25];
 
@@ -112,10 +112,29 @@ namespace Server.Classes
                 }
             }
         }
+
+        public void LoadShopNameFromDatabase(int shopNum)
+        {
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                using (var cmd = new SQLiteCommand(conn))
+                {
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM SHOPS WHERE rowid = " + shopNum;
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     [Serializable()]
-    class ShopItem
+    public class ShopItem
     {
         public string Name { get; set; }
         public int ItemNum { get; set; }

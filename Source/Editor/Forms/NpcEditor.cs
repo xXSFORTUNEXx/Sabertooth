@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
-using Editor.Classes;
+using Server.Classes;
 using static System.Convert;
 
 namespace Editor.Forms

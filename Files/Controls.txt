@@ -12,6 +12,7 @@ L - Look Right
 Space - Shoot Weapon
 O - Pickup Item
 R - Reload
+E - Interact
 
 C - Chat Window
 B - Debug Window
@@ -23,3 +24,4 @@ Right Stick - Aim
 Left Trigger - Shoot Weapon
 A - Pickup
 X - Reload
+B - Interact

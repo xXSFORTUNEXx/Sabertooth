@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Server.Classes
 {
-    class Map
+    public class Map
     {
         public string Name { get; set; }
 
@@ -327,7 +327,7 @@ namespace Server.Classes
         }
     }
 
-    class MapNpc : Npc
+    public class MapNpc : Npc
     {
         public int NpcNum { get; set; }
 
@@ -342,7 +342,7 @@ namespace Server.Classes
         }
     }
 
-    class MapProj : Projectile
+    public class MapProj : Projectile
     {
         public int projNum { get; set; }
 
@@ -357,7 +357,7 @@ namespace Server.Classes
         }
     }
 
-    class MapItem : Item
+    public class MapItem : Item
     {
         public int ItemNum { get; set; }
         public int X { get; set; }
@@ -377,7 +377,7 @@ namespace Server.Classes
         }
     }
 
-    class Tile
+    public class Tile
     {
         public int TileX { get; set; }
         public int TileY { get; set; }

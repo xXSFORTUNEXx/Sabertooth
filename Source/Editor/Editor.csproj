@@ -84,11 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\Map.cs" />
-    <Compile Include="Classes\Npc.cs" />
-    <Compile Include="Classes\Projectile.cs" />
-    <Compile Include="Classes\Shop.cs" />
     <Compile Include="Forms\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +249,12 @@
     <Content Include="SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Server\Server.csproj">
+      <Project>{9ab3f5d0-7b9e-4022-9c79-77e269d4ea7a}</Project>
+      <Name>Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

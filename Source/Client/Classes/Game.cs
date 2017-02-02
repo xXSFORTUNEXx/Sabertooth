@@ -423,9 +423,9 @@ namespace Client.Classes
             {
                 if (c_Map.m_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.m_MapNpc[i].X - 12 < minX && c_Map.m_MapNpc[i].X + 12 > maxX)
+                    if (c_Map.m_MapNpc[i].X > minX && c_Map.m_MapNpc[i].X < maxX)
                     {
-                        if (c_Map.m_MapNpc[i].Y - 9 < minY && c_Map.m_MapNpc[i].Y + 9 > maxY)
+                        if (c_Map.m_MapNpc[i].Y > minY && c_Map.m_MapNpc[i].Y < maxY)
                         {
                             if (c_Map.m_MapNpc[i].Sprite > 0)
                             {
@@ -561,6 +561,7 @@ namespace Client.Classes
                     this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);                    
                     this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
                     ProcessMovement();
                     c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
                     walkTick = TickCount;

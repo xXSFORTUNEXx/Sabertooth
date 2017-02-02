@@ -3,7 +3,7 @@ using static System.Convert;
 
 namespace Server.Classes
 {
-    class Projectile
+    public class Projectile
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -40,6 +40,13 @@ namespace Server.Classes
         {
             using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
+                Name = "Default";
+                Damage = 0;
+                Range = 0;
+                Sprite = 1;
+                Type = (int)ProjType.Bullet;
+                Speed = 0;
+
                 conn.Open();
                 string sql;
                 sql = "INSERT INTO `PROJECTILES`";
@@ -63,7 +70,7 @@ namespace Server.Classes
 
                 sql = "UPDATE PROJECTILES SET ";
                 sql = sql + "NAME = '" + Name + "', DAMAGE = '" + Damage + "', RANGE = '" + Range + "', SPRITE = '" + Sprite + "', TYPE = '" + Type + "', SPEED = '" + Speed + "' ";
-                sql = sql + "WHERE rownid = '" + projNum + "';";
+                sql = sql + "WHERE rowid = '" + projNum + "';";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -97,9 +104,30 @@ namespace Server.Classes
                 }
             }
         }
+
+        public void LoadNameFromDatabase(int projNum)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+                sql = "SELECT * FROM `PROJECTILES` WHERE rowid = " + projNum;
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    enum ProjType
+    public enum ProjType
     {
         Bullet,
         Thrown,

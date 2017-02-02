@@ -13,7 +13,7 @@ using System.Data.SQLite;
 
 namespace Server.Classes
 {
-    class Player
+    public class Player
     {
         #region Main Classes
         public NetConnection Connection;

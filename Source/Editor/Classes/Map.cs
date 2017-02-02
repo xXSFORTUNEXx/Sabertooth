@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Server.Classes;
 
 namespace Editor.Classes
 {
@@ -511,24 +512,5 @@ namespace Editor.Classes
             flagged = false;
             SpawnNum = 0;
         }
-    }
-
-    public enum TileType
-    {
-        None,
-        Blocked,
-        NpcSpawn,
-        SpawnPool,
-        NpcAvoid,
-        MapItem
-    }
-
-    public enum TileLayers
-    {
-        Ground,
-        Mask,
-        Fringe,
-        MaskA,
-        FringeA
     }
 }

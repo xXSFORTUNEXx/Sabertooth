@@ -6,7 +6,7 @@ using static System.Environment;
 
 namespace Server.Classes
 {
-    class Npc
+    public class Npc
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -170,6 +170,28 @@ namespace Server.Classes
                             Money = ToInt32(read["MONEY"].ToString());
                             Range = ToInt32(read["RANGE"].ToString());
                             ShopNum = ToInt32(read["SHOPNUM"].ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        public void LoadNpcNameFromDatabase(int npcNum)
+        {
+
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+                sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
                         }
                     }
                 }
@@ -733,6 +755,7 @@ namespace Server.Classes
         Friendly,
         Passive,
         Aggressive,
-        ToLocation
+        ToLocation,
+        ShopOwner
     }
 }

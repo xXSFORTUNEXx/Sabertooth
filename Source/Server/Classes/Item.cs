@@ -3,7 +3,7 @@ using static System.Convert;
 
 namespace Server.Classes
 {
-    class Item
+    public class Item
     {
         public string Name { get; set; }
         public int Sprite { get; set; }
@@ -61,16 +61,37 @@ namespace Server.Classes
 
         public void CreateItemInDatabase()
         {
+            Name = "Default";
+            Sprite = 1;
+            Damage = 0;
+            Armor = 0;
+            Type = (int)ItemType.None;
+            AttackSpeed = 0;
+            ReloadSpeed = 0;
+            HealthRestore = 0;
+            HungerRestore = 0;
+            HydrateRestore = 0;
+            Strength = 0;
+            Agility = 0;
+            Endurance = 0;
+            Stamina = 0;
+            Clip = 0;
+            MaxClip = 0;
+            ItemAmmoType = 0;
+            Value = 0;
+            ProjectileNumber = 1;
+            Price = 1;
+
             using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
                 conn.Open();
                 string sql;
                 sql = "INSERT INTO `ITEMS`";
                 sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`)";
+                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`,`PRICE`)";
                 sql = sql + " VALUES ";
                 sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
-                sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "',' " + Price + "');";
+                sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "',' " + ProjectileNumber + "','" + Price + "');";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -134,6 +155,28 @@ namespace Server.Classes
                             Value = ToInt32(read["VALUE"].ToString());
                             ProjectileNumber = ToInt32(read["PROJ"].ToString());
                             Price = ToInt32(read["PRICE"].ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        public void LoadNameFromDatabase(int itemNum)
+        {
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            {
+                conn.Open();
+                string sql;
+
+                sql = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    {
+                        while (read.Read())
+                        {
+                            Name = read["NAME"].ToString();
                         }
                     }
                 }

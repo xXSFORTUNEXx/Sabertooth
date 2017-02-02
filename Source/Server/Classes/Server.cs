@@ -342,6 +342,7 @@ namespace Server.Classes
                         s_Map[i].m_MapNpc[n].Money = s_Npc[num].Money;
                         s_Map[i].m_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
                         s_Map[i].m_MapNpc[n].Range = s_Npc[num].Range;
+                        s_Map[i].m_MapNpc[n].ShopNum = s_Npc[num].ShopNum;
                     }
                 }
             }

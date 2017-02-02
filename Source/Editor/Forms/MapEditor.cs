@@ -10,11 +10,11 @@ using SFML.Window;
 using SFML.Graphics;
 using SFML.System;
 using static System.Environment;
-using Editor.Classes;
 using static System.Windows.Forms.Application;
 using System.Drawing;
 using System.Data.SQLite;
 using static System.Convert;
+using Server.Classes;
 
 namespace Editor.Forms
 {
@@ -22,7 +22,7 @@ namespace Editor.Forms
     {
         RenderWindow e_Window;
         RenderText e_Text = new RenderText();
-        Map e_Map = new Map();
+        Classes.Map e_Map = new Classes.Map();
         SFML.Graphics.View e_View = new SFML.Graphics.View();
         Texture[] e_Tileset = new Texture[2];
         Sprite e_SelectedTile = new Sprite();
@@ -30,7 +30,6 @@ namespace Editor.Forms
         Sprite e_Grid = new Sprite();
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
-        Texture[] e_Texture = new Texture[8];
         public int e_ViewX { get; set; }
         public int e_ViewY { get; set; }
         int e_OffsetX = 25;
@@ -50,6 +49,13 @@ namespace Editor.Forms
         static int frameRate;
         static int lastTick;
 
+        public const int Max_ItemPics = 8;
+        public const int Max_Sprites = 8;
+        public Texture[] ItemPic = new Texture[Max_ItemPics];
+        public Sprite ItemSprite = new Sprite();
+        public Texture[] SpritePic = new Texture[Max_Sprites];
+        public Sprite e_Sprite = new Sprite();
+
         public MapEditor()
         {
             InitializeComponent();
@@ -68,9 +74,14 @@ namespace Editor.Forms
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
             }
 
-            for (int s = 0; s < 8; s++)
+            for (int s = 0; s < Max_Sprites; s++)
             {
-                e_Texture[s] = new Texture("Resources/Characters/" + (s + 1) + ".png");
+                SpritePic[s] = new Texture("Resources/Characters/" + (s + 1) + ".png");
+            }
+
+            for (int p = 0; p < Max_ItemPics; p++)
+            {
+                ItemPic[p] = new Texture("Resources/Items/" + (p + 1) + ".png");
             }
 
             using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
@@ -267,7 +278,7 @@ namespace Editor.Forms
                             {
                                 int npcNum = e_Map.Ground[x, y].SpawnNum;
                                 e_Npc.LoadNpcFromDatabase(npcNum);
-                                e_Npc.DrawNpc(e_Window, e_Texture[e_Npc.Sprite - 1], x, y);
+                                DrawNpc(e_Window, SpritePic[e_Npc.Sprite - 1], x, y);
                             }
                         }
                     }
@@ -289,11 +300,29 @@ namespace Editor.Forms
                         {
                             int itemNum = e_Map.Ground[x, y].SpawnNum;
                             e_Item.LoadItemFromDatabase(itemNum);
-                            e_Item.DrawItem(e_Window, (e_Item.Sprite - 1), x, y);
+                            DrawItem(e_Window, (e_Item.Sprite - 1), x, y);
                         }
                     }
                 }
             }
+        }
+
+        void DrawItem(RenderWindow e_Window, int itemPic, int x, int y)
+        {
+            ItemSprite.Texture = ItemPic[itemPic];
+            ItemSprite.TextureRect = new IntRect(0, 0, 32, 32);
+            ItemSprite.Position = new Vector2f(x * 32, y * 32);
+
+            e_Window.Draw(ItemSprite);
+        }
+
+        public void DrawNpc(RenderWindow e_Window, Texture e_Texture, int x, int y)
+        {
+            e_Sprite.Texture = e_Texture;
+            e_Sprite.TextureRect = new IntRect(0, 0, 32, 48);
+            e_Sprite.Position = new Vector2f(x * 32, (y * 32) - 16);
+
+            e_Window.Draw(e_Sprite);
         }
 
         void DrawSelectTile(Vector2f position, int x, int y, int w, int h)
@@ -535,7 +564,6 @@ namespace Editor.Forms
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
         }
-
 
         private void EditorMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {

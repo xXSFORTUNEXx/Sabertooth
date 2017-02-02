@@ -1443,6 +1443,7 @@ namespace Client.Classes
                                 {
                                     if (c_Map.m_MapNpc[i].X == x && c_Map.m_MapNpc[i].Y == y)
                                     {
+                                        if (c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
                                         m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
                                         m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
                                         m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
@@ -1454,6 +1455,7 @@ namespace Client.Classes
                             {
                                 if (c_Map.r_MapNpc[i].X == x && c_Map.r_MapNpc[i].Y == y)
                                 {
+                                    if (c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
                                     m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
                                     m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
                                     m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));

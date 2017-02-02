@@ -69,6 +69,7 @@ namespace Client.Classes
         public int Step;
         public int PickupTick;
         public int equipTick;
+        public int interactionTick;
         #endregion
 
         #region Class Constructors
@@ -421,7 +422,7 @@ namespace Client.Classes
             return value;
         }
 
-        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map movementMap, GUI c_GUI)
+        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map m_Map, GUI c_GUI)
         {
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
@@ -431,7 +432,7 @@ namespace Client.Classes
             {
                 if (Y > 1 - offsetY)
                 {
-                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
@@ -448,7 +449,7 @@ namespace Client.Classes
             {
                 if (Y < 49 - offsetY)  
                 {
-                    if (movementMap.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false; 
@@ -465,7 +466,7 @@ namespace Client.Classes
             {
                 if (X > 1 - offsetX)
                 {
-                    if (movementMap.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false; 
@@ -482,7 +483,7 @@ namespace Client.Classes
             {
                 if (X < 49 - offsetX) 
                 {
-                    if (movementMap.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked) 
+                    if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked) 
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
@@ -501,6 +502,85 @@ namespace Client.Classes
                 if (Step == 4) { Step = 0; }
                 Moved = false;
                 SendMovementData(c_Client, index);
+            }
+        }
+        //current
+        public void CheckPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
+        {
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+            if (TickCount - interactionTick < 1000) { return; }
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            {
+                switch (AimDirection)
+                {
+                    case (int)Directions.Up:
+                        if (Y > 2 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
+                                {
+                                    if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                    {
+                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Down:
+                        if (Y < 48 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
+                                {
+                                    if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                    {
+                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Left:
+                        if (X > 2 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
+                                {
+                                    if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                    {
+                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Right:
+                        if (X < 48 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
+                                {
+                                    if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                    {
+                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                interactionTick = TickCount;
             }
         }
 
