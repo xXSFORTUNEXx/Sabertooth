@@ -135,9 +135,11 @@ namespace Client.Classes
         HUD p_HUD = new HUD();
         HandleData handleData; 
         Player[] c_Player = new Player[5]; 
-        Npc[] c_Npc = new Npc[10]; 
+        Npc[] c_Npc = new Npc[10];
+        Shop[] c_Shop = new Shop[10];
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10];
+        Chat[] c_Chat = new Chat[15];
         Map c_Map = new Map();
         View c_View = new View();
         ClientConfig c_Config;
@@ -175,17 +177,17 @@ namespace Client.Classes
             c_Canvas.KeyboardInputEnabled = true;
             c_Input = new Gwen.Input.SFML();
             c_Input.Initialize(c_Canvas, c_Window);
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config);
+            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item);
             c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData(); 
 
             InitArrays();
 
-            while (c_Window.IsOpen)    
+            while (c_Window.IsOpen)
             {
                 CheckForConnection(c_Client);  
-                UpdateView(c_Client, c_Config, c_Npc, c_Item); 
+                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop); 
                 DrawGraphics(c_Client, c_Player);
                 c_Window.Display(); 
             }
@@ -396,6 +398,16 @@ namespace Client.Classes
             {
                 c_Proj[i] = new Projectile();
             }
+
+            for (int i = 0; i < 10; i++)
+            {
+                c_Shop[i] = new Shop();
+            }
+
+            for (int i = 0; i < 15; i++)
+            {
+                c_Chat[i] = new Chat();
+            }
         }
 
         void DrawPlayers()
@@ -593,12 +605,12 @@ namespace Client.Classes
             c_Canvas.RenderCanvas();
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop)
         {
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
 
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop); 
 
             c_Window.SetActive();
             c_Window.DispatchEvents();
@@ -609,8 +621,8 @@ namespace Client.Classes
 
             fps = CalculateFrameRate();
 
-            c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index);
-            c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]);
+            if (c_GUI.menuWindow != null && c_GUI.menuWindow.IsVisible) { c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]); }
+            if (c_Player[handleData.c_Index].inShop) { c_GUI.UpdateShopWindow(c_Shop[c_Player[handleData.c_Index].shopNum]); }
 
             UpdateTitle(fps);
 

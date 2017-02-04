@@ -11,7 +11,7 @@ namespace Server.Classes
     {
         public string s_Version;
 
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop)
         {
             NetIncomingMessage incMSG;
 
@@ -34,7 +34,7 @@ namespace Server.Classes
                                 HandleRegisterRequest(incMSG, s_Server, s_Player);
                                 break;
                             case (byte)PacketTypes.Login:
-                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
+                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
@@ -85,6 +85,18 @@ namespace Server.Classes
                                 HandleDropItem(incMSG, s_Server, s_Player, s_Map);
                                 break;
 
+                            case (byte)PacketTypes.Interaction:
+                                HandleInteraction(incMSG, s_Server, s_Map);
+                                break;
+
+                            case (byte)PacketTypes.BuyItem:
+                                HandleBuyItem(incMSG, s_Server, s_Player, s_Shop, s_Item);
+                                break;
+
+                            case (byte)PacketTypes.SellItem:
+                                HandleSellItem(incMSG, s_Server, s_Player, s_Shop);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -103,6 +115,37 @@ namespace Server.Classes
         }
 
         #region Handle Incoming Data
+        void HandleSellItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Shop[] s_Shop)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int slot = incMSG.ReadVariableInt32();
+            int shopNum = incMSG.ReadVariableInt32();
+
+            s_Shop[shopNum].SellShopItem(s_Server, s_Player, index, slot);
+
+        }
+
+        void HandleBuyItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Shop[] s_Shop, Item[] s_Item)
+        {
+            int shopSlot = incMSG.ReadVariableInt32();
+            int index = incMSG.ReadVariableInt32();
+            int shopIndex = incMSG.ReadVariableInt32();
+            int itemNum = s_Shop[shopIndex].shopItem[shopSlot].ItemNum - 1;
+
+            s_Shop[shopIndex].BuyShopItem(s_Server, s_Player, s_Item[itemNum], shopSlot, index);
+        }
+
+        void HandleInteraction(NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
+        {
+            int npcIndex = incMSG.ReadVariableInt32();
+            int mapIndex = incMSG.ReadVariableInt32();
+
+            if (s_Map[mapIndex].m_MapNpc[npcIndex].ShopNum > 0)
+            {
+                SendOpenShop(incMSG, s_Server, mapIndex, npcIndex);
+            }
+        }
+
         void HandleDropItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map)
         {
             int index = incMSG.ReadVariableInt32();
@@ -337,7 +380,7 @@ namespace Server.Classes
             }
         }
 
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -364,6 +407,7 @@ namespace Server.Classes
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
                         SendProjectiles(incMSG, s_Server, s_Proj);
+                        SendShops(incMSG, s_Server, s_Shop);
                         SendMapData(incMSG, s_Server, s_Map[currentMap], s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[currentMap]);
@@ -433,6 +477,14 @@ namespace Server.Classes
         #endregion
 
         #region Send Outgoing Data
+        void SendOpenShop(NetIncomingMessage incMSG, NetServer s_Server, int shopNum, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.OpenShop);
+            outMSG.WriteVariableInt32(shopNum);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public void SendServerMessage(NetServer s_Server, string message)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -809,6 +861,50 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Proj[i].Sprite);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendShops(NetIncomingMessage incMSG, NetServer s_Server, Shop[] s_Shop)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ShopData);
+            for (int i = 0; i < 10; i++)
+            {
+                outMSG.Write(s_Shop[i].Name);
+                for (int n = 0; n < 25; n++)
+                {
+                    outMSG.Write(s_Shop[i].shopItem[n].Name);
+                    outMSG.WriteVariableInt32(s_Shop[i].shopItem[n].ItemNum);
+                    outMSG.WriteVariableInt32(s_Shop[i].shopItem[n].Cost);
+                }
+            }
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendShopItems(NetIncomingMessage incMSG, NetServer s_Server, Shop[] s_Shop, int shopIndex)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ShopItemsData);
+            outMSG.WriteVariableInt32(shopIndex);
+            for (int n = 0; n < 25; n++)
+            {
+                outMSG.Write(s_Shop[shopIndex].shopItem[n].Name);
+                outMSG.WriteVariableInt32(s_Shop[shopIndex].shopItem[n].ItemNum);
+                outMSG.WriteVariableInt32(s_Shop[shopIndex].shopItem[n].Cost);
+            }
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendShopItemData(NetIncomingMessage incMSG, NetServer s_Server, Shop[] s_Shop, int shopIndex, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ShopItemData);
+            outMSG.WriteVariableInt32(shopIndex);
+            outMSG.WriteVariableInt32(index);
+            outMSG.Write(s_Shop[shopIndex].shopItem[index].Name);
+            outMSG.WriteVariableInt32(s_Shop[shopIndex].shopItem[index].ItemNum);
+            outMSG.WriteVariableInt32(s_Shop[shopIndex].shopItem[index].Cost);
+
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         void SendItemData(NetIncomingMessage incMSG, NetServer s_Server, Item[] s_Item, int index)
@@ -1364,6 +1460,13 @@ namespace Server.Classes
         NpcDirection,
         PoolNpcDirecion,
         NpcVitals,
-        PoolNpcVitals
+        PoolNpcVitals,
+        ShopData,
+        ShopItemData,
+        ShopItemsData,
+        Interaction,
+        OpenShop,
+        BuyItem,
+        SellItem
     }
 }

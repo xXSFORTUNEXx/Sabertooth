@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Game.cs" />
     <Compile Include="Classes\GUI.cs" />
     <Compile Include="Classes\HandleData.cs" />

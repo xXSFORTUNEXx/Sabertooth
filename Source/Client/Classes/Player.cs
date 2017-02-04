@@ -70,6 +70,8 @@ namespace Client.Classes
         public int PickupTick;
         public int equipTick;
         public int interactionTick;
+        public bool inShop;
+        public int shopNum;
         #endregion
 
         #region Class Constructors
@@ -217,6 +219,7 @@ namespace Client.Classes
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+            if (inShop) { return; }
 
             float deadZone = 35;
             float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
@@ -306,6 +309,7 @@ namespace Client.Classes
             if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+            if (inShop) { return; }
 
             float deadZone = 35;
             float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
@@ -346,6 +350,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
+            if (inShop) { return; }
 
             if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
             {
@@ -388,6 +393,8 @@ namespace Client.Classes
 
         public void CheckControllerReload(NetClient c_Client, int index)
         {
+            if (inShop) { return; }
+
             if (!Joystick.IsConnected(0)) { return; }
             if (Joystick.IsButtonPressed(0, 2))
             {
@@ -401,6 +408,8 @@ namespace Client.Classes
 
         public void CheckControllerItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
+            if (inShop) { return; }
+
             if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
@@ -427,6 +436,7 @@ namespace Client.Classes
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+            if (inShop) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
@@ -504,13 +514,14 @@ namespace Client.Classes
                 SendMovementData(c_Client, index);
             }
         }
-        //current
+        
         public void CheckPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - interactionTick < 1000) { return; }
+            if (inShop) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
@@ -525,7 +536,7 @@ namespace Client.Classes
                                 {
                                     if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                     {
-                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                        SendInteraction(c_Client, i);
                                     }
                                 }
                             }
@@ -541,7 +552,7 @@ namespace Client.Classes
                                 {
                                     if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                     {
-                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                        SendInteraction(c_Client, i);
                                     }
                                 }
                             }
@@ -557,7 +568,7 @@ namespace Client.Classes
                                 {
                                     if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                     {
-                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                        SendInteraction(c_Client, i);
                                     }
                                 }
                             }
@@ -573,7 +584,7 @@ namespace Client.Classes
                                 {
                                     if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                     {
-                                        c_GUI.outputChat.AddRow("Npc Interaction! NPC: " + i);
+                                        SendInteraction(c_Client, i);
                                     }
                                 }
                             }
@@ -588,6 +599,7 @@ namespace Client.Classes
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
+            if (inShop) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
@@ -618,6 +630,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
+            if (inShop) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
@@ -660,6 +673,8 @@ namespace Client.Classes
 
         public void CheckReload(NetClient c_Client, int index)
         {
+            if (inShop) { return; }
+
             if (Keyboard.IsKeyPressed(Keyboard.Key.R))
             {
                 if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
@@ -675,6 +690,7 @@ namespace Client.Classes
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
+            if (inShop) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
@@ -849,6 +865,15 @@ namespace Client.Classes
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.ItemPickup);
             outMSG.WriteVariableInt32(index);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendInteraction(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Interaction);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(Map);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 

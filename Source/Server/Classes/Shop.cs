@@ -2,6 +2,7 @@
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Lidgren.Network;
 
 namespace Server.Classes
 {
@@ -130,6 +131,51 @@ namespace Server.Classes
                     }
                 }
             }
+        }
+
+        public void BuyShopItem(NetServer s_Server, Player[] s_Player, Item s_Item, int shopSlot, int index)
+        {
+            HandleData hData = new HandleData();
+            int cash = s_Player[index].Money;
+            int cost = shopItem[shopSlot].Cost;
+
+            if (cost == 1) { cost = s_Item.Price; }
+
+            if (cash >= cost)
+            {
+                int slot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                if (slot < 25)
+                {
+                    s_Player[index].Money -= cost;
+                    s_Player[index].Backpack[slot] = s_Item;
+                    hData.SendServerMessage(s_Server, "You purchased " + s_Item.Name + " for " + cost + " dollars!");
+                    hData.SendPlayerInv(s_Server, s_Player, index);
+                    hData.SendUpdatePlayerStats(s_Server, s_Player, index);
+                }
+                else
+                {
+                    hData.SendServerMessage(s_Server, "Your backpack is full!");
+                    return;
+                }
+            }
+            else
+            {
+                hData.SendServerMessage(s_Server, "You don't have enough money!");
+                return;
+            }
+        }
+
+        public void SellShopItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        {
+            HandleData hData = new HandleData();
+            int money = s_Player[index].Money;
+            int price = s_Player[index].Backpack[slot].Price;
+            money += price;
+            s_Player[index].Money = money;
+            hData.SendServerMessage(s_Server, "You sold " + s_Player[index].Backpack[slot].Name + " for " + price + " dollars!");
+            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1);            
+            hData.SendPlayerInv(s_Server, s_Player, index);
+            hData.SendUpdatePlayerStats(s_Server, s_Player, index);
         }
     }
 

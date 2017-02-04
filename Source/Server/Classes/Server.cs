@@ -12,7 +12,7 @@ using System.Data.SQLite;
 
 namespace Server.Classes
 {
-    class StartUp
+    public class StartUp
     {
 
         // Run to check how many lines of code my project has
@@ -80,7 +80,7 @@ namespace Server.Classes
             }
         }
 
-        static void CreateDatabase()
+        public static void CreateDatabase()
         {
             using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
@@ -180,6 +180,15 @@ namespace Server.Classes
                 {
                     cmd.ExecuteNonQuery();
                 }
+
+                sql = "CREATE TABLE `CHAT`";
+                sql = sql + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHAT` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
+                sql = sql + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
+
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
     }
@@ -193,6 +202,7 @@ namespace Server.Classes
         Projectile[] s_Proj = new Projectile[10];
         Map[] s_Map = new Map[10];
         Shop[] s_Shop = new Shop[10];
+        Chat[] s_Chat = new Chat[15];
         Random RND = new Random();
         static string s_userCommand;
         public bool isRunning;
@@ -229,7 +239,7 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop);
                 SavePlayers();
                 CheckNpcSpawn(s_Server);
                 CheckItemSpawn(s_Server);
@@ -358,6 +368,16 @@ namespace Server.Classes
             }
             WriteLine("Shops loaded successfully!");
             WriteLog("Shops loaded successfully", "Server");
+            //chats
+            WriteLine("Loading chats...");
+            WriteLog("Loading chats...", "Server");
+            for (int i = 0; i < 15; i++)
+            {
+                s_Chat[i] = new Chat();
+                s_Chat[i].LoadChatFromDatabase(i + 1);
+            }
+            WriteLine("Chats loaded successfully!");
+            WriteLog("Chats loaded successfully", "Server");
             //final
             WriteLine("Listening for connections...Waiting...");
             WriteLog("Server is listening for connections...", "Server");

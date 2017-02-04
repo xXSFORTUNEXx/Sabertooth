@@ -16,6 +16,8 @@ namespace Client.Classes
         Canvas c_Canvas;
         Gwen.Font c_Font;
         Player[] c_Player;
+        Shop[] c_Shop;
+        Item[] c_Item;
         ClientConfig c_Config;
         #endregion
 
@@ -75,6 +77,33 @@ namespace Client.Classes
         TabControl menuTabs;
         #endregion
 
+        #region Shop Window
+        public WindowControl shopWindow;
+        ImagePanel[] shopPic = new ImagePanel[25];
+        Button closeShop;
+
+        public WindowControl shopStatWindow;
+        ImagePanel shopStatPic;
+        Label shopName;
+        Label shopDamage;
+        Label shopArmor;
+        Label shopHeRestore;
+        Label shopHuRestore;
+        Label shopHyRestore;
+        Label shopStr;
+        Label shopAgi;
+        Label shopEdu;
+        Label shopSta;
+        Label shopClip;
+        Label shopMClip;
+        Label shopASpeed;
+        Label shopRSpeed;
+        Label shopAmmo;
+        Label shopType;
+        Label shopValue;
+        Label shopPrice;
+        #endregion
+
         #region CharTab
         public TabButton charTab;
         Label charName;
@@ -92,11 +121,11 @@ namespace Client.Classes
         Label charSta;
         #endregion
 
-        public WindowControl statWindow;
-
         #region PackTab
-        TabButton packTab;
+        public TabButton packTab;
         ImagePanel[] invPic = new ImagePanel[25];
+
+        public WindowControl statWindow;
         ImagePanel statPic;
         Label packName;
         Label packDamage;
@@ -151,21 +180,55 @@ namespace Client.Classes
         #endregion
 
 
-        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config)
+        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item)
         {
             GUI.c_Client = c_Client;
             this.c_Canvas = c_Canvas;
             this.c_Font = c_Font;
             this.c_Player = c_Player;
             this.c_Config = c_Config;
+            this.c_Shop = c_Shop;
+            this.c_Item = c_Item;
         }
 
         #region Update Voids
+        public void UpdateShopWindow(Shop c_Shop)
+        {
+            if (shopWindow != null && shopWindow.IsVisible)
+            {
+                shopWindow.Title = c_Shop.Name;
+                for (int i = 0; i < 25; i++)
+                {
+                    if (c_Shop.shopItem[i].Name != "None")
+                    {
+                        shopPic[i].ImageName = "Resources/Items/" + c_Item[c_Shop.shopItem[i].ItemNum - 1].Sprite + ".png";
+                        shopPic[i].Show();
+                    }
+                    else
+                    {
+                        shopPic[i].Hide();
+                    }
+                    if (shopPic[i].IsHovered)
+                    {
+                        if (c_Shop.shopItem[i].Name != "None")
+                        {
+                            SetShopStatWindow(shopPic[i].X, shopPic[i].Y, c_Item[c_Shop.shopItem[i].ItemNum - 1]);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        RemoveShopStatWindow();
+                    }
+                }
+            }
+        }
+
         public void UpdateMenuWindow(Player c_Player)
         {
             if (menuWindow != null && c_Player != null && menuWindow.IsVisible)
             {
-                if (charTab.HasFocus)
+                //if (charTab.HasFocus)
                 {
                     #region Character
                     charName.Text = c_Player.Name;
@@ -185,7 +248,7 @@ namespace Client.Classes
                     charSta.Text = "Stamina: " + c_Player.Stamina;
                     #endregion
                 }
-                if (packTab.HasFocus)
+                //if (packTab.HasFocus)
                 {
                     #region BackPack
                     for (int i = 0; i < 25; i++)
@@ -214,7 +277,7 @@ namespace Client.Classes
                     }
                     #endregion
                 }
-                if (equipTab.HasFocus)
+                //if (equipTab.HasFocus)
                 {
                     #region Equipment
                     if (c_Player.mainWeapon.Name != "None")
@@ -307,7 +370,6 @@ namespace Client.Classes
                     #endregion
                 }
             }
-            if (statWindow != null && !statWindow.IsOnTop) { statWindow.Hide(); }
         }
 
         public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
@@ -531,10 +593,217 @@ namespace Client.Classes
             statWindow.Show();
         }
 
+        void SetShopStatWindow(int x, int y, Item statItem)
+        {
+            int locX = (x + 300);
+            int locY = (y + 50);
+            shopStatWindow.SetPosition(locX, locY);
+            shopStatWindow.Title = statItem.Name;
+            shopStatPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";
+            shopName.Text = statItem.Name;
+            shopDamage.Hide();
+            shopArmor.Hide();
+            shopHeRestore.Hide();
+            shopHuRestore.Hide();
+            shopHyRestore.Hide();
+            shopStr.Hide();
+            shopAgi.Hide();
+            shopEdu.Hide();
+            shopSta.Hide();
+            shopClip.Hide();
+            shopMClip.Hide();
+            shopASpeed.Hide();
+            shopRSpeed.Hide();
+            shopType.Hide();
+            shopAmmo.Hide();
+            shopValue.Hide();
+            shopPrice.Hide();
+
+            int n = 15;
+            shopType.SetPosition(3, n);
+            switch (statItem.Type)
+            {
+                case (int)ItemType.RangedWeapon:
+                    shopType.Text = "Ranged Weapon";
+                    break;
+                case (int)ItemType.MeleeWeapon:
+                    shopType.Text = "Melee Weapon";
+                    break;
+                case (int)ItemType.Currency:
+                    shopType.Text = "Currency";
+                    break;
+                case (int)ItemType.Food:
+                    shopType.Text = "Food";
+                    break;
+                case (int)ItemType.Drink:
+                    shopType.Text = "Drink";
+                    break;
+                case (int)ItemType.FirstAid:
+                    shopType.Text = "First Aid";
+                    break;
+                default:
+                    shopType.Text = "Other";
+                    break;
+            }
+            shopType.Show();
+            if (statItem.Damage > 0)
+            {
+                n += 10;
+                shopDamage.SetPosition(3, n);
+                shopDamage.Text = "Damage: " + statItem.Damage;
+                shopDamage.Show();
+            }
+
+            if (statItem.Armor > 0)
+            {
+                n += 10;
+                shopArmor.SetPosition(3, n);
+                shopArmor.Text = "Armor: " + statItem.Armor;
+                shopArmor.Show();
+            }
+
+            if (statItem.HealthRestore > 0)
+            {
+                n += 10;
+                shopHeRestore.SetPosition(3, n);
+                shopHeRestore.Text = "Health Restore: " + statItem.HealthRestore;
+                shopHeRestore.Show();
+            }
+
+            if (statItem.HungerRestore > 0)
+            {
+                n += 10;
+                shopHuRestore.SetPosition(3, n);
+                shopHuRestore.Text = "Hunger Restore: " + statItem.HungerRestore;
+                shopHuRestore.Show();
+            }
+
+            if (statItem.HydrateRestore > 0)
+            {
+                n += 10;
+                shopHyRestore.SetPosition(3, n);
+                shopHyRestore.Text = "Hydration Restore: " + statItem.HydrateRestore;
+                shopHyRestore.Show();
+            }
+
+            if (statItem.Strength > 0)
+            {
+                n += 10;
+                shopStr.SetPosition(3, n);
+                shopStr.Text = "Strength: " + statItem.Strength;
+                shopStr.Show();
+            }
+
+            if (statItem.Agility > 0)
+            {
+                n += 10;
+                shopAgi.SetPosition(3, n);
+                shopAgi.Text = "Agility: " + statItem.Agility;
+                shopAgi.Show();
+            }
+
+            if (statItem.Endurance > 0)
+            {
+                n += 10;
+                shopEdu.SetPosition(3, n);
+                shopEdu.Text = "Endurance: " + statItem.Endurance;
+                shopEdu.Show();
+            }
+
+            if (statItem.Stamina > 0)
+            {
+                n += 10;
+                shopSta.SetPosition(3, n);
+                shopSta.Text = "Stamina: " + statItem.Stamina;
+                shopSta.Show();
+            }
+
+            if (statItem.Clip > 0)
+            {
+                n += 10;
+                shopClip.SetPosition(3, n);
+                shopClip.Text = "Clip: " + statItem.Clip;
+                shopClip.Show();
+            }
+
+            if (statItem.maxClip > 0)
+            {
+                n += 10;
+                shopMClip.SetPosition(3, n);
+                shopMClip.Text = "Max Clip: " + statItem.maxClip;
+                shopMClip.Show();
+            }
+
+            if (statItem.ammoType > 0)
+            {
+                n += 10;
+                shopAmmo.SetPosition(3, n);
+                switch (statItem.ammoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        shopAmmo.Text = "Pistol Ammo";
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        shopAmmo.Text = "Assault Ammo";
+                        break;
+                    case (int)AmmoType.Rocket:
+                        shopAmmo.Text = "Rocket Ammo";
+                        break;
+                    case (int)AmmoType.Grenade:
+                        shopAmmo.Text = "Grenade Ammo";
+                        break;
+                    default:
+                        shopAmmo.Text = "None";
+                        break;
+                }
+                shopAmmo.Show();
+            }
+
+            if (statItem.AttackSpeed > 0)
+            {
+                n += 10;
+                shopASpeed.SetPosition(3, n);
+                shopASpeed.Text = "Attack Speed: " + ((float)statItem.AttackSpeed / 1000).ToString("#.##") + " s";
+                shopASpeed.Show();
+            }
+
+            if (statItem.ReloadSpeed > 0)
+            {
+                n += 10;
+                shopRSpeed.SetPosition(3, n);
+                shopRSpeed.Text = "Reload Speed: " + ((float)statItem.ReloadSpeed / 1000).ToString("#.##") + " s";
+                shopRSpeed.Show();
+            }
+
+            if (statItem.Value > 1)
+            {
+                n += 10;
+                shopValue.SetPosition(3, n);
+                shopValue.Text = "Value: " + statItem.Value;
+                shopValue.Show();
+            }
+
+            if (statItem.Price > 0)
+            {
+                n += 10;
+                shopPrice.SetPosition(3, n);
+                shopPrice.Text = "Price: " + statItem.Price;
+                shopPrice.Show();
+            }
+
+            shopStatWindow.Show();
+        }
+
         void RemoveStatWindow()
         {
             statWindow.SetPosition(200, 10);
             statWindow.Hide();
+        }
+
+        void RemoveShopStatWindow()
+        {
+            shopStatWindow.SetPosition(200, 10);
+            shopStatWindow.Hide();
         }
         #endregion
 
@@ -829,13 +1098,28 @@ namespace Client.Classes
             HandleData hData = new HandleData();
             int index = hData.c_Index;
 
-            if (c_Player[index].Backpack[itemSlot].Name != "None")
+            if (c_Player[index].inShop)
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
-                outMSG.Write((byte)PacketTypes.EquipItem);
-                outMSG.WriteVariableInt32(index);
-                outMSG.WriteVariableInt32(itemSlot);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                {
+                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    outMSG.Write((byte)PacketTypes.SellItem);
+                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(itemSlot);
+                    outMSG.WriteVariableInt32(c_Player[index].shopNum);
+                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+            else
+            {
+                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                {
+                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    outMSG.Write((byte)PacketTypes.EquipItem);
+                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(itemSlot);
+                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                }
             }
             packTab.Focus();
         }
@@ -857,9 +1141,157 @@ namespace Client.Classes
             }
             packTab.Focus(); 
         }
+
+        private void ShopPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel shopPicE = (ImagePanel)sender;
+            int shopSlot = ToInt32(shopPicE.Name);
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+            int shopIndex = c_Player[index].shopNum;
+
+            if (c_Shop[shopIndex].shopItem[shopSlot].Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.BuyItem);
+                outMSG.WriteVariableInt32(shopSlot);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(shopIndex);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        private void CloseShop_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+
+            c_Player[index].inShop = false;
+            c_Player[index].shopNum = 0;
+            shopWindow.Close();
+        }
         #endregion
 
         #region Window Creation
+        public void CreateShopWindow(Base parent)
+        {
+            shopWindow = new WindowControl(parent.GetCanvas());
+            shopWindow.SetSize(350, 300);
+            shopWindow.Position(Gwen.Pos.Top);
+            shopWindow.Position(Gwen.Pos.Right);
+            shopWindow.DisableResizing();
+            shopWindow.IsClosable = false;
+            shopWindow.Title = "Shop Name";
+
+            int n = 0;
+            int c = 0;
+            for (int i = 0; i < 25; i++)
+            {
+                shopPic[i] = new ImagePanel(shopWindow);
+                shopPic[i].SetSize(32, 32);
+                shopPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));
+                shopPic[i].Name = i.ToString();
+                shopPic[i].DoubleClicked += ShopPic_DoubleClicked;
+
+                c += 1;
+                if (c > 4) { c = 0; }
+                if (i == 4 || i == 9 || i == 14 || i == 19) { n += 1; }
+            }
+
+            closeShop = new Button(shopWindow);
+            closeShop.SetPosition(225, 10);
+            closeShop.SetSize(100, 25);
+            closeShop.Text = "Close";
+            closeShop.Clicked += CloseShop_Clicked;
+
+            #region Shop Stat Window
+            shopStatWindow = new WindowControl(parent.GetCanvas());
+            shopStatWindow.SetPosition(200, 10);
+            shopStatWindow.SetSize(155, 180);
+            shopStatWindow.IsClosable = false;
+            shopStatWindow.Title = "Item Name";
+            shopStatWindow.DisableResizing();
+            shopStatWindow.Hide();
+
+            shopStatPic = new ImagePanel(shopStatWindow);
+            shopStatPic.SetPosition(105, 5);
+            shopStatPic.SetSize(32, 32);
+
+            shopName = new Label(shopStatWindow);
+            shopName.SetPosition(3, 5);
+            shopName.Text = "Name: ?";
+            shopName.BringToFront();
+
+            shopDamage = new Label(shopStatWindow);
+            shopDamage.SetPosition(3, 15);
+            shopDamage.Text = "Damage: ?";
+
+            shopArmor = new Label(shopStatWindow);
+            shopArmor.SetPosition(3, 25);
+            shopArmor.Text = "Armor: ?";
+
+            shopHeRestore = new Label(shopStatWindow);
+            shopHeRestore.SetPosition(3, 35);
+            shopHeRestore.Text = "Health Restore: ?";
+
+            shopHuRestore = new Label(shopStatWindow);
+            shopHuRestore.SetPosition(3, 45);
+            shopHuRestore.Text = "Hunger Restore: ?";
+
+            shopHyRestore = new Label(shopStatWindow);
+            shopHyRestore.SetPosition(3, 55);
+            shopHyRestore.Text = "Hydration Restore: ?";
+
+            shopStr = new Label(shopStatWindow);
+            shopStr.SetPosition(3, 65);
+            shopStr.Text = "Strength: ?";
+
+            shopAgi = new Label(shopStatWindow);
+            shopAgi.SetPosition(3, 75);
+            shopAgi.Text = "Agility: ?";
+
+            shopEdu = new Label(shopStatWindow);
+            shopEdu.SetPosition(3, 85);
+            shopEdu.Text = "Endurance: ?";
+
+            shopSta = new Label(shopStatWindow);
+            shopSta.SetPosition(3, 95);
+            shopSta.Text = "Stamina: ?";
+
+            shopClip = new Label(shopStatWindow);
+            shopClip.SetPosition(3, 105);
+            shopClip.Text = "Clip: ?";
+
+            shopMClip = new Label(shopStatWindow);
+            shopMClip.SetPosition(3, 115);
+            shopMClip.Text = "Max Clip: ?";
+
+            shopASpeed = new Label(shopStatWindow);
+            shopASpeed.SetPosition(3, 125);
+            shopASpeed.Text = "Attack Speed: ?";
+
+            shopRSpeed = new Label(shopStatWindow);
+            shopRSpeed.SetPosition(3, 135);
+            shopRSpeed.Text = "Reload Speed: ?";
+
+            shopType = new Label(shopStatWindow);
+            shopType.SetPosition(3, 145);
+            shopType.Text = "Type: ?";
+
+            shopAmmo = new Label(shopStatWindow);
+            shopAmmo.SetPosition(3, 155);
+            shopAmmo.Text = "Ammo Type: ?";
+
+            shopValue = new Label(shopStatWindow);
+            shopValue.SetPosition(3, 160);
+            shopValue.Text = "Value: ?";
+
+            shopPrice = new Label(shopStatWindow);
+            shopPrice.SetPosition(3, 160);
+            shopPrice.Text = "Price: ?";
+            #endregion
+        }
+
         public void CreateMenuWindow(Base parent)
         {
             menuWindow = new WindowControl(parent.GetCanvas());

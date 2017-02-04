@@ -38,7 +38,7 @@
             this.btnProjectileEditor = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
+            this.btnEditor = new System.Windows.Forms.Button();
             this.btnShopEditor = new System.Windows.Forms.Button();
             this.pnlLock.SuspendLayout();
             this.SuspendLayout();
@@ -142,14 +142,15 @@
             this.button6.Text = "Skill Editor";
             this.button6.UseVisualStyleBackColor = true;
             // 
-            // button7
+            // btnEditor
             // 
-            this.button7.Location = new System.Drawing.Point(12, 186);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(119, 23);
-            this.button7.TabIndex = 7;
-            this.button7.Text = "Event Editor";
-            this.button7.UseVisualStyleBackColor = true;
+            this.btnEditor.Location = new System.Drawing.Point(12, 186);
+            this.btnEditor.Name = "btnEditor";
+            this.btnEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnEditor.TabIndex = 7;
+            this.btnEditor.Text = "Chat Editor";
+            this.btnEditor.UseVisualStyleBackColor = true;
+            this.btnEditor.Click += new System.EventHandler(this.btnEditor_Click);
             // 
             // btnShopEditor
             // 
@@ -167,7 +168,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(144, 252);
             this.Controls.Add(this.btnShopEditor);
-            this.Controls.Add(this.button7);
+            this.Controls.Add(this.btnEditor);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.btnProjectileEditor);
@@ -197,7 +198,7 @@
         private System.Windows.Forms.Button btnProjectileEditor;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnShopEditor;
     }
 }

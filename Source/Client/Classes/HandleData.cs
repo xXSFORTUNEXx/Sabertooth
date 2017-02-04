@@ -15,7 +15,7 @@ namespace Client.Classes
         public string c_Version = "1.0";
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -173,6 +173,21 @@ namespace Client.Classes
                                 HandlePoolNpcVitals(incMSG, c_Map);
                                 break;
 
+                            case (byte)PacketTypes.ShopData:
+                                HandleShops(incMSG, c_Shop);
+                                break;
+
+                            case (byte)PacketTypes.ShopItemsData:
+                                HandleShopItems(incMSG, c_Shop);
+                                break;
+
+                            case (byte)PacketTypes.ShopItemData:
+                                HandleShopItemData(incMSG, c_Shop);
+                                break;
+
+                            case (byte)PacketTypes.OpenShop:
+                                HandleOpenShops(incMSG, c_Player, c_GUI, c_Shop, c_Canvas);
+                                break;
                         }
                         break;
                 }
@@ -189,6 +204,54 @@ namespace Client.Classes
             c_Canvas.Dispose();
             c_Client.Shutdown("Disconnect");
             Exit(0);
+        }
+
+        void HandleOpenShops(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Shop[] c_Shop, Canvas c_Canvas)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            if (!c_Player[c_Index].inShop)
+            {
+                c_Player[c_Index].shopNum = index;
+                c_Player[c_Index].inShop = true;
+                c_GUI.CreateShopWindow(c_Canvas);
+            }
+        }
+
+        void HandleShops(NetIncomingMessage incMSG, Shop[] c_Shop)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                c_Shop[i].Name = incMSG.ReadString();
+                for (int n = 0; n < 25; n++)
+                {
+                    c_Shop[i].shopItem[n].Name = incMSG.ReadString();
+                    c_Shop[i].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
+                    c_Shop[i].shopItem[n].Cost = incMSG.ReadVariableInt32();
+                }
+            }
+        }
+
+        void HandleShopItems(NetIncomingMessage incMSG, Shop[] c_Shop)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            for (int n = 0; n < 25; n++)
+            {
+                c_Shop[index].shopItem[n].Name = incMSG.ReadString();
+                c_Shop[index].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
+                c_Shop[index].shopItem[n].Cost = incMSG.ReadVariableInt32();
+            }
+        }
+
+        void HandleShopItemData(NetIncomingMessage incMSG, Shop[] c_Shop)
+        {
+            int shopIndex = incMSG.ReadVariableInt32();
+            int index = incMSG.ReadVariableInt32();
+
+            c_Shop[shopIndex].shopItem[index].Name = incMSG.ReadString();
+            c_Shop[shopIndex].shopItem[index].ItemNum = incMSG.ReadVariableInt32();
+            c_Shop[shopIndex].shopItem[index].Cost = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayerEquipment(NetIncomingMessage incMSG, Player[] c_Player, int index)
@@ -945,8 +1008,8 @@ namespace Client.Classes
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
             c_Canvas.DeleteAllChildren();
-            c_GUI.CreateDebugWindow(c_Canvas);
-            c_GUI.d_Window.Hide();
+            //c_GUI.CreateDebugWindow(c_Canvas);
+            //c_GUI.d_Window.Hide();
             c_GUI.CreateMenuWindow(c_Canvas);
             c_GUI.menuWindow.Hide();
             c_GUI.CreateChatWindow(c_Canvas);
@@ -1002,6 +1065,13 @@ namespace Client.Classes
         NpcDirection,
         PoolNpcDirecion,
         NpcVitals,
-        PoolNpcVitals
+        PoolNpcVitals,
+        ShopData,
+        ShopItemData,
+        ShopItemsData,
+        Interaction,
+        OpenShop,
+        BuyItem,
+        SellItem
     }
 }
