@@ -13,7 +13,7 @@ namespace Server.Classes
         public string Name { get; set; }
         public string MainMessage { get; set; }
         public string[] Option = new string[4];
-        public int NextChat { get; set; }
+        public int[] NextChat = new int[4];
         public int ShopNum { get; set; }
         public int MissionNum { get; set; }
         public int[] ItemNum = new int[3];
@@ -23,7 +23,7 @@ namespace Server.Classes
 
         public Chat() { }
 
-        public Chat(string name, string msg, string opt1, string opt2, string opt3, string opt4, int nextchat, int shopnum, int missionnum, int[] itemNum, int[] itemVal, int money, int type)
+        public Chat(string name, string msg, string opt1, string opt2, string opt3, string opt4, int[] nextchat, int shopnum, int missionnum, int[] itemNum, int[] itemVal, int money, int type)
         {
             Name = name;
             MainMessage = msg;
@@ -48,7 +48,10 @@ namespace Server.Classes
             Option[1] = "None";
             Option[2] = "None";
             Option[3] = "None";
-            NextChat = 0;
+            NextChat[0] = 0;
+            NextChat[1] = 0;
+            NextChat[2] = 0;
+            NextChat[3] = 0;
             ShopNum = 0;
             MissionNum = 0;
             for (int i = 0; i < 3; i++)
@@ -65,9 +68,9 @@ namespace Server.Classes
                 {
                     conn.Open();
                     string command;
-                    command = "INSERT INTO `CHAT` (`NAME`,`MAINMESSAGE`,`OPTIONA`,`OPTIONB`,`OPTIONC`,`OPTIOND`,`NEXTCHAT`,`SHOPNUM`,`MISSIONNUM`,`ITEMA`,`ITEMB`,`ITEMC`,`VALA`,`VALB`,`VALC`,`MONEY`,`TYPE`) ";
+                    command = "INSERT INTO `CHAT` (`NAME`,`MAINMESSAGE`,`OPTIONA`,`OPTIONB`,`OPTIONC`,`OPTIOND`,`NEXTCHATA`,`NEXTCHATB`,`NEXTCHATC`,`NEXTCHATD`,`SHOPNUM`,`MISSIONNUM`,`ITEMA`,`ITEMB`,`ITEMC`,`VALA`,`VALB`,`VALC`,`MONEY`,`TYPE`) ";
                     command = command + "VALUES ";
-                    command = command + "(@name,@msg,@optiona,@optionb,@optionc,@optiond,@nextchat,@shopnum,@missionnum,@itema,@itemb,@itemc,@vala,@valb,@valc,@money,@type);";
+                    command = command + "(@name,@msg,@optiona,@optionb,@optionc,@optiond,@nextchata,@nextchatb,@nextchatc,@nextchatd,@shopnum,@missionnum,@itema,@itemb,@itemc,@vala,@valb,@valc,@money,@type);";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@msg", System.Data.DbType.String).Value = MainMessage;
@@ -75,7 +78,10 @@ namespace Server.Classes
                     cmd.Parameters.Add("@optionb", System.Data.DbType.String).Value = Option[1];
                     cmd.Parameters.Add("@optionc", System.Data.DbType.String).Value = Option[2];
                     cmd.Parameters.Add("@optiond", System.Data.DbType.String).Value = Option[3];
-                    cmd.Parameters.Add("@nextchat", System.Data.DbType.Int32).Value = NextChat;
+                    cmd.Parameters.Add("@nextchata", System.Data.DbType.Int32).Value = NextChat[0];
+                    cmd.Parameters.Add("@nextchatb", System.Data.DbType.Int32).Value = NextChat[1];
+                    cmd.Parameters.Add("@nextchatc", System.Data.DbType.Int32).Value = NextChat[2];
+                    cmd.Parameters.Add("@nextchatd", System.Data.DbType.Int32).Value = NextChat[3];
                     cmd.Parameters.Add("@shopnum", System.Data.DbType.Int32).Value = ShopNum;
                     cmd.Parameters.Add("@missionnum", System.Data.DbType.Int32).Value = MissionNum;
                     cmd.Parameters.Add("@itema", System.Data.DbType.Int32).Value = ItemNum[0];
@@ -100,8 +106,8 @@ namespace Server.Classes
                     conn.Open();
                     string command;
                     command = "UPDATE CHAT SET ";
-                    command = command + "NAME = @name, MAINMESSAGE = @msg, OPTIONA = @optiona, OPTIONB = @optionb, OPTIONC = @optionc, OPTIOND = @optionc, NEXTCHAT = @nextchat, SHOPNUM = @shopnum, MISSIONNUM = @missionnum, ITEMA = @itema, ITEMB = @itemb, ITEMC = @itemc,";
-                    command = command + "VALA = @vala, VALB = @valb, VALC = @valc, MONEY = @money, TYPE = @type ";
+                    command = command + "NAME = @name, MAINMESSAGE = @msg, OPTIONA = @optiona, OPTIONB = @optionb, OPTIONC = @optionc, OPTIOND = @optionc, NEXTCHATA = @nextchata, NEXTCHATB = @nextchatb, NEXTCHATC = @nextchatc, NEXTCHATD = @nextchatd ";
+                    command = command + "SHOPNUM = @shopnum, MISSIONNUM = @missionnum, ITEMA = @itema, ITEMB = @itemb, ITEMC = @itemc, VALA = @vala, VALB = @valb, VALC = @valc, MONEY = @money, TYPE = @type ";
                     command = command + "WHERE rowid = " + chatNum + ";";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
@@ -110,7 +116,10 @@ namespace Server.Classes
                     cmd.Parameters.Add("@optionb", System.Data.DbType.String).Value = Option[1];
                     cmd.Parameters.Add("@optionc", System.Data.DbType.String).Value = Option[2];
                     cmd.Parameters.Add("@optiond", System.Data.DbType.String).Value = Option[3];
-                    cmd.Parameters.Add("@nextchat", System.Data.DbType.Int32).Value = NextChat;
+                    cmd.Parameters.Add("@nextchata", System.Data.DbType.Int32).Value = NextChat[0];
+                    cmd.Parameters.Add("@nextchatb", System.Data.DbType.Int32).Value = NextChat[1];
+                    cmd.Parameters.Add("@nextchatc", System.Data.DbType.Int32).Value = NextChat[2];
+                    cmd.Parameters.Add("@nextchatd", System.Data.DbType.Int32).Value = NextChat[3];
                     cmd.Parameters.Add("@shopnum", System.Data.DbType.Int32).Value = ShopNum;
                     cmd.Parameters.Add("@missionnum", System.Data.DbType.Int32).Value = MissionNum;
                     cmd.Parameters.Add("@itema", System.Data.DbType.Int32).Value = ItemNum[0];
@@ -144,7 +153,10 @@ namespace Server.Classes
                             Option[1] = read["OPTIONB"].ToString();
                             Option[2] = read["OPTIONC"].ToString();
                             Option[3] = read["OPTIOND"].ToString();
-                            NextChat = ToInt32(read["NEXTCHAT"].ToString());
+                            NextChat[0] = ToInt32(read["NEXTCHATA"].ToString());
+                            NextChat[1] = ToInt32(read["NEXTCHATB"].ToString());
+                            NextChat[2] = ToInt32(read["NEXTCHATC"].ToString());
+                            NextChat[3] = ToInt32(read["NEXTCHATD"].ToString());
                             ShopNum = ToInt32(read["SHOPNUM"].ToString());
                             MissionNum = ToInt32(read["MISSIONNUM"].ToString());
                             ItemNum[0] = ToInt32(read["ITEMA"].ToString());

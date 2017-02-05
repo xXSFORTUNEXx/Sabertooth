@@ -72,6 +72,8 @@ namespace Client.Classes
         public int interactionTick;
         public bool inShop;
         public int shopNum;
+        public bool inChat;
+        public int chatNum;
         #endregion
 
         #region Class Constructors
@@ -194,6 +196,7 @@ namespace Client.Classes
             target.Draw(p_Name);
         }
 
+        #region Controller
         public void CheckControllerMovement(NetClient c_Client, RenderWindow c_Window, Map c_Map, GUI c_GUI, int index)
         {
             /*
@@ -219,7 +222,7 @@ namespace Client.Classes
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop) { return; }
+            if (inShop|| inChat) { return; }
 
             float deadZone = 35;
             float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
@@ -309,7 +312,7 @@ namespace Client.Classes
             if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             float deadZone = 35;
             float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
@@ -350,7 +353,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
             {
@@ -393,7 +396,7 @@ namespace Client.Classes
 
         public void CheckControllerReload(NetClient c_Client, int index)
         {
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (!Joystick.IsConnected(0)) { return; }
             if (Joystick.IsButtonPressed(0, 2))
@@ -414,6 +417,7 @@ namespace Client.Classes
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
+            if (inShop || inChat) { return; }
 
             if (Joystick.IsButtonPressed(0, 0))
             {
@@ -421,6 +425,100 @@ namespace Client.Classes
                 PickupTick = TickCount;
             }
         }
+
+        public void CheckControllerPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
+        {
+            if (!Joystick.IsConnected(0)) { return; }
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+            if (TickCount - interactionTick < 1000) { return; }
+            if (inShop || inChat) { return; }
+
+            if (Joystick.IsButtonPressed(0, 3))
+            {
+                switch (AimDirection)
+                {
+                    case (int)Directions.Up:
+                        if (Y > 2 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Down:
+                        if (Y < 48 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Left:
+                        if (X > 2 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Right:
+                        if (X < 48 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                interactionTick = TickCount;
+            }
+        }
+        #endregion
 
         float SnaptoZero(float value, float threshold)
         {
@@ -431,12 +529,13 @@ namespace Client.Classes
             return value;
         }
 
+        #region Keyboard
         public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map m_Map, GUI c_GUI)
         {
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
@@ -515,91 +614,11 @@ namespace Client.Classes
             }
         }
         
-        public void CheckPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
-        {
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (TickCount - interactionTick < 1000) { return; }
-            if (inShop) { return; }
-
-            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
-            {
-                switch (AimDirection)
-                {
-                    case (int)Directions.Up:
-                        if (Y > 2 - offsetY)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
-                                {
-                                    if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
-                                    {
-                                        SendInteraction(c_Client, i);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Down:
-                        if (Y < 48 - offsetY)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
-                                {
-                                    if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
-                                    {
-                                        SendInteraction(c_Client, i);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Left:
-                        if (X > 2 - offsetX)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
-                                {
-                                    if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
-                                    {
-                                        SendInteraction(c_Client, i);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Right:
-                        if (X < 48 - offsetX)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (m_Map.m_MapNpc[i].IsSpawned && m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner)
-                                {
-                                    if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
-                                    {
-                                        SendInteraction(c_Client, i);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                }
-                interactionTick = TickCount;
-            }
-        }
-
         public void CheckChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
@@ -630,7 +649,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
@@ -690,7 +709,7 @@ namespace Client.Classes
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
@@ -698,6 +717,99 @@ namespace Client.Classes
                 PickupTick = TickCount;
             }
         }
+
+        public void CheckPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
+        {
+            if (c_GUI.inputChat.HasFocus == true) { return; }
+            if (!c_Window.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+            if (TickCount - interactionTick < 1000) { return; }
+            if (inShop) { return; }
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            {
+                switch (AimDirection)
+                {
+                    case (int)Directions.Up:
+                        if (Y > 2 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Down:
+                        if (Y < 48 - offsetY)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Left:
+                        if (X > 2 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case (int)Directions.Right:
+                        if (X < 48 - offsetX)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                {
+                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    {
+                                        if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        {
+                                            SendInteraction(c_Client, i);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+                interactionTick = TickCount;
+            }
+        }
+        #endregion
 
         public void RemoveBulletFromClip(NetClient c_Client, int index)
         {

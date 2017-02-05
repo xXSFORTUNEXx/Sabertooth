@@ -87,7 +87,10 @@ namespace Editor.Forms
             txtOptC.Text = e_Chat.Option[2];
             txtOptD.Text = e_Chat.Option[3];
             cmbType.SelectedIndex = e_Chat.Type;
-            scrlNextChat.Value = e_Chat.NextChat;
+            scrlNextChatA.Value = e_Chat.NextChat[0];
+            scrlNextChatB.Value = e_Chat.NextChat[1];
+            scrlNextChatC.Value = e_Chat.NextChat[2];
+            scrlNextChatD.Value = e_Chat.NextChat[3];
             scrlShopNum.Value = e_Chat.ShopNum;
             scrlMissionNum.Value = e_Chat.MissionNum;
             scrlMoney.Value = e_Chat.Money;
@@ -95,7 +98,10 @@ namespace Editor.Forms
             SelectedItem = 1;
             scrlItemNum.Value = e_Chat.ItemNum[0];
             scrlValue.Value = e_Chat.ItemVal[0];
-            lblNextChat.Text = "Next Chat: " + scrlNextChat.Value;
+            lblNextChatA.Text = "Next Chat: " + scrlNextChatA.Value;
+            lblNextChatB.Text = "Next Chat: " + scrlNextChatB.Value;
+            lblNextChatC.Text = "Next Chat: " + scrlNextChatC.Value;
+            lblNextChatD.Text = "Next Chat: " + scrlNextChatD.Value;
             lblShopNum.Text = "Shop Number: " + scrlShopNum.Value;
             lblMissionNum.Text = "Mission Number: " + scrlMissionNum.Value;
             lblMoney.Text = "Money: " + scrlMoney.Value;
@@ -130,12 +136,6 @@ namespace Editor.Forms
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Chat.Type = cmbType.SelectedIndex;
-        }
-
-        private void scrlNextChat_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblNextChat.Text = "Next Chat: " + scrlNextChat.Value;
-            e_Chat.NextChat = scrlNextChat.Value;
         }
 
         private void scrlShopNum_Scroll(object sender, ScrollEventArgs e)
@@ -174,6 +174,30 @@ namespace Editor.Forms
         {
             lblItemVal.Text = "Value: " + scrlValue.Value;
             e_Chat.ItemVal[SelectedItem] = scrlValue.Value;
+        }
+
+        private void scrlNextChatA_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblNextChatA.Text = "Next Chat: " + scrlNextChatA.Value;
+            e_Chat.NextChat[0] = scrlNextChatA.Value;
+        }
+
+        private void scrlNextChatB_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblNextChatB.Text = "Next Chat: " + scrlNextChatB.Value;
+            e_Chat.NextChat[1] = scrlNextChatB.Value;
+        }
+
+        private void scrlNextChatC_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblNextChatC.Text = "Next Chat: " + scrlNextChatC.Value;
+            e_Chat.NextChat[2] = scrlNextChatC.Value;
+        }
+
+        private void scrlNextChatD_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblNextChatD.Text = "Next Chat: " + scrlNextChatD.Value;
+            e_Chat.NextChat[3] = scrlNextChatD.Value;
         }
     }
 }

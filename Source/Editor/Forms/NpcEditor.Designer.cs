@@ -35,6 +35,8 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlShopNum = new System.Windows.Forms.HScrollBar();
+            this.lblShopNum = new System.Windows.Forms.Label();
             this.scrlRange = new System.Windows.Forms.HScrollBar();
             this.lblRange = new System.Windows.Forms.Label();
             this.scrlMoney = new System.Windows.Forms.HScrollBar();
@@ -66,8 +68,8 @@
             this.lblSprite = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
-            this.lblShopNum = new System.Windows.Forms.Label();
-            this.scrlShopNum = new System.Windows.Forms.HScrollBar();
+            this.lblChatNum = new System.Windows.Forms.Label();
+            this.scrlChatNum = new System.Windows.Forms.HScrollBar();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -138,6 +140,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlChatNum);
+            this.pnlMain.Controls.Add(this.lblChatNum);
             this.pnlMain.Controls.Add(this.scrlShopNum);
             this.pnlMain.Controls.Add(this.lblShopNum);
             this.pnlMain.Controls.Add(this.scrlRange);
@@ -178,6 +182,25 @@
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlShopNum
+            // 
+            this.scrlShopNum.LargeChange = 1;
+            this.scrlShopNum.Location = new System.Drawing.Point(215, 290);
+            this.scrlShopNum.Maximum = 10;
+            this.scrlShopNum.Name = "scrlShopNum";
+            this.scrlShopNum.Size = new System.Drawing.Size(156, 17);
+            this.scrlShopNum.TabIndex = 40;
+            this.scrlShopNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlShopNum_Scroll);
+            // 
+            // lblShopNum
+            // 
+            this.lblShopNum.AutoSize = true;
+            this.lblShopNum.Location = new System.Drawing.Point(212, 276);
+            this.lblShopNum.Name = "lblShopNum";
+            this.lblShopNum.Size = new System.Drawing.Size(44, 13);
+            this.lblShopNum.TabIndex = 39;
+            this.lblShopNum.Text = "Shop: 0";
             // 
             // scrlRange
             // 
@@ -468,24 +491,22 @@
             this.lblName.TabIndex = 5;
             this.lblName.Text = "Name:";
             // 
-            // lblShopNum
+            // lblChatNum
             // 
-            this.lblShopNum.AutoSize = true;
-            this.lblShopNum.Location = new System.Drawing.Point(212, 276);
-            this.lblShopNum.Name = "lblShopNum";
-            this.lblShopNum.Size = new System.Drawing.Size(44, 13);
-            this.lblShopNum.TabIndex = 39;
-            this.lblShopNum.Text = "Shop: 0";
+            this.lblChatNum.AutoSize = true;
+            this.lblChatNum.Location = new System.Drawing.Point(212, 307);
+            this.lblChatNum.Name = "lblChatNum";
+            this.lblChatNum.Size = new System.Drawing.Size(81, 13);
+            this.lblChatNum.TabIndex = 41;
+            this.lblChatNum.Text = "Chat Number: 0";
             // 
-            // scrlShopNum
+            // scrlChatNum
             // 
-            this.scrlShopNum.LargeChange = 1;
-            this.scrlShopNum.Location = new System.Drawing.Point(215, 290);
-            this.scrlShopNum.Maximum = 10;
-            this.scrlShopNum.Name = "scrlShopNum";
-            this.scrlShopNum.Size = new System.Drawing.Size(156, 17);
-            this.scrlShopNum.TabIndex = 40;
-            this.scrlShopNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlShopNum_Scroll);
+            this.scrlChatNum.Location = new System.Drawing.Point(213, 320);
+            this.scrlChatNum.Name = "scrlChatNum";
+            this.scrlChatNum.Size = new System.Drawing.Size(158, 17);
+            this.scrlChatNum.TabIndex = 42;
+            this.scrlChatNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlChatNum_Scroll);
             // 
             // NpcEditor
             // 
@@ -548,5 +569,7 @@
         private System.Windows.Forms.Label lblRange;
         private System.Windows.Forms.HScrollBar scrlShopNum;
         private System.Windows.Forms.Label lblShopNum;
+        private System.Windows.Forms.HScrollBar scrlChatNum;
+        private System.Windows.Forms.Label lblChatNum;
     }
 }

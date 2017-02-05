@@ -15,7 +15,7 @@ namespace Client.Classes
         public string c_Version = "1.0";
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -188,6 +188,26 @@ namespace Client.Classes
                             case (byte)PacketTypes.OpenShop:
                                 HandleOpenShops(incMSG, c_Player, c_GUI, c_Shop, c_Canvas);
                                 break;
+
+                            case (byte)PacketTypes.SendChats:
+                                HandleChats(incMSG, c_Chat);
+                                break;
+
+                            case (byte)PacketTypes.SendChatData:
+                                HandleChatData(incMSG, c_Chat);
+                                break;
+
+                            case (byte)PacketTypes.OpenChat:
+                                HandleOpenChat(incMSG, c_GUI, c_Player, c_Chat, c_Canvas);
+                                break;
+
+                            case (byte)PacketTypes.NextChat:
+                                HandleNextChat(incMSG, c_GUI, c_Player, c_Chat);
+                                break;
+
+                            case (byte)PacketTypes.CloseChat:
+                                HandleCloseChat(incMSG, c_GUI, c_Player);
+                                break;
                         }
                         break;
                 }
@@ -204,6 +224,87 @@ namespace Client.Classes
             c_Canvas.Dispose();
             c_Client.Shutdown("Disconnect");
             Exit(0);
+        }
+
+        void HandleCloseChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player)
+        {
+            c_GUI.npcChatWindow.Close();
+            c_Player[c_Index].inChat = false;
+            c_Player[c_Index].chatNum = 0;
+        }
+
+        void HandleNextChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chat[] c_Chat)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Player[c_Index].chatNum = index;
+            c_Player[c_Index].inChat = true;
+            c_GUI.UpdateNpcChatWindow(c_Chat[index - 1]);
+        }
+
+        void HandleOpenChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chat[] c_Chat, Canvas c_Canvas)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            if (!c_Player[c_Index].inChat)
+            {
+                c_Player[c_Index].chatNum = index;
+                c_Player[c_Index].inChat = true;
+                c_GUI.CreatNpcChatWindow(c_Canvas, c_Chat[index - 1]);
+            }          
+        }
+
+        void HandleChats(NetIncomingMessage incMSG, Chat[] c_Chat)
+        {
+            for (int i = 0; i < 15; i++)
+            {
+                c_Chat[i].Name = incMSG.ReadString();
+                c_Chat[i].MainMessage = incMSG.ReadString();
+                c_Chat[i].Option[0] = incMSG.ReadString();
+                c_Chat[i].Option[1] = incMSG.ReadString();
+                c_Chat[i].Option[2] = incMSG.ReadString();
+                c_Chat[i].Option[3] = incMSG.ReadString();
+                c_Chat[i].NextChat[0] = incMSG.ReadVariableInt32();
+                c_Chat[i].NextChat[1] = incMSG.ReadVariableInt32();
+                c_Chat[i].NextChat[2] = incMSG.ReadVariableInt32();
+                c_Chat[i].NextChat[3] = incMSG.ReadVariableInt32();
+                c_Chat[i].ShopNum = incMSG.ReadVariableInt32();
+                c_Chat[i].MissionNum = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemNum[0] = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemNum[1] = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemNum[2] = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemVal[0] = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemVal[1] = incMSG.ReadVariableInt32();
+                c_Chat[i].ItemVal[2] = incMSG.ReadVariableInt32();
+                c_Chat[i].Money = incMSG.ReadVariableInt32();
+                c_Chat[i].Type = incMSG.ReadVariableInt32();
+            }
+        }
+
+        void HandleChatData(NetIncomingMessage incMSG, Chat[] c_Chat)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Chat[index].Name = incMSG.ReadString();
+            c_Chat[index].MainMessage = incMSG.ReadString();
+            c_Chat[index].Option[0] = incMSG.ReadString();
+            c_Chat[index].Option[1] = incMSG.ReadString();
+            c_Chat[index].Option[2] = incMSG.ReadString();
+            c_Chat[index].Option[3] = incMSG.ReadString();
+            c_Chat[index].NextChat[0] = incMSG.ReadVariableInt32();
+            c_Chat[index].NextChat[1] = incMSG.ReadVariableInt32();
+            c_Chat[index].NextChat[2] = incMSG.ReadVariableInt32();
+            c_Chat[index].NextChat[3] = incMSG.ReadVariableInt32();
+            c_Chat[index].ShopNum = incMSG.ReadVariableInt32();
+            c_Chat[index].MissionNum = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemNum[0] = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemNum[1] = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemNum[2] = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemVal[0] = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemVal[1] = incMSG.ReadVariableInt32();
+            c_Chat[index].ItemVal[2] = incMSG.ReadVariableInt32();
+            c_Chat[index].Money = incMSG.ReadVariableInt32();
+            c_Chat[index].Type = incMSG.ReadVariableInt32();
         }
 
         void HandleOpenShops(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Shop[] c_Shop, Canvas c_Canvas)
@@ -1072,6 +1173,11 @@ namespace Client.Classes
         Interaction,
         OpenShop,
         BuyItem,
-        SellItem
+        SellItem,
+        SendChats,
+        SendChatData,
+        OpenChat,
+        NextChat,
+        CloseChat
     }
 }

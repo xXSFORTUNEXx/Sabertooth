@@ -11,7 +11,7 @@ namespace Client.Classes
         public string Name { get; set; }
         public string MainMessage { get; set; }
         public string[] Option = new string[4];
-        public int NextChat { get; set; }
+        public int[] NextChat = new int[4];
         public int ShopNum { get; set; }
         public int MissionNum { get; set; }
         public int[] ItemNum = new int[3];
@@ -21,7 +21,7 @@ namespace Client.Classes
 
         public Chat() { }
 
-        public Chat(string name, string msg, string opt1, string opt2, string opt3, string opt4, int nextchat, int shopnum, int missionnum, int[] itemNum, int[] itemVal, int money, int type)
+        public Chat(string name, string msg, string opt1, string opt2, string opt3, string opt4, int[] nextchat, int shopnum, int missionnum, int[] itemNum, int[] itemVal, int money, int type)
         {
             Name = name;
             MainMessage = msg;

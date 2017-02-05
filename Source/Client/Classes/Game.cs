@@ -154,7 +154,7 @@ namespace Client.Classes
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Close);
+            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Default);
             c_Window.Closed += new EventHandler(OnClose);
             c_Window.KeyReleased += window_KeyReleased;
             c_Window.KeyPressed += OnKeyPressed;
@@ -177,7 +177,7 @@ namespace Client.Classes
             c_Canvas.KeyboardInputEnabled = true;
             c_Input = new Gwen.Input.SFML();
             c_Input.Initialize(c_Canvas, c_Window);
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item);
+            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item, c_Chat);
             c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData(); 
@@ -186,13 +186,13 @@ namespace Client.Classes
 
             while (c_Window.IsOpen)
             {
-                CheckForConnection(c_Client);  
+                CheckForConnection(c_Client);
                 UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop); 
                 DrawGraphics(c_Client, c_Player);
                 c_Window.Display(); 
             }
 
-            c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);            
+            if (c_Client.ServerConnection != null) { c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index); }      
 
             c_Canvas.Dispose(); 
             skin.Dispose();
@@ -574,6 +574,7 @@ namespace Client.Classes
                     this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);                    
                     this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
                     ProcessMovement();
                     c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
                     walkTick = TickCount;
@@ -610,7 +611,7 @@ namespace Client.Classes
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
 
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat); 
 
             c_Window.SetActive();
             c_Window.DispatchEvents();

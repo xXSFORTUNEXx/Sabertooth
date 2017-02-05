@@ -80,6 +80,7 @@ namespace Editor.Forms
             scrlMoney.Value = e_Npc.Money;
             scrlRange.Value = e_Npc.Range;
             scrlShopNum.Value = e_Npc.ShopNum;
+            scrlChatNum.Value = e_Npc.ChatNum;
             lblX.Text = "X: " + (scrlX.Value);
             lblY.Text = "Y: " + (scrlY.Value);
             lblDirection.Text = "Direction: " + (scrlDirection.Value);
@@ -95,6 +96,7 @@ namespace Editor.Forms
             lblMoney.Text = "Money: " + scrlMoney.Value;
             lblRange.Text = "Range: " + scrlRange.Value;
             lblShopNum.Text = "Shop: " + scrlShopNum.Value;
+            lblChatNum.Text = "Chat Number: " + scrlChatNum.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
         }
@@ -211,6 +213,12 @@ namespace Editor.Forms
         {
             lblShopNum.Text = "Shop: " + scrlShopNum.Value;
             e_Npc.ShopNum = scrlShopNum.Value;
+        }
+
+        private void scrlChatNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblChatNum.Text = "Chat Number: " + scrlChatNum.Value;
+            e_Npc.ChatNum = scrlChatNum.Value;
         }
     }
 }

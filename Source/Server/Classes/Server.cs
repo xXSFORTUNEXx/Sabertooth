@@ -158,7 +158,7 @@ namespace Server.Classes
 
                 sql = "CREATE TABLE `NPCS`";
                 sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
-                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER)";
+                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -239,7 +239,7 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat);
                 SavePlayers();
                 CheckNpcSpawn(s_Server);
                 CheckItemSpawn(s_Server);
@@ -263,7 +263,7 @@ namespace Server.Classes
 
         private void InitArrays()
         {
-            //players
+            #region Players
             WriteLine("Creating player array...");
             WriteLog("Creating player array...", "Server");
             for (int i = 0; i < 5; i++)
@@ -272,7 +272,9 @@ namespace Server.Classes
             }
             WriteLine("Player Array created successfully!");
             WriteLog("Player array loaded successfully", "Server");
-            //maps
+            #endregion
+
+            #region Maps
             bool exists = true;
             WriteLine("Loading maps...");
             WriteLog("Loading maps...", "Server");
@@ -298,7 +300,9 @@ namespace Server.Classes
             }
             WriteLine("Maps loaded successfully!");
             WriteLog("Maps loaded successfully", "Server");
-            //items
+            #endregion
+
+            #region Items
             WriteLine("Loading items...");
             WriteLog("Loading npcs...", "Server");
             for (int i = 0; i < 50; i++)
@@ -308,7 +312,9 @@ namespace Server.Classes
             }
             WriteLine("Items loaded successfully!");
             WriteLog("Items loaded successfully", "Server");
-            //projectiles
+            #endregion
+
+            #region Projectiles
             WriteLine("Loading projectiles...");
             WriteLog("Loading projectiles...", "Server");
             for (int i = 0; i < 10; i++)
@@ -318,7 +324,9 @@ namespace Server.Classes
             }
             WriteLine("Projectiles loaded successfully!");
             WriteLog("Projectiles loaded successfully", "Server");
-            //npcs
+            #endregion
+
+            #region Npcs
             WriteLine("Loading npcs...");
             WriteLog("Loading npcs...", "Server");
             for (int i = 0; i < 10; i++)
@@ -353,12 +361,15 @@ namespace Server.Classes
                         s_Map[i].m_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
                         s_Map[i].m_MapNpc[n].Range = s_Npc[num].Range;
                         s_Map[i].m_MapNpc[n].ShopNum = s_Npc[num].ShopNum;
+                        s_Map[i].m_MapNpc[n].ChatNum = s_Npc[num].ChatNum;
                     }
                 }
             }
             WriteLine("Npcs loaded successfully!");
             WriteLog("Npcs loaded successfully", "Server");
-            //shops
+            #endregion
+
+            #region Shops
             WriteLine("Loading shops...");
             WriteLog("Loading shops...", "Server");
             for (int i = 0; i < 10; i++)
@@ -368,7 +379,9 @@ namespace Server.Classes
             }
             WriteLine("Shops loaded successfully!");
             WriteLog("Shops loaded successfully", "Server");
-            //chats
+            #endregion
+
+            #region Chats
             WriteLine("Loading chats...");
             WriteLog("Loading chats...", "Server");
             for (int i = 0; i < 15; i++)
@@ -378,6 +391,8 @@ namespace Server.Classes
             }
             WriteLine("Chats loaded successfully!");
             WriteLog("Chats loaded successfully", "Server");
+            #endregion
+
             //final
             WriteLine("Listening for connections...Waiting...");
             WriteLog("Server is listening for connections...", "Server");

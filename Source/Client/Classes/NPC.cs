@@ -24,6 +24,7 @@ namespace Client.Classes
         public int Exp { get; set; }
         public int Money { get; set; }
         public int ShopNum { get; set; }
+        public int ChatNum { get; set; }
         public bool IsSpawned { get; set; }
         const int spriteTextures = 8;
         Texture[] c_Sprite = new Texture[spriteTextures];
@@ -40,7 +41,7 @@ namespace Client.Classes
         }
 
         public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxHealth, int damage, 
-            int desx, int desy, int exp, int money, int range, int shopnum)
+            int desx, int desy, int exp, int money, int range, int shopnum, int chatnum)
         {
             Name = name;
             X = x;
@@ -60,6 +61,7 @@ namespace Client.Classes
             Money = money;
             Range = range;
             ShopNum = shopnum;
+            ChatNum = chatnum;
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
@@ -86,6 +88,7 @@ namespace Client.Classes
             Money = 0;
             Range = 0;
             ShopNum = 0;
+            ChatNum = 0;
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");

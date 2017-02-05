@@ -6,6 +6,7 @@ using System;
 using SFML.Graphics;
 using SFML.System;
 using static System.Convert;
+using System.Text;
 
 namespace Client.Classes
 {
@@ -18,6 +19,7 @@ namespace Client.Classes
         Player[] c_Player;
         Shop[] c_Shop;
         Item[] c_Item;
+        Chat[] c_Chat;
         ClientConfig c_Config;
         #endregion
 
@@ -104,6 +106,13 @@ namespace Client.Classes
         Label shopPrice;
         #endregion
 
+        #region Npc Chat Window
+        public WindowControl npcChatWindow;
+        Label npcChatName;
+        ListBox npcChatMessage;
+        Button[] npcChatOption = new Button[4];
+        #endregion
+
         #region CharTab
         public TabButton charTab;
         Label charName;
@@ -170,9 +179,13 @@ namespace Client.Classes
         Label equipSta;
         #endregion
 
+        #region SkillsTab
         TabButton skillsTab;
+        #endregion
 
+        #region MissionTab
         TabButton missionTab;
+        #endregion
 
         #region OptionsTab
         TabButton optionsTab;
@@ -180,7 +193,7 @@ namespace Client.Classes
         #endregion
 
 
-        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item)
+        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item, Chat[] c_Chat)
         {
             GUI.c_Client = c_Client;
             this.c_Canvas = c_Canvas;
@@ -189,6 +202,7 @@ namespace Client.Classes
             this.c_Config = c_Config;
             this.c_Shop = c_Shop;
             this.c_Item = c_Item;
+            this.c_Chat = c_Chat;
         }
 
         #region Update Voids
@@ -352,7 +366,7 @@ namespace Client.Classes
                     }
                     else
                     {
-                        RemoveStatWindow();
+                        //RemoveStatWindow();
                     }
                     
                     pistolAmmo.Text = "Pistol Ammo: " + c_Player.PistolAmmo;
@@ -805,6 +819,45 @@ namespace Client.Classes
             shopStatWindow.SetPosition(200, 10);
             shopStatWindow.Hide();
         }
+
+        public void UpdateNpcChatWindow(Chat c_Chat)
+        {
+            npcChatName.Text = c_Chat.Name;
+
+            npcChatMessage.Clear();
+            string msg = c_Chat.MainMessage;
+            int msgLength = msg.Length;
+            int maxLength = 70;
+
+            if (msgLength > maxLength)
+            {
+                int lines = msgLength / maxLength;
+                string[] splitMsg = new string[lines];
+                int start = 0;
+
+                for (int i = 0; i < lines; i++)
+                {
+                    splitMsg[i] = msg.Substring(start, maxLength);
+                    start += maxLength;
+                    npcChatMessage.AddRow(splitMsg[i]);
+                }
+            }
+            else
+            {
+                npcChatMessage.AddRow(msg);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                npcChatOption[i].Hide();
+
+                if (c_Chat.Option[i] != "None")
+                {
+                    npcChatOption[i].Text = c_Chat.Option[i];
+                    npcChatOption[i].Show();
+                }
+            }
+        }
         #endregion
 
         #region Menu Events
@@ -1159,6 +1212,22 @@ namespace Client.Classes
                 outMSG.WriteVariableInt32(shopIndex);
                 c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
+        }
+
+        private void ChatOption_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            Button chatOption = (Button)sender;
+            int optionSlot = ToInt32(chatOption.Name);
+            HandleData hData = new HandleData();
+            int index = hData.c_Index;
+            int chatIndex = c_Player[index].chatNum;
+
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.NextChat);
+            outMSG.WriteVariableInt32(optionSlot);
+            outMSG.WriteVariableInt32(chatIndex);
+            outMSG.WriteVariableInt32(index);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         private void CloseShop_Clicked(Base sender, ClickedEventArgs arguments)
@@ -1790,7 +1859,64 @@ namespace Client.Classes
             d_ConDir.SetPosition(10, 135);
             d_ConDir.Text = "Dir: ?";
         }
-        #endregion 
+
+        public void CreatNpcChatWindow(Base parent, Chat c_Chat)
+        {
+            npcChatWindow = new WindowControl(parent.GetCanvas());
+            npcChatWindow.Title = c_Chat.Name;
+            npcChatWindow.SetSize(405, 325);
+            npcChatWindow.Position(Gwen.Pos.Center);
+            npcChatWindow.DisableResizing();
+            npcChatWindow.IsClosable = false;
+
+            npcChatName = new Label(npcChatWindow);
+            npcChatName.Text = c_Chat.Name;
+            npcChatName.SetPosition(5, 5);
+
+            npcChatMessage = new ListBox(npcChatWindow);
+            npcChatMessage.SetBounds(5, 20, 380, 220);
+
+            string msg = c_Chat.MainMessage;
+            int msgLength = msg.Length;
+            int maxLength = 70;
+
+            if (msgLength > maxLength)
+            {
+                int lines = msgLength / maxLength;
+                string[] splitMsg = new string[lines];
+                int start = 0;
+
+                for (int i = 0; i < lines; i++)
+                {
+                    splitMsg[i] = msg.Substring(start, maxLength);
+                    start += maxLength;
+                    npcChatMessage.AddRow(splitMsg[i]);
+                }
+            }
+            else
+            {
+                npcChatMessage.AddRow(msg);
+            }
+
+            int n = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                npcChatOption[i] = new Button(npcChatWindow);
+                npcChatOption[i].SetSize(90, 25);
+                npcChatOption[i].Name = i.ToString();
+                npcChatOption[i].Clicked += ChatOption_Clicked;           
+                npcChatOption[i].Hide();
+
+                if (c_Chat.Option[i] != "None")
+                {
+                    npcChatOption[i].Text = c_Chat.Option[i];
+                    npcChatOption[i].SetPosition(8 + (n * 95), 255);
+                    n += 1;
+                    npcChatOption[i].Show();
+                }                                
+            }
+        }
+        #endregion
 
         #region Other Voids
         public void AddText(string msg)
