@@ -182,7 +182,7 @@ namespace Server.Classes
             {
                 Health -= 50;
                 msg = "You are dying from dehydration!";
-                hData.SendServerMessage(s_Server, msg);
+                hData.SendServerMessageTo(Connection, s_Server, msg);
                 return;
             }
 
@@ -190,7 +190,7 @@ namespace Server.Classes
             {
                 Health -= 100;
                 msg = "You are dying from starvation!";
-                hData.SendServerMessage(s_Server, msg);
+                hData.SendServerMessageTo(Connection, s_Server, msg);
                 return;
             }
 
@@ -422,7 +422,7 @@ namespace Server.Classes
                     }
                     else
                     {
-                        hData.SendServerMessage(s_Server, "Inventory is full!");
+                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                         return;
                     }
                     break;
@@ -439,7 +439,7 @@ namespace Server.Classes
                     }
                     else
                     {
-                        hData.SendServerMessage(s_Server, "Inventory is full!");
+                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                         return;
                     }
                     break;
@@ -456,7 +456,7 @@ namespace Server.Classes
                     }
                     else
                     {
-                        hData.SendServerMessage(s_Server, "Inventory is full!");
+                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                         return;
                     }
                     break;
@@ -473,7 +473,7 @@ namespace Server.Classes
                     }
                     else
                     {
-                        hData.SendServerMessage(s_Server, "Inventory is full!");
+                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                         return;
                     }
                     break;
@@ -490,7 +490,7 @@ namespace Server.Classes
                     }
                     else
                     {
-                        hData.SendServerMessage(s_Server, "Inventory is full!");
+                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                         return;
                     }
                     break;
@@ -545,7 +545,7 @@ namespace Server.Classes
                 }
                 else
                 {
-                    hData.SendServerMessage(s_Server, "All map item slots are filled!");
+                    hData.SendServerMessageTo(Connection, s_Server, "All map item slots are filled!");
                 }
             }
         }
@@ -610,7 +610,7 @@ namespace Server.Classes
             }
             else
             {
-                hData.SendServerMessage(s_Server, "Inventory is full!");
+                hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
                 return;
             }
         }

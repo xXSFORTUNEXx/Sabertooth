@@ -1109,8 +1109,8 @@ namespace Client.Classes
         void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
         {
             c_Canvas.DeleteAllChildren();
-            //c_GUI.CreateDebugWindow(c_Canvas);
-            //c_GUI.d_Window.Hide();
+            c_GUI.CreateDebugWindow(c_Canvas);
+            c_GUI.d_Window.Hide();
             c_GUI.CreateMenuWindow(c_Canvas);
             c_GUI.menuWindow.Hide();
             c_GUI.CreateChatWindow(c_Canvas);

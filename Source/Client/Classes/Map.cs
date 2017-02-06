@@ -12,16 +12,12 @@ namespace Client.Classes
         public Tile[,] Fringe = new Tile[50, 50];
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
-
         public LowerMap t_Map = new LowerMap();
         public UpperMap p_Map = new UpperMap();
         public MiniMap m_Map = new MiniMap();
-
         public MapNpc[] m_MapNpc = new MapNpc[10];
         public MapNpc[] r_MapNpc = new MapNpc[20];
-
         public MapProj[] mapProj = new MapProj[200];
-
         public MapItem[] mapItem = new MapItem[20];
 
         const int Max_Tilesets = 2;
@@ -188,7 +184,6 @@ namespace Client.Classes
             binaryReader.Close();
         }
     }
-
 
     class UpperMap : Drawable
     {

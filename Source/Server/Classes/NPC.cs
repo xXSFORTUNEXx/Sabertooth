@@ -237,7 +237,7 @@ namespace Server.Classes
                 s_Player[index].Y = 0;
                 sendData.SendPlayers(s_Server, s_Player);
                 string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
-                sendData.SendServerMessage(s_Server, deathMsg);
+                sendData.SendServerMessageToAll(s_Server, deathMsg);
             }
             else
             {

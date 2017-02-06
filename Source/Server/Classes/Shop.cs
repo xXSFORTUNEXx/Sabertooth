@@ -148,19 +148,19 @@ namespace Server.Classes
                 {
                     s_Player[index].Money -= cost;
                     s_Player[index].Backpack[slot] = s_Item;
-                    hData.SendServerMessage(s_Server, "You purchased " + s_Item.Name + " for " + cost + " dollars!");
+                    hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You purchased " + s_Item.Name + " for " + cost + " dollars!");
                     hData.SendPlayerInv(s_Server, s_Player, index);
                     hData.SendUpdatePlayerStats(s_Server, s_Player, index);
                 }
                 else
                 {
-                    hData.SendServerMessage(s_Server, "Your backpack is full!");
+                    hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "Your backpack is full!");
                     return;
                 }
             }
             else
             {
-                hData.SendServerMessage(s_Server, "You don't have enough money!");
+                hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You don't have enough money!");
                 return;
             }
         }
@@ -172,7 +172,7 @@ namespace Server.Classes
             int price = s_Player[index].Backpack[slot].Price;
             money += price;
             s_Player[index].Money = money;
-            hData.SendServerMessage(s_Server, "You sold " + s_Player[index].Backpack[slot].Name + " for " + price + " dollars!");
+            hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You sold " + s_Player[index].Backpack[slot].Name + " for " + price + " dollars!");
             s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1);            
             hData.SendPlayerInv(s_Server, s_Player, index);
             hData.SendUpdatePlayerStats(s_Server, s_Player, index);

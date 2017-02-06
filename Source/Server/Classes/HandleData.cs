@@ -124,9 +124,16 @@ namespace Server.Classes
             int optionSlot = incMSG.ReadVariableInt32();
             int chatIndex = incMSG.ReadVariableInt32();
             int playerIndex = incMSG.ReadVariableInt32();
-            int index = chatIndex - 1;
+            int index = chatIndex;
+            if (chatIndex > 0) { index = chatIndex - 1; }
             int nextChat = s_Chat[index].NextChat[optionSlot];
             int shop = s_Chat[index].ShopNum;
+
+            if (s_Chat[index].Option[optionSlot] == "Exit")
+            {
+                SendCloseChat(incMSG, s_Server);
+                return;
+            }
 
             if (nextChat > 0)
             {
@@ -466,7 +473,7 @@ namespace Server.Classes
                         SendMapItems(incMSG, s_Server, s_Map[currentMap]);
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
                         string welcomeMsg = username + " has joined Sabertooth!";
-                        SendServerMessage(s_Server, welcomeMsg);
+                        SendServerMessageToAll(s_Server, welcomeMsg);
                     }
                     else
                     {
@@ -560,13 +567,21 @@ namespace Server.Classes
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendServerMessage(NetServer s_Server, string message)
+        public void SendServerMessageToAll(NetServer s_Server, string message)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.ChatMessage);
             outMSG.Write(message);
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         } 
+
+        public void SendServerMessageTo(NetConnection conn, NetServer s_Server, string message)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ChatMessage);
+            outMSG.Write(message);
+            s_Server.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
+        }
 
         void SendUpdateDirection(NetServer s_Server, NetConnection playerConn, int index, int direction, int aimdirection)
         {
@@ -1372,6 +1387,13 @@ namespace Server.Classes
             }
             
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendClientDisconnect(NetIncomingMessage incMSG, NetServer s_Server)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.Shutdown);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.Unreliable);
         }
         #endregion
 

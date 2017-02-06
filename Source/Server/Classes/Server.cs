@@ -33,7 +33,6 @@ namespace Server.Classes
             WriteLine(@"                              Created by Steven Fortune");
             WriteLine("Loading...Please wait...");
             WriteLog("Loading...Please wait...", "Server");
-
             s_Config = new NetPeerConfiguration("sabertooth");
             s_Config.Port = 14242;
             s_Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -49,6 +48,11 @@ namespace Server.Classes
             s_Config.UseMessageRecycling = true;
             s_Config.MaximumConnections = 5;
             s_Config.EnableUPnP = false;
+            //s_Config.SimulatedRandomLatency = 0.085f;
+            s_Config.SimulatedMinimumLatency = 0.065f;
+            //s_Config.SimulatedLoss = 0.5f;
+            //s_Config.SimulatedDuplicatesChance = 0.5f;
+            s_Config.ConnectionTimeout = 25.0f;
             CheckDirectories();
             s_Server = new NetServer(s_Config);
             s_Server.Start();
@@ -749,7 +753,7 @@ namespace Server.Classes
                             if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
                             {
                                 Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
-                                                              100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
+                                                                100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
                                 ac_Player.CreatePlayerInDatabase();
                                 WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know
                             }
@@ -793,6 +797,11 @@ namespace Server.Classes
                         WriteLine("Version: " + s_Version);
                         WriteLine(upTime);
                         WriteLine("CPS: " + fps);
+                        if (s_Server.Configuration.SimulatedMinimumLatency > 0)
+                        {
+                            string latency = s_Server.Configuration.SimulatedMinimumLatency.ToString(".0#0").TrimStart('0', '.', '0');
+                            WriteLine("Simulated Minimum Latency: " + latency + "ms");
+                        }
                         WriteLine("Host Name: " + hostName);
                         WriteLine("Server Address: " + NetUtility.Resolve(hostName));
                         WriteLine("Port: " + s_Server.Port);
@@ -802,7 +811,8 @@ namespace Server.Classes
                         {
                             if (s_Player[i].Connection != null)
                             {
-                                WriteLine(s_Player[i].Connection + " Logged in as: " + s_Player[i].Name);
+                                WriteLine(s_Player[i].Connection + " Logged in as: " + s_Player[i].Name + " Latency: " + s_Player[i].Connection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms");
+                                WriteLine(s_Player[i].Connection.Statistics.ToString());
                             }
                             else
                             {

@@ -398,11 +398,14 @@ namespace Client.Classes
                 d_Map.Text = "Map: " + c_Player[drawIndex].Map;
                 d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
                 d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
-                d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();                
-                d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString("#.##") + " s";
-                d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
-                d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+                if (c_Client.ServerConnection != null)
+                {
+                    d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
+                    d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
+                    d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms";
+                    d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
+                    d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+                }
             }
         }
 
@@ -1066,8 +1069,7 @@ namespace Client.Classes
 
         private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].offWeapon.Name != "None")
             {
@@ -1082,8 +1084,7 @@ namespace Client.Classes
 
         private void EquipMain_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].mainWeapon.Name != "None")
             {
@@ -1098,8 +1099,7 @@ namespace Client.Classes
 
         private void EquipChest_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].Chest.Name != "None")
             {
@@ -1114,8 +1114,7 @@ namespace Client.Classes
 
         private void EquipLegs_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].Legs.Name != "None")
             {
@@ -1130,8 +1129,7 @@ namespace Client.Classes
 
         private void EquipFeet_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].Feet.Name != "None")
             {
@@ -1148,8 +1146,7 @@ namespace Client.Classes
         {
             ImagePanel invPicE = (ImagePanel)sender;
             int itemSlot = ToInt32(invPicE.Name);
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].inShop)
             {
@@ -1181,8 +1178,7 @@ namespace Client.Classes
         {
             ImagePanel invPicE = (ImagePanel)sender;
             int itemSlot = ToInt32(invPicE.Name);
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             if (c_Player[index].Backpack[itemSlot].Name != "None")
             {
@@ -1199,8 +1195,7 @@ namespace Client.Classes
         {
             ImagePanel shopPicE = (ImagePanel)sender;
             int shopSlot = ToInt32(shopPicE.Name);
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
             int shopIndex = c_Player[index].shopNum;
 
             if (c_Shop[shopIndex].shopItem[shopSlot].Name != "None")
@@ -1218,8 +1213,7 @@ namespace Client.Classes
         {
             Button chatOption = (Button)sender;
             int optionSlot = ToInt32(chatOption.Name);
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
             int chatIndex = c_Player[index].chatNum;
 
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
@@ -1232,8 +1226,7 @@ namespace Client.Classes
 
         private void CloseShop_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            HandleData hData = new HandleData();
-            int index = hData.c_Index;
+            int index = g_Index;
 
             c_Player[index].inShop = false;
             c_Player[index].shopNum = 0;
@@ -1874,6 +1867,7 @@ namespace Client.Classes
             npcChatName.SetPosition(5, 5);
 
             npcChatMessage = new ListBox(npcChatWindow);
+            npcChatMessage.RenderColor = System.Drawing.Color.Transparent;
             npcChatMessage.SetBounds(5, 20, 380, 220);
 
             string msg = c_Chat.MainMessage;

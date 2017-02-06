@@ -34,6 +34,13 @@ namespace Client.Classes
         {
             var handle = GetConsoleWindow();
             Console.Title = "Sabertooth Console - Debug Info";
+            Console.WriteLine(@"  _____       _               _              _   _     ");
+            Console.WriteLine(@" / ____|     | |             | |            | | | |    ");
+            Console.WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            Console.WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            Console.WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            Console.WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            Console.WriteLine(@"                              Created by Steven Fortune");
             Console.WriteLine("Initializing client...");
             ClientConfig cConfig = new ClientConfig();
             c_Config = new NetPeerConfiguration("sabertooth");
@@ -47,14 +54,22 @@ namespace Client.Classes
             c_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             c_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
             c_Config.UseMessageRecycling = true;
+            c_Config.MaximumConnections = 1;
             c_Config.MaximumTransmissionUnit = 1500;
+            c_Config.ConnectionTimeout = 25.0f;
+            c_Config.SimulatedMinimumLatency = 0.065f;
+            //c_Config.SimulatedRandomLatency = 0.085f;
+            //c_Config.SimulatedLoss = 0.5f;
+            //c_Config.SimulatedDuplicatesChance = 0.1f;
             Console.WriteLine("Enabling message types...");
             c_Client = new NetClient(c_Config);
             Console.WriteLine("Loading config...");
             c_Client.Start();
             Console.WriteLine("Client started...");
             Game c_Game = new Game();
-            #if !DEBUG
+            #if DEBUG
+            ShowWindow(handle, SW_SHOW);
+            #else
             ShowWindow(handle, SW_HIDE);
             #endif
             c_Game.GameLoop(c_Client, cConfig);
@@ -154,7 +169,7 @@ namespace Client.Classes
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Default);
+            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.None);
             c_Window.Closed += new EventHandler(OnClose);
             c_Window.KeyReleased += window_KeyReleased;
             c_Window.KeyPressed += OnKeyPressed;
@@ -162,7 +177,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
             c_Window.MouseMoved += window_MouseMoved;
             c_Window.TextEntered += window_TextEntered;
-            c_Window.SetFramerateLimit(75);
+            c_Window.SetFramerateLimit(75);                       
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
@@ -189,7 +204,7 @@ namespace Client.Classes
                 CheckForConnection(c_Client);
                 UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop); 
                 DrawGraphics(c_Client, c_Player);
-                c_Window.Display(); 
+                c_Window.Display();                
             }
 
             if (c_Client.ServerConnection != null) { c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index); }      
@@ -202,6 +217,42 @@ namespace Client.Classes
             Exit(0);
         }
 
+        #region Initialize Methods
+        private void InitArrays()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                c_Player[i] = new Player();
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                c_Npc[i] = new Npc();
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                c_Item[i] = new Item();
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                c_Proj[i] = new Projectile();
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                c_Shop[i] = new Shop();
+            }
+
+            for (int i = 0; i < 15; i++)
+            {
+                c_Chat[i] = new Chat();
+            }
+        }
+        #endregion
+
+        #region Events
         static void OnClose(object sender, EventArgs args)
         {
             RenderWindow srvrWindow = (RenderWindow)sender;
@@ -376,40 +427,9 @@ namespace Client.Classes
             frameRate++;
             return lastFrameRate;
         }
+        #endregion
 
-        private void InitArrays()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                c_Player[i] = new Player();
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                c_Npc[i] = new Npc();
-            }
-
-            for (int i = 0; i < 50; i++)
-            {
-                c_Item[i] = new Item();
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                c_Proj[i] = new Projectile();
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                c_Shop[i] = new Shop();
-            }
-
-            for (int i = 0; i < 15; i++)
-            {
-                c_Chat[i] = new Chat();
-            }
-        }
-
+        #region Draw Methods
         void DrawPlayers()
         {
             for (int i = 0; i < 5; i++)
@@ -519,6 +539,60 @@ namespace Client.Classes
             c_Window.Draw(c_Player[handleData.c_Index]);
         }
 
+        void DrawGraphics(NetClient c_Client, Player[] c_Player)
+        {
+            if (c_Map.Name != null)
+            {
+                c_Window.Draw(c_Map.t_Map);
+                DrawMapItems(c_Player[handleData.c_Index]);
+                DrawNpcs(c_Player[handleData.c_Index]);
+                DrawPlayers();
+                DrawIndexPlayer();
+                DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
+                c_Window.Draw(c_Map.p_Map);
+                if (TickCount - walkTick > 100)
+                {
+                    this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
+                    this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
+                    ProcessMovement();
+                    c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
+                    walkTick = TickCount;
+                }
+                if (TickCount - attackTick > 25)
+                {
+                    this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    attackTick = TickCount;
+                }
+                if (TickCount - pickupTick > 100)
+                {
+                    this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    pickupTick = TickCount;
+                }
+            }
+            c_Window.SetView(c_Window.DefaultView);
+            if (c_Map.Name != null)
+            {
+                p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
+                p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
+                c_Window.Draw(p_HUD);
+                c_Window.Draw(c_Map.m_Map);
+            }
+            c_Canvas.RenderCanvas();
+        }
+        #endregion
+
+        #region Check & Update Methods
         void ProcessMovement()
         {
             for (int i = 0; i < 5; i++)
@@ -552,58 +626,7 @@ namespace Client.Classes
                     discoverTick = TickCount;
                 }
             }
-        }
-
-        void DrawGraphics(NetClient c_Client, Player[] c_Player)
-        {
-            if (c_Map.Name != null)
-            {             
-                c_Window.Draw(c_Map.t_Map);
-                DrawMapItems(c_Player[handleData.c_Index]);
-                DrawNpcs(c_Player[handleData.c_Index]);
-                DrawPlayers();
-                DrawIndexPlayer();
-                DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
-                c_Window.Draw(c_Map.p_Map);
-                if (TickCount - walkTick > 100)
-                {
-                    this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
-                    this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);                    
-                    this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
-                    ProcessMovement();
-                    c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
-                    walkTick = TickCount;
-                }
-                if (TickCount - attackTick > 25)
-                {
-                    this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    attackTick = TickCount;
-                }
-                if (TickCount - pickupTick > 100)
-                {                    
-                    this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    pickupTick = TickCount;
-                }
-            }
-            c_Window.SetView(c_Window.DefaultView);
-            if (c_Map.Name != null)
-            {
-                p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
-                c_Window.Draw(p_HUD);
-                c_Window.Draw(c_Map.m_Map);
-            }
-            c_Canvas.RenderCanvas();
+            Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
         }
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop)
@@ -624,10 +647,12 @@ namespace Client.Classes
 
             if (c_GUI.menuWindow != null && c_GUI.menuWindow.IsVisible) { c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]); }
             if (c_Player[handleData.c_Index].inShop) { c_GUI.UpdateShopWindow(c_Shop[c_Player[handleData.c_Index].shopNum]); }
+            if (c_GUI.d_Window != null && c_GUI.d_Window.IsVisible) { c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index); }
 
             UpdateTitle(fps);
 
             Joystick.Update();
         }
+        #endregion
     }
 }
