@@ -1958,28 +1958,28 @@ namespace Client.Classes
                         int w = 12;
                         int h = 12;
 
-                        if (c_Map.Ground[x, y].type == (int)TileType.Blocked)
+                        if (c_Map.Ground[x, y].Type == (int)TileType.Blocked)
                         {
                             m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
                             m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
                             m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
                             m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
                         }
-                        if (c_Map.Ground[x, y].type == (int)TileType.NpcSpawn)
+                        if (c_Map.Ground[x, y].Type == (int)TileType.NpcSpawn)
                         {
                             m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Blue);
                             m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
                             m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue);
                             m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                         }
-                        if (c_Map.Ground[x, y].type == (int)TileType.SpawnPool)
+                        if (c_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
                         {
                             m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta);
                             m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
                             m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta);
                             m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                         }
-                        if (c_Map.Ground[x, y].type == (int)TileType.NpcAvoid)
+                        if (c_Map.Ground[x, y].Type == (int)TileType.NpcAvoid)
                         {
                             m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Black);
                             m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
@@ -2014,9 +2014,9 @@ namespace Client.Classes
                                     m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
                                 }
                             }
-                            if (c_Map.mapItem[i].IsSpawned)
+                            if (c_Map.m_MapItem[i].IsSpawned)
                             {
-                                if (c_Map.mapItem[i].X == x && c_Map.mapItem[i].Y == y)
+                                if (c_Map.m_MapItem[i].X == x && c_Map.m_MapItem[i].Y == y)
                                 {
                                     tx = 48;
                                     m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));

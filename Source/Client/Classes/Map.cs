@@ -1,29 +1,39 @@
 ﻿using SFML.Graphics;
 using SFML.System;
-using SFML.Window;
+using System.Data.SQLite;
+using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using static System.Convert;
 
 namespace Client.Classes
 {
-    class Map
+    class Map : Drawable
     {
+        public string Name { get; set; }
+        public int Revision { get; set; }
+        public int TopMap { get; set; }
+        public int BottomMap { get; set; }
+        public int LeftMap { get; set; }
+        public int RightMap { get; set; }
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
-        public LowerMap t_Map = new LowerMap();
-        public UpperMap p_Map = new UpperMap();
+        public VertexArray g_Tile = new VertexArray(PrimitiveType.Quads, 4);
+        public VertexArray m_Tile = new VertexArray(PrimitiveType.Quads, 4);
+        public VertexArray m2_Tile = new VertexArray(PrimitiveType.Quads, 4);
+        public VertexArray f_Tile = new VertexArray(PrimitiveType.Quads, 4);
+        public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public MiniMap m_Map = new MiniMap();
         public MapNpc[] m_MapNpc = new MapNpc[10];
         public MapNpc[] r_MapNpc = new MapNpc[20];
-        public MapProj[] mapProj = new MapProj[200];
-        public MapItem[] mapItem = new MapItem[20];
-
+        public MapProj[] m_MapProj = new MapProj[200];
+        public MapItem[] m_MapItem = new MapItem[20];        
+        public RenderStates ustates;
         const int Max_Tilesets = 2;
-        Texture[] TileSet = new Texture[Max_Tilesets];
-
-        public string Name { get; set; }
+        Texture[] TileSet = new Texture[Max_Tilesets];        
 
         public Map()
         {
@@ -33,315 +43,339 @@ namespace Client.Classes
             }
         }
 
-        public void SaveMap()
+        private byte[] ToByteArray(object source)
         {
-            if (!Directory.Exists("Cache"))
+            var formatter = new BinaryFormatter();
+            using (var stream = new MemoryStream())
             {
-                Directory.CreateDirectory("Cache");
+                formatter.Serialize(stream, source);
+                return stream.ToArray();
             }
-            FileStream fileStream = File.OpenWrite("Cache/Map.bin");
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
-
-            binaryWriter.Write(Name);
-
-            for (int i = 0; i < 10; i++)
-            {
-                m_MapNpc[i] = new MapNpc("Cache", 0, 0, 0);
-                binaryWriter.Write(m_MapNpc[i].Name);
-                binaryWriter.Write(m_MapNpc[i].X);
-                binaryWriter.Write(m_MapNpc[i].Y);
-                binaryWriter.Write(m_MapNpc[i].npcNum);
-            }
-
-            for (int p = 0; p < 20; p++)
-            {
-                mapItem[p] = new MapItem("Cache", 0, 0, 0);
-                binaryWriter.Write(mapItem[p].Name);
-                binaryWriter.Write(mapItem[p].X);
-                binaryWriter.Write(mapItem[p].Y);
-                binaryWriter.Write(mapItem[p].ItemNum);
-            }
-
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
-                {
-                    //Ground
-                    binaryWriter.Write(Ground[x, y].tileX);
-                    binaryWriter.Write(Ground[x, y].tileY);
-                    binaryWriter.Write(Ground[x, y].tileW);
-                    binaryWriter.Write(Ground[x, y].tileH);
-                    binaryWriter.Write(Ground[x, y].Tileset);
-                    binaryWriter.Write(Ground[x, y].type);
-                    binaryWriter.Write(Ground[x, y].SpawnNum);
-                    binaryWriter.Write(Ground[x, y].SpawnAmount);
-                    //Mask
-                    binaryWriter.Write(Mask[x, y].tileX);
-                    binaryWriter.Write(Mask[x, y].tileY);
-                    binaryWriter.Write(Mask[x, y].tileW);
-                    binaryWriter.Write(Mask[x, y].tileH);
-                    binaryWriter.Write(Mask[x, y].Tileset);
-                    //Fringe
-                    binaryWriter.Write(Fringe[x, y].tileX);
-                    binaryWriter.Write(Fringe[x, y].tileY);
-                    binaryWriter.Write(Fringe[x, y].tileW);
-                    binaryWriter.Write(Fringe[x, y].tileH);
-                    binaryWriter.Write(Fringe[x, y].Tileset);
-                    //Mask2
-                    binaryWriter.Write(MaskA[x, y].tileX);
-                    binaryWriter.Write(MaskA[x, y].tileY);
-                    binaryWriter.Write(MaskA[x, y].tileW);
-                    binaryWriter.Write(MaskA[x, y].tileH);
-                    binaryWriter.Write(MaskA[x, y].Tileset);
-                    //Fringe2
-                    binaryWriter.Write(FringeA[x, y].tileX);
-                    binaryWriter.Write(FringeA[x, y].tileY);
-                    binaryWriter.Write(FringeA[x, y].tileW);
-                    binaryWriter.Write(FringeA[x, y].tileH);
-                    binaryWriter.Write(FringeA[x, y].Tileset);
-                }
-            }
-
-            binaryWriter.Flush();
-            binaryWriter.Close();
         }
 
-        public void LoadMap()
+        private static object ByteArrayToObject(byte[] arrBytes)
         {
-            FileStream fileStream = File.OpenRead("Cache/Map.bin");
-            BinaryReader binaryReader = new BinaryReader(fileStream);
-
-            Name = binaryReader.ReadString();
-
-            for (int i = 0; i < 10; i++)
+            using (var memStream = new MemoryStream())
             {
-                m_MapNpc[i] = new MapNpc();
-                m_MapNpc[i].Name = binaryReader.ReadString();
-                m_MapNpc[i].X = binaryReader.ReadInt32();
-                m_MapNpc[i].Y = binaryReader.ReadInt32();
-                m_MapNpc[i].npcNum = binaryReader.ReadInt32();
+                var binForm = new BinaryFormatter();
+                memStream.Write(arrBytes, 0, arrBytes.Length);
+                memStream.Seek(0, SeekOrigin.Begin);
+                var obj = binForm.Deserialize(memStream);
+                return obj;
             }
+        }
 
+        public void MapDatabaseCache(int mapNum)
+        {
+            bool exists = false;
+            int currentRevision = -1;
+
+            using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+            {
+                using (var cmd = new SQLiteCommand(conn))
+                {
+                    conn.Open();
+                    try
+                    {
+                        cmd.CommandText = "SELECT * FROM `MAPS` WHERE rowid = " + mapNum;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                exists = true;
+                                currentRevision = ToInt32(read["REVISION"].ToString());
+                            }                      
+                        }
+                    }
+                    finally
+                    {
+                        if (!exists)
+                        {
+                            byte[] m_Ground = ToByteArray(Ground);
+                            byte[] m_Mask = ToByteArray(Mask);
+                            byte[] m_MaskA = ToByteArray(MaskA);
+                            byte[] m_Fringe = ToByteArray(Fringe);
+                            byte[] m_FringeA = ToByteArray(FringeA);
+                            string sql;
+
+                            sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`TOP`,`BOTTOM`,`LEFT`,`RIGHT`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
+                            sql = sql + " VALUES ";
+                            sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @ground, @mask, @maska, @fringe, @fringea)";
+                            cmd.CommandText = sql;
+                            cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                            cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
+                            cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
+                            cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
+                            cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
+                            cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                            cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
+                            cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
+                            cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
+                            cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
+                            cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else if (Revision > currentRevision)
+                        {
+                            byte[] m_Ground = ToByteArray(Ground);
+                            byte[] m_Mask = ToByteArray(Mask);
+                            byte[] m_MaskA = ToByteArray(MaskA);
+                            byte[] m_Fringe = ToByteArray(Fringe);
+                            byte[] m_FringeA = ToByteArray(FringeA);
+                            string sql;
+
+                            sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, TOP = @top, BOTTOM = @bottom, LEFT = @left, RIGHT = @right, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
+                            sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
+                            cmd.CommandText = sql;
+                            cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                            cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
+                            cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
+                            cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
+                            cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
+                            cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                            cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
+                            cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
+                            cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
+                            cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
+                            cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void LoadMapFromCache(int mapNum)
+        {
             for (int i = 0; i < 20; i++)
             {
-                r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
-            }
-
-            for (int p = 0; p < 20; p++)
-            {
-                mapItem[p] = new MapItem();
-                mapItem[p].Name = binaryReader.ReadString();
-                mapItem[p].X = binaryReader.ReadInt32();
-                mapItem[p].Y = binaryReader.ReadInt32();
-                mapItem[p].ItemNum = binaryReader.ReadInt32();
-            }
-
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
+                if (i < 10)
                 {
-                    Ground[x, y] = new Tile();
-                    Mask[x, y] = new Tile();
-                    Fringe[x, y] = new Tile();
-                    MaskA[x, y] = new Tile();
-                    FringeA[x, y] = new Tile();
-
-                    //Ground
-                    Ground[x, y].tileX = binaryReader.ReadInt32();
-                    Ground[x, y].tileY = binaryReader.ReadInt32();
-                    Ground[x, y].tileW = binaryReader.ReadInt32();
-                    Ground[x, y].tileH = binaryReader.ReadInt32();
-                    Ground[x, y].Tileset = binaryReader.ReadInt32();
-                    Ground[x, y].type = binaryReader.ReadInt32();
-                    Ground[x, y].SpawnNum = binaryReader.ReadInt32();
-                    Ground[x, y].SpawnAmount = binaryReader.ReadInt32();
-                    //Mask
-                    Mask[x, y].tileX = binaryReader.ReadInt32();
-                    Mask[x, y].tileY = binaryReader.ReadInt32();
-                    Mask[x, y].tileW = binaryReader.ReadInt32();
-                    Mask[x, y].tileH = binaryReader.ReadInt32();
-                    Mask[x, y].Tileset = binaryReader.ReadInt32();
-                    //Fringe
-                    Fringe[x, y].tileX = binaryReader.ReadInt32();
-                    Fringe[x, y].tileY = binaryReader.ReadInt32();
-                    Fringe[x, y].tileW = binaryReader.ReadInt32();
-                    Fringe[x, y].tileH = binaryReader.ReadInt32();
-                    Fringe[x, y].Tileset = binaryReader.ReadInt32();
-                    //Mask2
-                    MaskA[x, y].tileX = binaryReader.ReadInt32();
-                    MaskA[x, y].tileY = binaryReader.ReadInt32();
-                    MaskA[x, y].tileW = binaryReader.ReadInt32();
-                    MaskA[x, y].tileH = binaryReader.ReadInt32();
-                    MaskA[x, y].Tileset = binaryReader.ReadInt32();
-                    //Fringe2
-                    FringeA[x, y].tileX = binaryReader.ReadInt32();
-                    FringeA[x, y].tileY = binaryReader.ReadInt32();
-                    FringeA[x, y].tileW = binaryReader.ReadInt32();
-                    FringeA[x, y].tileH = binaryReader.ReadInt32();
-                    FringeA[x, y].Tileset = binaryReader.ReadInt32();
+                    m_MapNpc[i] = new MapNpc();
                 }
-            }
-            binaryReader.Close();
-        }
-    }
+                r_MapNpc[i] = new MapNpc();
+                m_MapItem[i] = new MapItem();
 
-    class UpperMap : Drawable
-    {
-        VertexArray f_vertices = new VertexArray();
-        VertexArray f2_vertices = new VertexArray();
-        Texture TileSet = new Texture("Resources/Tilesets/1.png");
-
-        public UpperMap()
-        {
-            f_vertices.PrimitiveType = PrimitiveType.Quads;
-            f_vertices.Resize(50 * 50 * 32);
-            f2_vertices.PrimitiveType = PrimitiveType.Quads;
-            f2_vertices.Resize(50 * 50 * 32);
-        }
-
-        public void Load(Map c_Map)
-        {
-            if (c_Map == null) { return; }
-
-            for (int x = 0; x < 50; x++)
-            {
-                for (int y = 0; y < 50; y++)
+                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
                 {
-                    int fx = (x * 32);
-                    int fy = (y * 32);
-                    int index = (x + y * 50) * 4;
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
+                        using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                        {
+                            while (read.Read())
+                            {
+                                Name = read["NAME"].ToString();
+                                Revision = ToInt32(read["REVISION"].ToString());
+                                TopMap = ToInt32(read["TOP"].ToString());
+                                BottomMap = ToInt32(read["BOTTOM"].ToString());
+                                LeftMap = ToInt32(read["LEFT"].ToString());
+                                RightMap = ToInt32(read["RIGHT"].ToString());
 
-                    int tx = (c_Map.Fringe[x, y].tileX);
-                    int ty = (c_Map.Fringe[x, y].tileY);
-                    int w = (c_Map.Fringe[x, y].tileW);
-                    int h = (c_Map.Fringe[x, y].tileH);
+                                byte[] buffer;
+                                object load;
 
-                    f_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                    f_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                    f_vertices[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                    f_vertices[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                                buffer = (byte[])read["GROUND"];
+                                load = ByteArrayToObject(buffer);
+                                Ground = (Tile[,])load;
 
-                    int mx = (c_Map.FringeA[x, y].tileX);
-                    int my = (c_Map.FringeA[x, y].tileY);
-                    int mw = (c_Map.FringeA[x, y].tileW);
-                    int mh = (c_Map.FringeA[x, y].tileH);
+                                buffer = (byte[])read["MASK"];
+                                load = ByteArrayToObject(buffer);
+                                Mask = (Tile[,])load;
 
-                    f2_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(mx, my));
-                    f2_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + mw, fy), new Vector2f(mx + mw, my));
-                    f2_vertices[(uint)index + 2] = new Vertex(new Vector2f(fx + mw, fy + mh), new Vector2f(mx + mw, my + mh));
-                    f2_vertices[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + mh), new Vector2f(mx, my + mh));
+                                buffer = (byte[])read["MASKA"];
+                                load = ByteArrayToObject(buffer);
+                                MaskA = (Tile[,])load;
+
+                                buffer = (byte[])read["FRINGE"];
+                                load = ByteArrayToObject(buffer);
+                                Fringe = (Tile[,])load;
+
+                                buffer = (byte[])read["FRINGEA"];
+                                load = ByteArrayToObject(buffer);
+                                FringeA = (Tile[,])load;
+                            }
+                        }
+                    }
                 }
             }
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            states.Texture = TileSet;
-
-            target.Draw(f_vertices, states);
-            target.Draw(f2_vertices, states);
-        }
-    }
-
-    class LowerMap : Drawable
-    {
-        VertexArray g_vertices = new VertexArray();
-        VertexArray m_vertices = new VertexArray();
-        VertexArray m2_vertices = new VertexArray();
-        RenderStates[] rStates = new RenderStates[3];
-        Map l_Map;
-        const int tileSets = 2;
-        Texture[] TileSet = new Texture[tileSets];
-
-        public LowerMap()
-        {
-            g_vertices.PrimitiveType = PrimitiveType.Quads;
-            g_vertices.Resize(50 * 50 * 32);
-            m_vertices.PrimitiveType = PrimitiveType.Quads;
-            m_vertices.Resize(50 * 50 * 32);
-            m2_vertices.PrimitiveType = PrimitiveType.Quads;
-            m2_vertices.Resize(50 * 50 * 32);
-            rStates[0] = new RenderStates();
-            rStates[1] = new RenderStates();
-            rStates[2] = new RenderStates();
-            for (int i = 0; i < tileSets; i++)
-            {
-                TileSet[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");
-            }
-        }
-
-        public void Load(Map c_Map)
-        {
-            l_Map = c_Map;
-
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
                 {
                     int fx = (x * 32);
                     int fy = (y * 32);
-                    int index = (x + y * 50) * 4;
-                    int tx = (l_Map.Ground[x, y].tileX);
-                    int ty = (l_Map.Ground[x, y].tileY);
-                    int w = (l_Map.Ground[x, y].tileW);
-                    int h = (l_Map.Ground[x, y].tileH);
+                    int tx, ty, w, h, set;
 
-                    g_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                    g_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                    g_vertices[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                    g_vertices[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-                    rStates[0].Texture = TileSet[c_Map.Ground[x, y].Tileset];
+                    tx = (Ground[x, y].TileX);
+                    ty = (Ground[x, y].TileY);
+                    w = (Ground[x, y].TileW);
+                    h = (Ground[x, y].TileH);
+                    set = (Ground[x, y].Tileset);
+                    states.Texture = TileSet[set];
+                    g_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                    g_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                    g_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                    g_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
 
-                    int mx = (l_Map.Mask[x, y].tileX);
-                    int my = (l_Map.Mask[x, y].tileY);
-                    int mw = (l_Map.Mask[x, y].tileW);
-                    int mh = (l_Map.Mask[x, y].tileH);
+                    target.Draw(g_Tile, states);
 
-                    m_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(mx, my));
-                    m_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + mw, fy), new Vector2f(mx + mw, my));
-                    m_vertices[(uint)index + 2] = new Vertex(new Vector2f(fx + mw, fy + mh), new Vector2f(mx + mw, my + mh));
-                    m_vertices[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + mh), new Vector2f(mx, my + mh));
-                    rStates[1].Texture = TileSet[c_Map.Mask[x, y].Tileset];
+                    if (Mask[x, y].TileX > 0 || Mask[x, y].TileY > 0)
+                    {
+                        tx = (Mask[x, y].TileX);
+                        ty = (Mask[x, y].TileY);
+                        w = (Mask[x, y].TileW);
+                        h = (Mask[x, y].TileH);
+                        set = (Mask[x, y].Tileset);
+                        states.Texture = TileSet[set];
+                        m_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                        m_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                        m_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                        m_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
 
-                    int m2x = (l_Map.MaskA[x, y].tileX);
-                    int m2y = (l_Map.MaskA[x, y].tileY);
-                    int m2w = (l_Map.MaskA[x, y].tileW);
-                    int m2h = (l_Map.MaskA[x, y].tileH);
+                        target.Draw(m_Tile, states);
+                    }
 
-                    m2_vertices[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(m2x, m2y));
-                    m2_vertices[(uint)index + 1] = new Vertex(new Vector2f(fx + m2w, fy), new Vector2f(m2x + m2w, m2y));
-                    m2_vertices[(uint)index + 2] = new Vertex(new Vector2f(fx + m2w, fy + m2h), new Vector2f(m2x + m2w, m2y + m2h));
-                    m2_vertices[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + m2h), new Vector2f(m2x, m2y + m2h));
-                    rStates[2].Texture = TileSet[c_Map.MaskA[x, y].Tileset];
+                    if (MaskA[x, y].TileX > 0 || MaskA[x, y].TileY > 0)
+                    {
+                        tx = (MaskA[x, y].TileX);
+                        ty = (MaskA[x, y].TileY);
+                        w = (MaskA[x, y].TileW);
+                        h = (MaskA[x, y].TileH);
+                        set = (MaskA[x, y].Tileset);
+                        states.Texture = TileSet[set];
+                        m2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                        m2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                        m2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                        m2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+
+                        target.Draw(m2_Tile, states);
+                    }
                 }
             }
         }
 
-        public virtual void Draw(RenderTarget target, RenderStates states)
+        public void DrawFringe(RenderTarget target)
         {
-            states.Texture = rStates[0].Texture;
-            target.Draw(g_vertices, states);
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    int fx = (x * 32);
+                    int fy = (y * 32);
+                    int tx, ty, w, h, set;
 
-            states.Texture = rStates[1].Texture;
-            target.Draw(m_vertices, states);
+                    if (Fringe[x, y].TileX > 0 || Fringe[x, y].TileY > 0)
+                    {
+                        tx = (Fringe[x, y].TileX);
+                        ty = (Fringe[x, y].TileY);
+                        w = (Fringe[x, y].TileW);
+                        h = (Fringe[x, y].TileH);
+                        set = (Fringe[x, y].Tileset);
+                        ustates = new RenderStates(TileSet[set]);
+                        f_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                        f_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                        f_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                        f_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                        target.Draw(f_Tile, ustates);
+                    }
 
-            states.Texture = rStates[2].Texture;
-            target.Draw(m2_vertices, states);
+                    if (FringeA[x, y].TileX > 0 || FringeA[x, y].TileY > 0)
+                    {
+                        tx = (FringeA[x, y].TileX);
+                        ty = (FringeA[x, y].TileY);
+                        w = (FringeA[x, y].TileW);
+                        h = (FringeA[x, y].TileH);
+                        set = (FringeA[x, y].Tileset);
+                        ustates = new RenderStates(TileSet[set]);
+                        f2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                        f2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                        f2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                        f2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                        target.Draw(f2_Tile, ustates);
+                    }
+                }
+            }
         }
     }
 
-    class MapNpc : Npc
+    class MapNpc : Drawable
     {
-        public int npcNum { get; set; }
+        public string Name { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int NpcNum { get; set; }
+        public int Range { get; set; }
+        public int Direction { get; set; }
+        public int Sprite { get; set; }
+        public int Step { get; set; }
+        public int Owner { get; set; }
+        public int Behavior { get; set; }
+        public int SpawnTime { get; set; }
+        public int Health { get; set; }
+        public int MaxHealth { get; set; }
+        public int Damage { get; set; }
+        public int DesX { get; set; }
+        public int DesY { get; set; }
+        public int Exp { get; set; }
+        public int Money { get; set; }
+        public int ShopNum { get; set; }
+        public int ChatNum { get; set; }
+        public bool IsSpawned;
+        const int spriteTextures = 8;
+        Texture[] c_Sprite = new Texture[spriteTextures];
+        VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
+        float barLength;
 
-        public MapNpc() { }
+        public MapNpc()
+        {
+            for (int i = 0; i < spriteTextures; i++)
+            {
+                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
+        }
 
         public MapNpc(string name, int x, int y, int npcnum)
         {
             Name = name;
             X = x;
             Y = y;
-            npcnum = npcNum;
+            npcnum = NpcNum;
+            for (int i = 0; i < spriteTextures; i++)
+            {
+                c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates state)
+        {
+            int x = (X * 32);
+            int y = (Y * 32) - 16;
+            int step = (Step * 32);
+            int dir = (Direction * 48);
+            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
+            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
+            spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
+
+            barLength = ((float)Health / MaxHealth) * 35;
+
+            x = (X * 32);
+            y = (Y * 32) - 20;
+            healthBar[0] = new Vertex(new Vector2f(x, y), Color.Red);
+            healthBar[1] = new Vertex(new Vector2f(barLength + x, y), Color.Red);
+            healthBar[2] = new Vertex(new Vector2f(barLength + x, y + 5), Color.Red);
+            healthBar[3] = new Vertex(new Vector2f(x, y + 5), Color.Red);
+
+            state.Texture = c_Sprite[Sprite - 1];
+            target.Draw(spritePic, state);
+            target.Draw(healthBar);
         }
     }
 
@@ -360,11 +394,31 @@ namespace Client.Classes
         }
     }
 
-    class MapItem : Item, Drawable
+    class MapItem : Drawable
     {
+        public string Name { get; set; }
         public int ItemNum { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int Sprite { get; set; }
+        public int Damage { get; set; }
+        public int Armor { get; set; }
+        public int Type { get; set; }
+        public int AttackSpeed { get; set; }
+        public int ReloadSpeed { get; set; }
+        public int HealthRestore { get; set; }
+        public int HungerRestore { get; set; }
+        public int HydrateRestore { get; set; }
+        public int Strength { get; set; }
+        public int Agility { get; set; }
+        public int Endurance { get; set; }
+        public int Stamina { get; set; }
+        public int Clip { get; set; }
+        public int MaxClip { get; set; }
+        public int ItemAmmoType { get; set; }
+        public int Value { get; set; }
+        public int ProjectileNumber { get; set; }
+        public int Price { get; set; }
         public bool IsSpawned;
         const int spritePics = 8;
         VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
@@ -403,31 +457,32 @@ namespace Client.Classes
         }
     }
 
+    [Serializable()]
     class Tile
     {
-        public int tileX { get; set; }
-        public int tileY { get; set; }
-        public int tileW { get; set; }
-        public int tileH { get; set; }
+        public int TileX { get; set; }
+        public int TileY { get; set; }
+        public int TileW { get; set; }
+        public int TileH { get; set; }
         public int Tileset { get; set; }
 
-        public int type { get; set; }
-        public bool flagged { get; set; }
+        public int Type { get; set; }
+        public bool Flagged { get; set; }
 
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
 
         public Tile()
         {
-            tileX = 0;
-            tileY = 0;
-            tileW = 0;
-            tileH = 0;
+            TileX = 0;
+            TileY = 0;
+            TileW = 0;
+            TileH = 0;
 
             Tileset = 0;
             SpawnAmount = 0;
-            type = (int)TileType.None;
-            flagged = false;
+            Type = (int)TileType.None;
+            Flagged = false;
             SpawnNum = 0;
         }
     }

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Editor.Classes;
 using Editor.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -37,15 +36,6 @@ namespace Editor
 
         private void CheckDirectories()
         {
-            if (!Exists("Maps"))
-            {
-                CreateDirectory("Maps");
-            }
-            if (!File.Exists("Maps/Map0.bin"))
-            {
-                Map e_Map = new Map();
-                e_Map.CreateDefaultMap(e_Map);
-            }
             if (!Exists("Database"))
             {
                 CreateDirectory("Database");

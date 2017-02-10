@@ -234,7 +234,7 @@ namespace Client.Classes
             {
                 if (X < 49 - offsetX)
                 {
-                    if (c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked)
+                    if (c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
@@ -251,7 +251,7 @@ namespace Client.Classes
             {
                 if (X > 1 - offsetX)
                 {
-                    if (c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
+                    if (c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false;
@@ -268,7 +268,7 @@ namespace Client.Classes
             {
                 if (Y < 49 - offsetY)
                 {
-                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
+                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
@@ -285,7 +285,7 @@ namespace Client.Classes
             {
                 if (Y > 1 - offsetY)
                 {
-                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
+                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
@@ -541,7 +541,7 @@ namespace Client.Classes
             {
                 if (Y > 1 - offsetY)
                 {
-                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
@@ -558,7 +558,7 @@ namespace Client.Classes
             {
                 if (Y < 49 - offsetY)  
                 {
-                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false; 
@@ -575,7 +575,7 @@ namespace Client.Classes
             {
                 if (X > 1 - offsetX)
                 {
-                    if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].type == (int)TileType.Blocked)
+                    if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false; 
@@ -592,7 +592,7 @@ namespace Client.Classes
             {
                 if (X < 49 - offsetX) 
                 {
-                    if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].type == (int)TileType.Blocked) 
+                    if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked) 
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;

@@ -84,7 +84,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Map.cs" />
     <Compile Include="Forms\ChatEditor.cs">
       <SubType>Form</SubType>
     </Compile>

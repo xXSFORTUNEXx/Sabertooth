@@ -193,6 +193,13 @@ namespace Server.Classes
                 {
                     cmd.ExecuteNonQuery();
                 }
+
+                sql = "CREATE TABLE `MAPS`";
+                sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
     }
@@ -279,28 +286,12 @@ namespace Server.Classes
             #endregion
 
             #region Maps
-            bool exists = true;
             WriteLine("Loading maps...");
             WriteLog("Loading maps...", "Server");
             for (int i = 0; i < 10; i++)
             {
-                if (!Exists("Maps/Map" + i + ".bin"))
-                {
                     s_Map[i] = new Map();
-                    s_Map[i].GenerateMap(i);
-                    s_Map[i].SaveMap(i);
-                    exists = false;
-                }
-                else
-                {
-                    s_Map[i] = new Map();
-                    s_Map[i].LoadMap(i);
-                }
-            }
-            if (!exists)
-            {
-                WriteLine("Saving maps...");
-                WriteLog("Saving maps...", "Server");
+                    s_Map[i].LoadMapFromDatabase(i + 1);
             }
             WriteLine("Maps loaded successfully!");
             WriteLog("Maps loaded successfully", "Server");
@@ -477,11 +468,11 @@ namespace Server.Classes
                     {
                         for (int n = 0; n < 20; n++)
                         {
-                            if (s_Map[i].mapItem[n].ExpireTick > 0 && s_Map[i].mapItem[n].IsSpawned)
+                            if (s_Map[i].m_MapItem[n].ExpireTick > 0 && s_Map[i].m_MapItem[n].IsSpawned)
                             {
-                                if (TickCount - s_Map[i].mapItem[n].ExpireTick > 300000)
+                                if (TickCount - s_Map[i].m_MapItem[n].ExpireTick > 300000)
                                 {
-                                    s_Map[i].mapItem[n] = new MapItem("None", 0, 0, 0);
+                                    s_Map[i].m_MapItem[n] = new MapItem("None", 0, 0, 0);
 
                                     for (int p = 0; p < 5; p++)
                                     {
@@ -531,30 +522,30 @@ namespace Server.Classes
                                             if (slot < 20)
                                             {
                                                 int itemNum = s_Map[i].Ground[x, y].SpawnNum - 1;
-                                                s_Map[i].mapItem[slot].ItemNum = itemNum + 1;
-                                                s_Map[i].mapItem[slot].Name = s_Item[itemNum].Name;
-                                                s_Map[i].mapItem[slot].X = x;
-                                                s_Map[i].mapItem[slot].Y = y;
-                                                s_Map[i].mapItem[slot].Sprite = s_Item[itemNum].Sprite;
-                                                s_Map[i].mapItem[slot].Damage = s_Item[itemNum].Damage;
-                                                s_Map[i].mapItem[slot].Armor = s_Item[itemNum].Armor;
-                                                s_Map[i].mapItem[slot].Type = s_Item[itemNum].Type;
-                                                s_Map[i].mapItem[slot].AttackSpeed = s_Item[itemNum].AttackSpeed;
-                                                s_Map[i].mapItem[slot].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
-                                                s_Map[i].mapItem[slot].HealthRestore = s_Item[itemNum].HealthRestore;
-                                                s_Map[i].mapItem[slot].HungerRestore = s_Item[itemNum].HungerRestore;
-                                                s_Map[i].mapItem[slot].HydrateRestore = s_Item[itemNum].HydrateRestore;
-                                                s_Map[i].mapItem[slot].Strength = s_Item[itemNum].Strength;
-                                                s_Map[i].mapItem[slot].Agility = s_Item[itemNum].Agility;
-                                                s_Map[i].mapItem[slot].Endurance = s_Item[itemNum].Endurance;
-                                                s_Map[i].mapItem[slot].Stamina = s_Item[itemNum].Stamina;
-                                                s_Map[i].mapItem[slot].Clip = s_Item[itemNum].Clip;
-                                                s_Map[i].mapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
-                                                s_Map[i].mapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
-                                                s_Map[i].mapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
-                                                s_Map[i].mapItem[slot].Price = s_Item[itemNum].Price;
-                                                s_Map[i].mapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                           
-                                                s_Map[i].mapItem[slot].IsSpawned = true;
+                                                s_Map[i].m_MapItem[slot].ItemNum = itemNum + 1;
+                                                s_Map[i].m_MapItem[slot].Name = s_Item[itemNum].Name;
+                                                s_Map[i].m_MapItem[slot].X = x;
+                                                s_Map[i].m_MapItem[slot].Y = y;
+                                                s_Map[i].m_MapItem[slot].Sprite = s_Item[itemNum].Sprite;
+                                                s_Map[i].m_MapItem[slot].Damage = s_Item[itemNum].Damage;
+                                                s_Map[i].m_MapItem[slot].Armor = s_Item[itemNum].Armor;
+                                                s_Map[i].m_MapItem[slot].Type = s_Item[itemNum].Type;
+                                                s_Map[i].m_MapItem[slot].AttackSpeed = s_Item[itemNum].AttackSpeed;
+                                                s_Map[i].m_MapItem[slot].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
+                                                s_Map[i].m_MapItem[slot].HealthRestore = s_Item[itemNum].HealthRestore;
+                                                s_Map[i].m_MapItem[slot].HungerRestore = s_Item[itemNum].HungerRestore;
+                                                s_Map[i].m_MapItem[slot].HydrateRestore = s_Item[itemNum].HydrateRestore;
+                                                s_Map[i].m_MapItem[slot].Strength = s_Item[itemNum].Strength;
+                                                s_Map[i].m_MapItem[slot].Agility = s_Item[itemNum].Agility;
+                                                s_Map[i].m_MapItem[slot].Endurance = s_Item[itemNum].Endurance;
+                                                s_Map[i].m_MapItem[slot].Stamina = s_Item[itemNum].Stamina;
+                                                s_Map[i].m_MapItem[slot].Clip = s_Item[itemNum].Clip;
+                                                s_Map[i].m_MapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
+                                                s_Map[i].m_MapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
+                                                s_Map[i].m_MapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
+                                                s_Map[i].m_MapItem[slot].Price = s_Item[itemNum].Price;
+                                                s_Map[i].m_MapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                           
+                                                s_Map[i].m_MapItem[slot].IsSpawned = true;
                                                 s_Map[i].Ground[x, y].NeedsSpawned = true;
 
                                                 for (int p = 0; p < 5; p++)
@@ -898,7 +889,7 @@ namespace Server.Classes
         {
             for (int i = 0; i < 20; i++)
             {
-                if (s_Map.mapItem[i].Name == "None" && !s_Map.mapItem[i].IsSpawned)
+                if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned)
                 {
                     return i;
                 }

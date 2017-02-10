@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lidgren.Network;
-using System.Xml;
-using static System.Environment;
-using static System.Convert;
-using System.IO;
-using System.Threading;
+﻿using Lidgren.Network;
+using System;
 using System.Data.SQLite;
+using static System.Convert;
+using static System.Environment;
 
 namespace Server.Classes
 {
@@ -507,30 +500,30 @@ namespace Server.Classes
                 int mapSlot = server.FindOpenMapItemSlot(s_Map[mapNum]);
                 if (mapSlot < 20)
                 {
-                    s_Map[mapNum].mapItem[mapSlot].Name = s_Player[index].Backpack[slot].Name;
-                    s_Map[mapNum].mapItem[mapSlot].X = s_Player[index].X + 12;
-                    s_Map[mapNum].mapItem[mapSlot].Y = s_Player[index].Y + 9;
-                    s_Map[mapNum].mapItem[mapSlot].Sprite = s_Player[index].Backpack[slot].Sprite;
-                    s_Map[mapNum].mapItem[mapSlot].Damage = s_Player[index].Backpack[slot].Damage;
-                    s_Map[mapNum].mapItem[mapSlot].Armor = s_Player[index].Backpack[slot].Armor;
-                    s_Map[mapNum].mapItem[mapSlot].Type = s_Player[index].Backpack[slot].Type;
-                    s_Map[mapNum].mapItem[mapSlot].AttackSpeed = s_Player[index].Backpack[slot].AttackSpeed;
-                    s_Map[mapNum].mapItem[mapSlot].ReloadSpeed = s_Player[index].Backpack[slot].ReloadSpeed;
-                    s_Map[mapNum].mapItem[mapSlot].HealthRestore = s_Player[index].Backpack[slot].HealthRestore;
-                    s_Map[mapNum].mapItem[mapSlot].HungerRestore = s_Player[index].Backpack[slot].HungerRestore;
-                    s_Map[mapNum].mapItem[mapSlot].HydrateRestore = s_Player[index].Backpack[slot].HydrateRestore;
-                    s_Map[mapNum].mapItem[mapSlot].Strength = s_Player[index].Backpack[slot].Strength;
-                    s_Map[mapNum].mapItem[mapSlot].Agility = s_Player[index].Backpack[slot].Agility;
-                    s_Map[mapNum].mapItem[mapSlot].Endurance = s_Player[index].Backpack[slot].Endurance;
-                    s_Map[mapNum].mapItem[mapSlot].Stamina = s_Player[index].Backpack[slot].Stamina;
-                    s_Map[mapNum].mapItem[mapSlot].Clip = s_Player[index].Backpack[slot].Clip;
-                    s_Map[mapNum].mapItem[mapSlot].MaxClip = s_Player[index].Backpack[slot].MaxClip;
-                    s_Map[mapNum].mapItem[mapSlot].ItemAmmoType = s_Player[index].Backpack[slot].ItemAmmoType;
-                    s_Map[mapNum].mapItem[mapSlot].Value = s_Player[index].Backpack[slot].Value;
-                    s_Map[mapNum].mapItem[mapSlot].ProjectileNumber = s_Player[index].Backpack[slot].ProjectileNumber;
-                    s_Map[mapNum].mapItem[mapSlot].Price = s_Player[index].Backpack[slot].Price;
-                    s_Map[mapNum].mapItem[mapSlot].IsSpawned = true;
-                    s_Map[mapNum].mapItem[mapSlot].ExpireTick = TickCount;
+                    s_Map[mapNum].m_MapItem[mapSlot].Name = s_Player[index].Backpack[slot].Name;
+                    s_Map[mapNum].m_MapItem[mapSlot].X = s_Player[index].X + 12;
+                    s_Map[mapNum].m_MapItem[mapSlot].Y = s_Player[index].Y + 9;
+                    s_Map[mapNum].m_MapItem[mapSlot].Sprite = s_Player[index].Backpack[slot].Sprite;
+                    s_Map[mapNum].m_MapItem[mapSlot].Damage = s_Player[index].Backpack[slot].Damage;
+                    s_Map[mapNum].m_MapItem[mapSlot].Armor = s_Player[index].Backpack[slot].Armor;
+                    s_Map[mapNum].m_MapItem[mapSlot].Type = s_Player[index].Backpack[slot].Type;
+                    s_Map[mapNum].m_MapItem[mapSlot].AttackSpeed = s_Player[index].Backpack[slot].AttackSpeed;
+                    s_Map[mapNum].m_MapItem[mapSlot].ReloadSpeed = s_Player[index].Backpack[slot].ReloadSpeed;
+                    s_Map[mapNum].m_MapItem[mapSlot].HealthRestore = s_Player[index].Backpack[slot].HealthRestore;
+                    s_Map[mapNum].m_MapItem[mapSlot].HungerRestore = s_Player[index].Backpack[slot].HungerRestore;
+                    s_Map[mapNum].m_MapItem[mapSlot].HydrateRestore = s_Player[index].Backpack[slot].HydrateRestore;
+                    s_Map[mapNum].m_MapItem[mapSlot].Strength = s_Player[index].Backpack[slot].Strength;
+                    s_Map[mapNum].m_MapItem[mapSlot].Agility = s_Player[index].Backpack[slot].Agility;
+                    s_Map[mapNum].m_MapItem[mapSlot].Endurance = s_Player[index].Backpack[slot].Endurance;
+                    s_Map[mapNum].m_MapItem[mapSlot].Stamina = s_Player[index].Backpack[slot].Stamina;
+                    s_Map[mapNum].m_MapItem[mapSlot].Clip = s_Player[index].Backpack[slot].Clip;
+                    s_Map[mapNum].m_MapItem[mapSlot].MaxClip = s_Player[index].Backpack[slot].MaxClip;
+                    s_Map[mapNum].m_MapItem[mapSlot].ItemAmmoType = s_Player[index].Backpack[slot].ItemAmmoType;
+                    s_Map[mapNum].m_MapItem[mapSlot].Value = s_Player[index].Backpack[slot].Value;
+                    s_Map[mapNum].m_MapItem[mapSlot].ProjectileNumber = s_Player[index].Backpack[slot].ProjectileNumber;
+                    s_Map[mapNum].m_MapItem[mapSlot].Price = s_Player[index].Backpack[slot].Price;
+                    s_Map[mapNum].m_MapItem[mapSlot].IsSpawned = true;
+                    s_Map[mapNum].m_MapItem[mapSlot].ExpireTick = TickCount;
 
                     s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1);
                     hData.SendPlayerInv(s_Server, s_Player, index);
@@ -554,18 +547,18 @@ namespace Server.Classes
         {
             for (int c = 0; c < 20; c++)
             {
-                if (s_Map.mapItem[c] != null && s_Map.mapItem[c].IsSpawned)
+                if (s_Map.m_MapItem[c] != null && s_Map.m_MapItem[c].IsSpawned)
                 {
-                    if ((X + 12) == s_Map.mapItem[c].X && (Y + 9) == s_Map.mapItem[c].Y)
+                    if ((X + 12) == s_Map.m_MapItem[c].X && (Y + 9) == s_Map.m_MapItem[c].Y)
                     {
-                        PickUpItem(s_Server, s_Player, s_Map.mapItem[c], s_Map, index, c);
+                        PickUpItem(s_Server, s_Player, s_Map.m_MapItem[c], s_Map, index, c);
                         break;
                     }
                 }
             }
         }
 
-        void PickUpItem(NetServer s_Server, Player[] s_Player, Item s_Item, Map s_Map, int index, int itemNum)
+        void PickUpItem(NetServer s_Server, Player[] s_Player, MapItem s_Item, Map s_Map, int index, int itemNum)
         {
             HandleData hData = new HandleData();
             int itemSlot = FindOpenInvSlot(Backpack);
@@ -593,11 +586,11 @@ namespace Server.Classes
                 Backpack[itemSlot].ProjectileNumber = s_Item.ProjectileNumber;
                 Backpack[itemSlot].Price = s_Item.Price;
 
-                int TileX = s_Map.mapItem[itemNum].X;
-                int TileY = s_Map.mapItem[itemNum].Y;
+                int TileX = s_Map.m_MapItem[itemNum].X;
+                int TileY = s_Map.m_MapItem[itemNum].Y;
                 s_Map.Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
-                s_Map.mapItem[itemNum].Name = "None";
-                s_Map.mapItem[itemNum].IsSpawned = false;
+                s_Map.m_MapItem[itemNum].Name = "None";
+                s_Map.m_MapItem[itemNum].IsSpawned = false;
 
                 for (int p = 0; p < 5; p++)
                 {

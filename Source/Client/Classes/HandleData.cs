@@ -55,7 +55,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.MapData:
-                                HandleMapData(c_Client, incMSG, c_Map, c_GUI, c_Canvas);
+                                HandleMapData(c_Client, incMSG, c_Map, c_GUI, c_Canvas, c_Player);
                                 break;
 
                             case (byte)PacketTypes.Players:
@@ -457,8 +457,8 @@ namespace Client.Classes
             if (mapName != c_Map.Name) { return; }
 
             int slot = incMSG.ReadVariableInt32();
-            if (c_Map.mapProj[slot] != null) { return; }
-            c_Map.mapProj[slot] = null;
+            if (c_Map.m_MapProj[slot] != null) { return; }
+            c_Map.m_MapProj[slot] = null;
         }
 
         void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map, Projectile[] c_Proj)
@@ -466,16 +466,16 @@ namespace Client.Classes
             int slot = incMSG.ReadVariableInt32();
             int proj = incMSG.ReadVariableInt32();
 
-            c_Map.mapProj[slot] = new MapProj();
+            c_Map.m_MapProj[slot] = new MapProj();
 
-            c_Map.mapProj[slot].X = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Y = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Direction = incMSG.ReadVariableInt32();
-            c_Map.mapProj[slot].Name = c_Proj[proj].Name;
-            c_Map.mapProj[slot].Speed = c_Proj[proj].Speed;
-            c_Map.mapProj[slot].Type = c_Proj[proj].Type;
-            c_Map.mapProj[slot].Sprite = c_Proj[proj].Sprite;
-            c_Map.mapProj[slot].Range = c_Proj[proj].Range;
+            c_Map.m_MapProj[slot].X = incMSG.ReadVariableInt32();
+            c_Map.m_MapProj[slot].Y = incMSG.ReadVariableInt32();
+            c_Map.m_MapProj[slot].Direction = incMSG.ReadVariableInt32();
+            c_Map.m_MapProj[slot].Name = c_Proj[proj].Name;
+            c_Map.m_MapProj[slot].Speed = c_Proj[proj].Speed;
+            c_Map.m_MapProj[slot].Type = c_Proj[proj].Type;
+            c_Map.m_MapProj[slot].Sprite = c_Proj[proj].Sprite;
+            c_Map.m_MapProj[slot].Range = c_Proj[proj].Range;
         }
 
         void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
@@ -619,27 +619,27 @@ namespace Client.Classes
         {
             for (int i = 0; i < 20; i++)
             {
-                c_Map.mapItem[i].Name = incMSG.ReadString();
-                c_Map.mapItem[i].X = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Y = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Sprite = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Damage = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Armor = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Type = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].HealthRestore = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].HungerRestore = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Strength = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Agility = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Endurance = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Stamina = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Clip = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].maxClip = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].ammoType = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Value = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].Price = incMSG.ReadVariableInt32();
-                c_Map.mapItem[i].IsSpawned = incMSG.ReadBoolean();
+                c_Map.m_MapItem[i].Name = incMSG.ReadString();
+                c_Map.m_MapItem[i].X = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Y = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Sprite = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Damage = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Armor = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Type = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].HealthRestore = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].HungerRestore = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Strength = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Agility = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Endurance = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Stamina = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Clip = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].MaxClip = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
         }
 
@@ -647,27 +647,27 @@ namespace Client.Classes
         {
             int itemNum = incMSG.ReadVariableInt32();
 
-            c_Map.mapItem[itemNum].Name = incMSG.ReadString();
-            c_Map.mapItem[itemNum].X = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Y = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Armor = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Type = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Strength = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Agility = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Clip = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].maxClip = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].ammoType = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Value = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].Price = incMSG.ReadVariableInt32();
-            c_Map.mapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
+            c_Map.m_MapItem[itemNum].Name = incMSG.ReadString();
+            c_Map.m_MapItem[itemNum].X = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Y = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Damage = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Armor = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Type = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Strength = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Agility = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Clip = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].MaxClip = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].ItemAmmoType = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
         void HandleMapNpcs(NetIncomingMessage incMSG, Map c_Map)
@@ -1039,9 +1039,14 @@ namespace Client.Classes
             msgBox.Position(Gwen.Pos.Center);
         }
 
-        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
+        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas, Player[] c_Player)
         {
             c_Map.Name = incMSG.ReadString();
+            c_Map.Revision = incMSG.ReadVariableInt32();
+            c_Map.TopMap = incMSG.ReadVariableInt32();
+            c_Map.BottomMap = incMSG.ReadVariableInt32();
+            c_Map.LeftMap = incMSG.ReadVariableInt32();
+            c_Map.RightMap = incMSG.ReadVariableInt32();
 
             for (int i = 0; i < 10; i++)
             {
@@ -1051,7 +1056,7 @@ namespace Client.Classes
             for (int i = 0; i < 20; i++)
             {
                 c_Map.r_MapNpc[i] = new MapNpc();
-                c_Map.mapItem[i] = new MapItem();
+                c_Map.m_MapItem[i] = new MapItem();
             }
 
             for (int x = 0; x < 50; x++)
@@ -1065,43 +1070,40 @@ namespace Client.Classes
                     c_Map.FringeA[x, y] = new Tile();
 
                     //ground
-                    c_Map.Ground[x, y].tileX = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].tileY = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].tileW = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].TileX = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].TileY = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].TileW = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].TileH = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].type = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].Type = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].SpawnNum = incMSG.ReadVariableInt32();
                     //mask
-                    c_Map.Mask[x, y].tileX = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].tileY = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].tileW = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].TileX = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].TileY = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].TileW = incMSG.ReadVariableInt32();
+                    c_Map.Mask[x, y].TileH = incMSG.ReadVariableInt32();
                     c_Map.Mask[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe
-                    c_Map.Fringe[x, y].tileX = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].tileY = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].tileW = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].TileX = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].TileY = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].TileW = incMSG.ReadVariableInt32();
+                    c_Map.Fringe[x, y].TileH = incMSG.ReadVariableInt32();
                     c_Map.Fringe[x, y].Tileset = incMSG.ReadVariableInt32();
                     //mask a
-                    c_Map.MaskA[x, y].tileX = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].tileY = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].tileW = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].TileX = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].TileY = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].TileW = incMSG.ReadVariableInt32();
+                    c_Map.MaskA[x, y].TileH = incMSG.ReadVariableInt32();
                     c_Map.MaskA[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe a
-                    c_Map.FringeA[x, y].tileX = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].tileY = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].tileW = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].tileH = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].TileX = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].TileY = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].TileW = incMSG.ReadVariableInt32();
+                    c_Map.FringeA[x, y].TileH = incMSG.ReadVariableInt32();
                     c_Map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
-            
-            c_Map.SaveMap();
-            c_Map.t_Map.Load(c_Map);
-            c_Map.p_Map.Load(c_Map);
+            c_Map.MapDatabaseCache(c_Player[c_Index].Map + 1);
             LoadMainGUI(c_GUI, c_Canvas);
         }
         #endregion

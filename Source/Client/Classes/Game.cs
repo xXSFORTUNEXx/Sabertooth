@@ -12,6 +12,7 @@ using System.Xml;
 using static System.Environment;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
+using System.Data.SQLite;
 
 namespace Client.Classes
 {
@@ -57,7 +58,7 @@ namespace Client.Classes
             c_Config.MaximumConnections = 1;
             c_Config.MaximumTransmissionUnit = 1500;
             c_Config.ConnectionTimeout = 25.0f;
-            c_Config.SimulatedMinimumLatency = 0.065f;
+            //c_Config.SimulatedMinimumLatency = 0.065f;
             //c_Config.SimulatedRandomLatency = 0.085f;
             //c_Config.SimulatedLoss = 0.5f;
             //c_Config.SimulatedDuplicatesChance = 0.1f;
@@ -101,6 +102,7 @@ namespace Client.Classes
                 SaveConfig();
             }
             LoadConfig();
+            CreateMapCache();
         }
 
         public void LoadConfig()
@@ -139,6 +141,27 @@ namespace Client.Classes
             writer.Flush();
             writer.Close();
         }
+
+        public void CreateMapCache()
+        {
+            if (!Directory.Exists("Cache")) { Directory.CreateDirectory("Cache"); }
+
+            if (!File.Exists("Cache/MapCache.db"))
+            {
+                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string sql;
+                        sql = "CREATE TABLE `MAPS`";
+                        sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 
     class Game
@@ -169,7 +192,7 @@ namespace Client.Classes
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.None);
+            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Close);
             c_Window.Closed += new EventHandler(OnClose);
             c_Window.KeyReleased += window_KeyReleased;
             c_Window.KeyPressed += OnKeyPressed;
@@ -495,15 +518,15 @@ namespace Client.Classes
 
             for (int i = 0; i < 20; i++)
             {
-                if (c_Map.mapItem[i].IsSpawned)
+                if (c_Map.m_MapItem[i].IsSpawned)
                 {
-                    if (c_Map.mapItem[i].X > minX && c_Map.mapItem[i].X < maxX)
+                    if (c_Map.m_MapItem[i].X > minX && c_Map.m_MapItem[i].X < maxX)
                     {
-                        if (c_Map.mapItem[i].Y > minY && c_Map.mapItem[i].Y < maxY)
+                        if (c_Map.m_MapItem[i].Y > minY && c_Map.m_MapItem[i].Y < maxY)
                         {
-                            if (c_Map.mapItem[i].Sprite > 0)
+                            if (c_Map.m_MapItem[i].Sprite > 0)
                             {
-                                c_Window.Draw(c_Map.mapItem[i]);
+                                c_Window.Draw(c_Map.m_MapItem[i]);
                             }
                         }
                     }
@@ -520,16 +543,16 @@ namespace Client.Classes
 
             for (int i = 0; i < 200; i++)
             {
-                if (c_Map.mapProj[i] != null)
+                if (c_Map.m_MapProj[i] != null)
                 {
-                    if (c_Map.mapProj[i].X > minX && c_Map.mapProj[i].X < maxX)
+                    if (c_Map.m_MapProj[i].X > minX && c_Map.m_MapProj[i].X < maxX)
                     {
-                        if (c_Map.mapProj[i].Y > minY && c_Map.mapProj[i].Y < maxY)
+                        if (c_Map.m_MapProj[i].Y > minY && c_Map.m_MapProj[i].Y < maxY)
                         {
-                            c_Window.Draw(c_Map.mapProj[i]);
+                            c_Window.Draw(c_Map.m_MapProj[i]);
                         }
                     }
-                    c_Map.mapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
+                    c_Map.m_MapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
                 }
             }
         }
@@ -543,13 +566,13 @@ namespace Client.Classes
         {
             if (c_Map.Name != null)
             {
-                c_Window.Draw(c_Map.t_Map);
+                c_Window.Draw(c_Map);
                 DrawMapItems(c_Player[handleData.c_Index]);
                 DrawNpcs(c_Player[handleData.c_Index]);
                 DrawPlayers();
                 DrawIndexPlayer();
                 DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
-                c_Window.Draw(c_Map.p_Map);
+                c_Map.DrawFringe(c_Window);
                 if (TickCount - walkTick > 100)
                 {
                     this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);

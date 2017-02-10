@@ -637,3 +637,5 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Til
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Grid.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\minimap.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.SQLite.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\SQLite.Interop.dll

@@ -256,7 +256,7 @@ namespace Server.Classes
             if (type == 0)
             {
                 if (s_Map[c_Map].m_MapNpc[npc].IsSpawned == false) { return; }
-                if (s_Map[c_Map].mapProj[slot] == null) { return; }
+                if (s_Map[c_Map].m_MapProj[slot] == null) { return; }
 
                 s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
                 bool updatePlayer = s_Map[c_Map].m_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
@@ -273,7 +273,7 @@ namespace Server.Classes
             else
             {
                 if (s_Map[c_Map].r_MapNpc[npc].IsSpawned == false) { return; }
-                if (s_Map[c_Map].mapProj[slot] == null) { return; }
+                if (s_Map[c_Map].m_MapProj[slot] == null) { return; }
 
                 s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
                 bool updatePlayer = s_Map[c_Map].r_MapNpc[npc].DamageNpc(s_Player[owner], s_Map[c_Map], damage);
@@ -305,7 +305,7 @@ namespace Server.Classes
             int owner = incMSG.ReadVariableInt32();
             int c_Map = s_Player[owner].Map;
 
-            if (s_Map[c_Map].mapProj[slot] == null) { return; }
+            if (s_Map[c_Map].m_MapProj[slot] == null) { return; }
             s_Map[c_Map].ClearProjSlot(s_Server, s_Map, s_Player, c_Map, slot);
         }
 
@@ -1276,27 +1276,27 @@ namespace Server.Classes
             outMSG.Write((byte)PacketTypes.MapItems);
             for (int i = 0; i < 20; i++)
             {
-                outMSG.Write(s_Map.mapItem[i].Name);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].X);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Y);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Sprite);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Damage);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Armor);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Type);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].HealthRestore);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].HungerRestore);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].HydrateRestore);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Strength);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Agility);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Endurance);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Stamina);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Clip);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].MaxClip);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].ItemAmmoType);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Value);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].ProjectileNumber);
-                outMSG.WriteVariableInt32(s_Map.mapItem[i].Price);
-                outMSG.Write(s_Map.mapItem[i].IsSpawned);
+                outMSG.Write(s_Map.m_MapItem[i].Name);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].X);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Y);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Sprite);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Damage);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Armor);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Type);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].HealthRestore);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].HungerRestore);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].HydrateRestore);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Strength);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Agility);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Endurance);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Stamina);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Clip);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].MaxClip);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].ItemAmmoType);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Value);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Price);
+                outMSG.Write(s_Map.m_MapItem[i].IsSpawned);
             }            
 
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -1307,27 +1307,27 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapItemData);
             outMSG.WriteVariableInt32(itemNum);
-            outMSG.Write(s_Map.mapItem[itemNum].Name);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].X);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Y);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Sprite);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Damage);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Armor);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Type);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].HealthRestore);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].HungerRestore);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].HydrateRestore);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Strength);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Agility);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Endurance);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Stamina);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Clip);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].MaxClip);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ItemAmmoType);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Value);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].ProjectileNumber);
-            outMSG.WriteVariableInt32(s_Map.mapItem[itemNum].Price);
-            outMSG.Write(s_Map.mapItem[itemNum].IsSpawned);            
+            outMSG.Write(s_Map.m_MapItem[itemNum].Name);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].X);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Y);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Sprite);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Damage);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Armor);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Type);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].HealthRestore);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].HungerRestore);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].HydrateRestore);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Strength);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Agility);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Endurance);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Stamina);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Clip);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].MaxClip);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].ItemAmmoType);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Value);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].ProjectileNumber);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Price);
+            outMSG.Write(s_Map.m_MapItem[itemNum].IsSpawned);            
 
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1343,9 +1343,14 @@ namespace Server.Classes
 
         void SendMapData(NetIncomingMessage incMSG, NetServer s_Server, Map s_Map, Player[] s_Player)
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage(67529);
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
             outMSG.Write(s_Map.Name);
+            outMSG.WriteVariableInt32(s_Map.Revision);
+            outMSG.WriteVariableInt32(s_Map.TopMap);
+            outMSG.WriteVariableInt32(s_Map.BottomMap);
+            outMSG.WriteVariableInt32(s_Map.LeftMap);
+            outMSG.WriteVariableInt32(s_Map.RightMap);
 
             for (int x = 0; x < 50; x++)
             {
@@ -1435,8 +1440,8 @@ namespace Server.Classes
                     {
                         int mapNum = ToInt32(msg.Substring(5, 1));
                         s_Player[index].Map = mapNum;
+                        SendPlayerData(incMSG, s_Server, s_Player, index);
                         SendMapData(incMSG, s_Server, s_Map[mapNum], s_Player);
-                        SendPlayers(s_Server, s_Player);
                         SendMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[mapNum]);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);

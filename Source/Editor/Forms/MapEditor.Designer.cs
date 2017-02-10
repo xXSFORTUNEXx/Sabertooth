@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this.tabTools = new System.Windows.Forms.TabControl();
             this.tabLayer = new System.Windows.Forms.TabPage();
             this.chkNpc = new System.Windows.Forms.CheckBox();
@@ -70,18 +71,6 @@
             this.picTileset = new System.Windows.Forms.PictureBox();
             this.lblTileset = new System.Windows.Forms.Label();
             this.cmbTileset = new System.Windows.Forms.ComboBox();
-            this.tabProp = new System.Windows.Forms.TabPage();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.mnuFile = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFillLayer = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapNpcsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDebug = new System.Windows.Forms.ToolStripMenuItem();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.pnlMapNpcs = new System.Windows.Forms.Panel();
             this.cmbNpc10 = new System.Windows.Forms.ComboBox();
@@ -98,6 +87,16 @@
             this.lblNpcs = new System.Windows.Forms.Label();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
+            this.treeMaps = new System.Windows.Forms.TreeView();
+            this.mapProperties = new System.Windows.Forms.PropertyGrid();
+            this.tosMenu = new System.Windows.Forms.ToolStrip();
+            this.btnNewMap = new System.Windows.Forms.ToolStripButton();
+            this.btnSaveMap = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.btnMapNpcs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnFillMap = new System.Windows.Forms.ToolStripButton();
+            this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -107,10 +106,9 @@
             this.tabTiles.SuspendLayout();
             this.pnlTile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
-            this.tabProp.SuspendLayout();
-            this.mnuFile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.pnlMapNpcs.SuspendLayout();
+            this.tosMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabTools
@@ -118,7 +116,6 @@
             this.tabTools.Controls.Add(this.tabLayer);
             this.tabTools.Controls.Add(this.tabTypes);
             this.tabTools.Controls.Add(this.tabTiles);
-            this.tabTools.Controls.Add(this.tabProp);
             this.tabTools.Location = new System.Drawing.Point(12, 36);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
@@ -580,108 +577,6 @@
             this.cmbTileset.TabIndex = 2;
             this.cmbTileset.SelectedIndexChanged += new System.EventHandler(this.cmbTileset_SelectedIndexChanged);
             // 
-            // tabProp
-            // 
-            this.tabProp.Controls.Add(this.txtName);
-            this.tabProp.Controls.Add(this.label1);
-            this.tabProp.Location = new System.Drawing.Point(4, 22);
-            this.tabProp.Name = "tabProp";
-            this.tabProp.Size = new System.Drawing.Size(299, 589);
-            this.tabProp.TabIndex = 3;
-            this.tabProp.Text = "Properties";
-            this.tabProp.UseVisualStyleBackColor = true;
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(15, 28);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(264, 20);
-            this.txtName.TabIndex = 1;
-            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Name:";
-            // 
-            // mnuFile
-            // 
-            this.mnuFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.toolsToolStripMenuItem});
-            this.mnuFile.Location = new System.Drawing.Point(0, 0);
-            this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(1152, 24);
-            this.mnuFile.TabIndex = 12;
-            this.mnuFile.Text = "File";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuOpen,
-            this.mnuSave,
-            this.mnuExit});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // mnuOpen
-            // 
-            this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(103, 22);
-            this.mnuOpen.Text = "Open";
-            this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
-            // 
-            // mnuSave
-            // 
-            this.mnuSave.Name = "mnuSave";
-            this.mnuSave.Size = new System.Drawing.Size(103, 22);
-            this.mnuSave.Text = "Save";
-            this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
-            // 
-            // mnuExit
-            // 
-            this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(103, 22);
-            this.mnuExit.Text = "Exit";
-            this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFillLayer,
-            this.mapNpcsToolStripMenuItem,
-            this.mnuDebug});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // mnuFillLayer
-            // 
-            this.mnuFillLayer.Name = "mnuFillLayer";
-            this.mnuFillLayer.Size = new System.Drawing.Size(128, 22);
-            this.mnuFillLayer.Text = "Fill Layer";
-            this.mnuFillLayer.Click += new System.EventHandler(this.mnuFillLayer_Click);
-            // 
-            // mapNpcsToolStripMenuItem
-            // 
-            this.mapNpcsToolStripMenuItem.Name = "mapNpcsToolStripMenuItem";
-            this.mapNpcsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.mapNpcsToolStripMenuItem.Text = "Map Npcs";
-            this.mapNpcsToolStripMenuItem.Click += new System.EventHandler(this.mapNpcsToolStripMenuItem_Click);
-            // 
-            // mnuDebug
-            // 
-            this.mnuDebug.CheckOnClick = true;
-            this.mnuDebug.Name = "mnuDebug";
-            this.mnuDebug.Size = new System.Drawing.Size(128, 22);
-            this.mnuDebug.Text = "Debug";
-            this.mnuDebug.Click += new System.EventHandler(this.mnuDebug_Click);
-            // 
             // picMap
             // 
             this.picMap.Location = new System.Drawing.Point(321, 31);
@@ -861,18 +756,111 @@
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
             // 
+            // treeMaps
+            // 
+            this.treeMaps.Location = new System.Drawing.Point(1144, 36);
+            this.treeMaps.Name = "treeMaps";
+            this.treeMaps.Size = new System.Drawing.Size(241, 414);
+            this.treeMaps.TabIndex = 18;
+            this.treeMaps.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaps_AfterSelect);
+            // 
+            // mapProperties
+            // 
+            this.mapProperties.Location = new System.Drawing.Point(1144, 456);
+            this.mapProperties.Name = "mapProperties";
+            this.mapProperties.Size = new System.Drawing.Size(241, 195);
+            this.mapProperties.TabIndex = 19;
+            // 
+            // tosMenu
+            // 
+            this.tosMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNewMap,
+            this.btnSaveMap,
+            this.toolStripSeparator,
+            this.btnDebug,
+            this.btnMapNpcs,
+            this.toolStripSeparator1,
+            this.btnFillMap});
+            this.tosMenu.Location = new System.Drawing.Point(0, 0);
+            this.tosMenu.Name = "tosMenu";
+            this.tosMenu.Size = new System.Drawing.Size(1397, 25);
+            this.tosMenu.TabIndex = 20;
+            this.tosMenu.Text = "toolStrip1";
+            // 
+            // btnNewMap
+            // 
+            this.btnNewMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNewMap.Image = ((System.Drawing.Image)(resources.GetObject("btnNewMap.Image")));
+            this.btnNewMap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNewMap.Name = "btnNewMap";
+            this.btnNewMap.Size = new System.Drawing.Size(23, 22);
+            this.btnNewMap.Text = "New Map";
+            this.btnNewMap.Click += new System.EventHandler(this.btnNewMap_Click);
+            // 
+            // btnSaveMap
+            // 
+            this.btnSaveMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSaveMap.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveMap.Image")));
+            this.btnSaveMap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSaveMap.Name = "btnSaveMap";
+            this.btnSaveMap.Size = new System.Drawing.Size(23, 22);
+            this.btnSaveMap.Text = "Save Map";
+            this.btnSaveMap.Click += new System.EventHandler(this.saveToolStripButton_Click);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnMapNpcs
+            // 
+            this.btnMapNpcs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMapNpcs.Image = ((System.Drawing.Image)(resources.GetObject("btnMapNpcs.Image")));
+            this.btnMapNpcs.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMapNpcs.Name = "btnMapNpcs";
+            this.btnMapNpcs.Size = new System.Drawing.Size(23, 22);
+            this.btnMapNpcs.Text = "Map Npcs";
+            this.btnMapNpcs.Click += new System.EventHandler(this.btnMapNpcs_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnFillMap
+            // 
+            this.btnFillMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnFillMap.Image = ((System.Drawing.Image)(resources.GetObject("btnFillMap.Image")));
+            this.btnFillMap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnFillMap.Name = "btnFillMap";
+            this.btnFillMap.Size = new System.Drawing.Size(23, 22);
+            this.btnFillMap.Text = "Fill Current Layer";
+            this.btnFillMap.Click += new System.EventHandler(this.btnFillMap_Click);
+            // 
+            // btnDebug
+            // 
+            this.btnDebug.CheckOnClick = true;
+            this.btnDebug.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDebug.Image = ((System.Drawing.Image)(resources.GetObject("btnDebug.Image")));
+            this.btnDebug.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDebug.Name = "btnDebug";
+            this.btnDebug.Size = new System.Drawing.Size(23, 22);
+            this.btnDebug.Text = "Debug Window";
+            this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1152, 663);
+            this.ClientSize = new System.Drawing.Size(1397, 663);
+            this.Controls.Add(this.tosMenu);
+            this.Controls.Add(this.mapProperties);
+            this.Controls.Add(this.treeMaps);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
             this.Controls.Add(this.pnlMapNpcs);
             this.Controls.Add(this.picMap);
             this.Controls.Add(this.tabTools);
-            this.Controls.Add(this.mnuFile);
-            this.MainMenuStrip = this.mnuFile;
             this.Name = "MapEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Map Editor";
@@ -892,13 +880,11 @@
             this.pnlTile.ResumeLayout(false);
             this.pnlTile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
-            this.tabProp.ResumeLayout(false);
-            this.tabProp.PerformLayout();
-            this.mnuFile.ResumeLayout(false);
-            this.mnuFile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.pnlMapNpcs.ResumeLayout(false);
             this.pnlMapNpcs.PerformLayout();
+            this.tosMenu.ResumeLayout(false);
+            this.tosMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -920,11 +906,6 @@
         private System.Windows.Forms.Label lblTileset;
         private System.Windows.Forms.ComboBox cmbTileset;
         private System.Windows.Forms.CheckBox chkGrid;
-        private System.Windows.Forms.MenuStrip mnuFile;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mnuOpen;
-        private System.Windows.Forms.ToolStripMenuItem mnuSave;
-        private System.Windows.Forms.ToolStripMenuItem mnuExit;
         private System.Windows.Forms.Panel pnlTile;
         private System.Windows.Forms.PictureBox picTileset;
         private System.Windows.Forms.Panel pnlDebug;
@@ -942,8 +923,6 @@
         private System.Windows.Forms.HScrollBar scrlNpcNum;
         private System.Windows.Forms.Label lblNpcSpawn;
         private System.Windows.Forms.PictureBox picMap;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mnuFillLayer;
         private System.Windows.Forms.Panel pnlMapNpcs;
         private System.Windows.Forms.ComboBox cmbNpc10;
         private System.Windows.Forms.ComboBox cmbNpc9;
@@ -957,13 +936,8 @@
         private System.Windows.Forms.ComboBox cmbNpc1;
         private System.Windows.Forms.Button btnCloseNpcs;
         private System.Windows.Forms.Label lblNpcs;
-        private System.Windows.Forms.ToolStripMenuItem mapNpcsToolStripMenuItem;
         private System.Windows.Forms.HScrollBar scrlViewX;
         private System.Windows.Forms.VScrollBar scrlViewY;
-        private System.Windows.Forms.ToolStripMenuItem mnuDebug;
-        private System.Windows.Forms.TabPage tabProp;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkNpc;
         private System.Windows.Forms.RadioButton radSpawnPool;
         private System.Windows.Forms.HScrollBar scrlSpawnAmount;
@@ -975,5 +949,15 @@
         private System.Windows.Forms.HScrollBar scrlItemNum;
         private System.Windows.Forms.Label lblItemNum;
         private System.Windows.Forms.RadioButton radMapItem;
+        private System.Windows.Forms.TreeView treeMaps;
+        private System.Windows.Forms.PropertyGrid mapProperties;
+        private System.Windows.Forms.ToolStrip tosMenu;
+        private System.Windows.Forms.ToolStripButton btnNewMap;
+        private System.Windows.Forms.ToolStripButton btnSaveMap;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripButton btnMapNpcs;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton btnFillMap;
+        private System.Windows.Forms.ToolStripButton btnDebug;
     }
 }

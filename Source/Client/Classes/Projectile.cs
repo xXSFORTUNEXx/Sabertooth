@@ -54,16 +54,16 @@ namespace Client.Classes
         public void CheckMovment(NetClient c_Client, RenderWindow c_Window, Map c_MoveMap, int slot)
         {
             if (Moved == true) { Moved = false; return; }
-            if (c_MoveMap.mapProj[slot] == null) { return; }
+            if (c_MoveMap.m_MapProj[slot] == null) { return; }
 
             if (RangeCounter > Range) { Direction = (int)Directions.Down; Moved = false; SendClearProjectile(c_Client, c_MoveMap, slot); return; }
 
-            switch (c_MoveMap.mapProj[slot].Direction)
+            switch (c_MoveMap.m_MapProj[slot].Direction)
             {
                 case (int)Directions.Down:
                     if (Y < 49)
                     {
-                        if (c_MoveMap.Ground[X, (Y + 1)].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[X, (Y + 1)].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Down;
                             Moved = false;
@@ -120,7 +120,7 @@ namespace Client.Classes
                 case (int)Directions.Left:
                     if (X > 1)
                     {
-                        if (c_MoveMap.Ground[(X - 1), Y].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[(X - 1), Y].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Left;
                             Moved = false;
@@ -177,7 +177,7 @@ namespace Client.Classes
                 case (int)Directions.Right:
                     if (X < 49)
                     {
-                        if (c_MoveMap.Ground[(X + 1), Y].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[(X + 1), Y].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Right;
                             Moved = false;
@@ -234,7 +234,7 @@ namespace Client.Classes
                 case (int)Directions.Up:
                     if (Y > 1)
                     {
-                        if (c_MoveMap.Ground[X, (Y - 1)].type == (int)TileType.Blocked)
+                        if (c_MoveMap.Ground[X, (Y - 1)].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Up;
                             Moved = false;
@@ -300,7 +300,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(Owner);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);
-            c_Map.mapProj[slot] = null;
+            c_Map.m_MapProj[slot] = null;
         }
 
         void SendProjectileAttackNpc(NetClient c_Client, Map c_Map, int slot, int npcNum, int spawntype)
@@ -312,7 +312,7 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(Owner);
             outMSG.WriteVariableInt32(spawntype);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
-            c_Map.mapProj[slot] = null;
+            c_Map.m_MapProj[slot] = null;
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
