@@ -26,7 +26,6 @@ namespace Client.Classes
         public VertexArray m2_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
-        public MiniMap m_Map = new MiniMap();
         public MapNpc[] m_MapNpc = new MapNpc[10];
         public MapNpc[] r_MapNpc = new MapNpc[20];
         public MapProj[] m_MapProj = new MapProj[200];

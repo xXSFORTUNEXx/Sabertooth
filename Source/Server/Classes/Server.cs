@@ -49,7 +49,7 @@ namespace Server.Classes
             s_Config.MaximumConnections = 5;
             s_Config.EnableUPnP = false;
             //s_Config.SimulatedRandomLatency = 0.085f;
-            s_Config.SimulatedMinimumLatency = 0.065f;
+            //s_Config.SimulatedMinimumLatency = 0.065f;
             //s_Config.SimulatedLoss = 0.5f;
             //s_Config.SimulatedDuplicatesChance = 0.5f;
             s_Config.ConnectionTimeout = 25.0f;

@@ -7,6 +7,7 @@ using SFML.Graphics;
 using SFML.System;
 using static System.Convert;
 using System.Text;
+using System.Data.SQLite;
 
 namespace Client.Classes
 {
@@ -919,6 +920,18 @@ namespace Client.Classes
                     c_Config.savedUser = username;
                     c_Config.savedPass = password;
                     c_Config.SaveConfig();
+                }
+
+                int result = 0;                
+                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT COUNT(*) FROM MAPS";
+                        object queue = cmd.ExecuteScalar();
+                        result = ToInt32(queue);
+                    }
                 }
 
                 NetOutgoingMessage outMSG = c_Client.CreateMessage();
@@ -1931,18 +1944,29 @@ namespace Client.Classes
 
     class MiniMap : Drawable
     {
-        VertexArray m_Map;
+        Map m_Map;
+        Player c_Player;
+        VertexArray m_Blocked = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray m_Player = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray m_Npc = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray m_Item = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray m_NpcSpawn = new VertexArray(PrimitiveType.Quads, 4);
+        VertexArray m_NpcAvoid = new VertexArray(PrimitiveType.Quads, 4);
         Texture t_Mini = new Texture("Resources/Tilesets/minimap.png");
 
         public void UpdateMiniMap(Player c_Player, Map c_Map)
+        {
+            m_Map = c_Map;
+            this.c_Player = c_Player;
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
         {
             int minX = (c_Player.X + 12) - 12;
             int minY = (c_Player.Y + 9) - 9;
             int maxX = (c_Player.X + 12) + 13;
             int maxY = (c_Player.Y + 9) + 11;
-            m_Map = new VertexArray();
-            m_Map.PrimitiveType = PrimitiveType.Quads;
-            m_Map.Resize((uint)maxX * (uint)maxY * 12);
+            states.Texture = t_Mini;
 
             for (int x = minX; x < maxX; x++)
             {
@@ -1952,97 +1976,118 @@ namespace Client.Classes
                     {
                         int fx = (x * 12) - (minX * 12) + 500;
                         int fy = (y * 12) - (minY * 12);
-                        int index = (x + y * (maxX + maxY)) * 4;
-                        int tx = 0;
-                        int ty = 0;
-                        int w = 12;
-                        int h = 12;
+                        int tx, ty, w, h;
 
-                        if (c_Map.Ground[x, y].Type == (int)TileType.Blocked)
+                        if (m_Map.Ground[x, y].Type == (int)TileType.Blocked)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                            tx = 0;
+                            ty = 0;
+                            w = 12;
+                            h = 12;
+                            m_Blocked[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            m_Blocked[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            m_Blocked[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            m_Blocked[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                            target.Draw(m_Blocked, states);
                         }
-                        if (c_Map.Ground[x, y].Type == (int)TileType.NpcSpawn)
+                        if (m_Map.Ground[x, y].Type == (int)TileType.NpcSpawn)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Blue);
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue);
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            w = 12;
+                            h = 12;
+                            m_NpcSpawn[0] = new Vertex(new Vector2f(fx, fy), Color.Blue);
+                            m_NpcSpawn[1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_NpcSpawn[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Blue);
+                            m_NpcSpawn[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            target.Draw(m_NpcSpawn, states);
                         }
-                        if (c_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
+                        if (m_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta);
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta);
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            w = 12;
+                            h = 12;
+                            m_NpcSpawn[0] = new Vertex(new Vector2f(fx, fy), Color.Magenta);
+                            m_NpcSpawn[1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_NpcSpawn[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta);
+                            m_NpcSpawn[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            target.Draw(m_NpcSpawn, states);
                         }
-                        if (c_Map.Ground[x, y].Type == (int)TileType.NpcAvoid)
+                        if (m_Map.Ground[x, y].Type == (int)TileType.NpcAvoid)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Black);
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Black);
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            w = 12;
+                            h = 12;
+                            m_NpcAvoid[0] = new Vertex(new Vector2f(fx, fy), Color.Black);
+                            m_NpcAvoid[1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
+                            m_NpcAvoid[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Black);
+                            m_NpcAvoid[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
+                            target.Draw(m_NpcAvoid, states);
                         }
-                        tx = 12;
                         for (int i = 0; i < 20; i++)
                         {
                             if (i < 10)
                             {
-                                if (c_Map.m_MapNpc[i].IsSpawned)
+                                if (m_Map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (c_Map.m_MapNpc[i].X == x && c_Map.m_MapNpc[i].Y == y)
+                                    if (m_Map.m_MapNpc[i].X == x && m_Map.m_MapNpc[i].Y == y)
                                     {
-                                        if (c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
-                                        m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
-                                        m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
-                                        m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
-                                        m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                        tx = 12;
+                                        ty = 0;
+                                        w = 12;
+                                        h = 12;
+                                        if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
+                                        m_Npc[0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
+                                        m_Npc[1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
+                                        m_Npc[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
+                                        m_Npc[3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                        target.Draw(m_Npc, states);
                                     }
                                 }
                             }
-                            if (c_Map.r_MapNpc[i].IsSpawned)
+                            if (m_Map.r_MapNpc[i].IsSpawned)
                             {
-                                if (c_Map.r_MapNpc[i].X == x && c_Map.r_MapNpc[i].Y == y)
+                                if (m_Map.r_MapNpc[i].X == x && m_Map.r_MapNpc[i].Y == y)
                                 {
-                                    if (c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
-                                    m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
-                                    m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
-                                    m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
-                                    m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                    tx = 12;
+                                    ty = 0;
+                                    w = 12;
+                                    h = 12;
+                                    if (m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Friendly || m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
+                                    m_Npc[0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
+                                    m_Npc[1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
+                                    m_Npc[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
+                                    m_Npc[3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
+                                    target.Draw(m_Npc, states);
                                 }
                             }
-                            if (c_Map.m_MapItem[i].IsSpawned)
+                            if (m_Map.m_MapItem[i].IsSpawned)
                             {
-                                if (c_Map.m_MapItem[i].X == x && c_Map.m_MapItem[i].Y == y)
+                                if (m_Map.m_MapItem[i].X == x && m_Map.m_MapItem[i].Y == y)
                                 {
                                     tx = 48;
-                                    m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
-                                    m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.Magenta, new Vector2f(tx + w, ty));
-                                    m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
-                                    m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.Magenta, new Vector2f(tx, ty + h));
+                                    ty = 0;
+                                    w = 12;
+                                    h = 12;
+                                    m_Item[0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
+                                    m_Item[1] = new Vertex(new Vector2f(fx + w, fy), Color.Magenta, new Vector2f(tx + w, ty));
+                                    m_Item[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
+                                    m_Item[3] = new Vertex(new Vector2f(fx, fy + h), Color.Magenta, new Vector2f(tx, ty + h));
+                                    target.Draw(m_Item, states);
                                 }
                             }
                         }
-                        tx = 60;
                         if ((c_Player.X + 12) == x && (c_Player.Y + 9) == y)
                         {
-                            m_Map[(uint)index + 0] = new Vertex(new Vector2f(fx, fy), Color.White, new Vector2f(tx, ty));
-                            m_Map[(uint)index + 1] = new Vertex(new Vector2f(fx + w, fy), Color.White, new Vector2f(tx + w, ty));
-                            m_Map[(uint)index + 2] = new Vertex(new Vector2f(fx + w, fy + h), Color.White, new Vector2f(tx + w, ty + h));
-                            m_Map[(uint)index + 3] = new Vertex(new Vector2f(fx, fy + h), Color.White, new Vector2f(tx, ty + h));
+                            tx = 60;
+                            ty = 0;
+                            w = 12;
+                            h = 12;
+                            m_Player[0] = new Vertex(new Vector2f(fx, fy), Color.White, new Vector2f(tx, ty));
+                            m_Player[1] = new Vertex(new Vector2f(fx + w, fy), Color.White, new Vector2f(tx + w, ty));
+                            m_Player[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.White, new Vector2f(tx + w, ty + h));
+                            m_Player[3] = new Vertex(new Vector2f(fx, fy + h), Color.White, new Vector2f(tx, ty + h));
+                            target.Draw(m_Player, states);
                         }
                     }
                 }
             }
-        }
-
-        public virtual void Draw(RenderTarget target, RenderStates states)
-        {
-            states.Texture = t_Mini;
-            target.Draw(m_Map, states);
         }
     }
 

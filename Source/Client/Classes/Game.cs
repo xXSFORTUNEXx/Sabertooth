@@ -179,6 +179,7 @@ namespace Client.Classes
         Projectile[] c_Proj = new Projectile[10];
         Chat[] c_Chat = new Chat[15];
         Map c_Map = new Map();
+        MiniMap m_Map = new MiniMap();
         View c_View = new View();
         ClientConfig c_Config;
         static int lastTick;
@@ -200,7 +201,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
             c_Window.MouseMoved += window_MouseMoved;
             c_Window.TextEntered += window_TextEntered;
-            c_Window.SetFramerateLimit(75);                       
+            c_Window.SetFramerateLimit(60);                       
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
@@ -584,7 +585,6 @@ namespace Client.Classes
                     this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
                     this.c_Player[handleData.c_Index].CheckControllerPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
                     ProcessMovement();
-                    c_Map.m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
                     walkTick = TickCount;
                 }
                 if (TickCount - attackTick > 25)
@@ -609,7 +609,8 @@ namespace Client.Classes
                 p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
                 c_Window.Draw(p_HUD);
-                c_Window.Draw(c_Map.m_Map);
+                m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
+                c_Window.Draw(m_Map);
             }
             c_Canvas.RenderCanvas();
         }
