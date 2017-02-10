@@ -32,7 +32,8 @@ namespace Client.Classes
         public MapItem[] m_MapItem = new MapItem[20];        
         public RenderStates ustates;
         const int Max_Tilesets = 2;
-        Texture[] TileSet = new Texture[Max_Tilesets];        
+        Texture[] TileSet = new Texture[Max_Tilesets];
+        Player c_Player;
 
         public Map()
         {
@@ -201,59 +202,72 @@ namespace Client.Classes
             }
         }
 
+        public void UpdateMapPlayer(Player c_Player)
+        {
+            this.c_Player = c_Player;
+        }
+
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            for (int x = 0; x < 50; x++)
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
+            for (int x = minX; x < maxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = minY; y < maxY; y++)
                 {
-                    int fx = (x * 32);
-                    int fy = (y * 32);
-                    int tx, ty, w, h, set;
-
-                    tx = (Ground[x, y].TileX);
-                    ty = (Ground[x, y].TileY);
-                    w = (Ground[x, y].TileW);
-                    h = (Ground[x, y].TileH);
-                    set = (Ground[x, y].Tileset);
-                    states.Texture = TileSet[set];
-                    g_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                    g_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                    g_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                    g_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-
-                    target.Draw(g_Tile, states);
-
-                    if (Mask[x, y].TileX > 0 || Mask[x, y].TileY > 0)
+                    if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
-                        tx = (Mask[x, y].TileX);
-                        ty = (Mask[x, y].TileY);
-                        w = (Mask[x, y].TileW);
-                        h = (Mask[x, y].TileH);
-                        set = (Mask[x, y].Tileset);
+                        int fx = (x * 32);
+                        int fy = (y * 32);
+                        int tx, ty, w, h, set;
+
+                        tx = (Ground[x, y].TileX);
+                        ty = (Ground[x, y].TileY);
+                        w = (Ground[x, y].TileW);
+                        h = (Ground[x, y].TileH);
+                        set = (Ground[x, y].Tileset);
                         states.Texture = TileSet[set];
-                        m_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                        m_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                        m_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                        m_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                        g_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                        g_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                        g_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                        g_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
 
-                        target.Draw(m_Tile, states);
-                    }
+                        target.Draw(g_Tile, states);
 
-                    if (MaskA[x, y].TileX > 0 || MaskA[x, y].TileY > 0)
-                    {
-                        tx = (MaskA[x, y].TileX);
-                        ty = (MaskA[x, y].TileY);
-                        w = (MaskA[x, y].TileW);
-                        h = (MaskA[x, y].TileH);
-                        set = (MaskA[x, y].Tileset);
-                        states.Texture = TileSet[set];
-                        m2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                        m2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                        m2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                        m2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                        if (Mask[x, y].TileX > 0 || Mask[x, y].TileY > 0)
+                        {
+                            tx = (Mask[x, y].TileX);
+                            ty = (Mask[x, y].TileY);
+                            w = (Mask[x, y].TileW);
+                            h = (Mask[x, y].TileH);
+                            set = (Mask[x, y].Tileset);
+                            states.Texture = TileSet[set];
+                            m_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            m_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            m_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            m_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
 
-                        target.Draw(m2_Tile, states);
+                            target.Draw(m_Tile, states);
+                        }
+
+                        if (MaskA[x, y].TileX > 0 || MaskA[x, y].TileY > 0)
+                        {
+                            tx = (MaskA[x, y].TileX);
+                            ty = (MaskA[x, y].TileY);
+                            w = (MaskA[x, y].TileW);
+                            h = (MaskA[x, y].TileH);
+                            set = (MaskA[x, y].Tileset);
+                            states.Texture = TileSet[set];
+                            m2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            m2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            m2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            m2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+
+                            target.Draw(m2_Tile, states);
+                        }
                     }
                 }
             }
@@ -261,42 +275,50 @@ namespace Client.Classes
 
         public void DrawFringe(RenderTarget target)
         {
-            for (int x = 0; x < 50; x++)
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
+            for (int x = minX; x < maxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = minY; y < maxY; y++)
                 {
-                    int fx = (x * 32);
-                    int fy = (y * 32);
-                    int tx, ty, w, h, set;
-
-                    if (Fringe[x, y].TileX > 0 || Fringe[x, y].TileY > 0)
+                    if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
-                        tx = (Fringe[x, y].TileX);
-                        ty = (Fringe[x, y].TileY);
-                        w = (Fringe[x, y].TileW);
-                        h = (Fringe[x, y].TileH);
-                        set = (Fringe[x, y].Tileset);
-                        ustates = new RenderStates(TileSet[set]);
-                        f_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                        f_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                        f_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                        f_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-                        target.Draw(f_Tile, ustates);
-                    }
+                        int fx = (x * 32);
+                        int fy = (y * 32);
+                        int tx, ty, w, h, set;
 
-                    if (FringeA[x, y].TileX > 0 || FringeA[x, y].TileY > 0)
-                    {
-                        tx = (FringeA[x, y].TileX);
-                        ty = (FringeA[x, y].TileY);
-                        w = (FringeA[x, y].TileW);
-                        h = (FringeA[x, y].TileH);
-                        set = (FringeA[x, y].Tileset);
-                        ustates = new RenderStates(TileSet[set]);
-                        f2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
-                        f2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
-                        f2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
-                        f2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-                        target.Draw(f2_Tile, ustates);
+                        if (Fringe[x, y].TileX > 0 || Fringe[x, y].TileY > 0)
+                        {
+                            tx = (Fringe[x, y].TileX);
+                            ty = (Fringe[x, y].TileY);
+                            w = (Fringe[x, y].TileW);
+                            h = (Fringe[x, y].TileH);
+                            set = (Fringe[x, y].Tileset);
+                            ustates = new RenderStates(TileSet[set]);
+                            f_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            f_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            f_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            f_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                            target.Draw(f_Tile, ustates);
+                        }
+
+                        if (FringeA[x, y].TileX > 0 || FringeA[x, y].TileY > 0)
+                        {
+                            tx = (FringeA[x, y].TileX);
+                            ty = (FringeA[x, y].TileY);
+                            w = (FringeA[x, y].TileW);
+                            h = (FringeA[x, y].TileH);
+                            set = (FringeA[x, y].Tileset);
+                            ustates = new RenderStates(TileSet[set]);
+                            f2_Tile[0] = new Vertex(new Vector2f(fx, fy), new Vector2f(tx, ty));
+                            f2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
+                            f2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
+                            f2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
+                            target.Draw(f2_Tile, ustates);
+                        }
                     }
                 }
             }

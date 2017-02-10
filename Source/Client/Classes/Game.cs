@@ -567,6 +567,7 @@ namespace Client.Classes
         {
             if (c_Map.Name != null)
             {
+                c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
                 c_Window.Draw(c_Map);
                 DrawMapItems(c_Player[handleData.c_Index]);
                 DrawNpcs(c_Player[handleData.c_Index]);
@@ -610,6 +611,7 @@ namespace Client.Classes
                 p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
                 c_Window.Draw(p_HUD);
                 m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
+                c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
                 c_Window.Draw(m_Map);
             }
             c_Canvas.RenderCanvas();
