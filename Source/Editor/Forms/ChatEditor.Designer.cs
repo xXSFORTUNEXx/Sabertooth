@@ -52,7 +52,9 @@
             this.scrlItemNum = new System.Windows.Forms.HScrollBar();
             this.lblItemVal = new System.Windows.Forms.Label();
             this.scrlValue = new System.Windows.Forms.HScrollBar();
+            this.pnlMain = new System.Windows.Forms.GroupBox();
             this.pnlOptions = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.scrlNextChatD = new System.Windows.Forms.HScrollBar();
             this.lblNextChatD = new System.Windows.Forms.Label();
             this.scrlNextChatC = new System.Windows.Forms.HScrollBar();
@@ -69,11 +71,9 @@
             this.lblNextChatA = new System.Windows.Forms.Label();
             this.txtOptA = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.pnlMain = new System.Windows.Forms.GroupBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
-            this.pnlOptions.SuspendLayout();
             this.pnlMain.SuspendLayout();
+            this.pnlOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -308,6 +308,34 @@
             this.scrlValue.Value = 1;
             this.scrlValue.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlValue_Scroll);
             // 
+            // pnlMain
+            // 
+            this.pnlMain.Controls.Add(this.scrlValue);
+            this.pnlMain.Controls.Add(this.lblItemVal);
+            this.pnlMain.Controls.Add(this.scrlItemNum);
+            this.pnlMain.Controls.Add(this.lblItemNum);
+            this.pnlMain.Controls.Add(this.scrlItem);
+            this.pnlMain.Controls.Add(this.lblItem);
+            this.pnlMain.Controls.Add(this.scrlMoney);
+            this.pnlMain.Controls.Add(this.lblMoney);
+            this.pnlMain.Controls.Add(this.cmbType);
+            this.pnlMain.Controls.Add(this.label7);
+            this.pnlMain.Controls.Add(this.scrlMissionNum);
+            this.pnlMain.Controls.Add(this.lblMissionNum);
+            this.pnlMain.Controls.Add(this.scrlShopNum);
+            this.pnlMain.Controls.Add(this.lblShopNum);
+            this.pnlMain.Controls.Add(this.txtMainMessage);
+            this.pnlMain.Controls.Add(this.label2);
+            this.pnlMain.Controls.Add(this.txtName);
+            this.pnlMain.Controls.Add(this.label1);
+            this.pnlMain.Location = new System.Drawing.Point(159, 12);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(249, 466);
+            this.pnlMain.TabIndex = 10;
+            this.pnlMain.TabStop = false;
+            this.pnlMain.Text = "Properties";
+            this.pnlMain.Visible = false;
+            // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.label8);
@@ -327,12 +355,23 @@
             this.pnlOptions.Controls.Add(this.lblNextChatA);
             this.pnlOptions.Controls.Add(this.txtOptA);
             this.pnlOptions.Controls.Add(this.label3);
-            this.pnlOptions.Location = new System.Drawing.Point(259, 17);
+            this.pnlOptions.Location = new System.Drawing.Point(414, 12);
             this.pnlOptions.Name = "pnlOptions";
             this.pnlOptions.Size = new System.Drawing.Size(248, 441);
-            this.pnlOptions.TabIndex = 28;
+            this.pnlOptions.TabIndex = 29;
             this.pnlOptions.TabStop = false;
             this.pnlOptions.Text = "Chat Options";
+            this.pnlOptions.Visible = false;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(16, 371);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(228, 52);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "To assign an option to mission or shop use the \r\nfollowing keywords: \r\n\r\n\"Accept " +
+    "Mission\" or \"Shop\"";
             // 
             // scrlNextChatD
             // 
@@ -391,6 +430,7 @@
             this.txtOptD.Name = "txtOptD";
             this.txtOptD.Size = new System.Drawing.Size(213, 20);
             this.txtOptD.TabIndex = 21;
+            this.txtOptD.TextChanged += new System.EventHandler(this.txtOptD_TextChanged);
             // 
             // label6
             // 
@@ -407,6 +447,7 @@
             this.txtOptC.Name = "txtOptC";
             this.txtOptC.Size = new System.Drawing.Size(213, 20);
             this.txtOptC.TabIndex = 19;
+            this.txtOptC.TextChanged += new System.EventHandler(this.txtOptC_TextChanged);
             // 
             // label5
             // 
@@ -423,6 +464,7 @@
             this.txtOptB.Name = "txtOptB";
             this.txtOptB.Size = new System.Drawing.Size(213, 20);
             this.txtOptB.TabIndex = 17;
+            this.txtOptB.TextChanged += new System.EventHandler(this.txtOptB_TextChanged);
             // 
             // label4
             // 
@@ -456,6 +498,7 @@
             this.txtOptA.Name = "txtOptA";
             this.txtOptA.Size = new System.Drawing.Size(213, 20);
             this.txtOptA.TabIndex = 7;
+            this.txtOptA.TextChanged += new System.EventHandler(this.txtOptA_TextChanged);
             // 
             // label3
             // 
@@ -466,60 +509,22 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Option A:";
             // 
-            // pnlMain
-            // 
-            this.pnlMain.Controls.Add(this.pnlOptions);
-            this.pnlMain.Controls.Add(this.scrlValue);
-            this.pnlMain.Controls.Add(this.lblItemVal);
-            this.pnlMain.Controls.Add(this.scrlItemNum);
-            this.pnlMain.Controls.Add(this.lblItemNum);
-            this.pnlMain.Controls.Add(this.scrlItem);
-            this.pnlMain.Controls.Add(this.lblItem);
-            this.pnlMain.Controls.Add(this.scrlMoney);
-            this.pnlMain.Controls.Add(this.lblMoney);
-            this.pnlMain.Controls.Add(this.cmbType);
-            this.pnlMain.Controls.Add(this.label7);
-            this.pnlMain.Controls.Add(this.scrlMissionNum);
-            this.pnlMain.Controls.Add(this.lblMissionNum);
-            this.pnlMain.Controls.Add(this.scrlShopNum);
-            this.pnlMain.Controls.Add(this.lblShopNum);
-            this.pnlMain.Controls.Add(this.txtMainMessage);
-            this.pnlMain.Controls.Add(this.label2);
-            this.pnlMain.Controls.Add(this.txtName);
-            this.pnlMain.Controls.Add(this.label1);
-            this.pnlMain.Location = new System.Drawing.Point(159, 12);
-            this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(526, 466);
-            this.pnlMain.TabIndex = 10;
-            this.pnlMain.TabStop = false;
-            this.pnlMain.Text = "Properties";
-            this.pnlMain.Visible = false;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 371);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(228, 52);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "To assign an option to mission or shop use the \r\nfollowing keywords: \r\n\r\n\"Accept " +
-    "Mission\" or \"Shop\"";
-            // 
             // ChatEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 490);
+            this.ClientSize = new System.Drawing.Size(680, 490);
+            this.Controls.Add(this.pnlOptions);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.groupBox1);
             this.Name = "ChatEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChatEditor";
             this.groupBox1.ResumeLayout(false);
-            this.pnlOptions.ResumeLayout(false);
-            this.pnlOptions.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
+            this.pnlOptions.ResumeLayout(false);
+            this.pnlOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -550,12 +555,9 @@
         private System.Windows.Forms.HScrollBar scrlItemNum;
         private System.Windows.Forms.Label lblItemVal;
         private System.Windows.Forms.HScrollBar scrlValue;
-        private System.Windows.Forms.GroupBox pnlOptions;
-        private System.Windows.Forms.HScrollBar scrlNextChatA;
-        private System.Windows.Forms.Label lblNextChatA;
-        private System.Windows.Forms.TextBox txtOptA;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox pnlMain;
+        private System.Windows.Forms.GroupBox pnlOptions;
+        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.HScrollBar scrlNextChatD;
         private System.Windows.Forms.Label lblNextChatD;
         private System.Windows.Forms.HScrollBar scrlNextChatC;
@@ -568,6 +570,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtOptB;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.HScrollBar scrlNextChatA;
+        private System.Windows.Forms.Label lblNextChatA;
+        private System.Windows.Forms.TextBox txtOptA;
+        private System.Windows.Forms.Label label3;
     }
 }

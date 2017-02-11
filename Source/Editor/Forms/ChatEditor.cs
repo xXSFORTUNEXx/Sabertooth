@@ -108,9 +108,9 @@ namespace Editor.Forms
             lblItem.Text = "Item: " + scrlItem.Value;
             lblItemNum.Text = "Item Number: " + scrlItemNum.Value;
             lblItemVal.Text = "Value: " + scrlValue.Value;
-            LoadItemList();
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
+            if (pnlOptions.Visible == false) { pnlOptions.Visible = true; }
         }
 
         private void txtOptA_TextChanged(object sender, EventArgs e)

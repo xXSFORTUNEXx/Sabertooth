@@ -22,6 +22,7 @@ namespace Client.Classes
         Item[] c_Item;
         Chat[] c_Chat;
         ClientConfig c_Config;
+        public bool Ready;
         #endregion
 
         #region DebugWindow

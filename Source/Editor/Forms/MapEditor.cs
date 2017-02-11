@@ -174,7 +174,7 @@ namespace Editor.Forms
                 DrawItems();
                 DrawTypes();
                 DrawGrid();
-                Text = "Map Editor - FPS: " + CalculateFrameRate();                
+                Text = "Map Editor - FPS: " + CalculateFrameRate();
                 e_Window.Display();
             }
             Visible = false;
@@ -204,6 +204,7 @@ namespace Editor.Forms
 
         void DrawTiles(RenderTarget target)
         {
+            if (pnlMapNpcs.Visible) { return; }
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -1100,7 +1101,7 @@ namespace Editor.Forms
         private void treeMaps_AfterSelect(object sender, TreeViewEventArgs e)
         {
             SelectedIndex = treeMaps.SelectedNode.Index;
-            e_Map.LoadMapFromDatabase(SelectedIndex + 1);
+            e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
         }
 
@@ -1125,7 +1126,7 @@ namespace Editor.Forms
 
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
-            e_Map.SaveMapInDatabase(SelectedIndex + 1);
+            e_Map.SaveMapInDatabase(SelectedIndex);
             LoadMapList();
         }
 

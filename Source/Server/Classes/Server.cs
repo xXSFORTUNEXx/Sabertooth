@@ -105,7 +105,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `MAINWEAPONS`";
                 sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
                 sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -115,7 +115,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `SECONDARYWEAPONS`";
                 sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
                 sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -125,7 +125,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `EQUIPMENT`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
                 sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -135,7 +135,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `INVENTORY`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
                 sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -144,7 +144,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `BANK`";
                 sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
                 sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
@@ -153,7 +153,7 @@ namespace Server.Classes
                 sql = "CREATE TABLE `ITEMS`";
                 sql = sql + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
                 sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, `PROJ` INTEGER, ";
-                sql = sql + "`PRICE` INTEGER)";
+                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                 {
@@ -186,7 +186,7 @@ namespace Server.Classes
                 }
 
                 sql = "CREATE TABLE `CHAT`";
-                sql = sql + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHAT` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
+                sql = sql + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
                 sql = sql + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
 
                 using (var cmd = new SQLiteCommand(sql, conn))
@@ -315,7 +315,7 @@ namespace Server.Classes
             for (int i = 0; i < 10; i++)
             {
                 s_Proj[i] = new Projectile();
-                s_Proj[i].LoadProjectileFromDatabase(i);
+                s_Proj[i].LoadProjectileFromDatabase(i + 1);
             }
             WriteLine("Projectiles loaded successfully!");
             WriteLog("Projectiles loaded successfully", "Server");
@@ -813,6 +813,12 @@ namespace Server.Classes
                         break;
                     case "uptime":
                         WriteLine(upTime);
+                        break;
+                    case "latency":
+                        float slatency = s_Server.Configuration.SimulatedMinimumLatency;
+
+                        if (slatency != 0.065f) { s_Server.Configuration.SimulatedMinimumLatency = 0.065f; }
+                        else { s_Server.Configuration.SimulatedMinimumLatency = 0; }                        
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");

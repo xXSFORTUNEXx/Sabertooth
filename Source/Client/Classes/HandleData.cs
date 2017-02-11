@@ -55,7 +55,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.MapData:
-                                HandleMapData(c_Client, incMSG, c_Map, c_GUI, c_Canvas, c_Player);
+                                HandleMapData(c_Client, incMSG, c_Map, c_Player);
                                 break;
 
                             case (byte)PacketTypes.Players:
@@ -146,7 +146,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.MapItems:
-                                HandleMapItems(incMSG, c_Map);
+                                HandleMapItems(incMSG, c_Map, c_GUI, c_Canvas);
                                 break;
 
                             case (byte)PacketTypes.MapItemData:
@@ -615,7 +615,7 @@ namespace Client.Classes
             }
         }
 
-        void HandleMapItems(NetIncomingMessage incMSG, Map c_Map)
+        void HandleMapItems(NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
         {
             for (int i = 0; i < 20; i++)
             {
@@ -641,6 +641,8 @@ namespace Client.Classes
                 c_Map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
                 c_Map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
+            LoadMainGUI(c_GUI, c_Canvas);
+            c_GUI.Ready = true;
         }
 
         void HandleMapItemData(NetIncomingMessage incMSG, Map c_Map)
@@ -836,6 +838,7 @@ namespace Client.Classes
             Console.WriteLine("Login successful! IP: " + incMSG.SenderConnection);
             c_Canvas.DeleteAllChildren();
             c_GUI.CreateLoadingWindow(c_Canvas);
+            c_GUI.Ready = false;
         }
 
         void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
@@ -1039,7 +1042,7 @@ namespace Client.Classes
             msgBox.Position(Gwen.Pos.Center);
         }
 
-        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas, Player[] c_Player)
+        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, Player[] c_Player)
         {
             c_Map.Name = incMSG.ReadString();
             c_Map.Revision = incMSG.ReadVariableInt32();
@@ -1104,7 +1107,6 @@ namespace Client.Classes
                 }
             }
             c_Map.MapDatabaseCache(c_Player[c_Index].Map + 1);
-            LoadMainGUI(c_GUI, c_Canvas);
         }
         #endregion
 
@@ -1118,6 +1120,7 @@ namespace Client.Classes
             c_GUI.CreateChatWindow(c_Canvas);
             c_GUI.chatWindow.Hide();
             c_GUI.AddText("Welcome to Sabertooth!");
+
         }
     } 
 

@@ -38,24 +38,28 @@ namespace Server.Classes
 
         public void CreateProjectileInDatabase()
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            Name = "Default";
+            Damage = 0;
+            Range = 0;
+            Sprite = 1;
+            Type = (int)ProjType.Bullet;
+            Speed = 0;
+
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                Name = "Default";
-                Damage = 0;
-                Range = 0;
-                Sprite = 1;
-                Type = (int)ProjType.Bullet;
-                Speed = 0;
-
-                conn.Open();
-                string sql;
-                sql = "INSERT INTO `PROJECTILES`";
-                sql = sql + "(`NAME`,`DAMAGE`,`RANGE`,`SPRITE`,`TYPE`,`SPEED`)";
-                sql = sql + " VALUES ";
-                sql = sql + "('" + Name + "','" + Damage + "','" + Range + "','" + Sprite + "','" + Type + "','" + Speed + "');";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    string command;
+                    command = "INSERT INTO `PROJECTILES` (`NAME`,`DAMAGE`,`RANGE`,`SPRITE`,`TYPE`,`SPEED`) VALUES ";
+                    command = command + "(@name,@damage,@range,@sprite,@type,@speed);";
+                    cmd.CommandText = command;
+                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
+                    cmd.Parameters.Add("@range", System.Data.DbType.Int32).Value = Range;
+                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
+                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Type;
+                    cmd.Parameters.Add("@speed", System.Data.DbType.Int32).Value = Speed;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -63,17 +67,21 @@ namespace Server.Classes
 
         public void SaveProjectileToDatabase(int projNum)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-
-                sql = "UPDATE PROJECTILES SET ";
-                sql = sql + "NAME = '" + Name + "', DAMAGE = '" + Damage + "', RANGE = '" + Range + "', SPRITE = '" + Sprite + "', TYPE = '" + Type + "', SPEED = '" + Speed + "' ";
-                sql = sql + "WHERE rowid = '" + projNum + "';";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    string command;
+                    command = "UPDATE PROJECTILES SET ";
+                    command = command + "NAME = @name, DAMAGE = @damage, RANGE = @range, SPRITE = @sprite, TYPE = @type, SPEED = @speed WHERE rowid = " + projNum + ";";
+                    cmd.CommandText = command;
+                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
+                    cmd.Parameters.Add("@range", System.Data.DbType.Int32).Value = Range;
+                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
+                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Type;
+                    cmd.Parameters.Add("@speed", System.Data.DbType.Int32).Value = Speed;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -81,14 +89,12 @@ namespace Server.Classes
 
         public void LoadProjectileFromDatabase(int projNum)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-                sql = "SELECT * FROM `PROJECTILES` WHERE rowid = " + (projNum + 1);
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM `PROJECTILES` WHERE rowid = " + projNum;
                     using (SQLiteDataReader read = cmd.ExecuteReader())
                     {
                         while (read.Read())
@@ -107,14 +113,12 @@ namespace Server.Classes
 
         public void LoadNameFromDatabase(int projNum)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-                sql = "SELECT * FROM `PROJECTILES` WHERE rowid = " + projNum;
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM `PROJECTILES` WHERE rowid = " + projNum;
                     using (SQLiteDataReader read = cmd.ExecuteReader())
                     {
                         while (read.Read())

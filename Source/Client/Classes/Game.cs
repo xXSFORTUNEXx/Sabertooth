@@ -565,7 +565,7 @@ namespace Client.Classes
 
         void DrawGraphics(NetClient c_Client, Player[] c_Player)
         {
-            if (c_Map.Name != null)
+            if (c_Map.Name != null && c_GUI.Ready)
             {
                 c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
                 c_Window.Draw(c_Map);
@@ -602,7 +602,7 @@ namespace Client.Classes
                 }
             }
             c_Window.SetView(c_Window.DefaultView);
-            if (c_Map.Name != null)
+            if (c_Map.Name != null && c_GUI.Ready)
             {
                 p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
