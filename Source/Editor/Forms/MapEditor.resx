@@ -117,6 +117,53 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Controls
+W - Moves Map Up
+A - Moves Map Left
+S - Moves Map Down
+D - Moves Map Right
+Left click - Paint selected tile or type
+Right click - Remove selected tile or type
+Click and drag for continues paints/removal
+
+Icons (Left to Right)
+New Map - Creates a new map
+Save Map - Saves currently loaded map
+---
+Debug - Displays debugging info
+Map Npcs - Shows map npc diag
+---
+Fill Layer - Fills currently selected layer
+
+Layer Tab
+Shows all different layers and shows a preview of selected 
+tiles, Types are hidden
+Ground - Lowest Tile
+Mask - Above Ground Below Mask2
+Mask2 - Above Mask below Fringe
+Fringe - Above mask2 below Fringe 2
+Fringe2 - Highest tile
+Grid - Shows map grid
+Show Npcs - Under construction
+
+Types Tab
+When this tab is selected all currently painted types will 
+appear on the map
+Blocked - Tiles that cannot be walked on
+Npc Avoid - A tile npc's will avoid walking on
+Spawn Npc - Spawns 1 npc selected in map npcs
+Spawn Pool - Spawns a specified amount of npcs from map npcs
+Item - Places an im and its value selected on the map
+
+Tiles Tab
+Shows selected tileset for editing the map
+TileSet - Current tileset selected for editing the map
+W - Removes 32 pixels from the height of the selected tile
+A - Removes 32 pixels from the width of the selected tile
+S - Adds 32 pixels to the height of the selected tile
+D - Adds 32 pixels to the width of the selected tile</value>
+  </data>
   <metadata name="tosMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -138,23 +185,14 @@
         NwAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="btnDebug.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC0SURBVDhPY/j27dt/IH7/9evXAAZyAMiAmHkR/++9vAcy
-        qB8qTDwAGWDRZfLfZaLD/+O3j/0HumQ/1FVYMVQbAoAEQQbUb64F09MPTAUrdHJywsB4DQDRMEPWn1tL
-        ugHdOzspcwEoDHZf2YkRBjCNMAzVhgAgQVyxAJLDaTMMgCSBGJwOoGwUjO4CGIZqRwUgCZh/8WGCBsBs
-        wYaxGoBNAQwTI4/T6TAFhOQHiQG4MH75b/8BsWkY9mnO1tkAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="btnMapNpcs.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADwSURBVDhPlZArDoNAFEW7pK4BT1KLq8CzhSpsN4BnAXg8
-        Hl8sQdTwkVPOYx6ZTieEvuTk/ebeGbgcxTRNt5XXPM8GqJnZ9XFwcBgGk2WZiaJIoGZ2yoTbXLFrws4e
-        22J93lOfaZHeFyvsrHQT13Vt4jiWJZn+yKDrui8DEeV5bpqmkUzP/NQn6E2Iqcn01H3fv10Tan7iOI5X
-        Kz9+wRn424+qqkTELeSyLE2SJNIXRbEfptbXgBgQy7LcaRjyg9RMadtWcGewGxBqQFb0YJqmgvZK0MBd
-        un2IoAFZ8QU+QQN36fYhggZkxRf4/Bj8z2w+xvs2izW75MkAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADzSURBVDhPlZErEoMwFEW7pK4Bz0wtrgLPFqqw3QCeBeDx
+        eHxxCEQFP5n2PPI6aZph6Js58365Nyk97cU8z5dxHB/LshigZmbX+8HBYRhMlmUmiiKBmtkhE25zxa4J
+        O3tsi/fz7vpMi/S+WGFnpZu4rmsTx7EsyfR7Bl3XfRmIKM9z0zSNZHrmh36C3oSYmkxP3ff90zWh5iNO
+        03S28v0XHIG/61ZVlYi4hVyWpUmSRPqiKD6HqfU1IAbEuq5XGoZ8IDVT2rYV3Bl8DAg1ICt6ME1TQXsl
+        aOAu3T5E0ICs+AKfoIG7dPsQQQOy4gt8fgz+ZzEvUU02Zx4XkJ8AAAAASUVORK5CYII=
 </value>
   </data>
   <data name="btnFillMap.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -166,6 +204,35 @@
         dDwczTjjOE4QDMzsAxDzAwCmOZZMjbVPT6ebe6qA8HQ3FwTotjnd4pBmAJ4VKvymDwALoXOo0Be74vwA
         ECSKopgZXPmLttYpliBqRos/FBeM4+5EzbbEjGw/w0GBdlPZKy+i6AVoYtEy9asOnAAAAABJRU5ErkJg
         gg==
+</value>
+  </data>
+  <data name="btnDeleteLayer.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEXSURBVDhPY/j+/bvDt2/f3gPx/69fv85ngAKgeAKQvx+E
+        gXLrocKYACR5sCTl/zJjmf/Pzp8CGVIAMgjEvjh7wn+Q4V++fDGAKscEIA0gxSADQPj1nZv/b29d+3+N
+        g9b/jy+fgwzAi8GGgBgXdm4BawJhkEEgvq+v738nJyecGMWA88eP/d8W5f5/oRrv/42+lmA+Nk3IGGwA
+        kFj/8NAesK0gzSB/g8IEZMjaZUuwaoRhmAFgjbBA/Pjh0//Pnz7/v7ZiPtigL5+//P/w/iNYA4iGYWQD
+        3oNsvX1kP1gzTEFKSgpYAQh/BhqC0wBgfCuAGIQCDBsGGwALRJAAug2E+NQ3gFRMfRegKyDExzCAVIxi
+        AHn4238AQsKlV05W48EAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnDebug.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC0SURBVDhPY/j27dt/IH7/9evXAAZyAMiAmHkR/++9vAcy
+        qB8qTDwAGWDRZfLfZaLD/+O3j/0HumQ/1FVYMVQbAoAEQQbUb64F09MPTAUrdHJywsB4DQDRMEPWn1tL
+        ugHdOzspcwEoDHZf2YkRBjCNMAzVhgAgQVyxAJLDaTMMgCSBGJwOoGwUjO4CGIZqRwUgCZh/8WGCBsBs
+        wYaxGoBNAQwTI4/T6TAFhOQHiQG4MH75b/8BsWkY9mnO1tkAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="btnHelp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACRSURBVDhPzZGxCcAgEEUdISMFe2fLAvaWKRwgtdNYqaXx
+        h4uIXIiBFD74cPjvvnKK+fDeLzHGrcgXZRLqDR61PRNCOKy1WSmVpZSXUOMMHrXx0O11sBc8auVJKa1t
+        gHMuG2O+B/QaDmgpzbvWug5/CuB2gbDXJd70u0CN4aFvBNwuyBqDewFZY/wW0Iqs6RDiBEMl9XB1Lt2Y
+        AAAAAElFTkSuQmCC
 </value>
   </data>
 </root>

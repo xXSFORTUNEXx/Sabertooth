@@ -266,7 +266,7 @@ namespace Server.Classes
                 {
                     conn.Open();
                     cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
-                    using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                    using (SQLiteDataReader read = cmd.ExecuteReader())
                     {
                         while (read.Read())
                         {

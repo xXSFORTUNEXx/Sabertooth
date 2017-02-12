@@ -517,6 +517,7 @@
             this.Controls.Add(this.pnlOptions);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ChatEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChatEditor";

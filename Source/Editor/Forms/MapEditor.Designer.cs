@@ -71,6 +71,8 @@
             this.picTileset = new System.Windows.Forms.PictureBox();
             this.lblTileset = new System.Windows.Forms.Label();
             this.cmbTileset = new System.Windows.Forms.ComboBox();
+            this.tabHelp = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.pnlMapNpcs = new System.Windows.Forms.Panel();
             this.cmbNpc10 = new System.Windows.Forms.ComboBox();
@@ -96,7 +98,10 @@
             this.btnMapNpcs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnFillMap = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
+            this.btnHelp = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteLayer = new System.Windows.Forms.ToolStripButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -106,6 +111,7 @@
             this.tabTiles.SuspendLayout();
             this.pnlTile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
+            this.tabHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.pnlMapNpcs.SuspendLayout();
             this.tosMenu.SuspendLayout();
@@ -116,6 +122,7 @@
             this.tabTools.Controls.Add(this.tabLayer);
             this.tabTools.Controls.Add(this.tabTypes);
             this.tabTools.Controls.Add(this.tabTiles);
+            this.tabTools.Controls.Add(this.tabHelp);
             this.tabTools.Location = new System.Drawing.Point(12, 36);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
@@ -577,6 +584,27 @@
             this.cmbTileset.TabIndex = 2;
             this.cmbTileset.SelectedIndexChanged += new System.EventHandler(this.cmbTileset_SelectedIndexChanged);
             // 
+            // tabHelp
+            // 
+            this.tabHelp.Controls.Add(this.label1);
+            this.tabHelp.Location = new System.Drawing.Point(4, 22);
+            this.tabHelp.Name = "tabHelp";
+            this.tabHelp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabHelp.Size = new System.Drawing.Size(299, 589);
+            this.tabHelp.TabIndex = 3;
+            this.tabHelp.Text = "Help";
+            this.tabHelp.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(13, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(273, 495);
+            this.label1.TabIndex = 0;
+            this.label1.Text = resources.GetString("label1.Text");
+            // 
             // picMap
             // 
             this.picMap.Location = new System.Drawing.Point(321, 31);
@@ -777,10 +805,13 @@
             this.btnNewMap,
             this.btnSaveMap,
             this.toolStripSeparator,
-            this.btnDebug,
             this.btnMapNpcs,
             this.toolStripSeparator1,
-            this.btnFillMap});
+            this.btnFillMap,
+            this.btnDeleteLayer,
+            this.toolStripSeparator2,
+            this.btnDebug,
+            this.btnHelp});
             this.tosMenu.Location = new System.Drawing.Point(0, 0);
             this.tosMenu.Name = "tosMenu";
             this.tosMenu.Size = new System.Drawing.Size(1397, 25);
@@ -837,6 +868,11 @@
             this.btnFillMap.Text = "Fill Current Layer";
             this.btnFillMap.Click += new System.EventHandler(this.btnFillMap_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // btnDebug
             // 
             this.btnDebug.CheckOnClick = true;
@@ -847,6 +883,26 @@
             this.btnDebug.Size = new System.Drawing.Size(23, 22);
             this.btnDebug.Text = "Debug Window";
             this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnHelp.Image = ((System.Drawing.Image)(resources.GetObject("btnHelp.Image")));
+            this.btnHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(23, 22);
+            this.btnHelp.Text = "Help";
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // btnDeleteLayer
+            // 
+            this.btnDeleteLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDeleteLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteLayer.Image")));
+            this.btnDeleteLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteLayer.Name = "btnDeleteLayer";
+            this.btnDeleteLayer.Size = new System.Drawing.Size(23, 22);
+            this.btnDeleteLayer.Text = "Delete Layer";
+            this.btnDeleteLayer.Click += new System.EventHandler(this.btnDeleteLayer_Click);
             // 
             // MapEditor
             // 
@@ -861,6 +917,8 @@
             this.Controls.Add(this.pnlMapNpcs);
             this.Controls.Add(this.picMap);
             this.Controls.Add(this.tabTools);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.HelpButton = true;
             this.Name = "MapEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Map Editor";
@@ -880,6 +938,8 @@
             this.pnlTile.ResumeLayout(false);
             this.pnlTile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
+            this.tabHelp.ResumeLayout(false);
+            this.tabHelp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.pnlMapNpcs.ResumeLayout(false);
             this.pnlMapNpcs.PerformLayout();
@@ -959,5 +1019,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnFillMap;
         private System.Windows.Forms.ToolStripButton btnDebug;
+        private System.Windows.Forms.TabPage tabHelp;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton btnHelp;
+        private System.Windows.Forms.ToolStripButton btnDeleteLayer;
     }
 }

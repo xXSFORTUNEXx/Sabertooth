@@ -1376,7 +1376,7 @@ namespace Client.Classes
             menuWindow.Position(Gwen.Pos.Right);
             menuWindow.DisableResizing();
             menuWindow.Title = "Game Menu";
-            menuWindow.IsClosable = false;
+            //menuWindow.IsClosable = false;
 
             menuTabs = new TabControl(menuWindow);
             menuTabs.SetSize(330, 260);

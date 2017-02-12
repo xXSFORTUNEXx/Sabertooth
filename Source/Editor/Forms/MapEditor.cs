@@ -1100,7 +1100,7 @@ namespace Editor.Forms
 
         private void treeMaps_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SelectedIndex = treeMaps.SelectedNode.Index;
+            SelectedIndex = treeMaps.SelectedNode.Index + 1;
             e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
         }
@@ -1229,6 +1229,100 @@ namespace Editor.Forms
             }
             frameRate++;
             return lastFrameRate;
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"C:\Users\Steve\Source\Repos\Sabertooth\Help\Map Editor Help\Map Editor.chm");
+        }
+
+        private void btnDeleteLayer_Click(object sender, EventArgs e)
+        {
+            string w_Message = "Are you sure you want to delete this layer?";
+            string w_Caption = "Unsaved data";
+            MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
+            DialogResult w_Result;
+            w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
+            if (w_Result == DialogResult.No) { return; }
+
+            switch (e_Layer)
+            {
+                case (int)TileLayers.Ground:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Ground[x, y].TileX = 0;
+                            e_Map.Ground[x, y].TileY = 0;
+                            e_Map.Ground[x, y].TileW = 0;
+                            e_Map.Ground[x, y].TileH = 0;
+                            e_Map.Ground[x, y].Tileset = 0;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.Mask:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Mask[x, y].TileX = 0;
+                            e_Map.Mask[x, y].TileY = 0;
+                            e_Map.Mask[x, y].TileW = 0;
+                            e_Map.Mask[x, y].TileH = 0;
+                            e_Map.Mask[x, y].Tileset = 0;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.MaskA:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.MaskA[x, y].TileX = 0;
+                            e_Map.MaskA[x, y].TileY = 0;
+                            e_Map.MaskA[x, y].TileW = 0;
+                            e_Map.MaskA[x, y].TileH = 0;
+                            e_Map.MaskA[x, y].Tileset = 0;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.Fringe:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.Fringe[x, y].TileX = 0;
+                            e_Map.Fringe[x, y].TileY = 0;
+                            e_Map.Fringe[x, y].TileW = 0;
+                            e_Map.Fringe[x, y].TileH = 0;
+                            e_Map.Fringe[x, y].Tileset = 0;
+                        }
+                    }
+                    break;
+                case (int)TileLayers.FringeA:
+                    for (int x = 0; x < 50; x++)
+                    {
+                        for (int y = 0; y < 50; y++)
+                        {
+                            e_Map.FringeA[x, y].TileX = 0;
+                            e_Map.FringeA[x, y].TileY = 0;
+                            e_Map.FringeA[x, y].TileW = 0;
+                            e_Map.FringeA[x, y].TileH = 0;
+                            e_Map.FringeA[x, y].Tileset = 0;
+                        }
+                    }
+                    break;
+            }
+            if (tabTypes.Focused)
+            {
+                for (int x = 0; x < 50; x++)
+                {
+                    for (int y = 0; y < 50; y++)
+                    {
+                        e_Map.Ground[x, y].Type = (int)TileType.None;
+                    }
+                }
+            }
         }
     }
 
