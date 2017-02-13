@@ -78,6 +78,8 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
+            this.lblRarity = new System.Windows.Forms.Label();
+            this.scrlRarity = new System.Windows.Forms.HScrollBar();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -89,6 +91,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlRarity);
+            this.pnlMain.Controls.Add(this.lblRarity);
             this.pnlMain.Controls.Add(this.scrlPrice);
             this.pnlMain.Controls.Add(this.lblPrice);
             this.pnlMain.Controls.Add(this.scrlAttackSpeed);
@@ -169,16 +173,16 @@
             "Pants",
             "Shoes",
             "Other"});
-            this.cmbType.Location = new System.Drawing.Point(17, 259);
+            this.cmbType.Location = new System.Drawing.Point(20, 290);
             this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(156, 21);
+            this.cmbType.Size = new System.Drawing.Size(153, 21);
             this.cmbType.TabIndex = 15;
             this.cmbType.SelectedIndexChanged += new System.EventHandler(this.cmbType_SelectedIndexChanged);
             // 
             // lblType
             // 
             this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(17, 242);
+            this.lblType.Location = new System.Drawing.Point(17, 273);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(34, 13);
             this.lblType.TabIndex = 14;
@@ -187,6 +191,7 @@
             // scrlArmor
             // 
             this.scrlArmor.Location = new System.Drawing.Point(17, 152);
+            this.scrlArmor.Maximum = 2500;
             this.scrlArmor.Name = "scrlArmor";
             this.scrlArmor.Size = new System.Drawing.Size(156, 17);
             this.scrlArmor.TabIndex = 13;
@@ -204,6 +209,7 @@
             // scrlDamage
             // 
             this.scrlDamage.Location = new System.Drawing.Point(17, 122);
+            this.scrlDamage.Maximum = 2500;
             this.scrlDamage.Name = "scrlDamage";
             this.scrlDamage.Size = new System.Drawing.Size(156, 17);
             this.scrlDamage.TabIndex = 11;
@@ -478,6 +484,7 @@
             // scrlHydrateRestore
             // 
             this.scrlHydrateRestore.Location = new System.Drawing.Point(23, 96);
+            this.scrlHydrateRestore.Maximum = 1000;
             this.scrlHydrateRestore.Name = "scrlHydrateRestore";
             this.scrlHydrateRestore.Size = new System.Drawing.Size(156, 17);
             this.scrlHydrateRestore.TabIndex = 33;
@@ -495,6 +502,7 @@
             // scrlHungerRestore
             // 
             this.scrlHungerRestore.Location = new System.Drawing.Point(23, 66);
+            this.scrlHungerRestore.Maximum = 1000;
             this.scrlHungerRestore.Name = "scrlHungerRestore";
             this.scrlHungerRestore.Size = new System.Drawing.Size(156, 17);
             this.scrlHungerRestore.TabIndex = 31;
@@ -512,6 +520,7 @@
             // scrlHealthRestore
             // 
             this.scrlHealthRestore.Location = new System.Drawing.Point(23, 36);
+            this.scrlHealthRestore.Maximum = 1000;
             this.scrlHealthRestore.Name = "scrlHealthRestore";
             this.scrlHealthRestore.Size = new System.Drawing.Size(156, 17);
             this.scrlHealthRestore.TabIndex = 29;
@@ -547,6 +556,7 @@
             // scrlStamina
             // 
             this.scrlStamina.Location = new System.Drawing.Point(24, 124);
+            this.scrlStamina.Maximum = 1000;
             this.scrlStamina.Name = "scrlStamina";
             this.scrlStamina.Size = new System.Drawing.Size(156, 17);
             this.scrlStamina.TabIndex = 43;
@@ -564,6 +574,7 @@
             // scrlEndurance
             // 
             this.scrlEndurance.Location = new System.Drawing.Point(24, 94);
+            this.scrlEndurance.Maximum = 1000;
             this.scrlEndurance.Name = "scrlEndurance";
             this.scrlEndurance.Size = new System.Drawing.Size(156, 17);
             this.scrlEndurance.TabIndex = 41;
@@ -581,6 +592,7 @@
             // scrlAgility
             // 
             this.scrlAgility.Location = new System.Drawing.Point(24, 64);
+            this.scrlAgility.Maximum = 1000;
             this.scrlAgility.Name = "scrlAgility";
             this.scrlAgility.Size = new System.Drawing.Size(156, 17);
             this.scrlAgility.TabIndex = 39;
@@ -598,6 +610,7 @@
             // scrlStrength
             // 
             this.scrlStrength.Location = new System.Drawing.Point(24, 34);
+            this.scrlStrength.Maximum = 1000;
             this.scrlStrength.Name = "scrlStrength";
             this.scrlStrength.Size = new System.Drawing.Size(156, 17);
             this.scrlStrength.TabIndex = 37;
@@ -611,6 +624,25 @@
             this.lblStrength.Size = new System.Drawing.Size(59, 13);
             this.lblStrength.TabIndex = 36;
             this.lblStrength.Text = "Strength: 0";
+            // 
+            // lblRarity
+            // 
+            this.lblRarity.AutoSize = true;
+            this.lblRarity.Location = new System.Drawing.Point(17, 237);
+            this.lblRarity.Name = "lblRarity";
+            this.lblRarity.Size = new System.Drawing.Size(88, 13);
+            this.lblRarity.TabIndex = 22;
+            this.lblRarity.Text = "Rarity: 0 - Normal";
+            // 
+            // scrlRarity
+            // 
+            this.scrlRarity.LargeChange = 1;
+            this.scrlRarity.Location = new System.Drawing.Point(17, 251);
+            this.scrlRarity.Maximum = 5;
+            this.scrlRarity.Name = "scrlRarity";
+            this.scrlRarity.Size = new System.Drawing.Size(156, 17);
+            this.scrlRarity.TabIndex = 23;
+            this.scrlRarity.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRarity_Scroll);
             // 
             // ItemEditor
             // 
@@ -693,5 +725,7 @@
         private System.Windows.Forms.Label lblStrength;
         private System.Windows.Forms.HScrollBar scrlPrice;
         private System.Windows.Forms.Label lblPrice;
+        private System.Windows.Forms.HScrollBar scrlRarity;
+        private System.Windows.Forms.Label lblRarity;
     }
 }

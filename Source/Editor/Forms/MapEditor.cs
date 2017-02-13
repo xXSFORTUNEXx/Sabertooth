@@ -670,6 +670,8 @@ namespace Editor.Forms
             e_CursorX = (e.X / 32) + e_ViewX;
             e_CursorY = (e.Y / 32) + e_ViewY;
 
+            if (e_CursorX < 0 || e_CursorX >= 50 || e_CursorY < 0 || e_CursorY >= 50) { return; }
+
             if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
             {
                 if (e.Button == MouseButtons.Left)

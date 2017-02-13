@@ -440,6 +440,8 @@ namespace Client.Classes
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
+        public int Rarity { get; set; }
+
         public bool IsSpawned;
         const int spritePics = 8;
         VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);

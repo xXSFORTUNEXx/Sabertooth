@@ -986,6 +986,8 @@ namespace Server.Classes
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
+        public int Rarity { get; set; }
+
         public int ItemNum { get; set; }
         public int X { get; set; }
         public int Y { get; set; }

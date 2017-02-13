@@ -377,6 +377,7 @@ namespace Client.Classes
             c_Player[index].Chest.Value = incMSG.ReadVariableInt32();
             c_Player[index].Chest.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Chest.Price= incMSG.ReadVariableInt32();
+            c_Player[index].Chest.Rarity = incMSG.ReadVariableInt32();
 
             c_Player[index].Legs.Name = incMSG.ReadString();
             c_Player[index].Legs.Sprite = incMSG.ReadVariableInt32();
@@ -398,6 +399,7 @@ namespace Client.Classes
             c_Player[index].Legs.Value = incMSG.ReadVariableInt32();
             c_Player[index].Legs.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Legs.Price = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.Rarity = incMSG.ReadVariableInt32();
 
             c_Player[index].Feet.Name = incMSG.ReadString();
             c_Player[index].Feet.Sprite = incMSG.ReadVariableInt32();
@@ -419,6 +421,7 @@ namespace Client.Classes
             c_Player[index].Feet.Value = incMSG.ReadVariableInt32();
             c_Player[index].Feet.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Feet.Price = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.Rarity = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayerInv(NetIncomingMessage incMSG, Player[] c_Player, int index)
@@ -447,6 +450,7 @@ namespace Client.Classes
                     c_Player[index].Backpack[i].Value = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Price = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -541,6 +545,7 @@ namespace Client.Classes
                     c_Item[i].Value = incMSG.ReadVariableInt32();
                     c_Item[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     c_Item[i].Price = incMSG.ReadVariableInt32();
+                    c_Item[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -567,6 +572,7 @@ namespace Client.Classes
             c_Item[index].Value = incMSG.ReadVariableInt32();
             c_Item[index].ProjectileNumber = incMSG.ReadVariableInt32();
             c_Item[index].Price = incMSG.ReadVariableInt32();
+            c_Item[index].Rarity = incMSG.ReadVariableInt32();
         }
 
         void HandleNpcs(NetIncomingMessage incMSG, Npc[] c_Npc)
@@ -639,6 +645,7 @@ namespace Client.Classes
                 c_Map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
                 c_Map.m_MapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
                 c_Map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
+                c_Map.m_MapItem[i].Rarity = incMSG.ReadVariableInt32();
                 c_Map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
             LoadMainGUI(c_GUI, c_Canvas);
@@ -669,6 +676,7 @@ namespace Client.Classes
             c_Map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();
             c_Map.m_MapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
             c_Map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
+            c_Map.m_MapItem[itemNum].Rarity = incMSG.ReadVariableInt32();
             c_Map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
@@ -930,6 +938,7 @@ namespace Client.Classes
             c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
             c_Player[index].offWeapon.Name = incMSG.ReadString();
@@ -952,6 +961,7 @@ namespace Client.Classes
             c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Rarity = incMSG.ReadVariableInt32();
         }
 
         void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
@@ -977,6 +987,7 @@ namespace Client.Classes
             c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
             c_Player[index].offWeapon.Name = incMSG.ReadString();
@@ -999,6 +1010,7 @@ namespace Client.Classes
             c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.Rarity = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)

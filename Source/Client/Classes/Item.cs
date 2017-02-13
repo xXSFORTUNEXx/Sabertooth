@@ -31,6 +31,7 @@ namespace Client.Classes
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
+        public int Rarity { get; set; }
 
         public Item() { }
 
@@ -83,5 +84,15 @@ namespace Client.Classes
         AssaultRifle,
         Rocket,
         Grenade
+    }
+
+    public enum Rarity
+    {
+        Normal,
+        Uncommon,
+        Rare,
+        UltraRare,
+        Legendary,
+        Admin
     }
 }

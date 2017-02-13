@@ -158,6 +158,33 @@ namespace Editor.Forms
             UnModSave = true;
         }
 
+        private void scrlRarity_Scroll(object sender, ScrollEventArgs e)
+        {
+            switch (scrlRarity.Value)
+            {
+                case (int)Rarity.Normal:
+                    lblRarity.Text = "Rarity: 0 - Normal";
+                    break;
+                case (int)Rarity.Uncommon:
+                    lblRarity.Text = "Rarity: 1 - Uncommon";
+                    break;
+                case (int)Rarity.Rare:
+                    lblRarity.Text = "Rarity: 2 - Rare";
+                    break;
+                case (int)Rarity.UltraRare:
+                    lblRarity.Text = "Rarity: 3 - UltraRare";
+                    break;
+                case (int)Rarity.Legendary:
+                    lblRarity.Text = "Rarity: 4 - Legendary";
+                    break;
+                case (int)Rarity.Admin:
+                    lblRarity.Text = "Rarity: 5 - Admin";
+                    break;
+            }
+            e_Item.Rarity = scrlRarity.Value;
+            UnModSave = true;
+        }
+
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Item.Type = (cmbType.SelectedIndex);
@@ -244,6 +271,7 @@ namespace Editor.Forms
             cmbAmmoType.SelectedIndex = e_Item.ItemAmmoType;
             scrlProjNum.Value = e_Item.ProjectileNumber;
             scrlPrice.Value = e_Item.Price;
+            scrlRarity.Value = e_Item.Rarity;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
             picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
@@ -262,6 +290,27 @@ namespace Editor.Forms
             lblMaxClip.Text = "Max Clip: " + (scrlMaxClip.Value);
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
             lblPrice.Text = "Price: " + scrlPrice.Value;
+            switch (scrlRarity.Value)
+            {
+                case (int)Rarity.Normal:
+                    lblRarity.Text = "Rarity: 0 - Normal";
+                    break;
+                case (int)Rarity.Uncommon:
+                    lblRarity.Text = "Rarity: 1 - Uncommon";
+                    break;
+                case (int)Rarity.Rare:
+                    lblRarity.Text = "Rarity: 2 - Rare";
+                    break;
+                case (int)Rarity.UltraRare:
+                    lblRarity.Text = "Rarity: 3 - UltraRare";
+                    break;
+                case (int)Rarity.Legendary:
+                    lblRarity.Text = "Rarity: 4 - Legendary";
+                    break;
+                case (int)Rarity.Admin:
+                    lblRarity.Text = "Rarity: 5 - Admin";
+                    break;
+            }
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }

@@ -173,7 +173,7 @@ namespace Server.Classes
             money += price;
             s_Player[index].Money = money;
             hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You sold " + s_Player[index].Backpack[slot].Name + " for " + price + " dollars!");
-            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1);            
+            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);            
             hData.SendPlayerInv(s_Server, s_Player, index);
             hData.SendUpdatePlayerStats(s_Server, s_Player, index);
         }

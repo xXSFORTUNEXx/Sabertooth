@@ -25,6 +25,7 @@ namespace Server.Classes
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
+        public int Rarity { get; set; }
 
         public Item() { }
 
@@ -35,7 +36,7 @@ namespace Server.Classes
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
                     int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype, 
-                    int value, int projNum, int price)
+                    int value, int projNum, int price, int rarity)
         {
             Name = name;
             Sprite = sprite;
@@ -57,6 +58,7 @@ namespace Server.Classes
             Value = value;
             ProjectileNumber = projNum;
             Price = price;
+            Rarity = rarity;
         }
 
         public void CreateItemInDatabase()
@@ -81,20 +83,40 @@ namespace Server.Classes
             Value = 0;
             ProjectileNumber = 1;
             Price = 1;
+            Rarity = 0;
 
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-                sql = "INSERT INTO `ITEMS`";
-                sql = sql + "(`NAME`,`SPRITE`,`DAMAGE`,`ARMOR`,`TYPE`,`ATTACKSPEED`,`RELOADSPEED`,`HEALTHRESTORE`,`HUNGERRESTORE`,`HYDRATERESTORE`,";
-                sql = sql + "`STRENGTH`,`AGILITY`,`ENDURANCE`,`STAMINA`,`CLIP`,`MAXCLIP`,`AMMOTYPE`,`VALUE`,`PROJ`,`PRICE`)";
-                sql = sql + " VALUES ";
-                sql = sql + "('" + Name + "','" + Sprite + "','" + Damage + "','" + Armor + "','" + Type + "','" + AttackSpeed + "','" + ReloadSpeed + "','" + HealthRestore + "','" + HungerRestore + "',";
-                sql = sql + "'" + HydrateRestore + "','" + Strength + "','" + Agility + "','" + Endurance + "','" + Stamina + "','" + Clip + "','" + MaxClip + "','" + ItemAmmoType + "','" + Value + "',' " + ProjectileNumber + "','" + Price + "');";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    string command;
+                    command = "INSERT INTO ITEMS";
+                    command = command + "(NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
+                    command = command + " VALUES ";
+                    command = command + "(@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
+                    cmd.CommandText = command;
+                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
+                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
+                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Armor;
+                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Type;
+                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = AttackSpeed;
+                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = ReloadSpeed;
+                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = HealthRestore;
+                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = HungerRestore;
+                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = HydrateRestore;
+                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Strength;
+                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Agility;
+                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Endurance;
+                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Stamina;
+                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Clip;
+                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = MaxClip;
+                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = ItemAmmoType;
+                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Value;
+                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = ProjectileNumber;
+                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Price;
+                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Rarity;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -102,19 +124,38 @@ namespace Server.Classes
 
         public void SaveItemToDatabase(int itemNum)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-                sql = "UPDATE ITEMS SET ";
-                sql = sql + "NAME = '" + Name + "', SPRITE = '" + Sprite + "', DAMAGE = '" + Damage + "', ARMOR = '" + Armor + "', TYPE = '" + Type + "', ATTACKSPEED = '" + AttackSpeed + "', ";
-                sql = sql + "RELOADSPEED = '" + ReloadSpeed + "', HEALTHRESTORE = '" + HealthRestore + "', HUNGERRESTORE = '" + HungerRestore + "', HYDRATERESTORE = '" + HydrateRestore + "', ";
-                sql = sql + "STRENGTH = '" + Strength + "', AGILITY = '" + Agility + "', ENDURANCE = '" + Endurance + "', STAMINA = '" + Stamina + "', CLIP = '" + Clip + "', MAXCLIP = '" + MaxClip + "', AMMOTYPE = '" + ItemAmmoType + "', ";
-                sql = sql + "VALUE = '" + Value + "', PROJ = '" + ProjectileNumber + "', PRICE = '" + Price + "' ";
-                sql = sql + "WHERE rowid = '" + itemNum + "';";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    string command;
+                    command = "UPDATE ITEMS SET ";
+                    command = command + "NAME = @name, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, ";
+                    command = command + "STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, CLIP = @clip, MAXCLIP = @maxclip, AMMOTYPE = @ammotype, VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity ";
+                    command = command + "WHERE rowid = " + itemNum + ";";
+                    cmd.CommandText = command;
+                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
+                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
+                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Armor;
+                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Type;
+                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = AttackSpeed;
+                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = ReloadSpeed;
+                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = HealthRestore;
+                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = HungerRestore;
+                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = HydrateRestore;
+                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Strength;
+                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Agility;
+                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Endurance;
+                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Stamina;
+                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Clip;
+                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = MaxClip;
+                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = ItemAmmoType;
+                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Value;
+                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = ProjectileNumber;
+                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Price;
+                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Rarity;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -122,15 +163,13 @@ namespace Server.Classes
 
         public void LoadItemFromDatabase(int itemNum)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-
-                sql = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM ITEMS WHERE rowid = " + itemNum;
+
                     using (SQLiteDataReader read = cmd.ExecuteReader())
                     {
                         while (read.Read())
@@ -155,6 +194,7 @@ namespace Server.Classes
                             Value = ToInt32(read["VALUE"].ToString());
                             ProjectileNumber = ToInt32(read["PROJ"].ToString());
                             Price = ToInt32(read["PRICE"].ToString());
+                            Rarity = ToInt32(read["RARITY"].ToString());
                         }
                     }
                 }
@@ -206,5 +246,15 @@ namespace Server.Classes
         AssaultRifle,
         Rocket,
         Grenade
+    }
+
+    public enum Rarity
+    {
+        Normal,
+        Uncommon,
+        Rare,
+        UltraRare,
+        Legendary,
+        Admin
     }
 }

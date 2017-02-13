@@ -86,118 +86,88 @@ namespace Server.Classes
 
         public static void CreateDatabase()
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
             {
-                conn.Open();
-                string sql;
-
-                sql = "CREATE TABLE `PLAYERS`";
-                sql = sql + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
-                sql = sql + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
-                sql = sql + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
-                sql = sql + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(conn))
                 {
+                    conn.Open();
+                    string command;
+
+                    command = "CREATE TABLE `PLAYERS`";
+                    command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
+                    command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
+                    command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
+                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `MAINWEAPONS`";
-                sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `MAINWEAPONS`";
+                    command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                    command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `SECONDARYWEAPONS`";
-                sql = sql + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                sql = sql + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `SECONDARYWEAPONS`";
+                    command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                    command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `EQUIPMENT`";
-                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `EQUIPMENT`";
+                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `INVENTORY`";
-                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `INVENTORY`";
+                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `BANK`";
-                sql = sql + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `BANK`";
+                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `ITEMS`";
-                sql = sql + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                sql = sql + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, `PROJ` INTEGER, ";
-                sql = sql + "`PROJ` INTEGER, `PRICE` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `ITEMS`";
+                    command = command + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `NPCS`";
-                sql = sql + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
-                sql = sql + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `NPCS`";
+                    command = command + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
+                    command = command + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `PROJECTILES`";
-                sql = sql + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `PROJECTILES`";
+                    command = command + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `SHOPS`";
-                sql = sql + "(`NAME` TEXT, `ITEMDATA` BLOB)";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `SHOPS`";
+                    command = command + "(`NAME` TEXT, `ITEMDATA` BLOB)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `CHAT`";
-                sql = sql + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
-                sql = sql + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
-
-                using (var cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `CHAT`";
+                    command = command + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
+                    command = command + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
-                }
 
-                sql = "CREATE TABLE `MAPS`";
-                sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
-                using (var cmd = new SQLiteCommand(sql, conn))
-                {
+                    command = "CREATE TABLE `MAPS`";
+                    command = command + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                    cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -544,7 +514,8 @@ namespace Server.Classes
                                                 s_Map[i].m_MapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
                                                 s_Map[i].m_MapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
                                                 s_Map[i].m_MapItem[slot].Price = s_Item[itemNum].Price;
-                                                s_Map[i].m_MapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;                                           
+                                                s_Map[i].m_MapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;
+                                                s_Map[i].m_MapItem[slot].Rarity = s_Item[itemNum].Rarity;
                                                 s_Map[i].m_MapItem[slot].IsSpawned = true;
                                                 s_Map[i].Ground[x, y].NeedsSpawned = true;
 
@@ -895,7 +866,7 @@ namespace Server.Classes
         {
             for (int i = 0; i < 20; i++)
             {
-                if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned)
+                if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned || s_Map.m_MapItem[i].Name == null && !s_Map.m_MapItem[i].IsSpawned)
                 {
                     return i;
                 }

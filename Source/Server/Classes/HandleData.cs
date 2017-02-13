@@ -686,6 +686,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Rarity);
 
             //Secondary weapon
             outMSG.Write(s_Player[index].offWeapon.Name);
@@ -708,6 +709,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Price);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Rarity);
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -764,6 +766,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Value);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ProjectileNumber);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Price);
+                outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Rarity);
             }
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -793,6 +796,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Chest.Value);
             outMSG.WriteVariableInt32(s_Player[index].Chest.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].Chest.Price);
+            outMSG.WriteVariableInt32(s_Player[index].Chest.Rarity);
 
             outMSG.Write(s_Player[index].Legs.Name);
             outMSG.WriteVariableInt32(s_Player[index].Legs.Sprite);
@@ -814,6 +818,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Legs.Value);
             outMSG.WriteVariableInt32(s_Player[index].Legs.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].Legs.Price);
+            outMSG.WriteVariableInt32(s_Player[index].Legs.Rarity);
 
             outMSG.Write(s_Player[index].Feet.Name);
             outMSG.WriteVariableInt32(s_Player[index].Feet.Sprite);
@@ -835,6 +840,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].Feet.Value);
             outMSG.WriteVariableInt32(s_Player[index].Feet.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].Feet.Price);
+            outMSG.WriteVariableInt32(s_Player[index].Feet.Rarity);
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -864,6 +870,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.ProjectileNumber);
             outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
+            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Rarity);
 
             //Secondary weapon
             outMSG.Write(s_Player[index].offWeapon.Name);
@@ -885,7 +892,8 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ItemAmmoType);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.Value);
             outMSG.WriteVariableInt32(s_Player[index].offWeapon.ProjectileNumber);
-            outMSG.WriteVariableInt32(s_Player[index].mainWeapon.Price);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Price);
+            outMSG.WriteVariableInt32(s_Player[index].offWeapon.Rarity);
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1079,6 +1087,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Item[index].Value);
             outMSG.WriteVariableInt32(s_Item[index].ProjectileNumber);
             outMSG.WriteVariableInt32(s_Item[index].Price);
+            outMSG.WriteVariableInt32(s_Item[index].Rarity);
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1106,6 +1115,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Item[i].Value);
                 outMSG.WriteVariableInt32(s_Item[i].ProjectileNumber);
                 outMSG.WriteVariableInt32(s_Item[i].Price);
+                outMSG.WriteVariableInt32(s_Item[i].Rarity);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1296,6 +1306,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Value);
                 outMSG.WriteVariableInt32(s_Map.m_MapItem[i].ProjectileNumber);
                 outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Price);
+                outMSG.WriteVariableInt32(s_Map.m_MapItem[i].Rarity);
                 outMSG.Write(s_Map.m_MapItem[i].IsSpawned);
             }            
 
@@ -1327,6 +1338,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Value);
             outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].ProjectileNumber);
             outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Price);
+            outMSG.WriteVariableInt32(s_Map.m_MapItem[itemNum].Rarity);
             outMSG.Write(s_Map.m_MapItem[itemNum].IsSpawned);            
 
             s_Server.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);

@@ -228,7 +228,7 @@ namespace Client.Classes
                     {
                         if (c_Shop.shopItem[i].Name != "None")
                         {
-                            SetShopStatWindow(shopPic[i].X, shopPic[i].Y, c_Item[c_Shop.shopItem[i].ItemNum - 1]);
+                            SetShopStatWindow(shopPic[i].X, shopPic[i].Y, c_Item[c_Shop.shopItem[i].ItemNum - 1], c_Shop.shopItem[i].Cost);
                             break;
                         }
                     }
@@ -418,7 +418,6 @@ namespace Client.Classes
             statWindow.SetPosition(locX, locY);
             statWindow.Title = statItem.Name;
             statPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";
-            packName.Text = statItem.Name;
             packDamage.Hide();
             packArmor.Hide();
             packHeRestore.Hide();
@@ -437,6 +436,28 @@ namespace Client.Classes
             packValue.Hide();
             packPrice.Hide();
 
+            packName.Text = statItem.Name;
+            switch (statItem.Rarity)
+            {
+                case (int)Rarity.Normal:
+                    packName.TextColor = System.Drawing.Color.Gray;
+                    break;
+                case (int)Rarity.Uncommon:
+                    packName.TextColor = System.Drawing.Color.LightGreen;
+                    break;
+                case (int)Rarity.Rare:
+                    packName.TextColor = System.Drawing.Color.Blue;
+                    break;
+                case (int)Rarity.UltraRare:
+                    packName.TextColor = System.Drawing.Color.Purple;
+                    break;
+                case (int)Rarity.Legendary:
+                    packName.TextColor = System.Drawing.Color.Orange;
+                    break;
+                case (int)Rarity.Admin:
+                    packName.TextColor = System.Drawing.Color.Red;
+                    break;
+            }
             int n = 15;
             packType.SetPosition(3, n);
             switch (statItem.Type)
@@ -459,6 +480,15 @@ namespace Client.Classes
                 case (int)ItemType.FirstAid:
                     packType.Text = "First Aid";
                     break;
+                case (int)ItemType.Shirt:
+                    packType.Text = "Chest";
+                    break;
+                case (int)ItemType.Pants:
+                    packType.Text = "Legs";
+                    break;
+                case (int)ItemType.Shoes:
+                    packType.Text = "Feet";
+                    break;                
                 default:
                     packType.Text = "Other";
                     break;
@@ -612,14 +642,13 @@ namespace Client.Classes
             statWindow.Show();
         }
 
-        void SetShopStatWindow(int x, int y, Item statItem)
+        void SetShopStatWindow(int x, int y, Item statItem, int price)
         {
             int locX = (x + 300);
             int locY = (y + 50);
             shopStatWindow.SetPosition(locX, locY);
             shopStatWindow.Title = statItem.Name;
-            shopStatPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";
-            shopName.Text = statItem.Name;
+            shopStatPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";       
             shopDamage.Hide();
             shopArmor.Hide();
             shopHeRestore.Hide();
@@ -638,6 +667,28 @@ namespace Client.Classes
             shopValue.Hide();
             shopPrice.Hide();
 
+            shopName.Text = statItem.Name;
+            switch (statItem.Rarity)
+            {
+                case (int)Rarity.Normal:
+                    shopName.TextColor = System.Drawing.Color.Gray;
+                    break;
+                case (int)Rarity.Uncommon:
+                    shopName.TextColor = System.Drawing.Color.Green;
+                    break;
+                case (int)Rarity.Rare:
+                    shopName.TextColor = System.Drawing.Color.Blue;
+                    break;
+                case (int)Rarity.UltraRare:
+                    shopName.TextColor = System.Drawing.Color.Purple;
+                    break;
+                case (int)Rarity.Legendary:
+                    shopName.TextColor = System.Drawing.Color.Brown;
+                    break;
+                case (int)Rarity.Admin:
+                    shopName.TextColor = System.Drawing.Color.Red;
+                    break;
+            }
             int n = 15;
             shopType.SetPosition(3, n);
             switch (statItem.Type)
@@ -659,6 +710,15 @@ namespace Client.Classes
                     break;
                 case (int)ItemType.FirstAid:
                     shopType.Text = "First Aid";
+                    break;
+                case (int)ItemType.Shirt:
+                    shopType.Text = "Chest";
+                    break;
+                case (int)ItemType.Pants:
+                    shopType.Text = "Legs";
+                    break;
+                case (int)ItemType.Shoes:
+                    shopType.Text = "Feet";
                     break;
                 default:
                     shopType.Text = "Other";
@@ -806,7 +866,8 @@ namespace Client.Classes
             {
                 n += 10;
                 shopPrice.SetPosition(3, n);
-                shopPrice.Text = "Price: " + statItem.Price;
+                if (price > 1) { shopPrice.Text = "Price: " + price; }
+                else { shopPrice.Text = "Price: " + statItem.Price; }
                 shopPrice.Show();
             }
 
