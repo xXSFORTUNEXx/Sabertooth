@@ -371,7 +371,7 @@
             this.label8.Size = new System.Drawing.Size(228, 52);
             this.label8.TabIndex = 28;
             this.label8.Text = "To assign an option to mission or shop use the \r\nfollowing keywords: \r\n\r\n\"Accept " +
-    "Mission\" or \"Shop\"";
+    "Mission\",\"Shop\",\"Bank\"";
             // 
             // scrlNextChatD
             // 

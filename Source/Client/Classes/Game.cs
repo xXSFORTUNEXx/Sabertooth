@@ -674,6 +674,7 @@ namespace Client.Classes
             if (c_GUI.menuWindow != null && c_GUI.menuWindow.IsVisible) { c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]); }
             if (c_Player[handleData.c_Index].inShop) { c_GUI.UpdateShopWindow(c_Shop[c_Player[handleData.c_Index].shopNum]); }
             if (c_GUI.d_Window != null && c_GUI.d_Window.IsVisible) { c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index); }
+            if (c_GUI.bankWindow != null && c_GUI.bankWindow.IsVisible) { c_GUI.UpdateBankWindow(c_Player[handleData.c_Index]); }
 
             UpdateTitle(fps);
 

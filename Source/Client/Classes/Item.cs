@@ -26,8 +26,8 @@ namespace Client.Classes
         public int Endurance { get; set; }
         public int Stamina { get; set; }
         public int Clip { get; set; }
-        public int maxClip { get; set; }
-        public int ammoType { get; set; }
+        public int MaxClip { get; set; }
+        public int ItemAmmoType { get; set; }
         public int Value { get; set; }
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
@@ -41,7 +41,8 @@ namespace Client.Classes
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int ammotype, int price)
+                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype,
+                    int value, int projNum, int price, int rarity)
         {
             Name = name;
             Sprite = sprite;
@@ -57,8 +58,13 @@ namespace Client.Classes
             Agility = agi;
             Endurance = end;
             Stamina = sta;
-            ammoType = ammotype;
+            Clip = clip;
+            MaxClip = maxclip;
+            ItemAmmoType = ammotype;
+            Value = value;
+            ProjectileNumber = projNum;
             Price = price;
+            Rarity = rarity;
         }
     }
 

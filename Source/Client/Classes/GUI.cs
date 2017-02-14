@@ -72,13 +72,10 @@ namespace Client.Classes
         Button canlogButton;
         #endregion
 
-        #region Chat and Menu Window including Tab Diag
+        #region Chat Box
         public WindowControl chatWindow;
         public ListBox outputChat;
         public TextBox inputChat;
-
-        public WindowControl menuWindow;
-        TabControl menuTabs;
         #endregion
 
         #region Shop Window
@@ -108,11 +105,43 @@ namespace Client.Classes
         Label shopPrice;
         #endregion
 
+        #region Bank
+        public WindowControl bankWindow;
+        ImagePanel[] bankPic = new ImagePanel[50];
+        Button bankClose;
+
+        public WindowControl bankStatWindow;
+        ImagePanel bankStatPic;
+        Label bankName;
+        Label bankDamage;
+        Label bankArmor;
+        Label bankHeRestore;
+        Label bankHuRestore;
+        Label bankHyRestore;
+        Label bankStr;
+        Label bankAgi;
+        Label bankEdu;
+        Label bankSta;
+        Label bankClip;
+        Label bankMClip;
+        Label bankASpeed;
+        Label bankRSpeed;
+        Label bankAmmo;
+        Label bankType;
+        Label bankValue;
+        Label bankPrice;
+        #endregion
+
         #region Npc Chat Window
         public WindowControl npcChatWindow;
         Label npcChatName;
         ListBox npcChatMessage;
         Button[] npcChatOption = new Button[4];
+        #endregion
+
+        #region Menu Window
+        public WindowControl menuWindow;
+        public TabControl menuTabs;
         #endregion
 
         #region CharTab
@@ -159,12 +188,12 @@ namespace Client.Classes
         #endregion
 
         #region EquipTab
+        public TabButton equipTab;
         ImagePanel equipMain;
         ImagePanel equipOff;
         ImagePanel equipChest;
         ImagePanel equipLegs;
         ImagePanel equipFeet;
-        TabButton equipTab;
         GroupBox equipAmmo;
         Label pistolAmmo;
         Label assaultAmmo;
@@ -182,18 +211,17 @@ namespace Client.Classes
         #endregion
 
         #region SkillsTab
-        TabButton skillsTab;
+        public TabButton skillsTab;
         #endregion
 
         #region MissionTab
-        TabButton missionTab;
+        public TabButton missionTab;
         #endregion
 
         #region OptionsTab
-        TabButton optionsTab;
+        public TabButton optionsTab;
         Button optLog;
         #endregion
-
 
         public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item, Chat[] c_Chat)
         {
@@ -208,6 +236,38 @@ namespace Client.Classes
         }
 
         #region Update Voids
+        public void UpdateBankWindow(Player c_Player)
+        {
+            if (bankWindow != null && bankWindow.IsVisible)
+            {
+                bankWindow.Title = c_Player.Name + "'s Bank";
+                for (int i = 0; i < 50; i++)
+                {
+                    if (c_Player.Bank[i].Name != "None")
+                    {
+                        bankPic[i].ImageName = "Resources/Items/" + c_Player.Bank[i].Sprite+ ".png";
+                        bankPic[i].Show();
+                    }
+                    else
+                    {
+                        bankPic[i].Hide();
+                    }
+                    if (bankPic[i].IsHovered)
+                    {
+                        if (c_Player.Bank[i].Name != "None")
+                        {
+                            SetBankStateWindow(bankPic[i].X, bankPic[i].Y, c_Player.Bank[i]);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        RemoveBankStateWindow();
+                    }
+                }
+            }
+        }
+
         public void UpdateShopWindow(Shop c_Shop)
         {
             if (shopWindow != null && shopWindow.IsVisible)
@@ -574,19 +634,19 @@ namespace Client.Classes
                 packClip.Show();
             }
 
-            if (statItem.maxClip > 0)
+            if (statItem.MaxClip > 0)
             {
                 n += 10;
                 packMClip.SetPosition(3, n);
-                packMClip.Text = "Max Clip: " + statItem.maxClip;
+                packMClip.Text = "Max Clip: " + statItem.MaxClip;
                 packMClip.Show();
             }
 
-            if (statItem.ammoType > 0)
+            if (statItem.ItemAmmoType > 0)
             {
                 n += 10;
                 packAmmo.SetPosition(3, n);
-                switch (statItem.ammoType)
+                switch (statItem.ItemAmmoType)
                 {
                     case (int)AmmoType.Pistol:
                         packAmmo.Text = "Pistol Ammo";
@@ -805,19 +865,19 @@ namespace Client.Classes
                 shopClip.Show();
             }
 
-            if (statItem.maxClip > 0)
+            if (statItem.MaxClip > 0)
             {
                 n += 10;
                 shopMClip.SetPosition(3, n);
-                shopMClip.Text = "Max Clip: " + statItem.maxClip;
+                shopMClip.Text = "Max Clip: " + statItem.MaxClip;
                 shopMClip.Show();
             }
 
-            if (statItem.ammoType > 0)
+            if (statItem.ItemAmmoType > 0)
             {
                 n += 10;
                 shopAmmo.SetPosition(3, n);
-                switch (statItem.ammoType)
+                switch (statItem.ItemAmmoType)
                 {
                     case (int)AmmoType.Pistol:
                         shopAmmo.Text = "Pistol Ammo";
@@ -874,6 +934,237 @@ namespace Client.Classes
             shopStatWindow.Show();
         }
 
+        void SetBankStateWindow(int x, int y, Item bankItem)
+        {
+            int locX = (x + 50);
+            int locY = (y + 50);
+            bankStatWindow.SetPosition(locX, locY);
+            bankStatWindow.Title = bankItem.Name;
+            bankStatPic.ImageName = "Resources/Items/" + bankItem.Sprite + ".png";
+            bankDamage.Hide();
+            bankArmor.Hide();
+            bankHeRestore.Hide();
+            bankHuRestore.Hide();
+            bankHyRestore.Hide();
+            bankStr.Hide();
+            bankAgi.Hide();
+            bankEdu.Hide();
+            bankSta.Hide();
+            bankClip.Hide();
+            bankMClip.Hide();
+            bankASpeed.Hide();
+            bankRSpeed.Hide();
+            bankType.Hide();
+            bankAmmo.Hide();
+            bankValue.Hide();
+            bankPrice.Hide();
+
+            bankName.Text = bankItem.Name;
+            switch (bankItem.Rarity)
+            {
+                case (int)Rarity.Normal:
+                    bankName.TextColor = System.Drawing.Color.Gray;
+                    break;
+                case (int)Rarity.Uncommon:
+                    bankName.TextColor = System.Drawing.Color.Green;
+                    break;
+                case (int)Rarity.Rare:
+                    bankName.TextColor = System.Drawing.Color.Blue;
+                    break;
+                case (int)Rarity.UltraRare:
+                    bankName.TextColor = System.Drawing.Color.Purple;
+                    break;
+                case (int)Rarity.Legendary:
+                    bankName.TextColor = System.Drawing.Color.Brown;
+                    break;
+                case (int)Rarity.Admin:
+                    bankName.TextColor = System.Drawing.Color.Red;
+                    break;
+            }
+            int n = 15;
+            bankType.SetPosition(3, n);
+            switch (bankItem.Type)
+            {
+                case (int)ItemType.RangedWeapon:
+                    bankType.Text = "Ranged Weapon";
+                    break;
+                case (int)ItemType.MeleeWeapon:
+                    bankType.Text = "Melee Weapon";
+                    break;
+                case (int)ItemType.Currency:
+                    bankType.Text = "Currency";
+                    break;
+                case (int)ItemType.Food:
+                    bankType.Text = "Food";
+                    break;
+                case (int)ItemType.Drink:
+                    bankType.Text = "Drink";
+                    break;
+                case (int)ItemType.FirstAid:
+                    bankType.Text = "First Aid";
+                    break;
+                case (int)ItemType.Shirt:
+                    bankType.Text = "Chest";
+                    break;
+                case (int)ItemType.Pants:
+                    bankType.Text = "Legs";
+                    break;
+                case (int)ItemType.Shoes:
+                    bankType.Text = "Feet";
+                    break;
+                default:
+                    bankType.Text = "Other";
+                    break;
+            }
+            bankType.Show();
+            if (bankItem.Damage > 0)
+            {
+                n += 10;
+                bankDamage.SetPosition(3, n);
+                bankDamage.Text = "Damage: " + bankItem.Damage;
+                bankDamage.Show();
+            }
+
+            if (bankItem.Armor > 0)
+            {
+                n += 10;
+                bankArmor.SetPosition(3, n);
+                bankArmor.Text = "Armor: " + bankItem.Armor;
+                bankArmor.Show();
+            }
+
+            if (bankItem.HealthRestore > 0)
+            {
+                n += 10;
+                bankHeRestore.SetPosition(3, n);
+                bankHeRestore.Text = "Health Restore: " + bankItem.HealthRestore;
+                bankHeRestore.Show();
+            }
+
+            if (bankItem.HungerRestore > 0)
+            {
+                n += 10;
+                bankHuRestore.SetPosition(3, n);
+                bankHuRestore.Text = "Hunger Restore: " + bankItem.HungerRestore;
+                bankHuRestore.Show();
+            }
+
+            if (bankItem.HydrateRestore > 0)
+            {
+                n += 10;
+                bankHyRestore.SetPosition(3, n);
+                bankHyRestore.Text = "Hydration Restore: " + bankItem.HydrateRestore;
+                bankHyRestore.Show();
+            }
+
+            if (bankItem.Strength > 0)
+            {
+                n += 10;
+                bankStr.SetPosition(3, n);
+                bankStr.Text = "Strength: " + bankItem.Strength;
+                bankStr.Show();
+            }
+
+            if (bankItem.Agility > 0)
+            {
+                n += 10;
+                bankAgi.SetPosition(3, n);
+                bankAgi.Text = "Agility: " + bankItem.Agility;
+                bankAgi.Show();
+            }
+
+            if (bankItem.Endurance > 0)
+            {
+                n += 10;
+                bankEdu.SetPosition(3, n);
+                bankEdu.Text = "Endurance: " + bankItem.Endurance;
+                bankEdu.Show();
+            }
+
+            if (bankItem.Stamina > 0)
+            {
+                n += 10;
+                bankSta.SetPosition(3, n);
+                bankSta.Text = "Stamina: " + bankItem.Stamina;
+                bankSta.Show();
+            }
+
+            if (bankItem.Clip > 0)
+            {
+                n += 10;
+                bankClip.SetPosition(3, n);
+                bankClip.Text = "Clip: " + bankItem.Clip;
+                bankClip.Show();
+            }
+
+            if (bankItem.MaxClip > 0)
+            {
+                n += 10;
+                bankMClip.SetPosition(3, n);
+                bankMClip.Text = "Max Clip: " + bankItem.MaxClip;
+                bankMClip.Show();
+            }
+
+            if (bankItem.ItemAmmoType > 0)
+            {
+                n += 10;
+                bankAmmo.SetPosition(3, n);
+                switch (bankItem.ItemAmmoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        bankAmmo.Text = "Pistol Ammo";
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        bankAmmo.Text = "Assault Ammo";
+                        break;
+                    case (int)AmmoType.Rocket:
+                        bankAmmo.Text = "Rocket Ammo";
+                        break;
+                    case (int)AmmoType.Grenade:
+                        bankAmmo.Text = "Grenade Ammo";
+                        break;
+                    default:
+                        bankAmmo.Text = "None";
+                        break;
+                }
+                bankAmmo.Show();
+            }
+
+            if (bankItem.AttackSpeed > 0)
+            {
+                n += 10;
+                bankASpeed.SetPosition(3, n);
+                bankASpeed.Text = "Attack Speed: " + ((float)bankItem.AttackSpeed / 1000).ToString("#.##") + " s";
+                bankASpeed.Show();
+            }
+
+            if (bankItem.ReloadSpeed > 0)
+            {
+                n += 10;
+                bankRSpeed.SetPosition(3, n);
+                bankRSpeed.Text = "Reload Speed: " + ((float)bankItem.ReloadSpeed / 1000).ToString("#.##") + " s";
+                bankRSpeed.Show();
+            }
+
+            if (bankItem.Value > 1)
+            {
+                n += 10;
+                bankValue.SetPosition(3, n);
+                bankValue.Text = "Value: " + bankItem.Value;
+                bankValue.Show();
+            }
+
+            if (bankItem.Price > 0)
+            {
+                n += 10;
+                bankPrice.SetPosition(3, n);
+                bankPrice.Text = "Price: " + bankItem.Price;
+                bankPrice.Show();
+            }
+
+            bankStatWindow.Show();
+        }
+
         void RemoveStatWindow()
         {
             statWindow.SetPosition(200, 10);
@@ -884,6 +1175,12 @@ namespace Client.Classes
         {
             shopStatWindow.SetPosition(200, 10);
             shopStatWindow.Hide();
+        }
+
+        void RemoveBankStateWindow()
+        {
+            bankStatWindow.SetPosition(200, 10);
+            bankStatWindow.Hide();
         }
 
         public void UpdateNpcChatWindow(Chat c_Chat)
@@ -1235,6 +1532,17 @@ namespace Client.Classes
                     c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
+            else if (c_Player[index].inBank)
+            {
+                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                {
+                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    outMSG.Write((byte)PacketTypes.DepositItem);
+                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(itemSlot);
+                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
             else
             {
                 if (c_Player[index].Backpack[itemSlot].Name != "None")
@@ -1306,6 +1614,40 @@ namespace Client.Classes
             c_Player[index].inShop = false;
             c_Player[index].shopNum = 0;
             shopWindow.Close();
+            charTab.Show();
+            equipTab.Show();
+            skillsTab.Show();
+            missionTab.Show();
+            optionsTab.Show();
+        }
+
+        private void BankPick_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel bankPicE = (ImagePanel)sender;
+            int bankSlot = ToInt32(bankPicE.Name);
+            int index = g_Index;
+
+            if (c_Player[index].Bank[bankSlot].Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.WithdrawItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(bankSlot);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        private void CloseBank_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            int index = g_Index;
+
+            c_Player[index].inBank = false;
+            bankWindow.Close();
+            charTab.Show();
+            equipTab.Show();
+            skillsTab.Show();
+            missionTab.Show();
+            optionsTab.Show();
         }
         #endregion
 
@@ -1426,6 +1768,124 @@ namespace Client.Classes
             shopPrice = new Label(shopStatWindow);
             shopPrice.SetPosition(3, 160);
             shopPrice.Text = "Price: ?";
+            #endregion
+        }
+
+        public void CreateBankWindow(Base parent)
+        {
+            bankWindow = new WindowControl(parent.GetCanvas());
+            bankWindow.SetSize(405, 260);
+            bankWindow.Position(Gwen.Pos.Top);
+            bankWindow.Position(Gwen.Pos.Left);
+            bankWindow.DisableResizing();
+            bankWindow.IsClosable = false;            
+
+            int n = 0;
+            int c = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                bankPic[i] = new ImagePanel(bankWindow);
+                bankPic[i].SetSize(32, 32);
+                bankPic[i].SetPosition(1 + (c * 40), 5 + (n * 40));
+                bankPic[i].Name = i.ToString();
+                bankPic[i].DoubleClicked += BankPick_DoubleClicked;
+
+                c += 1;
+                if (c > 9) { c = 0; }
+                if (i == 9 || i == 19 || i == 29 || i == 39 || i == 49) { n += 1; }
+            }
+
+            bankClose = new Button(bankWindow);
+            bankClose.SetSize(100, 25);
+            bankClose.SetPosition(0, 205);
+            bankClose.Text = "Close";
+            bankClose.Clicked += CloseBank_Clicked;
+
+            #region Bank Stat Window
+            bankStatWindow = new WindowControl(parent.GetCanvas());
+            bankStatWindow.SetPosition(200, 10);
+            bankStatWindow.SetSize(155, 180);
+            bankStatWindow.IsClosable = false;
+            bankStatWindow.Title = "Item Name";
+            bankStatWindow.DisableResizing();
+            bankStatWindow.Hide();
+
+            bankStatPic = new ImagePanel(bankStatWindow);
+            bankStatPic.SetPosition(105, 5);
+            bankStatPic.SetSize(32, 32);
+
+            bankName = new Label(bankStatWindow);
+            bankName.SetPosition(3, 5);
+            bankName.Text = "Name: ?";
+            bankName.BringToFront();
+
+            bankDamage = new Label(bankStatWindow);
+            bankDamage.SetPosition(3, 15);
+            bankDamage.Text = "Damage: ?";
+
+            bankArmor = new Label(bankStatWindow);
+            bankArmor.SetPosition(3, 25);
+            bankArmor.Text = "Armor: ?";
+
+            bankHeRestore = new Label(bankStatWindow);
+            bankHeRestore.SetPosition(3, 35);
+            bankHeRestore.Text = "Health Restore: ?";
+
+            bankHuRestore = new Label(bankStatWindow);
+            bankHuRestore.SetPosition(3, 45);
+            bankHuRestore.Text = "Hunger Restore: ?";
+
+            bankHyRestore = new Label(bankStatWindow);
+            bankHyRestore.SetPosition(3, 55);
+            bankHyRestore.Text = "Hydration Restore: ?";
+
+            bankStr = new Label(bankStatWindow);
+            bankStr.SetPosition(3, 65);
+            bankStr.Text = "Strength: ?";
+
+            bankAgi = new Label(bankStatWindow);
+            bankAgi.SetPosition(3, 75);
+            bankAgi.Text = "Agility: ?";
+
+            bankEdu = new Label(bankStatWindow);
+            bankEdu.SetPosition(3, 85);
+            bankEdu.Text = "Endurance: ?";
+
+            bankSta = new Label(bankStatWindow);
+            bankSta.SetPosition(3, 95);
+            bankSta.Text = "Stamina: ?";
+
+            bankClip = new Label(bankStatWindow);
+            bankClip.SetPosition(3, 105);
+            bankClip.Text = "Clip: ?";
+
+            bankMClip = new Label(bankStatWindow);
+            bankMClip.SetPosition(3, 115);
+            bankMClip.Text = "Max Clip: ?";
+
+            bankASpeed = new Label(bankStatWindow);
+            bankASpeed.SetPosition(3, 125);
+            bankASpeed.Text = "Attack Speed: ?";
+
+            bankRSpeed = new Label(bankStatWindow);
+            bankRSpeed.SetPosition(3, 135);
+            bankRSpeed.Text = "Reload Speed: ?";
+
+            bankType = new Label(bankStatWindow);
+            bankType.SetPosition(3, 145);
+            bankType.Text = "Type: ?";
+
+            bankAmmo = new Label(bankStatWindow);
+            bankAmmo.SetPosition(3, 155);
+            bankAmmo.Text = "Ammo Type: ?";
+
+            bankValue = new Label(bankStatWindow);
+            bankValue.SetPosition(3, 160);
+            bankValue.Text = "Value: ?";
+
+            bankPrice = new Label(bankStatWindow);
+            bankPrice.SetPosition(3, 160);
+            bankPrice.Text = "Price: ?";
             #endregion
         }
 
@@ -2262,8 +2722,8 @@ namespace Client.Classes
                 }
                 else
                 {
-                    c_Text.DisplayedString = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.maxClip;
-                    c_barLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.maxClip) * f_Size;
+                    c_Text.DisplayedString = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.MaxClip;
+                    c_barLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.MaxClip) * f_Size;
                 }
             }
             else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }

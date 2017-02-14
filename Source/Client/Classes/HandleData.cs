@@ -186,7 +186,7 @@ namespace Client.Classes
                                 break;
 
                             case (byte)PacketTypes.OpenShop:
-                                HandleOpenShops(incMSG, c_Player, c_GUI, c_Shop, c_Canvas);
+                                HandleOpenShop(incMSG, c_Player, c_GUI, c_Shop, c_Canvas);
                                 break;
 
                             case (byte)PacketTypes.SendChats:
@@ -207,6 +207,14 @@ namespace Client.Classes
 
                             case (byte)PacketTypes.CloseChat:
                                 HandleCloseChat(incMSG, c_GUI, c_Player);
+                                break;
+
+                            case (byte)PacketTypes.PlayerBank:
+                                HandlePlayerBank(incMSG, c_Player, c_Index);
+                                break;
+
+                            case (byte)PacketTypes.OpenBank:
+                                HandleOpenBank(incMSG, c_Player, c_GUI, c_Canvas);
                                 break;
                         }
                         break;
@@ -307,7 +315,7 @@ namespace Client.Classes
             c_Chat[index].Type = incMSG.ReadVariableInt32();
         }
 
-        void HandleOpenShops(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Shop[] c_Shop, Canvas c_Canvas)
+        void HandleOpenShop(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Shop[] c_Shop, Canvas c_Canvas)
         {
             int index = incMSG.ReadVariableInt32();
 
@@ -316,6 +324,29 @@ namespace Client.Classes
                 c_Player[c_Index].shopNum = index;
                 c_Player[c_Index].inShop = true;
                 c_GUI.CreateShopWindow(c_Canvas);
+                c_GUI.menuWindow.Show();
+                c_GUI.packTab.Press(c_GUI.menuTabs);
+                c_GUI.charTab.Hide();
+                c_GUI.equipTab.Hide();
+                c_GUI.skillsTab.Hide();
+                c_GUI.missionTab.Hide();
+                c_GUI.optionsTab.Hide();
+            }
+        }
+
+        void HandleOpenBank(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Canvas c_Canvas)
+        {
+            if (!c_Player[c_Index].inBank)
+            {
+                c_Player[c_Index].inBank = true;
+                c_GUI.CreateBankWindow(c_Canvas);
+                c_GUI.menuWindow.Show();
+                c_GUI.packTab.Press(c_GUI.menuTabs);
+                c_GUI.charTab.Hide();
+                c_GUI.equipTab.Hide();
+                c_GUI.skillsTab.Hide();
+                c_GUI.missionTab.Hide();
+                c_GUI.optionsTab.Hide();
             }
         }
 
@@ -372,8 +403,8 @@ namespace Client.Classes
             c_Player[index].Chest.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].Chest.Stamina = incMSG.ReadVariableInt32();
             c_Player[index].Chest.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.maxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.MaxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Chest.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].Chest.Value = incMSG.ReadVariableInt32();
             c_Player[index].Chest.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Chest.Price= incMSG.ReadVariableInt32();
@@ -394,8 +425,8 @@ namespace Client.Classes
             c_Player[index].Legs.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].Legs.Stamina = incMSG.ReadVariableInt32();
             c_Player[index].Legs.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.maxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.MaxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Legs.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].Legs.Value = incMSG.ReadVariableInt32();
             c_Player[index].Legs.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Legs.Price = incMSG.ReadVariableInt32();
@@ -416,8 +447,8 @@ namespace Client.Classes
             c_Player[index].Feet.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].Feet.Stamina = incMSG.ReadVariableInt32();
             c_Player[index].Feet.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.maxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.MaxClip = incMSG.ReadVariableInt32();
+            c_Player[index].Feet.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].Feet.Value = incMSG.ReadVariableInt32();
             c_Player[index].Feet.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].Feet.Price = incMSG.ReadVariableInt32();
@@ -445,12 +476,43 @@ namespace Client.Classes
                     c_Player[index].Backpack[i].Endurance = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Stamina = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Clip = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].maxClip = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].ammoType = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].MaxClip = incMSG.ReadVariableInt32();
+                    c_Player[index].Backpack[i].ItemAmmoType = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Value = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Price = incMSG.ReadVariableInt32();
                     c_Player[index].Backpack[i].Rarity = incMSG.ReadVariableInt32();
+                }
+            }
+        }
+
+        void HandlePlayerBank(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (c_Player[index].Bank[i] != null)
+                {
+                    c_Player[index].Bank[i].Name = incMSG.ReadString();
+                    c_Player[index].Bank[i].Sprite = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Damage = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Armor = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Type = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].AttackSpeed = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].ReloadSpeed = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].HealthRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].HungerRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Strength = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Agility = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Endurance = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Stamina = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Clip = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].MaxClip = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Value = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Price = incMSG.ReadVariableInt32();
+                    c_Player[index].Bank[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -540,8 +602,8 @@ namespace Client.Classes
                     c_Item[i].Endurance = incMSG.ReadVariableInt32();
                     c_Item[i].Stamina = incMSG.ReadVariableInt32();
                     c_Item[i].Clip = incMSG.ReadVariableInt32();
-                    c_Item[i].maxClip = incMSG.ReadVariableInt32();
-                    c_Item[i].ammoType = incMSG.ReadVariableInt32();
+                    c_Item[i].MaxClip = incMSG.ReadVariableInt32();
+                    c_Item[i].ItemAmmoType = incMSG.ReadVariableInt32();
                     c_Item[i].Value = incMSG.ReadVariableInt32();
                     c_Item[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     c_Item[i].Price = incMSG.ReadVariableInt32();
@@ -567,8 +629,8 @@ namespace Client.Classes
             c_Item[index].Endurance = incMSG.ReadVariableInt32();
             c_Item[index].Stamina = incMSG.ReadVariableInt32();
             c_Item[index].Clip = incMSG.ReadVariableInt32();
-            c_Item[index].maxClip = incMSG.ReadVariableInt32();
-            c_Item[index].ammoType = incMSG.ReadVariableInt32();
+            c_Item[index].MaxClip = incMSG.ReadVariableInt32();
+            c_Item[index].ItemAmmoType = incMSG.ReadVariableInt32();
             c_Item[index].Value = incMSG.ReadVariableInt32();
             c_Item[index].ProjectileNumber = incMSG.ReadVariableInt32();
             c_Item[index].Price = incMSG.ReadVariableInt32();
@@ -920,7 +982,7 @@ namespace Client.Classes
             //Main Weapon
             c_Player[index].mainWeapon.Name = incMSG.ReadString();
             c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
@@ -934,7 +996,7 @@ namespace Client.Classes
             c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
@@ -943,7 +1005,7 @@ namespace Client.Classes
             //Secondary Weapon
             c_Player[index].offWeapon.Name = incMSG.ReadString();
             c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.MaxClip = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
@@ -957,7 +1019,7 @@ namespace Client.Classes
             c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
@@ -969,7 +1031,7 @@ namespace Client.Classes
             //Main Weapon
             c_Player[index].mainWeapon.Name = incMSG.ReadString();
             c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
@@ -983,7 +1045,7 @@ namespace Client.Classes
             c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
@@ -992,7 +1054,7 @@ namespace Client.Classes
             //Secondary Weapon
             c_Player[index].offWeapon.Name = incMSG.ReadString();
             c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.maxClip = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.MaxClip = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
@@ -1006,7 +1068,7 @@ namespace Client.Classes
             c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ammoType = incMSG.ReadVariableInt32();
+            c_Player[index].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
             c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
@@ -1195,6 +1257,10 @@ namespace Client.Classes
         SendChatData,
         OpenChat,
         NextChat,
-        CloseChat
+        CloseChat,
+        PlayerBank,
+        OpenBank,
+        DepositItem,
+        WithdrawItem
     }
 }

@@ -66,21 +66,10 @@ namespace Server.Classes
 
         static void CheckDirectories()
         {
-            bool exists = false;
-
-            if (!Directory.Exists("Maps"))
-            {
-                Directory.CreateDirectory("Maps");
-                exists = true;
-            }
             if (!Directory.Exists("Database"))
             {
                 Directory.CreateDirectory("Database");
                 CreateDatabase();
-            }
-            if (exists)
-            {
-                WriteLog("Directories and database created...", "Server");
             }
         }
 

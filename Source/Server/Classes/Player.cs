@@ -286,6 +286,50 @@ namespace Server.Classes
             return false;
         }
 
+        public void DepositItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        {
+            if (s_Player[index].Backpack[slot].Name != "None")
+            {
+                HandleData hData = new HandleData();
+
+                int newSlot = FindOpenBankSlot(s_Player[index].Bank);
+                if (newSlot < 50)
+                {
+                    s_Player[index].Bank[newSlot] = s_Player[index].Backpack[slot];
+                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    hData.SendPlayerBank(s_Server, s_Player, index);
+                    hData.SendPlayerInv(s_Server, s_Player, index);
+                }
+                else
+                {
+                    hData.SendServerMessageTo(Connection, s_Server, "You bank is full!");
+                    return;
+                }
+            }
+        }
+
+        public void WithdrawItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        {
+            if (s_Player[index].Bank[slot].Name != "None")
+            {
+                HandleData hData = new HandleData();
+
+                int newSlot = FindOpenInvSlot(s_Player[index].Backpack);
+                if (newSlot < 25)
+                {
+                    s_Player[index].Backpack[newSlot] = s_Player[index].Bank[slot];
+                    s_Player[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    hData.SendPlayerBank(s_Server, s_Player, index);
+                    hData.SendPlayerInv(s_Server, s_Player, index);
+                }
+                else
+                {
+                    hData.SendServerMessageTo(Connection, s_Server, "You inventory is full!");
+                    return;
+                }
+            }
+        }
+
         public void EquipItem(NetServer s_Server, Player[] s_Player, int index, int slot)
         {
             if (s_Player[index].Backpack[slot].Name != "None")
@@ -641,6 +685,18 @@ namespace Server.Classes
                 }
             }
             return 25;
+        }
+
+        public int FindOpenBankSlot(Item[] s_Bank)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (s_Bank[i].Name == "None")
+                {
+                    return i;
+                }
+            }
+            return 50;
         }
         #endregion
 
@@ -1059,6 +1115,47 @@ namespace Server.Classes
                             cmd.ExecuteNonQuery();
                         }
                     }
+
+                    command = "DELETE FROM BANK WHERE OWNER = '" + Name + "';";
+                    cmd.CommandText = command;
+                    cmd.ExecuteNonQuery();
+
+                    int m = 0;
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (Bank[i].Name != "None")
+                        {
+                            command = "INSERT INTO BANK";
+                            command = command + "(OWNER,ID,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
+                            command = command + " VALUES ";
+                            command = command + "(@owner,@id,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
+                            cmd.CommandText = command;
+                            cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
+                            cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = m;
+                            cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Bank[i].Name;
+                            cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Bank[i].Sprite;
+                            cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Bank[i].Damage;
+                            cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Bank[i].Armor;
+                            cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Bank[i].Type;
+                            cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Bank[i].AttackSpeed;
+                            cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Bank[i].ReloadSpeed;
+                            cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Bank[i].HealthRestore;
+                            cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Bank[i].HungerRestore;
+                            cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Bank[i].HydrateRestore;
+                            cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Bank[i].Strength;
+                            cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Bank[i].Agility;
+                            cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Bank[i].Endurance;
+                            cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Bank[i].Stamina;
+                            cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Bank[i].Clip;
+                            cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Bank[i].MaxClip;
+                            cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Bank[i].Value;
+                            cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Bank[i].ProjectileNumber;
+                            cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Bank[i].Price;
+                            cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Bank[i].Rarity;
+                            m = m + 1;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
         }
@@ -1296,13 +1393,54 @@ namespace Server.Classes
                             }
                         }
                     }
+
+                    command = "SELECT COUNT(*) FROM BANK WHERE OWNER = '" + Name + "'";
+                    cmd.CommandText = command;
+                    queue = cmd.ExecuteScalar();
+                    result = ToInt32(queue);
+
+                    if (result > 0)
+                    {
+                        for (int i = 0; i < 50; i++)
+                        {
+                            command = "SELECT * FROM BANK WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
+                            cmd.CommandText = command;
+                            using (SQLiteDataReader read = cmd.ExecuteReader())
+                            {
+                                while (read.Read())
+                                {
+                                    Bank[i].Name = read["NAME"].ToString();
+                                    Bank[i].Sprite = ToInt32(read["SPRITE"].ToString());
+                                    Bank[i].Damage = ToInt32(read["DAMAGE"].ToString());
+                                    Bank[i].Armor = ToInt32(read["ARMOR"].ToString());
+                                    Bank[i].Type = ToInt32(read["TYPE"].ToString());
+                                    Bank[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                    Bank[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                    Bank[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                    Bank[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                    Bank[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                    Bank[i].Strength = ToInt32(read["STRENGTH"].ToString());
+                                    Bank[i].Agility = ToInt32(read["AGILITY"].ToString());
+                                    Bank[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                    Bank[i].Stamina = ToInt32(read["STAMINA"].ToString());
+                                    Bank[i].Clip = ToInt32(read["CLIP"].ToString());
+                                    Bank[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                    Bank[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                    Bank[i].Value = ToInt32(read["VALUE"].ToString());
+                                    Bank[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                    Bank[i].Price = ToInt32(read["PRICE"].ToString());
+                                    Bank[i].Rarity = ToInt32(read["RARITY"].ToString());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
         #endregion
     }
 
-    public enum EquipSlots
+    public enum EquipSlots : int
     {
         MainWeapon,
         OffWeapon,
@@ -1311,7 +1449,7 @@ namespace Server.Classes
         Feet
     }
 
-    public enum Directions
+    public enum Directions : int
     {
         Down,
         Left,

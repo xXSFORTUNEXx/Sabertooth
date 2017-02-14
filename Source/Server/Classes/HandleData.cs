@@ -101,6 +101,14 @@ namespace Server.Classes
                                 HandleNextChat(incMSG, s_Server, s_Player, s_Chat, s_Item);
                                 break;
 
+                            case (byte)PacketTypes.WithdrawItem:
+                                HandleWithdrawItem(incMSG, s_Server, s_Player);
+                                break;
+
+                            case (byte)PacketTypes.DepositItem:
+                                HandleDepositItem(incMSG, s_Server, s_Player);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -131,6 +139,13 @@ namespace Server.Classes
 
             if (s_Chat[index].Option[optionSlot] == "Exit")
             {
+                SendCloseChat(incMSG, s_Server);
+                return;
+            }
+
+            if (s_Chat[index].Option[optionSlot] == "Bank")
+            {
+                SendOpenBank(incMSG, s_Server);
                 SendCloseChat(incMSG, s_Server);
                 return;
             }
@@ -182,7 +197,6 @@ namespace Server.Classes
             int shopNum = incMSG.ReadVariableInt32();
 
             s_Shop[shopNum].SellShopItem(s_Server, s_Player, index, slot);
-
         }
 
         void HandleBuyItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Shop[] s_Shop, Item[] s_Item)
@@ -193,6 +207,22 @@ namespace Server.Classes
             int itemNum = s_Shop[shopIndex].shopItem[shopSlot].ItemNum - 1;
 
             s_Shop[shopIndex].BuyShopItem(s_Server, s_Player, s_Item[itemNum], shopSlot, index);
+        }
+
+        void HandleDepositItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int slot = incMSG.ReadVariableInt32();
+
+            s_Player[index].DepositItem(s_Server, s_Player, index, slot);
+        }
+
+        public void HandleWithdrawItem(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int slot = incMSG.ReadVariableInt32();
+
+            s_Player[index].WithdrawItem(s_Server, s_Player, index, slot);
         }
 
         void HandleInteraction(NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
@@ -461,6 +491,7 @@ namespace Server.Classes
                         SendPlayerData(incMSG, s_Server, s_Player, i);
                         SendPlayers(s_Server, s_Player);
                         SendPlayerInv(s_Server, s_Player, i);
+                        SendPlayerBank(s_Server, s_Player, i);
                         SendPlayerEquipment(s_Server, s_Player, i);
                         SendNpcs(incMSG, s_Server, s_Npc);
                         SendItems(incMSG, s_Server, s_Item);
@@ -564,6 +595,13 @@ namespace Server.Classes
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.OpenShop);
             outMSG.WriteVariableInt32(index);
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendOpenBank(NetIncomingMessage incMSG, NetServer s_Server)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.OpenBank);
             s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -767,6 +805,37 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].ProjectileNumber);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Price);
                 outMSG.WriteVariableInt32(s_Player[index].Backpack[i].Rarity);
+            }
+            s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendPlayerBank(NetServer s_Server, Player[] s_Player, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PlayerBank);
+            for (int i = 0; i < 50; i++)
+            {
+                outMSG.Write(s_Player[index].Bank[i].Name);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Sprite);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Damage);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Armor);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Type);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].AttackSpeed);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].ReloadSpeed);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].HealthRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].HungerRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].HydrateRestore);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Strength);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Agility);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Endurance);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Stamina);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Clip);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].MaxClip);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].ItemAmmoType);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Value);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Price);
+                outMSG.WriteVariableInt32(s_Player[index].Bank[i].Rarity);
             }
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1645,6 +1714,10 @@ namespace Server.Classes
         SendChatData,
         OpenChat,
         NextChat,
-        CloseChat
+        CloseChat,
+        PlayerBank,
+        OpenBank,
+        DepositItem,
+        WithdrawItem
     }
 }

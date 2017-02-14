@@ -15,6 +15,7 @@ namespace Client.Classes
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[25];
+        public Item[] Bank = new Item[50];
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
@@ -74,6 +75,7 @@ namespace Client.Classes
         public int shopNum;
         public bool inChat;
         public int chatNum;
+        public bool inBank;
         #endregion
 
         #region Class Constructors
@@ -163,7 +165,11 @@ namespace Client.Classes
         {
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
             }
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -222,7 +228,7 @@ namespace Client.Classes
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop|| inChat) { return; }
+            if (inShop|| inChat || inBank) { return; }       
 
             float deadZone = 35;
             float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
@@ -312,7 +318,7 @@ namespace Client.Classes
             if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             float deadZone = 35;
             float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
@@ -353,7 +359,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
             {
@@ -371,7 +377,7 @@ namespace Client.Classes
 
             if (Attacking == true)
             {
-                switch (mainWeapon.ammoType)
+                switch (mainWeapon.ItemAmmoType)
                 {
                     case (int)AmmoType.Pistol:
                         if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
@@ -396,12 +402,12 @@ namespace Client.Classes
 
         public void CheckControllerReload(NetClient c_Client, int index)
         {
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (!Joystick.IsConnected(0)) { return; }
             if (Joystick.IsButtonPressed(0, 2))
             {
-                if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
+                if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip(c_Client, index);
@@ -411,7 +417,7 @@ namespace Client.Classes
 
         public void CheckControllerItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
         {
-            if (inShop) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (!Joystick.IsConnected(0)) { return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
@@ -433,7 +439,7 @@ namespace Client.Classes
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - interactionTick < 1000) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Joystick.IsButtonPressed(0, 3))
             {
@@ -535,7 +541,7 @@ namespace Client.Classes
             if (Moved == true) { Moved = false; return; }
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
@@ -618,7 +624,7 @@ namespace Client.Classes
         {
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
@@ -649,7 +655,7 @@ namespace Client.Classes
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
@@ -667,7 +673,7 @@ namespace Client.Classes
 
             if (Attacking == true)
             {
-                switch (mainWeapon.ammoType)
+                switch (mainWeapon.ItemAmmoType)
                 {
                     case (int)AmmoType.Pistol:
                         if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
@@ -692,11 +698,11 @@ namespace Client.Classes
 
         public void CheckReload(NetClient c_Client, int index)
         {
-            if (inShop) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.R))
             {
-                if (mainWeapon.Clip == mainWeapon.maxClip) { return; }
+                if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip(c_Client, index);
@@ -709,7 +715,7 @@ namespace Client.Classes
             if (c_GUI.inputChat.HasFocus == true) { return; }
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
-            if (inShop || inChat) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
@@ -724,7 +730,7 @@ namespace Client.Classes
             if (!c_Window.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - interactionTick < 1000) { return; }
-            if (inShop) { return; }
+            if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
             {
@@ -830,21 +836,21 @@ namespace Client.Classes
 
         public void Reload()
         {
-            switch (mainWeapon.ammoType)
+            switch (mainWeapon.ItemAmmoType)
             {
                 case (int)AmmoType.Pistol:
-                    if (PistolAmmo > mainWeapon.maxClip)
+                    if (PistolAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
                         {
-                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.maxClip;
+                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
                             PistolAmmo -= leftOver;
                         }
                         else
                         {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            PistolAmmo -= mainWeapon.maxClip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
+                            PistolAmmo -= mainWeapon.MaxClip;
                         }
                     }
                     else
@@ -854,18 +860,18 @@ namespace Client.Classes
                     }
                     break;
                 case (int)AmmoType.AssaultRifle:
-                    if (AssaultAmmo > mainWeapon.maxClip)
+                    if (AssaultAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
                         {
-                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.maxClip;
+                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
                             AssaultAmmo -= leftOver;
                         }
                         else
                         {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            AssaultAmmo -= mainWeapon.maxClip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
+                            AssaultAmmo -= mainWeapon.MaxClip;
                         }
                     }
                     else
@@ -875,18 +881,18 @@ namespace Client.Classes
                     }
                     break;
                 case (int)AmmoType.Rocket:
-                    if (RocketAmmo > mainWeapon.maxClip)
+                    if (RocketAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
                         {
-                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.maxClip;
+                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
                             RocketAmmo -= leftOver;
                         }
                         else
                         {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            RocketAmmo -= mainWeapon.maxClip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
+                            RocketAmmo -= mainWeapon.MaxClip;
                         }
                     }
                     else
@@ -896,18 +902,18 @@ namespace Client.Classes
                     }
                     break;
                 case (int)AmmoType.Grenade:
-                    if (GrenadeAmmo > mainWeapon.maxClip)
+                    if (GrenadeAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
                         {
-                            int leftOver = mainWeapon.maxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.maxClip;
+                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
                             GrenadeAmmo -= leftOver;
                         }
                         else
                         {
-                            mainWeapon.Clip = mainWeapon.maxClip;
-                            GrenadeAmmo -= mainWeapon.maxClip;
+                            mainWeapon.Clip = mainWeapon.MaxClip;
+                            GrenadeAmmo -= mainWeapon.MaxClip;
                         }
                     }
                     else
