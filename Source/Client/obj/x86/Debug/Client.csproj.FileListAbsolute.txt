@@ -639,3 +639,4 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.SQLite.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\SQLite.Interop.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\minimap.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Chest.png

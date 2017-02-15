@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Chat.cs" />
+    <Compile Include="Classes\Chest.cs" />
     <Compile Include="Classes\HandleData.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\LogWriter.cs" />

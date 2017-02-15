@@ -24,7 +24,6 @@ namespace Server.Classes
         public int LeftMap { get; set; }
         [CategoryAttribute("Border"), DescriptionAttribute("Right connected map.")]
         public int RightMap { get; set; }
-
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
@@ -1020,6 +1019,8 @@ namespace Server.Classes
 
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
+
+        public int ChestNum { get; set; }
         public int CurrentSpawn;
 
         public bool NeedsSpawned;
@@ -1037,6 +1038,7 @@ namespace Server.Classes
             Type = (int)TileType.None;
             Flagged = false;
             SpawnNum = 0;
+            ChestNum = 0;
         }
     }
 
@@ -1047,7 +1049,8 @@ namespace Server.Classes
         NpcSpawn,
         SpawnPool,
         NpcAvoid,
-        MapItem
+        MapItem,
+        Chest
     }
 
     public enum TileLayers

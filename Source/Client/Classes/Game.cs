@@ -178,6 +178,7 @@ namespace Client.Classes
         Item[] c_Item = new Item[50];   
         Projectile[] c_Proj = new Projectile[10];
         Chat[] c_Chat = new Chat[15];
+        Chest[] c_Chest = new Chest[10];
         Map c_Map = new Map();
         MiniMap m_Map = new MiniMap();
         View c_View = new View();
@@ -216,7 +217,7 @@ namespace Client.Classes
             c_Canvas.KeyboardInputEnabled = true;
             c_Input = new Gwen.Input.SFML();
             c_Input.Initialize(c_Canvas, c_Window);
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item, c_Chat);
+            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item, c_Chat, c_Chest);
             c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData(); 
@@ -226,7 +227,7 @@ namespace Client.Classes
             while (c_Window.IsOpen)
             {
                 CheckForConnection(c_Client);
-                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop); 
+                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop, c_Chest); 
                 DrawGraphics(c_Client, c_Player);
                 c_Window.Display();                
             }
@@ -272,6 +273,11 @@ namespace Client.Classes
             for (int i = 0; i < 15; i++)
             {
                 c_Chat[i] = new Chat();
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                c_Chest[i] = new Chest();
             }
         }
         #endregion
@@ -535,6 +541,28 @@ namespace Client.Classes
             }
         }
 
+        void DrawChests(Player c_Player)
+        {
+            int minX = (c_Player.X + 12) - 12;
+            int minY = (c_Player.Y + 9) - 9;
+            int maxX = (c_Player.X + 12) + 13;
+            int maxY = (c_Player.Y + 9) + 11;
+
+            for (int x = minX; x < maxX; x++)
+            {
+                for (int y = minY; y < maxY; y++)
+                {
+                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    {
+                        if (c_Map.Ground[x, y].Type == (int)TileType.Chest)
+                        {
+                            c_Map.DrawChest(c_Window, x, y);
+                        }
+                    }
+                }
+            }
+        }
+
         void DrawProjectiles(NetClient c_Client, Player c_Player)
         {
             int minX = (c_Player.X + 12) - 12;
@@ -569,6 +597,7 @@ namespace Client.Classes
             {
                 c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
                 c_Window.Draw(c_Map);
+                DrawChests(c_Player[handleData.c_Index]);
                 DrawMapItems(c_Player[handleData.c_Index]);
                 DrawNpcs(c_Player[handleData.c_Index]);
                 DrawPlayers();
@@ -655,12 +684,12 @@ namespace Client.Classes
             Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest)
         {
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
 
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat, c_Chest); 
 
             c_Window.SetActive();
             c_Window.DispatchEvents();
@@ -675,6 +704,7 @@ namespace Client.Classes
             if (c_Player[handleData.c_Index].inShop) { c_GUI.UpdateShopWindow(c_Shop[c_Player[handleData.c_Index].shopNum]); }
             if (c_GUI.d_Window != null && c_GUI.d_Window.IsVisible) { c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index); }
             if (c_GUI.bankWindow != null && c_GUI.bankWindow.IsVisible) { c_GUI.UpdateBankWindow(c_Player[handleData.c_Index]); }
+            if (c_GUI.chestWindow != null && c_GUI.chestWindow.IsVisible) { c_GUI.UpdateChestWindow(c_Chest[c_Player[handleData.c_Index].chestNum]); }
 
             UpdateTitle(fps);
 

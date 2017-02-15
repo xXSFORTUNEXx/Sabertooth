@@ -158,6 +158,11 @@ namespace Server.Classes
                     command = command + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
                     cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
+
+                    command = "CREATE TABLE CHESTS";
+                    command = command + "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,KEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM BLOB)";
+                    cmd.CommandText = command;
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -173,6 +178,7 @@ namespace Server.Classes
         Map[] s_Map = new Map[10];
         Shop[] s_Shop = new Shop[10];
         Chat[] s_Chat = new Chat[15];
+        Chest[] s_Chest = new Chest[10];
         Random RND = new Random();
         static string s_userCommand;
         public bool isRunning;
@@ -209,7 +215,7 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat);
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest);
                 SavePlayers();
                 CheckNpcSpawn(s_Server);
                 CheckItemSpawn(s_Server);
@@ -345,6 +351,18 @@ namespace Server.Classes
             }
             WriteLine("Chats loaded successfully!");
             WriteLog("Chats loaded successfully", "Server");
+            #endregion
+
+            #region Chests
+            WriteLine("Loading chests...");
+            WriteLog("Loading chests...", "Server");
+            for (int i = 0; i < 10; i++)
+            {
+                s_Chest[i] = new Chest();
+                s_Chest[i].LoadChestFromDatabase(i + 1);
+            }
+            WriteLine("Chests loaded successfully!");
+            WriteLog("Chests loaded successfully", "Server");
             #endregion
 
             //final

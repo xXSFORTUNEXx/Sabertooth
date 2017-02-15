@@ -50,6 +50,10 @@
             this.radMask = new System.Windows.Forms.RadioButton();
             this.radGround = new System.Windows.Forms.RadioButton();
             this.tabTypes = new System.Windows.Forms.TabPage();
+            this.pnlChest = new System.Windows.Forms.Panel();
+            this.scrlChest = new System.Windows.Forms.HScrollBar();
+            this.lblChest = new System.Windows.Forms.Label();
+            this.radChest = new System.Windows.Forms.RadioButton();
             this.pnlMapItem = new System.Windows.Forms.Panel();
             this.scrlItemAmount = new System.Windows.Forms.HScrollBar();
             this.lblItemAmount = new System.Windows.Forms.Label();
@@ -98,14 +102,15 @@
             this.btnMapNpcs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnFillMap = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteLayer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
-            this.btnDeleteLayer = new System.Windows.Forms.ToolStripButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlDebug.SuspendLayout();
             this.tabTypes.SuspendLayout();
+            this.pnlChest.SuspendLayout();
             this.pnlMapItem.SuspendLayout();
             this.pnlNpcSpawn.SuspendLayout();
             this.tabTiles.SuspendLayout();
@@ -339,6 +344,8 @@
             // 
             // tabTypes
             // 
+            this.tabTypes.Controls.Add(this.pnlChest);
+            this.tabTypes.Controls.Add(this.radChest);
             this.tabTypes.Controls.Add(this.pnlMapItem);
             this.tabTypes.Controls.Add(this.radMapItem);
             this.tabTypes.Controls.Add(this.radNpcAvoid);
@@ -354,6 +361,49 @@
             this.tabTypes.TabIndex = 1;
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
+            // 
+            // pnlChest
+            // 
+            this.pnlChest.Controls.Add(this.scrlChest);
+            this.pnlChest.Controls.Add(this.lblChest);
+            this.pnlChest.Location = new System.Drawing.Point(126, 267);
+            this.pnlChest.Name = "pnlChest";
+            this.pnlChest.Size = new System.Drawing.Size(167, 69);
+            this.pnlChest.TabIndex = 9;
+            this.pnlChest.Visible = false;
+            // 
+            // scrlChest
+            // 
+            this.scrlChest.LargeChange = 1;
+            this.scrlChest.Location = new System.Drawing.Point(20, 26);
+            this.scrlChest.Maximum = 10;
+            this.scrlChest.Minimum = 1;
+            this.scrlChest.Name = "scrlChest";
+            this.scrlChest.Size = new System.Drawing.Size(123, 17);
+            this.scrlChest.TabIndex = 1;
+            this.scrlChest.Value = 1;
+            this.scrlChest.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlChest_Scroll);
+            // 
+            // lblChest
+            // 
+            this.lblChest.AutoSize = true;
+            this.lblChest.Location = new System.Drawing.Point(17, 13);
+            this.lblChest.Name = "lblChest";
+            this.lblChest.Size = new System.Drawing.Size(46, 13);
+            this.lblChest.TabIndex = 0;
+            this.lblChest.Text = "Chest: 1";
+            // 
+            // radChest
+            // 
+            this.radChest.AutoSize = true;
+            this.radChest.Location = new System.Drawing.Point(20, 159);
+            this.radChest.Name = "radChest";
+            this.radChest.Size = new System.Drawing.Size(52, 17);
+            this.radChest.TabIndex = 8;
+            this.radChest.TabStop = true;
+            this.radChest.Text = "Chest";
+            this.radChest.UseVisualStyleBackColor = true;
+            this.radChest.CheckedChanged += new System.EventHandler(this.radChest_CheckedChanged);
             // 
             // pnlMapItem
             // 
@@ -868,6 +918,16 @@
             this.btnFillMap.Text = "Fill Current Layer";
             this.btnFillMap.Click += new System.EventHandler(this.btnFillMap_Click);
             // 
+            // btnDeleteLayer
+            // 
+            this.btnDeleteLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDeleteLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteLayer.Image")));
+            this.btnDeleteLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteLayer.Name = "btnDeleteLayer";
+            this.btnDeleteLayer.Size = new System.Drawing.Size(23, 22);
+            this.btnDeleteLayer.Text = "Delete Layer";
+            this.btnDeleteLayer.Click += new System.EventHandler(this.btnDeleteLayer_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -894,16 +954,6 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // btnDeleteLayer
-            // 
-            this.btnDeleteLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnDeleteLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteLayer.Image")));
-            this.btnDeleteLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDeleteLayer.Name = "btnDeleteLayer";
-            this.btnDeleteLayer.Size = new System.Drawing.Size(23, 22);
-            this.btnDeleteLayer.Text = "Delete Layer";
-            this.btnDeleteLayer.Click += new System.EventHandler(this.btnDeleteLayer_Click);
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -929,6 +979,8 @@
             this.pnlDebug.PerformLayout();
             this.tabTypes.ResumeLayout(false);
             this.tabTypes.PerformLayout();
+            this.pnlChest.ResumeLayout(false);
+            this.pnlChest.PerformLayout();
             this.pnlMapItem.ResumeLayout(false);
             this.pnlMapItem.PerformLayout();
             this.pnlNpcSpawn.ResumeLayout(false);
@@ -1024,5 +1076,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnHelp;
         private System.Windows.Forms.ToolStripButton btnDeleteLayer;
+        private System.Windows.Forms.Panel pnlChest;
+        private System.Windows.Forms.HScrollBar scrlChest;
+        private System.Windows.Forms.Label lblChest;
+        private System.Windows.Forms.RadioButton radChest;
     }
 }

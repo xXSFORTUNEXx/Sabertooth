@@ -90,6 +90,12 @@
     <Compile Include="Forms\ChatEditor.Designer.cs">
       <DependentUpon>ChatEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChestEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChestEditor.Designer.cs">
+      <DependentUpon>ChestEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +136,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\ChatEditor.resx">
       <DependentUpon>ChatEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChestEditor.resx">
+      <DependentUpon>ChestEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
@@ -243,6 +252,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Projectiles\2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Tilesets\Chest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Tilesets\Grid.png">

@@ -26,6 +26,7 @@ namespace Client.Classes
         public VertexArray m2_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
+        public VertexArray chestPic = new VertexArray(PrimitiveType.Quads, 4);
         public MapNpc[] m_MapNpc = new MapNpc[10];
         public MapNpc[] r_MapNpc = new MapNpc[20];
         public MapProj[] m_MapProj = new MapProj[200];
@@ -33,6 +34,7 @@ namespace Client.Classes
         public RenderStates ustates;
         const int Max_Tilesets = 2;
         Texture[] TileSet = new Texture[Max_Tilesets];
+        Texture chestSprite = new Texture("Resources/Tilesets/Chest.png");
         Player c_Player;
 
         public Map()
@@ -323,6 +325,17 @@ namespace Client.Classes
                 }
             }
         }
+
+        public void DrawChest(RenderTarget target, int x, int y)
+        {
+            chestPic[0] = new Vertex(new Vector2f((x * 32), (y * 32)), new Vector2f(0, 0));
+            chestPic[1] = new Vertex(new Vector2f((x * 32) + 32, (y * 32)), new Vector2f(32, 0));
+            chestPic[2] = new Vertex(new Vector2f((x * 32) + 32, (y * 32) + 32), new Vector2f(32, 32));
+            chestPic[3] = new Vertex(new Vector2f((x * 32), (y * 32) + 32), new Vector2f(0, 32));
+
+            ustates = new RenderStates(chestSprite);
+            target.Draw(chestPic, ustates);
+        }
     }
 
     class MapNpc : Drawable
@@ -495,6 +508,8 @@ namespace Client.Classes
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
 
+        public int ChestNum { get; set; }
+
         public Tile()
         {
             TileX = 0;
@@ -507,6 +522,7 @@ namespace Client.Classes
             Type = (int)TileType.None;
             Flagged = false;
             SpawnNum = 0;
+            ChestNum = 0;
         }
     }
 
@@ -517,7 +533,8 @@ namespace Client.Classes
         NpcSpawn,
         SpawnPool,
         NpcAvoid,
-        MapItem
+        MapItem,
+        Chest
     }
 
     public enum TileLayers

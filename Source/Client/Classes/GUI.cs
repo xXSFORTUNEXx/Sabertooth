@@ -21,6 +21,7 @@ namespace Client.Classes
         Shop[] c_Shop;
         Item[] c_Item;
         Chat[] c_Chat;
+        Chest[] c_Chest;
         ClientConfig c_Config;
         public bool Ready;
         #endregion
@@ -144,6 +145,33 @@ namespace Client.Classes
         public TabControl menuTabs;
         #endregion
 
+        #region Chest Window
+        public WindowControl chestWindow;
+        ImagePanel[] chestPic = new ImagePanel[10];
+        Button chestClose;
+
+        public WindowControl chestStatWindow;
+        ImagePanel chestStatPic;
+        Label chestName;
+        Label chestDamage;
+        Label chestArmor;
+        Label chestHeRestore;
+        Label chestHuRestore;
+        Label chestHyRestore;
+        Label chestStr;
+        Label chestAgi;
+        Label chestEdu;
+        Label chestSta;
+        Label chestClip;
+        Label chestMClip;
+        Label chestASpeed;
+        Label chestRSpeed;
+        Label chestAmmo;
+        Label chestType;
+        Label chestValue;
+        Label chestPrice;
+        #endregion
+
         #region CharTab
         public TabButton charTab;
         Label charName;
@@ -223,7 +251,7 @@ namespace Client.Classes
         Button optLog;
         #endregion
 
-        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item, Chat[] c_Chat)
+        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item, Chat[] c_Chat, Chest[] c_Chest)
         {
             GUI.c_Client = c_Client;
             this.c_Canvas = c_Canvas;
@@ -233,6 +261,7 @@ namespace Client.Classes
             this.c_Shop = c_Shop;
             this.c_Item = c_Item;
             this.c_Chat = c_Chat;
+            this.c_Chest = c_Chest;
         }
 
         #region Update Voids
@@ -256,13 +285,45 @@ namespace Client.Classes
                     {
                         if (c_Player.Bank[i].Name != "None")
                         {
-                            SetBankStateWindow(bankPic[i].X, bankPic[i].Y, c_Player.Bank[i]);
+                            SetBankStatWindow(bankPic[i].X, bankPic[i].Y, c_Player.Bank[i]);
                             break;
                         }
                     }
                     else
                     {
-                        RemoveBankStateWindow();
+                        RemoveBankStatWindow();
+                    }
+                }
+            }
+        }
+
+        public void UpdateChestWindow(Chest c_Chest)
+        {
+            if (chestWindow != null && chestWindow.IsVisible)
+            {
+                chestWindow.Title = c_Chest.Name;
+                for (int i = 0; i < 10; i++)
+                {
+                    if (c_Chest.ChestItem[i].Name != "None")
+                    {
+                        chestPic[i].ImageName = "Resources/Items/" + c_Item[c_Chest.ChestItem[i].ItemNum - 1].Sprite + ".png";
+                        chestPic[i].Show();
+                    }
+                    else
+                    {
+                        chestPic[i].Hide();
+                    }
+                    if (chestPic[i].IsHovered)
+                    {
+                        if (c_Chest.ChestItem[i].Name != "None")
+                        {
+                            SetChestStatWindow(chestPic[i].X, chestPic[i].Y, c_Item[c_Chest.ChestItem[i].ItemNum - 1]);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        RemoveChestStatWindow();
                     }
                 }
             }
@@ -473,7 +534,7 @@ namespace Client.Classes
 
         void SetStatWindow(int x, int y, Item statItem)
         {
-            int locX = (x + 350);
+            int locX = (x + 325);
             int locY = (y + 170);
             statWindow.SetPosition(locX, locY);
             statWindow.Title = statItem.Name;
@@ -934,7 +995,7 @@ namespace Client.Classes
             shopStatWindow.Show();
         }
 
-        void SetBankStateWindow(int x, int y, Item bankItem)
+        void SetBankStatWindow(int x, int y, Item bankItem)
         {
             int locX = (x + 50);
             int locY = (y + 50);
@@ -1165,6 +1226,237 @@ namespace Client.Classes
             bankStatWindow.Show();
         }
 
+        void SetChestStatWindow(int x, int y, Item chestItem)
+        {
+            int locX = (x + 450);
+            int locY = (y + 60);
+            chestStatWindow.SetPosition(locX, locY);
+            chestStatWindow.Title = chestItem.Name;
+            chestStatPic.ImageName = "Resources/Items/" + chestItem.Sprite + ".png";
+            chestDamage.Hide();
+            chestArmor.Hide();
+            chestHeRestore.Hide();
+            chestHuRestore.Hide();
+            chestHyRestore.Hide();
+            chestStr.Hide();
+            chestAgi.Hide();
+            chestEdu.Hide();
+            chestSta.Hide();
+            chestClip.Hide();
+            chestMClip.Hide();
+            chestASpeed.Hide();
+            chestRSpeed.Hide();
+            chestType.Hide();
+            chestAmmo.Hide();
+            chestValue.Hide();
+            chestPrice.Hide();
+
+            chestName.Text = chestItem.Name;
+            switch (chestItem.Rarity)
+            {
+                case (int)Rarity.Normal:
+                    chestName.TextColor = System.Drawing.Color.Gray;
+                    break;
+                case (int)Rarity.Uncommon:
+                    chestName.TextColor = System.Drawing.Color.Green;
+                    break;
+                case (int)Rarity.Rare:
+                    chestName.TextColor = System.Drawing.Color.Blue;
+                    break;
+                case (int)Rarity.UltraRare:
+                    chestName.TextColor = System.Drawing.Color.Purple;
+                    break;
+                case (int)Rarity.Legendary:
+                    chestName.TextColor = System.Drawing.Color.Brown;
+                    break;
+                case (int)Rarity.Admin:
+                    chestName.TextColor = System.Drawing.Color.Red;
+                    break;
+            }
+            int n = 15;
+            chestType.SetPosition(3, n);
+            switch (chestItem.Type)
+            {
+                case (int)ItemType.RangedWeapon:
+                    chestType.Text = "Ranged Weapon";
+                    break;
+                case (int)ItemType.MeleeWeapon:
+                    chestType.Text = "Melee Weapon";
+                    break;
+                case (int)ItemType.Currency:
+                    chestType.Text = "Currency";
+                    break;
+                case (int)ItemType.Food:
+                    chestType.Text = "Food";
+                    break;
+                case (int)ItemType.Drink:
+                    chestType.Text = "Drink";
+                    break;
+                case (int)ItemType.FirstAid:
+                    chestType.Text = "First Aid";
+                    break;
+                case (int)ItemType.Shirt:
+                    chestType.Text = "Chest";
+                    break;
+                case (int)ItemType.Pants:
+                    chestType.Text = "Legs";
+                    break;
+                case (int)ItemType.Shoes:
+                    chestType.Text = "Feet";
+                    break;
+                default:
+                    chestType.Text = "Other";
+                    break;
+            }
+            chestType.Show();
+            if (chestItem.Damage > 0)
+            {
+                n += 10;
+                chestDamage.SetPosition(3, n);
+                chestDamage.Text = "Damage: " + chestItem.Damage;
+                chestDamage.Show();
+            }
+
+            if (chestItem.Armor > 0)
+            {
+                n += 10;
+                chestArmor.SetPosition(3, n);
+                chestArmor.Text = "Armor: " + chestItem.Armor;
+                chestArmor.Show();
+            }
+
+            if (chestItem.HealthRestore > 0)
+            {
+                n += 10;
+                chestHeRestore.SetPosition(3, n);
+                chestHeRestore.Text = "Health Restore: " + chestItem.HealthRestore;
+                chestHeRestore.Show();
+            }
+
+            if (chestItem.HungerRestore > 0)
+            {
+                n += 10;
+                chestHuRestore.SetPosition(3, n);
+                chestHuRestore.Text = "Hunger Restore: " + chestItem.HungerRestore;
+                chestHuRestore.Show();
+            }
+
+            if (chestItem.HydrateRestore > 0)
+            {
+                n += 10;
+                chestHyRestore.SetPosition(3, n);
+                chestHyRestore.Text = "Hydration Restore: " + chestItem.HydrateRestore;
+                chestHyRestore.Show();
+            }
+
+            if (chestItem.Strength > 0)
+            {
+                n += 10;
+                chestStr.SetPosition(3, n);
+                chestStr.Text = "Strength: " + chestItem.Strength;
+                chestStr.Show();
+            }
+
+            if (chestItem.Agility > 0)
+            {
+                n += 10;
+                chestAgi.SetPosition(3, n);
+                chestAgi.Text = "Agility: " + chestItem.Agility;
+                chestAgi.Show();
+            }
+
+            if (chestItem.Endurance > 0)
+            {
+                n += 10;
+                chestEdu.SetPosition(3, n);
+                chestEdu.Text = "Endurance: " + chestItem.Endurance;
+                chestEdu.Show();
+            }
+
+            if (chestItem.Stamina > 0)
+            {
+                n += 10;
+                chestSta.SetPosition(3, n);
+                chestSta.Text = "Stamina: " + chestItem.Stamina;
+                chestSta.Show();
+            }
+
+            if (chestItem.Clip > 0)
+            {
+                n += 10;
+                chestClip.SetPosition(3, n);
+                chestClip.Text = "Clip: " + chestItem.Clip;
+                chestClip.Show();
+            }
+
+            if (chestItem.MaxClip > 0)
+            {
+                n += 10;
+                chestMClip.SetPosition(3, n);
+                chestMClip.Text = "Max Clip: " + chestItem.MaxClip;
+                chestMClip.Show();
+            }
+
+            if (chestItem.ItemAmmoType > 0)
+            {
+                n += 10;
+                chestAmmo.SetPosition(3, n);
+                switch (chestItem.ItemAmmoType)
+                {
+                    case (int)AmmoType.Pistol:
+                        chestAmmo.Text = "Pistol Ammo";
+                        break;
+                    case (int)AmmoType.AssaultRifle:
+                        chestAmmo.Text = "Assault Ammo";
+                        break;
+                    case (int)AmmoType.Rocket:
+                        chestAmmo.Text = "Rocket Ammo";
+                        break;
+                    case (int)AmmoType.Grenade:
+                        chestAmmo.Text = "Grenade Ammo";
+                        break;
+                    default:
+                        chestAmmo.Text = "None";
+                        break;
+                }
+                chestAmmo.Show();
+            }
+
+            if (chestItem.AttackSpeed > 0)
+            {
+                n += 10;
+                chestASpeed.SetPosition(3, n);
+                chestASpeed.Text = "Attack Speed: " + ((float)chestItem.AttackSpeed / 1000).ToString("#.##") + " s";
+                chestASpeed.Show();
+            }
+
+            if (chestItem.ReloadSpeed > 0)
+            {
+                n += 10;
+                chestRSpeed.SetPosition(3, n);
+                chestRSpeed.Text = "Reload Speed: " + ((float)chestItem.ReloadSpeed / 1000).ToString("#.##") + " s";
+                chestRSpeed.Show();
+            }
+
+            if (chestItem.Value > 1)
+            {
+                n += 10;
+                chestValue.SetPosition(3, n);
+                chestValue.Text = "Value: " + chestItem.Value;
+                chestValue.Show();
+            }
+
+            if (chestItem.Price > 0)
+            {
+                n += 10;
+                chestPrice.SetPosition(3, n);
+                chestPrice.Text = "Price: " + chestItem.Price;
+                chestPrice.Show();
+            }
+
+            chestStatWindow.Show();
+        }
+
         void RemoveStatWindow()
         {
             statWindow.SetPosition(200, 10);
@@ -1177,10 +1469,16 @@ namespace Client.Classes
             shopStatWindow.Hide();
         }
 
-        void RemoveBankStateWindow()
+        void RemoveBankStatWindow()
         {
             bankStatWindow.SetPosition(200, 10);
             bankStatWindow.Hide();
+        }
+
+        void RemoveChestStatWindow()
+        {
+            chestStatWindow.SetPosition(200, 10);
+            chestStatWindow.Hide();
         }
 
         public void UpdateNpcChatWindow(Chat c_Chat)
@@ -1649,6 +1947,37 @@ namespace Client.Classes
             missionTab.Show();
             optionsTab.Show();
         }
+
+        private void ChestPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel chestPicE = (ImagePanel)sender;
+            int chestSlot = ToInt32(chestPicE.Name);
+            int index = g_Index;
+            int chestIndex = c_Player[index].chestNum;
+
+            if (c_Chest[chestIndex].ChestItem[chestSlot].Name != "None")
+            {
+                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                outMSG.Write((byte)PacketTypes.TakeChestItem);
+                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(chestSlot);
+                outMSG.WriteVariableInt32(chestIndex);
+                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        private void CloseChest_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            int index = g_Index;
+            c_Player[index].inChest = false;
+            c_Player[index].chestNum = 0;
+            chestWindow.Close();
+            charTab.Show();
+            equipTab.Show();
+            skillsTab.Show();
+            missionTab.Show();
+            optionsTab.Show();
+        }
         #endregion
 
         #region Window Creation
@@ -1768,6 +2097,124 @@ namespace Client.Classes
             shopPrice = new Label(shopStatWindow);
             shopPrice.SetPosition(3, 160);
             shopPrice.Text = "Price: ?";
+            #endregion
+        }
+
+        public void CreateChestWindow(Base parent)
+        {
+            chestWindow = new WindowControl(parent.GetCanvas());
+            chestWindow.Position(Gwen.Pos.Top);
+            chestWindow.Position(Gwen.Pos.Right);
+            chestWindow.SetSize(215, 155);
+            chestWindow.DisableResizing();
+            chestWindow.IsClosable = false;
+
+            int n = 0;
+            int c = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                chestPic[i] = new ImagePanel(chestWindow);
+                chestPic[i].SetSize(32, 32);
+                chestPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));
+                chestPic[i].Name = i.ToString();
+                chestPic[i].DoubleClicked += ChestPic_DoubleClicked;
+
+                c += 1;
+                if (c > 4) { c = 0; }
+                if (i == 4 || i == 9) { n += 1; }
+            }
+
+            chestClose = new Button(chestWindow);
+            chestClose.SetSize(100, 25);
+            chestClose.SetPosition(0, 95);
+            chestClose.Text = "Close";
+            chestClose.Clicked += CloseChest_Clicked;
+
+            #region Chest Stat Window
+            chestStatWindow = new WindowControl(parent.GetCanvas());
+            chestStatWindow.SetPosition(200, 10);
+            chestStatWindow.SetSize(155, 180);
+            chestStatWindow.IsClosable = false;
+            chestStatWindow.Title = "Item Name";
+            chestStatWindow.DisableResizing();
+            chestStatWindow.Hide();
+
+            chestStatPic = new ImagePanel(chestStatWindow);
+            chestStatPic.SetPosition(105, 5);
+            chestStatPic.SetSize(32, 32);
+
+            chestName = new Label(chestStatWindow);
+            chestName.SetPosition(3, 5);
+            chestName.Text = "Name: ?";
+            chestName.BringToFront();
+
+            chestDamage = new Label(chestStatWindow);
+            chestDamage.SetPosition(3, 15);
+            chestDamage.Text = "Damage: ?";
+
+            chestArmor = new Label(chestStatWindow);
+            chestArmor.SetPosition(3, 25);
+            chestArmor.Text = "Armor: ?";
+
+            chestHeRestore = new Label(chestStatWindow);
+            chestHeRestore.SetPosition(3, 35);
+            chestHeRestore.Text = "Health Restore: ?";
+
+            chestHuRestore = new Label(chestStatWindow);
+            chestHuRestore.SetPosition(3, 45);
+            chestHuRestore.Text = "Hunger Restore: ?";
+
+            chestHyRestore = new Label(chestStatWindow);
+            chestHyRestore.SetPosition(3, 55);
+            chestHyRestore.Text = "Hydration Restore: ?";
+
+            chestStr = new Label(chestStatWindow);
+            chestStr.SetPosition(3, 65);
+            chestStr.Text = "Strength: ?";
+
+            chestAgi = new Label(chestStatWindow);
+            chestAgi.SetPosition(3, 75);
+            chestAgi.Text = "Agility: ?";
+
+            chestEdu = new Label(chestStatWindow);
+            chestEdu.SetPosition(3, 85);
+            chestEdu.Text = "Endurance: ?";
+
+            chestSta = new Label(chestStatWindow);
+            chestSta.SetPosition(3, 95);
+            chestSta.Text = "Stamina: ?";
+
+            chestClip = new Label(chestStatWindow);
+            chestClip.SetPosition(3, 105);
+            chestClip.Text = "Clip: ?";
+
+            chestMClip = new Label(chestStatWindow);
+            chestMClip.SetPosition(3, 115);
+            chestMClip.Text = "Max Clip: ?";
+
+            chestASpeed = new Label(chestStatWindow);
+            chestASpeed.SetPosition(3, 125);
+            chestASpeed.Text = "Attack Speed: ?";
+
+            chestRSpeed = new Label(chestStatWindow);
+            chestRSpeed.SetPosition(3, 135);
+            chestRSpeed.Text = "Reload Speed: ?";
+
+            chestType = new Label(chestStatWindow);
+            chestType.SetPosition(3, 145);
+            chestType.Text = "Type: ?";
+
+            chestAmmo = new Label(chestStatWindow);
+            chestAmmo.SetPosition(3, 155);
+            chestAmmo.Text = "Ammo Type: ?";
+
+            chestValue = new Label(chestStatWindow);
+            chestValue.SetPosition(3, 160);
+            chestValue.Text = "Value: ?";
+
+            chestPrice = new Label(chestStatWindow);
+            chestPrice.SetPosition(3, 160);
+            chestPrice.Text = "Price: ?";
             #endregion
         }
 

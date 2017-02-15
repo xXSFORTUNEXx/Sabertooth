@@ -69,13 +69,19 @@ namespace Editor
         private void btnShopEditor_Click(object sender, EventArgs e)
         {
             ShopEditor e_ShopEditor = new ShopEditor();
-            e_ShopEditor.Show();
+            e_ShopEditor.ShowDialog();
         }
 
         private void btnEditor_Click(object sender, EventArgs e)
         {
             ChatEditor e_ChatEditor = new ChatEditor();
-            e_ChatEditor.Show();
+            e_ChatEditor.ShowDialog();
+        }
+
+        private void btnChestEditor_Click(object sender, EventArgs e)
+        {
+            ChestEditor e_ChestEditor = new ChestEditor();
+            e_ChestEditor.ShowDialog();
         }
     }
 }

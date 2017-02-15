@@ -15,7 +15,7 @@ namespace Client.Classes
         public string c_Version = "1.0";
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -216,6 +216,18 @@ namespace Client.Classes
                             case (byte)PacketTypes.OpenBank:
                                 HandleOpenBank(incMSG, c_Player, c_GUI, c_Canvas);
                                 break;
+
+                            case (byte)PacketTypes.SendChests:
+                                HandleChests(incMSG, c_Chest);
+                                break;
+
+                            case (byte)PacketTypes.ChestData:
+                                HandleSendChest(incMSG, c_Chest);
+                                break;
+
+                            case (byte)PacketTypes.OpenChest:
+                                HandleOpenChest(incMSG, c_GUI, c_Player, c_Chest, c_Canvas);
+                                break;
                         }
                         break;
                 }
@@ -227,6 +239,25 @@ namespace Client.Classes
         }
 
         #region Handle Incoming Data
+        void HandleOpenChest(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chest[] c_Chest, Canvas c_Canvas)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            if (!c_Player[c_Index].inChest)
+            {
+                c_Player[c_Index].chestNum = index;
+                c_Player[c_Index].inChest = true;
+                c_GUI.CreateChestWindow(c_Canvas);
+                c_GUI.menuWindow.Show();
+                c_GUI.packTab.Press(c_GUI.menuTabs);
+                c_GUI.charTab.Hide();
+                c_GUI.equipTab.Hide();
+                c_GUI.skillsTab.Hide();
+                c_GUI.missionTab.Hide();
+                c_GUI.optionsTab.Hide();
+            }
+        }
+
         void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
         {
             c_Canvas.Dispose();
@@ -260,6 +291,51 @@ namespace Client.Classes
                 c_Player[c_Index].inChat = true;
                 c_GUI.CreatNpcChatWindow(c_Canvas, c_Chat[index - 1]);
             }          
+        }
+
+        void HandleChests(NetIncomingMessage incMSG, Chest[] c_Chest)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                c_Chest[i].Name = incMSG.ReadString();
+                c_Chest[i].Money = incMSG.ReadVariableInt32();
+                c_Chest[i].Experience = incMSG.ReadVariableInt32();
+                c_Chest[i].RequiredLevel = incMSG.ReadVariableInt32();
+                c_Chest[i].TrapLevel = incMSG.ReadVariableInt32();
+                c_Chest[i].Key = incMSG.ReadVariableInt32();
+                c_Chest[i].Damage = incMSG.ReadVariableInt32();
+                c_Chest[i].NpcSpawn = incMSG.ReadVariableInt32();
+                c_Chest[i].SpawnAmount = incMSG.ReadVariableInt32();
+
+                for (int n = 0; n < 10; n++)
+                {
+                    c_Chest[i].ChestItem[n].Name = incMSG.ReadString();
+                    c_Chest[i].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
+                    c_Chest[i].ChestItem[n].Value = incMSG.ReadVariableInt32();
+                }
+            }
+        }
+
+        void HandleSendChest(NetIncomingMessage incMSG, Chest[] c_Chest)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            c_Chest[index].Name = incMSG.ReadString();
+            c_Chest[index].Money = incMSG.ReadVariableInt32();
+            c_Chest[index].Experience = incMSG.ReadVariableInt32();
+            c_Chest[index].RequiredLevel = incMSG.ReadVariableInt32();
+            c_Chest[index].TrapLevel = incMSG.ReadVariableInt32();
+            c_Chest[index].Key = incMSG.ReadVariableInt32();
+            c_Chest[index].Damage = incMSG.ReadVariableInt32();
+            c_Chest[index].NpcSpawn = incMSG.ReadVariableInt32();
+            c_Chest[index].SpawnAmount = incMSG.ReadVariableInt32();
+
+            for (int n = 0; n < 10; n++)
+            {
+                c_Chest[index].ChestItem[n].Name = incMSG.ReadString();
+                c_Chest[index].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
+                c_Chest[index].ChestItem[n].Value = incMSG.ReadVariableInt32();
+            }
         }
 
         void HandleChats(NetIncomingMessage incMSG, Chat[] c_Chat)
@@ -1261,6 +1337,10 @@ namespace Client.Classes
         PlayerBank,
         OpenBank,
         DepositItem,
-        WithdrawItem
+        WithdrawItem,
+        ChestData,
+        SendChests,
+        OpenChest,
+        TakeChestItem
     }
 }

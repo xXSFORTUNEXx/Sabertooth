@@ -36,7 +36,7 @@
             this.btnNpcEditor = new System.Windows.Forms.Button();
             this.btnItemEditor = new System.Windows.Forms.Button();
             this.btnProjectileEditor = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnChestEditor = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.btnEditor = new System.Windows.Forms.Button();
             this.btnShopEditor = new System.Windows.Forms.Button();
@@ -124,14 +124,15 @@
             this.btnProjectileEditor.UseVisualStyleBackColor = true;
             this.btnProjectileEditor.Click += new System.EventHandler(this.btnProjectileEditor_Click);
             // 
-            // button5
+            // btnChestEditor
             // 
-            this.button5.Location = new System.Drawing.Point(12, 128);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(119, 23);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "Mission Editor";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btnChestEditor.Location = new System.Drawing.Point(12, 128);
+            this.btnChestEditor.Name = "btnChestEditor";
+            this.btnChestEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnChestEditor.TabIndex = 5;
+            this.btnChestEditor.Text = "Chest Editor";
+            this.btnChestEditor.UseVisualStyleBackColor = true;
+            this.btnChestEditor.Click += new System.EventHandler(this.btnChestEditor_Click);
             // 
             // button6
             // 
@@ -170,7 +171,7 @@
             this.Controls.Add(this.btnShopEditor);
             this.Controls.Add(this.btnEditor);
             this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.btnChestEditor);
             this.Controls.Add(this.btnProjectileEditor);
             this.Controls.Add(this.btnItemEditor);
             this.Controls.Add(this.btnNpcEditor);
@@ -196,7 +197,7 @@
         private System.Windows.Forms.Button btnNpcEditor;
         private System.Windows.Forms.Button btnItemEditor;
         private System.Windows.Forms.Button btnProjectileEditor;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnChestEditor;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnShopEditor;

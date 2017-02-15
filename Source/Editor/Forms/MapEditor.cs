@@ -40,6 +40,7 @@ namespace Editor.Forms
         int e_SelectTileset;
         int e_SpawnNumber;
         int e_SpawnAmount;
+        int e_Chest;
         static int lastFrameRate;
         static int frameRate;
         static int lastTick;
@@ -331,6 +332,9 @@ namespace Editor.Forms
                                     {
                                         e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnAmount.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Green);
                                     }
+                                    break;
+                                case (int)TileType.Chest:
+                                    e_Text.DrawText(e_Window, "C", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Blue);
                                     break;
                                 default:
                                     break;
@@ -655,6 +659,7 @@ namespace Editor.Forms
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
                     if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                     if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    if (e_Type == (int)TileType.Chest) { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_Chest; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -851,6 +856,7 @@ namespace Editor.Forms
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
                     if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                     if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    if (e_Type == (int)TileType.Chest) { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_Chest; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -954,6 +960,7 @@ namespace Editor.Forms
             lblType.Text = "Type: None";
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void radBlocked_CheckedChanged(object sender, EventArgs e)
@@ -962,6 +969,7 @@ namespace Editor.Forms
             lblType.Text = "Type: Blocked";
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void mnuExit_Click(object sender, EventArgs e)
@@ -978,6 +986,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = true;
             scrlSpawnAmount.Enabled = false;
             pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void radNpcAvoid_CheckedChanged(object sender, EventArgs e)
@@ -986,6 +995,7 @@ namespace Editor.Forms
             lblType.Text = "Type: Npc Avoid";
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
@@ -997,6 +1007,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = true;
             scrlSpawnAmount.Enabled = true;
             pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void radMapItem_CheckedChanged(object sender, EventArgs e)
@@ -1007,6 +1018,7 @@ namespace Editor.Forms
             e_SpawnAmount = 1;
             pnlMapItem.Visible = true;
             pnlNpcSpawn.Visible = false;
+            pnlChest.Visible = false;
         }
 
         private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)
@@ -1325,6 +1337,21 @@ namespace Editor.Forms
                     }
                 }
             }
+        }
+
+        private void scrlChest_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblChest.Text = "Chest: " + scrlChest.Value;
+            e_Chest = scrlChest.Value;            
+        }
+
+        private void radChest_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.Chest;
+            lblType.Text = "Type: Chest";
+            pnlChest.Visible = true;
+            pnlNpcSpawn.Visible = false;
+            pnlMapItem.Visible = false;
         }
     }
 
