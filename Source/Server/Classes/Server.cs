@@ -179,6 +179,7 @@ namespace Server.Classes
         Shop[] s_Shop = new Shop[10];
         Chat[] s_Chat = new Chat[15];
         Chest[] s_Chest = new Chest[10];
+        GameTime g_Time = new GameTime();
         Random RND = new Random();
         static string s_userCommand;
         public bool isRunning;
@@ -215,7 +216,9 @@ namespace Server.Classes
             isRunning = true;
             while (isRunning)
             {
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest);
+                g_Time.UpdateTime();
+                UpdateTitle();
+                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest, g_Time);
                 SavePlayers();
                 CheckNpcSpawn(s_Server);
                 CheckItemSpawn(s_Server);
@@ -798,6 +801,9 @@ namespace Server.Classes
                         if (slatency != 0.065f) { s_Server.Configuration.SimulatedMinimumLatency = 0.065f; }
                         else { s_Server.Configuration.SimulatedMinimumLatency = 0; }                        
                         break;
+                    case "time":
+                        WriteLine("Time Of Day: " + g_Time.Time);
+                        break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         WriteLine("Commands:");
                         WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
@@ -977,6 +983,11 @@ namespace Server.Classes
                 upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
                 s_uptimeTick = TickCount;
             }
+        }
+
+        void UpdateTitle()
+        {
+            Title = "Sabertooth Server - " + g_Time.Time;
         }
         #endregion
     }

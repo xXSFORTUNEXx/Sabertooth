@@ -15,7 +15,7 @@ namespace Client.Classes
         public string c_Version = "1.0";
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest, GameTime g_GameTime)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -228,6 +228,10 @@ namespace Client.Classes
                             case (byte)PacketTypes.OpenChest:
                                 HandleOpenChest(incMSG, c_GUI, c_Player, c_Chest, c_Canvas);
                                 break;
+
+                            case (byte)PacketTypes.DateandTime:
+                                HandleDateAndTime(incMSG, g_GameTime);
+                                break;
                         }
                         break;
                 }
@@ -239,6 +243,25 @@ namespace Client.Classes
         }
 
         #region Handle Incoming Data
+        void HandleDateAndTime(NetIncomingMessage incMSG, GameTime g_GameTime)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int year = incMSG.ReadVariableInt32();
+            int month = incMSG.ReadVariableInt32();
+            int day = incMSG.ReadVariableInt32();
+            int hour = incMSG.ReadVariableInt32();
+            int minute = incMSG.ReadVariableInt32();
+            int second = incMSG.ReadVariableInt32();
+
+            g_GameTime.g_Year = year;
+            g_GameTime.g_Month = month;
+            g_GameTime.g_DayOfWeek = (DayOfWeek)day;
+            g_GameTime.g_Hour = hour;
+            g_GameTime.g_Minute = minute;
+            g_GameTime.g_Second = second;
+            g_GameTime.updateTime = true;
+        } 
+
         void HandleOpenChest(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chest[] c_Chest, Canvas c_Canvas)
         {
             int index = incMSG.ReadVariableInt32();
@@ -1341,6 +1364,7 @@ namespace Client.Classes
         ChestData,
         SendChests,
         OpenChest,
-        TakeChestItem
+        TakeChestItem,
+        DateandTime
     }
 }

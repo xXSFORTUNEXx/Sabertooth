@@ -640,3 +640,5 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.S
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\SQLite.Interop.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\minimap.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Chest.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\NightOverlay.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\Light.png

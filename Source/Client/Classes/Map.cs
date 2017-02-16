@@ -326,12 +326,14 @@ namespace Client.Classes
             }
         }
 
-        public void DrawChest(RenderTarget target, int x, int y)
+        public void DrawChest(RenderTarget target, int x, int y, bool empty)
         {
-            chestPic[0] = new Vertex(new Vector2f((x * 32), (y * 32)), new Vector2f(0, 0));
-            chestPic[1] = new Vertex(new Vector2f((x * 32) + 32, (y * 32)), new Vector2f(32, 0));
-            chestPic[2] = new Vertex(new Vector2f((x * 32) + 32, (y * 32) + 32), new Vector2f(32, 32));
-            chestPic[3] = new Vertex(new Vector2f((x * 32), (y * 32) + 32), new Vector2f(0, 32));
+            int cX = 0;
+            if (empty) { cX = 32; }
+            chestPic[0] = new Vertex(new Vector2f((x * 32), (y * 32)), new Vector2f(0 + cX, 0));
+            chestPic[1] = new Vertex(new Vector2f((x * 32) + 32, (y * 32)), new Vector2f(32 + cX, 0));
+            chestPic[2] = new Vertex(new Vector2f((x * 32) + 32, (y * 32) + 32), new Vector2f(32 + cX, 32));
+            chestPic[3] = new Vertex(new Vector2f((x * 32), (y * 32) + 32), new Vector2f(0 + cX, 32));
 
             ustates = new RenderStates(chestSprite);
             target.Draw(chestPic, ustates);

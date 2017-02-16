@@ -11,7 +11,7 @@ namespace Server.Classes
     {
         public string s_Version;
 
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, GameTime gameTime)
         {
             NetIncomingMessage incMSG;
 
@@ -34,7 +34,7 @@ namespace Server.Classes
                                 HandleRegisterRequest(incMSG, s_Server, s_Player);
                                 break;
                             case (byte)PacketTypes.Login:
-                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest);
+                                HandleLoginRequest(incMSG, s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest, gameTime);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
@@ -86,7 +86,7 @@ namespace Server.Classes
                                 break;
 
                             case (byte)PacketTypes.Interaction:
-                                HandleInteraction(incMSG, s_Server, s_Map);
+                                HandleInteraction(incMSG, s_Server, s_Map, s_Chest, s_Player);
                                 break;
 
                             case (byte)PacketTypes.BuyItem:
@@ -239,11 +239,12 @@ namespace Server.Classes
             s_Player[index].WithdrawItem(s_Server, s_Player, index, slot);
         }
 
-        void HandleInteraction(NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map)
+        void HandleInteraction(NetIncomingMessage incMSG, NetServer s_Server, Map[] s_Map, Chest[] s_Chest, Player[] s_Player)
         {
             int type = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
             int mapIndex = incMSG.ReadVariableInt32();
+            int pIndex = incMSG.ReadVariableInt32();
 
             if (type == 0)
             {
@@ -252,7 +253,25 @@ namespace Server.Classes
             }
             else if (type == 1)
             {
+                bool change = false;
+                if (s_Chest[index].Money > 0)
+                {
+                    s_Player[pIndex].Money += s_Chest[index].Money;
+                    SendServerMessageTo(s_Player[pIndex].Connection, s_Server, "This chest has granted you " + s_Chest[index].Money + " dollars!");
+                    s_Chest[index].Money = 0;
+                    change = true;
+                }
+                if (s_Chest[index].Experience > 0)
+                {
+                    s_Player[pIndex].Experience += s_Chest[index].Experience;
+                    s_Player[pIndex].CheckPlayerLevelUp();
+                    SendServerMessageTo(s_Player[pIndex].Connection, s_Server, "This chest has granted you " + s_Chest[index].Experience + " experience!");
+                    s_Chest[index].Experience = 0;
+                    change = true;
+                }
+
                 SendOpenChest(incMSG, s_Server, index);
+                if (change) { SendUpdatePlayerStats(s_Server, s_Player, pIndex); }
             }
         }
 
@@ -490,7 +509,7 @@ namespace Server.Classes
             }
         }
 
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, GameTime gameTime)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -525,6 +544,7 @@ namespace Server.Classes
                         SendPoolMapNpcs(incMSG, s_Server, s_Map[currentMap]);
                         SendMapItems(incMSG, s_Server, s_Map[currentMap]);
                         SendChests(incMSG, s_Server, s_Chest);
+                        SendDateAndTime(incMSG, s_Server, gameTime, i);
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
                         string welcomeMsg = username + " has joined Sabertooth!";
                         SendServerMessageToAll(s_Server, welcomeMsg);
@@ -590,6 +610,21 @@ namespace Server.Classes
         #endregion
 
         #region Send Outgoing Data
+        void SendDateAndTime(NetIncomingMessage incMSG, NetServer s_Server, GameTime gameTime, int index)
+        {
+            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            outMSG.Write((byte)PacketTypes.DateandTime);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(gameTime.g_Year);
+            outMSG.WriteVariableInt32(gameTime.g_Month);
+            outMSG.WriteVariableInt32((int)gameTime.g_DayOfWeek);
+            outMSG.WriteVariableInt32(gameTime.g_Hour);
+            outMSG.WriteVariableInt32(gameTime.g_Minute);
+            outMSG.WriteVariableInt32(gameTime.g_Second);
+
+            s_Server.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         void SendOpenChest(NetIncomingMessage incMSG, NetServer s_Server, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
@@ -1803,6 +1838,7 @@ namespace Server.Classes
         ChestData,
         SendChests,
         OpenChest,
-        TakeChestItem
+        TakeChestItem,
+        DateandTime
     }
 }

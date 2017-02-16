@@ -458,7 +458,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -466,7 +466,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -482,7 +482,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -490,7 +490,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -506,7 +506,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -514,7 +514,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -530,7 +530,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -538,7 +538,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -769,7 +769,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -777,7 +777,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -793,7 +793,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -801,7 +801,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -817,7 +817,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -825,7 +825,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -841,7 +841,7 @@ namespace Client.Classes
                                     {
                                         if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0);
+                                            SendInteraction(c_Client, i, 0, index);
                                         }
                                     }
                                 }
@@ -849,7 +849,7 @@ namespace Client.Classes
 
                             if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1, index);
                             }
                         }
                         break;
@@ -1028,13 +1028,14 @@ namespace Client.Classes
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendInteraction(NetClient c_Client, int index, int interactiontype)
+        void SendInteraction(NetClient c_Client, int index, int interactiontype, int playerindex)
         {
             NetOutgoingMessage outMSG = c_Client.CreateMessage();
             outMSG.Write((byte)PacketTypes.Interaction);
             outMSG.WriteVariableInt32(interactiontype);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(Map);
+            outMSG.WriteVariableInt32(playerindex);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 

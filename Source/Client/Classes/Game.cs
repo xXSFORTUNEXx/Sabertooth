@@ -182,6 +182,7 @@ namespace Client.Classes
         Map c_Map = new Map();
         MiniMap m_Map = new MiniMap();
         View c_View = new View();
+        GameTime g_GameTime;
         ClientConfig c_Config;
         static int lastTick;
         static int lastFrameRate;  
@@ -220,14 +221,15 @@ namespace Client.Classes
             c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item, c_Chat, c_Chest);
             c_GUI.CreateMainWindow(c_Canvas);
 
-            handleData = new HandleData(); 
+            handleData = new HandleData();
+            g_GameTime = new GameTime();
 
             InitArrays();
 
             while (c_Window.IsOpen)
             {
                 CheckForConnection(c_Client);
-                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop, c_Chest); 
+                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop, c_Chest, g_GameTime); 
                 DrawGraphics(c_Client, c_Player);
                 c_Window.Display();                
             }
@@ -556,7 +558,8 @@ namespace Client.Classes
                     {
                         if (c_Map.Ground[x, y].Type == (int)TileType.Chest)
                         {
-                            c_Map.DrawChest(c_Window, x, y);
+                            
+                            c_Map.DrawChest(c_Window, x, y, isChestEmpty(c_Map.Ground[x, y].ChestNum));
                         }
                     }
                 }
@@ -631,6 +634,7 @@ namespace Client.Classes
                 }
             }
             c_Window.SetView(c_Window.DefaultView);
+            if (g_GameTime.g_Night) { c_Window.Draw(g_GameTime.n_Overlay); }
             if (c_Map.Name != null && c_GUI.Ready)
             {
                 p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
@@ -667,7 +671,12 @@ namespace Client.Classes
 
         void UpdateTitle(int fps)
         {
-            c_Window.SetTitle("Sabertooth - Logged: " + c_Player[handleData.c_Index].Name + " FPS: " + fps);
+            string title = "Sabertooth - FPS: " + fps;
+
+            if (c_Player[handleData.c_Index].Name != null) { title += " - Logged: " + c_Player[handleData.c_Index].Name; }
+            if (g_GameTime.updateTime == true) { title += " - Time: " + g_GameTime.Time; }
+
+            c_Window.SetTitle(title);
         }
 
         void CheckForConnection(NetClient c_Client)
@@ -684,12 +693,11 @@ namespace Client.Classes
             Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest, GameTime g_GameTime)
         {
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
-
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat, c_Chest); 
+            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat, c_Chest, g_GameTime); 
 
             c_Window.SetActive();
             c_Window.DispatchEvents();
@@ -705,10 +713,25 @@ namespace Client.Classes
             if (c_GUI.d_Window != null && c_GUI.d_Window.IsVisible) { c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index); }
             if (c_GUI.bankWindow != null && c_GUI.bankWindow.IsVisible) { c_GUI.UpdateBankWindow(c_Player[handleData.c_Index]); }
             if (c_GUI.chestWindow != null && c_GUI.chestWindow.IsVisible) { c_GUI.UpdateChestWindow(c_Chest[c_Player[handleData.c_Index].chestNum]); }
+            if (g_GameTime.updateTime == true) { g_GameTime.UpdateTime(); }
 
             UpdateTitle(fps);
 
             Joystick.Update();
+        }
+        #endregion
+
+        #region Misc Methods
+        bool isChestEmpty(int chestNum)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (c_Chest[chestNum].ChestItem[i].Name != "None")
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         #endregion
     }
