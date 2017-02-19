@@ -215,7 +215,10 @@
     <Content Include="Resources\Skins\DefaultSkin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Skins\NightOverlay.png">
+    <Content Include="Resources\Skins\Light.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Skins\LightW.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Tilesets\1.png">
@@ -229,6 +232,9 @@
     </Content>
     <Content Include="Resources\Tilesets\Grid.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Tilesets\Lights.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Tilesets\minimap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

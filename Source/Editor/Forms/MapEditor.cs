@@ -58,6 +58,12 @@ namespace Editor.Forms
         public Texture[] SpritePic = new Texture[Max_Sprites];
         public Sprite e_Sprite = new Sprite();
 
+        public RenderTexture brightness = new RenderTexture(800, 600);
+        public Sprite brightnessSprite = new Sprite();
+        public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 30);
+        public RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
+        public double LightRadius = 0;
+
         public MapEditor()
         {
             InitializeComponent();
@@ -161,18 +167,15 @@ namespace Editor.Forms
             while (Visible)
             {
                 if (tabTools.SelectedTab == tabTiles) { picTileset.Invalidate(); }
-                
-                e_View.Reset(new FloatRect(0, 0, 800, 600));
-                e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
-                e_Window.SetView(e_View);
 
+                UpdateView();
                 DoEvents();
                 e_Window.DispatchEvents();
-
                 e_Window.Clear();
                 DrawTiles(e_Window);
                 DrawNpcs();
                 DrawItems();
+                BrightnessOverlay();
                 DrawTypes();
                 DrawGrid();
                 Text = "Map Editor - FPS: " + CalculateFrameRate();
@@ -201,6 +204,43 @@ namespace Editor.Forms
                     treeMaps.EndUpdate();
                 }
             }            
+        }
+
+        void UpdateView()
+        {
+            brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
+
+            e_View.Reset(new FloatRect(0, 0, 800, 600));
+            e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
+            brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
+            e_Window.SetView(e_View);
+        }
+
+        void DrawLight()
+        {
+            int centerX = e_CursorX * 32;
+            int centerY = 600 - e_CursorY * 32;
+            Vector2f center = new Vector2f(centerX, centerY);
+            double radius = LightRadius;
+
+            LightParticle[0] = new Vertex(center, SFML.Graphics.Color.Transparent);
+
+            for (uint i = 1; i < 30; i++)
+            {
+                double angle = i * 2 * Math.PI / 28 - Math.PI / 2;
+                int x = (int)(center.X + radius * Math.Cos(angle));
+                int y = (int)(center.Y + radius * Math.Sin(angle));
+                LightParticle[i] = new Vertex(new Vector2f(x, y), SFML.Graphics.Color.White);
+            }
+            brightness.Draw(LightParticle, overlayStates);
+        }
+
+        void BrightnessOverlay()
+        {
+            brightnessSprite.Texture = brightness.Texture;
+            brightness.Clear(new SFML.Graphics.Color(0, 0, 0, (byte)e_Map.Brightness));
+            if (tabTools.SelectedTab == tabLight) { DrawLight(); }
+            e_Window.Draw(brightnessSprite);
         }
 
         void DrawTiles(RenderTarget target)
@@ -291,7 +331,7 @@ namespace Editor.Forms
                 }
             }
 
-            if (picMap.Focused)
+            if (picMap.Focused && tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
             {
                 DrawSelectTile(new Vector2f((e_CursorX * 32), (e_CursorY * 32)), (e_TileX * 32), (e_TileY * 32), (e_TileW * 32), (e_TileH * 32));
             }
@@ -1352,6 +1392,12 @@ namespace Editor.Forms
             pnlChest.Visible = true;
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
+        }
+
+        private void scrlIntensity_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblIntensity.Text = "Intensity: " + scrlIntensity.Value;
+            LightRadius = scrlIntensity.Value;
         }
     }
 

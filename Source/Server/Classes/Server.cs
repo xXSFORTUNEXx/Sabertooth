@@ -155,7 +155,7 @@ namespace Server.Classes
                     cmd.ExecuteNonQuery();
 
                     command = "CREATE TABLE `MAPS`";
-                    command = command + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                    command = command + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`BRIGHTNESS` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
                     cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
 

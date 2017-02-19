@@ -24,6 +24,8 @@ namespace Server.Classes
         public int LeftMap { get; set; }
         [CategoryAttribute("Border"), DescriptionAttribute("Right connected map.")]
         public int RightMap { get; set; }
+        [CategoryAttribute("Brightness"), DescriptionAttribute("Brightness of the map. (0 - 255)")]
+        public int Brightness { get; set; }
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
@@ -64,6 +66,7 @@ namespace Server.Classes
             LeftMap = 0;
             RightMap = 0;
             Revision = 0;
+            Brightness = 0;
 
             for (int i = 0; i < 10; i++)
             {
@@ -134,9 +137,9 @@ namespace Server.Classes
                     string sql;
 
                     conn.Open();
-                    sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`TOP`,`BOTTOM`,`LEFT`,`RIGHT`,`NPC`,`ITEM`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
+                    sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`TOP`,`BOTTOM`,`LEFT`,`RIGHT`,`BRIGHTNESS`,`NPC`,`ITEM`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
                     sql = sql + " VALUES ";
-                    sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @npc, @item, @ground, @mask, @maska, @fringe, @fringea)";
+                    sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @brightness, @npc, @item, @ground, @mask, @maska, @fringe, @fringea)";
                     cmd.CommandText = sql;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
@@ -144,6 +147,7 @@ namespace Server.Classes
                     cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
                     cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                     cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                    cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
                     cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
                     cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
                     cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
@@ -172,7 +176,7 @@ namespace Server.Classes
                     string sql;
 
                     conn.Open();
-                    sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, TOP = @top, BOTTOM = @bottom, LEFT = @left, RIGHT = @right, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
+                    sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, TOP = @top, BOTTOM = @bottom, LEFT = @left, RIGHT = @right, BRIGHTNESS = @brightness, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
                     sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
                     cmd.CommandText = sql;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
@@ -181,6 +185,7 @@ namespace Server.Classes
                     cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
                     cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                     cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                    cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
                     cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
                     cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
                     cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
@@ -220,7 +225,7 @@ namespace Server.Classes
                             BottomMap = ToInt32(read["BOTTOM"].ToString());
                             LeftMap = ToInt32(read["LEFT"].ToString());
                             RightMap = ToInt32(read["RIGHT"].ToString());
-
+                            Brightness = ToInt32(read["BRIGHTNESS"].ToString());
                             byte[] buffer;
                             object load;
 

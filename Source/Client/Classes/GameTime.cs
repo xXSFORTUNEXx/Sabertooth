@@ -67,7 +67,7 @@ namespace Client.Classes
                     g_DayOfWeek += 1;
                 }
 
-                if (g_Hour > 18 || g_Hour < 7) { g_Night = true; g_Day = false; }
+                if (g_Hour > 19 || g_Hour < 7) { g_Night = true; g_Day = false; }
                 else { g_Day = true; g_Night = false; }
 
                 g_GameTime = new DateTime(g_Year, g_Month, (int)g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
@@ -79,18 +79,20 @@ namespace Client.Classes
 
     class NightOverlay: Drawable
     {
-        Texture overlay = new Texture("Resources/Skins/NightOverlay.png");
-        VertexArray v_overlay = new VertexArray(PrimitiveType.Quads, 4);
+        RenderTexture d_Tex = new RenderTexture(800, 600);
+        Sprite d_Sprite = new Sprite();
+        Texture d_Light = new Texture("Resources/Skins/LightW.png");
+        Sprite d_LightSprite = new Sprite();
 
         public virtual void Draw(RenderTarget target, RenderStates states)
-        {            
-            v_overlay[0] = new Vertex(new Vector2f(0, 0), new Vector2f(0, 0));
-            v_overlay[1] = new Vertex(new Vector2f(800, 0), new Vector2f(800, 0));
-            v_overlay[2] = new Vertex(new Vector2f(800, 600), new Vector2f(800, 600));
-            v_overlay[3] = new Vertex(new Vector2f(0, 600), new Vector2f(0, 600));
-
-            states.Texture = overlay;
-            target.Draw(v_overlay, states);
+        {
+            states.BlendMode = BlendMode.Multiply;
+            d_Sprite.Texture = d_Tex.Texture;
+            d_Tex.Clear(new Color(0, 0, 0, 200));
+            d_LightSprite.Texture = d_Light;
+            d_LightSprite.Position = new Vector2f(250, 140);            
+            d_Tex.Draw(d_LightSprite, states);
+            target.Draw(d_Sprite);
         }
     }
 }

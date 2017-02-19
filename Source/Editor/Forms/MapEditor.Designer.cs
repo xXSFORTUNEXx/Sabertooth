@@ -75,6 +75,10 @@
             this.picTileset = new System.Windows.Forms.PictureBox();
             this.lblTileset = new System.Windows.Forms.Label();
             this.cmbTileset = new System.Windows.Forms.ComboBox();
+            this.tabLight = new System.Windows.Forms.TabPage();
+            this.scrlIntensity = new System.Windows.Forms.HScrollBar();
+            this.lblIntensity = new System.Windows.Forms.Label();
+            this.chkNight = new System.Windows.Forms.CheckBox();
             this.tabHelp = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.picMap = new System.Windows.Forms.PictureBox();
@@ -116,6 +120,7 @@
             this.tabTiles.SuspendLayout();
             this.pnlTile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
+            this.tabLight.SuspendLayout();
             this.tabHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.pnlMapNpcs.SuspendLayout();
@@ -127,6 +132,7 @@
             this.tabTools.Controls.Add(this.tabLayer);
             this.tabTools.Controls.Add(this.tabTypes);
             this.tabTools.Controls.Add(this.tabTiles);
+            this.tabTools.Controls.Add(this.tabLight);
             this.tabTools.Controls.Add(this.tabHelp);
             this.tabTools.Location = new System.Drawing.Point(12, 36);
             this.tabTools.Name = "tabTools";
@@ -634,6 +640,47 @@
             this.cmbTileset.TabIndex = 2;
             this.cmbTileset.SelectedIndexChanged += new System.EventHandler(this.cmbTileset_SelectedIndexChanged);
             // 
+            // tabLight
+            // 
+            this.tabLight.Controls.Add(this.scrlIntensity);
+            this.tabLight.Controls.Add(this.lblIntensity);
+            this.tabLight.Controls.Add(this.chkNight);
+            this.tabLight.Location = new System.Drawing.Point(4, 22);
+            this.tabLight.Name = "tabLight";
+            this.tabLight.Size = new System.Drawing.Size(299, 589);
+            this.tabLight.TabIndex = 4;
+            this.tabLight.Text = "Light";
+            this.tabLight.UseVisualStyleBackColor = true;
+            // 
+            // scrlIntensity
+            // 
+            this.scrlIntensity.LargeChange = 20;
+            this.scrlIntensity.Location = new System.Drawing.Point(23, 57);
+            this.scrlIntensity.Maximum = 400;
+            this.scrlIntensity.Name = "scrlIntensity";
+            this.scrlIntensity.Size = new System.Drawing.Size(141, 17);
+            this.scrlIntensity.TabIndex = 2;
+            this.scrlIntensity.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlIntensity_Scroll);
+            // 
+            // lblIntensity
+            // 
+            this.lblIntensity.AutoSize = true;
+            this.lblIntensity.Location = new System.Drawing.Point(20, 44);
+            this.lblIntensity.Name = "lblIntensity";
+            this.lblIntensity.Size = new System.Drawing.Size(58, 13);
+            this.lblIntensity.TabIndex = 1;
+            this.lblIntensity.Text = "Intensity: 0";
+            // 
+            // chkNight
+            // 
+            this.chkNight.AutoSize = true;
+            this.chkNight.Location = new System.Drawing.Point(23, 24);
+            this.chkNight.Name = "chkNight";
+            this.chkNight.Size = new System.Drawing.Size(51, 17);
+            this.chkNight.TabIndex = 0;
+            this.chkNight.Text = "Night";
+            this.chkNight.UseVisualStyleBackColor = true;
+            // 
             // tabHelp
             // 
             this.tabHelp.Controls.Add(this.label1);
@@ -990,6 +1037,8 @@
             this.pnlTile.ResumeLayout(false);
             this.pnlTile.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
+            this.tabLight.ResumeLayout(false);
+            this.tabLight.PerformLayout();
             this.tabHelp.ResumeLayout(false);
             this.tabHelp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
@@ -1080,5 +1129,9 @@
         private System.Windows.Forms.HScrollBar scrlChest;
         private System.Windows.Forms.Label lblChest;
         private System.Windows.Forms.RadioButton radChest;
+        private System.Windows.Forms.TabPage tabLight;
+        private System.Windows.Forms.CheckBox chkNight;
+        private System.Windows.Forms.HScrollBar scrlIntensity;
+        private System.Windows.Forms.Label lblIntensity;
     }
 }
