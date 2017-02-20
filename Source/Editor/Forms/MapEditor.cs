@@ -60,9 +60,9 @@ namespace Editor.Forms
 
         public RenderTexture brightness = new RenderTexture(800, 600);
         public Sprite brightnessSprite = new Sprite();
-        public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 30);
+        public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         public RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
-        public double LightRadius = 0;
+        public double e_LightRadius = 0;
 
         public MapEditor()
         {
@@ -208,26 +208,24 @@ namespace Editor.Forms
 
         void UpdateView()
         {
-            brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
-
             e_View.Reset(new FloatRect(0, 0, 800, 600));
             e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
             brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
             e_Window.SetView(e_View);
         }
 
-        void DrawLight()
+        void DrawCursorLight()
         {
-            int centerX = e_CursorX * 32;
-            int centerY = 600 - e_CursorY * 32;
+            int centerX = ((e_CursorX * 32) + 16) - (e_ViewX * 32);
+            int centerY = 600 - ((e_CursorY * 32) + 16) + (e_ViewY * 32);
             Vector2f center = new Vector2f(centerX, centerY);
-            double radius = LightRadius;
+            double radius = e_LightRadius;
 
             LightParticle[0] = new Vertex(center, SFML.Graphics.Color.Transparent);
 
-            for (uint i = 1; i < 30; i++)
+            for (uint i = 1; i < 18; i++)
             {
-                double angle = i * 2 * Math.PI / 28 - Math.PI / 2;
+                double angle = i * 2 * Math.PI / 16 - Math.PI / 2;
                 int x = (int)(center.X + radius * Math.Cos(angle));
                 int y = (int)(center.Y + radius * Math.Sin(angle));
                 LightParticle[i] = new Vertex(new Vector2f(x, y), SFML.Graphics.Color.White);
@@ -235,11 +233,43 @@ namespace Editor.Forms
             brightness.Draw(LightParticle, overlayStates);
         }
 
+        void DrawMapLight()
+        {
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    if (e_Map.Ground[x, y].LightRadius > 0)
+                    {
+                        int centerX = ((x * 32) + 16) - (e_ViewX * 32);
+                        int centerY = 600 - (((y * 32) + 16) - (e_ViewY * 32));
+                        Vector2f center = new Vector2f(centerX, centerY);
+                        double radius = e_Map.Ground[x, y].LightRadius;
+
+                        LightParticle[0] = new Vertex(center, SFML.Graphics.Color.Transparent);
+
+                        for (uint i = 1; i < 18; i++)
+                        {
+                            double angle = i * 2 * Math.PI / 16 - Math.PI / 2;
+                            int lx = (int)(center.X + radius * Math.Cos(angle));
+                            int ly = (int)(center.Y + radius * Math.Sin(angle));
+                            LightParticle[i] = new Vertex(new Vector2f(lx, ly), SFML.Graphics.Color.White);
+                        }
+                        brightness.Draw(LightParticle, overlayStates);
+                    }
+                }
+            }
+        }
+
         void BrightnessOverlay()
         {
+            int overlay;
+            if (chkNight.Checked) { overlay = 200; }
+            else { overlay = e_Map.Brightness; }
             brightnessSprite.Texture = brightness.Texture;
-            brightness.Clear(new SFML.Graphics.Color(0, 0, 0, (byte)e_Map.Brightness));
-            if (tabTools.SelectedTab == tabLight) { DrawLight(); }
+            brightness.Clear(new SFML.Graphics.Color(0, 0, 0, (byte)overlay));
+            if (tabTools.SelectedTab == tabLight) { DrawCursorLight(); }
+            DrawMapLight();
             e_Window.Draw(brightnessSprite);
         }
 
@@ -379,6 +409,19 @@ namespace Editor.Forms
                                 default:
                                     break;
                             }
+                        }
+                    }
+                }
+            }
+            if (tabTools.SelectedTab == tabLight)
+            {
+                for (int x = 0; x < 50; x++)
+                {
+                    for (int y = 0; y < 50; y++)
+                    {
+                        if (e_Map.Ground[x, y].LightRadius > 0)
+                        {
+                            e_Text.DrawText(e_Window, "L", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Yellow);
                         }
                     }
                 }
@@ -704,6 +747,17 @@ namespace Editor.Forms
                 else if (e.Button == MouseButtons.Right)
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].Type = (int)TileType.None;
+                }
+            }
+            else if (tabTools.SelectedTab == tabLight)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].LightRadius = e_LightRadius;
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    e_Map.Ground[e_CursorX, e_CursorY].LightRadius = 0;
                 }
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
@@ -1397,7 +1451,7 @@ namespace Editor.Forms
         private void scrlIntensity_Scroll(object sender, ScrollEventArgs e)
         {
             lblIntensity.Text = "Intensity: " + scrlIntensity.Value;
-            LightRadius = scrlIntensity.Value;
+            e_LightRadius = scrlIntensity.Value;
         }
     }
 

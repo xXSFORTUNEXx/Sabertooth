@@ -1031,6 +1031,7 @@ namespace Server.Classes
         public bool NeedsSpawned;
         public int NeedsSpawnedTick;
 
+        public double LightRadius { get; set; }
 
         public Tile()
         {
@@ -1044,6 +1045,7 @@ namespace Server.Classes
             Flagged = false;
             SpawnNum = 0;
             ChestNum = 0;
+            LightRadius = 0;
         }
     }
 
