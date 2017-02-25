@@ -9,7 +9,7 @@ namespace Server.Classes
         public int g_Second { get; set; }
         public int g_Minute { get; set; }
         public int g_Hour { get; set; }
-        public DayOfWeek g_DayOfWeek { get; set; }
+        public int g_DayOfWeek { get; set; }
         public int g_Month { get; set; }
         public int g_Year { get; set; }
         
@@ -26,11 +26,11 @@ namespace Server.Classes
             g_Second = DateTime.Now.Second;
             g_Minute = DateTime.Now.Minute;
             g_Hour = DateTime.Now.Hour;
-            g_DayOfWeek = DateTime.Now.DayOfWeek;
+            g_DayOfWeek = DateTime.Now.Day;
             g_Month = DateTime.Now.Month;
             g_Year = DateTime.Now.Year;
 
-            g_GameTime = new DateTime(g_Year, g_Month, (int)g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
+            g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
             timeTick = TickCount;
         }
 
@@ -62,7 +62,7 @@ namespace Server.Classes
                 if (g_Hour > 20 || g_Hour < 6) { g_Night = true; }
                 else { g_Day = true; }
 
-                g_GameTime = new DateTime(g_Year, g_Month, (int)g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
+                g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
                 Time = g_GameTime.ToString(dateFormat);
                 timeTick = TickCount;
             }

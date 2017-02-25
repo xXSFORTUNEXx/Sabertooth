@@ -634,9 +634,9 @@ namespace Client.Classes
                 }
             }
             c_Window.SetView(c_Window.DefaultView);
-            if (g_GameTime.g_Night) { c_Window.Draw(g_GameTime.n_Overlay); }
             if (c_Map.Name != null && c_GUI.Ready)
             {
+                c_Map.DrawBrightness(c_Window, c_Player, g_GameTime, handleData.c_Index);
                 p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
                 p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);

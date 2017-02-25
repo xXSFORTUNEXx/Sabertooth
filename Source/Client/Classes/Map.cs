@@ -16,6 +16,7 @@ namespace Client.Classes
         public int BottomMap { get; set; }
         public int LeftMap { get; set; }
         public int RightMap { get; set; }
+        public int Brightness { get; set; }
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
@@ -36,6 +37,10 @@ namespace Client.Classes
         Texture[] TileSet = new Texture[Max_Tilesets];
         Texture chestSprite = new Texture("Resources/Tilesets/Chest.png");
         Player c_Player;
+        RenderTexture brightness = new RenderTexture(800, 600);
+        Sprite brightnessSprite = new Sprite();
+        VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
+        RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
 
         public Map()
         {
@@ -338,6 +343,65 @@ namespace Client.Classes
             ustates = new RenderStates(chestSprite);
             target.Draw(chestPic, ustates);
         }
+
+        public void DrawBrightness(RenderTarget target, Player[] c_Player, GameTime g_Time, int index)
+        {
+            int overlay;
+            if (g_Time.g_Night) { overlay = 200; }
+            else { overlay = Brightness; }
+            brightnessSprite.Texture = brightness.Texture;
+            brightness.Clear(new Color(0, 0, 0, (byte)overlay));
+            DrawMapLight(c_Player[index]);
+            DrawPlayerLight(c_Player, index);
+            target.Draw(brightnessSprite);
+        }
+
+        void DrawMapLight(Player c_Player)
+        {
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    if (Ground[x, y].LightRadius > 0)
+                    {
+                        int centerX = ((x * 32) - c_Player.X * 32) + 16;
+                        int centerY = 600 - (((y * 32) - c_Player.Y * 32) + 16);
+                        Vector2f center = new Vector2f(centerX, centerY);
+                        double radius = Ground[x, y].LightRadius;
+
+                        LightParticle[0] = new Vertex(center, Color.Transparent);
+
+                        for (uint i = 1; i < 18; i++)
+                        {
+                            double angle = i * 2 * Math.PI / 16 - Math.PI / 2;
+                            int lx = (int)(center.X + radius * Math.Cos(angle));
+                            int ly = (int)(center.Y + radius * Math.Sin(angle));
+                            LightParticle[i] = new Vertex(new Vector2f(lx, ly), Color.White);
+                        }
+                        brightness.Draw(LightParticle, overlayStates);
+                    }
+                }
+            }
+        }
+
+        void DrawPlayerLight(Player[] c_Player, int index)
+        {
+            int centerX = 400;
+            int centerY = 288;
+            Vector2f center = new Vector2f(centerX, centerY);
+            double radius = c_Player[index].LightRadius;
+
+            LightParticle[0] = new Vertex(center, Color.Transparent);
+
+            for (uint i = 1; i < 18; i++)
+            {
+                double angle = i * 2 * Math.PI / 16 - Math.PI / 2;
+                int lx = (int)(center.X + radius * Math.Cos(angle));
+                int ly = (int)(center.Y + radius * Math.Sin(angle));
+                LightParticle[i] = new Vertex(new Vector2f(lx, ly), Color.White);
+            }
+            brightness.Draw(LightParticle, overlayStates);
+        }
     }
 
     class MapNpc : Drawable
@@ -511,6 +575,7 @@ namespace Client.Classes
         public int SpawnAmount { get; set; }
 
         public int ChestNum { get; set; }
+        public double LightRadius { get; set; }
 
         public Tile()
         {
@@ -525,6 +590,7 @@ namespace Client.Classes
             Flagged = false;
             SpawnNum = 0;
             ChestNum = 0;
+            LightRadius = 0;
         }
     }
 

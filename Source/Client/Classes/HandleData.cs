@@ -255,7 +255,7 @@ namespace Client.Classes
 
             g_GameTime.g_Year = year;
             g_GameTime.g_Month = month;
-            g_GameTime.g_DayOfWeek = (DayOfWeek)day;
+            g_GameTime.g_DayOfWeek = day;
             g_GameTime.g_Hour = hour;
             g_GameTime.g_Minute = minute;
             g_GameTime.g_Second = second;
@@ -1047,6 +1047,7 @@ namespace Client.Classes
             c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
             c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].LightRadius = incMSG.ReadVariableInt32();
         }
 
         void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
@@ -1075,6 +1076,7 @@ namespace Client.Classes
             c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
             c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+            c_Player[index].LightRadius = incMSG.ReadVariableInt32();
             c_Player[index].offsetX = 12;
             c_Player[index].offsetY = 9;
 
@@ -1202,6 +1204,7 @@ namespace Client.Classes
                 c_Player[i].AssaultAmmo = incMSG.ReadVariableInt32();
                 c_Player[i].RocketAmmo = incMSG.ReadVariableInt32();
                 c_Player[i].GrenadeAmmo = incMSG.ReadVariableInt32();
+                c_Player[i].LightRadius = incMSG.ReadVariableInt32();
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
@@ -1223,6 +1226,7 @@ namespace Client.Classes
             c_Map.BottomMap = incMSG.ReadVariableInt32();
             c_Map.LeftMap = incMSG.ReadVariableInt32();
             c_Map.RightMap = incMSG.ReadVariableInt32();
+            c_Map.Brightness = incMSG.ReadVariableInt32();
 
             for (int i = 0; i < 10; i++)
             {
@@ -1253,6 +1257,7 @@ namespace Client.Classes
                     c_Map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].Type = incMSG.ReadVariableInt32();
                     c_Map.Ground[x, y].SpawnNum = incMSG.ReadVariableInt32();
+                    c_Map.Ground[x, y].LightRadius = incMSG.ReadDouble();
                     //mask
                     c_Map.Mask[x, y].TileX = incMSG.ReadVariableInt32();
                     c_Map.Mask[x, y].TileY = incMSG.ReadVariableInt32();

@@ -768,6 +768,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
             outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
             outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].LightRadius);
 
             //Main weapon
             outMSG.Write(s_Player[index].mainWeapon.Name);
@@ -840,6 +841,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].AssaultAmmo);
             outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
             outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
+            outMSG.WriteVariableInt32(s_Player[index].LightRadius);
 
             s_Server.SendMessage(outMSG, s_Player[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1062,6 +1064,7 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].AssaultAmmo);
                 outMSG.WriteVariableInt32(s_Player[i].RocketAmmo);
                 outMSG.WriteVariableInt32(s_Player[i].GrenadeAmmo);
+                outMSG.WriteVariableInt32(s_Player[i].LightRadius);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1548,6 +1551,7 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Map.BottomMap);
             outMSG.WriteVariableInt32(s_Map.LeftMap);
             outMSG.WriteVariableInt32(s_Map.RightMap);
+            outMSG.WriteVariableInt32(s_Map.Brightness);
 
             for (int x = 0; x < 50; x++)
             {
@@ -1561,6 +1565,7 @@ namespace Server.Classes
                     outMSG.WriteVariableInt32(s_Map.Ground[x, y].Tileset);
                     outMSG.WriteVariableInt32(s_Map.Ground[x, y].Type);
                     outMSG.WriteVariableInt32(s_Map.Ground[x, y].SpawnNum);
+                    outMSG.Write(s_Map.Ground[x, y].LightRadius);
                     //mask
                     outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileX);
                     outMSG.WriteVariableInt32(s_Map.Mask[x, y].TileY);

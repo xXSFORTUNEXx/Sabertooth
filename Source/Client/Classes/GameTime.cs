@@ -12,12 +12,9 @@ namespace Client.Classes
         public int g_Second { get; set; }
         public int g_Minute { get; set; }
         public int g_Hour { get; set; }
-        public DayOfWeek g_DayOfWeek { get; set; }
+        public int g_DayOfWeek { get; set; }
         public int g_Month { get; set; }
         public int g_Year { get; set; }
-
-        public NightOverlay n_Overlay = new NightOverlay();
-
         public bool g_Day { get; set; }
         public bool g_Night { get; set; }
         int timeTick;
@@ -29,7 +26,7 @@ namespace Client.Classes
 
         public GameTime() { }
 
-        public GameTime(int year, int month, DayOfWeek day, int hour, int minute, int second)
+        public GameTime(int year, int month, int day, int hour, int minute, int second)
         {
             g_Second = second;
             g_Minute = minute;
@@ -38,7 +35,7 @@ namespace Client.Classes
             g_Month = month;
             g_Year = year;
 
-            g_GameTime = new DateTime(g_Year, g_Month, (int)g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
+            g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
             timeTick = TickCount;
         }
 
@@ -70,29 +67,10 @@ namespace Client.Classes
                 if (g_Hour > 19 || g_Hour < 7) { g_Night = true; g_Day = false; }
                 else { g_Day = true; g_Night = false; }
 
-                g_GameTime = new DateTime(g_Year, g_Month, (int)g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
+                g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
                 Time = g_GameTime.ToString(dateFormat);
                 timeTick = TickCount;
             }
-        }
-    }
-
-    class NightOverlay: Drawable
-    {
-        RenderTexture d_Tex = new RenderTexture(800, 600);
-        Sprite d_Sprite = new Sprite();
-        Texture d_Light = new Texture("Resources/Skins/LightW.png");
-        Sprite d_LightSprite = new Sprite();
-
-        public virtual void Draw(RenderTarget target, RenderStates states)
-        {
-            states.BlendMode = BlendMode.Multiply;
-            d_Sprite.Texture = d_Tex.Texture;
-            d_Tex.Clear(new Color(0, 0, 0, 200));
-            d_LightSprite.Texture = d_Light;
-            d_LightSprite.Position = new Vector2f(250, 140);            
-            d_Tex.Draw(d_LightSprite, states);
-            target.Draw(d_Sprite);
         }
     }
 }

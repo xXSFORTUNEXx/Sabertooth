@@ -86,7 +86,7 @@ namespace Server.Classes
                     command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
                     command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
                     command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
-                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER)";
+                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER)";
                     cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
 

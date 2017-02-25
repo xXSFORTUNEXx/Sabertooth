@@ -53,6 +53,7 @@ namespace Client.Classes
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
+        public int LightRadius { get; set; }
         #endregion
 
         #region Local Variables
@@ -110,6 +111,8 @@ namespace Client.Classes
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
+            LightRadius = 100;
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
@@ -711,7 +714,6 @@ namespace Client.Classes
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                SendCreateBullet(c_Client, index);
                 RemoveBulletFromClip(c_Client, index);
                 Attacking = false;
                 attackTick = TickCount;
@@ -863,11 +865,11 @@ namespace Client.Classes
         {
             if (mainWeapon.Clip > 0)
             {
+                SendCreateBullet(c_Client, index);
                 mainWeapon.Clip -= 1;
                 SendUpdateClip(c_Client, index);
             }
-
-            if (mainWeapon.Clip == 0)
+            else
             {
                 Reload();
                 reloadTick = TickCount;
@@ -881,6 +883,7 @@ namespace Client.Classes
             switch (mainWeapon.ItemAmmoType)
             {
                 case (int)AmmoType.Pistol:
+                    if (PistolAmmo == 0) { break; }
                     if (PistolAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
@@ -901,7 +904,10 @@ namespace Client.Classes
                         PistolAmmo = 0;
                     }
                     break;
+
                 case (int)AmmoType.AssaultRifle:
+                    if (AssaultAmmo == 0) { break; }
+
                     if (AssaultAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
@@ -922,7 +928,9 @@ namespace Client.Classes
                         AssaultAmmo = 0;
                     }
                     break;
+
                 case (int)AmmoType.Rocket:
+                    if (RocketAmmo == 0) { break; }
                     if (RocketAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)
@@ -944,6 +952,7 @@ namespace Client.Classes
                     }
                     break;
                 case (int)AmmoType.Grenade:
+                    if (GrenadeAmmo == 0) { break; }
                     if (GrenadeAmmo > mainWeapon.MaxClip)
                     {
                         if (mainWeapon.Clip > 0)

@@ -47,6 +47,7 @@ namespace Server.Classes
         public int AssaultAmmo { get; set; }
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
+        public int LightRadius { get; set; }
         #endregion
 
         #region Local Variables
@@ -85,6 +86,7 @@ namespace Server.Classes
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
+            LightRadius = 100;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -130,6 +132,7 @@ namespace Server.Classes
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
+            LightRadius = 100;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -710,10 +713,10 @@ namespace Server.Classes
                     conn.Open();
                     string command;
                     command = "INSERT INTO PLAYERS";
-                    command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO)";
+                    command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS)";
                     command = command + " VALUES ";
                     command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,@endurance,@stamina,";
-                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo);";
+                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo, @lightradius);";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -740,6 +743,7 @@ namespace Server.Classes
                     cmd.Parameters.Add("@assaultammo", System.Data.DbType.Int32).Value = AssaultAmmo;
                     cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
                     cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
+                    cmd.Parameters.Add("@ligtradius", System.Data.DbType.Int32).Value = LightRadius;
                     cmd.ExecuteNonQuery();
 
                     command = "INSERT INTO MAINWEAPONS";
@@ -904,7 +908,7 @@ namespace Server.Classes
                     command = "UPDATE PLAYERS SET ";
                     command = command + "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
                     command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
-                    command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo WHERE NAME = '" + Name + "';";
+                    command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius WHERE NAME = '" + Name + "';";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -931,6 +935,7 @@ namespace Server.Classes
                     cmd.Parameters.Add("@assaultammo", System.Data.DbType.Int32).Value = AssaultAmmo;
                     cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
                     cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
+                    cmd.Parameters.Add("@lightradius", System.Data.DbType.Int32).Value = LightRadius;
                     cmd.ExecuteNonQuery();
 
                     command = "UPDATE MAINWEAPONS SET ";
@@ -1200,6 +1205,7 @@ namespace Server.Classes
                             AssaultAmmo = ToInt32(read["ASSAULTAMMO"].ToString());
                             RocketAmmo = ToInt32(read["ROCKETAMMO"].ToString());
                             GrenadeAmmo = ToInt32(read["GRENADEAMMO"].ToString());
+                            LightRadius = ToInt32(read["LIGHTRADIUS"].ToString());
                         }
                     }
 
