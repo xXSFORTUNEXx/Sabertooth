@@ -179,7 +179,7 @@ namespace Server.Classes
         Shop[] s_Shop = new Shop[10];
         Chat[] s_Chat = new Chat[15];
         Chest[] s_Chest = new Chest[10];
-        GameTime g_Time = new GameTime();
+        WorldTime g_Time = new WorldTime();
         Random RND = new Random();
         static string s_userCommand;
         public bool isRunning;
@@ -769,10 +769,10 @@ namespace Server.Classes
                         WriteLine("Version: " + s_Version);
                         WriteLine(upTime);
                         WriteLine("CPS: " + fps);
-                        if (s_Server.Configuration.SimulatedMinimumLatency > 0)
+                        //if (s_Server.SimulatedMinimumLatency > 0)
                         {
-                            string latency = s_Server.Configuration.SimulatedMinimumLatency.ToString(".0#0").TrimStart('0', '.', '0');
-                            WriteLine("Simulated Minimum Latency: " + latency + "ms");
+                            //string latency = s_Server.Configuration.SimulatedMinimumLatency.ToString(".0#0").TrimStart('0', '.', '0');
+                        //    WriteLine("Simulated Minimum Latency: " + latency + "ms");
                         }
                         WriteLine("Host Name: " + hostName);
                         WriteLine("Server Address: " + NetUtility.Resolve(hostName));
@@ -796,10 +796,10 @@ namespace Server.Classes
                         WriteLine(upTime);
                         break;
                     case "latency":
-                        float slatency = s_Server.Configuration.SimulatedMinimumLatency;
+                        //float slatency = s_Server.Configuration.SimulatedMinimumLatency;
 
-                        if (slatency != 0.065f) { s_Server.Configuration.SimulatedMinimumLatency = 0.065f; }
-                        else { s_Server.Configuration.SimulatedMinimumLatency = 0; }                        
+                        //if (slatency != 0.065f) { s_Server.Configuration.SimulatedMinimumLatency = 0.065f; }
+                        //else { s_Server.Configuration.SimulatedMinimumLatency = 0; }                        
                         break;
                     case "time":
                         WriteLine("Time Of Day: " + g_Time.Time);

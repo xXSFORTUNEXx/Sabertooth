@@ -15,7 +15,7 @@ namespace Client.Classes
         public string c_Version = "1.0";
 
         public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest, GameTime g_GameTime)
+            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest, WorldTime g_GameTime)
         {
             NetIncomingMessage incMSG;
             s_IPAddress = c_Config.ipAddress;
@@ -243,7 +243,7 @@ namespace Client.Classes
         }
 
         #region Handle Incoming Data
-        void HandleDateAndTime(NetIncomingMessage incMSG, GameTime g_GameTime)
+        void HandleDateAndTime(NetIncomingMessage incMSG, WorldTime g_GameTime)
         {
             int index = incMSG.ReadVariableInt32();
             int year = incMSG.ReadVariableInt32();

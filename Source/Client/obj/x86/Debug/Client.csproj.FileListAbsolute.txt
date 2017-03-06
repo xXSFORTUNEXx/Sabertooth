@@ -318,15 +318,7 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Fon
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Fonts\Tahoma.ttf
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Client.exe
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Client.pdb
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Renderer.SFML.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.UnitTest.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-audio-2.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-graphics-2.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-system-2.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-window-2.dll
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Tao.OpenGl.dll
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\1.png
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\2.png
 C:\Users\Steve\Documents\Visual Studio 2015\Projects\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\3.png
@@ -636,7 +628,14 @@ C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Til
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\2.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Grid.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
-C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.SQLite.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\SQLite.Interop.dll
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\minimap.png
 C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Chest.png
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Renderer.SFML.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-audio-2.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-graphics-2.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-system-2.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-window-2.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.SQLite.dll
+C:\Users\Steve\Source\Repos\Sabertooth\Source\Client\bin\x86\Debug\Tao.OpenGl.dll

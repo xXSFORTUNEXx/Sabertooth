@@ -1,9 +1,12 @@
 ﻿using System;
 using static System.Environment;
+using SFML.System;
+using SFML.Graphics;
+using SFML.Window;
 
-namespace Server.Classes
+namespace Client.Classes
 {
-    class GameTime
+    class WorldTime
     {
         DateTime g_GameTime;
         public int g_Second { get; set; }
@@ -12,23 +15,25 @@ namespace Server.Classes
         public int g_DayOfWeek { get; set; }
         public int g_Month { get; set; }
         public int g_Year { get; set; }
-        
         public bool g_Day { get; set; }
         public bool g_Night { get; set; }
         int timeTick;
+        public bool updateTime = false;
 
         string dateFormat = "MMM dd, yyyy hh:mm:ss tt";
 
         public string Time { get; set; }
 
-        public GameTime()
+        public WorldTime() { }
+
+        public WorldTime(int year, int month, int day, int hour, int minute, int second)
         {
-            g_Second = DateTime.Now.Second;
-            g_Minute = DateTime.Now.Minute;
-            g_Hour = DateTime.Now.Hour;
-            g_DayOfWeek = DateTime.Now.Day;
-            g_Month = DateTime.Now.Month;
-            g_Year = DateTime.Now.Year;
+            g_Second = second;
+            g_Minute = minute;
+            g_Hour = hour;
+            g_DayOfWeek = day;
+            g_Month = month;
+            g_Year = year;
 
             g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
             timeTick = TickCount;
@@ -59,8 +64,8 @@ namespace Server.Classes
                     g_DayOfWeek += 1;
                 }
 
-                if (g_Hour > 20 || g_Hour < 6) { g_Night = true; }
-                else { g_Day = true; }
+                if (g_Hour > 19 || g_Hour < 7) { g_Night = true; g_Day = false; }
+                else { g_Day = true; g_Night = false; }
 
                 g_GameTime = new DateTime(g_Year, g_Month, g_DayOfWeek, g_Hour, g_Minute, g_Second, DateTimeKind.Utc);
                 Time = g_GameTime.ToString(dateFormat);

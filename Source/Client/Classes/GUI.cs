@@ -804,7 +804,7 @@ namespace Client.Classes
                     shopName.TextColor = System.Drawing.Color.Purple;
                     break;
                 case (int)Rarity.Legendary:
-                    shopName.TextColor = System.Drawing.Color.Brown;
+                    shopName.TextColor = System.Drawing.Color.Orange;
                     break;
                 case (int)Rarity.Admin:
                     shopName.TextColor = System.Drawing.Color.Red;
@@ -1036,7 +1036,7 @@ namespace Client.Classes
                     bankName.TextColor = System.Drawing.Color.Purple;
                     break;
                 case (int)Rarity.Legendary:
-                    bankName.TextColor = System.Drawing.Color.Brown;
+                    bankName.TextColor = System.Drawing.Color.Orange;
                     break;
                 case (int)Rarity.Admin:
                     bankName.TextColor = System.Drawing.Color.Red;

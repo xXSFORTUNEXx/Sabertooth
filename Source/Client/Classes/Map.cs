@@ -344,7 +344,7 @@ namespace Client.Classes
             target.Draw(chestPic, ustates);
         }
 
-        public void DrawBrightness(RenderTarget target, Player[] c_Player, GameTime g_Time, int index)
+       public void DrawBrightness(RenderTarget target, Player[] c_Player, WorldTime g_Time, int index)
         {
             int overlay;
             if (g_Time.g_Night) { overlay = 200; }

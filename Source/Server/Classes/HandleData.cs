@@ -11,7 +11,7 @@ namespace Server.Classes
     {
         public string s_Version;
 
-        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, GameTime gameTime)
+        public void HandleDataMessage(NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, WorldTime gameTime)
         {
             NetIncomingMessage incMSG;
 
@@ -509,7 +509,7 @@ namespace Server.Classes
             }
         }
 
-        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, GameTime gameTime)
+        void HandleLoginRequest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Map[] s_Map, Npc[] s_Npc, Item[] s_Item, Projectile[] s_Proj, Shop[] s_Shop, Chat[] s_Chat, Chest[] s_Chest, WorldTime gameTime)
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
@@ -610,7 +610,7 @@ namespace Server.Classes
         #endregion
 
         #region Send Outgoing Data
-        void SendDateAndTime(NetIncomingMessage incMSG, NetServer s_Server, GameTime gameTime, int index)
+        void SendDateAndTime(NetIncomingMessage incMSG, NetServer s_Server, WorldTime gameTime, int index)
         {
             NetOutgoingMessage outMSG = s_Server.CreateMessage();
             outMSG.Write((byte)PacketTypes.DateandTime);

@@ -41,14 +41,15 @@
     <StartupObject>Server.Classes.StartUp</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lidgren.Network, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Lidgren.Network, Version=3.6.0.1596, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite">
+    <Reference Include="System.Data.SQLite, Version=1.0.99.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -61,7 +62,7 @@
   <ItemGroup>
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
-    <Compile Include="Classes\GameTime.cs" />
+    <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\HandleData.cs" />
     <Compile Include="Classes\Item.cs" />
     <Compile Include="Classes\LogWriter.cs" />
@@ -79,7 +80,7 @@
   <ItemGroup>
     <Content Include="Server.ico" />
     <Content Include="SQLite.Interop.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

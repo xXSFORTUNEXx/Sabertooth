@@ -182,7 +182,7 @@ namespace Client.Classes
         Map c_Map = new Map();
         MiniMap m_Map = new MiniMap();
         View c_View = new View();
-        GameTime g_GameTime;
+        WorldTime g_GameTime;
         ClientConfig c_Config;
         static int lastTick;
         static int lastFrameRate;  
@@ -203,14 +203,16 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
             c_Window.MouseMoved += window_MouseMoved;
             c_Window.TextEntered += window_TextEntered;
-            c_Window.SetFramerateLimit(60);                       
+            c_Window.SetFramerateLimit(60);
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
+
             Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
+
             c_Canvas = new Canvas(skin);
             c_Canvas.SetSize(800, 600);
             c_Canvas.ShouldDrawBackground = true;
@@ -222,7 +224,7 @@ namespace Client.Classes
             c_GUI.CreateMainWindow(c_Canvas);
 
             handleData = new HandleData();
-            g_GameTime = new GameTime();
+            g_GameTime = new WorldTime();
 
             InitArrays();
 
@@ -323,18 +325,18 @@ namespace Client.Classes
 
             if (e.Code == Keyboard.Key.F12)
             {
-                Image img = c_Window.Capture();
-                if (img.Pixels == null)
-                {
-                    MessageBox.Show("Failed to capture window");
-                }
-                if (!Directory.Exists("Screenshots")) { Directory.CreateDirectory("Screenshots"); }
-                string path = string.Format("Screenshots/Screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                if (!img.SaveToFile(path))
-                {
-                    MessageBox.Show(path, "Failed to save screenshot");
-                    img.Dispose();
-                }
+                //Image img = c_Window.Capture();
+                //if (img.Pixels == null)
+                //{
+                //    MessageBox.Show("Failed to capture window");
+                //}
+                //if (!Directory.Exists("Screenshots")) { Directory.CreateDirectory("Screenshots"); }
+                //string path = string.Format("Screenshots/Screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                //if (!img.SaveToFile(path))
+                //{
+                //    MessageBox.Show(path, "Failed to save screenshot");
+                //    img.Dispose();
+                //}
             }
             else
             {
@@ -693,7 +695,7 @@ namespace Client.Classes
             Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest, GameTime g_GameTime)
+        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest, WorldTime g_GameTime)
         {
             c_View.Reset(new FloatRect(0, 0, 800, 600));
             c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
