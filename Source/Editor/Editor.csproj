@@ -102,7 +102,6 @@
     <Compile Include="Forms\Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\StartUp.cs" />
     <Compile Include="Forms\ItemEditor.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,21 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Editor.Forms;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Data.SQLite;
-using SFML.Graphics;
-using SFML.Window;
-using static System.Convert;
 using static System.IO.Directory;
+using static System.Windows.Forms.Application;
 
 namespace Editor
 {
@@ -84,4 +71,15 @@ namespace Editor
             e_ChestEditor.ShowDialog();
         }
     }
+    static class StartUp
+    {
+        [STAThread]
+        static void Main()
+        {
+            EnableVisualStyles();
+            SetCompatibleTextRenderingDefault(false);
+            Run(new Editor());
+        }
+    }
+
 }
