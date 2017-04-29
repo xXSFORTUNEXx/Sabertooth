@@ -1,4 +1,4 @@
-﻿#undef DEBUG
+﻿#define DEBUG
 using Gwen.Control;
 using Lidgren.Network;
 using SFML.Graphics;
@@ -692,7 +692,7 @@ namespace Client.Classes
                     discoverTick = TickCount;
                 }
             }
-            Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
+            //Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
         }
 
         void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest, WorldTime g_GameTime)
