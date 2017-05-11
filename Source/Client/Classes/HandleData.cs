@@ -1077,6 +1077,18 @@ namespace Client.Classes
             c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
             c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
             c_Player[index].LightRadius = incMSG.ReadVariableInt32();
+            c_Player[index].PlayDays = incMSG.ReadVariableInt32();
+            c_Player[index].PlayHours = incMSG.ReadVariableInt32();
+            c_Player[index].PlayMinutes = incMSG.ReadVariableInt32();
+            c_Player[index].PlaySeconds = incMSG.ReadVariableInt32();
+            c_Player[index].LifeDay = incMSG.ReadVariableInt32();
+            c_Player[index].LifeHour = incMSG.ReadVariableInt32();
+            c_Player[index].LifeMinute = incMSG.ReadVariableInt32();
+            c_Player[index].LifeSecond = incMSG.ReadVariableInt32();
+            c_Player[index].LongestLifeDay = incMSG.ReadVariableInt32();
+            c_Player[index].LongestLifeHour = incMSG.ReadVariableInt32();
+            c_Player[index].LongestLifeMinute = incMSG.ReadVariableInt32();
+            c_Player[index].LongestLifeSecond = incMSG.ReadVariableInt32();
             c_Player[index].offsetX = 12;
             c_Player[index].offsetY = 9;
 
@@ -1205,6 +1217,18 @@ namespace Client.Classes
                 c_Player[i].RocketAmmo = incMSG.ReadVariableInt32();
                 c_Player[i].GrenadeAmmo = incMSG.ReadVariableInt32();
                 c_Player[i].LightRadius = incMSG.ReadVariableInt32();
+                c_Player[i].PlayDays = incMSG.ReadVariableInt32();
+                c_Player[i].PlayHours = incMSG.ReadVariableInt32();
+                c_Player[i].PlayMinutes = incMSG.ReadVariableInt32();
+                c_Player[i].PlaySeconds = incMSG.ReadVariableInt32();
+                c_Player[i].LifeDay = incMSG.ReadVariableInt32();
+                c_Player[i].LifeHour = incMSG.ReadVariableInt32();
+                c_Player[i].LifeMinute = incMSG.ReadVariableInt32();
+                c_Player[i].LifeSecond = incMSG.ReadVariableInt32();
+                c_Player[i].LongestLifeDay = incMSG.ReadVariableInt32();
+                c_Player[i].LongestLifeHour = incMSG.ReadVariableInt32();
+                c_Player[i].LongestLifeMinute = incMSG.ReadVariableInt32();
+                c_Player[i].LongestLifeSecond = incMSG.ReadVariableInt32();
                 c_Player[i].offsetX = 12;
                 c_Player[i].offsetY = 9;
             }
@@ -1370,6 +1394,8 @@ namespace Client.Classes
         SendChests,
         OpenChest,
         TakeChestItem,
-        DateandTime
+        DateandTime,
+        PlayTime,
+        LifeTime
     }
 }

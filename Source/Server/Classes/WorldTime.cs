@@ -56,6 +56,7 @@ namespace Server.Classes
 
                 if (g_Hour == 24)
                 {
+                    g_Hour = 0;
                     g_DayOfWeek += 1;
                 }
 

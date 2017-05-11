@@ -113,6 +113,14 @@ namespace Server.Classes
                                 HandleTakeChestItem(incMSG, s_Server, s_Player, s_Chest, s_Item);
                                 break;
 
+                            case (byte)PacketTypes.PlayTime:
+                                HandlePlayerTime(incMSG, s_Server, s_Player);
+                                break;
+
+                            case (byte)PacketTypes.LifeTime:
+                                HandleLifeTime(incMSG, s_Server, s_Player);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -607,6 +615,34 @@ namespace Server.Classes
                 LogWriter.WriteLog("Player saved...", "Server");
             }
         }
+
+        void HandlePlayerTime(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int days = incMSG.ReadVariableInt32();
+            int hours = incMSG.ReadVariableInt32();
+            int minutes = incMSG.ReadVariableInt32();
+            int seconds = incMSG.ReadVariableInt32();
+
+            s_Player[index].PlayDays = days;
+            s_Player[index].PlayHours = hours;
+            s_Player[index].PlayMinutes = minutes;
+            s_Player[index].PlaySeconds = seconds;
+        }
+
+        void HandleLifeTime(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int days = incMSG.ReadVariableInt32();
+            int hours = incMSG.ReadVariableInt32();
+            int minute = incMSG.ReadVariableInt32();
+            int second = incMSG.ReadVariableInt32();
+
+            s_Player[index].LifeDay = days;
+            s_Player[index].LifeHour = hours;
+            s_Player[index].LifeMinute = minute;
+            s_Player[index].LifeSecond = second;
+        }
         #endregion
 
         #region Send Outgoing Data
@@ -769,6 +805,18 @@ namespace Server.Classes
             outMSG.WriteVariableInt32(s_Player[index].RocketAmmo);
             outMSG.WriteVariableInt32(s_Player[index].GrenadeAmmo);
             outMSG.WriteVariableInt32(s_Player[index].LightRadius);
+            outMSG.WriteVariableInt32(s_Player[index].PlayDays);
+            outMSG.WriteVariableInt32(s_Player[index].PlayHours);
+            outMSG.WriteVariableInt32(s_Player[index].PlayMinutes);
+            outMSG.WriteVariableInt32(s_Player[index].PlaySeconds);
+            outMSG.WriteVariableInt32(s_Player[index].LifeDay);
+            outMSG.WriteVariableInt32(s_Player[index].LifeHour);
+            outMSG.WriteVariableInt32(s_Player[index].LifeMinute);
+            outMSG.WriteVariableInt32(s_Player[index].LifeSecond);
+            outMSG.WriteVariableInt32(s_Player[index].LongestLifeDay);
+            outMSG.WriteVariableInt32(s_Player[index].LongestLifeHour);
+            outMSG.WriteVariableInt32(s_Player[index].LongestLifeMinute);
+            outMSG.WriteVariableInt32(s_Player[index].LongestLifeSecond);
 
             //Main weapon
             outMSG.Write(s_Player[index].mainWeapon.Name);
@@ -1065,6 +1113,18 @@ namespace Server.Classes
                 outMSG.WriteVariableInt32(s_Player[i].RocketAmmo);
                 outMSG.WriteVariableInt32(s_Player[i].GrenadeAmmo);
                 outMSG.WriteVariableInt32(s_Player[i].LightRadius);
+                outMSG.WriteVariableInt32(s_Player[i].PlayDays);
+                outMSG.WriteVariableInt32(s_Player[i].PlayHours);
+                outMSG.WriteVariableInt32(s_Player[i].PlayMinutes);
+                outMSG.WriteVariableInt32(s_Player[i].PlaySeconds);
+                outMSG.WriteVariableInt32(s_Player[i].LifeDay);
+                outMSG.WriteVariableInt32(s_Player[i].LifeHour);
+                outMSG.WriteVariableInt32(s_Player[i].LifeMinute);
+                outMSG.WriteVariableInt32(s_Player[i].LifeSecond);
+                outMSG.WriteVariableInt32(s_Player[i].LongestLifeDay);
+                outMSG.WriteVariableInt32(s_Player[i].LongestLifeHour);
+                outMSG.WriteVariableInt32(s_Player[i].LongestLifeMinute);
+                outMSG.WriteVariableInt32(s_Player[i].LongestLifeSecond);
             }
             s_Server.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1844,6 +1904,8 @@ namespace Server.Classes
         SendChests,
         OpenChest,
         TakeChestItem,
-        DateandTime
+        DateandTime,
+        PlayTime,
+        LifeTime
     }
 }

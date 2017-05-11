@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿#undef DEBUG
 using Gwen.Control;
 using Lidgren.Network;
 using SFML.Graphics;
@@ -188,10 +188,12 @@ namespace Client.Classes
         static int lastFrameRate;  
         static int frameRate; 
         static int fps; 
-        static int discoverTick;    
+        static int discoverTick;
+        static int timeTick;
         static int walkTick;
         static int attackTick;
         static int pickupTick;
+        static int saveTime;
 
         public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
         {
@@ -231,12 +233,18 @@ namespace Client.Classes
             while (c_Window.IsOpen)
             {
                 CheckForConnection(c_Client);
+                UpdatePlayerTime(c_Client, c_Player[handleData.c_Index], handleData.c_Index);
                 UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop, c_Chest, g_GameTime); 
                 DrawGraphics(c_Client, c_Player);
                 c_Window.Display();                
             }
 
-            if (c_Client.ServerConnection != null) { c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index); }      
+            if (c_Client.ServerConnection != null)
+            {
+                c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);
+                c_Player[handleData.c_Index].SendUpdatePlayerTime(c_Client, handleData.c_Index);
+                c_Player[handleData.c_Index].SendUpdateLifeTime(c_Client, handleData.c_Index);
+            }      
 
             c_Canvas.Dispose(); 
             skin.Dispose();
@@ -654,6 +662,21 @@ namespace Client.Classes
         #endregion
 
         #region Check & Update Methods
+        void UpdatePlayerTime(NetClient c_Client, Player c_Player, int index)
+        {
+            if (c_Client.ServerConnection == null || c_Player.Name == null) { return; }
+
+            c_Player.UpdatePlayerTime();
+            c_Player.UpdateLifeTime();
+
+            if (TickCount - saveTime >= 297000)
+            {
+                c_Player.SendUpdatePlayerTime(c_Client, handleData.c_Index);
+                c_Player.SendUpdateLifeTime(c_Client, handleData.c_Index);
+                saveTime = TickCount;
+            }
+        }
+
         void ProcessMovement()
         {
             for (int i = 0; i < 5; i++)

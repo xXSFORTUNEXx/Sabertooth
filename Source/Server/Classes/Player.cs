@@ -48,11 +48,25 @@ namespace Server.Classes
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
         public int LightRadius { get; set; }
+
+        public int PlayDays { get; set; }
+        public int PlayHours { get; set; }
+        public int PlayMinutes { get; set; }
+        public int PlaySeconds { get; set; }
+        public int LifeDay { get; set; }
+        public int LifeHour { get; set; }
+        public int LifeMinute { get; set; }
+        public int LifeSecond { get; set; }
+        public int LongestLifeDay { get; set; }
+        public int LongestLifeHour { get; set; }
+        public int LongestLifeMinute { get; set; }
+        public int LongestLifeSecond { get; set; }
         #endregion
 
         #region Local Variables
         public int hungerTick;
         public int hydrationTick;
+        public int timeTick;
         #endregion
 
         #region Class Constructors
@@ -82,11 +96,24 @@ namespace Server.Classes
             Health = MaxHealth;
             hungerTick = TickCount;
             hydrationTick = TickCount;
+            timeTick = TickCount;
             PistolAmmo = defaultAmmo;
             AssaultAmmo = defaultAmmo;
             RocketAmmo = 5;
             GrenadeAmmo = 3;
             LightRadius = 100;
+            PlayDays = 0;
+            PlayHours = 0;
+            PlayMinutes = 0;
+            PlaySeconds = 0;
+            LifeDay = 0;
+            LifeHour = 0;
+            LifeMinute = 0;
+            LifeSecond = 0;
+            LongestLifeDay = 0;
+            LongestLifeHour = 0;
+            LongestLifeMinute = 0;
+            LongestLifeSecond = 0;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -122,6 +149,9 @@ namespace Server.Classes
             Armor = armor;
             Hunger = hunger;
             Hydration = hydration;
+            hungerTick = TickCount;
+            hydrationTick = TickCount;
+            timeTick = TickCount;
             Strength = str;
             Agility = agi;
             Endurance = end;
@@ -133,6 +163,18 @@ namespace Server.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
             LightRadius = 100;
+            PlayDays = 0;
+            PlayHours = 0;
+            PlayMinutes = 0;
+            PlaySeconds = 0;
+            LifeDay = 0;
+            LifeHour = 0;
+            LifeMinute = 0;
+            LifeSecond = 0;
+            LongestLifeDay = 0;
+            LongestLifeHour = 0;
+            LongestLifeMinute = 0;
+            LongestLifeSecond = 0;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -158,6 +200,7 @@ namespace Server.Classes
             Connection = conn;
             hungerTick = TickCount;
             hydrationTick = TickCount;
+            timeTick = TickCount;
 
             for (int i = 0; i < 25; i++)
             {
@@ -713,10 +756,11 @@ namespace Server.Classes
                     conn.Open();
                     string command;
                     command = "INSERT INTO PLAYERS";
-                    command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS)";
+                    command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
+                    command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS)";
                     command = command + " VALUES ";
                     command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,@endurance,@stamina,";
-                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo, @lightradius);";
+                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo, @lightradius, @days, @hours, @minutes, @seconds, @ldays, @lhours, @lminutes, @lseconds, @lldays, @llhours, @llminutes, @llseconds);";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -744,6 +788,18 @@ namespace Server.Classes
                     cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
                     cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
                     cmd.Parameters.Add("@ligtradius", System.Data.DbType.Int32).Value = LightRadius;
+                    cmd.Parameters.Add("@days", System.Data.DbType.Int32).Value = PlayDays;
+                    cmd.Parameters.Add("@hours", System.Data.DbType.Int32).Value = PlayHours;
+                    cmd.Parameters.Add("@minutes", System.Data.DbType.Int32).Value = PlayMinutes;
+                    cmd.Parameters.Add("@seconds", System.Data.DbType.Int32).Value = PlaySeconds;
+                    cmd.Parameters.Add("@ldays", System.Data.DbType.Int32).Value = LifeDay;
+                    cmd.Parameters.Add("@lhours", System.Data.DbType.Int32).Value = LifeHour;
+                    cmd.Parameters.Add("@lminutes", System.Data.DbType.Int32).Value = LifeMinute;
+                    cmd.Parameters.Add("@lseconds", System.Data.DbType.Int32).Value = LifeSecond;
+                    cmd.Parameters.Add("@lldays", System.Data.DbType.Int32).Value = LongestLifeDay;
+                    cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
+                    cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
+                    cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
                     cmd.ExecuteNonQuery();
 
                     command = "INSERT INTO MAINWEAPONS";
@@ -908,7 +964,9 @@ namespace Server.Classes
                     command = "UPDATE PLAYERS SET ";
                     command = command + "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
                     command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
-                    command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius WHERE NAME = '" + Name + "';";
+                    command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
+                    command = command + "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
+                    command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds WHERE NAME = '" + Name + "';";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -936,6 +994,18 @@ namespace Server.Classes
                     cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
                     cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
                     cmd.Parameters.Add("@lightradius", System.Data.DbType.Int32).Value = LightRadius;
+                    cmd.Parameters.Add("@days", System.Data.DbType.Int32).Value = PlayDays;
+                    cmd.Parameters.Add("@hours", System.Data.DbType.Int32).Value = PlayHours;
+                    cmd.Parameters.Add("@minutes", System.Data.DbType.Int32).Value = PlayMinutes;
+                    cmd.Parameters.Add("@seconds", System.Data.DbType.Int32).Value = PlaySeconds;
+                    cmd.Parameters.Add("@ldays", System.Data.DbType.Int32).Value = LifeDay;
+                    cmd.Parameters.Add("@lhours", System.Data.DbType.Int32).Value = LifeHour;
+                    cmd.Parameters.Add("@lminutes", System.Data.DbType.Int32).Value = LifeMinute;
+                    cmd.Parameters.Add("@lseconds", System.Data.DbType.Int32).Value = LifeSecond;
+                    cmd.Parameters.Add("@lldays", System.Data.DbType.Int32).Value = LongestLifeDay;
+                    cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
+                    cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
+                    cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
                     cmd.ExecuteNonQuery();
 
                     command = "UPDATE MAINWEAPONS SET ";
@@ -1206,6 +1276,18 @@ namespace Server.Classes
                             RocketAmmo = ToInt32(read["ROCKETAMMO"].ToString());
                             GrenadeAmmo = ToInt32(read["GRENADEAMMO"].ToString());
                             LightRadius = ToInt32(read["LIGHTRADIUS"].ToString());
+                            PlayDays = ToInt32(read["DAYS"].ToString());
+                            PlayHours = ToInt32(read["HOURS"].ToString());
+                            PlayMinutes = ToInt32(read["MINUTES"].ToString());
+                            PlaySeconds = ToInt32(read["SECONDS"].ToString());
+                            LifeDay = ToInt32(read["LDAYS"].ToString());
+                            LifeHour = ToInt32(read["LHOURS"].ToString());
+                            LifeMinute = ToInt32(read["LMINUTES"].ToString());
+                            LifeSecond = ToInt32(read["LSECONDS"].ToString());
+                            LongestLifeDay = ToInt32(read["LLDAYS"].ToString());
+                            LongestLifeHour = ToInt32(read["LLHOURS"].ToString());
+                            LongestLifeMinute = ToInt32(read["LLMINUTES"].ToString());
+                            LongestLifeSecond = ToInt32(read["LLSECONDS"].ToString());
                         }
                     }
 

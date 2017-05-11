@@ -187,6 +187,9 @@ namespace Client.Classes
         Label charAgi;
         Label charEnd;
         Label charSta;
+        Label playTime;
+        Label lifeTime;
+        Label longestLife;
         #endregion
 
         #region PackTab
@@ -383,6 +386,14 @@ namespace Client.Classes
                     charAgi.Text = "Agility: " + c_Player.Agility;
                     charEnd.Text = "Endurance: " + c_Player.Endurance;
                     charSta.Text = "Stamina: " + c_Player.Stamina;
+
+                    lifeTime.Text = "Life Time: " + c_Player.LifeDay + "D " + c_Player.LifeHour + "H " + c_Player.LifeMinute + "M " + c_Player.LifeSecond + "S";
+                    playTime.Text = "Play Time: " + c_Player.PlayDays + "D " + c_Player.PlayHours + "H " + c_Player.PlayMinutes + "M " + c_Player.PlaySeconds + "S";
+                   
+                    if (c_Player.LongestLifeDay > 0 || c_Player.LongestLifeHour > 0 || c_Player.LongestLifeMinute > 0 || c_Player.LongestLifeSecond > 0)
+                    {
+                        longestLife.Text = "Longest Life: " + c_Player.LongestLifeDay + "D " + c_Player.LongestLifeHour + "H " + c_Player.LongestLifeMinute + "M " + c_Player.LongestLifeSecond + "S"; ;
+                    }
                     #endregion
                 }
                 //if (packTab.HasFocus)
@@ -2491,6 +2502,18 @@ namespace Client.Classes
             charSta = new Label(charTab.Page);
             charSta.SetPosition(10, 140);
             charSta.Text = "Stamina: ?";
+
+            lifeTime = new Label(charTab.Page);
+            lifeTime.SetPosition(10, 150);
+            lifeTime.Text = "Life Time: ?";
+
+            playTime = new Label(charTab.Page);
+            playTime.SetPosition(10, 160);
+            playTime.Text = "Play Time: ?";
+
+            longestLife = new Label(charTab.Page);
+            longestLife.SetPosition(10, 170);
+            longestLife.Text = "Longest Life: ?";
             #endregion
 
             packTab = menuTabs.AddPage("Backpack");

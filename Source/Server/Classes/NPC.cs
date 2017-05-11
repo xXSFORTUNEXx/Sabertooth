@@ -235,6 +235,21 @@ namespace Server.Classes
                 s_Player[index].Health = s_Player[index].MaxHealth;
                 s_Player[index].X = 0;
                 s_Player[index].Y = 0;
+                int day = s_Player[index].LifeDay;
+                int hour = s_Player[index].LifeHour;
+                int minute = s_Player[index].LifeMinute;
+                int second = s_Player[index].LifeSecond;
+                s_Player[index].LifeDay = 0;
+                s_Player[index].LifeHour = 0;
+                s_Player[index].LifeMinute = 0;
+                s_Player[index].LifeSecond = 0;
+                if (NewLongestLife(s_Player[index]))
+                {
+                    s_Player[index].LongestLifeDay = day;
+                    s_Player[index].LongestLifeHour = hour;
+                    s_Player[index].LongestLifeMinute = minute;
+                    s_Player[index].LongestLifeSecond = second;
+                }
                 sendData.SendPlayers(s_Server, s_Player);
                 string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
                 sendData.SendServerMessageToAll(s_Server, deathMsg);
@@ -243,6 +258,25 @@ namespace Server.Classes
             {
                 sendData.SendUpdatePlayerStats(s_Server, s_Player, index);
             }
+        }
+
+        bool NewLongestLife(Player s_Player)
+        {
+            if (s_Player.LifeDay > s_Player.LongestLifeDay)
+            {
+                return true;
+            }
+
+            if (s_Player.LifeHour > s_Player.LongestLifeHour)
+            {
+                return true;
+            }
+
+            if (s_Player.LifeMinute > s_Player.LongestLifeMinute)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player, NetServer s_Server)

@@ -54,13 +54,31 @@ namespace Client.Classes
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
         public int LightRadius { get; set; }
+
+        public int PlayDays { get; set; }
+        public int PlayHours { get; set; }
+        public int PlayMinutes { get; set; }
+        public int PlaySeconds { get; set; }
+        public int LifeDay { get; set; }
+        public int LifeHour { get; set; }
+        public int LifeMinute { get; set; }
+        public int LifeSecond { get; set; }
+        public int LongestLifeDay { get; set; }
+        public int LongestLifeHour { get; set; }
+        public int LongestLifeMinute { get; set; }
+        public int LongestLifeSecond { get; set; }
         #endregion
 
         #region Local Variables
-        public bool Moved;
-        public bool Attacking;
+        bool Moved;
+        bool Attacking;
+        int attackTick;
+        int timeTick;
+        int lifeTick;
+        int pickupTick;
+        int equipTick;
+        int interactionTick;
         public int reloadTick;
-        public int attackTick;
         public int offsetX;
         public int offsetY;
         public int tempX;
@@ -69,9 +87,6 @@ namespace Client.Classes
         public int tempaimDir;
         public int tempStep;
         public int Step;
-        public int PickupTick;
-        public int equipTick;
-        public int interactionTick;
         public bool inShop;
         public int shopNum;
         public bool inChat;
@@ -112,6 +127,18 @@ namespace Client.Classes
             RocketAmmo = 5;
             GrenadeAmmo = 3;
             LightRadius = 100;
+            PlayDays = 0;
+            PlayHours = 0;
+            PlayMinutes = 0;
+            PlaySeconds = 0;
+            LifeDay = 0;
+            LifeHour = 0;
+            LifeMinute = 0;
+            LifeSecond = 0;
+            LongestLifeDay = 0;
+            LongestLifeHour = 0;
+            LongestLifeMinute = 0;
+            LongestLifeSecond = 0;
 
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -433,7 +460,7 @@ namespace Client.Classes
             if (Joystick.IsButtonPressed(0, 0))
             {
                 SendPickupItem(c_Client, index);
-                PickupTick = TickCount;
+                pickupTick = TickCount;
             }
         }
 
@@ -744,7 +771,7 @@ namespace Client.Classes
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
                 SendPickupItem(c_Client, index);
-                PickupTick = TickCount;
+                pickupTick = TickCount;
             }
         }
 
@@ -1046,6 +1073,86 @@ namespace Client.Classes
             outMSG.WriteVariableInt32(Map);
             outMSG.WriteVariableInt32(playerindex);
             c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdatePlayerTime(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PlayTime);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(PlayDays);
+            outMSG.WriteVariableInt32(PlayHours);
+            outMSG.WriteVariableInt32(PlayMinutes);
+            outMSG.WriteVariableInt32(PlaySeconds);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdateLifeTime(NetClient c_Client, int index)
+        {
+            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            outMSG.Write((byte)PacketTypes.LifeTime);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(LifeDay);
+            outMSG.WriteVariableInt32(LifeHour);
+            outMSG.WriteVariableInt32(LifeMinute);
+            outMSG.WriteVariableInt32(LifeSecond);
+            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void UpdatePlayerTime()
+        {
+            if (TickCount - timeTick >= 1000)
+            {
+                if (PlaySeconds < 59)
+                {
+                    PlaySeconds += 1;
+                }
+                else
+                {
+                    PlaySeconds = 0;
+                    PlayMinutes += 1;
+                }
+
+                if (PlayMinutes >= 60)
+                {
+                    PlayMinutes = 0;
+                    PlayHours += 1;
+                }
+
+                if (PlayHours == 24)
+                {
+                    PlayHours = 0;
+                    PlayDays += 1;
+                }
+                timeTick = TickCount;
+            }
+        }
+
+        public void UpdateLifeTime()
+        {
+            if (TickCount - lifeTick >= 1000)
+            {
+                if (LifeSecond < 59)
+                {
+                    LifeSecond += 1;
+                }
+                else
+                {
+                    LifeSecond = 0;
+                    LifeMinute += 1;
+                }
+                if (LifeMinute >= 60)
+                {
+                    LifeMinute = 0;
+                    LifeHour += 1;
+                }
+                if (LifeHour == 24)
+                {
+                    LifeHour = 0;
+                    LifeDay += 1;
+                }
+                lifeTick = TickCount;
+            }
         }
 
         public int ArmorBonus(bool isBonus)

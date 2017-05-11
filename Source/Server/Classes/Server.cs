@@ -86,7 +86,8 @@ namespace Server.Classes
                     command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
                     command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
                     command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
-                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER)";
+                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER, `DAYS` INTEGER, `HOURS` INTEGER, `MINUTES` INTEGER, `SECONDS` INTEGER, `LDAYS` INTEGER, `LHOURS` INTEGER, `LMINUTES` INTEGER, `LSECONDS` INTEGER, ";
+                    command = command + "`LLDAYS` INTEGER, `LLHOURS` INTEGER, `LLMINUTES` INTEGER, `LLSECONDS` INTEGER)";
                     cmd.CommandText = command;
                     cmd.ExecuteNonQuery();
 
@@ -374,6 +375,35 @@ namespace Server.Classes
         }
 
         #region Server Check Voids
+        void UpTime()
+        {
+            if (TickCount - s_uptimeTick > 1000)
+            {
+                if (s_Second < 60)
+                {
+                    s_Second += 1;
+                }
+                else
+                {
+                    s_Second = 0;
+                    s_Minute += 1;
+                }
+
+                if (s_Minute >= 60)
+                {
+                    s_Minute = 0;
+                    s_Hour += 1;
+                }
+                if (s_Hour == 24)
+                {
+                    s_Hour = 0;
+                    s_Day += 1;
+                }
+                upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
+                s_uptimeTick = TickCount;
+            }
+        }
+        
         bool CheckHealthRegen(NetServer s_Server)
         {
             if (TickCount - regenTick < regenTime) { return false; }
@@ -954,35 +984,6 @@ namespace Server.Classes
                 Write("");
                 s_userCommand = ReadLine();
             } while (s_userCommand != null);
-        }
-
-        void UpTime()
-        {
-            if (TickCount - s_uptimeTick > 1000)
-            {
-                if (s_Second < 60)
-                {
-                    s_Second += 1;
-                }
-                else
-                {
-                    s_Second = 0;
-                    s_Minute += 1;
-                }
-
-                if (s_Minute >= 60)
-                {
-                    s_Minute = 0;
-                    s_Hour += 1;
-                }
-                if (s_Hour == 24)
-                {
-                    s_Hour = 0;
-                    s_Day += 1;
-                }
-                upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
-                s_uptimeTick = TickCount;
-            }
         }
 
         void UpdateTitle()
