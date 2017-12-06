@@ -16,6 +16,7 @@ namespace Editor.Forms
     public partial class ItemEditor : Form
     {
         Item e_Item = new Item();
+        Projectile e_Proj = new Projectile();
         int SelectedIndex;
         bool UnModSave;
 
@@ -212,7 +213,7 @@ namespace Editor.Forms
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
             e_Item.ProjectileNumber = scrlProjNum.Value;
             UnModSave = true;
-            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png");
         }
 
         private void btnNewItem_Click(object sender, EventArgs e)
@@ -250,8 +251,10 @@ namespace Editor.Forms
                 w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
                 if (w_Result == DialogResult.No) { return; }
             }
+
             SelectedIndex = (lstIndex.SelectedIndex + 1);
             e_Item.LoadItemFromDatabase(SelectedIndex);
+            if (e_Item.Type == (int)ItemType.RangedWeapon) { e_Proj.LoadProjectileFromDatabase(e_Item.ProjectileNumber); }
             txtName.Text = e_Item.Name;
             scrlSprite.Value = e_Item.Sprite;
             scrlDamage.Value = e_Item.Damage;
@@ -274,7 +277,7 @@ namespace Editor.Forms
             scrlRarity.Value = e_Item.Rarity;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
-            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProjNum.Value + ".png");
+            if (pnlRanged.Visible) { picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png"); }
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);

@@ -2504,15 +2504,15 @@ namespace Client.Classes
             charSta.Text = "Stamina: ?";
 
             lifeTime = new Label(charTab.Page);
-            lifeTime.SetPosition(10, 150);
+            lifeTime.SetPosition(10, 160);
             lifeTime.Text = "Life Time: ?";
 
             playTime = new Label(charTab.Page);
-            playTime.SetPosition(10, 160);
+            playTime.SetPosition(10, 170);
             playTime.Text = "Play Time: ?";
 
             longestLife = new Label(charTab.Page);
-            longestLife.SetPosition(10, 170);
+            longestLife.SetPosition(10, 180);
             longestLife.Text = "Longest Life: ?";
             #endregion
 
