@@ -328,7 +328,7 @@ namespace Client.Classes
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 32), new Vector2f(dir + 32, 32));
             spritePic[3] = new Vertex(new Vector2f(x, y + 32), new Vector2f(dir, 32));
 
-            states.Texture = proj_Texture[Sprite - 1];
+            states.Texture = proj_Texture[Sprite];
             target.Draw(spritePic, states);
         }
     }

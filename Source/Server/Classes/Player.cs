@@ -759,8 +759,8 @@ namespace Server.Classes
                     command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
                     command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS)";
                     command = command + " VALUES ";
-                    command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,@endurance,@stamina,";
-                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo, @lightradius, @days, @hours, @minutes, @seconds, @ldays, @lhours, @lminutes, @lseconds, @lldays, @llhours, @llminutes, @llseconds);";
+                    command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
+                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds);";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -777,8 +777,8 @@ namespace Server.Classes
                     cmd.Parameters.Add("@experience", System.Data.DbType.Int32).Value = Experience;
                     cmd.Parameters.Add("@money", System.Data.DbType.Int32).Value = Money;
                     cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Armor;
-                    cmd.Parameters.Add("@hunger", System.Data.DbType.Int32).Value = hungerTick;
-                    cmd.Parameters.Add("@hydrate", System.Data.DbType.Int32).Value = Hydration;
+                    cmd.Parameters.Add("@hunger", System.Data.DbType.Int32).Value = Hunger;
+                    cmd.Parameters.Add("@hydration", System.Data.DbType.Int32).Value = Hydration;
                     cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Strength;
                     cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Agility;
                     cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Endurance;
@@ -787,7 +787,7 @@ namespace Server.Classes
                     cmd.Parameters.Add("@assaultammo", System.Data.DbType.Int32).Value = AssaultAmmo;
                     cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
                     cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
-                    cmd.Parameters.Add("@ligtradius", System.Data.DbType.Int32).Value = LightRadius;
+                    cmd.Parameters.Add("@lightradius", System.Data.DbType.Int32).Value = LightRadius;
                     cmd.Parameters.Add("@days", System.Data.DbType.Int32).Value = PlayDays;
                     cmd.Parameters.Add("@hours", System.Data.DbType.Int32).Value = PlayHours;
                     cmd.Parameters.Add("@minutes", System.Data.DbType.Int32).Value = PlayMinutes;
