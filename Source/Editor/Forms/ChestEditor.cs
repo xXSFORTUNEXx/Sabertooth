@@ -88,16 +88,16 @@ namespace Editor.Forms
 
         private void RestructureChestItemArray()
         {
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 10; i++)
             {
                 if (e_Chest.ChestItem[i].Name == "None")
                 {
-                    if (i < 24)
+                    if (i < 10)
                     {
-                        if (e_Chest.ChestItem[i + 1].Name != "None")
+                        if (e_Chest.ChestItem[i].Name != "None")
                         {
                             e_Chest.ChestItem[i] = e_Chest.ChestItem[i + 1];
-                            e_Chest.ChestItem[i + 1] = new ChestItem("None", 0, 1);
+                            e_Chest.ChestItem[i] = new ChestItem("None", 0, 1);
                         }
                     }
                 }
