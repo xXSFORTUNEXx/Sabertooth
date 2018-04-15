@@ -797,3 +797,8 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.xml
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-network-2.dll
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\libsndfile-1.dll
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\openal32.dll
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Renderer.SFML.pdb
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.pdb

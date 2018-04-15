@@ -290,7 +290,7 @@ namespace Sabertooth
                 npcs[i] = new Npc();
                 npcs[i].LoadNpcFromDatabase((i + 1));
             }
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAPS; i++)
             {
                 for (int n = 0; n < 10; n++)
                 {
@@ -785,12 +785,11 @@ namespace Sabertooth
                         Logging.WriteMessageLog("Version: " + sVersion, "Commands");
                         Logging.WriteMessageLog(upTime, "Commands");                        
                         Logging.WriteMessageLog("CPS: " + fps, "Commands");
-                        Logging.WriteMessageLog("Public IP: " + GetPublicIPAddress() + ":" + Sabertooth.netServer.Port);
+                        Logging.WriteMessageLog("Public IP: " + GetPublicIPAddress());
                         Logging.WriteMessageLog("Host Name: " + hostName, "Commands");
                         Logging.WriteMessageLog("Server Address: " + NetUtility.Resolve(hostName), "Commands");
                         Logging.WriteMessageLog("Port: " + Sabertooth.netServer.Port, "Commands");
                         Logging.WriteMessageLog(Sabertooth.netServer.Statistics.ToString(), "Commands");
-                        Logging.WriteMessageLog("Connections: " + Sabertooth.netServer.ConnectionsCount.ToString(), "Commands");
                         for (int i = 0; i < Globals.MAX_PLAYERS; i++)
                         {
                             if (players[i].Connection != null)
@@ -813,6 +812,9 @@ namespace Sabertooth
 
                         //if (slatency != 0.065f) { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0.065f; }
                         //else { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0; }                        
+                        break;
+                    case "accounts":
+
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Logging.WriteMessageLog("Commands:", "Commands");
@@ -987,8 +989,9 @@ namespace Sabertooth
         public const int MAX_MAP_X = 50;
         public const int MAX_MAP_Y = 50;
         public const int MAX_SHOPS = 10;
-        public const int MAX_CHATS = 10;
+        public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
+        public const int MAX_CHEST_ITEMS = 10;
         //Config Globals
         public const string IP_ADDRESS = "10.16.0.8";
         public const string SMTP_IP_ADDRESS = "";

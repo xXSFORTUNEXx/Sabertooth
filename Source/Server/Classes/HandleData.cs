@@ -1208,7 +1208,7 @@ namespace Sabertooth
         {
             NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChats);
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < Globals.MAX_CHATS; i++)
             {
                 outMSG.Write(chats[i].Name);
                 outMSG.Write(chats[i].MainMessage);

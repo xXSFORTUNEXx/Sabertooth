@@ -205,7 +205,7 @@ namespace Client.Classes
             c_Window.MouseButtonReleased += window_MouseButtonReleased;
             c_Window.MouseMoved += window_MouseMoved;
             c_Window.TextEntered += window_TextEntered;
-            c_Window.SetFramerateLimit(60);
+            //c_Window.SetFramerateLimit(60);
             this.c_Config = c_Config;
             Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
