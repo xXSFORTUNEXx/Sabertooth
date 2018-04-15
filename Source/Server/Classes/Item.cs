@@ -1,7 +1,7 @@
 ﻿using System.Data.SQLite;
 using static System.Convert;
 
-namespace Server.Classes
+namespace Sabertooth
 {
     public class Item
     {

@@ -1,24 +1,35 @@
 ﻿using System;
 using System.IO;
-using static System.IO.Directory;
 
-namespace Server.Classes
+namespace Sabertooth
 {
-    static class LogWriter
+    public static class Logging
     {
-        public static void WriteLog(string entry, string logType)
+        public static void WriteMessageLog(string logMessage, string logType = "Server")
         {
-            if (!Exists("Logs"))
-            {
-                CreateDirectory("Logs");                
-            }
+            if (!Directory.Exists("Logs")) { Directory.CreateDirectory("Logs"); }
+            string dir = "Logs/" + logType + " " + DateTime.Now.ToString("yyyMMdd") + ".txt";
+            string final = "[" + DateTime.Now.ToString("HH:mm:ss") + "] - " + logMessage;
 
-            string dir = "Logs/" + logType + " " + DateTime.Now.ToString("yyyyMMdd") + ".txt";
-            string finalEntry = "[" + DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + "] " + entry;
-            StreamWriter logFile = File.AppendText(dir);
-            logFile.WriteLine(finalEntry);
-            logFile.Flush();
-            logFile.Close();
+            using (StreamWriter logFile = File.AppendText(dir))
+            {
+                logFile.WriteLine(final);
+                logFile.Flush();
+            }
+            Console.WriteLine(final);
+        }
+
+        public static void WriteLog(string logMessage, string logType = "Server")
+        {
+            if (!Directory.Exists("Logs")) { Directory.CreateDirectory("Logs"); }
+            string dir = "Logs/" + logType + " " + DateTime.Now.ToString("yyyMMdd") + ".txt";
+            string final = "[" + DateTime.Now.ToString("HH:mm:ss") + "] - " + logMessage;
+
+            using (StreamWriter logFile = File.AppendText(dir))
+            {
+                logFile.WriteLine(final);
+                logFile.Flush();
+            }
         }
     }
 }

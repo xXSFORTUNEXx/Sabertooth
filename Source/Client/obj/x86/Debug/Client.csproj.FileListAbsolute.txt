@@ -795,3 +795,5 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csp
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj.CopyComplete
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.pdb
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.xml

@@ -3,65 +3,70 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Xml;
-using static Server.Classes.LogWriter;
-using static System.Console;
 using static System.Environment;
 using static System.IO.File;
 using System.IO;
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 
-namespace Server.Classes
+namespace Sabertooth
 {
-    public class StartUp
+    public class Sabertooth
     {
 
         // Run to check how many lines of code my project has
         //Ctrl+Shift+F, use regular expression, ^(?([^\r\n])\s)*[^\s+?/]+[^\n]*$
 
-        static NetServer s_Server;
-        static NetPeerConfiguration s_Config;
+        public static NetServer netServer;
 
         static void Main(string[] args)
         {
-            Title = "Sabertooth Server";
-            WriteLine(@"  _____       _               _              _   _     ");
-            WriteLine(@" / ____|     | |             | |            | | | |    ");
-            WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
-            WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
-            WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
-            WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
-            WriteLine(@"                              Created by Steven Fortune");
-            WriteLine("Loading...Please wait...");
-            WriteLog("Loading...Please wait...", "Server");
-            s_Config = new NetPeerConfiguration("sabertooth");
-            s_Config.Port = 14242;
-            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-            s_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-            s_Config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
-            s_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
-            s_Config.DisableMessageType(NetIncomingMessageType.Error);
-            s_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
-            s_Config.DisableMessageType(NetIncomingMessageType.Receipt);
-            s_Config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
-            s_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
-            s_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            s_Config.UseMessageRecycling = true;
-            s_Config.MaximumConnections = 5;
-            s_Config.EnableUPnP = false;
-            //s_Config.SimulatedRandomLatency = 0.085f;
-            //s_Config.SimulatedMinimumLatency = 0.065f;
-            //s_Config.SimulatedLoss = 0.5f;
-            //s_Config.SimulatedDuplicatesChance = 0.5f;
-            s_Config.ConnectionTimeout = 25.0f;
+            Console.Title = "Sabertooth Server";
+            Logging.WriteMessageLog(@"  _____       _               _              _   _     ");
+            Logging.WriteMessageLog(@" / ____|     | |             | |            | | | |    ");
+            Logging.WriteMessageLog(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            Logging.WriteMessageLog(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            Logging.WriteMessageLog(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            Logging.WriteMessageLog(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            Logging.WriteMessageLog(@"                              Created by Steven Fortune");
+            Logging.WriteMessageLog("Loading...Please wait...");
+            Logging.WriteMessageLog("Loading...Please wait...Init network configuration...");
+            Logging.WriteMessageLog("Init network configuration...");
+
+            NetPeerConfiguration netConfig = new NetPeerConfiguration("sabertooth")
+            {
+                Port = Globals.SERVER_PORT,
+                UseMessageRecycling = true,
+                MaximumConnections = Globals.MAX_PLAYERS,
+                EnableUPnP = false,
+                ConnectionTimeout = Globals.CONNECTION_TIMEOUT,
+                SimulatedRandomLatency = Globals.SIMULATED_RANDOM_LATENCY,
+                SimulatedMinimumLatency = Globals.SIMULATED_MINIMUM_LATENCY,
+                SimulatedLoss = Globals.SIMULATED_PACKET_LOSS,
+                SimulatedDuplicatesChance = Globals.SIMULATED_DUPLICATES_CHANCE
+            };
+
+            Logging.WriteMessageLog("Enabling message types...");
+            netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            netConfig.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            Logging.WriteMessageLog("Disabling message types...");
+            netConfig.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            netConfig.DisableMessageType(NetIncomingMessageType.Error);
+            netConfig.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            netConfig.DisableMessageType(NetIncomingMessageType.Receipt);
+            netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            Logging.WriteMessageLog("Message Types Enabled: ConApproval, Latency Updates, Discovery Requests");
+            Logging.WriteMessageLog("Message Types Disabled: Debug, NAT Intro Success, Receipt, UnconnectedData, Verbose Debug, Warning Message");
+
             CheckDirectories();
-            s_Server = new NetServer(s_Config);
-            s_Server.Start();
-            //s_Server.UPnP.ForwardPort(14242, "Sabertooth");
-            Server srvrServer = new Server();
-            WriteLine("Server Started...");
-            WriteLog("Server started...", "Server");
-            srvrServer.LoadServerConfig();
-            srvrServer.ServerLoop(s_Server);
+            netServer = new NetServer(netConfig);
+            netServer.Start();
+            Logging.WriteMessageLog("Network configuration complete...");
+            Server.LoadServerConfig();
+            Server.ServerLoop();
         }
 
         static void CheckDirectories()
@@ -169,296 +174,273 @@ namespace Server.Classes
         }
     }
 
-    class Server
+    public static class Server
     {
-        Player[] s_Player = new Player[5];
-        Npc[] s_Npc = new Npc[10];
-        Item[] s_Item = new Item[50];
-        HandleData handleData = new HandleData();
-        Projectile[] s_Proj = new Projectile[10];
-        Map[] s_Map = new Map[10];
-        Shop[] s_Shop = new Shop[10];
-        Chat[] s_Chat = new Chat[15];
-        Chest[] s_Chest = new Chest[10];
-        WorldTime g_Time = new WorldTime();
-        Random RND = new Random();
-        static string s_userCommand;
-        public bool isRunning;
-        private int saveTick;
-        private int aiTick;
-        private int regenTick;
-        private int regenTime;
-        private int hungerTime; 
-        private int hydrationTime;
-        private int saveTime;
-        private int spawnTime;
-        private int aiTime;
-        private int removeTime;
-        public int s_Second;
-        public int s_Minute;
-        public int s_Hour;
-        public int s_Day;
-        public int s_uptimeTick;
-        public string upTime;
-        public string s_Version;
+        public static Player[] players = new Player[Globals.MAX_PLAYERS];
+        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
+        public static Item[] items = new Item[Globals.MAX_ITEMS];
+        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
+        public static Map[] maps = new Map[Globals.MAX_MAPS];
+        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
+        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
+        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
+        public static WorldTime worldTime = new WorldTime();
+        public static Random RND = new Random();
+        public static bool isRunning;
+        private static int saveTick;
+        private static int aiTick;
+        private static int regenTick;
+        private static int regenTime;
+        private static int hungerTime;
+        private static int hydrationTime;
+        private static int saveTime;
+        private static int spawnTime;
+        private static int aiTime;
+        private static int removeTime;
+        public static int sSecond;
+        public static int sMinute;
+        public static int sHour;
+        public static int sDay;
+        public static int suptimeTick;
+        public static string upTime;
+        public static string sVersion;
         static int lastTick;
         static int lastFrameRate;
         static int frameRate;
         static int fps;
 
-        public void ServerLoop(NetServer s_Server)
+        public static void ServerLoop()
         {
-            handleData.s_Version = s_Version;
             InitArrays();
 
-            Thread s_Command = new Thread(CommandWindow);
-            s_Command.Start();
+            Thread commandThread = new Thread(() => CommandWindow());
+            commandThread.Start();
 
             isRunning = true;
             while (isRunning)
             {
-                g_Time.UpdateTime();
+                worldTime.UpdateTime();
                 UpdateTitle();
-                handleData.HandleDataMessage(s_Server, s_Player, s_Map, s_Npc, s_Item, s_Proj, s_Shop, s_Chat, s_Chest, g_Time);
+                HandleData.HandleDataMessage();
                 SavePlayers();
-                CheckNpcSpawn(s_Server);
-                CheckItemSpawn(s_Server);
-                CheckClearMapItem(s_Server);
-                CheckHealthRegen(s_Server);
-                CheckVitalLoss(s_Server);
-                CheckNpcAi(s_Server);
-                CheckCommands(s_Server, s_Player);
+                CheckNpcSpawn();
+                CheckItemSpawn();
+                CheckClearMapItem();
+                CheckHealthRegen();
+                CheckVitalLoss();
+                CheckNpcAi();
                 UpTime();
                 fps = CalculateFrameRate();
                 Thread.Sleep(10);
             }
-            DisconnectClients(s_Server);
-            WriteLine("Disconnecting clients...");
+            DisconnectClients();
+            Logging.WriteMessageLog("Disconnecting clients...");
             Thread.Sleep(2500);
-            s_Server.Shutdown("Shutting down");
-            WriteLine("Shutting down...");
+            Sabertooth.netServer.Shutdown("Shutting down");
+            Logging.WriteMessageLog("Shutting down...");
             Thread.Sleep(500);
             Exit(0);
         }
 
-        private void InitArrays()
+        private static void InitArrays()
         {
             #region Players
-            WriteLine("Creating player array...");
-            WriteLog("Creating player array...", "Server");
-            for (int i = 0; i < 5; i++)
+            Logging.WriteMessageLog("Creating player array...");
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                s_Player[i] = new Player();
+                players[i] = new Player();
             }
-            WriteLine("Player Array created successfully!");
-            WriteLog("Player array loaded successfully", "Server");
+            Logging.WriteMessageLog("Player array loaded successfully");
             #endregion
 
             #region Maps
-            WriteLine("Loading maps...");
-            WriteLog("Loading maps...", "Server");
-            for (int i = 0; i < 10; i++)
+            Logging.WriteMessageLog("Loading maps...");
+            for (int i = 0; i < Globals.MAX_MAPS; i++)
             {
-                    s_Map[i] = new Map();
-                    s_Map[i].LoadMapFromDatabase(i + 1);
+                    maps[i] = new Map();
+                    maps[i].LoadMapFromDatabase(i + 1);
             }
-            WriteLine("Maps loaded successfully!");
-            WriteLog("Maps loaded successfully", "Server");
+            Logging.WriteMessageLog("Maps loaded successfully");
             #endregion
 
             #region Items
-            WriteLine("Loading items...");
-            WriteLog("Loading npcs...", "Server");
-            for (int i = 0; i < 50; i++)
+            Logging.WriteMessageLog("Loading npcs...");
+            for (int i = 0; i < Globals.MAX_ITEMS; i++)
             {
-                s_Item[i] = new Item();
-                s_Item[i].LoadItemFromDatabase(i + 1);
+                items[i] = new Item();
+                items[i].LoadItemFromDatabase(i + 1);
             }
-            WriteLine("Items loaded successfully!");
-            WriteLog("Items loaded successfully", "Server");
+            Logging.WriteMessageLog("Items loaded successfully");
             #endregion
 
             #region Projectiles
-            WriteLine("Loading projectiles...");
-            WriteLog("Loading projectiles...", "Server");
-            for (int i = 0; i < 10; i++)
+            Logging.WriteMessageLog("Loading projectiles...");
+            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
             {
-                s_Proj[i] = new Projectile();
-                s_Proj[i].LoadProjectileFromDatabase(i + 1);
+                projectiles[i] = new Projectile();
+                projectiles[i].LoadProjectileFromDatabase(i + 1);
             }
-            WriteLine("Projectiles loaded successfully!");
-            WriteLog("Projectiles loaded successfully", "Server");
+            Logging.WriteMessageLog("Projectiles loaded successfully");
             #endregion
 
             #region Npcs
-            WriteLine("Loading npcs...");
-            WriteLog("Loading npcs...", "Server");
-            for (int i = 0; i < 10; i++)
+            Logging.WriteMessageLog("Loading npcs...");
+            for (int i = 0; i < Globals.MAX_NPCS; i++)
             {
-                s_Npc[i] = new Npc();
-                s_Npc[i].LoadNpcFromDatabase((i + 1));
+                npcs[i] = new Npc();
+                npcs[i].LoadNpcFromDatabase((i + 1));
             }
             for (int i = 0; i < 10; i++)
             {
                 for (int n = 0; n < 10; n++)
                 {
-                    int num = (s_Map[i].m_MapNpc[n].NpcNum - 1);
+                    int num = (maps[i].m_MapNpc[n].NpcNum - 1);
 
                     if (num > -1)
                     {
-                        s_Map[i].m_MapNpc[n].Name = s_Npc[num].Name;
-                        s_Map[i].m_MapNpc[n].X = s_Npc[num].X;
-                        s_Map[i].m_MapNpc[n].Y = s_Npc[num].Y;
-                        s_Map[i].m_MapNpc[n].Health = s_Npc[num].Health;
-                        s_Map[i].m_MapNpc[n].MaxHealth = s_Npc[num].MaxHealth;
-                        s_Map[i].m_MapNpc[n].Direction = s_Npc[num].Direction;
-                        s_Map[i].m_MapNpc[n].Step = s_Npc[num].Step;
-                        s_Map[i].m_MapNpc[n].Sprite = s_Npc[num].Sprite;
-                        s_Map[i].m_MapNpc[n].Behavior = s_Npc[num].Behavior;
-                        s_Map[i].m_MapNpc[n].Owner = s_Npc[num].Owner;
-                        s_Map[i].m_MapNpc[n].IsSpawned = s_Npc[num].IsSpawned;
-                        s_Map[i].m_MapNpc[n].Damage = s_Npc[num].Damage;
-                        s_Map[i].m_MapNpc[n].DesX = s_Npc[num].DesX;
-                        s_Map[i].m_MapNpc[n].DesY = s_Npc[num].DesY;
-                        s_Map[i].m_MapNpc[n].Exp = s_Npc[num].Exp;
-                        s_Map[i].m_MapNpc[n].Money = s_Npc[num].Money;
-                        s_Map[i].m_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
-                        s_Map[i].m_MapNpc[n].Range = s_Npc[num].Range;
-                        s_Map[i].m_MapNpc[n].ShopNum = s_Npc[num].ShopNum;
-                        s_Map[i].m_MapNpc[n].ChatNum = s_Npc[num].ChatNum;
+                        maps[i].m_MapNpc[n].Name = npcs[num].Name;
+                        maps[i].m_MapNpc[n].X = npcs[num].X;
+                        maps[i].m_MapNpc[n].Y = npcs[num].Y;
+                        maps[i].m_MapNpc[n].Health = npcs[num].Health;
+                        maps[i].m_MapNpc[n].MaxHealth = npcs[num].MaxHealth;
+                        maps[i].m_MapNpc[n].Direction = npcs[num].Direction;
+                        maps[i].m_MapNpc[n].Step = npcs[num].Step;
+                        maps[i].m_MapNpc[n].Sprite = npcs[num].Sprite;
+                        maps[i].m_MapNpc[n].Behavior = npcs[num].Behavior;
+                        maps[i].m_MapNpc[n].Owner = npcs[num].Owner;
+                        maps[i].m_MapNpc[n].IsSpawned = npcs[num].IsSpawned;
+                        maps[i].m_MapNpc[n].Damage = npcs[num].Damage;
+                        maps[i].m_MapNpc[n].DesX = npcs[num].DesX;
+                        maps[i].m_MapNpc[n].DesY = npcs[num].DesY;
+                        maps[i].m_MapNpc[n].Exp = npcs[num].Exp;
+                        maps[i].m_MapNpc[n].Money = npcs[num].Money;
+                        maps[i].m_MapNpc[n].SpawnTime = npcs[num].SpawnTime;
+                        maps[i].m_MapNpc[n].Range = npcs[num].Range;
+                        maps[i].m_MapNpc[n].ShopNum = npcs[num].ShopNum;
+                        maps[i].m_MapNpc[n].ChatNum = npcs[num].ChatNum;
                     }
                 }
             }
-            WriteLine("Npcs loaded successfully!");
-            WriteLog("Npcs loaded successfully", "Server");
+            Logging.WriteMessageLog("Npcs loaded successfully");
             #endregion
 
             #region Shops
-            WriteLine("Loading shops...");
-            WriteLog("Loading shops...", "Server");
-            for (int i = 0; i < 10; i++)
+            Logging.WriteMessageLog("Loading shops...");
+            for (int i = 0; i < Globals.MAX_SHOPS; i++)
             {
-                s_Shop[i] = new Shop();
-                s_Shop[i].LoadShopFromDatabase(i + 1);
+                shops[i] = new Shop();
+                shops[i].LoadShopFromDatabase(i + 1);
             }
-            WriteLine("Shops loaded successfully!");
-            WriteLog("Shops loaded successfully", "Server");
+
+            Logging.WriteMessageLog("Shops loaded successfully");
             #endregion
 
             #region Chats
-            WriteLine("Loading chats...");
-            WriteLog("Loading chats...", "Server");
-            for (int i = 0; i < 15; i++)
+            Logging.WriteMessageLog("Loading chats...");
+            for (int i = 0; i < Globals.MAX_CHATS; i++)
             {
-                s_Chat[i] = new Chat();
-                s_Chat[i].LoadChatFromDatabase(i + 1);
+                chats[i] = new Chat();
+                chats[i].LoadChatFromDatabase(i + 1);
             }
-            WriteLine("Chats loaded successfully!");
-            WriteLog("Chats loaded successfully", "Server");
+            Logging.WriteMessageLog("Chats loaded successfully");
             #endregion
 
             #region Chests
-            WriteLine("Loading chests...");
-            WriteLog("Loading chests...", "Server");
-            for (int i = 0; i < 10; i++)
+            Logging.WriteMessageLog("Loading chests...");
+            for (int i = 0; i < Globals.MAX_CHESTS; i++)
             {
-                s_Chest[i] = new Chest();
-                s_Chest[i].LoadChestFromDatabase(i + 1);
+                chests[i] = new Chest();
+                chests[i].LoadChestFromDatabase(i + 1);
             }
-            WriteLine("Chests loaded successfully!");
-            WriteLog("Chests loaded successfully", "Server");
+            Logging.WriteMessageLog("Chests loaded successfully");
             #endregion
 
             //final
-            WriteLine("Listening for connections...Waiting...");
-            WriteLog("Server is listening for connections...", "Server");
+            Logging.WriteMessageLog("Server is listening for connections...");
         }
 
         #region Server Check Voids
-        void UpTime()
+        static void UpTime()
         {
-            if (TickCount - s_uptimeTick > 1000)
+            if (TickCount - suptimeTick > Globals.A_MILLISECOND)
             {
-                if (s_Second < 60)
+                if (sSecond < Globals.SECONDS_IN_MINUTE)
                 {
-                    s_Second += 1;
+                    sSecond += 1;
                 }
                 else
                 {
-                    s_Second = 0;
-                    s_Minute += 1;
+                    sSecond = 0;
+                    sMinute += 1;
                 }
 
-                if (s_Minute >= 60)
+                if (sMinute >= Globals.MINUTES_IN_HOUR)
                 {
-                    s_Minute = 0;
-                    s_Hour += 1;
+                    sMinute = 0;
+                    sHour += 1;
                 }
-                if (s_Hour == 24)
+                if (sHour == Globals.HOURS_IN_DAY)
                 {
-                    s_Hour = 0;
-                    s_Day += 1;
+                    sHour = 0;
+                    sDay += 1;
                 }
-                upTime = "Uptime - Days: " + s_Day + " Hours: " + s_Hour + " Minutes: " + s_Minute + " Seconds: " + s_Second;
-                s_uptimeTick = TickCount;
+                upTime = "Uptime - Days: " + sDay + " Hours: " + sHour + " Minutes: " + sMinute + " Seconds: " + sSecond;
+                suptimeTick = TickCount;
             }
         }
-        
-        bool CheckHealthRegen(NetServer s_Server)
+
+        static bool CheckHealthRegen()
         {
             if (TickCount - regenTick < regenTime) { return false; }
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (s_Player[i].Name != null)
+                if (players[i].Name != null)
                 {
-                    WriteLine("Checking for health regen...");
-                    WriteLog("Checking for health regin...", "Server");
+                    Logging.WriteMessageLog("Checking for health regin...");
 
-                    s_Player[i].RegenHealth(s_Server);
-                    handleData.SendUpdateHealthData(s_Server, i, s_Player[i].Health);
+                    players[i].RegenHealth();
+                    HandleData.SendUpdateHealthData(i, players[i].Health);
                 }
             }
             regenTick = TickCount;
             return true;
         }
 
-        void CheckVitalLoss(NetServer s_Server)
+        static void CheckVitalLoss()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (s_Player[i].Name != null)
+                if (players[i].Name != null)
                 {
                     //Check for hunger
-                    if (TickCount - s_Player[i].hungerTick >= hungerTime)
+                    if (TickCount - players[i].hungerTick >= hungerTime)
                     {
-                        WriteLine("Checking for hunger loss...");
-                        WriteLog("Checking for hunger loss...", "Server");
+                        Logging.WriteMessageLog("Checking for hunger loss...");
 
-                        s_Player[i].VitalLoss("food");
-                        handleData.SendUpdateVitalData(s_Server, i, "food", s_Player[i].Hunger);
-                        s_Player[i].hungerTick = TickCount;
+                        players[i].VitalLoss("food");
+                        HandleData.SendUpdateVitalData(i, "food", players[i].Hunger);
+                        players[i].hungerTick = TickCount;
                     }
 
-                    if (TickCount - s_Player[i].hydrationTick >= hydrationTime)
+                    if (TickCount - players[i].hydrationTick >= hydrationTime)
                     {
 
-                        WriteLine("Checking for hydration loss...");
-                        WriteLog("Checking for hydration loss...", "Server");
+                        Logging.WriteMessageLog("Checking for hydration loss...");
 
-                        s_Player[i].VitalLoss("water");
-                        handleData.SendUpdateVitalData(s_Server, i, "water", s_Player[i].Hydration);
-                        s_Player[i].hydrationTick = TickCount;
+                        players[i].VitalLoss("water");
+                        HandleData.SendUpdateVitalData(i, "water", players[i].Hydration);
+                        players[i].hydrationTick = TickCount;
                     }
                 }
             }
         }
 
-        bool CheckIfMapHasPlayers(int mapNum, Player[] s_Player)
+        static bool CheckIfMapHasPlayers(int mapNum)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (s_Player[i].Connection != null && s_Player[i].Map == mapNum)
+                if (players[i].Connection != null && players[i].Map == mapNum)
                 {
                     return true;
                 }
@@ -466,29 +448,29 @@ namespace Server.Classes
             return false;
         }
 
-        bool CheckClearMapItem(NetServer s_Server)
+        static bool CheckClearMapItem()
         {
             if (TickCount - removeTime < 1000) { return false; }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAPS; i++)
             {
-                if (s_Map[i] != null && s_Map[i].Name != null)
+                if (maps[i] != null && maps[i].Name != null)
                 {
-                    if (CheckIfMapHasPlayers(i, s_Player))
+                    if (CheckIfMapHasPlayers(i))
                     {
-                        for (int n = 0; n < 20; n++)
+                        for (int n = 0; n < Globals.MAX_MAP_ITEMS; n++)
                         {
-                            if (s_Map[i].m_MapItem[n].ExpireTick > 0 && s_Map[i].m_MapItem[n].IsSpawned)
+                            if (maps[i].m_MapItem[n].ExpireTick > 0 && maps[i].m_MapItem[n].IsSpawned)
                             {
-                                if (TickCount - s_Map[i].m_MapItem[n].ExpireTick > 300000)
+                                if (TickCount - maps[i].m_MapItem[n].ExpireTick > 300000)
                                 {
-                                    s_Map[i].m_MapItem[n] = new MapItem("None", 0, 0, 0);
+                                    maps[i].m_MapItem[n] = new MapItem("None", 0, 0, 0);
 
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                     {
-                                        if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                        if (players[p].Connection != null && i == players[p].Map)
                                         {
-                                            handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                            HandleData.SendMapItemData(players[p].Connection, i, n);
                                         }
                                     }
                                 }
@@ -501,69 +483,69 @@ namespace Server.Classes
             return true;
         }
 
-        void CheckItemSpawn(NetServer s_Server)
+        static void CheckItemSpawn()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAPS; i++)
             {
-                if (s_Map[i] != null && s_Map[i].Name != null)
+                if (maps[i] != null && maps[i].Name != null)
                 {
-                    if (CheckIfMapHasPlayers(i, s_Player))
+                    if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < 50; x++)
+                        for (int x = 0; x < Globals.MAX_MAP_X; x++)
                         {
-                            for (int y = 0; y < 50; y++)
+                            for (int y = 0; y < Globals.MAX_MAP_Y; y++)
                             {
-                                if (s_Map[i].Ground[x, y].Type == (int)TileType.MapItem)
+                                if (maps[i].Ground[x, y].Type == (int)TileType.MapItem)
                                 {
-                                    if (s_Map[i].Ground[x, y].SpawnNum > 0)
+                                    if (maps[i].Ground[x, y].SpawnNum > 0)
                                     {
-                                        if (s_Map[i].Ground[x, y].NeedsSpawnedTick > 0)
+                                        if (maps[i].Ground[x, y].NeedsSpawnedTick > 0)
                                         {
-                                            if (TickCount - s_Map[i].Ground[x, y].NeedsSpawnedTick > 300000 && s_Map[i].Ground[x, y].NeedsSpawned)
+                                            if (TickCount - maps[i].Ground[x, y].NeedsSpawnedTick > 300000 && maps[i].Ground[x, y].NeedsSpawned)
                                             {
-                                                s_Map[i].Ground[x, y].NeedsSpawned = false;
-                                                s_Map[i].Ground[x, y].NeedsSpawnedTick = 0;
+                                                maps[i].Ground[x, y].NeedsSpawned = false;
+                                                maps[i].Ground[x, y].NeedsSpawnedTick = 0;
                                             }
                                         }
 
-                                        if (!s_Map[i].Ground[x, y].NeedsSpawned)
+                                        if (!maps[i].Ground[x, y].NeedsSpawned)
                                         {
-                                            int slot = FindOpenMapItemSlot(s_Map[i]);
+                                            int slot = FindOpenMapItemSlot(maps[i]);
                                             if (slot < 20)
                                             {
-                                                int itemNum = s_Map[i].Ground[x, y].SpawnNum - 1;
-                                                s_Map[i].m_MapItem[slot].ItemNum = itemNum + 1;
-                                                s_Map[i].m_MapItem[slot].Name = s_Item[itemNum].Name;
-                                                s_Map[i].m_MapItem[slot].X = x;
-                                                s_Map[i].m_MapItem[slot].Y = y;
-                                                s_Map[i].m_MapItem[slot].Sprite = s_Item[itemNum].Sprite;
-                                                s_Map[i].m_MapItem[slot].Damage = s_Item[itemNum].Damage;
-                                                s_Map[i].m_MapItem[slot].Armor = s_Item[itemNum].Armor;
-                                                s_Map[i].m_MapItem[slot].Type = s_Item[itemNum].Type;
-                                                s_Map[i].m_MapItem[slot].AttackSpeed = s_Item[itemNum].AttackSpeed;
-                                                s_Map[i].m_MapItem[slot].ReloadSpeed = s_Item[itemNum].ReloadSpeed;
-                                                s_Map[i].m_MapItem[slot].HealthRestore = s_Item[itemNum].HealthRestore;
-                                                s_Map[i].m_MapItem[slot].HungerRestore = s_Item[itemNum].HungerRestore;
-                                                s_Map[i].m_MapItem[slot].HydrateRestore = s_Item[itemNum].HydrateRestore;
-                                                s_Map[i].m_MapItem[slot].Strength = s_Item[itemNum].Strength;
-                                                s_Map[i].m_MapItem[slot].Agility = s_Item[itemNum].Agility;
-                                                s_Map[i].m_MapItem[slot].Endurance = s_Item[itemNum].Endurance;
-                                                s_Map[i].m_MapItem[slot].Stamina = s_Item[itemNum].Stamina;
-                                                s_Map[i].m_MapItem[slot].Clip = s_Item[itemNum].Clip;
-                                                s_Map[i].m_MapItem[slot].MaxClip = s_Item[itemNum].MaxClip;
-                                                s_Map[i].m_MapItem[slot].ItemAmmoType = s_Item[itemNum].ItemAmmoType;
-                                                s_Map[i].m_MapItem[slot].ProjectileNumber = s_Item[itemNum].ProjectileNumber;
-                                                s_Map[i].m_MapItem[slot].Price = s_Item[itemNum].Price;
-                                                s_Map[i].m_MapItem[slot].Value = s_Map[i].Ground[x, y].SpawnAmount;
-                                                s_Map[i].m_MapItem[slot].Rarity = s_Item[itemNum].Rarity;
-                                                s_Map[i].m_MapItem[slot].IsSpawned = true;
-                                                s_Map[i].Ground[x, y].NeedsSpawned = true;
+                                                int itemNum = maps[i].Ground[x, y].SpawnNum - 1;
+                                                maps[i].m_MapItem[slot].ItemNum = itemNum + 1;
+                                                maps[i].m_MapItem[slot].Name = items[itemNum].Name;
+                                                maps[i].m_MapItem[slot].X = x;
+                                                maps[i].m_MapItem[slot].Y = y;
+                                                maps[i].m_MapItem[slot].Sprite = items[itemNum].Sprite;
+                                                maps[i].m_MapItem[slot].Damage = items[itemNum].Damage;
+                                                maps[i].m_MapItem[slot].Armor = items[itemNum].Armor;
+                                                maps[i].m_MapItem[slot].Type = items[itemNum].Type;
+                                                maps[i].m_MapItem[slot].AttackSpeed = items[itemNum].AttackSpeed;
+                                                maps[i].m_MapItem[slot].ReloadSpeed = items[itemNum].ReloadSpeed;
+                                                maps[i].m_MapItem[slot].HealthRestore = items[itemNum].HealthRestore;
+                                                maps[i].m_MapItem[slot].HungerRestore = items[itemNum].HungerRestore;
+                                                maps[i].m_MapItem[slot].HydrateRestore = items[itemNum].HydrateRestore;
+                                                maps[i].m_MapItem[slot].Strength = items[itemNum].Strength;
+                                                maps[i].m_MapItem[slot].Agility = items[itemNum].Agility;
+                                                maps[i].m_MapItem[slot].Endurance = items[itemNum].Endurance;
+                                                maps[i].m_MapItem[slot].Stamina = items[itemNum].Stamina;
+                                                maps[i].m_MapItem[slot].Clip = items[itemNum].Clip;
+                                                maps[i].m_MapItem[slot].MaxClip = items[itemNum].MaxClip;
+                                                maps[i].m_MapItem[slot].ItemAmmoType = items[itemNum].ItemAmmoType;
+                                                maps[i].m_MapItem[slot].ProjectileNumber = items[itemNum].ProjectileNumber;
+                                                maps[i].m_MapItem[slot].Price = items[itemNum].Price;
+                                                maps[i].m_MapItem[slot].Value = maps[i].Ground[x, y].SpawnAmount;
+                                                maps[i].m_MapItem[slot].Rarity = items[itemNum].Rarity;
+                                                maps[i].m_MapItem[slot].IsSpawned = true;
+                                                maps[i].Ground[x, y].NeedsSpawned = true;
 
-                                                for (int p = 0; p < 5; p++)
+                                                for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                 {
-                                                    if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                    if (players[p].Connection != null && i == players[p].Map)
                                                     {
-                                                        handleData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[i], slot);
+                                                        HandleData.SendMapItemData(players[p].Connection, i, slot);
                                                     }
                                                 }
                                             }
@@ -577,38 +559,38 @@ namespace Server.Classes
             }
         }
 
-        void CheckNpcSpawn(NetServer s_Server)
+        static void CheckNpcSpawn()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAPS; i++)
             {
-                if (s_Map[i] != null && s_Map[i].Name != null)
+                if (maps[i] != null && maps[i].Name != null)
                 {
-                    if (CheckIfMapHasPlayers(i, s_Player))
+                    if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < 50; x++)
+                        for (int x = 0; x < Globals.MAX_MAP_X; x++)
                         {
-                            for (int y = 0; y < 50; y++)
+                            for (int y = 0; y < Globals.MAX_MAP_Y; y++)
                             {
-                                switch (s_Map[i].Ground[x, y].Type)
+                                switch (maps[i].Ground[x, y].Type)
                                 {
                                     case (int)TileType.NpcSpawn:
-                                        for (int c = 0; c < 10; c++)
+                                        for (int c = 0; c < Globals.MAX_MAP_NPCS; c++)
                                         {
-                                            if (s_Map[i].Ground[x, y].SpawnNum == (c + 1))
+                                            if (maps[i].Ground[x, y].SpawnNum == (c + 1))
                                             {
-                                                if (!s_Map[i].m_MapNpc[c].IsSpawned && s_Map[i].m_MapNpc[c].Name != "None")
+                                                if (!maps[i].m_MapNpc[c].IsSpawned && maps[i].m_MapNpc[c].Name != "None")
                                                 {
-                                                    if (TickCount - s_Map[i].m_MapNpc[c].spawnTick > (s_Map[i].m_MapNpc[c].SpawnTime * 1000))
+                                                    if (TickCount - maps[i].m_MapNpc[c].spawnTick > (maps[i].m_MapNpc[c].SpawnTime * 1000))
                                                     {
-                                                        s_Map[i].m_MapNpc[c].X = x;
-                                                        s_Map[i].m_MapNpc[c].Y = y;
-                                                        s_Map[i].m_MapNpc[c].IsSpawned = true;
+                                                        maps[i].m_MapNpc[c].X = x;
+                                                        maps[i].m_MapNpc[c].Y = y;
+                                                        maps[i].m_MapNpc[c].IsSpawned = true;
 
-                                                        for (int p = 0; p < 5; p++)
+                                                        for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                         {
-                                                            if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                            if (players[p].Connection != null && i == players[p].Map)
                                                             {
-                                                                handleData.SendMapNpcData(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                                                HandleData.SendMapNpcData(players[p].Connection, i, c);
                                                             }
                                                         }
                                                     }
@@ -618,50 +600,50 @@ namespace Server.Classes
                                         break;
 
                                     case (int)TileType.SpawnPool:
-                                        if (s_Map[i].Ground[x, y].SpawnNum > 0)
+                                        if (maps[i].Ground[x, y].SpawnNum > 0)
                                         {
-                                            for (int n = 0; n < 20; n++)
+                                            for (int n = 0; n < Globals.MAX_MAP_POOL_NPCS; n++)
                                             {
-                                                if (s_Map[i].Ground[x, y].SpawnAmount > s_Map[i].Ground[x, y].CurrentSpawn)
+                                                if (maps[i].Ground[x, y].SpawnAmount > maps[i].Ground[x, y].CurrentSpawn)
                                                 {
-                                                    if (!s_Map[i].r_MapNpc[n].IsSpawned)
+                                                    if (!maps[i].r_MapNpc[n].IsSpawned)
                                                     {
-                                                        if (TickCount - s_Map[i].r_MapNpc[n].spawnTick > (s_Map[i].r_MapNpc[n].SpawnTime * 1000))
+                                                        if (TickCount - maps[i].r_MapNpc[n].spawnTick > (maps[i].r_MapNpc[n].SpawnTime * 1000))
                                                         {
-                                                            int num = (s_Map[i].Ground[x, y].SpawnNum - 1);
+                                                            int num = (maps[i].Ground[x, y].SpawnNum - 1);
 
                                                             if (num > -1)
                                                             {
-                                                                s_Map[i].r_MapNpc[n].NpcNum = num;
+                                                                maps[i].r_MapNpc[n].NpcNum = num;
                                                                 int genX = (x + RND.Next(1, 3));
                                                                 int genY = (y + RND.Next(1, 3));
-                                                                s_Map[i].r_MapNpc[n].Name = s_Npc[num].Name;
-                                                                s_Map[i].r_MapNpc[n].X = genX;
-                                                                s_Map[i].r_MapNpc[n].Y = genY;
-                                                                s_Map[i].r_MapNpc[n].Health = s_Npc[num].Health;
-                                                                s_Map[i].r_MapNpc[n].MaxHealth = s_Npc[num].MaxHealth;
-                                                                s_Map[i].r_MapNpc[n].SpawnX = x;
-                                                                s_Map[i].r_MapNpc[n].SpawnY = y;
-                                                                s_Map[i].r_MapNpc[n].Direction = s_Npc[num].Direction;
-                                                                s_Map[i].r_MapNpc[n].Step = s_Npc[num].Step;
-                                                                s_Map[i].r_MapNpc[n].Sprite = s_Npc[num].Sprite;
-                                                                s_Map[i].r_MapNpc[n].Behavior = s_Npc[num].Behavior;
-                                                                s_Map[i].r_MapNpc[n].Owner = s_Npc[num].Owner;
-                                                                s_Map[i].r_MapNpc[n].Damage = s_Npc[num].Damage;
-                                                                s_Map[i].r_MapNpc[n].DesX = s_Npc[num].DesX;
-                                                                s_Map[i].r_MapNpc[n].DesY = s_Npc[num].DesY;
-                                                                s_Map[i].r_MapNpc[n].Exp = s_Npc[num].Exp;
-                                                                s_Map[i].r_MapNpc[n].Money = s_Npc[num].Money;
-                                                                s_Map[i].r_MapNpc[n].SpawnTime = s_Npc[num].SpawnTime;
-                                                                s_Map[i].r_MapNpc[n].IsSpawned = true;
-                                                                s_Map[i].r_MapNpc[n].Range = s_Npc[num].Range;
-                                                                s_Map[i].Ground[x, y].CurrentSpawn += 1;
+                                                                maps[i].r_MapNpc[n].Name = npcs[num].Name;
+                                                                maps[i].r_MapNpc[n].X = genX;
+                                                                maps[i].r_MapNpc[n].Y = genY;
+                                                                maps[i].r_MapNpc[n].Health = npcs[num].Health;
+                                                                maps[i].r_MapNpc[n].MaxHealth = npcs[num].MaxHealth;
+                                                                maps[i].r_MapNpc[n].SpawnX = x;
+                                                                maps[i].r_MapNpc[n].SpawnY = y;
+                                                                maps[i].r_MapNpc[n].Direction = npcs[num].Direction;
+                                                                maps[i].r_MapNpc[n].Step = npcs[num].Step;
+                                                                maps[i].r_MapNpc[n].Sprite = npcs[num].Sprite;
+                                                                maps[i].r_MapNpc[n].Behavior = npcs[num].Behavior;
+                                                                maps[i].r_MapNpc[n].Owner = npcs[num].Owner;
+                                                                maps[i].r_MapNpc[n].Damage = npcs[num].Damage;
+                                                                maps[i].r_MapNpc[n].DesX = npcs[num].DesX;
+                                                                maps[i].r_MapNpc[n].DesY = npcs[num].DesY;
+                                                                maps[i].r_MapNpc[n].Exp = npcs[num].Exp;
+                                                                maps[i].r_MapNpc[n].Money = npcs[num].Money;
+                                                                maps[i].r_MapNpc[n].SpawnTime = npcs[num].SpawnTime;
+                                                                maps[i].r_MapNpc[n].IsSpawned = true;
+                                                                maps[i].r_MapNpc[n].Range = npcs[num].Range;
+                                                                maps[i].Ground[x, y].CurrentSpawn += 1;
 
-                                                                for (int p = 0; p < 5; p++)
+                                                                for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                                 {
-                                                                    if (s_Player[p].Connection != null && i == s_Player[p].Map)
+                                                                    if (players[p].Connection != null && i == players[p].Map)
                                                                     {
-                                                                        handleData.SendPoolNpcData(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                                                        HandleData.SendPoolNpcData(players[p].Connection, i, n);
                                                                     }
                                                                 }
                                                             }
@@ -679,55 +661,55 @@ namespace Server.Classes
             }
         }
 
-        void CheckNpcAi(NetServer s_Server)
+        static void CheckNpcAi()
         {
             if (TickCount - aiTick > aiTime)
             {
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < Globals.MAX_MAPS; i++)
                 {
-                    if (CheckIfMapHasPlayers(i, s_Player))
+                    if (CheckIfMapHasPlayers(i))
                     {
-                        for (int n = 0; n < 10; n++)
+                        for (int n = 0; n < Globals.MAX_MAP_NPCS; n++)
                         {
-                            if (s_Map[i].m_MapNpc[n].IsSpawned)
+                            if (maps[i].m_MapNpc[n].IsSpawned)
                             {
                                 int canMove = RND.Next(0, 100);
                                 int dir = RND.Next(0, 3);
 
-                                s_Map[i].m_MapNpc[n].NpcAI(canMove, dir, s_Map[i], s_Player, s_Server);
+                                maps[i].m_MapNpc[n].NpcAI(canMove, dir, i);
 
-                                if (s_Map[i].m_MapNpc[n].DidMove)
+                                if (maps[i].m_MapNpc[n].DidMove)
                                 {
-                                    s_Map[i].m_MapNpc[n].DidMove = false;
+                                    maps[i].m_MapNpc[n].DidMove = false;
 
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                     {
-                                        if (s_Player[p].Connection != null && s_Player[p].Map == i)
+                                        if (players[p].Connection != null && players[p].Map == i)
                                         {
-                                            handleData.SendUpdateNpcLoc(s_Server, s_Player[p].Connection, s_Map[i], n);
+                                            HandleData.SendUpdateNpcLoc(players[p].Connection, i, n);
                                         }
                                     }
                                 }
                             }
                         }
-                        for (int c = 0; c < 20; c++)
+                        for (int c = 0; c < Globals.MAX_MAP_POOL_NPCS; c++)
                         {
-                            if (s_Map[i].r_MapNpc[c].IsSpawned)
+                            if (maps[i].r_MapNpc[c].IsSpawned)
                             {
                                 int canMove = RND.Next(0, 100);
                                 int dir = RND.Next(0, 3);
 
-                                s_Map[i].r_MapNpc[c].NpcAI(canMove, dir, s_Map[i], s_Player, s_Server);
+                                maps[i].r_MapNpc[c].NpcAI(canMove, dir, i);
 
-                                if (s_Map[i].r_MapNpc[c].DidMove)
+                                if (maps[i].r_MapNpc[c].DidMove)
                                 {
-                                    s_Map[i].r_MapNpc[c].DidMove = false;
+                                    maps[i].r_MapNpc[c].DidMove = false;
 
                                     for (int p = 0; p < 5; p++)
                                     {
-                                        if (s_Player[p].Connection != null && s_Player[p].Map == i)
+                                        if (players[p].Connection != null && players[p].Map == i)
                                         {
-                                            handleData.SendUpdatePoolNpcLoc(s_Server, s_Player[p].Connection, s_Map[i], c);
+                                            HandleData.SendUpdatePoolNpcLoc(players[p].Connection, i, c);
                                         }
                                     }
                                 }
@@ -738,121 +720,117 @@ namespace Server.Classes
                 aiTick = TickCount;
             }
         }
-
-        void CheckCommands(NetServer s_Server, Player[] s_Player)
+        static void CommandWindow()
         {
-            if (s_userCommand != null)
+            string input;
+            while (true)
             {
+                Console.Write(">");
+                input = Console.ReadLine().ToLower();
+
+                Logging.WriteLog("Command: " + input);   //Log which command was used
                 //Dynamic Commands
-                if (s_userCommand.Length >= 7 && s_userCommand.Substring(0, 7) == "account")    //Check for account command
+                if (input.Length >= 7 && input.Substring(0, 7) == "account")    //Check for account command
                 {
-                    if (s_userCommand.Substring(8, 6) == "create")    //Create
+                    if (input.Substring(8, 6) == "create")    //Create
                     {
-                        if (s_userCommand.Length >= 14)
+                        if (input.Length >= 14)
                         {
-                            string restofInfo = s_userCommand.Substring(14);  //Get whats left of the string after account create (username and pass)  
+                            string restofInfo = input.Substring(14);  //Get whats left of the string after account create (username and pass)  
                             string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
                             if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
                             {
                                 Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
                                                                 100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
                                 ac_Player.CreatePlayerInDatabase();
-                                WriteLine("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2]); //Let the operator know
+                                Logging.WriteMessageLog("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2], "Commands"); //Let the operator know
                             }
-                            else { WriteLine("USERNAME and PASSWORD must be 3 characters each!"); } //Dont fuck it up by making basic shit
+                            else { Logging.WriteMessageLog("USERNAME and PASSWORD must be 3 characters each!", "Commands"); } //Dont fuck it up by making basic shit
 
-                            s_userCommand = null;   //Clear the command
                             return; //Get da fuck out
                         }
                     }
-                    else if (s_userCommand.Substring(8, 6) == "delete")
+                    else if (input.Substring(8, 6) == "delete")
                     {
-                        if (s_userCommand.Length >= 14)
+                        if (input.Length >= 14)
                         {
-                            string restofInfo = s_userCommand.Substring(14);
+                            string restofInfo = input.Substring(14);
                             if (AccountExist(restofInfo))
                             {
-                                Write("Are you sure? (y/n)");
-                                string answer = ReadLine();
-                                if (answer == "y") { Delete("Players / " + restofInfo + ".xml"); s_userCommand = null; return; }
+                                Console.Write("Are you sure? (y/n)");
+                                string answer = Console.ReadLine();
+                                if (answer == "y") { Delete("Players / " + restofInfo + ".xml"); return; }
                             }
-                            else { WriteLine("Account doesnt exist!"); s_userCommand = null; return; }
+                            else { Logging.WriteMessageLog("Account doesnt exist!", "Commands"); return; }
                         }
                     }
-                    else { WriteLine("Please enter a valid command!"); s_userCommand = null; return; }  //Did you provide a modifier?
+                    else { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); return; }  //Did you provide a modifier?
                 }
+
                 //Basic commands
-                switch (s_userCommand)  //Basic commands can be ran in a switch statement since they dont require modifiers and arguments
+                switch (input)  //Basic commands can be ran in a switch statement since they dont require modifiers and arguments
                 {
-                    case "shutdown":    //Shutdow the server in about 3 seconds
+                    case "shutdown":    //Shutdown the server in about 3 seconds
                         isRunning = false;  //Break the loop
                         break;
                     case "exit":    //Same as shutdown command but shorter and it was the first command it wrote
                         isRunning = false;  //Break the loop
                         break;
-                    case "save all":    //Save all players (online) which just saves all accounts to their respective XML files
+                    case "saveall":    //Save all players (online) which just saves all accounts to their respective XML files
                         SaveAll();  //The void for this command
                         break;
                     case "info":
                         string hostName = Dns.GetHostName();
-                        WriteLine("Statistics: ");
-                        WriteLine("Version: " + s_Version);
-                        WriteLine(upTime);
-                        WriteLine("CPS: " + fps);
-                        //if (s_Server.SimulatedMinimumLatency > 0)
+                        Logging.WriteMessageLog("Statistics: ", "Commands");
+                        Logging.WriteMessageLog("Version: " + sVersion, "Commands");
+                        Logging.WriteMessageLog(upTime, "Commands");                        
+                        Logging.WriteMessageLog("CPS: " + fps, "Commands");
+                        Logging.WriteMessageLog("Public IP: " + GetPublicIPAddress() + ":" + Sabertooth.netServer.Port);
+                        Logging.WriteMessageLog("Host Name: " + hostName, "Commands");
+                        Logging.WriteMessageLog("Server Address: " + NetUtility.Resolve(hostName), "Commands");
+                        Logging.WriteMessageLog("Port: " + Sabertooth.netServer.Port, "Commands");
+                        Logging.WriteMessageLog(Sabertooth.netServer.Statistics.ToString(), "Commands");
+                        Logging.WriteMessageLog("Connections: " + Sabertooth.netServer.ConnectionsCount.ToString(), "Commands");
+                        for (int i = 0; i < Globals.MAX_PLAYERS; i++)
                         {
-                            //string latency = s_Server.Configuration.SimulatedMinimumLatency.ToString(".0#0").TrimStart('0', '.', '0');
-                        //    WriteLine("Simulated Minimum Latency: " + latency + "ms");
-                        }
-                        WriteLine("Host Name: " + hostName);
-                        WriteLine("Server Address: " + NetUtility.Resolve(hostName));
-                        WriteLine("Port: " + s_Server.Port);
-                        WriteLine(s_Server.Statistics.ToString());
-                        WriteLine("Connections: ");
-                        for (int i = 0; i < 5; i++)
-                        {
-                            if (s_Player[i].Connection != null)
+                            if (players[i].Connection != null)
                             {
-                                WriteLine(s_Player[i].Connection + " Logged in as: " + s_Player[i].Name + " Latency: " + s_Player[i].Connection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms");
-                                WriteLine(s_Player[i].Connection.Statistics.ToString());
+                                Logging.WriteMessageLog(players[i].Connection + " Logged in as: " + players[i].Name + " Latency: " + players[i].Connection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms", "Commands");
+                                Logging.WriteMessageLog(players[i].Connection.Statistics.ToString(), "Commands");
                             }
                             else
                             {
-                                WriteLine("Open");
+                                Logging.WriteMessageLog("Open", "Commands");
                             }
                         }
                         break;
                     case "uptime":
-                        WriteLine(upTime);
+                        Logging.WriteMessageLog(upTime, "Commands");
+                        Logging.WriteMessageLog("Local Time: " + worldTime.Time, "Commands");
                         break;
                     case "latency":
-                        //float slatency = s_Server.Configuration.SimulatedMinimumLatency;
+                        //float slatency = Sabertooth.netServer.Configuration.SimulatedMinimumLatency;
 
-                        //if (slatency != 0.065f) { s_Server.Configuration.SimulatedMinimumLatency = 0.065f; }
-                        //else { s_Server.Configuration.SimulatedMinimumLatency = 0; }                        
-                        break;
-                    case "time":
-                        WriteLine("Time Of Day: " + g_Time.Time);
+                        //if (slatency != 0.065f) { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0.065f; }
+                        //else { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0; }                        
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
-                        WriteLine("Commands:");
-                        WriteLine("account create UN PW - creates an account with generic stats, must provide username and password");
-                        WriteLine("info - shows the servers stat, hosts, ip, connections");
-                        WriteLine("uptime - shows server uptime.");
-                        WriteLine("save all - saves all players");
-                        WriteLine("shutdown - shuts down the server");
+                        Logging.WriteMessageLog("Commands:", "Commands");
+                        Logging.WriteMessageLog("account create UN PW - creates an account with generic stats, must provide username and password", "Commands");
+                        Logging.WriteMessageLog("info - shows the servers stats", "Commands");
+                        Logging.WriteMessageLog("uptime - shows server uptime.", "Commands");
+                        Logging.WriteMessageLog("saveall - saves all players", "Commands");
+                        Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
                         break;
                     default:    //If you entered something that wasnt a command or pure garbage
-                        WriteLine("Please enter a valid command!");
+                        Logging.WriteMessageLog("Please enter a valid command!", "Commands");
                         break;
                 }
-                s_userCommand = null;   //Clear the command
             }
         }
-
         static int CalculateFrameRate()
         {
-            if (TickCount - lastTick >= 1000)
+            if (TickCount - lastTick >= Globals.A_MILLISECOND)
             {
                 lastFrameRate = frameRate;
                 frameRate = 0;
@@ -864,35 +842,32 @@ namespace Server.Classes
         #endregion
 
         #region Server Voids
-        void SaveAll()
+        static void SaveAll()
         {
-            WriteLine("Saving players...");
-            WriteLog("Saving players...", "Server");
-            for (int i = 0; i < 5; i++)
+            Logging.WriteMessageLog("Saving players...");
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (s_Player[i].Name != null)
+                if (players[i].Name != null)
                 {
-                    s_Player[i].SavePlayerToDatabase();
+                    players[i].SavePlayerToDatabase();
                 }
             }
-            WriteLine("Players saved!");
+            Logging.WriteMessageLog("Players saved!");
         }
 
-        bool SavePlayers()
+        static bool SavePlayers()
         {
             if (TickCount - saveTick < saveTime) { return false; }
-            WriteLine("Saving players...");
-            WriteLog("Saving players...", "Server");
-            for (int i = 0; i < 5; i++)
+            Logging.WriteMessageLog("Saving players...");
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (s_Player[i].Name != null)
+                if (players[i].Name != null)
                 {
-                    s_Player[i].SavePlayerToDatabase();
+                    players[i].SavePlayerToDatabase();
                 }
             }
             saveTick = TickCount;
-            WriteLine("Players saved successfully!");
-            WriteLog("Players saved successfully!", "Server");
+            Logging.WriteMessageLog("Players saved successfully!");
             return true;
         }
 
@@ -905,61 +880,63 @@ namespace Server.Classes
             return false;
         }
 
-        public int FindOpenMapItemSlot(Map s_Map)
+        public static int FindOpenMapItemSlot(Map s_Map)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
             {
                 if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned || s_Map.m_MapItem[i].Name == null && !s_Map.m_MapItem[i].IsSpawned)
                 {
                     return i;
                 }
             }
-            return 20;
+            return Globals.MAX_MAP_ITEMS;
         }
 
-        public void DisconnectClients(NetServer s_Server)
+        public static void DisconnectClients()
         {
-            NetOutgoingMessage outMSG = s_Server.CreateMessage();
+            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
 
             outMSG.Write((byte)PacketTypes.Shutdown);
-            s_Server.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
+            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
         }
 
-        public void SaveServerConfig()
+        public static void SaveServerConfig()
         {
-            XmlWriterSettings userData = new XmlWriterSettings();
-            userData.Indent = true;
+            XmlWriterSettings userData = new XmlWriterSettings
+            {
+                Indent = true
+            };
             XmlWriter writer = XmlWriter.Create("Config.xml", userData);
-            WriteLog("Config XML file saved.", "Server");
+            Logging.WriteMessageLog("Config XML file saved.");
             writer.WriteStartDocument();
             //writer.WriteComment("This file is generated by the server.");
             writer.WriteStartElement("ConfigData");
-            writer.WriteElementString("Version", "1.0");
-            writer.WriteElementString("RegenTime", "60000");
-            writer.WriteElementString("HungerTime", "600000");
-            writer.WriteElementString("HydrationTime", "300000");
-            writer.WriteElementString("SaveTime", "300000");
-            writer.WriteElementString("SpawnTime", "1000");
-            writer.WriteElementString("AiTime", "1000");
+            writer.WriteElementString("Version", Globals.VERSION);
+            writer.WriteElementString("RegenTime", Globals.HEALTH_REGEN_TIME);
+            writer.WriteElementString("HungerTime", Globals.HUNGER_DEGEN_TIME);
+            writer.WriteElementString("HydrationTime", Globals.HYDRATION_DEGEN_TIME);
+            writer.WriteElementString("SaveTime", Globals.AUTOSAVE_TIME);
+            writer.WriteElementString("SpawnTime", Globals.SPAWN_TIME);
+            writer.WriteElementString("AiTime", Globals.AI_TIME);
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
         }
 
-        public void LoadServerConfig()
+        public static void LoadServerConfig()
         {
             if (!Exists("Config.xml"))
             {
                 SaveServerConfig();
-                WriteLine("Creating config XML...");
+                Logging.WriteMessageLog("Creating config XML...");
             }
 
-            WriteLine("Loading config XML...");
+            Logging.WriteMessageLog("Loading config XML...");
             XmlReader reader = XmlReader.Create("Config.xml");
-            WriteLog("Config XML file loaded.", "Server");
+            Logging.WriteMessageLog("Config XML file found, importing settings...");
             reader.ReadToFollowing("Version");
-            s_Version = reader.ReadElementContentAsString();
+            sVersion = reader.ReadElementContentAsString();
             reader.ReadToFollowing("RegenTime");
             regenTime = reader.ReadElementContentAsInt();
             reader.ReadToFollowing("HungerTime");
@@ -973,23 +950,69 @@ namespace Server.Classes
             reader.ReadToFollowing("AiTime");
             aiTime = reader.ReadElementContentAsInt();
             reader.Close();
-            WriteLine("Config XML loaded successfully!");
+            Logging.WriteMessageLog("Config XML imported successfully!");
         }
 
-        static void CommandWindow()
+        static void UpdateTitle()
         {
-            //WriteLine("Enter commands below, type help for commands:");
-            do
+            Console.Title = "Sabertooth Server - " + worldTime.Time;
+        }
+        private static string GetPublicIPAddress()
+        {
+            try
             {
-                Write("");
-                s_userCommand = ReadLine();
-            } while (s_userCommand != null);
-        }
-
-        void UpdateTitle()
-        {
-            Title = "Sabertooth Server - " + g_Time.Time;
+                string externalIP;
+                externalIP = (new WebClient()).DownloadString("http://checkip.dyndns.org/");
+                externalIP = (new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")).Matches(externalIP)[0].ToString();
+                return externalIP;
+            }
+            catch { return null; }
         }
         #endregion
+    }
+
+    public static class Globals
+    {
+        //Server Globals
+        public const byte NO = 0;
+        public const byte YES = 1;
+        public const int MAX_PLAYERS = 5;
+        public const int MAX_NPCS = 10;
+        public const int MAX_ITEMS = 50;
+        public const int MAX_PROJECTILES = 10;
+        public const int MAX_MAPS = 10;
+        public const int MAX_MAP_NPCS = 10;
+        public const int MAX_MAP_POOL_NPCS = 20;
+        public const int MAX_MAP_ITEMS = 20;
+        public const int MAX_MAP_X = 50;
+        public const int MAX_MAP_Y = 50;
+        public const int MAX_SHOPS = 10;
+        public const int MAX_CHATS = 10;
+        public const int MAX_CHESTS = 10;
+        //Config Globals
+        public const string IP_ADDRESS = "10.16.0.8";
+        public const string SMTP_IP_ADDRESS = "";
+        public const int SERVER_PORT = 14242;
+        public const int SMTP_SERVER_PORT = 25;
+        public const string SMTP_USER_CREDS = "";
+        public const string SMTP_PASS_CREDS = "";
+        public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
+        public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
+        public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
+        public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
+        public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
+        public const string VERSION = "1.0"; //For beta and alpha
+        //Enviroment Globals
+        public const string HEALTH_REGEN_TIME = "60000"; //60000 / 1000 = 1 MIN
+        public const string HUNGER_DEGEN_TIME = "600000"; //600000 / 1000 = 10 MIN
+        public const string HYDRATION_DEGEN_TIME = "300000"; //300000 / 1000 = 5 MIN
+        public const string AUTOSAVE_TIME = "300000"; //300000 / 1000 = 5 MIN
+        public const string SPAWN_TIME = "1000"; //1000 / 1000 = 1 SECOND
+        public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND
+        public const int A_MILLISECOND = 1000;
+        public const int SECONDS_IN_MINUTE = 60;
+        public const int MINUTES_IN_HOUR = 60;
+        public const int HOURS_IN_DAY = 24;
+        public const int DAYS_IN_YEAR = 365;
     }
 }

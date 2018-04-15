@@ -4,8 +4,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
 using static System.Convert;
+using static Sabertooth.Server;
 
-namespace Server.Classes
+namespace Sabertooth
 {
     public class Chest
     {
@@ -192,22 +193,21 @@ namespace Server.Classes
             }
         }
 
-        public void TakeItemFromChest(NetIncomingMessage incMSG, NetServer s_Server, Player[] s_Player, Item s_Item, int chestSlot, int index)
+        public void TakeItemFromChest(NetIncomingMessage incMSG, int itemNum, int chestSlot, int index)
         {
-            HandleData hData = new HandleData();
-            int slot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+            int slot = players[index].FindOpenInvSlot(players[index].Backpack);
 
             if (slot < 25)
             {
-                s_Player[index].Backpack[slot] = s_Item;
+                players[index].Backpack[slot] = items[itemNum];
+                HandleData.SendServerMessageTo(players[index].Connection, "You took " + items[itemNum].Name + " from the chest.");
                 ChestItem[chestSlot] = new ChestItem("None", 0, 1);
-                hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You took " + s_Item.Name + " from the chest.");
-                hData.SendPlayerInv(s_Server, s_Player, index);
-                hData.SendChestData(incMSG, s_Server, this, index);
+                HandleData.SendPlayerInv(index);
+                HandleData.SendChestData(incMSG, index);
             }
             else
             {
-                hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "Your backpack is full!");
+                HandleData.SendServerMessageTo(players[index].Connection, "Your backpack is full!");
                 return;
             }
         }

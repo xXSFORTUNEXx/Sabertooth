@@ -3,8 +3,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
+using static Sabertooth.Server;
 
-namespace Server.Classes
+namespace Sabertooth
 {
     public class Shop
     {
@@ -133,49 +134,47 @@ namespace Server.Classes
             }
         }
 
-        public void BuyShopItem(NetServer s_Server, Player[] s_Player, Item s_Item, int shopSlot, int index)
+        public void BuyShopItem(int itemNum, int shopSlot, int index)
         {
-            HandleData hData = new HandleData();
-            int cash = s_Player[index].Money;
+            int cash = players[index].Money;
             int cost = shopItem[shopSlot].Cost;
 
-            if (cost == 1) { cost = s_Item.Price; }
+            if (cost == 1) { cost = items[itemNum].Price; }
 
             if (cash >= cost)
             {
-                int slot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                int slot = players[index].FindOpenInvSlot(players[index].Backpack);
                 if (slot < 25)
                 {
-                    s_Player[index].Money -= cost;
-                    s_Player[index].Backpack[slot] = s_Item;
-                    hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You purchased " + s_Item.Name + " for " + cost + " dollars!");
-                    hData.SendPlayerInv(s_Server, s_Player, index);
-                    hData.SendUpdatePlayerStats(s_Server, s_Player, index);
+                    players[index].Money -= cost;
+                    players[index].Backpack[slot] = items[itemNum];
+                    HandleData.SendServerMessageTo(players[index].Connection, "You purchased " + items[itemNum].Name + " for " + cost + " dollars!");
+                    HandleData.SendPlayerInv(index);
+                    HandleData.SendUpdatePlayerStats(index);
                 }
                 else
                 {
-                    hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "Your backpack is full!");
+                    HandleData.SendServerMessageTo(players[index].Connection, "Your backpack is full!");
                     return;
                 }
             }
             else
             {
-                hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You don't have enough money!");
+                HandleData.SendServerMessageTo(players[index].Connection, "You don't have enough money!");
                 return;
             }
         }
 
-        public void SellShopItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        public void SellShopItem(int index, int slot)
         {
-            HandleData hData = new HandleData();
-            int money = s_Player[index].Money;
-            int price = s_Player[index].Backpack[slot].Price;
+            int money = players[index].Money;
+            int price = players[index].Backpack[slot].Price;
             money += price;
-            s_Player[index].Money = money;
-            hData.SendServerMessageTo(s_Player[index].Connection, s_Server, "You sold " + s_Player[index].Backpack[slot].Name + " for " + price + " dollars!");
-            s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);            
-            hData.SendPlayerInv(s_Server, s_Player, index);
-            hData.SendUpdatePlayerStats(s_Server, s_Player, index);
+            players[index].Money = money;
+            HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Name + " for " + price + " dollars!");
+            players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);            
+            HandleData.SendPlayerInv(index);
+            HandleData.SendUpdatePlayerStats(index);
         }
     }
 

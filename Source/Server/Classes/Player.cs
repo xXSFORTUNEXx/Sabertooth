@@ -3,8 +3,8 @@ using System;
 using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
-
-namespace Server.Classes
+using static Sabertooth.Server;
+namespace Sabertooth
 {
     public class Player
     {
@@ -233,16 +233,15 @@ namespace Server.Classes
         #endregion
 
         #region Methods
-        public void RegenHealth(NetServer s_Server)
+        public void RegenHealth()
         {
-            HandleData hData = new HandleData();
             string msg;
 
             if (Hydration == 0)
             {
                 Health -= 50;
                 msg = "You are dying from dehydration!";
-                hData.SendServerMessageTo(Connection, s_Server, msg);
+                HandleData.SendServerMessageTo(Connection, msg);
                 return;
             }
 
@@ -250,7 +249,7 @@ namespace Server.Classes
             {
                 Health -= 100;
                 msg = "You are dying from starvation!";
-                hData.SendServerMessageTo(Connection, s_Server, msg);
+                HandleData.SendServerMessageTo(Connection, msg);
                 return;
             }
 
@@ -332,61 +331,56 @@ namespace Server.Classes
             return false;
         }
 
-        public void DepositItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        public void DepositItem(int index, int slot)
         {
-            if (s_Player[index].Backpack[slot].Name != "None")
+            if (players[index].Backpack[slot].Name != "None")
             {
-                HandleData hData = new HandleData();
-
-                int newSlot = FindOpenBankSlot(s_Player[index].Bank);
+                int newSlot = FindOpenBankSlot(players[index].Bank);
                 if (newSlot < 50)
                 {
-                    s_Player[index].Bank[newSlot] = s_Player[index].Backpack[slot];
-                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
-                    hData.SendPlayerBank(s_Server, s_Player, index);
-                    hData.SendPlayerInv(s_Server, s_Player, index);
+                    players[index].Bank[newSlot] = players[index].Backpack[slot];
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    HandleData.SendPlayerBank(index);
+                    HandleData.SendPlayerInv(index);
                 }
                 else
                 {
-                    hData.SendServerMessageTo(Connection, s_Server, "You bank is full!");
+                    HandleData.SendServerMessageTo(Connection, "You bank is full!");
                     return;
                 }
             }
         }
 
-        public void WithdrawItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        public void WithdrawItem(int index, int slot)
         {
-            if (s_Player[index].Bank[slot].Name != "None")
+            if (players[index].Bank[slot].Name != "None")
             {
-                HandleData hData = new HandleData();
-
-                int newSlot = FindOpenInvSlot(s_Player[index].Backpack);
+                int newSlot = FindOpenInvSlot(players[index].Backpack);
                 if (newSlot < 25)
                 {
-                    s_Player[index].Backpack[newSlot] = s_Player[index].Bank[slot];
-                    s_Player[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
-                    hData.SendPlayerBank(s_Server, s_Player, index);
-                    hData.SendPlayerInv(s_Server, s_Player, index);
+                    players[index].Backpack[newSlot] = players[index].Bank[slot];
+                    players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    HandleData.SendPlayerBank(index);
+                    HandleData.SendPlayerInv(index);
                 }
                 else
                 {
-                    hData.SendServerMessageTo(Connection, s_Server, "You inventory is full!");
+                    HandleData.SendServerMessageTo(Connection, "You inventory is full!");
                     return;
                 }
             }
         }
 
-        public void EquipItem(NetServer s_Server, Player[] s_Player, int index, int slot)
+        public void EquipItem(int index, int slot)
         {
-            if (s_Player[index].Backpack[slot].Name != "None")
-            {
-                HandleData hData = new HandleData();                
-                switch (s_Player[index].Backpack[slot].Type)
+            if (players[index].Backpack[slot].Name != "None")
+            {              
+                switch (players[index].Backpack[slot].Type)
                 {                    
                     case (int)ItemType.RangedWeapon:
-                        if (s_Player[index].mainWeapon.Name == "None")
+                        if (players[index].mainWeapon.Name == "None")
                         {
-                            s_Player[index].mainWeapon = s_Player[index].Backpack[slot];
+                            players[index].mainWeapon = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -394,16 +388,16 @@ namespace Server.Classes
 
                             if (newSlot < 25)
                             {
-                                s_Player[index].Backpack[newSlot] = s_Player[index].mainWeapon;
-                                s_Player[index].mainWeapon = s_Player[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].mainWeapon;
+                                players[index].mainWeapon = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.MeleeWeapon:
-                        if (s_Player[index].offWeapon.Name == "None")
+                        if (players[index].offWeapon.Name == "None")
                         {
-                            s_Player[index].offWeapon = s_Player[index].Backpack[slot];
+                            players[index].offWeapon = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -411,16 +405,16 @@ namespace Server.Classes
 
                             if (newSlot < 25)
                             {
-                                s_Player[index].Backpack[newSlot] = s_Player[index].offWeapon;
-                                s_Player[index].offWeapon = s_Player[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].offWeapon;
+                                players[index].offWeapon = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.Shirt:
-                        if (s_Player[index].Chest.Name == "None")
+                        if (players[index].Chest.Name == "None")
                         {
-                            s_Player[index].Chest = s_Player[index].Backpack[slot];
+                            players[index].Chest = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -428,16 +422,16 @@ namespace Server.Classes
 
                             if (newSlot < 25)
                             {
-                                s_Player[index].Backpack[newSlot] = s_Player[index].Chest;
-                                s_Player[index].Chest = s_Player[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].Chest;
+                                players[index].Chest = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.Pants:
-                        if (s_Player[index].Legs.Name == "None")
+                        if (players[index].Legs.Name == "None")
                         {
-                            s_Player[index].Legs = s_Player[index].Backpack[slot];
+                            players[index].Legs = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -445,16 +439,16 @@ namespace Server.Classes
 
                             if (newSlot < 25)
                             {
-                                s_Player[index].Backpack[newSlot] = s_Player[index].Legs;
-                                s_Player[index].Legs = s_Player[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].Legs;
+                                players[index].Legs = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.Shoes:
-                        if (s_Player[index].Feet.Name == "None")
+                        if (players[index].Feet.Name == "None")
                         {
-                            s_Player[index].Feet = s_Player[index].Backpack[slot];
+                            players[index].Feet = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -462,261 +456,255 @@ namespace Server.Classes
 
                             if (newSlot < 25)
                             {
-                                s_Player[index].Backpack[newSlot] = s_Player[index].Feet;
-                                s_Player[index].Feet = s_Player[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].Feet;
+                                players[index].Feet = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.Currency:
-                        if (s_Player[index].Backpack[slot].Value > 0)
+                        if (players[index].Backpack[slot].Value > 0)
                         {
-                            s_Player[index].Money += s_Player[index].Backpack[slot].Value;
+                            players[index].Money += players[index].Backpack[slot].Value;
                         }                        
                         break;
 
                     case (int)ItemType.Food:
-                        if (s_Player[index].Backpack[slot].HungerRestore > 0)
+                        if (players[index].Backpack[slot].HungerRestore > 0)
                         {
-                            s_Player[index].Hunger += s_Player[index].Backpack[slot].HungerRestore;
-                            if (s_Player[index].Hunger > 100) { s_Player[index].Hunger = 100; }
+                            players[index].Hunger += players[index].Backpack[slot].HungerRestore;
+                            if (players[index].Hunger > 100) { players[index].Hunger = 100; }
                         }
                         break;
 
                     case (int)ItemType.Drink:
-                        if (s_Player[index].Backpack[slot].HydrateRestore > 0)
+                        if (players[index].Backpack[slot].HydrateRestore > 0)
                         {
-                            s_Player[index].Hydration += s_Player[index].Backpack[slot].HydrateRestore;
-                            if (s_Player[index].Hydration > 100) { s_Player[index].Hydration = 100; }
+                            players[index].Hydration += players[index].Backpack[slot].HydrateRestore;
+                            if (players[index].Hydration > 100) { players[index].Hydration = 100; }
                         }
                         break;
 
                     case (int)ItemType.FirstAid:
-                        if (s_Player[index].Backpack[slot].HealthRestore > 0)
+                        if (players[index].Backpack[slot].HealthRestore > 0)
                         {
-                            s_Player[index].Health += s_Player[index].Backpack[slot].HealthRestore;
-                            if (s_Player[index].Health > s_Player[index].MaxHealth) { s_Player[index].Health = s_Player[index].MaxHealth; }
+                            players[index].Health += players[index].Backpack[slot].HealthRestore;
+                            if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; }
                         }
                         break;
                 }
-                s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                hData.SendPlayerInv(s_Server, s_Player, index);
-                hData.SendUpdatePlayerStats(s_Server, s_Player, index);
-                hData.SendPlayerEquipment(s_Server, s_Player, index);
+                players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                HandleData.SendWeaponsUpdate(index);
+                HandleData.SendPlayerInv(index);
+                HandleData.SendUpdatePlayerStats(index);
+                HandleData.SendPlayerEquipment(index);
             }
         }
 
-        public void UnequipItem(NetServer s_Server, Player[] s_Player, int index, int equip)
+        public void UnequipItem(int index, int equip)
         {
-            HandleData hData = new HandleData();
-
             switch (equip)
             {
                 case (int)EquipSlots.MainWeapon:
-                    int itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    int itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].mainWeapon;
-                        s_Player[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Backpack[itemSlot] = players[index].mainWeapon;
+                        players[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
-                        hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                        hData.SendPlayerInv(s_Server, s_Player, index);
-                        hData.SendPlayerEquipment(s_Server, s_Player, index);
+                        HandleData.SendWeaponsUpdate(index);
+                        HandleData.SendPlayerInv(index);
+                        HandleData.SendPlayerEquipment(index);
                     }
                     else
                     {
-                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                        HandleData.SendServerMessageTo(Connection, "Inventory is full!");
                         return;
                     }
                     break;
 
                 case (int)EquipSlots.OffWeapon:
-                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].offWeapon;
-                        s_Player[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                        hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                        hData.SendPlayerInv(s_Server, s_Player, index);
-                        hData.SendPlayerEquipment(s_Server, s_Player, index);
+                        players[index].Backpack[itemSlot] = players[index].offWeapon;
+                        players[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        HandleData.SendWeaponsUpdate(index);
+                        HandleData.SendPlayerInv(index);
+                        HandleData.SendPlayerEquipment(index);
                     }
                     else
                     {
-                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                        HandleData.SendServerMessageTo(Connection, "Inventory is full!");
                         return;
                     }
                     break;
 
                 case (int)EquipSlots.Chest:
-                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].Chest;
-                        s_Player[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                        hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                        hData.SendPlayerInv(s_Server, s_Player, index);
-                        hData.SendPlayerEquipment(s_Server, s_Player, index);
+                        players[index].Backpack[itemSlot] = players[index].Chest;
+                        players[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        HandleData.SendWeaponsUpdate(index);
+                        HandleData.SendPlayerInv(index);
+                        HandleData.SendPlayerEquipment(index);
                     }
                     else
                     {
-                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                        HandleData.SendServerMessageTo(Connection,"Inventory is full!");
                         return;
                     }
                     break;
 
                 case (int)EquipSlots.Legs:
-                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].Legs;
-                        s_Player[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                        hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                        hData.SendPlayerInv(s_Server, s_Player, index);
-                        hData.SendPlayerEquipment(s_Server, s_Player, index);
+                        players[index].Backpack[itemSlot] = players[index].Legs;
+                        players[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        HandleData.SendWeaponsUpdate(index);
+                        HandleData.SendPlayerInv(index);
+                        HandleData.SendPlayerEquipment(index);
                     }
                     else
                     {
-                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                        HandleData.SendServerMessageTo(Connection,"Inventory is full!");
                         return;
                     }
                     break;
 
                 case (int)EquipSlots.Feet:
-                    itemSlot = s_Player[index].FindOpenInvSlot(s_Player[index].Backpack);
+                    itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        s_Player[index].Backpack[itemSlot] = s_Player[index].Feet;
-                        s_Player[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                        hData.SendWeaponsUpdate(s_Server, s_Player, index);
-                        hData.SendPlayerInv(s_Server, s_Player, index);
-                        hData.SendPlayerEquipment(s_Server, s_Player, index);
+                        players[index].Backpack[itemSlot] = players[index].Feet;
+                        players[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        HandleData.SendWeaponsUpdate(index);
+                        HandleData.SendPlayerInv(index);
+                        HandleData.SendPlayerEquipment(index);
                     }
                     else
                     {
-                        hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                        HandleData.SendServerMessageTo(Connection,"Inventory is full!");
                         return;
                     }
                     break;
             }
         }
 
-        public void DropItem(NetServer s_Server, Map[] s_Map, Player[] s_Player, int index, int slot, int mapNum)
+        public void DropItem(int index, int slot, int mapNum)
         {
-            if (s_Player[index].Backpack[slot].Name != "None")
+            if (players[index].Backpack[slot].Name != "None")
             {
-                Server server = new Server();
-                HandleData hData = new HandleData();
-
-                int mapSlot = server.FindOpenMapItemSlot(s_Map[mapNum]);
+                int mapSlot = FindOpenMapItemSlot(maps[mapNum]);
                 if (mapSlot < 20)
                 {
-                    s_Map[mapNum].m_MapItem[mapSlot].Name = s_Player[index].Backpack[slot].Name;
-                    s_Map[mapNum].m_MapItem[mapSlot].X = s_Player[index].X + 12;
-                    s_Map[mapNum].m_MapItem[mapSlot].Y = s_Player[index].Y + 9;
-                    s_Map[mapNum].m_MapItem[mapSlot].Sprite = s_Player[index].Backpack[slot].Sprite;
-                    s_Map[mapNum].m_MapItem[mapSlot].Damage = s_Player[index].Backpack[slot].Damage;
-                    s_Map[mapNum].m_MapItem[mapSlot].Armor = s_Player[index].Backpack[slot].Armor;
-                    s_Map[mapNum].m_MapItem[mapSlot].Type = s_Player[index].Backpack[slot].Type;
-                    s_Map[mapNum].m_MapItem[mapSlot].AttackSpeed = s_Player[index].Backpack[slot].AttackSpeed;
-                    s_Map[mapNum].m_MapItem[mapSlot].ReloadSpeed = s_Player[index].Backpack[slot].ReloadSpeed;
-                    s_Map[mapNum].m_MapItem[mapSlot].HealthRestore = s_Player[index].Backpack[slot].HealthRestore;
-                    s_Map[mapNum].m_MapItem[mapSlot].HungerRestore = s_Player[index].Backpack[slot].HungerRestore;
-                    s_Map[mapNum].m_MapItem[mapSlot].HydrateRestore = s_Player[index].Backpack[slot].HydrateRestore;
-                    s_Map[mapNum].m_MapItem[mapSlot].Strength = s_Player[index].Backpack[slot].Strength;
-                    s_Map[mapNum].m_MapItem[mapSlot].Agility = s_Player[index].Backpack[slot].Agility;
-                    s_Map[mapNum].m_MapItem[mapSlot].Endurance = s_Player[index].Backpack[slot].Endurance;
-                    s_Map[mapNum].m_MapItem[mapSlot].Stamina = s_Player[index].Backpack[slot].Stamina;
-                    s_Map[mapNum].m_MapItem[mapSlot].Clip = s_Player[index].Backpack[slot].Clip;
-                    s_Map[mapNum].m_MapItem[mapSlot].MaxClip = s_Player[index].Backpack[slot].MaxClip;
-                    s_Map[mapNum].m_MapItem[mapSlot].ItemAmmoType = s_Player[index].Backpack[slot].ItemAmmoType;
-                    s_Map[mapNum].m_MapItem[mapSlot].Value = s_Player[index].Backpack[slot].Value;
-                    s_Map[mapNum].m_MapItem[mapSlot].ProjectileNumber = s_Player[index].Backpack[slot].ProjectileNumber;
-                    s_Map[mapNum].m_MapItem[mapSlot].Price = s_Player[index].Backpack[slot].Price;
-                    s_Map[mapNum].m_MapItem[mapSlot].Rarity = s_Player[index].Backpack[slot].Rarity;
-                    s_Map[mapNum].m_MapItem[mapSlot].IsSpawned = true;
-                    s_Map[mapNum].m_MapItem[mapSlot].ExpireTick = TickCount;
+                    maps[mapNum].m_MapItem[mapSlot].Name = players[index].Backpack[slot].Name;
+                    maps[mapNum].m_MapItem[mapSlot].X = players[index].X + 12;
+                    maps[mapNum].m_MapItem[mapSlot].Y = players[index].Y + 9;
+                    maps[mapNum].m_MapItem[mapSlot].Sprite = players[index].Backpack[slot].Sprite;
+                    maps[mapNum].m_MapItem[mapSlot].Damage = players[index].Backpack[slot].Damage;
+                    maps[mapNum].m_MapItem[mapSlot].Armor = players[index].Backpack[slot].Armor;
+                    maps[mapNum].m_MapItem[mapSlot].Type = players[index].Backpack[slot].Type;
+                    maps[mapNum].m_MapItem[mapSlot].AttackSpeed = players[index].Backpack[slot].AttackSpeed;
+                    maps[mapNum].m_MapItem[mapSlot].ReloadSpeed = players[index].Backpack[slot].ReloadSpeed;
+                    maps[mapNum].m_MapItem[mapSlot].HealthRestore = players[index].Backpack[slot].HealthRestore;
+                    maps[mapNum].m_MapItem[mapSlot].HungerRestore = players[index].Backpack[slot].HungerRestore;
+                    maps[mapNum].m_MapItem[mapSlot].HydrateRestore = players[index].Backpack[slot].HydrateRestore;
+                    maps[mapNum].m_MapItem[mapSlot].Strength = players[index].Backpack[slot].Strength;
+                    maps[mapNum].m_MapItem[mapSlot].Agility = players[index].Backpack[slot].Agility;
+                    maps[mapNum].m_MapItem[mapSlot].Endurance = players[index].Backpack[slot].Endurance;
+                    maps[mapNum].m_MapItem[mapSlot].Stamina = players[index].Backpack[slot].Stamina;
+                    maps[mapNum].m_MapItem[mapSlot].Clip = players[index].Backpack[slot].Clip;
+                    maps[mapNum].m_MapItem[mapSlot].MaxClip = players[index].Backpack[slot].MaxClip;
+                    maps[mapNum].m_MapItem[mapSlot].ItemAmmoType = players[index].Backpack[slot].ItemAmmoType;
+                    maps[mapNum].m_MapItem[mapSlot].Value = players[index].Backpack[slot].Value;
+                    maps[mapNum].m_MapItem[mapSlot].ProjectileNumber = players[index].Backpack[slot].ProjectileNumber;
+                    maps[mapNum].m_MapItem[mapSlot].Price = players[index].Backpack[slot].Price;
+                    maps[mapNum].m_MapItem[mapSlot].Rarity = players[index].Backpack[slot].Rarity;
+                    maps[mapNum].m_MapItem[mapSlot].IsSpawned = true;
+                    maps[mapNum].m_MapItem[mapSlot].ExpireTick = TickCount;
 
-                    s_Player[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-                    hData.SendPlayerInv(s_Server, s_Player, index);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                    HandleData.SendPlayerInv(index);
 
                     for (int p = 0; p < 5; p++)
                     {
-                        if (s_Player[p].Connection != null && mapNum == s_Player[p].Map)
+                        if (players[p].Connection != null && mapNum == players[p].Map)
                         {
-                            hData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map[mapNum], mapSlot);
+                            HandleData.SendMapItemData(players[p].Connection, mapNum, mapSlot);
                         }
                     }
                 }
                 else
                 {
-                    hData.SendServerMessageTo(Connection, s_Server, "All map item slots are filled!");
+                    HandleData.SendServerMessageTo(Connection, "All map item slots are filled!");
                 }
             }
         }
 
-        public void CheckPickup(NetServer s_Server, Map s_Map, Player[] s_Player, Item[] s_Item, int index)
+        public void CheckPickup(int index, int map)
         {
             for (int c = 0; c < 20; c++)
             {
-                if (s_Map.m_MapItem[c] != null && s_Map.m_MapItem[c].IsSpawned)
+                if (maps[map].m_MapItem[c] != null && maps[map].m_MapItem[c].IsSpawned)
                 {
-                    if ((X + 12) == s_Map.m_MapItem[c].X && (Y + 9) == s_Map.m_MapItem[c].Y)
+                    if ((X + 12) == maps[map].m_MapItem[c].X && (Y + 9) == maps[map].m_MapItem[c].Y)
                     {
-                        PickUpItem(s_Server, s_Player, s_Map.m_MapItem[c], s_Map, index, c);
+                        PickUpItem(map, index, c);
                         break;
                     }
                 }
             }
         }
 
-        void PickUpItem(NetServer s_Server, Player[] s_Player, MapItem s_Item, Map s_Map, int index, int itemNum)
+        void PickUpItem(int map, int index, int itemNum)
         {
-            HandleData hData = new HandleData();
             int itemSlot = FindOpenInvSlot(Backpack);
 
             if (itemSlot < 25)
             {
-                Backpack[itemSlot].Name = s_Item.Name;
-                Backpack[itemSlot].Sprite = s_Item.Sprite;
-                Backpack[itemSlot].Damage = s_Item.Damage;
-                Backpack[itemSlot].Armor = s_Item.Armor;
-                Backpack[itemSlot].Type = s_Item.Type;
-                Backpack[itemSlot].AttackSpeed = s_Item.AttackSpeed;
-                Backpack[itemSlot].ReloadSpeed = s_Item.ReloadSpeed;
-                Backpack[itemSlot].HealthRestore = s_Item.HealthRestore;
-                Backpack[itemSlot].HungerRestore = s_Item.HungerRestore;
-                Backpack[itemSlot].HydrateRestore = s_Item.HydrateRestore;
-                Backpack[itemSlot].Strength = s_Item.Strength;
-                Backpack[itemSlot].Agility = s_Item.Agility;
-                Backpack[itemSlot].Endurance = s_Item.Endurance;
-                Backpack[itemSlot].Stamina = s_Item.Stamina;
-                Backpack[itemSlot].Clip = s_Item.Clip;
-                Backpack[itemSlot].MaxClip = s_Item.MaxClip;
-                Backpack[itemSlot].ItemAmmoType = s_Item.ItemAmmoType;
-                Backpack[itemSlot].Value = s_Item.Value;
-                Backpack[itemSlot].ProjectileNumber = s_Item.ProjectileNumber;
-                Backpack[itemSlot].Price = s_Item.Price;
-                Backpack[itemSlot].Rarity = s_Item.Price;
+                Backpack[itemSlot].Name = items[itemNum].Name;
+                Backpack[itemSlot].Sprite = items[itemNum].Sprite;
+                Backpack[itemSlot].Damage = items[itemNum].Damage;
+                Backpack[itemSlot].Armor = items[itemNum].Armor;
+                Backpack[itemSlot].Type = items[itemNum].Type;
+                Backpack[itemSlot].AttackSpeed = items[itemNum].AttackSpeed;
+                Backpack[itemSlot].ReloadSpeed = items[itemNum].ReloadSpeed;
+                Backpack[itemSlot].HealthRestore = items[itemNum].HealthRestore;
+                Backpack[itemSlot].HungerRestore = items[itemNum].HungerRestore;
+                Backpack[itemSlot].HydrateRestore = items[itemNum].HydrateRestore;
+                Backpack[itemSlot].Strength = items[itemNum].Strength;
+                Backpack[itemSlot].Agility = items[itemNum].Agility;
+                Backpack[itemSlot].Endurance = items[itemNum].Endurance;
+                Backpack[itemSlot].Stamina = items[itemNum].Stamina;
+                Backpack[itemSlot].Clip = items[itemNum].Clip;
+                Backpack[itemSlot].MaxClip = items[itemNum].MaxClip;
+                Backpack[itemSlot].ItemAmmoType = items[itemNum].ItemAmmoType;
+                Backpack[itemSlot].Value = items[itemNum].Value;
+                Backpack[itemSlot].ProjectileNumber = items[itemNum].ProjectileNumber;
+                Backpack[itemSlot].Price = items[itemNum].Price;
+                Backpack[itemSlot].Rarity = items[itemNum].Rarity;
 
-                int TileX = s_Map.m_MapItem[itemNum].X;
-                int TileY = s_Map.m_MapItem[itemNum].Y;
-                s_Map.Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
-                s_Map.m_MapItem[itemNum].Name = "None";
-                s_Map.m_MapItem[itemNum].IsSpawned = false;
+                int TileX = maps[map].m_MapItem[itemNum].X;
+                int TileY = maps[map].m_MapItem[itemNum].Y;
+                maps[map].Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
+                maps[map].m_MapItem[itemNum].Name = "None";
+                maps[map].m_MapItem[itemNum].IsSpawned = false;
 
                 for (int p = 0; p < 5; p++)
                 {
-                    if (s_Player[p].Connection != null && Map == s_Player[p].Map)
+                    if (players[p].Connection != null && Map == players[p].Map)
                     {
-                        hData.SendMapItemData(s_Server, s_Player[p].Connection, s_Map, itemNum);
+                        HandleData.SendMapItemData(players[p].Connection, map, itemNum);
                     }
                 }
-                hData.SendPlayerInv(s_Server, s_Player, index);
+                HandleData.SendPlayerInv(index);
             }
             else
             {
-                hData.SendServerMessageTo(Connection, s_Server, "Inventory is full!");
+                HandleData.SendServerMessageTo(Connection,"Inventory is full!");
                 return;
             }
         }

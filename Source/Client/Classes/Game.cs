@@ -426,9 +426,10 @@ namespace Client.Classes
 
             if (e.Code == Keyboard.Key.C)
             {
-                if (c_GUI.inputChat.HasFocus) { return; }
                 if (c_GUI.chatWindow != null)
                 {
+                    if (c_GUI.inputChat.HasFocus) { return; }
+
                     if (c_GUI.chatWindow.IsVisible)
                     {
                         c_GUI.chatWindow.Hide();

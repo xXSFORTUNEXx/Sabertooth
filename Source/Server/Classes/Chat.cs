@@ -7,7 +7,7 @@ using System.Data.SQLite;
 using static System.Convert;
 using Lidgren.Network;
 
-namespace Server.Classes
+namespace Sabertooth
 {
     public class Chat
     {

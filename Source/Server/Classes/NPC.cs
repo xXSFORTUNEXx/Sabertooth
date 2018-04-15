@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
 
-namespace Server.Classes
+namespace Sabertooth
 {
     public class Npc
     {
@@ -34,8 +34,6 @@ namespace Server.Classes
         public int spawnTick;
         public int SpawnX;
         public int SpawnY;
-
-        HandleData sendData = new HandleData();
 
         public Npc() { }
 
@@ -250,13 +248,13 @@ namespace Server.Classes
                     s_Player[index].LongestLifeMinute = minute;
                     s_Player[index].LongestLifeSecond = second;
                 }
-                sendData.SendPlayers(s_Server, s_Player);
+                HandleData.SendPlayers();
                 string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
-                sendData.SendServerMessageToAll(s_Server, deathMsg);
+                HandleData.SendServerMessageToAll(deathMsg);
             }
             else
             {
-                sendData.SendUpdatePlayerStats(s_Server, s_Player, index);
+                HandleData.SendUpdatePlayerStats(index);
             }
         }
 
