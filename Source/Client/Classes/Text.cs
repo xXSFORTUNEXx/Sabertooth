@@ -4,9 +4,9 @@ using SFML.System;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class RenderText : IDisposable
+    public class RenderText : IDisposable
     {
         Font defaultFont = new Font("Resources/Fonts/Arial.ttf");   //Load the true type
         Text defaultText = new Text();  //create texture class

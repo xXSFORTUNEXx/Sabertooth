@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public class Npc
     {

@@ -38,7 +38,7 @@
     <ApplicationIcon>Server.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Sabertooth.Sabertooth</StartupObject>
+    <StartupObject>SabertoothServer.SabertoothServer</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />

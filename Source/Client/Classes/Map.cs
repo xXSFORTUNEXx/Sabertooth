@@ -5,10 +5,11 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static System.Convert;
+using static SabertoothClient.Client;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Map : Drawable
+    public class Map : Drawable
     {
         public string Name { get; set; }
         public int Revision { get; set; }
@@ -36,7 +37,6 @@ namespace Client.Classes
         const int Max_Tilesets = 2;
         Texture[] TileSet = new Texture[Max_Tilesets];
         Texture chestSprite = new Texture("Resources/Tilesets/Chest.png");
-        Player c_Player;
         RenderTexture brightness = new RenderTexture(800, 600);
         Sprite brightnessSprite = new Sprite();
         VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
@@ -209,17 +209,12 @@ namespace Client.Classes
             }
         }
 
-        public void UpdateMapPlayer(Player c_Player)
-        {
-            this.c_Player = c_Player;
-        }
-
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
             for (int x = minX; x < maxX; x++)
             {
@@ -280,12 +275,12 @@ namespace Client.Classes
             }
         }
 
-        public void DrawFringe(RenderTarget target)
+        public void DrawFringe(RenderTarget renderWindow)
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
             for (int x = minX; x < maxX; x++)
             {
@@ -309,7 +304,7 @@ namespace Client.Classes
                             f_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
                             f_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
                             f_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-                            target.Draw(f_Tile, ustates);
+                            renderWindow.Draw(f_Tile, ustates);
                         }
 
                         if (FringeA[x, y].TileX > 0 || FringeA[x, y].TileY > 0)
@@ -324,14 +319,14 @@ namespace Client.Classes
                             f2_Tile[1] = new Vertex(new Vector2f(fx + w, fy), new Vector2f(tx + w, ty));
                             f2_Tile[2] = new Vertex(new Vector2f(fx + w, fy + h), new Vector2f(tx + w, ty + h));
                             f2_Tile[3] = new Vertex(new Vector2f(fx, fy + h), new Vector2f(tx, ty + h));
-                            target.Draw(f2_Tile, ustates);
+                            renderWindow.Draw(f2_Tile, ustates);
                         }
                     }
                 }
             }
         }
 
-        public void DrawChest(RenderTarget target, int x, int y, bool empty)
+        public void DrawChest(int x, int y, bool empty)
         {
             int cX = 0;
             if (empty) { cX = 32; }
@@ -341,31 +336,31 @@ namespace Client.Classes
             chestPic[3] = new Vertex(new Vector2f((x * 32), (y * 32) + 32), new Vector2f(0 + cX, 32));
 
             ustates = new RenderStates(chestSprite);
-            target.Draw(chestPic, ustates);
+            renderWindow.Draw(chestPic, ustates);
         }
 
-       public void DrawBrightness(RenderTarget target, Player[] c_Player, WorldTime g_Time, int index)
+       public void DrawBrightness()
         {
             int overlay;
-            if (g_Time.g_Night) { overlay = 200; }
+            if (worldTime.g_Night) { overlay = 200; }
             else { overlay = Brightness; }
             brightnessSprite.Texture = brightness.Texture;
             brightness.Clear(new Color(0, 0, 0, (byte)overlay));
-            DrawMapLight(c_Player[index]);
-            DrawPlayerLight(c_Player, index);
-            target.Draw(brightnessSprite);
+            DrawMapLight();
+            DrawPlayerLight();
+            renderWindow.Draw(brightnessSprite);
         }
 
-        void DrawMapLight(Player c_Player)
+        void DrawMapLight()
         {
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < Globals.MAX_MAP_X; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < Globals.MAX_MAP_X; y++)
                 {
                     if (Ground[x, y].LightRadius > 0)
                     {
-                        int centerX = ((x * 32) - c_Player.X * 32) + 16;
-                        int centerY = 600 - (((y * 32) - c_Player.Y * 32) + 16);
+                        int centerX = ((x * 32) - players[HandleData.myIndex].X * 32) + 16;
+                        int centerY = 600 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = Ground[x, y].LightRadius;
 
@@ -384,12 +379,12 @@ namespace Client.Classes
             }
         }
 
-        void DrawPlayerLight(Player[] c_Player, int index)
+        void DrawPlayerLight()
         {
             int centerX = 400;
             int centerY = 288;
             Vector2f center = new Vector2f(centerX, centerY);
-            double radius = c_Player[index].LightRadius;
+            double radius = players[HandleData.myIndex].LightRadius;
 
             LightParticle[0] = new Vertex(center, Color.Transparent);
 
@@ -404,7 +399,7 @@ namespace Client.Classes
         }
     }
 
-    class MapNpc : Drawable
+    public class MapNpc : Drawable
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -479,7 +474,7 @@ namespace Client.Classes
         }
     }
 
-    class MapProj : Projectile
+    public class MapProj : Projectile
     {
         public int projNum { get; set; }
 
@@ -494,7 +489,7 @@ namespace Client.Classes
         }
     }
 
-    class MapItem : Drawable
+    public class MapItem : Drawable
     {
         public string Name { get; set; }
         public int ItemNum { get; set; }
@@ -560,7 +555,7 @@ namespace Client.Classes
     }
 
     [Serializable()]
-    class Tile
+    public class Tile
     {
         public int TileX { get; set; }
         public int TileY { get; set; }

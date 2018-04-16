@@ -4,9 +4,9 @@ using System;
 using System.Data.SQLite;
 using System.Threading;
 using static System.Convert;
-using static Sabertooth.Server;
+using static SabertoothServer.Server;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public static class HandleData
     {
@@ -14,7 +14,7 @@ namespace Sabertooth
         {
             NetIncomingMessage incMSG;
 
-            if ((incMSG = Sabertooth.netServer.ReadMessage()) != null)
+            if ((incMSG = SabertoothServer.netServer.ReadMessage()) != null)
             {
                 switch (incMSG.MessageType)
                 {
@@ -134,7 +134,7 @@ namespace Sabertooth
                 Console.WriteLine("Packet Size: " + incMSG.LengthBytes + " Bytes, " + incMSG.LengthBits + " bits");
                 #endif
             }
-            Sabertooth.netServer.Recycle(incMSG);
+            SabertoothServer.netServer.Recycle(incMSG);
         }
 
         #region Handle Incoming Data
@@ -454,9 +454,9 @@ namespace Sabertooth
         static void HandleDiscoveryRequest(NetIncomingMessage incMSG)
         {
             Logging.WriteMessageLog("Client discovered @ " + incMSG.SenderEndPoint.ToString());
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write("Sabertooth Server");
-            Sabertooth.netServer.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
+            SabertoothServer.netServer.SendDiscoveryResponse(outMSG, incMSG.SenderEndPoint);
         }
 
         static void HandleConnectionApproval(NetIncomingMessage incMSG)
@@ -468,9 +468,9 @@ namespace Sabertooth
                 {
                     incMSG.SenderConnection.Approve();
                     Thread.Sleep(500);
-                    NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Connection);
-                    Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                    SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                 }
                 else
                 {
@@ -588,10 +588,10 @@ namespace Sabertooth
             {
                 string name = players[GetPlayerConnection(incMSG)].Name;
                 string finalMsg = name + ": " + msg;
-                NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
                 outMSG.Write((byte)PacketTypes.ChatMessage);
                 outMSG.Write(finalMsg);
-                Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+                SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
                 Logging.WriteLog(finalMsg, "Chat");
                 Console.WriteLine(finalMsg);
             }
@@ -643,7 +643,7 @@ namespace Sabertooth
         #region Send Outgoing Data
         static void SendDateAndTime(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.DateandTime);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(worldTime.g_Year);
@@ -653,84 +653,84 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(worldTime.g_Minute);
             outMSG.WriteVariableInt32(worldTime.g_Second);
 
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenChest(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.OpenChest);
             outMSG.WriteVariableInt32(index);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendCloseChat(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.CloseChat);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenNextChat(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NextChat);
             outMSG.WriteVariableInt32(index);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenChat(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.OpenChat);
             outMSG.WriteVariableInt32(index);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenShop(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.OpenShop);
             outMSG.WriteVariableInt32(index);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenBank(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.OpenBank);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendServerMessageToAll(string message)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ChatMessage);
             outMSG.Write(message);
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         } 
 
         public static void SendServerMessageTo(NetConnection conn, string message)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ChatMessage);
             outMSG.Write(message);
-            Sabertooth.netServer.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendUpdateDirection(NetConnection playerConn, int index, int direction, int aimdirection)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.DirData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(direction);
             outMSG.WriteVariableInt32(aimdirection);
-            Sabertooth.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
+            SabertoothServer.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
         }
 
         static void SendUpdateMovementData(NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(x);
@@ -739,40 +739,40 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(aimdirection);
             outMSG.WriteVariableInt32(step);
 
-            Sabertooth.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
+            SabertoothServer.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
         }
 
         public static void SendUpdateHealthData(int index, int health)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.HealthData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(health);
 
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdateVitalData(int index, string vitalName, int vital)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.VitalLoss);
             outMSG.WriteVariableInt32(index);
             outMSG.Write(vitalName);
             outMSG.WriteVariableInt32(vital);
 
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendAcceptLogin(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Login);
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendPlayerData(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerData);
             outMSG.Write(index);
             outMSG.Write(players[index].Name);
@@ -859,12 +859,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(players[index].offWeapon.Price);
             outMSG.WriteVariableInt32(players[index].offWeapon.Rarity);
 
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdatePlayerStats(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdatePlayerStats);
             //outMSG.Write(index);
             outMSG.WriteVariableInt32(players[index].Level);
@@ -886,12 +886,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(players[index].GrenadeAmmo);
             outMSG.WriteVariableInt32(players[index].LightRadius);
 
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPlayerInv(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerInv);
             for (int i = 0; i < 25; i++)
             {
@@ -917,12 +917,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Price);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Rarity);
             }
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPlayerBank(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerBank);
             for (int i = 0; i < 50; i++)
             {
@@ -948,12 +948,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(players[index].Bank[i].Price);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Rarity);
             }
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPlayerEquipment(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerEquip);
 
             outMSG.Write(players[index].Chest.Name);
@@ -1022,12 +1022,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(players[index].Feet.Price);
             outMSG.WriteVariableInt32(players[index].Feet.Rarity);
 
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendWeaponsUpdate(int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateWeapons);
             //Main weapon
             outMSG.Write(players[index].mainWeapon.Name);
@@ -1074,12 +1074,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(players[index].offWeapon.ProjectileNumber);
             outMSG.WriteVariableInt32(players[index].offWeapon.Price);
             outMSG.WriteVariableInt32(players[index].offWeapon.Rarity);
-            Sabertooth.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPlayers()
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Players);
             for (int i = 0; i < 5; i++)
             {
@@ -1121,12 +1121,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(players[i].LongestLifeMinute);
                 outMSG.WriteVariableInt32(players[i].LongestLifeSecond);
             }
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendProjData(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ProjData);
             outMSG.WriteVariableInt32(index);
             outMSG.Write(projectiles[index].Name);
@@ -1135,12 +1135,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(projectiles[index].Sprite);
             outMSG.WriteVariableInt32(projectiles[index].Type);
             outMSG.WriteVariableInt32(projectiles[index].Speed);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendProjectiles(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Projectiles);
             for (int i = 0; i < 10; i++)
             {
@@ -1151,12 +1151,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(projectiles[i].Type);
                 outMSG.WriteVariableInt32(projectiles[i].Sprite);
             }
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendChests(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChests);
             for (int i = 0; i < 10; i++)
             {
@@ -1177,12 +1177,12 @@ namespace Sabertooth
                     outMSG.WriteVariableInt32(chests[i].ChestItem[n].Value);
                 }
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendChestData(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ChestData);
             outMSG.WriteVariableInt32(index);
             outMSG.Write(chests[index].Name);
@@ -1201,12 +1201,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(chests[index].ChestItem[n].ItemNum);
                 outMSG.WriteVariableInt32(chests[index].ChestItem[n].Value);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendChats(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChats);
             for (int i = 0; i < Globals.MAX_CHATS; i++)
             {
@@ -1231,12 +1231,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(chats[i].Money);
                 outMSG.WriteVariableInt32(chats[i].Type);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendChatData(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChatData);
             outMSG.WriteVariableInt32(index);
             outMSG.Write(chats[index].Name);
@@ -1260,12 +1260,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(chats[index].Money);
             outMSG.WriteVariableInt32(chats[index].Type);
 
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendShops(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ShopData);
             for (int i = 0; i < 10; i++)
             {
@@ -1277,12 +1277,12 @@ namespace Sabertooth
                     outMSG.WriteVariableInt32(shops[i].shopItem[n].Cost);
                 }
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendShopItems(NetIncomingMessage incMSG, int shopIndex)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ShopItemsData);
             outMSG.WriteVariableInt32(shopIndex);
             for (int n = 0; n < 25; n++)
@@ -1291,12 +1291,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(shops[shopIndex].shopItem[n].ItemNum);
                 outMSG.WriteVariableInt32(shops[shopIndex].shopItem[n].Cost);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendShopItemData(NetIncomingMessage incMSG, int shopIndex, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ShopItemData);
             outMSG.WriteVariableInt32(shopIndex);
             outMSG.WriteVariableInt32(index);
@@ -1304,12 +1304,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(shops[shopIndex].shopItem[index].ItemNum);
             outMSG.WriteVariableInt32(shops[shopIndex].shopItem[index].Cost);
 
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendItemData(NetIncomingMessage incMSG, int index)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ItemData);
             outMSG.WriteVariableInt32(index);
             outMSG.Write(items[index].Name);
@@ -1331,12 +1331,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(items[index].ProjectileNumber);
             outMSG.WriteVariableInt32(items[index].Price);
             outMSG.WriteVariableInt32(items[index].Rarity);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendItems(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Items);
             for (int i = 0; i < 50; i++)
             {
@@ -1360,12 +1360,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(items[i].Price);
                 outMSG.WriteVariableInt32(items[i].Rarity);
             }
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendNpcs(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);
             for (int i = 0; i < 10; i++)
             {
@@ -1383,12 +1383,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(npcs[i].Damage);
                 outMSG.Write(npcs[i].IsSpawned);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendPoolMapNpcs(NetIncomingMessage incMSG, int map)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PoolNpcs);
             for (int i = 0; i < 20; i++)
             {
@@ -1406,12 +1406,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Damage);
                 outMSG.Write(maps[map].r_MapNpc[i].IsSpawned);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendMapNpcs(NetIncomingMessage incMSG, int map)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapNpc);
             for (int i = 0; i < 10; i++)
             {
@@ -1429,12 +1429,12 @@ namespace Sabertooth
                 outMSG.WriteVariableInt32(maps[map].m_MapNpc[i].Damage);
                 outMSG.Write(maps[map].m_MapNpc[i].IsSpawned);
             }
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPoolNpcData(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PoolNpcData);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.Write(maps[map].r_MapNpc[npcNum].Name);
@@ -1451,24 +1451,24 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Damage);
             outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdatePoolNpcLoc(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PoolNpcDirecion);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].X);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Y);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Direction);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Step);
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendMapNpcData(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcData);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.Write(maps[map].m_MapNpc[npcNum].Name);
@@ -1485,12 +1485,12 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Damage);
             outMSG.Write(maps[map].m_MapNpc[npcNum].IsSpawned);
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdateNpcLoc(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcDirection);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].X);
@@ -1498,34 +1498,34 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Direction);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Step);            
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendNpcVitalData(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Health);
             outMSG.Write(maps[map].m_MapNpc[npcNum].IsSpawned);            
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendPoolNpcVitalData(NetConnection p_Conn, int map, int npcNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PoolNpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Health);
             outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);            
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendMapItems(NetIncomingMessage incMSG, int map)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapItems);
             for (int i = 0; i < 20; i++)
             {
@@ -1553,12 +1553,12 @@ namespace Sabertooth
                 outMSG.Write(maps[map].m_MapItem[i].IsSpawned);
             }            
 
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendMapItemData(NetConnection p_Conn, int map, int mapSlot)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapItemData);
             outMSG.WriteVariableInt32(mapSlot);
             outMSG.Write(maps[map].m_MapItem[mapSlot].Name);
@@ -1584,21 +1584,21 @@ namespace Sabertooth
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Rarity);
             outMSG.Write(maps[map].m_MapItem[mapSlot].IsSpawned);            
 
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendErrorMessage(string message, string caption, NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ErrorMessage);
             outMSG.Write(message);
             outMSG.Write(caption);            
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendMapData(NetIncomingMessage incMSG, int map)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
             outMSG.Write(maps[map].Name);
             outMSG.WriteVariableInt32(maps[map].Revision);
@@ -1648,14 +1648,14 @@ namespace Sabertooth
                 }
             }
             
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendClientDisconnect(NetIncomingMessage incMSG)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Shutdown);
-            Sabertooth.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.Unreliable);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.Unreliable);
         }
         #endregion
 

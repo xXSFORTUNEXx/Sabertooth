@@ -2,10 +2,11 @@
 using SFML.Graphics;
 using SFML.System;
 using System;
+using static SabertoothClient.Client;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Projectile : Drawable
+    public class Projectile : Drawable
     {
         public string Name { get; set; }
         public int X { get; set; }
@@ -51,54 +52,54 @@ namespace Client.Classes
             Speed = speed;
         }
 
-        public void CheckMovment(NetClient c_Client, RenderWindow c_Window, Map c_MoveMap, int slot)
+        public void CheckMovment(int slot)
         {
             if (Moved == true) { Moved = false; return; }
-            if (c_MoveMap.m_MapProj[slot] == null) { return; }
+            if (map.m_MapProj[slot] == null) { return; }
 
-            if (RangeCounter > Range) { Direction = (int)Directions.Down; Moved = false; SendClearProjectile(c_Client, c_MoveMap, slot); return; }
+            if (RangeCounter > Range) { Direction = (int)Directions.Down; Moved = false; SendClearProjectile(slot); return; }
 
-            switch (c_MoveMap.m_MapProj[slot].Direction)
+            switch (map.m_MapProj[slot].Direction)
             {
                 case (int)Directions.Down:
                     if (Y < 49)
                     {
-                        if (c_MoveMap.Ground[X, (Y + 1)].Type == (int)TileType.Blocked)
+                        if (map.Ground[X, (Y + 1)].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Down;
                             Moved = false;
-                            SendClearProjectile(c_Client, c_MoveMap, slot);
+                            SendClearProjectile( slot);
                             return;
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
+                            if (map.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y + 1))
+                                if (map.m_MapNpc[i].X == X && map.m_MapNpc[i].Y == (Y + 1))
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
-                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        SendClearProjectile(slot);
                                         return;
                                     }
                                     Direction = (int)Directions.Down;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
+                                    SendProjectileAttackNpc(slot, i, 0);
                                     return;
                                 }
                             }
                         }
                         for (int c = 0; c < 20; c++)
                         {
-                            if (c_MoveMap.r_MapNpc[c].IsSpawned)
+                            if (map.r_MapNpc[c].IsSpawned)
                             {
-                                if (c_MoveMap.r_MapNpc[c].X == X && c_MoveMap.r_MapNpc[c].Y == (Y + 1))
+                                if (map.r_MapNpc[c].X == X && map.r_MapNpc[c].Y == (Y + 1))
                                 {
                                     Direction = (int)Directions.Down;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, c, 1);
+                                    SendProjectileAttackNpc(slot, c, 1);
                                     return;
                                 }
                             }
@@ -112,7 +113,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                        SendClearProjectile(slot);
                         return;
                     }
                     break;
@@ -120,42 +121,42 @@ namespace Client.Classes
                 case (int)Directions.Left:
                     if (X > 1)
                     {
-                        if (c_MoveMap.Ground[(X - 1), Y].Type == (int)TileType.Blocked)
+                        if (map.Ground[(X - 1), Y].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Left;
                             Moved = false;
-                            SendClearProjectile(c_Client, c_MoveMap, slot);
+                            SendClearProjectile(slot);
                             return;
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
+                            if (map.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.m_MapNpc[i].X == (X - 1) && c_MoveMap.m_MapNpc[i].Y == Y)
+                                if (map.m_MapNpc[i].X == (X - 1) && map.m_MapNpc[i].Y == Y)
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
-                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        SendClearProjectile(slot);
                                         return;
                                     }
                                     Direction = (int)Directions.Left;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
+                                    SendProjectileAttackNpc(slot, i, 0);
                                     return;
                                 }
                             }
                         }
                         for (int c = 0; c < 20; c++)
                         {
-                            if (c_MoveMap.r_MapNpc[c].IsSpawned)
+                            if (map.r_MapNpc[c].IsSpawned)
                             {
-                                if (c_MoveMap.r_MapNpc[c].X == (X - 1) && c_MoveMap.r_MapNpc[c].Y == Y)
+                                if (map.r_MapNpc[c].X == (X - 1) && map.r_MapNpc[c].Y == Y)
                                 {
                                     Direction = (int)Directions.Left;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, c, 1);
+                                    SendProjectileAttackNpc(slot, c, 1);
                                     return;
                                 }
                             }
@@ -169,7 +170,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                        SendClearProjectile(slot);
                         return;
                     }
                     break;
@@ -177,42 +178,42 @@ namespace Client.Classes
                 case (int)Directions.Right:
                     if (X < 49)
                     {
-                        if (c_MoveMap.Ground[(X + 1), Y].Type == (int)TileType.Blocked)
+                        if (map.Ground[(X + 1), Y].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Right;
                             Moved = false;
-                            SendClearProjectile(c_Client, c_MoveMap, slot);
+                            SendClearProjectile(slot);
                             return;
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
+                            if (map.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.m_MapNpc[i].X == (X + 1) && c_MoveMap.m_MapNpc[i].Y == Y)
+                                if (map.m_MapNpc[i].X == (X + 1) && map.m_MapNpc[i].Y == Y)
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
-                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        SendClearProjectile(slot);
                                         return;
                                     }
                                     Direction = (int)Directions.Right;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
+                                    SendProjectileAttackNpc(slot, i, 0);
                                     return;
                                 }
                             }
                         }
                         for (int c = 0; c < 20; c++)
                         {
-                            if (c_MoveMap.r_MapNpc[c].IsSpawned)
+                            if (map.r_MapNpc[c].IsSpawned)
                             {
-                                if (c_MoveMap.r_MapNpc[c].X == (X + 1) && c_MoveMap.r_MapNpc[c].Y == Y)
+                                if (map.r_MapNpc[c].X == (X + 1) && map.r_MapNpc[c].Y == Y)
                                 {
                                     Direction = (int)Directions.Right;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, c, 1);
+                                    SendProjectileAttackNpc(slot, c, 1);
                                     return;
                                 }
                             }
@@ -226,7 +227,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                        SendClearProjectile(slot);
                         return;
                     }
                     break;
@@ -234,42 +235,42 @@ namespace Client.Classes
                 case (int)Directions.Up:
                     if (Y > 1)
                     {
-                        if (c_MoveMap.Ground[X, (Y - 1)].Type == (int)TileType.Blocked)
+                        if (map.Ground[X, (Y - 1)].Type == (int)TileType.Blocked)
                         {
                             Direction = (int)Directions.Up;
                             Moved = false;
-                            SendClearProjectile(c_Client, c_MoveMap, slot);
+                            SendClearProjectile(slot);
                             return;
                         }
                         for (int i = 0; i < 10; i++)
                         {
-                            if (c_MoveMap.m_MapNpc[i].IsSpawned)
+                            if (map.m_MapNpc[i].IsSpawned)
                             {
-                                if (c_MoveMap.m_MapNpc[i].X == X && c_MoveMap.m_MapNpc[i].Y == (Y - 1))
+                                if (map.m_MapNpc[i].X == X && map.m_MapNpc[i].Y == (Y - 1))
                                 {
-                                    if (c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || c_MoveMap.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         Direction = (int)Directions.Down;
                                         Moved = false;
-                                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                                        SendClearProjectile(slot);
                                         return;
                                     }
                                     Direction = (int)Directions.Up;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, i, 0);
+                                    SendProjectileAttackNpc(slot, i, 0);
                                     return;
                                 }
                             }
                         }
                         for (int c = 0; c < 20; c++)
                         {
-                            if (c_MoveMap.r_MapNpc[c].IsSpawned)
+                            if (map.r_MapNpc[c].IsSpawned)
                             {
-                                if (c_MoveMap.r_MapNpc[c].X == X && c_MoveMap.r_MapNpc[c].Y == (Y - 1))
+                                if (map.r_MapNpc[c].X == X && map.r_MapNpc[c].Y == (Y - 1))
                                 {                                    
                                     Direction = (int)Directions.Up;
                                     Moved = false;
-                                    SendProjectileAttackNpc(c_Client, c_MoveMap, slot, c, 1);
+                                    SendProjectileAttackNpc(slot, c, 1);
                                     return;
                                 }
                             }
@@ -282,7 +283,7 @@ namespace Client.Classes
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendClearProjectile(c_Client, c_MoveMap, slot);
+                        SendClearProjectile(slot);
                         return;
                     }
                     break;
@@ -293,26 +294,26 @@ namespace Client.Classes
             }
         }
 
-        void SendClearProjectile(NetClient c_Client, Map c_Map, int slot)
+        void SendClearProjectile(int slot)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(Owner);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);
-            c_Map.m_MapProj[slot] = null;
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);
+            map.m_MapProj[slot] = null;
         }
 
-        void SendProjectileAttackNpc(NetClient c_Client, Map c_Map, int slot, int npcNum, int spawntype)
+        void SendProjectileAttackNpc(int slot, int npcNum, int spawntype)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.AttackNpcProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(Owner);
             outMSG.WriteVariableInt32(spawntype);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
-            c_Map.m_MapProj[slot] = null;
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
+            map.m_MapProj[slot] = null;
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)

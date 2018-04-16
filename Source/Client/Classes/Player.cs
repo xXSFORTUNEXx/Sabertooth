@@ -5,10 +5,11 @@ using SFML.System;
 using Gwen.Control;
 using static System.Environment;
 using System;
+using static SabertoothClient.Client;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Player : Drawable
+    public class Player : Drawable
     {
         #region Main Classes
         public NetConnection Connection;
@@ -235,7 +236,7 @@ namespace Client.Classes
         }
 
         #region Controller
-        public void CheckControllerMovement(NetClient c_Client, RenderWindow c_Window, Map c_Map, GUI c_GUI, int index)
+        public void CheckControllerMovement()
         {
             /*
             * Button ID's Xbox Controller
@@ -258,25 +259,25 @@ namespace Client.Classes
             */
             if (!Joystick.IsConnected(0)) { return; }
             if (Moved == true) { Moved = false; return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (inShop|| inChat || inBank) { return; }       
 
             float deadZone = 35;
             float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
             float y = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.Y), deadZone);
 
-            c_GUI.d_Controller.Text = "X: " + x + " / Y: " + y;
+            gui.d_Controller.Text = "X: " + x + " / Y: " + y;
 
             if (x > deadZone)
             {
                 if (X < 49 - offsetX)
                 {
-                    if (c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || c_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     X += 1;
@@ -289,11 +290,11 @@ namespace Client.Classes
             {
                 if (X > 1 - offsetX)
                 {
-                    if (c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || c_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     X -= 1;
@@ -306,11 +307,11 @@ namespace Client.Classes
             {
                 if (Y < 49 - offsetY)
                 {
-                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || c_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     Y += 1;
@@ -323,11 +324,11 @@ namespace Client.Classes
             {
                 if (Y > 1 - offsetY)
                 {
-                    if (c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || c_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     Y -= 1;
@@ -341,53 +342,53 @@ namespace Client.Classes
                 Step += 1;
                 if (Step == 4) { Step = 0; }
                 Moved = false;
-                SendMovementData(c_Client, index);
+                SendMovementData();
             }
         }
 
-        public void CheckControllerChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckControllerChangeDirection()
         {
             if (!Joystick.IsConnected(0)) { return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
 
             float deadZone = 35;
             float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
             float r = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.R), deadZone);
 
-            c_GUI.d_ConDir.Text = "Direction: " + AimDirection;
+            gui.d_ConDir.Text = "Direction: " + AimDirection;
 
             if (u > deadZone)
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
 
             if (u < -deadZone)
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
 
             if (r > deadZone)
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
 
             if (r < -deadZone)
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
         }
 
-        public void CheckControllerAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckControllerAttack()
         {
             if (!Joystick.IsConnected(0)) { return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
@@ -401,7 +402,7 @@ namespace Client.Classes
                 }
                 else
                 {
-                    c_GUI.AddText("You need a weapon equiped to attack!");
+                    gui.AddText("You need a weapon equiped to attack!");
                     equipTick = TickCount;
                     return;
                 }
@@ -425,14 +426,14 @@ namespace Client.Classes
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                SendCreateBullet(c_Client, index);
-                RemoveBulletFromClip(c_Client, index);
+                SendCreateBullet();
+                RemoveBulletFromClip();
                 Attacking = false;
                 attackTick = TickCount;
             }
         }
 
-        public void CheckControllerReload(NetClient c_Client, int index)
+        public void CheckControllerReload()
         {
             if (inShop || inChat || inBank) { return; }
 
@@ -442,33 +443,33 @@ namespace Client.Classes
                 if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
                 Reload();
                 reloadTick = TickCount;
-                SendUpdateClip(c_Client, index);
-                SendUpdateAmmo(c_Client, index);
+                SendUpdateClip();
+                SendUpdateAmmo();
             }
         }
 
-        public void CheckControllerItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckControllerItemPickUp()
         {
             if (inShop || inChat || inBank) { return; }
 
             if (!Joystick.IsConnected(0)) { return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (inShop || inChat) { return; }
 
             if (Joystick.IsButtonPressed(0, 0))
             {
-                SendPickupItem(c_Client, index);
+                SendPickupItem();
                 pickupTick = TickCount;
             }
         }
 
-        public void CheckControllerPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
+        public void CheckControllerPlayerInteraction()
         {
             if (!Joystick.IsConnected(0)) { return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - interactionTick < 1000) { return; }
             if (inShop || inChat || inBank) { return; }
@@ -482,21 +483,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y + 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
                             }
                         }
                         break;
@@ -506,21 +507,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y - 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
                             }
                         }
                         break;
@@ -530,21 +531,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X + 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
                             }
                         }
                         break;
@@ -554,21 +555,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X - 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
                             }
                         }
                         break;
@@ -588,22 +589,22 @@ namespace Client.Classes
         }
 
         #region Keyboard
-        public void CheckMovement(NetClient c_Client, int index, RenderWindow c_Window, Map m_Map, GUI c_GUI)
+        public void CheckMovement()
         {
             if (Moved == true) { Moved = false; return; }
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
                 if (Y > 1 - offsetY)
                 {
-                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     Y -= 1;
@@ -616,11 +617,11 @@ namespace Client.Classes
             {
                 if (Y < 49 - offsetY)  
                 {
-                    if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false; 
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return; 
                     }
                     Y += 1;
@@ -633,11 +634,11 @@ namespace Client.Classes
             {
                 if (X > 1 - offsetX)
                 {
-                    if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false; 
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     X -= 1;
@@ -650,11 +651,11 @@ namespace Client.Classes
             {
                 if (X < 49 - offsetX) 
                 {
-                    if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest) 
+                    if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest) 
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
-                        SendUpdateDirection(c_Client, index);
+                        SendUpdateDirection();
                         return;
                     }
                     X += 1;
@@ -668,42 +669,42 @@ namespace Client.Classes
                 Step += 1;
                 if (Step == 4) { Step = 0; }
                 Moved = false;
-                SendMovementData(c_Client, index);
+                SendMovementData();
             }
         }
         
-        public void CheckChangeDirection(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckChangeDirection()
         {
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.I))
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.K))
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.J))
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.L))
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection(c_Client, index);
+                SendUpdateDirection();
             }
         }
 
-        public void CheckAttack(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckAttack()
         {
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
             if (TickCount - equipTick < 5000) { return; }
@@ -717,7 +718,7 @@ namespace Client.Classes
                 }
                 else
                 {
-                    c_GUI.AddText("You need a weapon equiped to attack!");
+                    gui.AddText("You need a weapon equiped to attack!");
                     equipTick = TickCount;
                     return;
                 }
@@ -741,13 +742,13 @@ namespace Client.Classes
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                RemoveBulletFromClip(c_Client, index);
+                RemoveBulletFromClip();
                 Attacking = false;
                 attackTick = TickCount;
             }
         }
 
-        public void CheckReload(NetClient c_Client, int index)
+        public void CheckReload()
         {
             if (inShop || inChat || inBank) { return; }
 
@@ -756,29 +757,29 @@ namespace Client.Classes
                 if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
                 Reload();
                 reloadTick = TickCount;
-                SendUpdateClip(c_Client, index);
-                SendUpdateAmmo(c_Client, index);
+                SendUpdateClip();
+                SendUpdateAmmo();
             }
         }
 
-        public void CheckItemPickUp(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, int index)
+        public void CheckItemPickUp()
         {
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
-                SendPickupItem(c_Client, index);
+                SendPickupItem();
                 pickupTick = TickCount;
             }
         }
 
-        public void CheckPlayerInteraction(NetClient c_Client, GUI c_GUI, RenderWindow c_Window, Map m_Map, int index)
+        public void CheckPlayerInteraction()
         {
-            if (c_GUI.inputChat.HasFocus == true) { return; }
-            if (!c_Window.HasFocus()) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
             if (TickCount - interactionTick < 1000) { return; }
             if (inShop || inChat || inBank) { return; }
@@ -792,21 +793,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].Y + 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y + 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
                             }
                         }
                         break;
@@ -816,21 +817,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].Y - 1 == (Y + offsetY) && m_Map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y - 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
                             }
                         }
                         break;
@@ -840,21 +841,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].X + 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X + 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
                             }
                         }
                         break;
@@ -864,21 +865,21 @@ namespace Client.Classes
                         {
                             for (int i = 0; i < 10; i++)
                             {
-                                if (m_Map.m_MapNpc[i].IsSpawned)
+                                if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (m_Map.m_MapNpc[i].X - 1 == (X + offsetX) && m_Map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X - 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
-                                            SendInteraction(c_Client, i, 0, index);
+                                            SendInteraction(i, 0);
                                         }
                                     }
                                 }
                             }
 
-                            if (m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(c_Client, m_Map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1, index);
+                                SendInteraction(map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
                             }
                         }
                         break;
@@ -888,20 +889,20 @@ namespace Client.Classes
         }
         #endregion
 
-        public void RemoveBulletFromClip(NetClient c_Client, int index)
+        public void RemoveBulletFromClip()
         {
             if (mainWeapon.Clip > 0)
             {
-                SendCreateBullet(c_Client, index);
+                SendCreateBullet();
                 mainWeapon.Clip -= 1;
-                SendUpdateClip(c_Client, index);
+                SendUpdateClip();
             }
             else
             {
                 Reload();
                 reloadTick = TickCount;
-                SendUpdateClip(c_Client, index);
-                SendUpdateAmmo(c_Client, index);
+                SendUpdateClip();
+                SendUpdateAmmo();
             }
         }
 
@@ -1003,100 +1004,100 @@ namespace Client.Classes
             }            
         }
 
-        public void SendUpdateClip(NetClient c_Client, int index)
+        public void SendUpdateClip()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateClip);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(mainWeapon.Clip);
             outMSG.WriteVariableInt32(offWeapon.Clip);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendUpdateAmmo(NetClient c_Client, int index)
+        void SendUpdateAmmo()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateAmmo);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(PistolAmmo);
             outMSG.WriteVariableInt32(AssaultAmmo);
             outMSG.WriteVariableInt32(RocketAmmo);
             outMSG.WriteVariableInt32(GrenadeAmmo);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendCreateBullet(NetClient c_Client, int index)
+        void SendCreateBullet()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage(2);
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage(2);
             outMSG.Write((byte)PacketTypes.RangedAttack);
-            outMSG.WriteVariableInt32(index);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendMovementData(NetClient c_Client, int index)
+        void SendMovementData()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.MoveData);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(X);
             outMSG.WriteVariableInt32(Y);
             outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
             outMSG.WriteVariableInt32(Step);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendUpdateDirection(NetClient c_Client, int index)
+        void SendUpdateDirection()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateDirection);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(Direction);
             outMSG.WriteVariableInt32(AimDirection);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendPickupItem(NetClient c_Client, int index)
+        void SendPickupItem()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.ItemPickup);
-            outMSG.WriteVariableInt32(index);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendInteraction(NetClient c_Client, int index, int interactiontype, int playerindex)
+        void SendInteraction(int interactiontype, int playerindex)
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.Interaction);
             outMSG.WriteVariableInt32(interactiontype);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(Map);
             outMSG.WriteVariableInt32(playerindex);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendUpdatePlayerTime(NetClient c_Client, int index)
+        public void SendUpdatePlayerTime()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayTime);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(PlayDays);
             outMSG.WriteVariableInt32(PlayHours);
             outMSG.WriteVariableInt32(PlayMinutes);
             outMSG.WriteVariableInt32(PlaySeconds);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendUpdateLifeTime(NetClient c_Client, int index)
+        public void SendUpdateLifeTime()
         {
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.LifeTime);
-            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(LifeDay);
             outMSG.WriteVariableInt32(LifeHour);
             outMSG.WriteVariableInt32(LifeMinute);
             outMSG.WriteVariableInt32(LifeSecond);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void UpdatePlayerTime()

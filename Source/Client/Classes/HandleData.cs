@@ -4,233 +4,227 @@ using Lidgren.Network;
 using System;
 using static System.Convert;
 using static System.Environment;
+using static SabertoothClient.Client;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class HandleData
+    public static class HandleData
     {
-        public string s_IPAddress;
-        public string s_Port;
-        public int c_Index;
-        public string c_Version = "1.0";
+        public static int myIndex;
 
-        public void DataMessage(NetClient c_Client, Canvas c_Canvas, GUI c_GUI, Player[] c_Player, Map c_Map, 
-            ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Projectile[] c_Proj, Shop[] c_Shop, Chat[] c_Chat, Chest[] c_Chest, WorldTime g_GameTime)
+        public static void HandleDataMessage()
         {
             NetIncomingMessage incMSG;
-            s_IPAddress = c_Config.ipAddress;
-            s_Port = c_Config.port;
 
-            if ((incMSG = c_Client.ReadMessage()) != null)
+            if ((incMSG = SabertoothClient.netClient.ReadMessage()) != null)
             {
                 switch (incMSG.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
-                        HandleDiscoveryResponse(incMSG, c_Client);
+                        HandleDiscoveryResponse(incMSG);
                         break;
 
                     case NetIncomingMessageType.Data:
                         switch (incMSG.ReadByte())
                         {
                             case (byte)PacketTypes.Connection:
-                                HandleConnectionData(incMSG, c_Client);
+                                HandleConnectionData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ErrorMessage:
-                                HandleErrorMessage(incMSG, c_Client, c_Canvas);
+                                HandleErrorMessage(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Login:
-                                HandleLoginData(incMSG, c_Client, c_Canvas, c_GUI);
+                                HandleLoginData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerData:
-                                c_Index = incMSG.ReadInt32();
-                                c_GUI.g_Index = c_Index;
-                                HandlePlayerData(incMSG, c_Client, c_Player, c_Index);
+                                myIndex = incMSG.ReadInt32();
+                                HandlePlayerData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ChatMessage:
-                                HandleChatMessage(incMSG, c_GUI);
+                                HandleChatMessage(incMSG);
                                 break;
 
                             case (byte)PacketTypes.MapData:
-                                HandleMapData(c_Client, incMSG, c_Map, c_Player);
+                                HandleMapData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Players:
-                                HandlePlayers(c_Client, incMSG, c_Player);
+                                HandlePlayers(incMSG);
                                 break;
 
                             case (byte)PacketTypes.UpdateMoveData:
-                                HandleUpdateMoveData(incMSG, c_Player, c_Index);
+                                HandleUpdateMoveData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.DirData:
-                                HandleUpdateDirectionData(incMSG, c_Player, c_Index);
+                                HandleUpdateDirectionData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Npcs:
-                                HandleNpcs(incMSG, c_Npc);
+                                HandleNpcs(incMSG);
                                 break;
 
                             case (byte)PacketTypes.MapNpc:
-                                HandleMapNpcs(incMSG, c_Map);
+                                HandleMapNpcs(incMSG);
                                 break;
 
                             case (byte)PacketTypes.NpcData:
-                                if (c_Map.Name != null)
+                                if (map.Name != null)
                                 {
-                                    HandleNpcData(incMSG, c_Map);
+                                    HandleNpcData(incMSG);
                                 }
                                 break;
 
                             case (byte)PacketTypes.HealthData:
-                                HandleHealthData(incMSG, c_Player);
+                                HandleHealthData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.VitalLoss:
-                                HandleVitalData(incMSG, c_Player);
+                                HandleVitalData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ItemData:
-                                HandleItemData(incMSG, c_Item);
+                                HandleItemData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Items:
-                                HandleItems(incMSG, c_Item);
+                                HandleItems(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Shutdown:
-                                HandleServerShutdown(c_Client, c_Canvas);
+                                HandleServerShutdown();
                                 break;
 
                             case (byte)PacketTypes.ProjData:
-                                HandleProjData(incMSG, c_Proj);
+                                HandleProjData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Projectiles:
-                                HandleProjectiles(incMSG, c_Proj);
+                                HandleProjectiles(incMSG);
                                 break;
 
                             case (byte)PacketTypes.UpdateAmmo:
-                                HandleUpdateAmmo(incMSG, c_Player);
+                                HandleUpdateAmmo(incMSG);
                                 break;
 
                             case (byte)PacketTypes.CreateProj:
-                                HandleCreateProjectile(incMSG, c_Player, c_Map, c_Proj);
+                                HandleCreateProjectile(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ClearProj:
-                                HandleClearProjectile(incMSG, c_Player, c_Map);
+                                HandleClearProjectile(incMSG);
                                 break;
 
                             case (byte)PacketTypes.UpdateWeapons:
-                                HandleWeaponsUpdate(incMSG, c_Client, c_Player, c_Index);
+                                HandleWeaponsUpdate(incMSG);
                                 break;
 
                             case (byte)PacketTypes.UpdatePlayerStats:
-                                HandleUpdatePlayerStats(incMSG, c_Client, c_Player, c_Index);
+                                HandleUpdatePlayerStats(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PoolNpcs:
-                                HandlePoolNpcs(incMSG, c_Map);
+                                HandlePoolNpcs(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PoolNpcData:
-                                HandlePoolNpcData(incMSG, c_Map);
+                                HandlePoolNpcData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerInv:
-                                HandlePlayerInv(incMSG, c_Player, c_Index);
+                                HandlePlayerInv(incMSG);
                                 break;
 
                             case (byte)PacketTypes.MapItems:
-                                HandleMapItems(incMSG, c_Map, c_GUI, c_Canvas);
+                                HandleMapItems(incMSG);
                                 break;
 
                             case (byte)PacketTypes.MapItemData:
-                                 HandleMapItemData(incMSG, c_Map);
+                                 HandleMapItemData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerEquip:
-                                HandlePlayerEquipment(incMSG, c_Player, c_Index);
+                                HandlePlayerEquipment(incMSG);
                                 break;
 
                             case (byte)PacketTypes.NpcDirection:
-                                HandleNpcDirection(incMSG, c_Map);
+                                HandleNpcDirection(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PoolNpcDirecion:
-                                HandleNpcPoolDirection(incMSG, c_Map);
+                                HandleNpcPoolDirection(incMSG);
                                 break;
 
                             case (byte)PacketTypes.NpcVitals:
-                                HandleNpcVitals(incMSG, c_Map);
+                                HandleNpcVitals(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PoolNpcVitals:
-                                HandlePoolNpcVitals(incMSG, c_Map);
+                                HandlePoolNpcVitals(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ShopData:
-                                HandleShops(incMSG, c_Shop);
+                                HandleShops(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ShopItemsData:
-                                HandleShopItems(incMSG, c_Shop);
+                                HandleShopItems(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ShopItemData:
-                                HandleShopItemData(incMSG, c_Shop);
+                                HandleShopItemData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.OpenShop:
-                                HandleOpenShop(incMSG, c_Player, c_GUI, c_Shop, c_Canvas);
+                                HandleOpenShop(incMSG);
                                 break;
 
                             case (byte)PacketTypes.SendChats:
-                                HandleChats(incMSG, c_Chat);
+                                HandleChats(incMSG);
                                 break;
 
                             case (byte)PacketTypes.SendChatData:
-                                HandleChatData(incMSG, c_Chat);
+                                HandleChatData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.OpenChat:
-                                HandleOpenChat(incMSG, c_GUI, c_Player, c_Chat, c_Canvas);
+                                HandleOpenChat(incMSG);
                                 break;
 
                             case (byte)PacketTypes.NextChat:
-                                HandleNextChat(incMSG, c_GUI, c_Player, c_Chat);
+                                HandleNextChat(incMSG);
                                 break;
 
                             case (byte)PacketTypes.CloseChat:
-                                HandleCloseChat(incMSG, c_GUI, c_Player);
+                                HandleCloseChat(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerBank:
-                                HandlePlayerBank(incMSG, c_Player, c_Index);
+                                HandlePlayerBank(incMSG);
                                 break;
 
                             case (byte)PacketTypes.OpenBank:
-                                HandleOpenBank(incMSG, c_Player, c_GUI, c_Canvas);
+                                HandleOpenBank(incMSG);
                                 break;
 
                             case (byte)PacketTypes.SendChests:
-                                HandleChests(incMSG, c_Chest);
+                                HandleChests(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ChestData:
-                                HandleSendChest(incMSG, c_Chest);
+                                HandleSendChest(incMSG);
                                 break;
 
                             case (byte)PacketTypes.OpenChest:
-                                HandleOpenChest(incMSG, c_GUI, c_Player, c_Chest, c_Canvas);
+                                HandleOpenChest(incMSG);
                                 break;
 
                             case (byte)PacketTypes.DateandTime:
-                                HandleDateAndTime(incMSG, g_GameTime);
+                                HandleDateAndTime(incMSG);
                                 break;
                         }
                         break;
@@ -239,11 +233,11 @@ namespace Client.Classes
                 Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString());
                 #endif
         }
-            c_Client.Recycle(incMSG);
+            SabertoothClient.netClient.Recycle(incMSG);
         }
 
         #region Handle Incoming Data
-        void HandleDateAndTime(NetIncomingMessage incMSG, WorldTime g_GameTime)
+        static void HandleDateAndTime(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             int year = incMSG.ReadVariableInt32();
@@ -253,702 +247,702 @@ namespace Client.Classes
             int minute = incMSG.ReadVariableInt32();
             int second = incMSG.ReadVariableInt32();
 
-            g_GameTime.g_Year = year;
-            g_GameTime.g_Month = month;
-            g_GameTime.g_DayOfWeek = day;
-            g_GameTime.g_Hour = hour;
-            g_GameTime.g_Minute = minute;
-            g_GameTime.g_Second = second;
-            g_GameTime.updateTime = true;
-        } 
+            worldTime.g_Year = year;
+            worldTime.g_Month = month;
+            worldTime.g_DayOfWeek = day;
+            worldTime.g_Hour = hour;
+            worldTime.g_Minute = minute;
+            worldTime.g_Second = second;
+            worldTime.updateTime = true;
+        }
 
-        void HandleOpenChest(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chest[] c_Chest, Canvas c_Canvas)
+        static void HandleOpenChest(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            if (!c_Player[c_Index].inChest)
+            if (!players[myIndex].inChest)
             {
-                c_Player[c_Index].chestNum = index;
-                c_Player[c_Index].inChest = true;
-                c_GUI.CreateChestWindow(c_Canvas);
-                c_GUI.menuWindow.Show();
-                c_GUI.packTab.Press(c_GUI.menuTabs);
-                c_GUI.charTab.Hide();
-                c_GUI.equipTab.Hide();
-                c_GUI.skillsTab.Hide();
-                c_GUI.missionTab.Hide();
-                c_GUI.optionsTab.Hide();
+                players[myIndex].chestNum = index;
+                players[myIndex].inChest = true;
+                gui.CreateChestWindow(canvas);
+                gui.menuWindow.Show();
+                gui.packTab.Press(gui.menuTabs);
+                gui.charTab.Hide();
+                gui.equipTab.Hide();
+                gui.skillsTab.Hide();
+                gui.missionTab.Hide();
+                gui.optionsTab.Hide();
             }
         }
 
-        void HandleServerShutdown(NetClient c_Client, Canvas c_Canvas)
+        static void HandleServerShutdown()
         {
-            c_Canvas.Dispose();
-            c_Client.Shutdown("Disconnect");
+            canvas.Dispose();
+            SabertoothClient.netClient.Shutdown("Disconnect");
             Exit(0);
         }
 
-        void HandleCloseChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player)
+        static void HandleCloseChat(NetIncomingMessage incMSG)
         {
-            c_GUI.npcChatWindow.Close();
-            c_Player[c_Index].inChat = false;
-            c_Player[c_Index].chatNum = 0;
+            gui.npcChatWindow.Close();
+            players[myIndex].inChat = false;
+            players[myIndex].chatNum = 0;
         }
 
-        void HandleNextChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chat[] c_Chat)
+        static void HandleNextChat(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Player[c_Index].chatNum = index;
-            c_Player[c_Index].inChat = true;
-            c_GUI.UpdateNpcChatWindow(c_Chat[index - 1]);
+            players[myIndex].chatNum = index;
+            players[myIndex].inChat = true;
+            gui.UpdateNpcChatWindow(index - 1);
         }
 
-        void HandleOpenChat(NetIncomingMessage incMSG, GUI c_GUI, Player[] c_Player, Chat[] c_Chat, Canvas c_Canvas)
+        static void HandleOpenChat(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            if (!c_Player[c_Index].inChat)
+            if (!players[myIndex].inChat)
             {
-                c_Player[c_Index].chatNum = index;
-                c_Player[c_Index].inChat = true;
-                c_GUI.CreatNpcChatWindow(c_Canvas, c_Chat[index - 1]);
+                players[myIndex].chatNum = index;
+                players[myIndex].inChat = true;
+                gui.CreatNpcChatWindow(canvas, index - 1);
             }          
         }
 
-        void HandleChests(NetIncomingMessage incMSG, Chest[] c_Chest)
+        static void HandleChests(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < 10; i++)
             {
-                c_Chest[i].Name = incMSG.ReadString();
-                c_Chest[i].Money = incMSG.ReadVariableInt32();
-                c_Chest[i].Experience = incMSG.ReadVariableInt32();
-                c_Chest[i].RequiredLevel = incMSG.ReadVariableInt32();
-                c_Chest[i].TrapLevel = incMSG.ReadVariableInt32();
-                c_Chest[i].Key = incMSG.ReadVariableInt32();
-                c_Chest[i].Damage = incMSG.ReadVariableInt32();
-                c_Chest[i].NpcSpawn = incMSG.ReadVariableInt32();
-                c_Chest[i].SpawnAmount = incMSG.ReadVariableInt32();
+                chests[i].Name = incMSG.ReadString();
+                chests[i].Money = incMSG.ReadVariableInt32();
+                chests[i].Experience = incMSG.ReadVariableInt32();
+                chests[i].RequiredLevel = incMSG.ReadVariableInt32();
+                chests[i].TrapLevel = incMSG.ReadVariableInt32();
+                chests[i].Key = incMSG.ReadVariableInt32();
+                chests[i].Damage = incMSG.ReadVariableInt32();
+                chests[i].NpcSpawn = incMSG.ReadVariableInt32();
+                chests[i].SpawnAmount = incMSG.ReadVariableInt32();
 
                 for (int n = 0; n < 10; n++)
                 {
-                    c_Chest[i].ChestItem[n].Name = incMSG.ReadString();
-                    c_Chest[i].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
-                    c_Chest[i].ChestItem[n].Value = incMSG.ReadVariableInt32();
+                    chests[i].ChestItem[n].Name = incMSG.ReadString();
+                    chests[i].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
+                    chests[i].ChestItem[n].Value = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandleSendChest(NetIncomingMessage incMSG, Chest[] c_Chest)
+        static void HandleSendChest(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Chest[index].Name = incMSG.ReadString();
-            c_Chest[index].Money = incMSG.ReadVariableInt32();
-            c_Chest[index].Experience = incMSG.ReadVariableInt32();
-            c_Chest[index].RequiredLevel = incMSG.ReadVariableInt32();
-            c_Chest[index].TrapLevel = incMSG.ReadVariableInt32();
-            c_Chest[index].Key = incMSG.ReadVariableInt32();
-            c_Chest[index].Damage = incMSG.ReadVariableInt32();
-            c_Chest[index].NpcSpawn = incMSG.ReadVariableInt32();
-            c_Chest[index].SpawnAmount = incMSG.ReadVariableInt32();
+            chests[index].Name = incMSG.ReadString();
+            chests[index].Money = incMSG.ReadVariableInt32();
+            chests[index].Experience = incMSG.ReadVariableInt32();
+            chests[index].RequiredLevel = incMSG.ReadVariableInt32();
+            chests[index].TrapLevel = incMSG.ReadVariableInt32();
+            chests[index].Key = incMSG.ReadVariableInt32();
+            chests[index].Damage = incMSG.ReadVariableInt32();
+            chests[index].NpcSpawn = incMSG.ReadVariableInt32();
+            chests[index].SpawnAmount = incMSG.ReadVariableInt32();
 
             for (int n = 0; n < 10; n++)
             {
-                c_Chest[index].ChestItem[n].Name = incMSG.ReadString();
-                c_Chest[index].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
-                c_Chest[index].ChestItem[n].Value = incMSG.ReadVariableInt32();
+                chests[index].ChestItem[n].Name = incMSG.ReadString();
+                chests[index].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
+                chests[index].ChestItem[n].Value = incMSG.ReadVariableInt32();
             }
         }
 
-        void HandleChats(NetIncomingMessage incMSG, Chat[] c_Chat)
+        static void HandleChats(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < 15; i++)
             {
-                c_Chat[i].Name = incMSG.ReadString();
-                c_Chat[i].MainMessage = incMSG.ReadString();
-                c_Chat[i].Option[0] = incMSG.ReadString();
-                c_Chat[i].Option[1] = incMSG.ReadString();
-                c_Chat[i].Option[2] = incMSG.ReadString();
-                c_Chat[i].Option[3] = incMSG.ReadString();
-                c_Chat[i].NextChat[0] = incMSG.ReadVariableInt32();
-                c_Chat[i].NextChat[1] = incMSG.ReadVariableInt32();
-                c_Chat[i].NextChat[2] = incMSG.ReadVariableInt32();
-                c_Chat[i].NextChat[3] = incMSG.ReadVariableInt32();
-                c_Chat[i].ShopNum = incMSG.ReadVariableInt32();
-                c_Chat[i].MissionNum = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemNum[0] = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemNum[1] = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemNum[2] = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemVal[0] = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemVal[1] = incMSG.ReadVariableInt32();
-                c_Chat[i].ItemVal[2] = incMSG.ReadVariableInt32();
-                c_Chat[i].Money = incMSG.ReadVariableInt32();
-                c_Chat[i].Type = incMSG.ReadVariableInt32();
+                chats[i].Name = incMSG.ReadString();
+                chats[i].MainMessage = incMSG.ReadString();
+                chats[i].Option[0] = incMSG.ReadString();
+                chats[i].Option[1] = incMSG.ReadString();
+                chats[i].Option[2] = incMSG.ReadString();
+                chats[i].Option[3] = incMSG.ReadString();
+                chats[i].NextChat[0] = incMSG.ReadVariableInt32();
+                chats[i].NextChat[1] = incMSG.ReadVariableInt32();
+                chats[i].NextChat[2] = incMSG.ReadVariableInt32();
+                chats[i].NextChat[3] = incMSG.ReadVariableInt32();
+                chats[i].ShopNum = incMSG.ReadVariableInt32();
+                chats[i].MissionNum = incMSG.ReadVariableInt32();
+                chats[i].ItemNum[0] = incMSG.ReadVariableInt32();
+                chats[i].ItemNum[1] = incMSG.ReadVariableInt32();
+                chats[i].ItemNum[2] = incMSG.ReadVariableInt32();
+                chats[i].ItemVal[0] = incMSG.ReadVariableInt32();
+                chats[i].ItemVal[1] = incMSG.ReadVariableInt32();
+                chats[i].ItemVal[2] = incMSG.ReadVariableInt32();
+                chats[i].Money = incMSG.ReadVariableInt32();
+                chats[i].Type = incMSG.ReadVariableInt32();
             }
         }
 
-        void HandleChatData(NetIncomingMessage incMSG, Chat[] c_Chat)
+        static void HandleChatData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Chat[index].Name = incMSG.ReadString();
-            c_Chat[index].MainMessage = incMSG.ReadString();
-            c_Chat[index].Option[0] = incMSG.ReadString();
-            c_Chat[index].Option[1] = incMSG.ReadString();
-            c_Chat[index].Option[2] = incMSG.ReadString();
-            c_Chat[index].Option[3] = incMSG.ReadString();
-            c_Chat[index].NextChat[0] = incMSG.ReadVariableInt32();
-            c_Chat[index].NextChat[1] = incMSG.ReadVariableInt32();
-            c_Chat[index].NextChat[2] = incMSG.ReadVariableInt32();
-            c_Chat[index].NextChat[3] = incMSG.ReadVariableInt32();
-            c_Chat[index].ShopNum = incMSG.ReadVariableInt32();
-            c_Chat[index].MissionNum = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemNum[0] = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemNum[1] = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemNum[2] = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemVal[0] = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemVal[1] = incMSG.ReadVariableInt32();
-            c_Chat[index].ItemVal[2] = incMSG.ReadVariableInt32();
-            c_Chat[index].Money = incMSG.ReadVariableInt32();
-            c_Chat[index].Type = incMSG.ReadVariableInt32();
+            chats[index].Name = incMSG.ReadString();
+            chats[index].MainMessage = incMSG.ReadString();
+            chats[index].Option[0] = incMSG.ReadString();
+            chats[index].Option[1] = incMSG.ReadString();
+            chats[index].Option[2] = incMSG.ReadString();
+            chats[index].Option[3] = incMSG.ReadString();
+            chats[index].NextChat[0] = incMSG.ReadVariableInt32();
+            chats[index].NextChat[1] = incMSG.ReadVariableInt32();
+            chats[index].NextChat[2] = incMSG.ReadVariableInt32();
+            chats[index].NextChat[3] = incMSG.ReadVariableInt32();
+            chats[index].ShopNum = incMSG.ReadVariableInt32();
+            chats[index].MissionNum = incMSG.ReadVariableInt32();
+            chats[index].ItemNum[0] = incMSG.ReadVariableInt32();
+            chats[index].ItemNum[1] = incMSG.ReadVariableInt32();
+            chats[index].ItemNum[2] = incMSG.ReadVariableInt32();
+            chats[index].ItemVal[0] = incMSG.ReadVariableInt32();
+            chats[index].ItemVal[1] = incMSG.ReadVariableInt32();
+            chats[index].ItemVal[2] = incMSG.ReadVariableInt32();
+            chats[index].Money = incMSG.ReadVariableInt32();
+            chats[index].Type = incMSG.ReadVariableInt32();
         }
 
-        void HandleOpenShop(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Shop[] c_Shop, Canvas c_Canvas)
+        static void HandleOpenShop(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            if (!c_Player[c_Index].inShop)
+            if (!players[myIndex].inShop)
             {
-                c_Player[c_Index].shopNum = index;
-                c_Player[c_Index].inShop = true;
-                c_GUI.CreateShopWindow(c_Canvas);
-                c_GUI.menuWindow.Show();
-                c_GUI.packTab.Press(c_GUI.menuTabs);
-                c_GUI.charTab.Hide();
-                c_GUI.equipTab.Hide();
-                c_GUI.skillsTab.Hide();
-                c_GUI.missionTab.Hide();
-                c_GUI.optionsTab.Hide();
+                players[myIndex].shopNum = index;
+                players[myIndex].inShop = true;
+                gui.CreateShopWindow(canvas);
+                gui.menuWindow.Show();
+                gui.packTab.Press(gui.menuTabs);
+                gui.charTab.Hide();
+                gui.equipTab.Hide();
+                gui.skillsTab.Hide();
+                gui.missionTab.Hide();
+                gui.optionsTab.Hide();
             }
         }
 
-        void HandleOpenBank(NetIncomingMessage incMSG, Player[] c_Player, GUI c_GUI, Canvas c_Canvas)
+        static void HandleOpenBank(NetIncomingMessage incMSG)
         {
-            if (!c_Player[c_Index].inBank)
+            if (!players[myIndex].inBank)
             {
-                c_Player[c_Index].inBank = true;
-                c_GUI.CreateBankWindow(c_Canvas);
-                c_GUI.menuWindow.Show();
-                c_GUI.packTab.Press(c_GUI.menuTabs);
-                c_GUI.charTab.Hide();
-                c_GUI.equipTab.Hide();
-                c_GUI.skillsTab.Hide();
-                c_GUI.missionTab.Hide();
-                c_GUI.optionsTab.Hide();
+                players[myIndex].inBank = true;
+                gui.CreateBankWindow(canvas);
+                gui.menuWindow.Show();
+                gui.packTab.Press(gui.menuTabs);
+                gui.charTab.Hide();
+                gui.equipTab.Hide();
+                gui.skillsTab.Hide();
+                gui.missionTab.Hide();
+                gui.optionsTab.Hide();
             }
         }
 
-        void HandleShops(NetIncomingMessage incMSG, Shop[] c_Shop)
+        static void HandleShops(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < 10; i++)
             {
-                c_Shop[i].Name = incMSG.ReadString();
+                shops[i].Name = incMSG.ReadString();
                 for (int n = 0; n < 25; n++)
                 {
-                    c_Shop[i].shopItem[n].Name = incMSG.ReadString();
-                    c_Shop[i].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
-                    c_Shop[i].shopItem[n].Cost = incMSG.ReadVariableInt32();
+                    shops[i].shopItem[n].Name = incMSG.ReadString();
+                    shops[i].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
+                    shops[i].shopItem[n].Cost = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandleShopItems(NetIncomingMessage incMSG, Shop[] c_Shop)
+        static void HandleShopItems(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
             for (int n = 0; n < 25; n++)
             {
-                c_Shop[index].shopItem[n].Name = incMSG.ReadString();
-                c_Shop[index].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
-                c_Shop[index].shopItem[n].Cost = incMSG.ReadVariableInt32();
+                shops[index].shopItem[n].Name = incMSG.ReadString();
+                shops[index].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
+                shops[index].shopItem[n].Cost = incMSG.ReadVariableInt32();
             }
         }
 
-        void HandleShopItemData(NetIncomingMessage incMSG, Shop[] c_Shop)
+        static void HandleShopItemData(NetIncomingMessage incMSG)
         {
             int shopIndex = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
 
-            c_Shop[shopIndex].shopItem[index].Name = incMSG.ReadString();
-            c_Shop[shopIndex].shopItem[index].ItemNum = incMSG.ReadVariableInt32();
-            c_Shop[shopIndex].shopItem[index].Cost = incMSG.ReadVariableInt32();
+            shops[shopIndex].shopItem[index].Name = incMSG.ReadString();
+            shops[shopIndex].shopItem[index].ItemNum = incMSG.ReadVariableInt32();
+            shops[shopIndex].shopItem[index].Cost = incMSG.ReadVariableInt32();
         }
 
-        void HandlePlayerEquipment(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        static void HandlePlayerEquipment(NetIncomingMessage incMSG)
         {
-            c_Player[index].Chest.Name = incMSG.ReadString();
-            c_Player[index].Chest.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Type = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Value = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Price= incMSG.ReadVariableInt32();
-            c_Player[index].Chest.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Name = incMSG.ReadString();
+            players[myIndex].Chest.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Type = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Value = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Price= incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Rarity = incMSG.ReadVariableInt32();
 
-            c_Player[index].Legs.Name = incMSG.ReadString();
-            c_Player[index].Legs.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Type = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Value = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Price = incMSG.ReadVariableInt32();
-            c_Player[index].Legs.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Name = incMSG.ReadString();
+            players[myIndex].Legs.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Type = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Value = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Price = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Rarity = incMSG.ReadVariableInt32();
 
-            c_Player[index].Feet.Name = incMSG.ReadString();
-            c_Player[index].Feet.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Type = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Value = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Price = incMSG.ReadVariableInt32();
-            c_Player[index].Feet.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Name = incMSG.ReadString();
+            players[myIndex].Feet.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Type = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Value = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Price = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Rarity = incMSG.ReadVariableInt32();
         }
 
-        void HandlePlayerInv(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        static void HandlePlayerInv(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < 25; i++)
             {
-                if (c_Player[index].Backpack[i] != null)
+                if (players[myIndex].Backpack[i] != null)
                 {
-                    c_Player[index].Backpack[i].Name = incMSG.ReadString();
-                    c_Player[index].Backpack[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Damage = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Armor = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Type = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].AttackSpeed = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].ReloadSpeed = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].HungerRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].HydrateRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Strength = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Agility = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Endurance = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Stamina = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Clip = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].MaxClip = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].ItemAmmoType = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Value = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].ProjectileNumber = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Price = incMSG.ReadVariableInt32();
-                    c_Player[index].Backpack[i].Rarity = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Name = incMSG.ReadString();
+                    players[myIndex].Backpack[i].Sprite = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Damage = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Armor = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Type = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].AttackSpeed = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].ReloadSpeed = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].HungerRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Strength = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Agility = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Endurance = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Stamina = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Clip = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].MaxClip = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Value = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Price = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandlePlayerBank(NetIncomingMessage incMSG, Player[] c_Player, int index)
+        static void HandlePlayerBank(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < 50; i++)
             {
-                if (c_Player[index].Bank[i] != null)
+                if (players[myIndex].Bank[i] != null)
                 {
-                    c_Player[index].Bank[i].Name = incMSG.ReadString();
-                    c_Player[index].Bank[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Damage = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Armor = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Type = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].AttackSpeed = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].ReloadSpeed = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].HealthRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].HungerRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].HydrateRestore = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Strength = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Agility = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Endurance = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Stamina = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Clip = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].MaxClip = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].ItemAmmoType = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Value = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].ProjectileNumber = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Price = incMSG.ReadVariableInt32();
-                    c_Player[index].Bank[i].Rarity = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Name = incMSG.ReadString();
+                    players[myIndex].Bank[i].Sprite = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Damage = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Armor = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Type = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].AttackSpeed = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].ReloadSpeed = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].HealthRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].HungerRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Strength = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Agility = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Endurance = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Stamina = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Clip = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].MaxClip = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Value = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Price = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandleClearProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map)
+        static void HandleClearProjectile(NetIncomingMessage incMSG)
         {
             string mapName = incMSG.ReadString();
-            if (mapName != c_Map.Name) { return; }
+            if (mapName != map.Name) { return; }
 
             int slot = incMSG.ReadVariableInt32();
-            if (c_Map.m_MapProj[slot] != null) { return; }
-            c_Map.m_MapProj[slot] = null;
+            if (map.m_MapProj[slot] != null) { return; }
+            map.m_MapProj[slot] = null;
         }
 
-        void HandleCreateProjectile(NetIncomingMessage incMSG, Player[] c_Player, Map c_Map, Projectile[] c_Proj)
+        static void HandleCreateProjectile(NetIncomingMessage incMSG)
         {
             int slot = incMSG.ReadVariableInt32();
             int proj = incMSG.ReadVariableInt32();
 
-            c_Map.m_MapProj[slot] = new MapProj();
+            map.m_MapProj[slot] = new MapProj();
 
-            c_Map.m_MapProj[slot].X = incMSG.ReadVariableInt32();
-            c_Map.m_MapProj[slot].Y = incMSG.ReadVariableInt32();
-            c_Map.m_MapProj[slot].Direction = incMSG.ReadVariableInt32();
-            c_Map.m_MapProj[slot].Name = c_Proj[proj].Name;
-            c_Map.m_MapProj[slot].Speed = c_Proj[proj].Speed;
-            c_Map.m_MapProj[slot].Type = c_Proj[proj].Type;
-            c_Map.m_MapProj[slot].Sprite = c_Proj[proj].Sprite;
-            c_Map.m_MapProj[slot].Range = c_Proj[proj].Range;
+            map.m_MapProj[slot].X = incMSG.ReadVariableInt32();
+            map.m_MapProj[slot].Y = incMSG.ReadVariableInt32();
+            map.m_MapProj[slot].Direction = incMSG.ReadVariableInt32();
+            map.m_MapProj[slot].Name = projectiles[proj].Name;
+            map.m_MapProj[slot].Speed = projectiles[proj].Speed;
+            map.m_MapProj[slot].Type = projectiles[proj].Type;
+            map.m_MapProj[slot].Sprite = projectiles[proj].Sprite;
+            map.m_MapProj[slot].Range = projectiles[proj].Range;
         }
 
-        void HandleUpdateAmmo(NetIncomingMessage incMSG, Player[] c_Player)
+        static void HandleUpdateAmmo(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
         }
 
-        void HandleProjectiles(NetIncomingMessage incMSG, Projectile[] c_Proj)
+        static void HandleProjectiles(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
             {
-                if (c_Proj[i] != null)
+                if (projectiles[i] != null)
                 {
-                    c_Proj[i].Name = incMSG.ReadString();
-                    c_Proj[i].Damage = incMSG.ReadVariableInt32();
-                    c_Proj[i].Range = incMSG.ReadVariableInt32();
-                    c_Proj[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Proj[i].Type = incMSG.ReadVariableInt32();
-                    c_Proj[i].Speed = incMSG.ReadVariableInt32();
+                    projectiles[i].Name = incMSG.ReadString();
+                    projectiles[i].Damage = incMSG.ReadVariableInt32();
+                    projectiles[i].Range = incMSG.ReadVariableInt32();
+                    projectiles[i].Sprite = incMSG.ReadVariableInt32();
+                    projectiles[i].Type = incMSG.ReadVariableInt32();
+                    projectiles[i].Speed = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandleProjData(NetIncomingMessage incMSG, Projectile[] c_Proj)
+        static void HandleProjData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Proj[index].Name = incMSG.ReadString();
-            c_Proj[index].Damage = incMSG.ReadVariableInt32();
-            c_Proj[index].Range = incMSG.ReadVariableInt32();
-            c_Proj[index].Sprite = incMSG.ReadVariableInt32();
-            c_Proj[index].Type = incMSG.ReadVariableInt32();
-            c_Proj[index].Speed = incMSG.ReadVariableInt32();
+            projectiles[index].Name = incMSG.ReadString();
+            projectiles[index].Damage = incMSG.ReadVariableInt32();
+            projectiles[index].Range = incMSG.ReadVariableInt32();
+            projectiles[index].Sprite = incMSG.ReadVariableInt32();
+            projectiles[index].Type = incMSG.ReadVariableInt32();
+            projectiles[index].Speed = incMSG.ReadVariableInt32();
         }
 
-        void HandleItems(NetIncomingMessage incMSG, Item[] c_Item)
+        static void HandleItems(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < Globals.MAX_ITEMS; i++)
             {
-                if (c_Item[i] != null)
+                if (items[i] != null)
                 {
-                    c_Item[i].Name = incMSG.ReadString();
-                    c_Item[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Item[i].Damage = incMSG.ReadVariableInt32();
-                    c_Item[i].Armor = incMSG.ReadVariableInt32();
-                    c_Item[i].Type = incMSG.ReadVariableInt32();
-                    c_Item[i].HealthRestore = incMSG.ReadVariableInt32();
-                    c_Item[i].HungerRestore = incMSG.ReadVariableInt32();
-                    c_Item[i].HydrateRestore = incMSG.ReadVariableInt32();
-                    c_Item[i].Strength = incMSG.ReadVariableInt32();
-                    c_Item[i].Agility = incMSG.ReadVariableInt32();
-                    c_Item[i].Endurance = incMSG.ReadVariableInt32();
-                    c_Item[i].Stamina = incMSG.ReadVariableInt32();
-                    c_Item[i].Clip = incMSG.ReadVariableInt32();
-                    c_Item[i].MaxClip = incMSG.ReadVariableInt32();
-                    c_Item[i].ItemAmmoType = incMSG.ReadVariableInt32();
-                    c_Item[i].Value = incMSG.ReadVariableInt32();
-                    c_Item[i].ProjectileNumber = incMSG.ReadVariableInt32();
-                    c_Item[i].Price = incMSG.ReadVariableInt32();
-                    c_Item[i].Rarity = incMSG.ReadVariableInt32();
+                    items[i].Name = incMSG.ReadString();
+                    items[i].Sprite = incMSG.ReadVariableInt32();
+                    items[i].Damage = incMSG.ReadVariableInt32();
+                    items[i].Armor = incMSG.ReadVariableInt32();
+                    items[i].Type = incMSG.ReadVariableInt32();
+                    items[i].HealthRestore = incMSG.ReadVariableInt32();
+                    items[i].HungerRestore = incMSG.ReadVariableInt32();
+                    items[i].HydrateRestore = incMSG.ReadVariableInt32();
+                    items[i].Strength = incMSG.ReadVariableInt32();
+                    items[i].Agility = incMSG.ReadVariableInt32();
+                    items[i].Endurance = incMSG.ReadVariableInt32();
+                    items[i].Stamina = incMSG.ReadVariableInt32();
+                    items[i].Clip = incMSG.ReadVariableInt32();
+                    items[i].MaxClip = incMSG.ReadVariableInt32();
+                    items[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                    items[i].Value = incMSG.ReadVariableInt32();
+                    items[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                    items[i].Price = incMSG.ReadVariableInt32();
+                    items[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
         }
 
-        void HandleItemData(NetIncomingMessage incMSG, Item[] c_Item)
+        static void HandleItemData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Item[index].Name = incMSG.ReadString();
-            c_Item[index].Sprite = incMSG.ReadVariableInt32();
-            c_Item[index].Damage = incMSG.ReadVariableInt32();
-            c_Item[index].Armor = incMSG.ReadVariableInt32();
-            c_Item[index].Type = incMSG.ReadVariableInt32();
-            c_Item[index].HealthRestore = incMSG.ReadVariableInt32();
-            c_Item[index].HungerRestore = incMSG.ReadVariableInt32();
-            c_Item[index].HydrateRestore = incMSG.ReadVariableInt32();
-            c_Item[index].Strength = incMSG.ReadVariableInt32();
-            c_Item[index].Agility = incMSG.ReadVariableInt32();
-            c_Item[index].Endurance = incMSG.ReadVariableInt32();
-            c_Item[index].Stamina = incMSG.ReadVariableInt32();
-            c_Item[index].Clip = incMSG.ReadVariableInt32();
-            c_Item[index].MaxClip = incMSG.ReadVariableInt32();
-            c_Item[index].ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Item[index].Value = incMSG.ReadVariableInt32();
-            c_Item[index].ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Item[index].Price = incMSG.ReadVariableInt32();
-            c_Item[index].Rarity = incMSG.ReadVariableInt32();
+            items[index].Name = incMSG.ReadString();
+            items[index].Sprite = incMSG.ReadVariableInt32();
+            items[index].Damage = incMSG.ReadVariableInt32();
+            items[index].Armor = incMSG.ReadVariableInt32();
+            items[index].Type = incMSG.ReadVariableInt32();
+            items[index].HealthRestore = incMSG.ReadVariableInt32();
+            items[index].HungerRestore = incMSG.ReadVariableInt32();
+            items[index].HydrateRestore = incMSG.ReadVariableInt32();
+            items[index].Strength = incMSG.ReadVariableInt32();
+            items[index].Agility = incMSG.ReadVariableInt32();
+            items[index].Endurance = incMSG.ReadVariableInt32();
+            items[index].Stamina = incMSG.ReadVariableInt32();
+            items[index].Clip = incMSG.ReadVariableInt32();
+            items[index].MaxClip = incMSG.ReadVariableInt32();
+            items[index].ItemAmmoType = incMSG.ReadVariableInt32();
+            items[index].Value = incMSG.ReadVariableInt32();
+            items[index].ProjectileNumber = incMSG.ReadVariableInt32();
+            items[index].Price = incMSG.ReadVariableInt32();
+            items[index].Rarity = incMSG.ReadVariableInt32();
         }
 
-        void HandleNpcs(NetIncomingMessage incMSG, Npc[] c_Npc)
+        static void HandleNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_NPCS; i++)
             {
-                if (c_Npc[i] != null)
+                if (npcs[i] != null)
                 {
-                    c_Npc[i].Name = incMSG.ReadString();
-                    c_Npc[i].X = incMSG.ReadVariableInt32();
-                    c_Npc[i].Y = incMSG.ReadVariableInt32();
-                    c_Npc[i].Direction = incMSG.ReadVariableInt32();
-                    c_Npc[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Npc[i].Step = incMSG.ReadVariableInt32();
-                    c_Npc[i].Owner = incMSG.ReadVariableInt32();
-                    c_Npc[i].Behavior = incMSG.ReadVariableInt32();
-                    c_Npc[i].SpawnTime = incMSG.ReadVariableInt32();
-                    c_Npc[i].Health = incMSG.ReadVariableInt32();
-                    c_Npc[i].MaxHealth = incMSG.ReadVariableInt32();
-                    c_Npc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Npc[i].IsSpawned = incMSG.ReadBoolean();
+                    npcs[i].Name = incMSG.ReadString();
+                    npcs[i].X = incMSG.ReadVariableInt32();
+                    npcs[i].Y = incMSG.ReadVariableInt32();
+                    npcs[i].Direction = incMSG.ReadVariableInt32();
+                    npcs[i].Sprite = incMSG.ReadVariableInt32();
+                    npcs[i].Step = incMSG.ReadVariableInt32();
+                    npcs[i].Owner = incMSG.ReadVariableInt32();
+                    npcs[i].Behavior = incMSG.ReadVariableInt32();
+                    npcs[i].SpawnTime = incMSG.ReadVariableInt32();
+                    npcs[i].Health = incMSG.ReadVariableInt32();
+                    npcs[i].MaxHealth = incMSG.ReadVariableInt32();
+                    npcs[i].Damage = incMSG.ReadVariableInt32();
+                    npcs[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
         }
 
-        void HandlePoolNpcs(NetIncomingMessage incMSG, Map c_Map)
+        static void HandlePoolNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Globals.MAX_MAP_POOL_NPCS; i++)
             {
-                if (c_Map.r_MapNpc[i] != null)
+                if (map.r_MapNpc[i] != null)
                 {
-                    c_Map.r_MapNpc[i].Name = incMSG.ReadString();
-                    c_Map.r_MapNpc[i].X = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Y = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Direction = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Step = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Owner = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Health = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Map.r_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
+                    map.r_MapNpc[i].Name = incMSG.ReadString();
+                    map.r_MapNpc[i].X = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Y = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Direction = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Step = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Owner = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Health = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].Damage = incMSG.ReadVariableInt32();
+                    map.r_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
         }
 
-        void HandleMapItems(NetIncomingMessage incMSG, Map c_Map, GUI c_GUI, Canvas c_Canvas)
+        static void HandleMapItems(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
             {
-                c_Map.m_MapItem[i].Name = incMSG.ReadString();
-                c_Map.m_MapItem[i].X = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Y = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Sprite = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Damage = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Armor = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Type = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].HealthRestore = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].HungerRestore = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Strength = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Agility = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Endurance = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Stamina = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Clip = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].MaxClip = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].ItemAmmoType = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].Rarity = incMSG.ReadVariableInt32();
-                c_Map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
+                map.m_MapItem[i].Name = incMSG.ReadString();
+                map.m_MapItem[i].X = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Y = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Sprite = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Damage = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Armor = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Type = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].HealthRestore = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].HungerRestore = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Strength = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Agility = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Endurance = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Stamina = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Clip = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].MaxClip = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].ItemAmmoType = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Rarity = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
-            LoadMainGUI(c_GUI, c_Canvas);
-            c_GUI.Ready = true;
+            LoadMainGUI();
+            gui.Ready = true;
         }
 
-        void HandleMapItemData(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleMapItemData(NetIncomingMessage incMSG)
         {
             int itemNum = incMSG.ReadVariableInt32();
 
-            c_Map.m_MapItem[itemNum].Name = incMSG.ReadString();
-            c_Map.m_MapItem[itemNum].X = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Y = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Armor = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Type = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Strength = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Agility = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Clip = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].MaxClip = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].Rarity = incMSG.ReadVariableInt32();
-            c_Map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
+            map.m_MapItem[itemNum].Name = incMSG.ReadString();
+            map.m_MapItem[itemNum].X = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Y = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Damage = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Armor = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Type = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Strength = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Agility = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Clip = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].MaxClip = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].ItemAmmoType = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Rarity = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
-        void HandleMapNpcs(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleMapNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAP_NPCS; i++)
             {
-                if (c_Map.m_MapNpc[i] != null)
+                if (map.m_MapNpc[i] != null)
                 {
-                    c_Map.m_MapNpc[i].Name = incMSG.ReadString();
-                    c_Map.m_MapNpc[i].X = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Y = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Direction = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Step = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Owner = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Health = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].Damage = incMSG.ReadVariableInt32();
-                    c_Map.m_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
+                    map.m_MapNpc[i].Name = incMSG.ReadString();
+                    map.m_MapNpc[i].X = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Y = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Direction = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Step = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Owner = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Health = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].Damage = incMSG.ReadVariableInt32();
+                    map.m_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
         }
 
-        void HandlePoolNpcData(NetIncomingMessage incMSG, Map c_Map)
+        static void HandlePoolNpcData(NetIncomingMessage incMSG)
         {
             int npcNum = incMSG.ReadVariableInt32();
 
-            c_Map.r_MapNpc[npcNum].Name = incMSG.ReadString();
-            c_Map.r_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+            map.r_MapNpc[npcNum].Name = incMSG.ReadString();
+            map.r_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
+            map.r_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
         }
 
-        void HandleNpcDirection(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleNpcDirection(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Map.m_MapNpc[index].X = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[index].Y = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[index].Direction = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[index].Step = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].X = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].Direction = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].Step = incMSG.ReadVariableInt32();
         }
 
-        void HandleNpcPoolDirection(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleNpcPoolDirection(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[index].Direction = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[index].Step = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].Direction = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].Step = incMSG.ReadVariableInt32();
         }
 
-        void HandleNpcVitals(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleNpcVitals(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Map.m_MapNpc[index].Health = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
+            map.m_MapNpc[index].Health = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
         }
 
-        void HandlePoolNpcVitals(NetIncomingMessage incMSG, Map c_Map)
+        static void HandlePoolNpcVitals(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
 
-            c_Map.r_MapNpc[index].Health = incMSG.ReadVariableInt32();
-            c_Map.r_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
+            map.r_MapNpc[index].Health = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
         }
 
-        void HandleNpcData(NetIncomingMessage incMSG, Map c_Map)
+        static void HandleNpcData(NetIncomingMessage incMSG)
         {
             int npcNum = incMSG.ReadVariableInt32();
 
-            c_Map.m_MapNpc[npcNum].Name = incMSG.ReadString();
-            c_Map.m_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
-            c_Map.m_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+            map.m_MapNpc[npcNum].Name = incMSG.ReadString();
+            map.m_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
+            map.m_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
         }
 
-        void HandleUpdateDirectionData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
+        static void HandleUpdateDirectionData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             int direction = incMSG.ReadVariableInt32();
             int aimdirection = incMSG.ReadVariableInt32();
 
-            c_Player[index].Direction = direction;
-            c_Player[index].AimDirection = aimdirection;
+            players[index].Direction = direction;
+            players[index].AimDirection = aimdirection;
         }
 
-        void HandleUpdateMoveData(NetIncomingMessage incMSG, Player[] c_Player, int clientIndex)
+        static void HandleUpdateMoveData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             int x = incMSG.ReadVariableInt32();
@@ -957,28 +951,28 @@ namespace Client.Classes
             int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
 
-            c_Player[index].tempX = x;
-            c_Player[index].tempY = y;
-            c_Player[index].tempDir = direction;
-            c_Player[index].tempaimDir = aimdirection;
-            c_Player[index].tempStep = step;
+            players[index].tempX = x;
+            players[index].tempY = y;
+            players[index].tempDir = direction;
+            players[index].tempaimDir = aimdirection;
+            players[index].tempStep = step;
         }
 
-        void HandleDiscoveryResponse(NetIncomingMessage incMSG, NetClient c_Client)
+        static void HandleDiscoveryResponse(NetIncomingMessage incMSG)
         {
             Console.WriteLine("Found Server: " + incMSG.ReadString() + " @ " + incMSG.SenderEndPoint);
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.Connection);
             outMSG.Write("sabertooth");
-            c_Client.Connect(s_IPAddress, ToInt32(s_Port), outMSG);
+            SabertoothClient.netClient.Connect(clientConfig.IPAddress, ToInt32(clientConfig.Port), outMSG);
         }
 
-        void HandleConnectionData(NetIncomingMessage incMSG, NetClient c_Client)
+        static void HandleConnectionData(NetIncomingMessage incMSG)
         {
-            if (c_Client.ServerConnection != null) { return; }
+            if (SabertoothClient.netClient.ServerConnection != null) { return; }
             Console.WriteLine("Connected to server!");        }
 
-        void HandleChatMessage(NetIncomingMessage incMSG, GUI c_GUI)
+        static void HandleChatMessage(NetIncomingMessage incMSG)
         {
             string msg = incMSG.ReadString();
             int msgLength = msg.Length;
@@ -990,338 +984,338 @@ namespace Client.Classes
                 int splitLength = msgLength - maxLength;
                 splitMsg[0] = msg.Substring(0, maxLength);
                 splitMsg[1] = msg.Substring(maxLength, splitLength);
-                c_GUI.outputChat.AddRow(splitMsg[0]);
-                c_GUI.outputChat.AddRow(splitMsg[1]);
+                gui.outputChat.AddRow(splitMsg[0]);
+                gui.outputChat.AddRow(splitMsg[1]);
             }
             else
             {
-                c_GUI.outputChat.AddRow(msg);
+                gui.outputChat.AddRow(msg);
             }
-            if (!c_GUI.chatWindow.IsVisible) { c_GUI.chatWindow.Show(); }
-            c_GUI.outputChat.ScrollToBottom();
-            c_GUI.outputChat.UnselectAll();
+            if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
+            gui.outputChat.ScrollToBottom();
+            gui.outputChat.UnselectAll();
         }
 
-        void HandleLoginData(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas, GUI c_GUI)
+        static void HandleLoginData(NetIncomingMessage incMSG)
         {
             Console.WriteLine("Login successful! IP: " + incMSG.SenderConnection);
-            c_Canvas.DeleteAllChildren();
-            c_GUI.CreateLoadingWindow(c_Canvas);
-            c_GUI.Ready = false;
+            canvas.DeleteAllChildren();
+            gui.CreateLoadingWindow(canvas);
+            gui.Ready = false;
         }
 
-        void HandleVitalData(NetIncomingMessage incMSG, Player[] c_Player)
+        static void HandleVitalData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             string vitalName = incMSG.ReadString();
             int vital = incMSG.ReadVariableInt32();
 
-            if (vitalName == "food") { c_Player[index].Hunger = vital; }
-            if (vitalName == "water") { c_Player[index].Hydration = vital; }
+            if (vitalName == "food") { players[myIndex].Hunger = vital; }
+            if (vitalName == "water") { players[myIndex].Hydration = vital; }
         }
 
-        void HandleHealthData(NetIncomingMessage incMSG, Player[] c_Player)
+        static void HandleHealthData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             int health = incMSG.ReadVariableInt32();
 
-            c_Player[index].Health = health;
+            players[myIndex].Health = health;
         }
 
-        void HandleUpdatePlayerStats(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
+        static void HandleUpdatePlayerStats(NetIncomingMessage incMSG)
         {
-            c_Player[index].Level = incMSG.ReadVariableInt32();
-            c_Player[index].Points = incMSG.ReadVariableInt32();
-            c_Player[index].Health = incMSG.ReadVariableInt32();
-            c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
-            c_Player[index].Hunger = incMSG.ReadVariableInt32();
-            c_Player[index].Hydration = incMSG.ReadVariableInt32();
-            c_Player[index].Experience = incMSG.ReadVariableInt32();
-            c_Player[index].Money = incMSG.ReadVariableInt32();
-            c_Player[index].Armor = incMSG.ReadVariableInt32();
-            c_Player[index].Strength = incMSG.ReadVariableInt32();
-            c_Player[index].Agility = incMSG.ReadVariableInt32();
-            c_Player[index].Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].LightRadius = incMSG.ReadVariableInt32();
+            players[myIndex].Level = incMSG.ReadVariableInt32();
+            players[myIndex].Points = incMSG.ReadVariableInt32();
+            players[myIndex].Health = incMSG.ReadVariableInt32();
+            players[myIndex].MaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].Hunger = incMSG.ReadVariableInt32();
+            players[myIndex].Hydration = incMSG.ReadVariableInt32();
+            players[myIndex].Experience = incMSG.ReadVariableInt32();
+            players[myIndex].Money = incMSG.ReadVariableInt32();
+            players[myIndex].Armor = incMSG.ReadVariableInt32();
+            players[myIndex].Strength = incMSG.ReadVariableInt32();
+            players[myIndex].Agility = incMSG.ReadVariableInt32();
+            players[myIndex].Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].LightRadius = incMSG.ReadVariableInt32();
         }
 
-        void HandlePlayerData(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
+        static void HandlePlayerData(NetIncomingMessage incMSG)
         {            
-            c_Player[index].Name = incMSG.ReadString();
-            c_Player[index].X = incMSG.ReadVariableInt32();
-            c_Player[index].Y = incMSG.ReadVariableInt32();
-            c_Player[index].Map = incMSG.ReadVariableInt32();
-            c_Player[index].Direction = incMSG.ReadVariableInt32();
-            c_Player[index].AimDirection = incMSG.ReadVariableInt32();
-            c_Player[index].Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].Level = incMSG.ReadVariableInt32();
-            c_Player[index].Points = incMSG.ReadVariableInt32();
-            c_Player[index].Health = incMSG.ReadVariableInt32();
-            c_Player[index].MaxHealth = incMSG.ReadVariableInt32();
-            c_Player[index].Hunger = incMSG.ReadVariableInt32();
-            c_Player[index].Hydration = incMSG.ReadVariableInt32();
-            c_Player[index].Experience = incMSG.ReadVariableInt32();
-            c_Player[index].Money = incMSG.ReadVariableInt32();
-            c_Player[index].Armor = incMSG.ReadVariableInt32();
-            c_Player[index].Strength = incMSG.ReadVariableInt32();
-            c_Player[index].Agility = incMSG.ReadVariableInt32();
-            c_Player[index].Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].PistolAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].AssaultAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].RocketAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].GrenadeAmmo = incMSG.ReadVariableInt32();
-            c_Player[index].LightRadius = incMSG.ReadVariableInt32();
-            c_Player[index].PlayDays = incMSG.ReadVariableInt32();
-            c_Player[index].PlayHours = incMSG.ReadVariableInt32();
-            c_Player[index].PlayMinutes = incMSG.ReadVariableInt32();
-            c_Player[index].PlaySeconds = incMSG.ReadVariableInt32();
-            c_Player[index].LifeDay = incMSG.ReadVariableInt32();
-            c_Player[index].LifeHour = incMSG.ReadVariableInt32();
-            c_Player[index].LifeMinute = incMSG.ReadVariableInt32();
-            c_Player[index].LifeSecond = incMSG.ReadVariableInt32();
-            c_Player[index].LongestLifeDay = incMSG.ReadVariableInt32();
-            c_Player[index].LongestLifeHour = incMSG.ReadVariableInt32();
-            c_Player[index].LongestLifeMinute = incMSG.ReadVariableInt32();
-            c_Player[index].LongestLifeSecond = incMSG.ReadVariableInt32();
-            c_Player[index].offsetX = 12;
-            c_Player[index].offsetY = 9;
+            players[myIndex].Name = incMSG.ReadString();
+            players[myIndex].X = incMSG.ReadVariableInt32();
+            players[myIndex].Y = incMSG.ReadVariableInt32();
+            players[myIndex].Map = incMSG.ReadVariableInt32();
+            players[myIndex].Direction = incMSG.ReadVariableInt32();
+            players[myIndex].AimDirection = incMSG.ReadVariableInt32();
+            players[myIndex].Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].Level = incMSG.ReadVariableInt32();
+            players[myIndex].Points = incMSG.ReadVariableInt32();
+            players[myIndex].Health = incMSG.ReadVariableInt32();
+            players[myIndex].MaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].Hunger = incMSG.ReadVariableInt32();
+            players[myIndex].Hydration = incMSG.ReadVariableInt32();
+            players[myIndex].Experience = incMSG.ReadVariableInt32();
+            players[myIndex].Money = incMSG.ReadVariableInt32();
+            players[myIndex].Armor = incMSG.ReadVariableInt32();
+            players[myIndex].Strength = incMSG.ReadVariableInt32();
+            players[myIndex].Agility = incMSG.ReadVariableInt32();
+            players[myIndex].Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].LightRadius = incMSG.ReadVariableInt32();
+            players[myIndex].PlayDays = incMSG.ReadVariableInt32();
+            players[myIndex].PlayHours = incMSG.ReadVariableInt32();
+            players[myIndex].PlayMinutes = incMSG.ReadVariableInt32();
+            players[myIndex].PlaySeconds = incMSG.ReadVariableInt32();
+            players[myIndex].LifeDay = incMSG.ReadVariableInt32();
+            players[myIndex].LifeHour = incMSG.ReadVariableInt32();
+            players[myIndex].LifeMinute = incMSG.ReadVariableInt32();
+            players[myIndex].LifeSecond = incMSG.ReadVariableInt32();
+            players[myIndex].LongestLifeDay = incMSG.ReadVariableInt32();
+            players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
+            players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
+            players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
+            players[myIndex].offsetX = 12;
+            players[myIndex].offsetY = 9;
 
             //Main Weapon
-            c_Player[index].mainWeapon.Name = incMSG.ReadString();
-            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Name = incMSG.ReadString();
+            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Value = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Price = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
-            c_Player[index].offWeapon.Name = incMSG.ReadString();
-            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Name = incMSG.ReadString();
+            players[myIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Type = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Value = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Price = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Rarity = incMSG.ReadVariableInt32();
         }
 
-        void HandleWeaponsUpdate(NetIncomingMessage incMSG, NetClient c_Client, Player[] c_Player, int index)
+        static void HandleWeaponsUpdate(NetIncomingMessage incMSG)
         {
             //Main Weapon
-            c_Player[index].mainWeapon.Name = incMSG.ReadString();
-            c_Player[index].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Value = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Price = incMSG.ReadVariableInt32();
-            c_Player[index].mainWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Name = incMSG.ReadString();
+            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Value = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Price = incMSG.ReadVariableInt32();
+            players[myIndex].mainWeapon.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
-            c_Player[index].offWeapon.Name = incMSG.ReadString();
-            c_Player[index].offWeapon.Clip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.MaxClip = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Damage = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Armor = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Type = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Strength = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Agility = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Value = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Price = incMSG.ReadVariableInt32();
-            c_Player[index].offWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Name = incMSG.ReadString();
+            players[myIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.MaxClip = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Type = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Value = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Price = incMSG.ReadVariableInt32();
+            players[myIndex].offWeapon.Rarity = incMSG.ReadVariableInt32();
         }
 
-        void HandlePlayers(NetClient c_Client, NetIncomingMessage incMSG, Player[] c_Player)
+        static void HandlePlayers(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                c_Player[i].Name = incMSG.ReadString();
-                c_Player[i].X = incMSG.ReadVariableInt32();
-                c_Player[i].Y = incMSG.ReadVariableInt32();
-                c_Player[i].Map = incMSG.ReadVariableInt32();
-                c_Player[i].Direction = incMSG.ReadVariableInt32();
-                c_Player[i].AimDirection = incMSG.ReadVariableInt32();
-                c_Player[i].Sprite = incMSG.ReadVariableInt32();
-                c_Player[i].Level = incMSG.ReadVariableInt32();
-                c_Player[i].Points = incMSG.ReadVariableInt32();
-                c_Player[i].Health = incMSG.ReadVariableInt32();
-                c_Player[i].MaxHealth = incMSG.ReadVariableInt32();
-                c_Player[i].Hunger = incMSG.ReadVariableInt32();
-                c_Player[i].Hydration = incMSG.ReadVariableInt32();
-                c_Player[i].Experience = incMSG.ReadVariableInt32();
-                c_Player[i].Money = incMSG.ReadVariableInt32();
-                c_Player[i].Armor = incMSG.ReadVariableInt32();
-                c_Player[i].Strength = incMSG.ReadVariableInt32();
-                c_Player[i].Agility = incMSG.ReadVariableInt32();
-                c_Player[i].Endurance = incMSG.ReadVariableInt32();
-                c_Player[i].Stamina = incMSG.ReadVariableInt32();
-                c_Player[i].PistolAmmo = incMSG.ReadVariableInt32();
-                c_Player[i].AssaultAmmo = incMSG.ReadVariableInt32();
-                c_Player[i].RocketAmmo = incMSG.ReadVariableInt32();
-                c_Player[i].GrenadeAmmo = incMSG.ReadVariableInt32();
-                c_Player[i].LightRadius = incMSG.ReadVariableInt32();
-                c_Player[i].PlayDays = incMSG.ReadVariableInt32();
-                c_Player[i].PlayHours = incMSG.ReadVariableInt32();
-                c_Player[i].PlayMinutes = incMSG.ReadVariableInt32();
-                c_Player[i].PlaySeconds = incMSG.ReadVariableInt32();
-                c_Player[i].LifeDay = incMSG.ReadVariableInt32();
-                c_Player[i].LifeHour = incMSG.ReadVariableInt32();
-                c_Player[i].LifeMinute = incMSG.ReadVariableInt32();
-                c_Player[i].LifeSecond = incMSG.ReadVariableInt32();
-                c_Player[i].LongestLifeDay = incMSG.ReadVariableInt32();
-                c_Player[i].LongestLifeHour = incMSG.ReadVariableInt32();
-                c_Player[i].LongestLifeMinute = incMSG.ReadVariableInt32();
-                c_Player[i].LongestLifeSecond = incMSG.ReadVariableInt32();
-                c_Player[i].offsetX = 12;
-                c_Player[i].offsetY = 9;
+                players[i].Name = incMSG.ReadString();
+                players[i].X = incMSG.ReadVariableInt32();
+                players[i].Y = incMSG.ReadVariableInt32();
+                players[i].Map = incMSG.ReadVariableInt32();
+                players[i].Direction = incMSG.ReadVariableInt32();
+                players[i].AimDirection = incMSG.ReadVariableInt32();
+                players[i].Sprite = incMSG.ReadVariableInt32();
+                players[i].Level = incMSG.ReadVariableInt32();
+                players[i].Points = incMSG.ReadVariableInt32();
+                players[i].Health = incMSG.ReadVariableInt32();
+                players[i].MaxHealth = incMSG.ReadVariableInt32();
+                players[i].Hunger = incMSG.ReadVariableInt32();
+                players[i].Hydration = incMSG.ReadVariableInt32();
+                players[i].Experience = incMSG.ReadVariableInt32();
+                players[i].Money = incMSG.ReadVariableInt32();
+                players[i].Armor = incMSG.ReadVariableInt32();
+                players[i].Strength = incMSG.ReadVariableInt32();
+                players[i].Agility = incMSG.ReadVariableInt32();
+                players[i].Endurance = incMSG.ReadVariableInt32();
+                players[i].Stamina = incMSG.ReadVariableInt32();
+                players[i].PistolAmmo = incMSG.ReadVariableInt32();
+                players[i].AssaultAmmo = incMSG.ReadVariableInt32();
+                players[i].RocketAmmo = incMSG.ReadVariableInt32();
+                players[i].GrenadeAmmo = incMSG.ReadVariableInt32();
+                players[i].LightRadius = incMSG.ReadVariableInt32();
+                players[i].PlayDays = incMSG.ReadVariableInt32();
+                players[i].PlayHours = incMSG.ReadVariableInt32();
+                players[i].PlayMinutes = incMSG.ReadVariableInt32();
+                players[i].PlaySeconds = incMSG.ReadVariableInt32();
+                players[i].LifeDay = incMSG.ReadVariableInt32();
+                players[i].LifeHour = incMSG.ReadVariableInt32();
+                players[i].LifeMinute = incMSG.ReadVariableInt32();
+                players[i].LifeSecond = incMSG.ReadVariableInt32();
+                players[i].LongestLifeDay = incMSG.ReadVariableInt32();
+                players[i].LongestLifeHour = incMSG.ReadVariableInt32();
+                players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
+                players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
+                players[i].offsetX = 12;
+                players[i].offsetY = 9;
             }
         }
 
-        void HandleErrorMessage(NetIncomingMessage incMSG, NetClient c_Client, Canvas c_Canvas)
+        static void HandleErrorMessage(NetIncomingMessage incMSG)
         {
             string msg = incMSG.ReadString();
             string caption = incMSG.ReadString();
-            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
+            MessageBox msgBox = new MessageBox(canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
         }
 
-        void HandleMapData(NetClient c_Client, NetIncomingMessage incMSG, Map c_Map, Player[] c_Player)
+        static void HandleMapData(NetIncomingMessage incMSG)
         {
-            c_Map.Name = incMSG.ReadString();
-            c_Map.Revision = incMSG.ReadVariableInt32();
-            c_Map.TopMap = incMSG.ReadVariableInt32();
-            c_Map.BottomMap = incMSG.ReadVariableInt32();
-            c_Map.LeftMap = incMSG.ReadVariableInt32();
-            c_Map.RightMap = incMSG.ReadVariableInt32();
-            c_Map.Brightness = incMSG.ReadVariableInt32();
+            map.Name = incMSG.ReadString();
+            map.Revision = incMSG.ReadVariableInt32();
+            map.TopMap = incMSG.ReadVariableInt32();
+            map.BottomMap = incMSG.ReadVariableInt32();
+            map.LeftMap = incMSG.ReadVariableInt32();
+            map.RightMap = incMSG.ReadVariableInt32();
+            map.Brightness = incMSG.ReadVariableInt32();
 
             for (int i = 0; i < 10; i++)
             {
-                c_Map.m_MapNpc[i] = new MapNpc();
+                map.m_MapNpc[i] = new MapNpc();
             }
 
             for (int i = 0; i < 20; i++)
             {
-                c_Map.r_MapNpc[i] = new MapNpc();
-                c_Map.m_MapItem[i] = new MapItem();
+                map.r_MapNpc[i] = new MapNpc();
+                map.m_MapItem[i] = new MapItem();
             }
 
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
                 {
-                    c_Map.Ground[x, y] = new Tile();
-                    c_Map.Mask[x, y] = new Tile();
-                    c_Map.Fringe[x, y] = new Tile();
-                    c_Map.MaskA[x, y] = new Tile();
-                    c_Map.FringeA[x, y] = new Tile();
+                    map.Ground[x, y] = new Tile();
+                    map.Mask[x, y] = new Tile();
+                    map.Fringe[x, y] = new Tile();
+                    map.MaskA[x, y] = new Tile();
+                    map.FringeA[x, y] = new Tile();
 
                     //ground
-                    c_Map.Ground[x, y].TileX = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].TileY = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].TileW = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].TileH = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].Type = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].SpawnNum = incMSG.ReadVariableInt32();
-                    c_Map.Ground[x, y].LightRadius = incMSG.ReadDouble();
+                    map.Ground[x, y].TileX = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].TileY = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].TileW = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].TileH = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].Tileset = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].Type = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].SpawnNum = incMSG.ReadVariableInt32();
+                    map.Ground[x, y].LightRadius = incMSG.ReadDouble();
                     //mask
-                    c_Map.Mask[x, y].TileX = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].TileY = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].TileW = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].TileH = incMSG.ReadVariableInt32();
-                    c_Map.Mask[x, y].Tileset = incMSG.ReadVariableInt32();
+                    map.Mask[x, y].TileX = incMSG.ReadVariableInt32();
+                    map.Mask[x, y].TileY = incMSG.ReadVariableInt32();
+                    map.Mask[x, y].TileW = incMSG.ReadVariableInt32();
+                    map.Mask[x, y].TileH = incMSG.ReadVariableInt32();
+                    map.Mask[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe
-                    c_Map.Fringe[x, y].TileX = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].TileY = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].TileW = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].TileH = incMSG.ReadVariableInt32();
-                    c_Map.Fringe[x, y].Tileset = incMSG.ReadVariableInt32();
+                    map.Fringe[x, y].TileX = incMSG.ReadVariableInt32();
+                    map.Fringe[x, y].TileY = incMSG.ReadVariableInt32();
+                    map.Fringe[x, y].TileW = incMSG.ReadVariableInt32();
+                    map.Fringe[x, y].TileH = incMSG.ReadVariableInt32();
+                    map.Fringe[x, y].Tileset = incMSG.ReadVariableInt32();
                     //mask a
-                    c_Map.MaskA[x, y].TileX = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].TileY = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].TileW = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].TileH = incMSG.ReadVariableInt32();
-                    c_Map.MaskA[x, y].Tileset = incMSG.ReadVariableInt32();
+                    map.MaskA[x, y].TileX = incMSG.ReadVariableInt32();
+                    map.MaskA[x, y].TileY = incMSG.ReadVariableInt32();
+                    map.MaskA[x, y].TileW = incMSG.ReadVariableInt32();
+                    map.MaskA[x, y].TileH = incMSG.ReadVariableInt32();
+                    map.MaskA[x, y].Tileset = incMSG.ReadVariableInt32();
                     //fringe a
-                    c_Map.FringeA[x, y].TileX = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].TileY = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].TileW = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].TileH = incMSG.ReadVariableInt32();
-                    c_Map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
+                    map.FringeA[x, y].TileX = incMSG.ReadVariableInt32();
+                    map.FringeA[x, y].TileY = incMSG.ReadVariableInt32();
+                    map.FringeA[x, y].TileW = incMSG.ReadVariableInt32();
+                    map.FringeA[x, y].TileH = incMSG.ReadVariableInt32();
+                    map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
-            c_Map.MapDatabaseCache(c_Player[c_Index].Map + 1);
+            map.MapDatabaseCache(players[myIndex].Map + 1);
         }
         #endregion
 
-        void LoadMainGUI(GUI c_GUI, Canvas c_Canvas)
+        static void LoadMainGUI()
         {
-            c_Canvas.DeleteAllChildren();
-            c_GUI.CreateDebugWindow(c_Canvas);
-            c_GUI.d_Window.Hide();
-            c_GUI.CreateMenuWindow(c_Canvas);
-            c_GUI.menuWindow.Hide();
-            c_GUI.CreateChatWindow(c_Canvas);
-            c_GUI.chatWindow.Hide();
-            c_GUI.AddText("Welcome to Sabertooth!");
+            canvas.DeleteAllChildren();
+            gui.CreateDebugWindow(canvas);
+            gui.d_Window.Hide();
+            gui.CreateMenuWindow(canvas);
+            gui.menuWindow.Hide();
+            gui.CreateChatWindow(canvas);
+            gui.chatWindow.Hide();
+            gui.AddText("Welcome to Sabertooth!");
 
         }
     } 

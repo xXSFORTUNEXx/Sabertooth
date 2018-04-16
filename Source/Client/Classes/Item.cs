@@ -7,9 +7,9 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Item
+    public class Item
     {
         public string Name { get; set; }
         public int Sprite { get; set; }

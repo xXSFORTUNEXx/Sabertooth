@@ -3,8 +3,8 @@ using System;
 using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
-using static Sabertooth.Server;
-namespace Sabertooth
+using static SabertoothServer.Server;
+namespace SabertoothServer
 {
     public class Player
     {

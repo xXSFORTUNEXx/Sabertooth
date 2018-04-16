@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Shop
+    public class Shop
     {
         public ShopItem[] shopItem = new ShopItem[25];
 
@@ -31,7 +31,7 @@ namespace Client.Classes
         }
     }
 
-    class ShopItem
+    public class ShopItem
     {
         public string Name { get; set; }
         public int ItemNum { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System.Data.SQLite;
 using static System.Convert;
-using static Sabertooth.Server;
+using static SabertoothServer.Server;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public class Projectile
     {

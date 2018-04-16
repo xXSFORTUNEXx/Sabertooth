@@ -1,4 +1,4 @@
-﻿#undef DEBUG
+﻿#define DEBUG
 using Gwen.Control;
 using Lidgren.Network;
 using SFML.Graphics;
@@ -14,21 +14,17 @@ using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Data.SQLite;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class StartUp
+    public static class SabertoothClient
     {
-        static NetClient c_Client;
-        static NetPeerConfiguration c_Config;
+        public static NetClient netClient;
 
         [DllImport("kernel32.dll")]
         static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
 
         [STAThread]
         static void Main(string[] args)
@@ -43,48 +39,52 @@ namespace Client.Classes
             Console.WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
             Console.WriteLine(@"                              Created by Steven Fortune");
             Console.WriteLine("Initializing client...");
-            ClientConfig cConfig = new ClientConfig();
-            c_Config = new NetPeerConfiguration("sabertooth");
-            c_Config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-            c_Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-            c_Config.DisableMessageType(NetIncomingMessageType.DebugMessage);
-            c_Config.DisableMessageType(NetIncomingMessageType.Error);
-            c_Config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
-            c_Config.DisableMessageType(NetIncomingMessageType.Receipt);
-            c_Config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
-            c_Config.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
-            c_Config.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            c_Config.UseMessageRecycling = true;
-            c_Config.MaximumConnections = 1;
-            c_Config.MaximumTransmissionUnit = 1500;
-            c_Config.ConnectionTimeout = 25.0f;
-            //c_Config.SimulatedMinimumLatency = 0.065f;
-            //c_Config.SimulatedRandomLatency = 0.085f;
-            //c_Config.SimulatedLoss = 0.5f;
-            //c_Config.SimulatedDuplicatesChance = 0.1f;
+
+            NetPeerConfiguration netConfig = new NetPeerConfiguration("sabertooth")
+            {
+                UseMessageRecycling = true,
+                MaximumConnections = 1,
+                MaximumTransmissionUnit = 1500,
+                EnableUPnP = false,
+                ConnectionTimeout = Globals.CONNECTION_TIMEOUT,
+                SimulatedRandomLatency = Globals.SIMULATED_RANDOM_LATENCY,
+                SimulatedMinimumLatency = Globals.SIMULATED_MINIMUM_LATENCY,
+                SimulatedLoss = Globals.SIMULATED_PACKET_LOSS,
+                SimulatedDuplicatesChance = Globals.SIMULATED_DUPLICATES_CHANCE
+            };
+
+            netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            netConfig.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            netConfig.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            netConfig.DisableMessageType(NetIncomingMessageType.Error);
+            netConfig.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            netConfig.DisableMessageType(NetIncomingMessageType.Receipt);
+            netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
+
+
             Console.WriteLine("Enabling message types...");
-            c_Client = new NetClient(c_Config);
-            Console.WriteLine("Loading config...");
-            c_Client.Start();
-            Console.WriteLine("Client started...");
-            Game c_Game = new Game();
-            #if DEBUG
-            ShowWindow(handle, SW_SHOW);
+            netClient = new NetClient(netConfig);
+            netClient.Start();
+            Console.WriteLine("Network configuration complete...");
+            /*#if DEBUG
+            ShowWindow(handle, Globals.SW_SHOW);
             #else
-            ShowWindow(handle, SW_HIDE);
-            #endif
-            c_Game.GameLoop(c_Client, cConfig);
+            ShowWindow(handle, Globals.SW_HIDE);
+            #endif*/
+            Client.GameLoop();
         }
     }
 
-    class ClientConfig
+    public class ClientConfig
     {
-        public string savedUser { get; set; }
-        public string savedPass { get; set; }
-        public string saveCreds { get; set; }
-        public string ipAddress { get; set; }
-        public string port { get; set; }
-        public string version { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Remember { get; set; }
+        public string IPAddress { get; set; }
+        public string Port { get; set; }
+        public string Version { get; set; }
 
         public ClientConfig()
         {
@@ -95,10 +95,10 @@ namespace Client.Classes
         {
             if (!File.Exists("Config.xml"))
             {
-                saveCreds = "0";
-                ipAddress = "127.0.0.1";
-                port = "14242";
-                version = "1.0";
+                Remember = "0";
+                IPAddress = "127.0.0.1";
+                Port = "14242";
+                Version = "1.0";
                 SaveConfig();
             }
             LoadConfig();
@@ -108,18 +108,18 @@ namespace Client.Classes
         public void LoadConfig()
         {
             XmlReader reader = XmlReader.Create("Config.xml");
-            reader.ReadToFollowing("savedUser");
-            savedUser = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("savedPass");
-            savedPass = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("saveCreds");
-            saveCreds = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("ipAddress");
-            ipAddress = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("port");
-            port = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("version");
-            version = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Username");
+            Username = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Password");
+            Password = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Remember");
+            Remember = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("IPAddress");
+            IPAddress = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Port");
+            Port = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Version");
+            Version = reader.ReadElementContentAsString();
             reader.Close();
         }
 
@@ -130,12 +130,12 @@ namespace Client.Classes
             XmlWriter writer = XmlWriter.Create("Config.xml", configData);
             writer.WriteStartDocument();
             writer.WriteStartElement("Configuration");
-            writer.WriteElementString("savedUser", savedUser);
-            writer.WriteElementString("savedPass", savedPass);
-            writer.WriteElementString("saveCreds", saveCreds);
-            writer.WriteElementString("ipAddress", ipAddress);
-            writer.WriteElementString("port", port);
-            writer.WriteElementString("version", version);
+            writer.WriteElementString("Username", Username);
+            writer.WriteElementString("Password", Password);
+            writer.WriteElementString("Remember", Remember);
+            writer.WriteElementString("IPAddress", IPAddress);
+            writer.WriteElementString("Port", Port);
+            writer.WriteElementString("Version", Version);
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -164,50 +164,48 @@ namespace Client.Classes
         }
     }
 
-    class Game
+    public static class Client
     {
-        static RenderWindow c_Window;
-        static Canvas c_Canvas;    
-        static Gwen.Input.SFML c_Input;  
-        static GUI c_GUI;
-        HUD p_HUD = new HUD();
-        HandleData handleData; 
-        Player[] c_Player = new Player[5]; 
-        Npc[] c_Npc = new Npc[10];
-        Shop[] c_Shop = new Shop[10];
-        Item[] c_Item = new Item[50];   
-        Projectile[] c_Proj = new Projectile[10];
-        Chat[] c_Chat = new Chat[15];
-        Chest[] c_Chest = new Chest[10];
-        Map c_Map = new Map();
-        MiniMap m_Map = new MiniMap();
-        View c_View = new View();
-        WorldTime g_GameTime;
-        ClientConfig c_Config;
+        public static RenderWindow renderWindow;
+        public static Canvas canvas;    
+        public static Gwen.Input.SFML sFML = new Gwen.Input.SFML();  
+        public static GUI gui = new GUI();
+        public static HUD hud = new HUD();
+        public static Player[] players = new Player[Globals.MAX_PLAYERS];
+        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
+        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
+        public static Item[] items = new Item[Globals.MAX_ITEMS];
+        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
+        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
+        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
+        public static Map map = new Map();
+        public static MiniMap miniMap = new MiniMap();
+        public static View view = new View();
+        public static WorldTime worldTime = new WorldTime();
+        public static ClientConfig clientConfig = new ClientConfig();
         static int lastTick;
         static int lastFrameRate;  
         static int frameRate; 
         static int fps; 
         static int discoverTick;
-        static int timeTick;
+        //static int timeTick;
         static int walkTick;
         static int attackTick;
         static int pickupTick;
         static int saveTime;
 
-        public void GameLoop(NetClient c_Client, ClientConfig c_Config)  
+        public static void GameLoop()  
         {
-            c_Window = new RenderWindow(new VideoMode(800, 600), "Sabertooth", Styles.Close);
-            c_Window.Closed += new EventHandler(OnClose);
-            c_Window.KeyReleased += window_KeyReleased;
-            c_Window.KeyPressed += OnKeyPressed;
-            c_Window.MouseButtonPressed += window_MouseButtonPressed;
-            c_Window.MouseButtonReleased += window_MouseButtonReleased;
-            c_Window.MouseMoved += window_MouseMoved;
-            c_Window.TextEntered += window_TextEntered;
-            //c_Window.SetFramerateLimit(60);
-            this.c_Config = c_Config;
-            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(c_Window);
+            renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Styles.Close);
+            renderWindow.Closed += new EventHandler(OnClose);
+            renderWindow.KeyReleased += window_KeyReleased;
+            renderWindow.KeyPressed += OnKeyPressed;
+            renderWindow.MouseButtonPressed += window_MouseButtonPressed;
+            renderWindow.MouseButtonReleased += window_MouseButtonReleased;
+            renderWindow.MouseMoved += window_MouseMoved;
+            renderWindow.TextEntered += window_TextEntered;
+            renderWindow.SetFramerateLimit(Globals.MAX_FPS);
+            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
             Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
 
             Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
@@ -215,81 +213,76 @@ namespace Client.Classes
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
 
-            c_Canvas = new Canvas(skin);
-            c_Canvas.SetSize(800, 600);
-            c_Canvas.ShouldDrawBackground = true;
-            c_Canvas.BackgroundColor = System.Drawing.Color.Transparent;
-            c_Canvas.KeyboardInputEnabled = true;
-            c_Input = new Gwen.Input.SFML();
-            c_Input.Initialize(c_Canvas, c_Window);
-            c_GUI = new GUI(c_Client, c_Canvas, defaultFont, gwenRenderer, c_Player, c_Config, c_Shop, c_Item, c_Chat, c_Chest);
-            c_GUI.CreateMainWindow(c_Canvas);
-
-            handleData = new HandleData();
-            g_GameTime = new WorldTime();
+            canvas = new Canvas(skin);
+            canvas.SetSize(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+            canvas.ShouldDrawBackground = true;
+            canvas.BackgroundColor = System.Drawing.Color.Transparent;
+            canvas.KeyboardInputEnabled = true;
+            sFML.Initialize(canvas, renderWindow);
+            gui.CreateMainWindow(canvas);
 
             InitArrays();
 
-            while (c_Window.IsOpen)
+            while (renderWindow.IsOpen)
             {
-                CheckForConnection(c_Client);
-                UpdatePlayerTime(c_Client, c_Player[handleData.c_Index], handleData.c_Index);
-                UpdateView(c_Client, c_Config, c_Npc, c_Item, c_Shop, c_Chest, g_GameTime); 
-                DrawGraphics(c_Client, c_Player);
-                c_Window.Display();                
+                CheckForConnection();
+                UpdatePlayerTime();
+                UpdateView(); 
+                DrawGraphics();
+                renderWindow.Display();                
             }
 
-            if (c_Client.ServerConnection != null)
+            if (SabertoothClient.netClient.ServerConnection != null)
             {
-                c_Player[handleData.c_Index].SendUpdateClip(c_Client, handleData.c_Index);
-                c_Player[handleData.c_Index].SendUpdatePlayerTime(c_Client, handleData.c_Index);
-                c_Player[handleData.c_Index].SendUpdateLifeTime(c_Client, handleData.c_Index);
+                players[HandleData.myIndex].SendUpdateClip();
+                players[HandleData.myIndex].SendUpdatePlayerTime();
+                players[HandleData.myIndex].SendUpdateLifeTime();
             }      
 
-            c_Canvas.Dispose(); 
+            canvas.Dispose(); 
             skin.Dispose();
             gwenRenderer.Dispose();
-            c_Client.Disconnect("bye");
+            SabertoothClient.netClient.Disconnect("shutdown");
             Thread.Sleep(500);
             Exit(0);
         }
 
         #region Initialize Methods
-        private void InitArrays()
+        static void InitArrays()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                c_Player[i] = new Player();
+                players[i] = new Player();
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_NPCS; i++)
             {
-                c_Npc[i] = new Npc();
+                npcs[i] = new Npc();
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < Globals.MAX_ITEMS; i++)
             {
-                c_Item[i] = new Item();
+                items[i] = new Item();
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
             {
-                c_Proj[i] = new Projectile();
+                projectiles[i] = new Projectile();
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_SHOPS; i++)
             {
-                c_Shop[i] = new Shop();
+                shops[i] = new Shop();
             }
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < Globals.MAX_CHATS; i++)
             {
-                c_Chat[i] = new Chat();
+                chats[i] = new Chat();
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_CHESTS; i++)
             {
-                c_Chest[i] = new Chest();
+                chests[i] = new Chest();
             }
         }
         #endregion
@@ -303,33 +296,33 @@ namespace Client.Classes
 
         static void window_TextEntered(object sender, TextEventArgs e)
         {
-            c_Input.ProcessMessage(e);
+            sFML.ProcessMessage(e);
         }
 
         static void window_MouseMoved(object sender, MouseMoveEventArgs e)
         {
-            c_Input.ProcessMessage(e);
+            sFML.ProcessMessage(e);
         }
 
         static void window_MouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
-            c_Input.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+            sFML.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
         }
 
         static void window_MouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
-            c_Input.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, false));
+            sFML.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, false));
         }
 
         static void window_KeyReleased(object sender, KeyEventArgs e)
         {
-            c_Input.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, false));
+            sFML.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, false));
         }
 
         static void OnKeyPressed(object sender, KeyEventArgs e)
         {
             if (e.Code == Keyboard.Key.Escape)
-                c_Window.Close();
+                renderWindow.Close();
 
             if (e.Code == Keyboard.Key.F12)
             {
@@ -348,112 +341,112 @@ namespace Client.Classes
             }
             else
             {
-                c_Input.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
+                sFML.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
             }
 
             if (e.Code == Keyboard.Key.Return)
             {
-                if (c_GUI.inputChat != null)
+                if (gui.inputChat != null)
                 {
-                    if (c_GUI.inputChat.HasFocus == false)
+                    if (gui.inputChat.HasFocus == false)
                     {
-                        c_GUI.chatWindow.Focus();
-                        c_GUI.inputChat.Focus();
+                        gui.chatWindow.Focus();
+                        gui.inputChat.Focus();
                     }
                 }
             }
 
             if (e.Code == Keyboard.Key.Tab)
             {
-                if (c_GUI.chatWindow != null)
+                if (gui.chatWindow != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.chatWindow.IsVisible)
+                    if (gui.chatWindow.IsVisible)
                     {
-                        c_GUI.chatWindow.Hide();
+                        gui.chatWindow.Hide();
                     }
                     else
                     {
-                        c_GUI.chatWindow.Show();
+                        gui.chatWindow.Show();
                     }
                 }
-                if (c_GUI.d_Window != null)
+                if (gui.d_Window != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.d_Window.IsVisible)
+                    if (gui.d_Window.IsVisible)
                     {
-                        c_GUI.d_Window.Hide();
+                        gui.d_Window.Hide();
                     }
                     else
                     {
-                        c_GUI.d_Window.Show();
+                        gui.d_Window.Show();
                     }
                 }
-                if (c_GUI.menuWindow != null)
+                if (gui.menuWindow != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.menuWindow.IsVisible)
+                    if (gui.menuWindow.IsVisible)
                     {
-                        c_GUI.menuWindow.Hide();
+                        gui.menuWindow.Hide();
                     }
                     else
                     {
-                        c_GUI.menuWindow.Show();
+                        gui.menuWindow.Show();
                     }
                 }
             }
 
             if (e.Code == Keyboard.Key.M)
             {
-                if (c_GUI.menuWindow != null)
+                if (gui.menuWindow != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.menuWindow.IsVisible)
+                    if (gui.menuWindow.IsVisible)
                     {
-                        c_GUI.menuWindow.Hide();
+                        gui.menuWindow.Hide();
                     }
                     else
                     {
-                        c_GUI.menuWindow.Show();
-                        c_GUI.charTab.Focus();
+                        gui.menuWindow.Show();
+                        gui.charTab.Focus();
                     }
                 }
             }
 
             if (e.Code == Keyboard.Key.C)
             {
-                if (c_GUI.chatWindow != null)
+                if (gui.chatWindow != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.chatWindow.IsVisible)
+                    if (gui.chatWindow.IsVisible)
                     {
-                        c_GUI.chatWindow.Hide();
+                        gui.chatWindow.Hide();
                     }
                     else
                     {
-                        c_GUI.chatWindow.Show();
+                        gui.chatWindow.Show();
                     }
                 }
             }
 
             if (e.Code == Keyboard.Key.B)
             {
-                if (c_GUI.d_Window != null)
+                if (gui.d_Window != null)
                 {
-                    if (c_GUI.inputChat.HasFocus) { return; }
+                    if (gui.inputChat.HasFocus) { return; }
 
-                    if (c_GUI.d_Window.IsVisible)
+                    if (gui.d_Window.IsVisible)
                     {
-                        c_GUI.d_Window.Hide();
+                        gui.d_Window.Hide();
                     }
                     else
                     {
-                        c_GUI.d_Window.Show();
+                        gui.d_Window.Show();
                     }
                 }
             }
@@ -473,55 +466,55 @@ namespace Client.Classes
         #endregion
 
         #region Draw Methods
-        void DrawPlayers()
+        static void DrawPlayers()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
             {
-                if (c_Player[i].Name != "")
+                if (players[i].Name != "")
                 {
-                    if (i != handleData.c_Index && c_Player[i].Map == c_Player[handleData.c_Index].Map)
+                    if (i != HandleData.myIndex && players[i].Map == players[HandleData.myIndex].Map)
                     {
-                        c_Window.Draw(c_Player[i]);
+                        renderWindow.Draw(players[i]);
                     }
                 }
             }
         }
 
-        void DrawNpcs(Player c_Player)
+        static void DrawNpcs()
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_MAP_NPCS; i++)
             {
-                if (c_Map.m_MapNpc[i].IsSpawned)
+                if (map.m_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.m_MapNpc[i].X > minX && c_Map.m_MapNpc[i].X < maxX)
+                    if (map.m_MapNpc[i].X > minX && map.m_MapNpc[i].X < maxX)
                     {
-                        if (c_Map.m_MapNpc[i].Y > minY && c_Map.m_MapNpc[i].Y < maxY)
+                        if (map.m_MapNpc[i].Y > minY && map.m_MapNpc[i].Y < maxY)
                         {
-                            if (c_Map.m_MapNpc[i].Sprite > 0)
+                            if (map.m_MapNpc[i].Sprite > 0)
                             {
-                                c_Window.Draw(c_Map.m_MapNpc[i]);
+                                renderWindow.Draw(map.m_MapNpc[i]);
                             }
                         }
                     }     
                 }
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Globals.MAX_MAP_POOL_NPCS; i++)
             {
-                if (c_Map.r_MapNpc[i].IsSpawned)
+                if (map.r_MapNpc[i].IsSpawned)
                 {
-                    if (c_Map.r_MapNpc[i].X > minX && c_Map.r_MapNpc[i].X < maxX)
+                    if (map.r_MapNpc[i].X > minX && map.r_MapNpc[i].X < maxX)
                     {
-                        if (c_Map.r_MapNpc[i].Y > minY && c_Map.r_MapNpc[i].Y < maxY)
+                        if (map.r_MapNpc[i].Y > minY && map.r_MapNpc[i].Y < maxY)
                         {
-                            if (c_Map.r_MapNpc[i].Sprite > 0)
+                            if (map.r_MapNpc[i].Sprite > 0)
                             {
-                                c_Window.Draw(c_Map.r_MapNpc[i]);
+                                renderWindow.Draw(map.r_MapNpc[i]);
                             }
                         }
                     }
@@ -529,24 +522,24 @@ namespace Client.Classes
             }
         }
 
-        void DrawMapItems(Player c_Player)
+        static void DrawMapItems()
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
             {
-                if (c_Map.m_MapItem[i].IsSpawned)
+                if (map.m_MapItem[i].IsSpawned)
                 {
-                    if (c_Map.m_MapItem[i].X > minX && c_Map.m_MapItem[i].X < maxX)
+                    if (map.m_MapItem[i].X > minX && map.m_MapItem[i].X < maxX)
                     {
-                        if (c_Map.m_MapItem[i].Y > minY && c_Map.m_MapItem[i].Y < maxY)
+                        if (map.m_MapItem[i].Y > minY && map.m_MapItem[i].Y < maxY)
                         {
-                            if (c_Map.m_MapItem[i].Sprite > 0)
+                            if (map.m_MapItem[i].Sprite > 0)
                             {
-                                c_Window.Draw(c_Map.m_MapItem[i]);
+                                renderWindow.Draw(map.m_MapItem[i]);
                             }
                         }
                     }
@@ -554,192 +547,190 @@ namespace Client.Classes
             }
         }
 
-        void DrawChests(Player c_Player)
+        static void DrawChests()
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
             for (int x = minX; x < maxX; x++)
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    if (x > 0 && y > 0 && x < Globals.MAX_MAP_X && y < Globals.MAX_MAP_Y)
                     {
-                        if (c_Map.Ground[x, y].Type == (int)TileType.Chest)
+                        if (map.Ground[x, y].Type == (int)TileType.Chest)
                         {
                             
-                            c_Map.DrawChest(c_Window, x, y, isChestEmpty(c_Map.Ground[x, y].ChestNum));
+                            map.DrawChest(x, y, isChestEmpty(map.Ground[x, y].ChestNum));
                         }
                     }
                 }
             }
         }
 
-        void DrawProjectiles(NetClient c_Client, Player c_Player)
+        static void DrawProjectiles()
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
 
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < Globals.MAX_DRAWN_PROJECTILES; i++)
             {
-                if (c_Map.m_MapProj[i] != null)
+                if (map.m_MapProj[i] != null)
                 {
-                    if (c_Map.m_MapProj[i].X > minX && c_Map.m_MapProj[i].X < maxX)
+                    if (map.m_MapProj[i].X > minX && map.m_MapProj[i].X < maxX)
                     {
-                        if (c_Map.m_MapProj[i].Y > minY && c_Map.m_MapProj[i].Y < maxY)
+                        if (map.m_MapProj[i].Y > minY && map.m_MapProj[i].Y < maxY)
                         {
-                            c_Window.Draw(c_Map.m_MapProj[i]);
+                            renderWindow.Draw(map.m_MapProj[i]);
                         }
                     }
-                    c_Map.m_MapProj[i].CheckMovment(c_Client, c_Window, c_Map, i);
+                    map.m_MapProj[i].CheckMovment(i);
                 }
             }
         }
 
-        void DrawIndexPlayer()
+        static void DrawIndexPlayer()
         {
-            c_Window.Draw(c_Player[handleData.c_Index]);
+            renderWindow.Draw(players[HandleData.myIndex]);
         }
 
-        void DrawGraphics(NetClient c_Client, Player[] c_Player)
+        static void DrawGraphics()
         {
-            if (c_Map.Name != null && c_GUI.Ready)
+            if (map.Name != null && gui.Ready)
             {
-                c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
-                c_Window.Draw(c_Map);
-                DrawChests(c_Player[handleData.c_Index]);
-                DrawMapItems(c_Player[handleData.c_Index]);
-                DrawNpcs(c_Player[handleData.c_Index]);
+                renderWindow.Draw(map);
+                DrawChests();
+                DrawMapItems();
+                DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
-                DrawProjectiles(c_Client, c_Player[handleData.c_Index]);
-                c_Map.DrawFringe(c_Window);
+                DrawProjectiles();
+                map.DrawFringe(renderWindow);
                 if (TickCount - walkTick > 100)
                 {
-                    this.c_Player[handleData.c_Index].CheckMovement(c_Client, handleData.c_Index, c_Window, c_Map, c_GUI);
-                    this.c_Player[handleData.c_Index].CheckControllerMovement(c_Client, c_Window, c_Map, c_GUI, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerChangeDirection(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckReload(c_Client, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerReload(c_Client, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerPlayerInteraction(c_Client, c_GUI, c_Window, c_Map, handleData.c_Index);
+                    players[HandleData.myIndex].CheckMovement();
+                    players[HandleData.myIndex].CheckControllerMovement();
+                    players[HandleData.myIndex].CheckChangeDirection();
+                    players[HandleData.myIndex].CheckControllerChangeDirection();
+                    players[HandleData.myIndex].CheckReload();
+                    players[HandleData.myIndex].CheckControllerReload();
+                    players[HandleData.myIndex].CheckPlayerInteraction();
+                    players[HandleData.myIndex].CheckControllerPlayerInteraction();
                     ProcessMovement();
                     walkTick = TickCount;
                 }
                 if (TickCount - attackTick > 25)
                 {
-                    this.c_Player[handleData.c_Index].CheckAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerAttack(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    players[HandleData.myIndex].CheckAttack();
+                    players[HandleData.myIndex].CheckControllerAttack();
                     attackTick = TickCount;
                 }
                 if (TickCount - pickupTick > 100)
                 {
-                    this.c_Player[handleData.c_Index].CheckItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
-                    this.c_Player[handleData.c_Index].CheckControllerItemPickUp(c_Client, c_GUI, c_Window, handleData.c_Index);
+                    players[HandleData.myIndex].CheckItemPickUp();
+                    players[HandleData.myIndex].CheckControllerItemPickUp();
                     pickupTick = TickCount;
                 }
             }
-            c_Window.SetView(c_Window.DefaultView);
-            if (c_Map.Name != null && c_GUI.Ready)
+            renderWindow.SetView(renderWindow.DefaultView);
+            if (map.Name != null && gui.Ready)
             {
-                c_Map.DrawBrightness(c_Window, c_Player, g_GameTime, handleData.c_Index);
-                p_HUD.UpdateHealthBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateExpBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateClipBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateHungerBar(c_Player[handleData.c_Index]);
-                p_HUD.UpdateHydrationBar(c_Player[handleData.c_Index]);
-                c_Window.Draw(p_HUD);
-                m_Map.UpdateMiniMap(c_Player[handleData.c_Index], c_Map);
-                c_Map.UpdateMapPlayer(c_Player[handleData.c_Index]);
-                c_Window.Draw(m_Map);
+                map.DrawBrightness();
+                hud.UpdateHealthBar();
+                hud.UpdateExpBar();
+                hud.UpdateClipBar();
+                hud.UpdateHungerBar();
+                hud.UpdateHydrationBar();
+                renderWindow.Draw(hud);
+                miniMap.UpdateMiniMap();
+                renderWindow.Draw(miniMap);
             }
-            c_Canvas.RenderCanvas();
+            canvas.RenderCanvas();
         }
         #endregion
 
         #region Check & Update Methods
-        void UpdatePlayerTime(NetClient c_Client, Player c_Player, int index)
+        static void UpdatePlayerTime()
         {
-            if (c_Client.ServerConnection == null || c_Player.Name == null) { return; }
+            if (SabertoothClient.netClient.ServerConnection == null || players[HandleData.myIndex].Name == null) { return; }
 
-            c_Player.UpdatePlayerTime();
-            c_Player.UpdateLifeTime();
+            players[HandleData.myIndex].UpdatePlayerTime();
+            players[HandleData.myIndex].UpdateLifeTime();
 
             if (TickCount - saveTime >= 297000)
             {
-                c_Player.SendUpdatePlayerTime(c_Client, handleData.c_Index);
-                c_Player.SendUpdateLifeTime(c_Client, handleData.c_Index);
+                players[HandleData.myIndex].SendUpdatePlayerTime();
+                players[HandleData.myIndex].SendUpdateLifeTime();
                 saveTime = TickCount;
             }
         }
 
-        void ProcessMovement()
+        static void ProcessMovement()
         {
             for (int i = 0; i < 5; i++)
             {
-                if (c_Player[i].tempStep != 5 && i != handleData.c_Index)
+                if (players[i].tempStep != 5 && i != HandleData.myIndex)
                 {
-                    c_Player[i].X = c_Player[i].tempX;
-                    c_Player[i].Y = c_Player[i].tempY;
-                    c_Player[i].Direction = c_Player[i].tempDir;
-                    c_Player[i].AimDirection = c_Player[i].tempaimDir;
-                    c_Player[i].Step = c_Player[i].tempStep;
+                    players[i].X = players[i].tempX;
+                    players[i].Y = players[i].tempY;
+                    players[i].Direction = players[i].tempDir;
+                    players[i].AimDirection = players[i].tempaimDir;
+                    players[i].Step = players[i].tempStep;
 
-                    c_Player[i].tempStep = 5;
+                    players[i].tempStep = 5;
                 }
             }
         }
 
-        void UpdateTitle(int fps)
+        static void UpdateTitle(int fps)
         {
-            string title = "Sabertooth - FPS: " + fps;
+            string title = Globals.GAME_TITLE + " FPS: " + fps;
 
-            if (c_Player[handleData.c_Index].Name != null) { title += " - Logged: " + c_Player[handleData.c_Index].Name; }
-            if (g_GameTime.updateTime == true) { title += " - Time: " + g_GameTime.Time; }
+            if (players[HandleData.myIndex].Name != null) { title += " - Logged: " + players[HandleData.myIndex].Name; }
+            if (worldTime.updateTime == true) { title += " - Time: " + worldTime.Time; }
 
-            c_Window.SetTitle(title);
+            renderWindow.SetTitle(title);
         }
 
-        void CheckForConnection(NetClient c_Client)
+        static void CheckForConnection()
         {
-            if (c_Client.ServerConnection == null)
+            if (SabertoothClient.netClient.ServerConnection == null)
             {
-                if (TickCount - discoverTick >= 6500)
+                if (TickCount - discoverTick >= Globals.DISCOVERY_TIMER)
                 {
                     Console.WriteLine("Connecting to server...");
-                    c_Client.DiscoverLocalPeers(14242);
+                    SabertoothClient.netClient.DiscoverLocalPeers(Globals.SERVER_PORT);
                     discoverTick = TickCount;
                 }
             }
-            //Console.WriteLine("Status: " + c_Client.ConnectionStatus.ToString());            
+            //Console.WriteLine("Status: " + SabertoothClient.netClient.ConnectionStatus.ToString());            
         }
 
-        void UpdateView(NetClient c_Client, ClientConfig c_Config, Npc[] c_Npc, Item[] c_Item, Shop[] c_Shop, Chest[] c_Chest, WorldTime g_GameTime)
+        static void UpdateView()
         {
-            c_View.Reset(new FloatRect(0, 0, 800, 600));
-            c_View.Move(new Vector2f(c_Player[handleData.c_Index].X * 32, c_Player[handleData.c_Index].Y * 32));
-            handleData.DataMessage(c_Client, c_Canvas, c_GUI, c_Player, c_Map, c_Config, c_Npc, c_Item, c_Proj, c_Shop, c_Chat, c_Chest, g_GameTime); 
+            view.Reset(new FloatRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT));
+            view.Move(new Vector2f(players[HandleData.myIndex].X * Globals.PIC_X, players[HandleData.myIndex].Y * Globals.PIC_Y));
+            HandleData.HandleDataMessage();
 
-            c_Window.SetActive();
-            c_Window.DispatchEvents();
-            c_Window.Clear();
+            renderWindow.SetActive();
+            renderWindow.DispatchEvents();
+            renderWindow.Clear();
             //Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
 
-            c_Window.SetView(c_View);
+            renderWindow.SetView(view);
 
             fps = CalculateFrameRate();
 
-            if (c_GUI.menuWindow != null && c_GUI.menuWindow.IsVisible) { c_GUI.UpdateMenuWindow(c_Player[handleData.c_Index]); }
-            if (c_Player[handleData.c_Index].inShop) { c_GUI.UpdateShopWindow(c_Shop[c_Player[handleData.c_Index].shopNum]); }
-            if (c_GUI.d_Window != null && c_GUI.d_Window.IsVisible) { c_GUI.UpdateDebugWindow(fps, c_Player, handleData.c_Index); }
-            if (c_GUI.bankWindow != null && c_GUI.bankWindow.IsVisible) { c_GUI.UpdateBankWindow(c_Player[handleData.c_Index]); }
-            if (c_GUI.chestWindow != null && c_GUI.chestWindow.IsVisible) { c_GUI.UpdateChestWindow(c_Chest[c_Player[handleData.c_Index].chestNum]); }
-            if (g_GameTime.updateTime == true) { g_GameTime.UpdateTime(); }
+            if (gui.menuWindow != null && gui.menuWindow.IsVisible) { gui.UpdateMenuWindow(); }
+            if (players[HandleData.myIndex].inShop) { gui.UpdateShopWindow(); }
+            if (gui.d_Window != null && gui.d_Window.IsVisible) { gui.UpdateDebugWindow(fps); }
+            if (gui.bankWindow != null && gui.bankWindow.IsVisible) { gui.UpdateBankWindow(); }
+            if (gui.chestWindow != null && gui.chestWindow.IsVisible) { gui.UpdateChestWindow(); }
+            if (worldTime.updateTime == true) { worldTime.UpdateTime(); }
 
             UpdateTitle(fps);
 
@@ -748,11 +739,11 @@ namespace Client.Classes
         #endregion
 
         #region Misc Methods
-        bool isChestEmpty(int chestNum)
+        static bool isChestEmpty(int chestNum)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Globals.MAX_CHESTS; i++)
             {
-                if (c_Chest[chestNum].ChestItem[i].Name != "None")
+                if (chests[chestNum].ChestItem[i].Name != "None")
                 {
                     return false;
                 }
@@ -760,5 +751,49 @@ namespace Client.Classes
             return true;
         }
         #endregion
+    }
+
+    public static class Globals
+    {
+        //Server Globals
+        public const byte NO = 0;
+        public const byte YES = 1;
+        public const int MAX_PLAYERS = 5;
+        public const int MAX_NPCS = 10;
+        public const int MAX_ITEMS = 50;
+        public const int MAX_PROJECTILES = 10;
+        public const int MAX_MAPS = 10;
+        public const int MAX_MAP_NPCS = 10;
+        public const int MAX_MAP_POOL_NPCS = 20;
+        public const int MAX_MAP_ITEMS = 20;
+        public const int MAX_MAP_X = 50;
+        public const int MAX_MAP_Y = 50;
+        public const int MAX_SHOPS = 10;
+        public const int MAX_CHATS = 15;
+        public const int MAX_CHESTS = 10;
+        public const int MAX_CHEST_ITEMS = 10;
+        //Config Globals
+        public const string GAME_TITLE = "Sabertooth";
+        public const string IP_ADDRESS = "10.16.0.8";
+        public const int SERVER_PORT = 14242;
+        public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
+        public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
+        public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
+        public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
+        public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
+        public const string VERSION = "1.0"; //For beta and alpha
+        //Client Globals
+        public const int SCREEN_WIDTH = 800;
+        public const int SCREEN_HEIGHT = 600;
+        public const int CANVAS_WIDTH = 800;
+        public const int CANVAS_HEIGHT = 600;
+        public const int MAX_FPS = 85;
+        public const Styles SCREEN_STYLE = Styles.Close;
+        public const int MAX_DRAWN_PROJECTILES = 200;
+        public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds
+        public const int PIC_X = 32;
+        public const int PIC_Y = 32;
+        public const int SW_HIDE = 0;
+        public const int SW_SHOW = 5;
     }
 }

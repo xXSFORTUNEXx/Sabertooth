@@ -7,9 +7,9 @@ using System.Data.SQLite;
 using static System.Environment;
 using System.ComponentModel;
 using static System.Convert;
-using static Sabertooth.Server;
+using static SabertoothServer.Server;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public class Map
     {
@@ -311,11 +311,11 @@ namespace Sabertooth
 
         void SendClearProjectileToAll(NetConnection p_Conn, int mapIndex, int slot)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.Write(maps[mapIndex].Name);
             outMSG.WriteVariableInt32(slot);
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void CreateProjectile(int mapIndex, int playerIndex)
@@ -349,14 +349,14 @@ namespace Sabertooth
 
         void SendNewProjectileToAll(NetConnection p_Conn, int mapIndex, int slot, int projNum)
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(m_MapProj[slot].projNum);
             outMSG.WriteVariableInt32(m_MapProj[slot].X);
             outMSG.WriteVariableInt32(m_MapProj[slot].Y);
             outMSG.WriteVariableInt32(m_MapProj[slot].Direction);            
-            Sabertooth.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
     }
 

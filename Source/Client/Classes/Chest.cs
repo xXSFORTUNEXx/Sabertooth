@@ -6,9 +6,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static System.Convert;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Chest
+    public class Chest
     {
         public string Name { get; set; }
         public int Money { get; set; }

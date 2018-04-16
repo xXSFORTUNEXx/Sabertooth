@@ -4,9 +4,9 @@ using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class WorldTime
+    public class WorldTime
     {
         DateTime g_GameTime;
         public int g_Second { get; set; }

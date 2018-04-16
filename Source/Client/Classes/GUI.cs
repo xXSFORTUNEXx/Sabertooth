@@ -8,27 +8,19 @@ using SFML.System;
 using static System.Convert;
 using System.Text;
 using System.Data.SQLite;
+using static SabertoothClient.Client;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class GUI
+    public class GUI
     {
         #region Main Classes
-        static NetClient c_Client;
-        Canvas c_Canvas;
-        Gwen.Font c_Font;
-        Player[] c_Player;
-        Shop[] c_Shop;
-        Item[] c_Item;
-        Chat[] c_Chat;
-        Chest[] c_Chest;
-        ClientConfig c_Config;
+        static Player player;
         public bool Ready;
         #endregion
 
         #region DebugWindow
         public WindowControl d_Window;
-        public int g_Index;
         public Label d_Controller;
         public Label d_ConDir;
         Label d_FPS;
@@ -254,30 +246,22 @@ namespace Client.Classes
         Button optLog;
         #endregion
 
-        public GUI(NetClient c_Client, Canvas c_Canvas, Gwen.Font c_Font, Gwen.Renderer.SFML gwenRenderer, Player[] c_Player, ClientConfig c_Config, Shop[] c_Shop, Item[] c_Item, Chat[] c_Chat, Chest[] c_Chest)
+        public GUI()
         {
-            GUI.c_Client = c_Client;
-            this.c_Canvas = c_Canvas;
-            this.c_Font = c_Font;
-            this.c_Player = c_Player;
-            this.c_Config = c_Config;
-            this.c_Shop = c_Shop;
-            this.c_Item = c_Item;
-            this.c_Chat = c_Chat;
-            this.c_Chest = c_Chest;
+            player = Client.players[HandleData.myIndex];
         }
 
         #region Update Voids
-        public void UpdateBankWindow(Player c_Player)
+        public void UpdateBankWindow()
         {
             if (bankWindow != null && bankWindow.IsVisible)
             {
-                bankWindow.Title = c_Player.Name + "'s Bank";
+                bankWindow.Title = player.Name + "'s Bank";
                 for (int i = 0; i < 50; i++)
                 {
-                    if (c_Player.Bank[i].Name != "None")
+                    if (player.Bank[i].Name != "None")
                     {
-                        bankPic[i].ImageName = "Resources/Items/" + c_Player.Bank[i].Sprite+ ".png";
+                        bankPic[i].ImageName = "Resources/Items/" + player.Bank[i].Sprite+ ".png";
                         bankPic[i].Show();
                     }
                     else
@@ -286,9 +270,9 @@ namespace Client.Classes
                     }
                     if (bankPic[i].IsHovered)
                     {
-                        if (c_Player.Bank[i].Name != "None")
+                        if (player.Bank[i].Name != "None")
                         {
-                            SetBankStatWindow(bankPic[i].X, bankPic[i].Y, c_Player.Bank[i]);
+                            SetBankStatWindow(bankPic[i].X, bankPic[i].Y, player.Bank[i]);
                             break;
                         }
                     }
@@ -300,16 +284,17 @@ namespace Client.Classes
             }
         }
 
-        public void UpdateChestWindow(Chest c_Chest)
+        public void UpdateChestWindow()
         {
             if (chestWindow != null && chestWindow.IsVisible)
             {
-                chestWindow.Title = c_Chest.Name;
+                int chestNum = player.chestNum;
+                chestWindow.Title = chests[chestNum].Name;
                 for (int i = 0; i < 10; i++)
                 {
-                    if (c_Chest.ChestItem[i].Name != "None")
+                    if (chests[chestNum].ChestItem[i].Name != "None")
                     {
-                        chestPic[i].ImageName = "Resources/Items/" + c_Item[c_Chest.ChestItem[i].ItemNum - 1].Sprite + ".png";
+                        chestPic[i].ImageName = "Resources/Items/" + items[chests[chestNum].ChestItem[i].ItemNum - 1].Sprite + ".png";
                         chestPic[i].Show();
                     }
                     else
@@ -318,9 +303,9 @@ namespace Client.Classes
                     }
                     if (chestPic[i].IsHovered)
                     {
-                        if (c_Chest.ChestItem[i].Name != "None")
+                        if (chests[chestNum].ChestItem[i].Name != "None")
                         {
-                            SetChestStatWindow(chestPic[i].X, chestPic[i].Y, c_Item[c_Chest.ChestItem[i].ItemNum - 1]);
+                            SetChestStatWindow(chestPic[i].X, chestPic[i].Y, items[chests[chestNum].ChestItem[i].ItemNum - 1]);
                             break;
                         }
                     }
@@ -332,16 +317,17 @@ namespace Client.Classes
             }
         }
 
-        public void UpdateShopWindow(Shop c_Shop)
+        public void UpdateShopWindow()
         {
             if (shopWindow != null && shopWindow.IsVisible)
             {
-                shopWindow.Title = c_Shop.Name;
+                int shopNum = player.shopNum;
+                shopWindow.Title = shops[shopNum].Name;
                 for (int i = 0; i < 25; i++)
                 {
-                    if (c_Shop.shopItem[i].Name != "None")
+                    if (shops[shopNum].shopItem[i].Name != "None")
                     {
-                        shopPic[i].ImageName = "Resources/Items/" + c_Item[c_Shop.shopItem[i].ItemNum - 1].Sprite + ".png";
+                        shopPic[i].ImageName = "Resources/Items/" + items[shops[shopNum].shopItem[i].ItemNum - 1].Sprite + ".png";
                         shopPic[i].Show();
                     }
                     else
@@ -350,9 +336,9 @@ namespace Client.Classes
                     }
                     if (shopPic[i].IsHovered)
                     {
-                        if (c_Shop.shopItem[i].Name != "None")
+                        if (shops[shopNum].shopItem[i].Name != "None")
                         {
-                            SetShopStatWindow(shopPic[i].X, shopPic[i].Y, c_Item[c_Shop.shopItem[i].ItemNum - 1], c_Shop.shopItem[i].Cost);
+                            SetShopStatWindow(shopPic[i].X, shopPic[i].Y, items[shops[shopNum].shopItem[i].ItemNum - 1], shops[shopNum].shopItem[i].Cost);
                             break;
                         }
                     }
@@ -364,35 +350,35 @@ namespace Client.Classes
             }
         }
 
-        public void UpdateMenuWindow(Player c_Player)
+        public void UpdateMenuWindow()
         {
-            if (menuWindow != null && c_Player != null && menuWindow.IsVisible)
+            if (menuWindow != null && player != null && menuWindow.IsVisible)
             {
                 //if (charTab.HasFocus)
                 {
                     #region Character
-                    charName.Text = c_Player.Name;
-                    charLevel.Text = "Level: " + c_Player.Level;
-                    charExp.Text = "Experience: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
-                    charMoney.Text = "Money: " + c_Player.Money;
-                    charPoints.Text = "Points: " + c_Player.Points;
+                    charName.Text = player.Name;
+                    charLevel.Text = "Level: " + player.Level;
+                    charExp.Text = "Experience: " + player.Experience + " / " + (player.Level * 1000);
+                    charMoney.Text = "Money: " + player.Money;
+                    charPoints.Text = "Points: " + player.Points;
 
-                    charHealth.Text = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
-                    charHunger.Text = "Hunger: " + c_Player.Hunger + " / 100";
-                    charHydration.Text = "Hydration: " + c_Player.Hydration + " / 100";
+                    charHealth.Text = "Health: " + player.Health + " / " + player.MaxHealth;
+                    charHunger.Text = "Hunger: " + player.Hunger + " / 100";
+                    charHydration.Text = "Hydration: " + player.Hydration + " / 100";
 
-                    charArmor.Text = "Armor: " + c_Player.Armor;
-                    charStr.Text = "Strength: " + c_Player.Strength;
-                    charAgi.Text = "Agility: " + c_Player.Agility;
-                    charEnd.Text = "Endurance: " + c_Player.Endurance;
-                    charSta.Text = "Stamina: " + c_Player.Stamina;
+                    charArmor.Text = "Armor: " + player.Armor;
+                    charStr.Text = "Strength: " + player.Strength;
+                    charAgi.Text = "Agility: " + player.Agility;
+                    charEnd.Text = "Endurance: " + player.Endurance;
+                    charSta.Text = "Stamina: " + player.Stamina;
 
-                    lifeTime.Text = "Life Time: " + c_Player.LifeDay + "D " + c_Player.LifeHour + "H " + c_Player.LifeMinute + "M " + c_Player.LifeSecond + "S";
-                    playTime.Text = "Play Time: " + c_Player.PlayDays + "D " + c_Player.PlayHours + "H " + c_Player.PlayMinutes + "M " + c_Player.PlaySeconds + "S";
+                    lifeTime.Text = "Life Time: " + player.LifeDay + "D " + player.LifeHour + "H " + player.LifeMinute + "M " + player.LifeSecond + "S";
+                    playTime.Text = "Play Time: " + player.PlayDays + "D " + player.PlayHours + "H " + player.PlayMinutes + "M " + player.PlaySeconds + "S";
                    
-                    if (c_Player.LongestLifeDay > 0 || c_Player.LongestLifeHour > 0 || c_Player.LongestLifeMinute > 0 || c_Player.LongestLifeSecond > 0)
+                    if (player.LongestLifeDay > 0 || player.LongestLifeHour > 0 || player.LongestLifeMinute > 0 || player.LongestLifeSecond > 0)
                     {
-                        longestLife.Text = "Longest Life: " + c_Player.LongestLifeDay + "D " + c_Player.LongestLifeHour + "H " + c_Player.LongestLifeMinute + "M " + c_Player.LongestLifeSecond + "S"; ;
+                        longestLife.Text = "Longest Life: " + player.LongestLifeDay + "D " + player.LongestLifeHour + "H " + player.LongestLifeMinute + "M " + player.LongestLifeSecond + "S"; ;
                     }
                     #endregion
                 }
@@ -401,9 +387,9 @@ namespace Client.Classes
                     #region BackPack
                     for (int i = 0; i < 25; i++)
                     {
-                        if (c_Player.Backpack[i].Name != "None" && c_Player.Backpack[i].Sprite > 0)
+                        if (player.Backpack[i].Name != "None" && player.Backpack[i].Sprite > 0)
                         {
-                            invPic[i].ImageName = "Resources/Items/" + c_Player.Backpack[i].Sprite + ".png";
+                            invPic[i].ImageName = "Resources/Items/" + player.Backpack[i].Sprite + ".png";
                             invPic[i].Show();                    
                         } 
                         else
@@ -412,9 +398,9 @@ namespace Client.Classes
                         }
                         if (invPic[i].IsHovered)
                         {
-                            if (c_Player.Backpack[i].Name != "None")
+                            if (player.Backpack[i].Name != "None")
                             {
-                                SetStatWindow(invPic[i].X, invPic[i].Y, c_Player.Backpack[i]);
+                                SetStatWindow(invPic[i].X, invPic[i].Y, player.Backpack[i]);
                                 break;
                             }
                         }
@@ -428,9 +414,9 @@ namespace Client.Classes
                 //if (equipTab.HasFocus)
                 {
                     #region Equipment
-                    if (c_Player.mainWeapon.Name != "None")
+                    if (player.mainWeapon.Name != "None")
                     {
-                        equipMain.ImageName = "Resources/Items/" + c_Player.mainWeapon.Sprite + ".png";
+                        equipMain.ImageName = "Resources/Items/" + player.mainWeapon.Sprite + ".png";
                         equipMain.Show();
                     }
                     else
@@ -438,9 +424,9 @@ namespace Client.Classes
                         equipMain.Hide();
                     }
 
-                    if (c_Player.offWeapon.Name != "None")
+                    if (player.offWeapon.Name != "None")
                     {
-                        equipOff.ImageName = "Resources/Items/" + c_Player.offWeapon.Sprite + ".png";
+                        equipOff.ImageName = "Resources/Items/" + player.offWeapon.Sprite + ".png";
                         equipOff.Show();
                     }
                     else
@@ -448,9 +434,9 @@ namespace Client.Classes
                         equipOff.Hide();
                     }
 
-                    if (c_Player.Chest.Name != "None")
+                    if (player.Chest.Name != "None")
                     {
-                        equipChest.ImageName = "Resources/Items/" + c_Player.Chest.Sprite + ".png";
+                        equipChest.ImageName = "Resources/Items/" + player.Chest.Sprite + ".png";
                         equipChest.Show();
                     }
                     else
@@ -458,9 +444,9 @@ namespace Client.Classes
                         equipChest.Hide();
                     }
 
-                    if (c_Player.Legs.Name != "None")
+                    if (player.Legs.Name != "None")
                     {
-                        equipLegs.ImageName = "Resources/Items/" + c_Player.Legs.Sprite + ".png";
+                        equipLegs.ImageName = "Resources/Items/" + player.Legs.Sprite + ".png";
                         equipLegs.Show();
                     }
                     else
@@ -468,9 +454,9 @@ namespace Client.Classes
                         equipLegs.Hide();
                     }
 
-                    if (c_Player.Feet.Name != "None")
+                    if (player.Feet.Name != "None")
                     {
-                        equipFeet.ImageName = "Resources/Items/" + c_Player.Feet.Sprite + ".png";
+                        equipFeet.ImageName = "Resources/Items/" + player.Feet.Sprite + ".png";
                         equipFeet.Show();
                     }
                     else
@@ -480,65 +466,65 @@ namespace Client.Classes
 
                     if (equipMain.IsHovered)
                     {
-                        SetStatWindow(equipMain.X, equipMain.Y, c_Player.mainWeapon);
+                        SetStatWindow(equipMain.X, equipMain.Y, player.mainWeapon);
                     }
                     else if (equipOff.IsHovered)
                     {
-                        SetStatWindow(equipMain.X, equipMain.Y, c_Player.offWeapon);
+                        SetStatWindow(equipMain.X, equipMain.Y, player.offWeapon);
                     }
                     else if (equipChest.IsHovered)
                     {
-                        SetStatWindow(equipChest.X, equipChest.Y, c_Player.Chest);
+                        SetStatWindow(equipChest.X, equipChest.Y, player.Chest);
                     }
                     else if (equipLegs.IsHovered)
                     {
-                        SetStatWindow(equipLegs.X, equipLegs.Y, c_Player.Legs);
+                        SetStatWindow(equipLegs.X, equipLegs.Y, player.Legs);
                     }
                     else if (equipFeet.IsHovered)
                     {
-                        SetStatWindow(equipFeet.X, equipFeet.Y, c_Player.Feet);
+                        SetStatWindow(equipFeet.X, equipFeet.Y, player.Feet);
                     }
                     else
                     {
                         //RemoveStatWindow();
                     }
                     
-                    pistolAmmo.Text = "Pistol Ammo: " + c_Player.PistolAmmo;
-                    assaultAmmo.Text = "Assault Ammo: " + c_Player.AssaultAmmo;
-                    rocketAmmo.Text = "Rocket Ammo: " + c_Player.RocketAmmo;
-                    grenadeAmmo.Text = "Grenade Ammo: " + c_Player.GrenadeAmmo;
+                    pistolAmmo.Text = "Pistol Ammo: " + player.PistolAmmo;
+                    assaultAmmo.Text = "Assault Ammo: " + player.AssaultAmmo;
+                    rocketAmmo.Text = "Rocket Ammo: " + player.RocketAmmo;
+                    grenadeAmmo.Text = "Grenade Ammo: " + player.GrenadeAmmo;
 
-                    equipMDamage.Text = "Main Damage: " + c_Player.mainWeapon.Damage;
-                    equipODamage.Text = "Off Damage: " + c_Player.offWeapon.Damage;
-                    equipArmor.Text = "Armor: " + c_Player.ArmorBonus(true);
-                    equipStr.Text = "Strength: " + c_Player.StrengthBonus(true);
-                    equipAgi.Text = "Agility: " + c_Player.AgilityBonus(true);
-                    equipEnd.Text = "Endurance: " + c_Player.EnduranceBonus(true);
-                    equipSta.Text = "Stamina: " + c_Player.StaminaBonus(true);
+                    equipMDamage.Text = "Main Damage: " + player.mainWeapon.Damage;
+                    equipODamage.Text = "Off Damage: " + player.offWeapon.Damage;
+                    equipArmor.Text = "Armor: " + player.ArmorBonus(true);
+                    equipStr.Text = "Strength: " + player.StrengthBonus(true);
+                    equipAgi.Text = "Agility: " + player.AgilityBonus(true);
+                    equipEnd.Text = "Endurance: " + player.EnduranceBonus(true);
+                    equipSta.Text = "Stamina: " + player.StaminaBonus(true);
                     #endregion
                 }
             }
         }
 
-        public void UpdateDebugWindow(int fps, Player[] c_Player, int drawIndex)
+        public void UpdateDebugWindow(int fps)
         {
-            if (d_Window != null && c_Player[drawIndex] != null)
+            if (d_Window != null && player != null)
             {
                 d_Window.Title = "Debug Window - Admin";
                 d_FPS.Text = "FPS: " + fps;
-                d_Name.Text = "Name: " + c_Player[drawIndex].Name + " (" + drawIndex + ")";
-                d_X.Text = "X: " + (c_Player[drawIndex].X + c_Player[drawIndex].offsetX);
-                d_Y.Text = "Y: " + (c_Player[drawIndex].Y + c_Player[drawIndex].offsetY);
-                d_Map.Text = "Map: " + c_Player[drawIndex].Map;
-                d_Dir.Text = "Direction: " + c_Player[drawIndex].Direction;
-                d_Sprite.Text = "Sprite: " + c_Player[drawIndex].Sprite;
-                if (c_Client.ServerConnection != null)
+                d_Name.Text = "Name: " + player.Name + " (" + HandleData.myIndex + ")";
+                d_X.Text = "X: " + (player.X + player.offsetX);
+                d_Y.Text = "Y: " + (player.Y + player.offsetY);
+                d_Map.Text = "Map: " + player.Map;
+                d_Dir.Text = "Direction: " + player.Direction;
+                d_Sprite.Text = "Sprite: " + player.Sprite;
+                if (SabertoothClient.netClient.ServerConnection != null)
                 {
-                    d_IP.Text = "IP Address: " + c_Client.ServerConnection.RemoteEndPoint.Address.ToString();
-                    d_Port.Text = "Port: " + c_Client.ServerConnection.RemoteEndPoint.Port.ToString();
-                    d_Latency.Text = "Latency: " + c_Client.ServerConnection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms";
-                    d_packetsIn.Text = "Packets Received: " + c_Client.Statistics.ReceivedPackets.ToString();
-                    d_packetsOut.Text = "Packets Sent: " + c_Client.Statistics.SentPackets.ToString();
+                    d_IP.Text = "IP Address: " + SabertoothClient.netClient.ServerConnection.RemoteEndPoint.Address.ToString();
+                    d_Port.Text = "Port: " + SabertoothClient.netClient.ServerConnection.RemoteEndPoint.Port.ToString();
+                    d_Latency.Text = "Latency: " + SabertoothClient.netClient.ServerConnection.AverageRoundtripTime.ToString(".0#0").TrimStart('0', '.', '0') + "ms";
+                    d_packetsIn.Text = "Packets Received: " + SabertoothClient.netClient.Statistics.ReceivedPackets.ToString();
+                    d_packetsOut.Text = "Packets Sent: " + SabertoothClient.netClient.Statistics.SentPackets.ToString();
                 }
             }
         }
@@ -1492,12 +1478,12 @@ namespace Client.Classes
             chestStatWindow.Hide();
         }
 
-        public void UpdateNpcChatWindow(Chat c_Chat)
+        public void UpdateNpcChatWindow(int chatNum)
         {
-            npcChatName.Text = c_Chat.Name;
+            npcChatName.Text = chats[chatNum].Name;
 
             npcChatMessage.Clear();
-            string msg = c_Chat.MainMessage;
+            string msg = chats[chatNum].MainMessage;
             int msgLength = msg.Length;
             int maxLength = 70;
 
@@ -1523,9 +1509,9 @@ namespace Client.Classes
             {
                 npcChatOption[i].Hide();
 
-                if (c_Chat.Option[i] != "None")
+                if (chats[chatNum].Option[i] != "None")
                 {
-                    npcChatOption[i].Text = c_Chat.Option[i];
+                    npcChatOption[i].Text = chats[chatNum].Option[i];
                     npcChatOption[i].Show();
                 }
             }
@@ -1535,8 +1521,8 @@ namespace Client.Classes
         #region Menu Events
         private void CheckLogOutSubmit(Base control, ClickedEventArgs e)
         {
-            c_Canvas.Dispose();
-            c_Client.Disconnect("bye");
+            canvas.Dispose();
+            SabertoothClient.netClient.Disconnect("shutdown");
             Thread.Sleep(500);
             Exit(0);
         }
@@ -1544,7 +1530,7 @@ namespace Client.Classes
         private void CheckMainWindowLogin(Base control, ClickedEventArgs e)
         {
             Button button = control as Button;
-            CreateLoginWindow(button.GetCanvas(), c_Config);
+            CreateLoginWindow(button.GetCanvas());
         }
 
         private void CheckMainWindowRegister(Base control, ClickedEventArgs e)
@@ -1555,7 +1541,7 @@ namespace Client.Classes
 
         private void CheckMainWindowExit(Base control, ClickedEventArgs e)
         {
-            c_Client.Disconnect("Shutting Down");
+            SabertoothClient.netClient.Disconnect("Shutting Down");
             Thread.Sleep(500);
             Exit(0);
         }
@@ -1573,21 +1559,21 @@ namespace Client.Classes
 
             if (unlogBox.Text != "" && pwlogBox.Text != "")
             {
-                if (c_Client.ServerConnection == null)
+                if (SabertoothClient.netClient.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", canvas);
                     return;
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = c_Config.version;
+                string version = clientConfig.Version;
 
-                if (c_Config.saveCreds == "1")
+                if (clientConfig.Remember == "1")
                 {
-                    c_Config.savedUser = username;
-                    c_Config.savedPass = password;
-                    c_Config.SaveConfig();
+                    clientConfig.Username = username;
+                    clientConfig.Password = password;
+                    clientConfig.SaveConfig();
                 }
 
                 int result = 0;                
@@ -1602,18 +1588,18 @@ namespace Client.Classes
                     }
                 }
 
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
                 outMSG.Write(version);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out the login info.", "Login Failed", c_Canvas);
+                MsgBox("Please fill out the login info.", "Login Failed", canvas);
             }
         }
 
@@ -1623,35 +1609,35 @@ namespace Client.Classes
 
             if (unlogBox.Text != "" && pwlogBox.Text != "")
             {
-                if (c_Client.ServerConnection == null)
+                if (SabertoothClient.netClient.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", canvas);
                     return;
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = c_Config.version;
+                string version = clientConfig.Version;
 
-                if (c_Config.saveCreds == "1")
+                if (clientConfig.Remember == "1")
                 {
-                    c_Config.savedUser = username;
-                    c_Config.savedPass = password;
-                    c_Config.SaveConfig();
+                    clientConfig.Username = username;
+                    clientConfig.Password = password;
+                    clientConfig.SaveConfig();
                 }
 
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
                 outMSG.Write(version);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out the login info.", "Login Failed", c_Canvas);
+                MsgBox("Please fill out the login info.", "Login Failed", canvas);
             }
         }
 
@@ -1667,10 +1653,10 @@ namespace Client.Classes
 
             if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
             {
-                if (c_Client.ServerConnection == null)
+                if (SabertoothClient.netClient.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", canvas);
                     return;
                 }
 
@@ -1678,23 +1664,23 @@ namespace Client.Classes
                 {
                     string username = unregBox.Text;
                     string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Register);
                     outMSG.Write(username);
                     outMSG.Write(password);
-                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                     parent.Hide();
                 }
                 else
                 {
                     parent.Hide();
-                    MsgBox("Passwords do not match!", "Retry", c_Canvas);
+                    MsgBox("Passwords do not match!", "Retry", canvas);
                 }
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out account info for registration.", "Error", c_Canvas);
+                MsgBox("Please fill out account info for registration.", "Error", canvas);
             }
         }
 
@@ -1704,10 +1690,10 @@ namespace Client.Classes
 
             if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
             {
-                if (c_Client.ServerConnection == null)
+                if (SabertoothClient.netClient.ServerConnection == null)
                 {
                     parent.Hide();
-                    MsgBox("Client is not connected to server!", "Not Connected", c_Canvas);
+                    MsgBox("Client is not connected to server!", "Not Connected", canvas);
                     return;
                 }
 
@@ -1715,23 +1701,23 @@ namespace Client.Classes
                 {
                     string username = unregBox.Text;
                     string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.Register);
                     outMSG.Write(username);
                     outMSG.Write(password);
-                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                     parent.Hide();
                 }
                 else
                 {
                     parent.Hide();
-                    MsgBox("Passwords do not match!", "Retry", c_Canvas);
+                    MsgBox("Passwords do not match!", "Retry", canvas);
                 }
             }
             else
             {
                 parent.Hide();
-                MsgBox("Please fill out account info for registration.", "Error", c_Canvas);
+                MsgBox("Please fill out account info for registration.", "Error", canvas);
             }
         }
 
@@ -1740,85 +1726,84 @@ namespace Client.Classes
             if (inputChat.Text != "")
             {
                 string msg = inputChat.Text;
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.ChatMessage);
                 outMSG.Write(msg);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 inputChat.Text = "";
             }
         }
 
         private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
-
-            if (c_Player[index].offWeapon.Name != "None")
+            
+            if (player.offWeapon.Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32((int)EquipSlots.OffWeapon);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             equipTab.Focus();
         }
 
         private void EquipMain_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            if (c_Player[index].mainWeapon.Name != "None")
+            if (player.mainWeapon.Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32((int)EquipSlots.MainWeapon);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             equipTab.Focus();
         }
 
         private void EquipChest_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            if (c_Player[index].Chest.Name != "None")
+            if (player.Chest.Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32((int)EquipSlots.Chest);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             equipTab.Focus();
         }
 
         private void EquipLegs_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            if (c_Player[index].Legs.Name != "None")
+            if (player.Legs.Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32((int)EquipSlots.Legs);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             equipTab.Focus();
         }
 
         private void EquipFeet_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            if (c_Player[index].Feet.Name != "None")
+            if (player.Feet.Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32((int)EquipSlots.Feet);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             equipTab.Focus();
         }
@@ -1827,40 +1812,40 @@ namespace Client.Classes
         {
             ImagePanel invPicE = (ImagePanel)sender;
             int itemSlot = ToInt32(invPicE.Name);
-            int index = g_Index;
+            
 
-            if (c_Player[index].inShop)
+            if (player.inShop)
             {
-                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                if (player.Backpack[itemSlot].Name != "None")
                 {
-                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.SellItem);
-                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(HandleData.myIndex);
                     outMSG.WriteVariableInt32(itemSlot);
-                    outMSG.WriteVariableInt32(c_Player[index].shopNum);
-                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    outMSG.WriteVariableInt32(player.shopNum);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
-            else if (c_Player[index].inBank)
+            else if (player.inBank)
             {
-                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                if (player.Backpack[itemSlot].Name != "None")
                 {
-                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.DepositItem);
-                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(HandleData.myIndex);
                     outMSG.WriteVariableInt32(itemSlot);
-                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
             else
             {
-                if (c_Player[index].Backpack[itemSlot].Name != "None")
+                if (player.Backpack[itemSlot].Name != "None")
                 {
-                    NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.EquipItem);
-                    outMSG.WriteVariableInt32(index);
+                    outMSG.WriteVariableInt32(HandleData.myIndex);
                     outMSG.WriteVariableInt32(itemSlot);
-                    c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
             packTab.Focus();
@@ -1870,15 +1855,15 @@ namespace Client.Classes
         {
             ImagePanel invPicE = (ImagePanel)sender;
             int itemSlot = ToInt32(invPicE.Name);
-            int index = g_Index;
+            
 
-            if (c_Player[index].Backpack[itemSlot].Name != "None")
+            if (player.Backpack[itemSlot].Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.DropItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(itemSlot);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
             packTab.Focus(); 
         }
@@ -1887,17 +1872,17 @@ namespace Client.Classes
         {
             ImagePanel shopPicE = (ImagePanel)sender;
             int shopSlot = ToInt32(shopPicE.Name);
-            int index = g_Index;
-            int shopIndex = c_Player[index].shopNum;
+            
+            int shopIndex = player.shopNum;
 
-            if (c_Shop[shopIndex].shopItem[shopSlot].Name != "None")
+            if (shops[shopIndex].shopItem[shopSlot].Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.BuyItem);
                 outMSG.WriteVariableInt32(shopSlot);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(shopIndex);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -1905,23 +1890,23 @@ namespace Client.Classes
         {
             Button chatOption = (Button)sender;
             int optionSlot = ToInt32(chatOption.Name);
-            int index = g_Index;
-            int chatIndex = c_Player[index].chatNum;
+            
+            int chatIndex = player.chatNum;
 
-            NetOutgoingMessage outMSG = c_Client.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.NextChat);
             outMSG.WriteVariableInt32(optionSlot);
             outMSG.WriteVariableInt32(chatIndex);
-            outMSG.WriteVariableInt32(index);
-            c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         private void CloseShop_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            c_Player[index].inShop = false;
-            c_Player[index].shopNum = 0;
+            player.inShop = false;
+            player.shopNum = 0;
             shopWindow.Close();
             charTab.Show();
             equipTab.Show();
@@ -1934,23 +1919,23 @@ namespace Client.Classes
         {
             ImagePanel bankPicE = (ImagePanel)sender;
             int bankSlot = ToInt32(bankPicE.Name);
-            int index = g_Index;
+            
 
-            if (c_Player[index].Bank[bankSlot].Name != "None")
+            if (player.Bank[bankSlot].Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.WithdrawItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(bankSlot);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         private void CloseBank_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
+            
 
-            c_Player[index].inBank = false;
+            player.inBank = false;
             bankWindow.Close();
             charTab.Show();
             equipTab.Show();
@@ -1963,25 +1948,25 @@ namespace Client.Classes
         {
             ImagePanel chestPicE = (ImagePanel)sender;
             int chestSlot = ToInt32(chestPicE.Name);
-            int index = g_Index;
-            int chestIndex = c_Player[index].chestNum;
+            
+            int chestIndex = player.chestNum;
 
-            if (c_Chest[chestIndex].ChestItem[chestSlot].Name != "None")
+            if (chests[chestIndex].ChestItem[chestSlot].Name != "None")
             {
-                NetOutgoingMessage outMSG = c_Client.CreateMessage();
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.TakeChestItem);
-                outMSG.WriteVariableInt32(index);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(chestSlot);
                 outMSG.WriteVariableInt32(chestIndex);
-                c_Client.SendMessage(outMSG, c_Client.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         private void CloseChest_Clicked(Base sender, ClickedEventArgs arguments)
         {
-            int index = g_Index;
-            c_Player[index].inChest = false;
-            c_Player[index].chestNum = 0;
+            
+            player.inChest = false;
+            player.chestNum = 0;
             chestWindow.Close();
             charTab.Show();
             equipTab.Show();
@@ -2674,7 +2659,7 @@ namespace Client.Classes
             mainbuttonExit.Clicked += CheckMainWindowExit;
         }
 
-        public void CreateLoginWindow(Base parent, ClientConfig c_Config)
+        public void CreateLoginWindow(Base parent)
         {
             logWindow = new WindowControl(parent.GetCanvas());
             logWindow.Title = "Login";
@@ -2692,9 +2677,9 @@ namespace Client.Classes
             unlogBox.SetPosition(25, 35);
             unlogBox.SetSize(140, 25);
             unlogBox.Focus();
-            if (this.c_Config.saveCreds == "1")
+            if (clientConfig.Remember == "1")
             {
-                unlogBox.Text = c_Config.savedUser;
+                unlogBox.Text = clientConfig.Username;
             }
             pwloglabel = new Label(logWindow);
             pwloglabel.SetPosition(25, 75);
@@ -2703,9 +2688,9 @@ namespace Client.Classes
             pwlogBox = new TextBoxPassword(logWindow);
             pwlogBox.SetPosition(25, 95);
             pwlogBox.SetSize(140, 25);
-            if (this.c_Config.saveCreds == "1")
+            if (clientConfig.Remember == "1")
             {
-                pwlogBox.Text = c_Config.savedPass;
+                pwlogBox.Text = clientConfig.Password;
             }
             //pwlogBox.Focus();
             pwlogBox.SubmitPressed += CheckLogWindowSubmit;
@@ -2858,24 +2843,24 @@ namespace Client.Classes
             d_ConDir.Text = "Dir: ?";
         }
 
-        public void CreatNpcChatWindow(Base parent, Chat c_Chat)
+        public void CreatNpcChatWindow(Base parent, int chatNum)
         {
             npcChatWindow = new WindowControl(parent.GetCanvas());
-            npcChatWindow.Title = c_Chat.Name;
+            npcChatWindow.Title = chats[chatNum].Name;
             npcChatWindow.SetSize(405, 325);
             npcChatWindow.Position(Gwen.Pos.Center);
             npcChatWindow.DisableResizing();
             npcChatWindow.IsClosable = false;
 
             npcChatName = new Label(npcChatWindow);
-            npcChatName.Text = c_Chat.Name;
+            npcChatName.Text = chats[chatNum].Name;
             npcChatName.SetPosition(5, 5);
 
             npcChatMessage = new ListBox(npcChatWindow);
             npcChatMessage.RenderColor = System.Drawing.Color.Transparent;
             npcChatMessage.SetBounds(5, 20, 380, 220);
 
-            string msg = c_Chat.MainMessage;
+            string msg = chats[chatNum].MainMessage;
             int msgLength = msg.Length;
             int maxLength = 70;
 
@@ -2906,9 +2891,9 @@ namespace Client.Classes
                 npcChatOption[i].Clicked += ChatOption_Clicked;           
                 npcChatOption[i].Hide();
 
-                if (c_Chat.Option[i] != "None")
+                if (chats[chatNum].Option[i] != "None")
                 {
-                    npcChatOption[i].Text = c_Chat.Option[i];
+                    npcChatOption[i].Text = chats[chatNum].Option[i];
                     npcChatOption[i].SetPosition(8 + (n * 95), 255);
                     n += 1;
                     npcChatOption[i].Show();
@@ -2926,18 +2911,18 @@ namespace Client.Classes
             outputChat.UnselectAll();
         }
 
-        public void MsgBox(string msg, string caption, Canvas c_Canvas)
+        public void MsgBox(string msg, string caption, Canvas canvas)
         {
-            MessageBox msgBox = new MessageBox(c_Canvas, msg, caption);
+            MessageBox msgBox = new MessageBox(canvas, msg, caption);
             msgBox.Position(Gwen.Pos.Center);
         }
         #endregion
     }
 
-    class MiniMap : Drawable
+    public class MiniMap : Drawable
     {
         Map m_Map;
-        Player c_Player;
+        Player player;
         VertexArray m_Blocked = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_Player = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_Npc = new VertexArray(PrimitiveType.Quads, 4);
@@ -2946,18 +2931,14 @@ namespace Client.Classes
         VertexArray m_NpcAvoid = new VertexArray(PrimitiveType.Quads, 4);
         Texture t_Mini = new Texture("Resources/Tilesets/minimap.png");
 
-        public void UpdateMiniMap(Player c_Player, Map c_Map)
-        {
-            m_Map = c_Map;
-            this.c_Player = c_Player;
-        }
+        public void UpdateMiniMap() { }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int minX = (c_Player.X + 12) - 12;
-            int minY = (c_Player.Y + 9) - 9;
-            int maxX = (c_Player.X + 12) + 13;
-            int maxY = (c_Player.Y + 9) + 11;
+            int minX = (players[HandleData.myIndex].X + 12) - 12;
+            int minY = (players[HandleData.myIndex].Y + 9) - 9;
+            int maxX = (players[HandleData.myIndex].X + 12) + 13;
+            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
             states.Texture = t_Mini;
 
             for (int x = minX; x < maxX; x++)
@@ -3065,7 +3046,7 @@ namespace Client.Classes
                                 }
                             }
                         }
-                        if ((c_Player.X + 12) == x && (c_Player.Y + 9) == y)
+                        if ((player.X + 12) == x && (player.Y + 9) == y)
                         {
                             tx = 60;
                             ty = 0;
@@ -3083,7 +3064,7 @@ namespace Client.Classes
         }
     }
 
-    class HUD : Drawable
+    public class HUD : Drawable
     {
         Font d_Font = new Font("Resources/Fonts/Arial.ttf");
 
@@ -3109,8 +3090,11 @@ namespace Client.Classes
 
         const int f_Size = 175;
 
+        Player player;
+
         public HUD()
         {
+            player = players[HandleData.myIndex];
             h_Bar.PrimitiveType = PrimitiveType.Quads;
             h_Bar.Resize(4);
 
@@ -3157,23 +3141,23 @@ namespace Client.Classes
             hy_Text.Position = new Vector2f(13, 154);
         }
 
-        public void UpdateHealthBar(Player c_Player)
+        public void UpdateHealthBar()
         {
-            h_barLength = ((float)c_Player.Health / c_Player.MaxHealth) * f_Size;
+            h_barLength = ((float)player.Health / player.MaxHealth) * f_Size;
 
             h_Bar[0] = new Vertex(new Vector2f(10, 10), Color.Red);
             h_Bar[1] = new Vertex(new Vector2f(h_barLength + 10, 10), Color.Red);
             h_Bar[2] = new Vertex(new Vector2f(h_barLength + 10, 40), Color.Red);
             h_Bar[3] = new Vertex(new Vector2f(10, 40), Color.Red);
 
-            h_Text.DisplayedString = "Health: " + c_Player.Health + " / " + c_Player.MaxHealth;
+            h_Text.DisplayedString = "Health: " + player.Health + " / " + player.MaxHealth;
         }
 
-        public void UpdateExpBar(Player c_Player)
+        public void UpdateExpBar()
         {
-            e_Text.DisplayedString = "XP: " + c_Player.Experience + " / " + (c_Player.Level * 1000);
+            e_Text.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 1000);
 
-            e_barLength = ((float)c_Player.Experience / (c_Player.Level * 1000)) * f_Size;
+            e_barLength = ((float)player.Experience / (player.Level * 1000)) * f_Size;
 
             e_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Yellow);
             e_Bar[1] = new Vertex(new Vector2f(e_barLength + 10, 45), Color.Yellow);
@@ -3181,19 +3165,19 @@ namespace Client.Classes
             e_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Yellow);
         }
 
-        public void UpdateClipBar(Player c_Player)
+        public void UpdateClipBar()
         {
-            if (c_Player.mainWeapon.Name != "None")
+            if (player.mainWeapon.Name != "None")
             {
-                if (TickCount - c_Player.reloadTick < c_Player.mainWeapon.ReloadSpeed)
+                if (TickCount - player.reloadTick < player.mainWeapon.ReloadSpeed)
                 {
                     c_Text.DisplayedString = "Reloading...";
-                    c_barLength = ((float)(TickCount - c_Player.reloadTick) / c_Player.mainWeapon.ReloadSpeed) * f_Size;
+                    c_barLength = ((float)(TickCount - player.reloadTick) / player.mainWeapon.ReloadSpeed) * f_Size;
                 }
                 else
                 {
-                    c_Text.DisplayedString = "Clip: " + c_Player.mainWeapon.Clip + " / " + c_Player.mainWeapon.MaxClip;
-                    c_barLength = ((float)c_Player.mainWeapon.Clip / c_Player.mainWeapon.MaxClip) * f_Size;
+                    c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip;
+                    c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
                 }
             }
             else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }
@@ -3204,11 +3188,11 @@ namespace Client.Classes
             c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Blue);
         }
 
-        public void UpdateHungerBar(Player c_Player)
+        public void UpdateHungerBar()
         {
-            hu_Text.DisplayedString = "Hunger: " + c_Player.Hunger + " / 100";
+            hu_Text.DisplayedString = "Hunger: " + player.Hunger + " / 100";
 
-            hu_barLength = ((float)c_Player.Hunger / 100) * f_Size;
+            hu_barLength = ((float)player.Hunger / 100) * f_Size;
 
             hu_Bar[0] = new Vertex(new Vector2f(10, 115), Color.Green);
             hu_Bar[1] = new Vertex(new Vector2f(hu_barLength + 10, 115), Color.Green);
@@ -3216,11 +3200,11 @@ namespace Client.Classes
             hu_Bar[3] = new Vertex(new Vector2f(10, 145), Color.Green);
         }
 
-        public void UpdateHydrationBar(Player c_Player)
+        public void UpdateHydrationBar()
         {
-            hy_Text.DisplayedString = "Hydration: " + c_Player.Hydration + " / 100";
+            hy_Text.DisplayedString = "Hydration: " + player.Hydration + " / 100";
 
-            hy_barLength = ((float)c_Player.Hydration / 100) * f_Size;
+            hy_barLength = ((float)player.Hydration / 100) * f_Size;
 
             hy_Bar[0] = new Vertex(new Vector2f(10, 150), Color.Blue);
             hy_Bar[1] = new Vertex(new Vector2f(hy_barLength + 10, 150), Color.Blue);

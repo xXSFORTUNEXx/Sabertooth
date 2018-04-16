@@ -1,7 +1,7 @@
 ﻿using System;
 using static System.Environment;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public class WorldTime
     {

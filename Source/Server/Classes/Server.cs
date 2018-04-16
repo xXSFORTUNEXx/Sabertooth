@@ -9,9 +9,9 @@ using System.IO;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
-    public class Sabertooth
+    public class SabertoothServer
     {
 
         // Run to check how many lines of code my project has
@@ -236,7 +236,7 @@ namespace Sabertooth
             DisconnectClients();
             Logging.WriteMessageLog("Disconnecting clients...");
             Thread.Sleep(2500);
-            Sabertooth.netServer.Shutdown("Shutting down");
+            SabertoothServer.netServer.Shutdown("Shutting down");
             Logging.WriteMessageLog("Shutting down...");
             Thread.Sleep(500);
             Exit(0);
@@ -788,8 +788,8 @@ namespace Sabertooth
                         Logging.WriteMessageLog("Public IP: " + GetPublicIPAddress());
                         Logging.WriteMessageLog("Host Name: " + hostName, "Commands");
                         Logging.WriteMessageLog("Server Address: " + NetUtility.Resolve(hostName), "Commands");
-                        Logging.WriteMessageLog("Port: " + Sabertooth.netServer.Port, "Commands");
-                        Logging.WriteMessageLog(Sabertooth.netServer.Statistics.ToString(), "Commands");
+                        Logging.WriteMessageLog("Port: " + SabertoothServer.netServer.Port, "Commands");
+                        Logging.WriteMessageLog(SabertoothServer.netServer.Statistics.ToString(), "Commands");
                         for (int i = 0; i < Globals.MAX_PLAYERS; i++)
                         {
                             if (players[i].Connection != null)
@@ -896,10 +896,10 @@ namespace Sabertooth
 
         public static void DisconnectClients()
         {
-            NetOutgoingMessage outMSG = Sabertooth.netServer.CreateMessage();
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
 
             outMSG.Write((byte)PacketTypes.Shutdown);
-            Sabertooth.netServer.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
         }
 
         public static void SaveServerConfig()
@@ -993,19 +993,20 @@ namespace Sabertooth
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
         //Config Globals
+        public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.8";
-        public const string SMTP_IP_ADDRESS = "";
         public const int SERVER_PORT = 14242;
-        public const int SMTP_SERVER_PORT = 25;
-        public const string SMTP_USER_CREDS = "";
-        public const string SMTP_PASS_CREDS = "";
         public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
         public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
         public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
         public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
         public const string VERSION = "1.0"; //For beta and alpha
-        //Enviroment Globals
+        //Server Globals
+        public const string SMTP_IP_ADDRESS = "";
+        public const int SMTP_SERVER_PORT = 25;
+        public const string SMTP_USER_CREDS = "";
+        public const string SMTP_PASS_CREDS = "";
         public const string HEALTH_REGEN_TIME = "60000"; //60000 / 1000 = 1 MIN
         public const string HUNGER_DEGEN_TIME = "600000"; //600000 / 1000 = 10 MIN
         public const string HYDRATION_DEGEN_TIME = "300000"; //300000 / 1000 = 5 MIN

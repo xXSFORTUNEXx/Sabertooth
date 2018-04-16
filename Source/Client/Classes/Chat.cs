@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Chat
+    public class Chat
     {
         public string Name { get; set; }
         public string MainMessage { get; set; }

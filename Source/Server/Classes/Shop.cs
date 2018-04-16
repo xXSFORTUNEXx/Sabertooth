@@ -3,9 +3,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
-using static Sabertooth.Server;
+using static SabertoothServer.Server;
 
-namespace Sabertooth
+namespace SabertoothServer
 {
     public class Shop
     {

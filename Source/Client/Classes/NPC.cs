@@ -2,9 +2,9 @@
 using SFML.System;
 using System;
 
-namespace Client.Classes
+namespace SabertoothClient
 {
-    class Npc : Drawable
+    public class Npc : Drawable
     {
         public string Name { get; set; }
         public int X { get; set; }

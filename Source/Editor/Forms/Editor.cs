@@ -26,7 +26,7 @@ namespace Editor
             if (!Exists("Database"))
             {
                 CreateDirectory("Database");
-                Sabertooth.Sabertooth.CreateDatabase();
+                SabertoothServer.SabertoothServer.CreateDatabase();
             }
         }
 
