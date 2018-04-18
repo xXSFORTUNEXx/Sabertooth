@@ -799,5 +799,3 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Ne
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.xml
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Renderer.SFML.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.pdb
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\OpenTK.dll
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\OpenTK.dll.config

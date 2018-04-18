@@ -246,12 +246,13 @@ namespace SabertoothClient
         Button optLog;
         #endregion
 
-        public GUI()
-        {
-            player = Client.players[HandleData.myIndex];
-        }
+        public GUI() { }
 
         #region Update Voids
+        public void SetIndexPlayer()
+        {
+            player = players[HandleData.myIndex];
+        }
         public void UpdateBankWindow()
         {
             if (bankWindow != null && bankWindow.IsVisible)
@@ -2933,12 +2934,18 @@ namespace SabertoothClient
 
         public void UpdateMiniMap() { }
 
+        public void SetPlayerIndexMap()
+        {
+            player = players[HandleData.myIndex];
+            m_Map = map;
+        }
+
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX = (player.X + 12) - 12;
+            int minY = (player.Y + 9) - 9;
+            int maxX = (player.X + 12) + 13;
+            int maxY = (player.Y + 9) + 11;
             states.Texture = t_Mini;
 
             for (int x = minX; x < maxX; x++)
@@ -3094,7 +3101,6 @@ namespace SabertoothClient
 
         public HUD()
         {
-            player = players[HandleData.myIndex];
             h_Bar.PrimitiveType = PrimitiveType.Quads;
             h_Bar.Resize(4);
 
@@ -3139,6 +3145,11 @@ namespace SabertoothClient
             hy_Text.Color = Color.White;
             hy_Text.Style = Text.Styles.Bold;
             hy_Text.Position = new Vector2f(13, 154);
+        }
+
+        public void SetPlayerIndex()
+        {
+            player = players[HandleData.myIndex];
         }
 
         public void UpdateHealthBar()

@@ -79,10 +79,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SFML.NET\extlibs\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\sfmlnet-audio-2.dll</HintPath>
@@ -120,7 +116,7 @@
   <ItemGroup>
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
-    <Compile Include="Classes\Game.cs" />
+    <Compile Include="Classes\Client.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\GUI.cs" />
     <Compile Include="Classes\HandleData.cs" />

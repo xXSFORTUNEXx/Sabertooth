@@ -20,16 +20,16 @@ namespace SabertoothClient
     {
         public static NetClient netClient;
 
-        [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
+        //[DllImport("kernel32.dll")]
+        //static extern IntPtr GetConsoleWindow();
 
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
+        //[DllImport("user32.dll")]
+        //static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [STAThread]
         static void Main(string[] args)
         {
-            var handle = GetConsoleWindow();
+            //var handle = GetConsoleWindow();
+
             Console.Title = "Sabertooth Console - Debug Info";
             Console.WriteLine(@"  _____       _               _              _   _     ");
             Console.WriteLine(@" / ____|     | |             | |            | | | |    ");
@@ -62,17 +62,11 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-
-
+            //ShowWindow(handle, Globals.SW_SHOW);
             Console.WriteLine("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
             Console.WriteLine("Network configuration complete...");
-            /*#if DEBUG
-            ShowWindow(handle, Globals.SW_SHOW);
-            #else
-            ShowWindow(handle, Globals.SW_HIDE);
-            #endif*/
             Client.GameLoop();
         }
     }
@@ -166,11 +160,14 @@ namespace SabertoothClient
 
     public static class Client
     {
-        public static RenderWindow renderWindow;
-        public static Canvas canvas;    
+        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Styles.Close);
+        static Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
+        static Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
+        static Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
+        public static Canvas canvas = new Canvas(skin);    
         public static Gwen.Input.SFML sFML = new Gwen.Input.SFML();  
-        public static GUI gui = new GUI();
         public static HUD hud = new HUD();
+        public static GUI gui = new GUI();
         public static Player[] players = new Player[Globals.MAX_PLAYERS];
         public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
         public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
@@ -196,7 +193,6 @@ namespace SabertoothClient
 
         public static void GameLoop()  
         {
-            renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Styles.Close);
             renderWindow.Closed += new EventHandler(OnClose);
             renderWindow.KeyReleased += window_KeyReleased;
             renderWindow.KeyPressed += OnKeyPressed;
@@ -204,17 +200,13 @@ namespace SabertoothClient
             renderWindow.MouseButtonReleased += window_MouseButtonReleased;
             renderWindow.MouseMoved += window_MouseMoved;
             renderWindow.TextEntered += window_TextEntered;
-            renderWindow.SetFramerateLimit(Globals.MAX_FPS);
-            Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
-            Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
-
-            Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
+            renderWindow.SetFramerateLimit(Globals.MAX_FPS);            
+                        
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
 
-            canvas = new Canvas(skin);
-            canvas.SetSize(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+            canvas.SetSize(Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
             canvas.ShouldDrawBackground = true;
             canvas.BackgroundColor = System.Drawing.Color.Transparent;
             canvas.KeyboardInputEnabled = true;
@@ -716,6 +708,10 @@ namespace SabertoothClient
             view.Move(new Vector2f(players[HandleData.myIndex].X * Globals.PIC_X, players[HandleData.myIndex].Y * Globals.PIC_Y));
             HandleData.HandleDataMessage();
 
+            gui.SetIndexPlayer();
+            hud.SetPlayerIndex();
+            miniMap.SetPlayerIndexMap();
+
             renderWindow.SetActive();
             renderWindow.DispatchEvents();
             renderWindow.Clear();
@@ -783,8 +779,8 @@ namespace SabertoothClient
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
         public const string VERSION = "1.0"; //For beta and alpha
         //Client Globals
-        public const int SCREEN_WIDTH = 800;
-        public const int SCREEN_HEIGHT = 600;
+        public const uint SCREEN_WIDTH = 800;
+        public const uint SCREEN_HEIGHT = 600;
         public const int CANVAS_WIDTH = 800;
         public const int CANVAS_HEIGHT = 600;
         public const int MAX_FPS = 85;
