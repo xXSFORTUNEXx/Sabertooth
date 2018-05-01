@@ -61,6 +61,7 @@ namespace SabertoothServer
         public int LongestLifeHour { get; set; }
         public int LongestLifeMinute { get; set; }
         public int LongestLifeSecond { get; set; }
+        public string LastLoggedIn { get; set; }
         #endregion
 
         #region Local Variables
@@ -114,6 +115,7 @@ namespace SabertoothServer
             LongestLifeHour = 0;
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
+            LastLoggedIn = "00:00:00.000";
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -745,10 +747,10 @@ namespace SabertoothServer
                     string command;
                     command = "INSERT INTO PLAYERS";
                     command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
-                    command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS)";
+                    command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED)";
                     command = command + " VALUES ";
                     command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
-                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds);";
+                    command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds,@lastlogged);";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -788,6 +790,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
                     cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
                     cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
+                    cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
                     cmd.ExecuteNonQuery();
 
                     command = "INSERT INTO MAINWEAPONS";
@@ -954,7 +957,7 @@ namespace SabertoothServer
                     command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
                     command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
                     command = command + "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
-                    command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds WHERE NAME = '" + Name + "';";
+                    command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE NAME = '" + Name + "';";
                     cmd.CommandText = command;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                     cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
@@ -994,6 +997,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
                     cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
                     cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
+                    cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
                     cmd.ExecuteNonQuery();
 
                     command = "UPDATE MAINWEAPONS SET ";
@@ -1276,6 +1280,7 @@ namespace SabertoothServer
                             LongestLifeHour = ToInt32(read["LLHOURS"].ToString());
                             LongestLifeMinute = ToInt32(read["LLMINUTES"].ToString());
                             LongestLifeSecond = ToInt32(read["LLSECONDS"].ToString());
+                            LastLoggedIn = read["LASTLOGGED"].ToString();
                         }
                     }
 

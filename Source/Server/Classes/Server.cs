@@ -8,6 +8,7 @@ using static System.IO.File;
 using System.IO;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
+using System.Data.SqlClient;
 
 namespace SabertoothServer
 {
@@ -61,114 +62,229 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Message Types Enabled: ConApproval, Latency Updates, Discovery Requests");
             Logging.WriteMessageLog("Message Types Disabled: Debug, NAT Intro Success, Receipt, UnconnectedData, Verbose Debug, Warning Message");
 
-            CheckDirectories();
+            Server.LoadConfiguration();
+            CheckSQL();
             netServer = new NetServer(netConfig);
             netServer.Start();
             Logging.WriteMessageLog("Network configuration complete...");
-            Server.LoadServerConfig();
             Server.ServerLoop();
         }
 
-        static void CheckDirectories()
+        static void CheckSQL()
         {
-            if (!Directory.Exists("Database"))
+            if (Server.localDB == "0")
             {
-                Directory.CreateDirectory("Database");
-                CreateDatabase();
+                try
+                {
+                    //string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                    string connection = "Data Source=" + Server.sqlServer + ";Integrated Security=True";
+                    using (var sql = new SqlConnection(connection))
+                    {
+                        sql.Open();
+                        Logging.WriteMessageLog("Established SQL connection!", "SQL");
+                        string command = "IF DB_ID('Sabertooth') IS NULL CREATE DATABASE Sabertooth;";
+                        using (var cmd = new SqlCommand(command, sql))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }           
+                    }
+                    CreateDatabase();
+                }
+                catch (Exception e)
+                {
+                    Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
+                    Logging.WriteLog(e.Message, "SQL");
+                }
+            }
+            else
+            {
+                if (!Directory.Exists("Database"))
+                {
+                    Directory.CreateDirectory("Database");
+                    CreateDatabase();
+                }
+                try
+                {
+                    string connection = "Data Source=Database/Sabertooth.db;Version=3;";
+                    using (var sql = new SQLiteConnection(connection))
+                    {
+                        sql.Open();
+                        Logging.WriteMessageLog("Established SQL connection!", "SQL");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
+                    Logging.WriteLog(e.Message, "SQL");
+                }
             }
         }
 
         public static void CreateDatabase()
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (Server.localDB == "0")
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
+                    sql.Open();
                     string command;
+                    command = "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PLAYERS')";
+                    command += "CREATE TABLE PLAYERS";
+                    command += "(NAME TEXT, PASSWORD TEXT, X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
+                    command += "SPRITE INTEGER, LEVEL INTEGER, POINTS INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, EXPERIENCE INTEGER, MONEY INTEGER, ARMOR INTEGER, HUNGER INTEGER,";
+                    command += "HYDRATION INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, PISTOLAMMO INTEGER, ASSAULTAMMO INTEGER,";
+                    command += "ROCKETAMMO INTEGER, GRENADEAMMO INTEGER, LIGHTRADIUS INTEGER, DAYS INTEGER, HOURS INTEGER, MINUTES INTEGER, SECONDS INTEGER, LDAYS INTEGER, LHOURS INTEGER, LMINUTES INTEGER, LSECONDS INTEGER,";
+                    command += "LLDAYS INTEGER, LLHOURS INTEGER, LLMINUTES INTEGER, LLSECONDS INTEGER, LASTLOGGED INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAINWEAPONS')";
+                    command += "CREATE TABLE MAINWEAPONS";
+                    command += "(OWNER TEXT, NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
+                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SECONDARYWEAPONS')";
+                    command += "CREATE TABLE SECONDARYWEAPONS";
+                    command += "(OWNER TEXT, NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
+                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'EQUIPMENT')";
+                    command += "CREATE TABLE EQUIPMENT";
+                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'INVENTORY')";
+                    command += "CREATE TABLE INVENTORY";
+                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'BANK')";
+                    command += "CREATE TABLE BANK";
+                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ITEMS')";
+                    command += "CREATE TABLE ITEMS";
+                    command += "(NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'NPCS')";
+                    command += "CREATE TABLE NPCS";
+                    command += "(NAME TEXT, X INTEGER, Y INTEGER, DIRECTION INTEGER, SPRITE INTEGER, STEP INTEGER, OWNER INTEGER, BEHAVIOR INTEGER, SPAWNTIME INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, DAMAGE INTEGER, DESX INTEGER, DESY INTEGER,";
+                    command += "EXP INTEGER, MONEY INTEGER, RANGE INTEGER, SHOPNUM INTEGER, CHATNUM INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PROJECTILES')";
+                    command += "CREATE TABLE PROJECTILES";
+                    command += "(NAME TEXT, DAMAGE INTEGER, RANGE INTEGER, SPRITE INTEGER, TYPE INTEGER, SPEED INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SHOPS')";
+                    command += "CREATE TABLE SHOPS";
+                    command += "(NAME TEXT, ITEMDATA VARBINARY(MAX))";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHAT')";
+                    command += "CREATE TABLE CHAT";
+                    command += "(NAME TEXT,MAINMESSAGE TEXT,OPTIONA TEXT,OPTIONB TEXT,OPTIONC TEXT,OPTIOND TEXT,NEXTCHATA INTEGER,NEXTCHATB INTEGER,NEXTCHATC INTEGER,NEXTCHATD INTEGER,SHOPNUM INTEGER,MISSIONNUM INTEGER,ITEMA INTEGER,ITEMB INTEGER,ITEMC INTEGER,VALA INTEGER,";
+                    command += "VALB INTEGER,VALC INTEGER,MONEY INTEGER,TYPE INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAPS')";
+                    command += "CREATE TABLE MAPS";
+                    command += "(NAME TEXT,REVISION INTEGER,UP INTEGER,DOWN INTEGER,LEFTSIDE INTEGER,RIGHTSIDE INTEGER,BRIGHTNESS INTEGER,NPC VARBINARY(MAX),ITEM VARBINARY(MAX), GROUND VARBINARY(MAX),MASK VARBINARY(MAX),MASKA VARBINARY(MAX),FRINGE VARBINARY(MAX),FRINGEA VARBINARY(MAX))";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHESTS')";
+                    command += "CREATE TABLE CHESTS";
+                    command += "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM VARBINARY(MAX))";
 
-                    command = "CREATE TABLE `PLAYERS`";
-                    command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
-                    command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
-                    command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
-                    command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER, `DAYS` INTEGER, `HOURS` INTEGER, `MINUTES` INTEGER, `SECONDS` INTEGER, `LDAYS` INTEGER, `LHOURS` INTEGER, `LMINUTES` INTEGER, `LSECONDS` INTEGER, ";
-                    command = command + "`LLDAYS` INTEGER, `LLHOURS` INTEGER, `LLMINUTES` INTEGER, `LLSECONDS` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
 
-                    command = "CREATE TABLE `MAINWEAPONS`";
-                    command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                    command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `PLAYERS`";
+                        command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
+                        command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
+                        command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
+                        command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER, `DAYS` INTEGER, `HOURS` INTEGER, `MINUTES` INTEGER, `SECONDS` INTEGER, `LDAYS` INTEGER, `LHOURS` INTEGER, `LMINUTES` INTEGER, `LSECONDS` INTEGER, ";
+                        command = command + "`LLDAYS` INTEGER, `LLHOURS` INTEGER, `LLMINUTES` INTEGER, `LLSECONDS` INTEGER, `LASTLOGGED` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `SECONDARYWEAPONS`";
-                    command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                    command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `MAINWEAPONS`";
+                        command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                        command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `EQUIPMENT`";
-                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `SECONDARYWEAPONS`";
+                        command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
+                        command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `INVENTORY`";
-                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `EQUIPMENT`";
+                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `BANK`";
-                    command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `INVENTORY`";
+                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `ITEMS`";
-                    command = command + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                    command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                    command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `BANK`";
+                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `NPCS`";
-                    command = command + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
-                    command = command + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `ITEMS`";
+                        command = command + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
+                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
+                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `PROJECTILES`";
-                    command = command + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `NPCS`";
+                        command = command + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
+                        command = command + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `SHOPS`";
-                    command = command + "(`NAME` TEXT, `ITEMDATA` BLOB)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `PROJECTILES`";
+                        command = command + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `CHAT`";
-                    command = command + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
-                    command = command + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `SHOPS`";
+                        command = command + "(`NAME` TEXT, `ITEMDATA` BLOB)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE `MAPS`";
-                    command = command + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`BRIGHTNESS` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `CHAT`";
+                        command = command + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
+                        command = command + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
 
-                    command = "CREATE TABLE CHESTS";
-                    command = command + "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,KEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM BLOB)";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
+                        command = "CREATE TABLE `MAPS`";
+                        command = command + "(`NAME` TEXT,`REVISION` INTEGER,`UP` INTEGER,`DOWN` INTEGER,`LEFTSIDE` INTEGER,`RIGHTSIDE` INTEGER,`BRIGHTNESS` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+
+                        command = "CREATE TABLE CHESTS";
+                        command = command + "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM BLOB)";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -204,6 +320,9 @@ namespace SabertoothServer
         public static int suptimeTick;
         public static string upTime;
         public static string sVersion;
+        public static string localDB;
+        public static string sqlServer;
+        public static string sqlDatabase;
         static int lastTick;
         static int lastFrameRate;
         static int frameRate;
@@ -727,9 +846,32 @@ namespace SabertoothServer
             {
                 Console.Write(">");
                 input = Console.ReadLine().ToLower();
-
+                bool isDynamic = false;
                 Logging.WriteLog("Command: " + input);   //Log which command was used
                 //Dynamic Commands
+                if (input.Length >= 11 && input.Substring(0, 10) == "sqlcommand")
+                {
+                    string command = input.Substring(11);
+                    try
+                    {
+                        string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                        using (var sql = new SqlConnection(connection))
+                        {
+                            sql.Open();
+                            using (var cmd = new SqlCommand(command, sql))
+                            {
+                                cmd.ExecuteNonQuery();
+                                Logging.WriteMessageLog("Command: " + cmd.CommandText);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.WriteMessageLog(e.Message, "SQL");
+                    }
+                    isDynamic = true;
+                }
+
                 if (input.Length >= 7 && input.Substring(0, 7) == "account")    //Check for account command
                 {
                     if (input.Substring(8, 6) == "create")    //Create
@@ -747,7 +889,6 @@ namespace SabertoothServer
                             }
                             else { Logging.WriteMessageLog("USERNAME and PASSWORD must be 3 characters each!", "Commands"); } //Dont fuck it up by making basic shit
 
-                            return; //Get da fuck out
                         }
                     }
                     else if (input.Substring(8, 6) == "delete")
@@ -765,6 +906,7 @@ namespace SabertoothServer
                         }
                     }
                     else { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); return; }  //Did you provide a modifier?
+                    isDynamic = true;
                 }
 
                 //Basic commands
@@ -825,7 +967,7 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
                         break;
                     default:    //If you entered something that wasnt a command or pure garbage
-                        Logging.WriteMessageLog("Please enter a valid command!", "Commands");
+                        if (!isDynamic) { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); }                        
                         break;
                 }
             }
@@ -902,7 +1044,7 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
         }
 
-        public static void SaveServerConfig()
+        public static void SaveConfiguration()
         {
             XmlWriterSettings userData = new XmlWriterSettings
             {
@@ -913,6 +1055,9 @@ namespace SabertoothServer
             writer.WriteStartDocument();
             //writer.WriteComment("This file is generated by the server.");
             writer.WriteStartElement("ConfigData");
+            writer.WriteElementString("SQLServer", Globals.SQL_SERVER_NAME);
+            writer.WriteElementString("Database", Globals.SQL_SERVER_DATABASE);
+            writer.WriteElementString("LocalDB", "0");
             writer.WriteElementString("Version", Globals.VERSION);
             writer.WriteElementString("RegenTime", Globals.HEALTH_REGEN_TIME);
             writer.WriteElementString("HungerTime", Globals.HUNGER_DEGEN_TIME);
@@ -926,17 +1071,23 @@ namespace SabertoothServer
             writer.Close();
         }
 
-        public static void LoadServerConfig()
+        public static void LoadConfiguration()
         {
             if (!Exists("Config.xml"))
             {
-                SaveServerConfig();
+                SaveConfiguration();
                 Logging.WriteMessageLog("Creating config XML...");
             }
 
             Logging.WriteMessageLog("Loading config XML...");
             XmlReader reader = XmlReader.Create("Config.xml");
             Logging.WriteMessageLog("Config XML file found, importing settings...");
+            reader.ReadToFollowing("SQLServer");
+            sqlServer = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Database");
+            sqlDatabase = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("LocalDB");
+            localDB = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Version");
             sVersion = reader.ReadElementContentAsString();
             reader.ReadToFollowing("RegenTime");
@@ -975,7 +1126,7 @@ namespace SabertoothServer
 
     public static class Globals
     {
-        //Server Globals
+        //Globals
         public const byte NO = 0;
         public const byte YES = 1;
         public const int MAX_PLAYERS = 5;
@@ -1007,6 +1158,9 @@ namespace SabertoothServer
         public const int SMTP_SERVER_PORT = 25;
         public const string SMTP_USER_CREDS = "";
         public const string SMTP_PASS_CREDS = "";
+        public const string SQL_SERVER_NAME = @"FDESKTOP-01\SFORTUNESQL";
+        public const string SQL_SERVER_DATABASE = "Sabertooth";
+        public const string SQL_LOCAL_DATABASE = "Database/Sabertooth.db";
         public const string HEALTH_REGEN_TIME = "60000"; //60000 / 1000 = 1 MIN
         public const string HUNGER_DEGEN_TIME = "600000"; //600000 / 1000 = 10 MIN
         public const string HYDRATION_DEGEN_TIME = "300000"; //300000 / 1000 = 5 MIN

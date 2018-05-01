@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static System.Console;
 using System.Data.SQLite;
+using System.Data.SqlClient;
 using static System.Environment;
 using System.ComponentModel;
 using static System.Convert;
@@ -13,19 +14,19 @@ namespace SabertoothServer
 {
     public class Map
     {
-        [CategoryAttribute("Properties"), DescriptionAttribute("Name of the map.")]
+        [Category("Properties"), Description("Name of the map.")]
         public string Name { get; set; }
-        [CategoryAttribute("Properties"), DescriptionAttribute("Revision of the map.")]
+        [Category("Properties"), Description("Revision of the map.")]
         public int Revision { get; set; }
-        [CategoryAttribute("Border"), DescriptionAttribute("Top connected map.")]
+        [Category("Border"), Description("Top connected map.")]
         public int TopMap { get; set; }
-        [CategoryAttribute("Border"), DescriptionAttribute("Bottom connected map.")]
+        [Category("Border"), Description("Bottom connected map.")]
         public int BottomMap { get; set; }
-        [CategoryAttribute("Border"), DescriptionAttribute("Left connected map.")]
+        [Category("Border"), Description("Left connected map.")]
         public int LeftMap { get; set; }
-        [CategoryAttribute("Border"), DescriptionAttribute("Right connected map.")]
+        [Category("Border"), Description("Right connected map.")]
         public int RightMap { get; set; }
-        [CategoryAttribute("Brightness"), DescriptionAttribute("Brightness of the map. (0 - 255)")]
+        [Category("Brightness"), Description("Brightness of the map. (0 - 255)")]
         public int Brightness { get; set; }
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
@@ -124,39 +125,81 @@ namespace SabertoothServer
                 }
             }
 
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (localDB == "0")
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    byte[] m_Npc = ToByteArray(m_MapNpc);
-                    byte[] m_Item = ToByteArray(m_MapItem);
-                    byte[] m_Ground = ToByteArray(Ground);
-                    byte[] m_Mask = ToByteArray(Mask);
-                    byte[] m_MaskA = ToByteArray(MaskA);
-                    byte[] m_Fringe = ToByteArray(Fringe);
-                    byte[] m_FringeA = ToByteArray(FringeA);
-                    string sql;
+                    using (var cmd = new SqlCommand(connection))
+                    {
+                        byte[] m_Npc = ToByteArray(m_MapNpc);
+                        byte[] m_Item = ToByteArray(m_MapItem);
+                        byte[] m_Ground = ToByteArray(Ground);
+                        byte[] m_Mask = ToByteArray(Mask);
+                        byte[] m_MaskA = ToByteArray(MaskA);
+                        byte[] m_Fringe = ToByteArray(Fringe);
+                        byte[] m_FringeA = ToByteArray(FringeA);
+                        string command;
 
-                    conn.Open();
-                    sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`TOP`,`BOTTOM`,`LEFT`,`RIGHT`,`BRIGHTNESS`,`NPC`,`ITEM`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
-                    sql = sql + " VALUES ";
-                    sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @brightness, @npc, @item, @ground, @mask, @maska, @fringe, @fringea)";
-                    cmd.CommandText = sql;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
-                    cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
-                    cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
-                    cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
-                    cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
-                    cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
-                    cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
-                    cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
-                    cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
-                    cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
-                    cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
-                    cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
-                    cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
-                    cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
-                    cmd.ExecuteNonQuery();
+                        sql.Open();
+                        command = "INSERT INTO MAPS (NAME,REVISION,UP,DOWN,LEFTSIDE,RIGHTSIDE,BRIGHTNESS,NPC,ITEM,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
+                        command = command + " VALUES ";
+                        command = command + "(@name,@revision,@top,@bottom,@left,@right,@brightness,@npc,@item,@ground,@mask,@maska,@fringe,@fringea)";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.SqlDbType.Text).Value = Name;
+                        cmd.Parameters.Add("@revision", System.Data.SqlDbType.Int).Value = Revision;
+                        cmd.Parameters.Add("@top", System.Data.SqlDbType.Int).Value = TopMap;
+                        cmd.Parameters.Add("@bottom", System.Data.SqlDbType.Int).Value = BottomMap;
+                        cmd.Parameters.Add("@left", System.Data.SqlDbType.Int).Value = LeftMap;
+                        cmd.Parameters.Add("@right", System.Data.SqlDbType.Int).Value = RightMap;
+                        cmd.Parameters.Add("@brightness", System.Data.SqlDbType.Int).Value = Brightness;
+                        cmd.Parameters.Add("@npc", System.Data.SqlDbType.VarBinary).Value = m_Npc;
+                        cmd.Parameters.Add("@item", System.Data.SqlDbType.VarBinary).Value = m_Item;
+                        cmd.Parameters.Add("@ground", System.Data.SqlDbType.VarBinary).Value = m_Ground;
+                        cmd.Parameters.Add("@mask", System.Data.SqlDbType.VarBinary).Value = m_Mask;
+                        cmd.Parameters.Add("@maska", System.Data.SqlDbType.VarBinary).Value = m_MaskA;
+                        cmd.Parameters.Add("@fringe", System.Data.SqlDbType.VarBinary).Value = m_Fringe;
+                        cmd.Parameters.Add("@fringea", System.Data.SqlDbType.VarBinary).Value = m_FringeA;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        byte[] m_Npc = ToByteArray(m_MapNpc);
+                        byte[] m_Item = ToByteArray(m_MapItem);
+                        byte[] m_Ground = ToByteArray(Ground);
+                        byte[] m_Mask = ToByteArray(Mask);
+                        byte[] m_MaskA = ToByteArray(MaskA);
+                        byte[] m_Fringe = ToByteArray(Fringe);
+                        byte[] m_FringeA = ToByteArray(FringeA);
+                        string sql;
+
+                        conn.Open();
+                        sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`UP`,`DOWN`,`LEFTSIDE`,`RIGHTSIDE`,`BRIGHTNESS`,`NPC`,`ITEM`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
+                        sql = sql + " VALUES ";
+                        sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @brightness, @npc, @item, @ground, @mask, @maska, @fringe, @fringea)";
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                        cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
+                        cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
+                        cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
+                        cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
+                        cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                        cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
+                        cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
+                        cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
+                        cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
+                        cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
+                        cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
+                        cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
+                        cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -177,7 +220,7 @@ namespace SabertoothServer
                     string sql;
 
                     conn.Open();
-                    sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, TOP = @top, BOTTOM = @bottom, LEFT = @left, RIGHT = @right, BRIGHTNESS = @brightness, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
+                    sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, UP = @top, DOWN = @bottom, LEFTSIDE = @left, RIGHTSIDE = @right, BRIGHTNESS = @brightness, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
                     sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
                     cmd.CommandText = sql;
                     cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
@@ -222,10 +265,10 @@ namespace SabertoothServer
                         {
                             Name = read["NAME"].ToString();
                             Revision = ToInt32(read["REVISION"].ToString());
-                            TopMap = ToInt32(read["TOP"].ToString());
-                            BottomMap = ToInt32(read["BOTTOM"].ToString());
-                            LeftMap = ToInt32(read["LEFT"].ToString());
-                            RightMap = ToInt32(read["RIGHT"].ToString());
+                            TopMap = ToInt32(read["UP"].ToString());
+                            BottomMap = ToInt32(read["DOWN"].ToString());
+                            LeftMap = ToInt32(read["LEFTSIDE"].ToString());
+                            RightMap = ToInt32(read["RIGHTSIDE"].ToString());
                             Brightness = ToInt32(read["BRIGHTNESS"].ToString());
                             byte[] buffer;
                             object load;

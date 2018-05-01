@@ -55,7 +55,6 @@ namespace SabertoothClient
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
         public int LightRadius { get; set; }
-
         public int PlayDays { get; set; }
         public int PlayHours { get; set; }
         public int PlayMinutes { get; set; }
@@ -68,6 +67,7 @@ namespace SabertoothClient
         public int LongestLifeHour { get; set; }
         public int LongestLifeMinute { get; set; }
         public int LongestLifeSecond { get; set; }
+        public string LastLoggedIn { get; set; }
         #endregion
 
         #region Local Variables
@@ -140,6 +140,7 @@ namespace SabertoothClient
             LongestLifeHour = 0;
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
+            LastLoggedIn = "00:00:00.000";
 
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -577,7 +578,6 @@ namespace SabertoothClient
                 interactionTick = TickCount;
             }
         }
-        #endregion
 
         float SnaptoZero(float value, float threshold)
         {
@@ -587,6 +587,7 @@ namespace SabertoothClient
             }
             return value;
         }
+        #endregion
 
         #region Keyboard
         public void CheckMovement()

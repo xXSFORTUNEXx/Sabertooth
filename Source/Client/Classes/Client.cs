@@ -67,100 +67,14 @@ namespace SabertoothClient
             netClient = new NetClient(netConfig);
             netClient.Start();
             Console.WriteLine("Network configuration complete...");
+            Client.LoadConfiguration();
             Client.GameLoop();
-        }
-    }
-
-    public class ClientConfig
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Remember { get; set; }
-        public string IPAddress { get; set; }
-        public string Port { get; set; }
-        public string Version { get; set; }
-
-        public ClientConfig()
-        {
-            CheckIfConfigExists();
-        }
-
-        public void CheckIfConfigExists()
-        {
-            if (!File.Exists("Config.xml"))
-            {
-                Remember = "0";
-                IPAddress = "127.0.0.1";
-                Port = "14242";
-                Version = "1.0";
-                SaveConfig();
-            }
-            LoadConfig();
-            CreateMapCache();
-        }
-
-        public void LoadConfig()
-        {
-            XmlReader reader = XmlReader.Create("Config.xml");
-            reader.ReadToFollowing("Username");
-            Username = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Password");
-            Password = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Remember");
-            Remember = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("IPAddress");
-            IPAddress = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Port");
-            Port = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Version");
-            Version = reader.ReadElementContentAsString();
-            reader.Close();
-        }
-
-        public void SaveConfig()
-        {
-            XmlWriterSettings configData = new XmlWriterSettings();
-            configData.Indent = true;
-            XmlWriter writer = XmlWriter.Create("Config.xml", configData);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Configuration");
-            writer.WriteElementString("Username", Username);
-            writer.WriteElementString("Password", Password);
-            writer.WriteElementString("Remember", Remember);
-            writer.WriteElementString("IPAddress", IPAddress);
-            writer.WriteElementString("Port", Port);
-            writer.WriteElementString("Version", Version);
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            writer.Close();
-        }
-
-        public void CreateMapCache()
-        {
-            if (!Directory.Exists("Cache")) { Directory.CreateDirectory("Cache"); }
-
-            if (!File.Exists("Cache/MapCache.db"))
-            {
-                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        string sql;
-                        sql = "CREATE TABLE `MAPS`";
-                        sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
-                        cmd.CommandText = sql;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
         }
     }
 
     public static class Client
     {
-        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Styles.Close);
+        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Globals.SCREEN_STYLE);
         static Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
         static Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
         static Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
@@ -179,7 +93,12 @@ namespace SabertoothClient
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
         public static WorldTime worldTime = new WorldTime();
-        public static ClientConfig clientConfig = new ClientConfig();
+        public static string Username { get; set; }
+        public static string Password { get; set; }
+        public static string Remember { get; set; }
+        public static string IPAddress { get; set; }
+        public static string Port { get; set; }
+        public static string CurrentVersion { get; set; }
         static int lastTick;
         static int lastFrameRate;  
         static int frameRate; 
@@ -200,8 +119,7 @@ namespace SabertoothClient
             renderWindow.MouseButtonReleased += window_MouseButtonReleased;
             renderWindow.MouseMoved += window_MouseMoved;
             renderWindow.TextEntered += window_TextEntered;
-            renderWindow.SetFramerateLimit(Globals.MAX_FPS);            
-                        
+            renderWindow.SetFramerateLimit(Globals.MAX_FPS);
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
@@ -237,6 +155,74 @@ namespace SabertoothClient
             SabertoothClient.netClient.Disconnect("shutdown");
             Thread.Sleep(500);
             Exit(0);
+        }
+
+        public static void LoadConfiguration()
+        {
+            if (!File.Exists("Config.xml"))
+            {
+                Remember = "0";
+                IPAddress = "127.0.0.1";
+                Port = "14242";
+                CurrentVersion = "1.0";
+                SaveConfiguration();
+                CreateMapCache();
+            }
+
+            XmlReader reader = XmlReader.Create("Config.xml");
+            reader.ReadToFollowing("Username");
+            Username = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Password");
+            Password = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Remember");
+            Remember = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("IPAddress");
+            IPAddress = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Port");
+            Port = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Version");
+            CurrentVersion = reader.ReadElementContentAsString();
+            reader.Close();
+        }
+
+        static void SaveConfiguration()
+        {
+            XmlWriterSettings configData = new XmlWriterSettings()
+            {
+                Indent = true
+            };
+            XmlWriter writer = XmlWriter.Create("Config.xml", configData);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Configuration");
+            writer.WriteElementString("Username", Username);
+            writer.WriteElementString("Password", Password);
+            writer.WriteElementString("Remember", Remember);
+            writer.WriteElementString("IPAddress", IPAddress);
+            writer.WriteElementString("Port", Port);
+            writer.WriteElementString("Version", CurrentVersion);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            writer.Close();
+        }
+
+        static void CreateMapCache()
+        {
+            if (!File.Exists("MapCache.db"))
+            {
+                using (var conn = new SQLiteConnection("Data Source=MapCache.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string sql;
+                        sql = "CREATE TABLE `MAPS`";
+                        sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
 
         #region Initialize Methods
@@ -318,18 +304,18 @@ namespace SabertoothClient
 
             if (e.Code == Keyboard.Key.F12)
             {
-                //Image img = c_Window.Capture();
-                //if (img.Pixels == null)
-                //{
-                //    MessageBox.Show("Failed to capture window");
-                //}
-                //if (!Directory.Exists("Screenshots")) { Directory.CreateDirectory("Screenshots"); }
-                //string path = string.Format("Screenshots/Screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                //if (!img.SaveToFile(path))
-                //{
-                //    MessageBox.Show(path, "Failed to save screenshot");
-                //    img.Dispose();
-                //}
+                Image img = renderWindow.Capture();
+                if (img.Pixels == null)
+                {
+                    MessageBox.Show("Failed to capture window");
+                }
+                if (!Directory.Exists("Screenshots")) { Directory.CreateDirectory("Screenshots"); }
+                string path = string.Format("Screenshots/Screenshot-{0:D2}{1:D2}{2:D2}.png", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                if (!img.SaveToFile(path))
+                {
+                    MessageBox.Show(path, "Failed to save screenshot");
+                    img.Dispose();
+                }
             }
             else
             {
@@ -751,7 +737,7 @@ namespace SabertoothClient
 
     public static class Globals
     {
-        //Server Globals
+        //Globals
         public const byte NO = 0;
         public const byte YES = 1;
         public const int MAX_PLAYERS = 5;

@@ -77,7 +77,7 @@ namespace SabertoothClient
             bool exists = false;
             int currentRevision = -1;
 
-            using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=MapCache.db;Version=3;"))
             {
                 using (var cmd = new SQLiteCommand(conn))
                 {

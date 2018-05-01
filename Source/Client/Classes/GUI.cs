@@ -38,7 +38,7 @@ namespace SabertoothClient
         #endregion
 
         #region Main Menu UI
-        public WindowControl loadWindow;
+        public static WindowControl loadWindow;
         Label loadLabel;
 
         public WindowControl mainWindow;
@@ -1568,17 +1568,16 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = clientConfig.Version;
+                string version = CurrentVersion;
 
-                if (clientConfig.Remember == "1")
+                if (Remember == "1")
                 {
-                    clientConfig.Username = username;
-                    clientConfig.Password = password;
-                    clientConfig.SaveConfig();
+                    Username = username;
+                    Password = password;
                 }
 
                 int result = 0;                
-                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+                using (var conn = new SQLiteConnection("Data Source=MapCache.db;Version=3;"))
                 {
                     using (var cmd = new SQLiteCommand(conn))
                     {
@@ -1618,13 +1617,12 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = clientConfig.Version;
+                string version = CurrentVersion;
 
-                if (clientConfig.Remember == "1")
+                if (Remember == "1")
                 {
-                    clientConfig.Username = username;
-                    clientConfig.Password = password;
-                    clientConfig.SaveConfig();
+                    Username = username;
+                    Password = password;
                 }
 
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
@@ -2678,9 +2676,9 @@ namespace SabertoothClient
             unlogBox.SetPosition(25, 35);
             unlogBox.SetSize(140, 25);
             unlogBox.Focus();
-            if (clientConfig.Remember == "1")
+            if (Remember == "1")
             {
-                unlogBox.Text = clientConfig.Username;
+                unlogBox.Text = Username;
             }
             pwloglabel = new Label(logWindow);
             pwloglabel.SetPosition(25, 75);
@@ -2689,9 +2687,9 @@ namespace SabertoothClient
             pwlogBox = new TextBoxPassword(logWindow);
             pwlogBox.SetPosition(25, 95);
             pwlogBox.SetSize(140, 25);
-            if (clientConfig.Remember == "1")
+            if (Remember == "1")
             {
-                pwlogBox.Text = clientConfig.Password;
+                pwlogBox.Text = Password;
             }
             //pwlogBox.Focus();
             pwlogBox.SubmitPressed += CheckLogWindowSubmit;
