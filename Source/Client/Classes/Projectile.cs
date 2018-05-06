@@ -329,7 +329,9 @@ namespace SabertoothClient
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 32), new Vector2f(dir + 32, 32));
             spritePic[3] = new Vertex(new Vector2f(x, y + 32), new Vector2f(dir, 32));
 
-            states.Texture = proj_Texture[Sprite];
+            int range = 0;
+            if (Sprite >= maxprojSprites) { range = 1; }
+            states.Texture = proj_Texture[Sprite - range];
             target.Draw(spritePic, states);
         }
     }

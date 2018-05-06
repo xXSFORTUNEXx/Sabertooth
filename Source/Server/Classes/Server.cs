@@ -72,6 +72,7 @@ namespace SabertoothServer
 
         static void CheckSQL()
         {
+            //MSSQL Database (remote)
             if (Server.localDB == "0")
             {
                 try
@@ -96,6 +97,7 @@ namespace SabertoothServer
                     Logging.WriteLog(e.Message, "SQL");
                 }
             }
+            //SQLite Database (local)
             else
             {
                 if (!Directory.Exists("Database"))
@@ -122,6 +124,7 @@ namespace SabertoothServer
 
         public static void CreateDatabase()
         {
+            //MSSQL Database (remote)
             if (Server.localDB == "0")
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
@@ -193,6 +196,7 @@ namespace SabertoothServer
                     }
                 }
             }
+            //SQLite Database (local)
             else
             {
                 using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
@@ -1143,6 +1147,8 @@ namespace SabertoothServer
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
+        public const int PLAYER_START_X = 5;
+        public const int PLAYER_START_Y = 5;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.8";

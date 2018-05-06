@@ -491,7 +491,7 @@ namespace SabertoothServer
                     int i = OpenSlot();
                     if (i < 5)
                     {
-                        players[i] = new Player(username, password, -2, -2, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
+                        players[i] = new Player(username, password, Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         players[i].CreatePlayerInDatabase();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG);
