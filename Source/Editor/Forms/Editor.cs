@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Editor.Forms;
 using static System.IO.Directory;
 using static System.Windows.Forms.Application;
+using static SabertoothServer.Server;
 
 namespace Editor
 {
@@ -11,7 +12,8 @@ namespace Editor
         public Editor()
         {
             InitializeComponent();
-            CheckDirectories();
+            LoadConfiguration();
+            CheckSQL();
         }
 
         private void btnUnlock_Click(object sender, EventArgs e)
@@ -19,15 +21,6 @@ namespace Editor
             string unlockPass = txtUnlock.Text;
             if (unlockPass == "fortune") { pnlLock.Visible = false; }
             else { lblIncorrect.Visible = true; }
-        }
-
-        private void CheckDirectories()
-        {
-            if (!Exists("Database"))
-            {
-                CreateDirectory("Database");
-                SabertoothServer.SabertoothServer.CreateDatabase();
-            }
         }
 
         private void btnItemEditor_Click(object sender, EventArgs e)

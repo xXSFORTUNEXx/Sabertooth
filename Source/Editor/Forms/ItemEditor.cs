@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using static System.Convert;
 using SabertoothServer;
+using System.Data.SqlClient;
 
 namespace Editor.Forms
 {
@@ -31,24 +32,47 @@ namespace Editor.Forms
 
         private void LoadItemList()
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                conn.Open();
-                string sql;
-
-                sql = "SELECT COUNT(*) FROM ITEMS";
-
-                object queue;
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    queue = cmd.ExecuteScalar();
+                    sql.Open();
+                    string command = "SELECT COUNT(*) FROM ITEMS";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    {
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        lstIndex.Items.Clear();
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Item.LoadNameFromDatabase(i + 1);
+                            lstIndex.Items.Add(e_Item.Name);
+                        }
+                    }
                 }
-                int result = ToInt32(queue);
-                lstIndex.Items.Clear();
-                for (int i = 0; i < result; i++)
+            }
+            else
+            {
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
                 {
-                    e_Item.LoadNameFromDatabase(i + 1);
-                    lstIndex.Items.Add(e_Item.Name);
+                    conn.Open();
+                    string sql;
+
+                    sql = "SELECT COUNT(*) FROM ITEMS";
+
+                    object queue;
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        queue = cmd.ExecuteScalar();
+                    }
+                    int result = ToInt32(queue);
+                    lstIndex.Items.Clear();
+                    for (int i = 0; i < result; i++)
+                    {
+                        e_Item.LoadNameFromDatabase(i + 1);
+                        lstIndex.Items.Add(e_Item.Name);
+                    }
                 }
             }
         }
@@ -211,9 +235,10 @@ namespace Editor.Forms
         private void scrlProjNum_Scroll(object sender, ScrollEventArgs e)
         {
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
+            e_Proj.LoadProjectileFromDatabase(scrlProjNum.Value);
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png");
             e_Item.ProjectileNumber = scrlProjNum.Value;
             UnModSave = true;
-            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png");
         }
 
         private void btnNewItem_Click(object sender, EventArgs e)

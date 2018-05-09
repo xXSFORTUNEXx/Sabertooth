@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlRarity = new System.Windows.Forms.HScrollBar();
+            this.lblRarity = new System.Windows.Forms.Label();
             this.scrlPrice = new System.Windows.Forms.HScrollBar();
             this.lblPrice = new System.Windows.Forms.Label();
             this.scrlAttackSpeed = new System.Windows.Forms.HScrollBar();
@@ -78,8 +80,6 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
-            this.lblRarity = new System.Windows.Forms.Label();
-            this.scrlRarity = new System.Windows.Forms.HScrollBar();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -115,6 +115,25 @@
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlRarity
+            // 
+            this.scrlRarity.LargeChange = 1;
+            this.scrlRarity.Location = new System.Drawing.Point(17, 251);
+            this.scrlRarity.Maximum = 5;
+            this.scrlRarity.Name = "scrlRarity";
+            this.scrlRarity.Size = new System.Drawing.Size(156, 17);
+            this.scrlRarity.TabIndex = 23;
+            this.scrlRarity.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRarity_Scroll);
+            // 
+            // lblRarity
+            // 
+            this.lblRarity.AutoSize = true;
+            this.lblRarity.Location = new System.Drawing.Point(17, 237);
+            this.lblRarity.Name = "lblRarity";
+            this.lblRarity.Size = new System.Drawing.Size(88, 13);
+            this.lblRarity.TabIndex = 22;
+            this.lblRarity.Text = "Rarity: 0 - Normal";
             // 
             // scrlPrice
             // 
@@ -624,25 +643,6 @@
             this.lblStrength.Size = new System.Drawing.Size(59, 13);
             this.lblStrength.TabIndex = 36;
             this.lblStrength.Text = "Strength: 0";
-            // 
-            // lblRarity
-            // 
-            this.lblRarity.AutoSize = true;
-            this.lblRarity.Location = new System.Drawing.Point(17, 237);
-            this.lblRarity.Name = "lblRarity";
-            this.lblRarity.Size = new System.Drawing.Size(88, 13);
-            this.lblRarity.TabIndex = 22;
-            this.lblRarity.Text = "Rarity: 0 - Normal";
-            // 
-            // scrlRarity
-            // 
-            this.scrlRarity.LargeChange = 1;
-            this.scrlRarity.Location = new System.Drawing.Point(17, 251);
-            this.scrlRarity.Maximum = 5;
-            this.scrlRarity.Name = "scrlRarity";
-            this.scrlRarity.Size = new System.Drawing.Size(156, 17);
-            this.scrlRarity.TabIndex = 23;
-            this.scrlRarity.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRarity_Scroll);
             // 
             // ItemEditor
             // 

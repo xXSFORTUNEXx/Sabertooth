@@ -37,6 +37,7 @@ namespace SabertoothServer
         public MapNpc[] r_MapNpc = new MapNpc[20];
         public MapProj[] m_MapProj = new MapProj[200];
         public MapItem[] m_MapItem = new MapItem[20];
+        public int Id { get; set; }
 
         private byte[] ToByteArray(object source)
         {
@@ -125,12 +126,17 @@ namespace SabertoothServer
                 }
             }
 
-            if (localDB == "0")
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
                 {
-                    using (var cmd = new SqlCommand(connection))
+                    sql.Open();
+                    string command;
+                    command = "INSERT INTO MAPS (NAME,REVISION,UP,DOWN,LEFTSIDE,RIGHTSIDE,BRIGHTNESS,NPC,ITEM,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
+                    command = command + " VALUES ";
+                    command = command + "(@name,@revision,@top,@bottom,@left,@right,@brightness,@npc,@item,@ground,@mask,@maska,@fringe,@fringea)";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
                         byte[] m_Npc = ToByteArray(m_MapNpc);
                         byte[] m_Item = ToByteArray(m_MapItem);
@@ -139,27 +145,21 @@ namespace SabertoothServer
                         byte[] m_MaskA = ToByteArray(MaskA);
                         byte[] m_Fringe = ToByteArray(Fringe);
                         byte[] m_FringeA = ToByteArray(FringeA);
-                        string command;
-
-                        sql.Open();
-                        command = "INSERT INTO MAPS (NAME,REVISION,UP,DOWN,LEFTSIDE,RIGHTSIDE,BRIGHTNESS,NPC,ITEM,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
-                        command = command + " VALUES ";
-                        command = command + "(@name,@revision,@top,@bottom,@left,@right,@brightness,@npc,@item,@ground,@mask,@maska,@fringe,@fringea)";
-                        cmd.CommandText = command;
-                        cmd.Parameters.Add("@name", System.Data.SqlDbType.Text).Value = Name;
-                        cmd.Parameters.Add("@revision", System.Data.SqlDbType.Int).Value = Revision;
-                        cmd.Parameters.Add("@top", System.Data.SqlDbType.Int).Value = TopMap;
-                        cmd.Parameters.Add("@bottom", System.Data.SqlDbType.Int).Value = BottomMap;
-                        cmd.Parameters.Add("@left", System.Data.SqlDbType.Int).Value = LeftMap;
-                        cmd.Parameters.Add("@right", System.Data.SqlDbType.Int).Value = RightMap;
-                        cmd.Parameters.Add("@brightness", System.Data.SqlDbType.Int).Value = Brightness;
-                        cmd.Parameters.Add("@npc", System.Data.SqlDbType.VarBinary).Value = m_Npc;
-                        cmd.Parameters.Add("@item", System.Data.SqlDbType.VarBinary).Value = m_Item;
-                        cmd.Parameters.Add("@ground", System.Data.SqlDbType.VarBinary).Value = m_Ground;
-                        cmd.Parameters.Add("@mask", System.Data.SqlDbType.VarBinary).Value = m_Mask;
-                        cmd.Parameters.Add("@maska", System.Data.SqlDbType.VarBinary).Value = m_MaskA;
-                        cmd.Parameters.Add("@fringe", System.Data.SqlDbType.VarBinary).Value = m_Fringe;
-                        cmd.Parameters.Add("@fringea", System.Data.SqlDbType.VarBinary).Value = m_FringeA;
+                        
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.SqlDbType.Text)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@revision", System.Data.SqlDbType.Int)).Value = Revision;
+                        cmd.Parameters.Add(new SqlParameter("@top", System.Data.SqlDbType.Int)).Value = TopMap;
+                        cmd.Parameters.Add(new SqlParameter("@bottom", System.Data.SqlDbType.Int)).Value = BottomMap;
+                        cmd.Parameters.Add(new SqlParameter("@left", System.Data.SqlDbType.Int)).Value = LeftMap;
+                        cmd.Parameters.Add(new SqlParameter("@right", System.Data.SqlDbType.Int)).Value = RightMap;
+                        cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
+                        cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
+                        cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
+                        cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
+                        cmd.Parameters.Add(new SqlParameter("@mask", System.Data.SqlDbType.VarBinary)).Value = m_Mask;
+                        cmd.Parameters.Add(new SqlParameter("@maska", System.Data.SqlDbType.VarBinary)).Value = m_MaskA;
+                        cmd.Parameters.Add(new SqlParameter("@fringe", System.Data.SqlDbType.VarBinary)).Value = m_Fringe;
+                        cmd.Parameters.Add(new SqlParameter("@fringea", System.Data.SqlDbType.VarBinary)).Value = m_FringeA;
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -206,38 +206,79 @@ namespace SabertoothServer
 
         public void SaveMapInDatabase(int mapNum)
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    byte[] m_Npc = ToByteArray(m_MapNpc);
-                    byte[] m_Item = ToByteArray(m_MapItem);
-                    byte[] m_Ground = ToByteArray(Ground);
-                    byte[] m_Mask = ToByteArray(Mask);
-                    byte[] m_MaskA = ToByteArray(MaskA);
-                    byte[] m_Fringe = ToByteArray(Fringe);
-                    byte[] m_FringeA = ToByteArray(FringeA);
-                    string sql;
+                    sql.Open();
+                    string command;
+                    command = "UPDATE MAPS SET NAME=@name,REVISION=@revision,UP=@top,DOWN=@bottom,LEFTSIDE=@left,RIGHTSIDE=@right,BRIGHTNESS=@brightness,NPC=@npc,ITEM=@item,GROUND=@ground,MASK=@mask,MASKA=@maska, ";
+                    command += "FRINGE=@fringe,FRINGEA=@fringea WHERE ID=@id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        byte[] m_Npc = ToByteArray(m_MapNpc);
+                        byte[] m_Item = ToByteArray(m_MapItem);
+                        byte[] m_Ground = ToByteArray(Ground);
+                        byte[] m_Mask = ToByteArray(Mask);
+                        byte[] m_MaskA = ToByteArray(MaskA);
+                        byte[] m_Fringe = ToByteArray(Fringe);
+                        byte[] m_FringeA = ToByteArray(FringeA);
 
-                    conn.Open();
-                    sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, UP = @top, DOWN = @bottom, LEFTSIDE = @left, RIGHTSIDE = @right, BRIGHTNESS = @brightness, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
-                    sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
-                    cmd.CommandText = sql;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
-                    cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
-                    cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
-                    cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
-                    cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
-                    cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
-                    cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
-                    cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
-                    cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
-                    cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
-                    cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
-                    cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
-                    cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
-                    cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
-                    cmd.ExecuteNonQuery();
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = mapNum;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.SqlDbType.Text)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@revision", System.Data.SqlDbType.Int)).Value = Revision;
+                        cmd.Parameters.Add(new SqlParameter("@top", System.Data.SqlDbType.Int)).Value = TopMap;
+                        cmd.Parameters.Add(new SqlParameter("@bottom", System.Data.SqlDbType.Int)).Value = BottomMap;
+                        cmd.Parameters.Add(new SqlParameter("@left", System.Data.SqlDbType.Int)).Value = LeftMap;
+                        cmd.Parameters.Add(new SqlParameter("@right", System.Data.SqlDbType.Int)).Value = RightMap;
+                        cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
+                        cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
+                        cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
+                        cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
+                        cmd.Parameters.Add(new SqlParameter("@mask", System.Data.SqlDbType.VarBinary)).Value = m_Mask;
+                        cmd.Parameters.Add(new SqlParameter("@maska", System.Data.SqlDbType.VarBinary)).Value = m_MaskA;
+                        cmd.Parameters.Add(new SqlParameter("@fringe", System.Data.SqlDbType.VarBinary)).Value = m_Fringe;
+                        cmd.Parameters.Add(new SqlParameter("@fringea", System.Data.SqlDbType.VarBinary)).Value = m_FringeA;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        byte[] m_Npc = ToByteArray(m_MapNpc);
+                        byte[] m_Item = ToByteArray(m_MapItem);
+                        byte[] m_Ground = ToByteArray(Ground);
+                        byte[] m_Mask = ToByteArray(Mask);
+                        byte[] m_MaskA = ToByteArray(MaskA);
+                        byte[] m_Fringe = ToByteArray(Fringe);
+                        byte[] m_FringeA = ToByteArray(FringeA);
+                        string sql;
+
+                        conn.Open();
+                        sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, UP = @top, DOWN = @bottom, LEFTSIDE = @left, RIGHTSIDE = @right, BRIGHTNESS = @brightness, NPC = @npc, ITEM = @item, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
+                        sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                        cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
+                        cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
+                        cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
+                        cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
+                        cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                        cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
+                        cmd.Parameters.Add("@npc", System.Data.DbType.Binary).Value = m_Npc;
+                        cmd.Parameters.Add("@item", System.Data.DbType.Binary).Value = m_Item;
+                        cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
+                        cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
+                        cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
+                        cmd.Parameters.Add("@fringe", System.Data.DbType.Binary).Value = m_Fringe;
+                        cmd.Parameters.Add("@fringea", System.Data.DbType.Binary).Value = m_FringeA;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
@@ -253,53 +294,115 @@ namespace SabertoothServer
                 r_MapNpc[i] = new MapNpc();
                 m_MapItem[i] = new MapItem();
             }
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
-                    cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
-                    using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                    sql.Open();
+                    string command;
+                    command = "SELECT * FROM MAPS WHERE ID=@id";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
                     {
-                        while (read.Read())
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = mapNum;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Name = read["NAME"].ToString();
-                            Revision = ToInt32(read["REVISION"].ToString());
-                            TopMap = ToInt32(read["UP"].ToString());
-                            BottomMap = ToInt32(read["DOWN"].ToString());
-                            LeftMap = ToInt32(read["LEFTSIDE"].ToString());
-                            RightMap = ToInt32(read["RIGHTSIDE"].ToString());
-                            Brightness = ToInt32(read["BRIGHTNESS"].ToString());
-                            byte[] buffer;
-                            object load;
+                            while (reader.Read())
+                            {
+                                Name = reader[1].ToString();
+                                Revision = ToInt32(reader[2]);
+                                TopMap = ToInt32(reader[3]);
+                                BottomMap = ToInt32(reader[4]);
+                                LeftMap = ToInt32(reader[5]);
+                                RightMap = ToInt32(reader[6]);
+                                Brightness = ToInt32(reader[7]);
 
-                            buffer = (byte[])read["NPC"];
-                            load = ByteArrayToObject(buffer);
-                            m_MapNpc = (MapNpc[])load;
+                                byte[] buffer;
+                                object load;
 
-                            buffer = (byte[])read["ITEM"];
-                            load = ByteArrayToObject(buffer);
-                            m_MapItem = (MapItem[])load;
+                                buffer = (byte[])reader[8];
+                                load = ByteArrayToObject(buffer);
+                                m_MapNpc = (MapNpc[])load;
 
-                            buffer = (byte[])read["GROUND"];
-                            load = ByteArrayToObject(buffer);
-                            Ground = (Tile[,])load;
+                                buffer = (byte[])reader[9];
+                                load = ByteArrayToObject(buffer);
+                                m_MapItem = (MapItem[])load;
 
-                            buffer = (byte[])read["MASK"];
-                            load = ByteArrayToObject(buffer);
-                            Mask = (Tile[,])load;
+                                buffer = (byte[])reader[10];
+                                load = ByteArrayToObject(buffer);
+                                Ground = (Tile[,])load;
 
-                            buffer = (byte[])read["MASKA"];
-                            load = ByteArrayToObject(buffer);
-                            MaskA = (Tile[,])load;
+                                buffer = (byte[])reader[11];
+                                load = ByteArrayToObject(buffer);
+                                Mask = (Tile[,])load;
 
-                            buffer = (byte[])read["FRINGE"];
-                            load = ByteArrayToObject(buffer);
-                            Fringe = (Tile[,])load;
+                                buffer = (byte[])reader[12];
+                                load = ByteArrayToObject(buffer);
+                                MaskA = (Tile[,])load;
 
-                            buffer = (byte[])read["FRINGEA"];
-                            load = ByteArrayToObject(buffer);
-                            FringeA = (Tile[,])load;
+                                buffer = (byte[])reader[13];
+                                load = ByteArrayToObject(buffer);
+                                Fringe = (Tile[,])load;
+
+                                buffer = (byte[])reader[14];
+                                load = ByteArrayToObject(buffer);
+                                FringeA = (Tile[,])load;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
+                        using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                        {
+                            while (read.Read())
+                            {
+                                Name = read["NAME"].ToString();
+                                Revision = ToInt32(read["REVISION"].ToString());
+                                TopMap = ToInt32(read["UP"].ToString());
+                                BottomMap = ToInt32(read["DOWN"].ToString());
+                                LeftMap = ToInt32(read["LEFTSIDE"].ToString());
+                                RightMap = ToInt32(read["RIGHTSIDE"].ToString());
+                                Brightness = ToInt32(read["BRIGHTNESS"].ToString());
+                                byte[] buffer;
+                                object load;
+
+                                buffer = (byte[])read["NPC"];
+                                load = ByteArrayToObject(buffer);
+                                m_MapNpc = (MapNpc[])load;
+
+                                buffer = (byte[])read["ITEM"];
+                                load = ByteArrayToObject(buffer);
+                                m_MapItem = (MapItem[])load;
+
+                                buffer = (byte[])read["GROUND"];
+                                load = ByteArrayToObject(buffer);
+                                Ground = (Tile[,])load;
+
+                                buffer = (byte[])read["MASK"];
+                                load = ByteArrayToObject(buffer);
+                                Mask = (Tile[,])load;
+
+                                buffer = (byte[])read["MASKA"];
+                                load = ByteArrayToObject(buffer);
+                                MaskA = (Tile[,])load;
+
+                                buffer = (byte[])read["FRINGE"];
+                                load = ByteArrayToObject(buffer);
+                                Fringe = (Tile[,])load;
+
+                                buffer = (byte[])read["FRINGEA"];
+                                load = ByteArrayToObject(buffer);
+                                FringeA = (Tile[,])load;
+                            }
                         }
                     }
                 }
@@ -308,17 +411,41 @@ namespace SabertoothServer
 
         public void LoadMapNameFromDatabase(int mapNum)
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
-                    cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    sql.Open();
+                    string command;
+                    command = "SELECT NAME FROM MAPS WHERE ID=@id";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
                     {
-                        while (read.Read())
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = mapNum;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Name = read["NAME"].ToString();
+                            while (reader.Read())
+                            {
+                                Name = reader[0].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Name = read["NAME"].ToString();
+                            }
                         }
                     }
                 }

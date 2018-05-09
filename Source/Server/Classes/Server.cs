@@ -63,17 +63,89 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Message Types Disabled: Debug, NAT Intro Success, Receipt, UnconnectedData, Verbose Debug, Warning Message");
 
             Server.LoadConfiguration();
-            CheckSQL();
+            Server.CheckSQL();
             netServer = new NetServer(netConfig);
             netServer.Start();
             Logging.WriteMessageLog("Network configuration complete...");
             Server.ServerLoop();
         }
+    }
 
-        static void CheckSQL()
+    public static class Server
+    {
+        public static Player[] players = new Player[Globals.MAX_PLAYERS];
+        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
+        public static Item[] items = new Item[Globals.MAX_ITEMS];
+        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
+        public static Map[] maps = new Map[Globals.MAX_MAPS];
+        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
+        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
+        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
+        public static WorldTime worldTime = new WorldTime();
+        public static Random RND = new Random();
+        public static bool isRunning;
+        private static int saveTick;
+        private static int aiTick;
+        private static int regenTick;
+        private static int regenTime;
+        private static int hungerTime;
+        private static int hydrationTime;
+        private static int saveTime;
+        private static int spawnTime;
+        private static int aiTime;
+        private static int removeTime;
+        public static int sSecond;
+        public static int sMinute;
+        public static int sHour;
+        public static int sDay;
+        public static int suptimeTick;
+        public static string upTime;
+        public static string sVersion;
+        public static string DBType;
+        public static string sqlServer;
+        public static string sqlDatabase;
+        static int lastTick;
+        static int lastFrameRate;
+        static int frameRate;
+        static int fps;
+
+        public static void ServerLoop()
+        {
+            InitArrays();
+
+            Thread commandThread = new Thread(() => CommandWindow());
+            commandThread.Start();
+
+            isRunning = true;
+            while (isRunning)
+            {
+                worldTime.UpdateTime();
+                UpdateTitle();
+                HandleData.HandleDataMessage();
+                SavePlayers();
+                CheckNpcSpawn();
+                CheckItemSpawn();
+                CheckClearMapItem();
+                CheckHealthRegen();
+                CheckVitalLoss();
+                CheckNpcAi();
+                UpTime();
+                fps = CalculateFrameRate();
+                Thread.Sleep(10);
+            }
+            DisconnectClients();
+            Logging.WriteMessageLog("Disconnecting clients...");
+            Thread.Sleep(2500);
+            SabertoothServer.netServer.Shutdown("Shutting down");
+            Logging.WriteMessageLog("Shutting down...");
+            Thread.Sleep(500);
+            Exit(0);
+        }
+
+        public static void CheckSQL()
         {
             //MSSQL Database (remote)
-            if (Server.localDB == "0")
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
                 try
                 {
@@ -82,12 +154,12 @@ namespace SabertoothServer
                     using (var sql = new SqlConnection(connection))
                     {
                         sql.Open();
-                        Logging.WriteMessageLog("Established SQL connection!", "SQL");
+                        Logging.WriteMessageLog("Established Remote SQL connection!", "SQL");
                         string command = "IF DB_ID('Sabertooth') IS NULL CREATE DATABASE Sabertooth;";
                         using (var cmd = new SqlCommand(command, sql))
                         {
                             cmd.ExecuteNonQuery();
-                        }           
+                        }
                     }
                     CreateDatabase();
                 }
@@ -111,7 +183,7 @@ namespace SabertoothServer
                     using (var sql = new SQLiteConnection(connection))
                     {
                         sql.Open();
-                        Logging.WriteMessageLog("Established SQL connection!", "SQL");
+                        Logging.WriteMessageLog("Established Local SQL connection!", "SQL");
                     }
                 }
                 catch (Exception e)
@@ -125,7 +197,7 @@ namespace SabertoothServer
         public static void CreateDatabase()
         {
             //MSSQL Database (remote)
-            if (Server.localDB == "0")
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -134,7 +206,7 @@ namespace SabertoothServer
                     string command;
                     command = "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PLAYERS')";
                     command += "CREATE TABLE PLAYERS";
-                    command += "(NAME TEXT, PASSWORD TEXT, X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, PASSWORD TEXT, X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
                     command += "SPRITE INTEGER, LEVEL INTEGER, POINTS INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, EXPERIENCE INTEGER, MONEY INTEGER, ARMOR INTEGER, HUNGER INTEGER,";
                     command += "HYDRATION INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, PISTOLAMMO INTEGER, ASSAULTAMMO INTEGER,";
                     command += "ROCKETAMMO INTEGER, GRENADEAMMO INTEGER, LIGHTRADIUS INTEGER, DAYS INTEGER, HOURS INTEGER, MINUTES INTEGER, SECONDS INTEGER, LDAYS INTEGER, LHOURS INTEGER, LMINUTES INTEGER, LSECONDS INTEGER,";
@@ -151,44 +223,44 @@ namespace SabertoothServer
                     command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'EQUIPMENT')";
                     command += "CREATE TABLE EQUIPMENT";
-                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "(OWNER TEXT, SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
                     command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
                     command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'INVENTORY')";
                     command += "CREATE TABLE INVENTORY";
-                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "(OWNER TEXT, SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
                     command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
                     command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'BANK')";
                     command += "CREATE TABLE BANK";
-                    command += "(OWNER TEXT, ID INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "(OWNER TEXT, SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
                     command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
                     command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ITEMS')";
                     command += "CREATE TABLE ITEMS";
-                    command += "(NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
                     command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
                     command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'NPCS')";
                     command += "CREATE TABLE NPCS";
-                    command += "(NAME TEXT, X INTEGER, Y INTEGER, DIRECTION INTEGER, SPRITE INTEGER, STEP INTEGER, OWNER INTEGER, BEHAVIOR INTEGER, SPAWNTIME INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, DAMAGE INTEGER, DESX INTEGER, DESY INTEGER,";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, X INTEGER, Y INTEGER, DIRECTION INTEGER, SPRITE INTEGER, STEP INTEGER, OWNER INTEGER, BEHAVIOR INTEGER, SPAWNTIME INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, DAMAGE INTEGER, DESX INTEGER, DESY INTEGER,";
                     command += "EXP INTEGER, MONEY INTEGER, RANGE INTEGER, SHOPNUM INTEGER, CHATNUM INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PROJECTILES')";
                     command += "CREATE TABLE PROJECTILES";
-                    command += "(NAME TEXT, DAMAGE INTEGER, RANGE INTEGER, SPRITE INTEGER, TYPE INTEGER, SPEED INTEGER)";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, DAMAGE INTEGER, RANGE INTEGER, SPRITE INTEGER, TYPE INTEGER, SPEED INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SHOPS')";
                     command += "CREATE TABLE SHOPS";
-                    command += "(NAME TEXT, ITEMDATA VARBINARY(MAX))";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, ITEMDATA VARBINARY(MAX))";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHAT')";
                     command += "CREATE TABLE CHAT";
-                    command += "(NAME TEXT,MAINMESSAGE TEXT,OPTIONA TEXT,OPTIONB TEXT,OPTIONC TEXT,OPTIOND TEXT,NEXTCHATA INTEGER,NEXTCHATB INTEGER,NEXTCHATC INTEGER,NEXTCHATD INTEGER,SHOPNUM INTEGER,MISSIONNUM INTEGER,ITEMA INTEGER,ITEMB INTEGER,ITEMC INTEGER,VALA INTEGER,";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MAINMESSAGE TEXT,OPTIONA TEXT,OPTIONB TEXT,OPTIONC TEXT,OPTIOND TEXT,NEXTCHATA INTEGER,NEXTCHATB INTEGER,NEXTCHATC INTEGER,NEXTCHATD INTEGER,SHOPNUM INTEGER,MISSIONNUM INTEGER,ITEMA INTEGER,ITEMB INTEGER,ITEMC INTEGER,VALA INTEGER,";
                     command += "VALB INTEGER,VALC INTEGER,MONEY INTEGER,TYPE INTEGER)";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAPS')";
                     command += "CREATE TABLE MAPS";
-                    command += "(NAME TEXT,REVISION INTEGER,UP INTEGER,DOWN INTEGER,LEFTSIDE INTEGER,RIGHTSIDE INTEGER,BRIGHTNESS INTEGER,NPC VARBINARY(MAX),ITEM VARBINARY(MAX), GROUND VARBINARY(MAX),MASK VARBINARY(MAX),MASKA VARBINARY(MAX),FRINGE VARBINARY(MAX),FRINGEA VARBINARY(MAX))";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,REVISION INTEGER,UP INTEGER,DOWN INTEGER,LEFTSIDE INTEGER,RIGHTSIDE INTEGER,BRIGHTNESS INTEGER,NPC VARBINARY(MAX),ITEM VARBINARY(MAX), GROUND VARBINARY(MAX),MASK VARBINARY(MAX),MASKA VARBINARY(MAX),FRINGE VARBINARY(MAX),FRINGEA VARBINARY(MAX))";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHESTS')";
                     command += "CREATE TABLE CHESTS";
-                    command += "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM VARBINARY(MAX))";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM VARBINARY(MAX))";
 
                     using (var cmd = new SqlCommand(command, sql))
                     {
@@ -291,78 +363,6 @@ namespace SabertoothServer
                     }
                 }
             }
-        }
-    }
-
-    public static class Server
-    {
-        public static Player[] players = new Player[Globals.MAX_PLAYERS];
-        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
-        public static Item[] items = new Item[Globals.MAX_ITEMS];
-        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
-        public static Map[] maps = new Map[Globals.MAX_MAPS];
-        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
-        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
-        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
-        public static WorldTime worldTime = new WorldTime();
-        public static Random RND = new Random();
-        public static bool isRunning;
-        private static int saveTick;
-        private static int aiTick;
-        private static int regenTick;
-        private static int regenTime;
-        private static int hungerTime;
-        private static int hydrationTime;
-        private static int saveTime;
-        private static int spawnTime;
-        private static int aiTime;
-        private static int removeTime;
-        public static int sSecond;
-        public static int sMinute;
-        public static int sHour;
-        public static int sDay;
-        public static int suptimeTick;
-        public static string upTime;
-        public static string sVersion;
-        public static string localDB;
-        public static string sqlServer;
-        public static string sqlDatabase;
-        static int lastTick;
-        static int lastFrameRate;
-        static int frameRate;
-        static int fps;
-
-        public static void ServerLoop()
-        {
-            InitArrays();
-
-            Thread commandThread = new Thread(() => CommandWindow());
-            commandThread.Start();
-
-            isRunning = true;
-            while (isRunning)
-            {
-                worldTime.UpdateTime();
-                UpdateTitle();
-                HandleData.HandleDataMessage();
-                SavePlayers();
-                CheckNpcSpawn();
-                CheckItemSpawn();
-                CheckClearMapItem();
-                CheckHealthRegen();
-                CheckVitalLoss();
-                CheckNpcAi();
-                UpTime();
-                fps = CalculateFrameRate();
-                Thread.Sleep(10);
-            }
-            DisconnectClients();
-            Logging.WriteMessageLog("Disconnecting clients...");
-            Thread.Sleep(2500);
-            SabertoothServer.netServer.Shutdown("Shutting down");
-            Logging.WriteMessageLog("Shutting down...");
-            Thread.Sleep(500);
-            Exit(0);
         }
 
         private static void InitArrays()
@@ -1061,7 +1061,7 @@ namespace SabertoothServer
             writer.WriteStartElement("ConfigData");
             writer.WriteElementString("SQLServer", Globals.SQL_SERVER_NAME);
             writer.WriteElementString("Database", Globals.SQL_SERVER_DATABASE);
-            writer.WriteElementString("LocalDB", "0");
+            writer.WriteElementString("DBType", "0");
             writer.WriteElementString("Version", Globals.VERSION);
             writer.WriteElementString("RegenTime", Globals.HEALTH_REGEN_TIME);
             writer.WriteElementString("HungerTime", Globals.HUNGER_DEGEN_TIME);
@@ -1090,8 +1090,8 @@ namespace SabertoothServer
             sqlServer = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Database");
             sqlDatabase = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("LocalDB");
-            localDB = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("DBType");
+            DBType = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Version");
             sVersion = reader.ReadElementContentAsString();
             reader.ReadToFollowing("RegenTime");
@@ -1173,6 +1173,8 @@ namespace SabertoothServer
         public const string AUTOSAVE_TIME = "300000"; //300000 / 1000 = 5 MIN
         public const string SPAWN_TIME = "1000"; //1000 / 1000 = 1 SECOND
         public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND
+        public const int SQL_DATABASE_REMOTE = 0;
+        public const int SQL_DATABASE_LOCAL = 1;
         public const int A_MILLISECOND = 1000;
         public const int SECONDS_IN_MINUTE = 60;
         public const int MINUTES_IN_HOUR = 60;

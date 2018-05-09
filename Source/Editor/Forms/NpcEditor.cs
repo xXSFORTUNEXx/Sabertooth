@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using SabertoothServer;
 using static System.Convert;
+using System.Data.SqlClient;
 
 namespace Editor.Forms
 {
@@ -29,24 +30,47 @@ namespace Editor.Forms
 
         private void LoadNpcList()
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                conn.Open();
-                string sql;
-
-                sql = "SELECT COUNT(*) FROM NPCS";
-
-                object queue;
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    queue = cmd.ExecuteScalar();
+                    sql.Open();
+                    string command = "SELECT COUNT(*) FROM NPCS";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    {
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        lstIndex.Items.Clear();
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Npc.LoadNpcNameFromDatabase(i + 1);
+                            lstIndex.Items.Add(e_Npc.Name);
+                        }
+                    }
                 }
-                int result = ToInt32(queue);
-                lstIndex.Items.Clear();
-                for (int i = 0; i < result; i++)
+            }
+            else
+            {
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
                 {
-                    e_Npc.LoadNpcNameFromDatabase(i + 1);
-                    lstIndex.Items.Add(e_Npc.Name);
+                    conn.Open();
+                    string sql;
+
+                    sql = "SELECT COUNT(*) FROM NPCS";
+
+                    object queue;
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        queue = cmd.ExecuteScalar();
+                    }
+                    int result = ToInt32(queue);
+                    lstIndex.Items.Clear();
+                    for (int i = 0; i < result; i++)
+                    {
+                        e_Npc.LoadNpcNameFromDatabase(i + 1);
+                        lstIndex.Items.Add(e_Npc.Name);
+                    }
                 }
             }
         }

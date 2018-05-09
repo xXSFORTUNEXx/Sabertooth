@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
 using static SabertoothServer.Server;
+
 namespace SabertoothServer
 {
     public class Player
