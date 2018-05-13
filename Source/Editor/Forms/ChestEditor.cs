@@ -3,6 +3,7 @@ using System;
 using System.Data.SQLite;
 using System.Windows.Forms;
 using static System.Convert;
+using System.Data.SqlClient;
 
 namespace Editor.Forms
 {
@@ -22,19 +23,42 @@ namespace Editor.Forms
 
         private void LoadItemList()
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
-                    cmd.CommandText = "SELECT COUNT(*) FROM CHESTS";
-                    object count = cmd.ExecuteScalar();
-                    int result = ToInt32(count);
-                    lstIndex.Items.Clear();
-                    for (int i = 0; i < result; i++)
+                    sql.Open();
+                    string command = "SELECT COUNT(*) FROM CHESTS";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
                     {
-                        e_Chest.LoadChestNameFromDatabase(i + 1);
-                        lstIndex.Items.Add(e_Chest.Name);
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        lstIndex.Items.Clear();
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Chest.LoadChestNameFromDatabase(i + 1);
+                            lstIndex.Items.Add(e_Chest.Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT COUNT(*) FROM CHESTS";
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        lstIndex.Items.Clear();
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Chest.LoadChestNameFromDatabase(i + 1);
+                            lstIndex.Items.Add(e_Chest.Name);
+                        }
                     }
                 }
             }
@@ -43,18 +67,41 @@ namespace Editor.Forms
         private void LoadItemCombo()
         {
             cmbItemsToAdd.Items.Add("None");
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+
+            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
-                    cmd.CommandText = "SELECT COUNT(*) FROM ITEMS";
-                    object count = cmd.ExecuteScalar();
-                    int result = ToInt32(count);
-                    for (int i = 0; i < result; i++)
+                    sql.Open();
+                    string command = "SELECT COUNT(*) FROM ITEMS";
+                    using (SqlCommand cmd = new SqlCommand(command, sql))
                     {
-                        e_Item.LoadNameFromDatabase(i + 1);
-                        cmbItemsToAdd.Items.Add((i + 1) + ": " + e_Item.Name);
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Item.LoadNameFromDatabase(i + 1);
+                            cmbItemsToAdd.Items.Add((i + 1) + ": " + e_Item.Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        cmd.CommandText = "SELECT COUNT(*) FROM ITEMS";
+                        object count = cmd.ExecuteScalar();
+                        int result = ToInt32(count);
+                        for (int i = 0; i < result; i++)
+                        {
+                            e_Item.LoadNameFromDatabase(i + 1);
+                            cmbItemsToAdd.Items.Add((i + 1) + ": " + e_Item.Name);
+                        }
                     }
                 }
             }

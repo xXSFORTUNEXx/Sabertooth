@@ -102,7 +102,6 @@ namespace SabertoothServer
 
         public void SaveShopInDatabase(int shopNum)
         {
-
             if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
