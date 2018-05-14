@@ -1385,17 +1385,16 @@ namespace SabertoothServer
                         cmd.ExecuteNonQuery();
                     }
 
-                    using (var cmd = new SqlCommand(command, sql))
+                    int n = 0;
+                    for (int i = 0; i < 25; i++)
                     {
-                        int n = 0;
-                        for (int i = 0; i < 25; i++)
+                        if (Backpack[i].Name != "None")
                         {
-                            if (Backpack[i].Name != "None")
+                            command = "INSERT INTO INVENTORY ";
+                            command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                            command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity)";
+                            using (var cmd = new SqlCommand(command, sql))
                             {
-                                command = "INSERT INTO INVENTORY ";
-                                command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
-                                command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity)";
-                                cmd.CommandText = command;
                                 cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                                 cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = n;
                                 cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Backpack[i].Name;
@@ -1419,9 +1418,9 @@ namespace SabertoothServer
                                 cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Backpack[i].ProjectileNumber;
                                 cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Backpack[i].Price;
                                 cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Backpack[i].Rarity;
-                                n = n + 1;
                                 cmd.ExecuteNonQuery();
                             }
+                            n = n + 1;
                         }
                     }
 
@@ -1431,20 +1430,19 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                         cmd.ExecuteNonQuery();
                     }
-
-                    using (var cmd = new SqlCommand(command, sql))
+                    
+                    int m = 0;
+                    for (int i = 0; i < 50; i++)
                     {
-                        int m = 0;
-                        for (int i = 0; i < 50; i++)
+                        if (Bank[i].Name != "None")
                         {
-                            if (Bank[i].Name != "None")
+                            command = "INSERT INTO BANK ";
+                            command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                            command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity)";
+                            using (var cmd = new SqlCommand(command, sql))
                             {
-                                command = "INSERT INTO BANK ";
-                                command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
-                                command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
-                                cmd.CommandText = command;
                                 cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                                cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = m;
+                                cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = m;
                                 cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Bank[i].Name;
                                 cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Bank[i].Sprite;
                                 cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Bank[i].Damage;
@@ -1466,11 +1464,11 @@ namespace SabertoothServer
                                 cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Bank[i].ProjectileNumber;
                                 cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Bank[i].Price;
                                 cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Bank[i].Rarity;
-                                m = m + 1;
                                 cmd.ExecuteNonQuery();
                             }
+                            m = m + 1;
                         }
-                    }
+                    }                    
                 }
             }
             else
@@ -1995,14 +1993,18 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                         object queue = cmd.ExecuteScalar();
                         result = ToInt32(queue);
+                    }
 
-                        if (result > 0)
+                    if (result > 0)
+                    {
+                        for (int i = 0; i < result; i++)
                         {
-                            for (int i = 0; i < result; i++)
+                            command = "SELECT * FROM INVENTORY WHERE OWNER=@owner AND SLOT=@slot";
+                            using (var cmd = new SqlCommand(command, sql))
                             {
-                                command = "SELECT * FROM INVENTORY WHERE OWNER=@owner AND SLOT=@slot";
+                                cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                                 cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
-                                cmd.CommandText = command;
+
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
                                     while (reader.Read())
@@ -2040,14 +2042,18 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                         object queue = cmd.ExecuteScalar();
                         result = ToInt32(queue);
+                    }
 
-                        if (result > 0)
+                    if (result > 0)
+                    {
+                        for (int i = 0; i < result; i++)
                         {
-                            for (int i = 0; i < result; i++)
+                            command = "SELECT * FROM BANK WHERE OWNER=@owner AND SLOT=@slot";
+                            using (var cmd = new SqlCommand(command, sql))
                             {
-                                command = "SELECT * FROM BANK WHERE OWNER=@owner AND SLOT=@slot";
+                                cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
                                 cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
-                                cmd.CommandText = command;
+
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
                                     while (reader.Read())

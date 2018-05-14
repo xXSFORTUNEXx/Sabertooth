@@ -250,9 +250,9 @@ namespace SabertoothServer
         static void HandleInteraction(NetIncomingMessage incMSG)
         {
             int type = incMSG.ReadVariableInt32();
-            int index = incMSG.ReadVariableInt32();
-            int mapIndex = incMSG.ReadVariableInt32();
             int pIndex = incMSG.ReadVariableInt32();
+            int mapIndex = incMSG.ReadVariableInt32();
+            int index = incMSG.ReadVariableInt32();
 
             if (type == 0)
             {

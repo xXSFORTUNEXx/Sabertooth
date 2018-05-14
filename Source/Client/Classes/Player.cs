@@ -796,7 +796,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].Y + 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
@@ -820,7 +820,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].Y - 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
                                         {
@@ -844,7 +844,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].X + 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
@@ -868,7 +868,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].X - 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
                                         {
@@ -1066,14 +1066,14 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendInteraction(int interactiontype, int playerindex)
+        void SendInteraction(int interactionValue, int interactionType)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.Interaction);
-            outMSG.WriteVariableInt32(interactiontype);
+            outMSG.WriteVariableInt32(interactionType);
             outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(Map);
-            outMSG.WriteVariableInt32(playerindex);
+            outMSG.WriteVariableInt32(interactionValue);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
