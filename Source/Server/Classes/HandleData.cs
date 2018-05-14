@@ -2,6 +2,7 @@
 using Lidgren.Network;
 using System;
 using System.Data.SQLite;
+using System.Data.SqlClient;
 using System.Threading;
 using static System.Convert;
 using static SabertoothServer.Server;
@@ -1777,27 +1778,57 @@ namespace SabertoothServer
 
         static bool CheckPassword(string name, string pass)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                conn.Open();
-                string sql;
-
-                sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    sql.Open();
+                    string command;
+                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        while (read.Read())
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            string compare = read["PASSWORD"].ToString();
-
-                            if (pass == compare)
+                            while (reader.Read())
                             {
-                                return true;
+                                string compare = reader[2].ToString();
+
+                                if (pass == compare)
+                                {
+                                    return true;
+                                }
                             }
+                            return false;
                         }
-                        return false;
+                    }
+                }
+            }
+            else
+            {
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    conn.Open();
+                    string sql;
+
+                    sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                string compare = read["PASSWORD"].ToString();
+
+                                if (pass == compare)
+                                {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
                     }
                 }
             }
@@ -1805,25 +1836,53 @@ namespace SabertoothServer
 
         static bool AccountExist(string name)
         {
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                conn.Open();
-                string sql;
-
-                sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    sql.Open();
+                    string command;
+                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        while (read.Read())
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (read["NAME"].ToString() == name)
+                            while (reader.Read())
                             {
-                                return true;
+                                if (reader[1].ToString() == name)
+                                {
+                                    return true;
+                                }
                             }
+                            return false;
                         }
-                        return false;
+                    }
+                }
+            }
+            else
+            {
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    conn.Open();
+                    string sql;
+
+                    sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                if (read["NAME"].ToString() == name)
+                                {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
                     }
                 }
             }

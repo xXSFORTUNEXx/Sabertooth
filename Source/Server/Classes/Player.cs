@@ -749,7 +749,7 @@ namespace SabertoothServer
                 {
                     sql.Open();
                     string command;
-                    command = "INSERT INTO PLAYERS";
+                    command = "INSERT INTO PLAYERS ";
                     command += "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
                     command += "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED) VALUES ";
                     command += "(@name,@password,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
@@ -760,7 +760,7 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@password", System.Data.DbType.String)).Value = Pass;
                         cmd.Parameters.Add(new SqlParameter("@x", System.Data.DbType.Int32)).Value = X;
                         cmd.Parameters.Add(new SqlParameter("@y", System.Data.DbType.Int32)).Value = Y;
-                        cmd.Parameters.Add(new SqlParameter("@map", System.Data.DbType.Int32).Value = Map;
+                        cmd.Parameters.Add(new SqlParameter("@map", System.Data.DbType.Int32)).Value = Map;
                         cmd.Parameters.Add(new SqlParameter("@direction", System.Data.DbType.Int32)).Value = Direction;
                         cmd.Parameters.Add(new SqlParameter("@aimdirection", System.Data.DbType.Int32)).Value = AimDirection;
                         cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
@@ -798,12 +798,157 @@ namespace SabertoothServer
                         cmd.ExecuteNonQuery();
                     }
 
-                    command = "INSERT INTO MAINWEAPONS";
+                    command = "INSERT INTO MAINWEAPONS ";
                     command += "(OWNER,NAME,CLIP,MAXCLIP,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
-                    command += "(@owner,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity);";
+                    command += "(@owner,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity)";
                     using (var cmd = new SqlCommand(command, sql))
                     {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = mainWeapon.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = mainWeapon.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = mainWeapon.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = mainWeapon.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = mainWeapon.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = mainWeapon.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = mainWeapon.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = mainWeapon.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = mainWeapon.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = mainWeapon.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = mainWeapon.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = mainWeapon.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = mainWeapon.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = mainWeapon.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = mainWeapon.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = mainWeapon.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = mainWeapon.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = mainWeapon.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = mainWeapon.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = mainWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
 
+                    command = "INSERT INTO SECONDARYWEAPONS ";
+                    command += "(OWNER,NAME,CLIP,MAXCLIP,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                    command += "(@owner,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity)";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = offWeapon.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = offWeapon.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = offWeapon.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = offWeapon.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = offWeapon.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = offWeapon.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = offWeapon.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = offWeapon.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = offWeapon.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = offWeapon.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = offWeapon.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = offWeapon.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = offWeapon.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = offWeapon.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = offWeapon.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = offWeapon.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = offWeapon.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = offWeapon.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = offWeapon.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = offWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "INSERT INTO EQUIPMENT ";
+                    command += "(OWNER,SLOT,NAME,CLIP,MAXCLIP,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                    command += "(@owner,@id,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity)";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 0;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Chest.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Chest.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Chest.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Chest.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Chest.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Chest.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Chest.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Chest.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Chest.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Chest.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Chest.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "INSERT INTO EQUIPMENT ";
+                    command += "(OWNER,SLOT,NAME,CLIP,MAXCLIP,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                    command += "(@owner,@id,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity)";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 1;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Legs.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Legs.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Legs.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Legs.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Legs.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Legs.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Legs.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Legs.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Legs.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Legs.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Legs.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "INSERT INTO EQUIPMENT ";
+                    command += "(OWNER,SLOT,NAME,CLIP,MAXCLIP,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                    command += "(@owner,@id,@name,@clip,@maxclip,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@ammotype,@value,@proj,@price,@rarity)";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 2;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Feet.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Feet.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Feet.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Feet.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Feet.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Feet.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Feet.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Feet.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Feet.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Feet.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Feet.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
+                        cmd.ExecuteNonQuery();
                     }
                 }
             }
@@ -1017,281 +1162,597 @@ namespace SabertoothServer
 
         public void SavePlayerToDatabase()
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
+                    sql.Open();
                     string command;
                     command = "UPDATE PLAYERS SET ";
-                    command = command + "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
-                    command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
-                    command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
-                    command = command + "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
-                    command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE NAME = '" + Name + "';";
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
-                    cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
-                    cmd.Parameters.Add("@x", System.Data.DbType.Int32).Value = X;
-                    cmd.Parameters.Add("@y", System.Data.DbType.Int32).Value = Y;
-                    cmd.Parameters.Add("@map", System.Data.DbType.Int32).Value = Map;
-                    cmd.Parameters.Add("@direction", System.Data.DbType.Int32).Value = Direction;
-                    cmd.Parameters.Add("@aimdirection", System.Data.DbType.Int32).Value = AimDirection;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
-                    cmd.Parameters.Add("@level", System.Data.DbType.Int32).Value = Level;
-                    cmd.Parameters.Add("@points", System.Data.DbType.Int32).Value = Points;
-                    cmd.Parameters.Add("@health", System.Data.DbType.Int32).Value = Health;
-                    cmd.Parameters.Add("@maxhealth", System.Data.DbType.Int32).Value = MaxHealth;
-                    cmd.Parameters.Add("@experience", System.Data.DbType.Int32).Value = Experience;
-                    cmd.Parameters.Add("@money", System.Data.DbType.Int32).Value = Money;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Armor;
-                    cmd.Parameters.Add("@hunger", System.Data.DbType.Int32).Value = Hunger;
-                    cmd.Parameters.Add("@hydrate", System.Data.DbType.Int32).Value = Hydration;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Stamina;
-                    cmd.Parameters.Add("@pistolammo", System.Data.DbType.Int32).Value = PistolAmmo;
-                    cmd.Parameters.Add("@assaultammo", System.Data.DbType.Int32).Value = AssaultAmmo;
-                    cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
-                    cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
-                    cmd.Parameters.Add("@lightradius", System.Data.DbType.Int32).Value = LightRadius;
-                    cmd.Parameters.Add("@days", System.Data.DbType.Int32).Value = PlayDays;
-                    cmd.Parameters.Add("@hours", System.Data.DbType.Int32).Value = PlayHours;
-                    cmd.Parameters.Add("@minutes", System.Data.DbType.Int32).Value = PlayMinutes;
-                    cmd.Parameters.Add("@seconds", System.Data.DbType.Int32).Value = PlaySeconds;
-                    cmd.Parameters.Add("@ldays", System.Data.DbType.Int32).Value = LifeDay;
-                    cmd.Parameters.Add("@lhours", System.Data.DbType.Int32).Value = LifeHour;
-                    cmd.Parameters.Add("@lminutes", System.Data.DbType.Int32).Value = LifeMinute;
-                    cmd.Parameters.Add("@lseconds", System.Data.DbType.Int32).Value = LifeSecond;
-                    cmd.Parameters.Add("@lldays", System.Data.DbType.Int32).Value = LongestLifeDay;
-                    cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
-                    cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
-                    cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
-                    cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
-                    cmd.ExecuteNonQuery();
+                    command += "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
+                    command += "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
+                    command += "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
+                    command += "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
+                    command += "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE ID = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@password", System.Data.DbType.String)).Value = Pass;
+                        cmd.Parameters.Add(new SqlParameter("@x", System.Data.DbType.Int32)).Value = X;
+                        cmd.Parameters.Add(new SqlParameter("@y", System.Data.DbType.Int32)).Value = Y;
+                        cmd.Parameters.Add(new SqlParameter("@map", System.Data.DbType.Int32)).Value = Map;
+                        cmd.Parameters.Add(new SqlParameter("@direction", System.Data.DbType.Int32)).Value = Direction;
+                        cmd.Parameters.Add(new SqlParameter("@aimdirection", System.Data.DbType.Int32)).Value = AimDirection;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;
+                        cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
+                        cmd.Parameters.Add(new SqlParameter("@health", System.Data.DbType.Int32)).Value = Health;
+                        cmd.Parameters.Add(new SqlParameter("@maxhealth", System.Data.DbType.Int32)).Value = MaxHealth;
+                        cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
+                        cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Armor;
+                        cmd.Parameters.Add(new SqlParameter("@hunger", System.Data.DbType.Int32)).Value = Hunger;
+                        cmd.Parameters.Add(new SqlParameter("@hydrate", System.Data.DbType.Int32)).Value = Hydration;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@pistolammo", System.Data.DbType.Int32)).Value = PistolAmmo;
+                        cmd.Parameters.Add(new SqlParameter("@assaultammo", System.Data.DbType.Int32)).Value = AssaultAmmo;
+                        cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
+                        cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
+                        cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
+                        cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
+                        cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
+                        cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
+                        cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
+                        cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
+                        cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
+                        cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
+                        cmd.ExecuteNonQuery();
+                    }
 
                     command = "UPDATE MAINWEAPONS SET ";
-                    command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
-                    command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
-                    command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "';";                        
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = mainWeapon.Name;
-                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = mainWeapon.Clip;
-                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = mainWeapon.MaxClip;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = mainWeapon.Sprite;
-                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = mainWeapon.Damage;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = mainWeapon.Armor;
-                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = mainWeapon.Type;
-                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = mainWeapon.AttackSpeed;
-                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = mainWeapon.ReloadSpeed;
-                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = mainWeapon.HealthRestore;
-                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = mainWeapon.HungerRestore;
-                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = mainWeapon.Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = mainWeapon.Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = mainWeapon.Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = mainWeapon.Stamina;
-                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = mainWeapon.ItemAmmoType;
-                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = mainWeapon.Value;
-                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = mainWeapon.ProjectileNumber;
-                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = mainWeapon.Price;
-                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = mainWeapon.Rarity;
-                    cmd.ExecuteNonQuery();
+                    command += "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                    command += "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                    command += "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = @owner";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = mainWeapon.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = mainWeapon.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = mainWeapon.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = mainWeapon.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = mainWeapon.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = mainWeapon.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = mainWeapon.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = mainWeapon.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = mainWeapon.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = mainWeapon.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = mainWeapon.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = mainWeapon.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = mainWeapon.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = mainWeapon.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = mainWeapon.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = mainWeapon.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = mainWeapon.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = mainWeapon.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = mainWeapon.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = mainWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
 
                     command = "UPDATE SECONDARYWEAPONS SET ";
-                    command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
-                    command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
-                    command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "';";
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = offWeapon.Name;
-                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = offWeapon.Clip;
-                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = offWeapon.MaxClip;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = offWeapon.Sprite;
-                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = offWeapon.Damage;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = offWeapon.Armor;
-                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = offWeapon.Type;
-                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = offWeapon.AttackSpeed;
-                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = offWeapon.ReloadSpeed;
-                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = offWeapon.HealthRestore;
-                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = offWeapon.HungerRestore;
-                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = offWeapon.Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = offWeapon.Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = offWeapon.Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = offWeapon.Stamina;
-                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = offWeapon.ItemAmmoType;
-                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = offWeapon.Value;
-                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = offWeapon.ProjectileNumber;
-                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = offWeapon.Price;
-                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = offWeapon.Rarity;
-                    cmd.ExecuteNonQuery();
-
-                    command = "UPDATE EQUIPMENT SET ";
-                    command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
-                    command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
-                    command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 0;";
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Chest.Name;
-                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Chest.Clip;
-                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Chest.MaxClip;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Chest.Sprite;
-                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Chest.Damage;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Chest.Armor;
-                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Chest.Type;
-                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Chest.AttackSpeed;
-                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Chest.ReloadSpeed;
-                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Chest.HealthRestore;
-                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Chest.HungerRestore;
-                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Chest.HydrateRestore;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Chest.Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Chest.Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Chest.Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Chest.Stamina;
-                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Chest.ItemAmmoType;
-                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Chest.Value;
-                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Chest.ProjectileNumber;
-                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Chest.Price;
-                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Chest.Rarity;
-                    cmd.ExecuteNonQuery();
-
-                    command = "UPDATE EQUIPMENT SET ";
-                    command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
-                    command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
-                    command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 1;";
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Legs.Name;
-                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Legs.Clip;
-                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Legs.MaxClip;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Legs.Sprite;
-                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Legs.Damage;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Legs.Armor;
-                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Legs.Type;
-                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Legs.AttackSpeed;
-                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Legs.ReloadSpeed;
-                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Legs.HealthRestore;
-                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Legs.HungerRestore;
-                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Legs.HydrateRestore;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Legs.Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Legs.Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Legs.Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Legs.Stamina;
-                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Legs.ItemAmmoType;
-                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Legs.Value;
-                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Legs.ProjectileNumber;
-                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Legs.Price;
-                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Legs.Rarity;
-                    cmd.ExecuteNonQuery();
-
-                    command = "UPDATE EQUIPMENT SET ";
-                    command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
-                    command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
-                    command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 2;";
-                    cmd.CommandText = command;
-                    cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Feet.Name;
-                    cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Feet.Clip;
-                    cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Feet.MaxClip;
-                    cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Feet.Sprite;
-                    cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Feet.Damage;
-                    cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Feet.Armor;
-                    cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Feet.Type;
-                    cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Feet.AttackSpeed;
-                    cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Feet.ReloadSpeed;
-                    cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Feet.HealthRestore;
-                    cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Feet.HungerRestore;
-                    cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Feet.HydrateRestore;
-                    cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Feet.Strength;
-                    cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Feet.Agility;
-                    cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Feet.Endurance;
-                    cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Feet.Stamina;
-                    cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Feet.ItemAmmoType;
-                    cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Feet.Value;
-                    cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Feet.ProjectileNumber;
-                    cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Feet.Price;
-                    cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Feet.Rarity;
-                    cmd.ExecuteNonQuery();
-
-                    command = "DELETE FROM INVENTORY WHERE OWNER = '" + Name + "';";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
-
-                    int n = 0;
-                    for (int i = 0; i < 25; i++)
+                    command += "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                    command += "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                    command += "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = @owner";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        if (Backpack[i].Name != "None")
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = offWeapon.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = offWeapon.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = offWeapon.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = offWeapon.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = offWeapon.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = offWeapon.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = offWeapon.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = offWeapon.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = offWeapon.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = offWeapon.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = offWeapon.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = offWeapon.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = offWeapon.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = offWeapon.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = offWeapon.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = offWeapon.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = offWeapon.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = offWeapon.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = offWeapon.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = offWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "UPDATE EQUIPMENT SET ";
+                    command += "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                    command += "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                    command += "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = @owner AND SLOT = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 0;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Chest.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Chest.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Chest.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Chest.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Chest.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Chest.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Chest.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Chest.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Chest.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Chest.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Chest.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "UPDATE EQUIPMENT SET ";
+                    command += "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                    command += "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                    command += "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = @owner AND SLOT = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 1;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Legs.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Legs.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Legs.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Legs.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Legs.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Legs.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Legs.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Legs.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Legs.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Legs.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Legs.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "UPDATE EQUIPMENT SET ";
+                    command += "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                    command += "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                    command += "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = @owner AND SLOT = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = 2;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Feet.Name;
+                        cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Feet.Clip;
+                        cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Feet.MaxClip;
+                        cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Feet.Sprite;
+                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Feet.Damage;
+                        cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Feet.Armor;
+                        cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
+                        cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Feet.ReloadSpeed;
+                        cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Feet.HungerRestore;
+                        cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Feet.HydrateRestore;
+                        cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
+                        cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
+                        cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
+                        cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
+                        cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Feet.ItemAmmoType;
+                        cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
+                        cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Feet.ProjectileNumber;
+                        cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
+                        cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    command = "DELETE FROM INVENTORY WHERE OWNER=@owner;";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        int n = 0;
+                        for (int i = 0; i < 25; i++)
                         {
-                            command = "INSERT INTO INVENTORY";
-                            command = command + "(OWNER,ID,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
-                            command = command + " VALUES ";
-                            command = command + "(@owner,@id,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
-                            cmd.CommandText = command;
-                            cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
-                            cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = n;
-                            cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Backpack[i].Name;
-                            cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Backpack[i].Sprite;
-                            cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Backpack[i].Damage;
-                            cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Backpack[i].Armor;
-                            cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Backpack[i].Type;
-                            cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Backpack[i].AttackSpeed;
-                            cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Backpack[i].ReloadSpeed;
-                            cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Backpack[i].HealthRestore;
-                            cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Backpack[i].HungerRestore;
-                            cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Backpack[i].HydrateRestore;
-                            cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Backpack[i].Strength;
-                            cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Backpack[i].Agility;
-                            cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Backpack[i].Endurance;
-                            cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Backpack[i].Stamina;
-                            cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Backpack[i].Clip;
-                            cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Backpack[i].MaxClip;
-                            cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Backpack[i].Value;
-                            cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Backpack[i].ProjectileNumber;
-                            cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Backpack[i].Price;
-                            cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Backpack[i].Rarity;
-                            n = n + 1;
-                            cmd.ExecuteNonQuery();
+                            if (Backpack[i].Name != "None")
+                            {
+                                command = "INSERT INTO INVENTORY ";
+                                command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                                command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity)";
+                                cmd.CommandText = command;
+                                cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                                cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = n;
+                                cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Backpack[i].Name;
+                                cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Backpack[i].Sprite;
+                                cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Backpack[i].Damage;
+                                cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Backpack[i].Armor;
+                                cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Backpack[i].Type;
+                                cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Backpack[i].AttackSpeed;
+                                cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Backpack[i].ReloadSpeed;
+                                cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Backpack[i].HealthRestore;
+                                cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Backpack[i].HungerRestore;
+                                cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Backpack[i].HydrateRestore;
+                                cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Backpack[i].Strength;
+                                cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Backpack[i].Agility;
+                                cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Backpack[i].Endurance;
+                                cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Backpack[i].Stamina;
+                                cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Backpack[i].Clip;
+                                cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Backpack[i].MaxClip;
+                                cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Backpack[i].ItemAmmoType;
+                                cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Backpack[i].Value;
+                                cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Backpack[i].ProjectileNumber;
+                                cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Backpack[i].Price;
+                                cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Backpack[i].Rarity;
+                                n = n + 1;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
 
-                    command = "DELETE FROM BANK WHERE OWNER = '" + Name + "';";
-                    cmd.CommandText = command;
-                    cmd.ExecuteNonQuery();
-
-                    int m = 0;
-                    for (int i = 0; i < 50; i++)
+                    command = "DELETE FROM BANK WHERE OWNER=@owner";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        if (Bank[i].Name != "None")
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        int m = 0;
+                        for (int i = 0; i < 50; i++)
                         {
-                            command = "INSERT INTO BANK";
-                            command = command + "(OWNER,ID,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
-                            command = command + " VALUES ";
-                            command = command + "(@owner,@id,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
-                            cmd.CommandText = command;
-                            cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
-                            cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = m;
-                            cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Bank[i].Name;
-                            cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Bank[i].Sprite;
-                            cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Bank[i].Damage;
-                            cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Bank[i].Armor;
-                            cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Bank[i].Type;
-                            cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Bank[i].AttackSpeed;
-                            cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Bank[i].ReloadSpeed;
-                            cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Bank[i].HealthRestore;
-                            cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Bank[i].HungerRestore;
-                            cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Bank[i].HydrateRestore;
-                            cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Bank[i].Strength;
-                            cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Bank[i].Agility;
-                            cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Bank[i].Endurance;
-                            cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Bank[i].Stamina;
-                            cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Bank[i].Clip;
-                            cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Bank[i].MaxClip;
-                            cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Bank[i].Value;
-                            cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Bank[i].ProjectileNumber;
-                            cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Bank[i].Price;
-                            cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Bank[i].Rarity;
-                            m = m + 1;
-                            cmd.ExecuteNonQuery();
+                            if (Bank[i].Name != "None")
+                            {
+                                command = "INSERT INTO BANK ";
+                                command += "(OWNER,SLOT,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
+                                command += "(@owner,@slot,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
+                                cmd.CommandText = command;
+                                cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                                cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = m;
+                                cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Bank[i].Name;
+                                cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Bank[i].Sprite;
+                                cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Bank[i].Damage;
+                                cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Bank[i].Armor;
+                                cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Bank[i].Type;
+                                cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Bank[i].AttackSpeed;
+                                cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Bank[i].ReloadSpeed;
+                                cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Bank[i].HealthRestore;
+                                cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Bank[i].HungerRestore;
+                                cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Bank[i].HydrateRestore;
+                                cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Bank[i].Strength;
+                                cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Bank[i].Agility;
+                                cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Bank[i].Endurance;
+                                cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Bank[i].Stamina;
+                                cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Bank[i].Clip;
+                                cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Bank[i].MaxClip;
+                                cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Bank[i].ItemAmmoType;
+                                cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Bank[i].Value;
+                                cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Bank[i].ProjectileNumber;
+                                cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Bank[i].Price;
+                                cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Bank[i].Rarity;
+                                m = m + 1;
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
+                        command = "UPDATE PLAYERS SET ";
+                        command = command + "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
+                        command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
+                        command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
+                        command = command + "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
+                        command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE NAME = '" + Name + "';";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                        cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
+                        cmd.Parameters.Add("@x", System.Data.DbType.Int32).Value = X;
+                        cmd.Parameters.Add("@y", System.Data.DbType.Int32).Value = Y;
+                        cmd.Parameters.Add("@map", System.Data.DbType.Int32).Value = Map;
+                        cmd.Parameters.Add("@direction", System.Data.DbType.Int32).Value = Direction;
+                        cmd.Parameters.Add("@aimdirection", System.Data.DbType.Int32).Value = AimDirection;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Sprite;
+                        cmd.Parameters.Add("@level", System.Data.DbType.Int32).Value = Level;
+                        cmd.Parameters.Add("@points", System.Data.DbType.Int32).Value = Points;
+                        cmd.Parameters.Add("@health", System.Data.DbType.Int32).Value = Health;
+                        cmd.Parameters.Add("@maxhealth", System.Data.DbType.Int32).Value = MaxHealth;
+                        cmd.Parameters.Add("@experience", System.Data.DbType.Int32).Value = Experience;
+                        cmd.Parameters.Add("@money", System.Data.DbType.Int32).Value = Money;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Armor;
+                        cmd.Parameters.Add("@hunger", System.Data.DbType.Int32).Value = Hunger;
+                        cmd.Parameters.Add("@hydrate", System.Data.DbType.Int32).Value = Hydration;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Stamina;
+                        cmd.Parameters.Add("@pistolammo", System.Data.DbType.Int32).Value = PistolAmmo;
+                        cmd.Parameters.Add("@assaultammo", System.Data.DbType.Int32).Value = AssaultAmmo;
+                        cmd.Parameters.Add("@rocketammo", System.Data.DbType.Int32).Value = RocketAmmo;
+                        cmd.Parameters.Add("@grenadeammo", System.Data.DbType.Int32).Value = GrenadeAmmo;
+                        cmd.Parameters.Add("@lightradius", System.Data.DbType.Int32).Value = LightRadius;
+                        cmd.Parameters.Add("@days", System.Data.DbType.Int32).Value = PlayDays;
+                        cmd.Parameters.Add("@hours", System.Data.DbType.Int32).Value = PlayHours;
+                        cmd.Parameters.Add("@minutes", System.Data.DbType.Int32).Value = PlayMinutes;
+                        cmd.Parameters.Add("@seconds", System.Data.DbType.Int32).Value = PlaySeconds;
+                        cmd.Parameters.Add("@ldays", System.Data.DbType.Int32).Value = LifeDay;
+                        cmd.Parameters.Add("@lhours", System.Data.DbType.Int32).Value = LifeHour;
+                        cmd.Parameters.Add("@lminutes", System.Data.DbType.Int32).Value = LifeMinute;
+                        cmd.Parameters.Add("@lseconds", System.Data.DbType.Int32).Value = LifeSecond;
+                        cmd.Parameters.Add("@lldays", System.Data.DbType.Int32).Value = LongestLifeDay;
+                        cmd.Parameters.Add("@llhours", System.Data.DbType.Int32).Value = LongestLifeHour;
+                        cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
+                        cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
+                        cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
+                        cmd.ExecuteNonQuery();
+
+                        command = "UPDATE MAINWEAPONS SET ";
+                        command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                        command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                        command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "';";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = mainWeapon.Name;
+                        cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = mainWeapon.Clip;
+                        cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = mainWeapon.MaxClip;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = mainWeapon.Sprite;
+                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = mainWeapon.Damage;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = mainWeapon.Armor;
+                        cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = mainWeapon.Type;
+                        cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = mainWeapon.AttackSpeed;
+                        cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = mainWeapon.ReloadSpeed;
+                        cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = mainWeapon.HealthRestore;
+                        cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = mainWeapon.HungerRestore;
+                        cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = mainWeapon.Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = mainWeapon.Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = mainWeapon.Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = mainWeapon.Stamina;
+                        cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = mainWeapon.ItemAmmoType;
+                        cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = mainWeapon.Value;
+                        cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = mainWeapon.ProjectileNumber;
+                        cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = mainWeapon.Price;
+                        cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = mainWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+
+                        command = "UPDATE SECONDARYWEAPONS SET ";
+                        command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                        command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                        command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "';";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = offWeapon.Name;
+                        cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = offWeapon.Clip;
+                        cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = offWeapon.MaxClip;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = offWeapon.Sprite;
+                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = offWeapon.Damage;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = offWeapon.Armor;
+                        cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = offWeapon.Type;
+                        cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = offWeapon.AttackSpeed;
+                        cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = offWeapon.ReloadSpeed;
+                        cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = offWeapon.HealthRestore;
+                        cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = offWeapon.HungerRestore;
+                        cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = mainWeapon.HydrateRestore;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = offWeapon.Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = offWeapon.Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = offWeapon.Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = offWeapon.Stamina;
+                        cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = offWeapon.ItemAmmoType;
+                        cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = offWeapon.Value;
+                        cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = offWeapon.ProjectileNumber;
+                        cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = offWeapon.Price;
+                        cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = offWeapon.Rarity;
+                        cmd.ExecuteNonQuery();
+
+                        command = "UPDATE EQUIPMENT SET ";
+                        command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                        command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                        command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 0;";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Chest.Name;
+                        cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Chest.Clip;
+                        cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Chest.MaxClip;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Chest.Sprite;
+                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Chest.Damage;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Chest.Armor;
+                        cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Chest.Type;
+                        cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Chest.AttackSpeed;
+                        cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Chest.ReloadSpeed;
+                        cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Chest.HealthRestore;
+                        cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Chest.HungerRestore;
+                        cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Chest.HydrateRestore;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Chest.Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Chest.Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Chest.Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Chest.Stamina;
+                        cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Chest.ItemAmmoType;
+                        cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Chest.Value;
+                        cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Chest.ProjectileNumber;
+                        cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Chest.Price;
+                        cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Chest.Rarity;
+                        cmd.ExecuteNonQuery();
+
+                        command = "UPDATE EQUIPMENT SET ";
+                        command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                        command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                        command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 1;";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Legs.Name;
+                        cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Legs.Clip;
+                        cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Legs.MaxClip;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Legs.Sprite;
+                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Legs.Damage;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Legs.Armor;
+                        cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Legs.Type;
+                        cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Legs.AttackSpeed;
+                        cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Legs.ReloadSpeed;
+                        cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Legs.HealthRestore;
+                        cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Legs.HungerRestore;
+                        cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Legs.HydrateRestore;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Legs.Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Legs.Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Legs.Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Legs.Stamina;
+                        cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Legs.ItemAmmoType;
+                        cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Legs.Value;
+                        cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Legs.ProjectileNumber;
+                        cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Legs.Price;
+                        cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Legs.Rarity;
+                        cmd.ExecuteNonQuery();
+
+                        command = "UPDATE EQUIPMENT SET ";
+                        command = command + "NAME = @name, CLIP = @clip, MAXCLIP = @maxclip, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, ";
+                        command = command + "HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, AMMOTYPE = @ammotype, ";
+                        command = command + "VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity WHERE OWNER = '" + Name + "' AND ID = 2;";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Feet.Name;
+                        cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Feet.Clip;
+                        cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Feet.MaxClip;
+                        cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Feet.Sprite;
+                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Feet.Damage;
+                        cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Feet.Armor;
+                        cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Feet.Type;
+                        cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Feet.AttackSpeed;
+                        cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Feet.ReloadSpeed;
+                        cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Feet.HealthRestore;
+                        cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Feet.HungerRestore;
+                        cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Feet.HydrateRestore;
+                        cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Feet.Strength;
+                        cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Feet.Agility;
+                        cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Feet.Endurance;
+                        cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Feet.Stamina;
+                        cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Feet.ItemAmmoType;
+                        cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Feet.Value;
+                        cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Feet.ProjectileNumber;
+                        cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Feet.Price;
+                        cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Feet.Rarity;
+                        cmd.ExecuteNonQuery();
+
+                        command = "DELETE FROM INVENTORY WHERE OWNER = '" + Name + "';";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+
+                        int n = 0;
+                        for (int i = 0; i < 25; i++)
+                        {
+                            if (Backpack[i].Name != "None")
+                            {
+                                command = "INSERT INTO INVENTORY";
+                                command = command + "(OWNER,ID,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
+                                command = command + " VALUES ";
+                                command = command + "(@owner,@id,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
+                                cmd.CommandText = command;
+                                cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
+                                cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = n;
+                                cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Backpack[i].Name;
+                                cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Backpack[i].Sprite;
+                                cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Backpack[i].Damage;
+                                cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Backpack[i].Armor;
+                                cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Backpack[i].Type;
+                                cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Backpack[i].AttackSpeed;
+                                cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Backpack[i].ReloadSpeed;
+                                cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Backpack[i].HealthRestore;
+                                cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Backpack[i].HungerRestore;
+                                cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Backpack[i].HydrateRestore;
+                                cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Backpack[i].Strength;
+                                cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Backpack[i].Agility;
+                                cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Backpack[i].Endurance;
+                                cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Backpack[i].Stamina;
+                                cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Backpack[i].Clip;
+                                cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Backpack[i].MaxClip;
+                                cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Backpack[i].ItemAmmoType;
+                                cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Backpack[i].Value;
+                                cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Backpack[i].ProjectileNumber;
+                                cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Backpack[i].Price;
+                                cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Backpack[i].Rarity;
+                                n = n + 1;
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        command = "DELETE FROM BANK WHERE OWNER = '" + Name + "';";
+                        cmd.CommandText = command;
+                        cmd.ExecuteNonQuery();
+
+                        int m = 0;
+                        for (int i = 0; i < 50; i++)
+                        {
+                            if (Bank[i].Name != "None")
+                            {
+                                command = "INSERT INTO BANK";
+                                command = command + "(OWNER,ID,NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY)";
+                                command = command + " VALUES ";
+                                command = command + "(@owner,@id,@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity);";
+                                cmd.CommandText = command;
+                                cmd.Parameters.Add("@owner", System.Data.DbType.String).Value = Name;
+                                cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = m;
+                                cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Bank[i].Name;
+                                cmd.Parameters.Add("@sprite", System.Data.DbType.Int32).Value = Bank[i].Sprite;
+                                cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Bank[i].Damage;
+                                cmd.Parameters.Add("@armor", System.Data.DbType.Int32).Value = Bank[i].Armor;
+                                cmd.Parameters.Add("@type", System.Data.DbType.Int32).Value = Bank[i].Type;
+                                cmd.Parameters.Add("@attackspeed", System.Data.DbType.Int32).Value = Bank[i].AttackSpeed;
+                                cmd.Parameters.Add("@reloadspeed", System.Data.DbType.Int32).Value = Bank[i].ReloadSpeed;
+                                cmd.Parameters.Add("@healthrestore", System.Data.DbType.Int32).Value = Bank[i].HealthRestore;
+                                cmd.Parameters.Add("@hungerrestore", System.Data.DbType.Int32).Value = Bank[i].HungerRestore;
+                                cmd.Parameters.Add("@hydraterestore", System.Data.DbType.Int32).Value = Bank[i].HydrateRestore;
+                                cmd.Parameters.Add("@strength", System.Data.DbType.Int32).Value = Bank[i].Strength;
+                                cmd.Parameters.Add("@agility", System.Data.DbType.Int32).Value = Bank[i].Agility;
+                                cmd.Parameters.Add("@endurance", System.Data.DbType.Int32).Value = Bank[i].Endurance;
+                                cmd.Parameters.Add("@stamina", System.Data.DbType.Int32).Value = Bank[i].Stamina;
+                                cmd.Parameters.Add("@clip", System.Data.DbType.Int32).Value = Bank[i].Clip;
+                                cmd.Parameters.Add("@maxclip", System.Data.DbType.Int32).Value = Bank[i].MaxClip;
+                                cmd.Parameters.Add("@ammotype", System.Data.DbType.Int32).Value = Bank[i].ItemAmmoType;
+                                cmd.Parameters.Add("@value", System.Data.DbType.Int32).Value = Bank[i].Value;
+                                cmd.Parameters.Add("@proj", System.Data.DbType.Int32).Value = Bank[i].ProjectileNumber;
+                                cmd.Parameters.Add("@price", System.Data.DbType.Int32).Value = Bank[i].Price;
+                                cmd.Parameters.Add("@rarity", System.Data.DbType.Int32).Value = Bank[i].Rarity;
+                                m = m + 1;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
                 }
@@ -1300,288 +1761,610 @@ namespace SabertoothServer
 
         public void LoadPlayerFromDatabase()
         {
-            using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
             {
-                using (var cmd = new SQLiteCommand(conn))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
                 {
-                    conn.Open();
+                    sql.Open();
                     string command;
-
-                    command = "SELECT * FROM PLAYERS WHERE NAME = '" + Name + "'";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
+                    int result;
+                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        while (read.Read())
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Name = read["NAME"].ToString();
-                            Pass = read["PASSWORD"].ToString();
-                            X = ToInt32(read["X"].ToString());
-                            Y = ToInt32(read["Y"].ToString());
-                            Map = ToInt32(read["MAP"].ToString());
-                            Direction = ToInt32(read["DIRECTION"].ToString());
-                            AimDirection = ToInt32(read["AIMDIRECTION"].ToString());
-                            Sprite = ToInt32(read["SPRITE"].ToString());
-                            Level = ToInt32(read["LEVEL"].ToString());
-                            Points = ToInt32(read["POINTS"].ToString());
-                            Health = ToInt32(read["HEALTH"].ToString());
-                            MaxHealth = ToInt32(read["MAXHEALTH"].ToString());
-                            Experience = ToInt32(read["EXPERIENCE"].ToString());
-                            Money = ToInt32(read["MONEY"].ToString());
-                            Armor = ToInt32(read["ARMOR"].ToString());
-                            Hunger = ToInt32(read["HUNGER"].ToString());
-                            Hydration = ToInt32(read["HYDRATION"].ToString());
-                            Strength = ToInt32(read["STRENGTH"].ToString());
-                            Agility = ToInt32(read["AGILITY"].ToString());
-                            Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            Stamina = ToInt32(read["STAMINA"].ToString());
-                            PistolAmmo = ToInt32(read["PISTOLAMMO"].ToString());
-                            AssaultAmmo = ToInt32(read["ASSAULTAMMO"].ToString());
-                            RocketAmmo = ToInt32(read["ROCKETAMMO"].ToString());
-                            GrenadeAmmo = ToInt32(read["GRENADEAMMO"].ToString());
-                            LightRadius = ToInt32(read["LIGHTRADIUS"].ToString());
-                            PlayDays = ToInt32(read["DAYS"].ToString());
-                            PlayHours = ToInt32(read["HOURS"].ToString());
-                            PlayMinutes = ToInt32(read["MINUTES"].ToString());
-                            PlaySeconds = ToInt32(read["SECONDS"].ToString());
-                            LifeDay = ToInt32(read["LDAYS"].ToString());
-                            LifeHour = ToInt32(read["LHOURS"].ToString());
-                            LifeMinute = ToInt32(read["LMINUTES"].ToString());
-                            LifeSecond = ToInt32(read["LSECONDS"].ToString());
-                            LongestLifeDay = ToInt32(read["LLDAYS"].ToString());
-                            LongestLifeHour = ToInt32(read["LLHOURS"].ToString());
-                            LongestLifeMinute = ToInt32(read["LLMINUTES"].ToString());
-                            LongestLifeSecond = ToInt32(read["LLSECONDS"].ToString());
-                            LastLoggedIn = read["LASTLOGGED"].ToString();
-                        }
-                    }
-
-                    command = "SELECT * FROM MAINWEAPONS WHERE OWNER = '" + Name + "'";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            mainWeapon.Name = read["NAME"].ToString();
-                            mainWeapon.Clip = ToInt32(read["CLIP"].ToString());
-                            mainWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                            mainWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
-                            mainWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
-                            mainWeapon.Armor = ToInt32(read["ARMOR"].ToString());
-                            mainWeapon.Type = ToInt32(read["TYPE"].ToString());
-                            mainWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                            mainWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                            mainWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                            mainWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                            mainWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                            mainWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
-                            mainWeapon.Agility = ToInt32(read["AGILITY"].ToString());
-                            mainWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            mainWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
-                            mainWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                            mainWeapon.Value = ToInt32(read["VALUE"].ToString());
-                            mainWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                            mainWeapon.Price = ToInt32(read["PRICE"].ToString());
-                            mainWeapon.Rarity = ToInt32(read["RARITY"].ToString());
-                        }
-                    }
-
-                    command = "SELECT * FROM SECONDARYWEAPONS WHERE OWNER = '" + Name + "'";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            offWeapon.Name = read["NAME"].ToString();
-                            offWeapon.Clip = ToInt32(read["CLIP"].ToString());
-                            offWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                            offWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
-                            offWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
-                            offWeapon.Armor = ToInt32(read["ARMOR"].ToString());
-                            offWeapon.Type = ToInt32(read["TYPE"].ToString());
-                            offWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                            offWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                            offWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                            offWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                            offWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                            offWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
-                            offWeapon.Agility = ToInt32(read["AGILITY"].ToString());
-                            offWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            offWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
-                            offWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                            offWeapon.Value = ToInt32(read["VALUE"].ToString());
-                            offWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                            offWeapon.Price = ToInt32(read["PRICE"].ToString());
-                            offWeapon.Rarity = ToInt32(read["RARITY"].ToString());
-                        }
-                    }
-
-                    command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 0 + ";";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            Chest.Name = read["NAME"].ToString();
-                            Chest.Sprite = ToInt32(read["SPRITE"].ToString());
-                            Chest.Damage = ToInt32(read["DAMAGE"].ToString());
-                            Chest.Armor = ToInt32(read["ARMOR"].ToString());
-                            Chest.Type = ToInt32(read["TYPE"].ToString());
-                            Chest.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                            Chest.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                            Chest.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                            Chest.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                            Chest.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                            Chest.Strength = ToInt32(read["STRENGTH"].ToString());
-                            Chest.Agility = ToInt32(read["AGILITY"].ToString());
-                            Chest.Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            Chest.Stamina = ToInt32(read["STAMINA"].ToString());
-                            Chest.Clip = ToInt32(read["CLIP"].ToString());
-                            Chest.MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                            Chest.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                            Chest.Value = ToInt32(read["VALUE"].ToString());
-                            Chest.ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                            Chest.Price = ToInt32(read["PRICE"].ToString());
-                            Chest.Rarity = ToInt32(read["RARITY"].ToString());
-                        }
-                    }
-
-                    command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 1 + ";";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            Legs.Name = read["NAME"].ToString();
-                            Legs.Sprite = ToInt32(read["SPRITE"].ToString());
-                            Legs.Damage = ToInt32(read["DAMAGE"].ToString());
-                            Legs.Armor = ToInt32(read["ARMOR"].ToString());
-                            Legs.Type = ToInt32(read["TYPE"].ToString());
-                            Legs.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                            Legs.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                            Legs.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                            Legs.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                            Legs.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                            Legs.Strength = ToInt32(read["STRENGTH"].ToString());
-                            Legs.Agility = ToInt32(read["AGILITY"].ToString());
-                            Legs.Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            Legs.Stamina = ToInt32(read["STAMINA"].ToString());
-                            Legs.Clip = ToInt32(read["CLIP"].ToString());
-                            Legs.MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                            Legs.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                            Legs.Value = ToInt32(read["VALUE"].ToString());
-                            Legs.ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                            Legs.Price = ToInt32(read["PRICE"].ToString());
-                            Legs.Rarity = ToInt32(read["RARITY"].ToString());
-                        }
-                    }
-
-                    command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 2 + ";";
-                    cmd.CommandText = command;
-                    using (SQLiteDataReader read = cmd.ExecuteReader())
-                    {
-                        while (read.Read())
-                        {
-                            Feet.Name = read["NAME"].ToString();
-                            Feet.Sprite = ToInt32(read["SPRITE"].ToString());
-                            Feet.Damage = ToInt32(read["DAMAGE"].ToString());
-                            Feet.Armor = ToInt32(read["ARMOR"].ToString());
-                            Feet.Type = ToInt32(read["TYPE"].ToString());
-                            Feet.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                            Feet.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                            Feet.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                            Feet.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                            Feet.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                            Feet.Strength = ToInt32(read["STRENGTH"].ToString());
-                            Feet.Agility = ToInt32(read["AGILITY"].ToString());
-                            Feet.Endurance = ToInt32(read["ENDURANCE"].ToString());
-                            Feet.Stamina = ToInt32(read["STAMINA"].ToString());
-                            Feet.Clip = ToInt32(read["CLIP"].ToString());
-                            Feet.MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                            Feet.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                            Feet.Value = ToInt32(read["VALUE"].ToString());
-                            Feet.ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                            Feet.Price = ToInt32(read["PRICE"].ToString());
-                            Feet.Rarity = ToInt32(read["RARITY"].ToString());
-                        }
-                    }
-
-                    command = "SELECT COUNT(*) FROM INVENTORY WHERE OWNER = '" + Name + "'";
-                    cmd.CommandText = command;
-                    object queue = cmd.ExecuteScalar();
-                    int result = ToInt32(queue);
-
-                    if (result > 0)
-                    {
-                        for (int i = 0; i < result; i++)
-                        {
-                            command = "SELECT * FROM INVENTORY WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
-                            cmd.CommandText = command;
-                            using (SQLiteDataReader read = cmd.ExecuteReader())
+                            while (reader.Read())
                             {
-                                while (read.Read())
+                                Id = ToInt32(reader[0]);
+                                Name = reader[1].ToString();
+                                Pass = reader[2].ToString();
+                                X = ToInt32(reader[3]);
+                                Y = ToInt32(reader[4]);
+                                Map = ToInt32(reader[5]);
+                                Direction = ToInt32(reader[6]);
+                                AimDirection = ToInt32(reader[7]);
+                                Sprite = ToInt32(reader[8]);
+                                Level = ToInt32(reader[9]);
+                                Points = ToInt32(reader[10]);
+                                Health = ToInt32(reader[11]);
+                                MaxHealth = ToInt32(reader[12]);
+                                Experience = ToInt32(reader[13]);
+                                Money = ToInt32(reader[14]);
+                                Armor = ToInt32(reader[15]);
+                                Hunger = ToInt32(reader[16]);
+                                Hydration = ToInt32(reader[17]);
+                                Strength = ToInt32(reader[18]);
+                                Agility = ToInt32(reader[19]);
+                                Endurance = ToInt32(reader[20]);
+                                Stamina = ToInt32(reader[21]);
+                                PistolAmmo = ToInt32(reader[22]);
+                                AssaultAmmo = ToInt32(reader[23]);
+                                RocketAmmo = ToInt32(reader[24]);
+                                GrenadeAmmo = ToInt32(reader[25]);
+                                LightRadius = ToInt32(reader[26]);
+                                PlayDays = ToInt32(reader[27]);
+                                PlayHours = ToInt32(reader[28]);
+                                PlayMinutes = ToInt32(reader[29]);
+                                PlaySeconds = ToInt32(reader[30]);
+                                LifeDay = ToInt32(reader[31]);
+                                LifeHour = ToInt32(reader[32]);
+                                LifeMinute = ToInt32(reader[33]);
+                                LifeSecond = ToInt32(reader[34]);
+                                LongestLifeDay = ToInt32(reader[35]);
+                                LongestLifeHour = ToInt32(reader[36]);
+                                LongestLifeMinute = ToInt32(reader[37]);
+                                LongestLifeSecond = ToInt32(reader[38]);
+                                LastLoggedIn = reader[39].ToString();
+                            }
+                        }
+                    }
+
+                    command = "SELECT * FROM MAINWEAPONS WHERE OWNER=@owner";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                mainWeapon.Name = reader[1].ToString();
+                                mainWeapon.Clip = ToInt32(reader[2]);
+                                mainWeapon.MaxClip = ToInt32(reader[3]);
+                                mainWeapon.Sprite = ToInt32(reader[4]);
+                                mainWeapon.Damage = ToInt32(reader[5]);
+                                mainWeapon.Armor = ToInt32(reader[6]);
+                                mainWeapon.Type = ToInt32(reader[7]);
+                                mainWeapon.AttackSpeed = ToInt32(reader[8]);
+                                mainWeapon.ReloadSpeed = ToInt32(reader[9]);
+                                mainWeapon.HealthRestore = ToInt32(reader[10]);
+                                mainWeapon.HungerRestore = ToInt32(reader[11]);
+                                mainWeapon.HydrateRestore = ToInt32(reader[12]);
+                                mainWeapon.Strength = ToInt32(reader[13]);
+                                mainWeapon.Agility = ToInt32(reader[14]);
+                                mainWeapon.Endurance = ToInt32(reader[15]);
+                                mainWeapon.Stamina = ToInt32(reader[16]);
+                                mainWeapon.ItemAmmoType = ToInt32(reader[17]);
+                                mainWeapon.Value = ToInt32(reader[18]);
+                                mainWeapon.ProjectileNumber = ToInt32(reader[19]);
+                                mainWeapon.Price = ToInt32(reader[20]);
+                                mainWeapon.Rarity = ToInt32(reader[21]);
+                            }
+                        }
+                    }
+
+                    command = "SELECT * FROM SECONDARYWEAPONS WHERE OWNER=@owner";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                offWeapon.Name = reader[1].ToString();
+                                offWeapon.Clip = ToInt32(reader[2]);
+                                offWeapon.MaxClip = ToInt32(reader[3]);
+                                offWeapon.Sprite = ToInt32(reader[4]);
+                                offWeapon.Damage = ToInt32(reader[5]);
+                                offWeapon.Armor = ToInt32(reader[6]);
+                                offWeapon.Type = ToInt32(reader[7]);
+                                offWeapon.AttackSpeed = ToInt32(reader[8]);
+                                offWeapon.ReloadSpeed = ToInt32(reader[9]);
+                                offWeapon.HealthRestore = ToInt32(reader[10]);
+                                offWeapon.HungerRestore = ToInt32(reader[11]);
+                                offWeapon.HydrateRestore = ToInt32(reader[12]);
+                                offWeapon.Strength = ToInt32(reader[13]);
+                                offWeapon.Agility = ToInt32(reader[14]);
+                                offWeapon.Endurance = ToInt32(reader[15]);
+                                offWeapon.Stamina = ToInt32(reader[16]);
+                                offWeapon.ItemAmmoType = ToInt32(reader[17]);
+                                offWeapon.Value = ToInt32(reader[18]);
+                                offWeapon.ProjectileNumber = ToInt32(reader[19]);
+                                offWeapon.Price = ToInt32(reader[20]);
+                                offWeapon.Rarity = ToInt32(reader[21]);
+                            }
+                        }
+                    }
+
+                    command = "SELECT * FROM EQUIPMENT WHERE OWNER=@owner AND SLOT=@slot";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 0;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Chest.Name = reader[2].ToString();
+                                Chest.Sprite = ToInt32(reader[3]);
+                                Chest.Damage = ToInt32(reader[4]);
+                                Chest.Armor = ToInt32(reader[5]);
+                                Chest.Type = ToInt32(reader[6]);
+                                Chest.AttackSpeed = ToInt32(reader[7]);
+                                Chest.ReloadSpeed = ToInt32(reader[8]);
+                                Chest.HealthRestore = ToInt32(reader[9]);
+                                Chest.HungerRestore = ToInt32(reader[10]);
+                                Chest.HydrateRestore = ToInt32(reader[11]);
+                                Chest.Strength = ToInt32(reader[12]);
+                                Chest.Agility = ToInt32(reader[13]);
+                                Chest.Endurance = ToInt32(reader[14]);
+                                Chest.Stamina = ToInt32(reader[15]);
+                                Chest.Clip = ToInt32(reader[16]);
+                                Chest.MaxClip = ToInt32(reader[17]);
+                                Chest.ItemAmmoType = ToInt32(reader[18]);
+                                Chest.Value = ToInt32(reader[19]);
+                                Chest.ProjectileNumber = ToInt32(reader[20]);
+                                Chest.Price = ToInt32(reader[21]);
+                                Chest.Rarity = ToInt32(reader[22]);
+                            }
+                        }
+                    }
+
+                    command = "SELECT * FROM EQUIPMENT WHERE OWNER=@owner AND SLOT=@slot";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 1;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Legs.Name = reader[2].ToString();
+                                Legs.Sprite = ToInt32(reader[3]);
+                                Legs.Damage = ToInt32(reader[4]);
+                                Legs.Armor = ToInt32(reader[5]);
+                                Legs.Type = ToInt32(reader[6]);
+                                Legs.AttackSpeed = ToInt32(reader[7]);
+                                Legs.ReloadSpeed = ToInt32(reader[8]);
+                                Legs.HealthRestore = ToInt32(reader[9]);
+                                Legs.HungerRestore = ToInt32(reader[10]);
+                                Legs.HydrateRestore = ToInt32(reader[11]);
+                                Legs.Strength = ToInt32(reader[12]);
+                                Legs.Agility = ToInt32(reader[13]);
+                                Legs.Endurance = ToInt32(reader[14]);
+                                Legs.Stamina = ToInt32(reader[15]);
+                                Legs.Clip = ToInt32(reader[16]);
+                                Legs.MaxClip = ToInt32(reader[17]);
+                                Legs.ItemAmmoType = ToInt32(reader[18]);
+                                Legs.Value = ToInt32(reader[19]);
+                                Legs.ProjectileNumber = ToInt32(reader[20]);
+                                Legs.Price = ToInt32(reader[21]);
+                                Legs.Rarity = ToInt32(reader[22]);
+                            }
+                        }
+                    }
+
+                    command = "SELECT * FROM EQUIPMENT WHERE OWNER=@owner AND SLOT=@slot";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 2;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Feet.Name = reader[2].ToString();
+                                Feet.Sprite = ToInt32(reader[3]);
+                                Feet.Damage = ToInt32(reader[4]);
+                                Feet.Armor = ToInt32(reader[5]);
+                                Feet.Type = ToInt32(reader[6]);
+                                Feet.AttackSpeed = ToInt32(reader[7]);
+                                Feet.ReloadSpeed = ToInt32(reader[8]);
+                                Feet.HealthRestore = ToInt32(reader[9]);
+                                Feet.HungerRestore = ToInt32(reader[10]);
+                                Feet.HydrateRestore = ToInt32(reader[11]);
+                                Feet.Strength = ToInt32(reader[12]);
+                                Feet.Agility = ToInt32(reader[13]);
+                                Feet.Endurance = ToInt32(reader[14]);
+                                Feet.Stamina = ToInt32(reader[15]);
+                                Feet.Clip = ToInt32(reader[16]);
+                                Feet.MaxClip = ToInt32(reader[17]);
+                                Feet.ItemAmmoType = ToInt32(reader[18]);
+                                Feet.Value = ToInt32(reader[19]);
+                                Feet.ProjectileNumber = ToInt32(reader[20]);
+                                Feet.Price = ToInt32(reader[21]);
+                                Feet.Rarity = ToInt32(reader[22]);
+                            }
+                        }
+                    }
+
+                    command = "SELECT COUNT(*) FROM INVENTORY WHERE OWNER=@owner";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        object queue = cmd.ExecuteScalar();
+                        result = ToInt32(queue);
+
+                        if (result > 0)
+                        {
+                            for (int i = 0; i < result; i++)
+                            {
+                                command = "SELECT * FROM INVENTORY WHERE OWNER=@owner AND SLOT=@slot";
+                                cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
+                                cmd.CommandText = command;
+                                using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    Backpack[i].Name = read["NAME"].ToString();
-                                    Backpack[i].Sprite = ToInt32(read["SPRITE"].ToString());
-                                    Backpack[i].Damage = ToInt32(read["DAMAGE"].ToString());
-                                    Backpack[i].Armor = ToInt32(read["ARMOR"].ToString());
-                                    Backpack[i].Type = ToInt32(read["TYPE"].ToString());
-                                    Backpack[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                                    Backpack[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                                    Backpack[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                                    Backpack[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                                    Backpack[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                                    Backpack[i].Strength = ToInt32(read["STRENGTH"].ToString());
-                                    Backpack[i].Agility = ToInt32(read["AGILITY"].ToString());
-                                    Backpack[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
-                                    Backpack[i].Stamina = ToInt32(read["STAMINA"].ToString());
-                                    Backpack[i].Clip = ToInt32(read["CLIP"].ToString());
-                                    Backpack[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                                    Backpack[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                                    Backpack[i].Value = ToInt32(read["VALUE"].ToString());
-                                    Backpack[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                                    Backpack[i].Price = ToInt32(read["PRICE"].ToString());
-                                    Backpack[i].Rarity = ToInt32(read["RARITY"].ToString());
+                                    while (reader.Read())
+                                    {
+                                        Backpack[i].Name = reader[2].ToString();
+                                        Backpack[i].Sprite = ToInt32(reader[3]);
+                                        Backpack[i].Damage = ToInt32(reader[4]);
+                                        Backpack[i].Armor = ToInt32(reader[5]);
+                                        Backpack[i].Type = ToInt32(reader[6]);
+                                        Backpack[i].AttackSpeed = ToInt32(reader[7]);
+                                        Backpack[i].ReloadSpeed = ToInt32(reader[8]);
+                                        Backpack[i].HealthRestore = ToInt32(reader[9]);
+                                        Backpack[i].HungerRestore = ToInt32(reader[10]);
+                                        Backpack[i].HydrateRestore = ToInt32(reader[11]);
+                                        Backpack[i].Strength = ToInt32(reader[12]);
+                                        Backpack[i].Agility = ToInt32(reader[13]);
+                                        Backpack[i].Endurance = ToInt32(reader[14]);
+                                        Backpack[i].Stamina = ToInt32(reader[15]);
+                                        Backpack[i].Clip = ToInt32(reader[16]);
+                                        Backpack[i].MaxClip = ToInt32(reader[17]);
+                                        Backpack[i].ItemAmmoType = ToInt32(reader[18]);
+                                        Backpack[i].Value = ToInt32(reader[19]);
+                                        Backpack[i].ProjectileNumber = ToInt32(reader[20]);
+                                        Backpack[i].Price = ToInt32(reader[21]);
+                                        Backpack[i].Rarity = ToInt32(reader[22]);
+                                    }
                                 }
                             }
                         }
                     }
 
-                    command = "SELECT COUNT(*) FROM BANK WHERE OWNER = '" + Name + "'";
-                    cmd.CommandText = command;
-                    queue = cmd.ExecuteScalar();
-                    result = ToInt32(queue);
-
-                    if (result > 0)
+                    command = "SELECT COUNT(*) FROM BANK WHERE OWNER=@owner";
+                    using (var cmd = new SqlCommand(command, sql))
                     {
-                        for (int i = 0; i < 50; i++)
+                        cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
+                        object queue = cmd.ExecuteScalar();
+                        result = ToInt32(queue);
+
+                        if (result > 0)
                         {
-                            command = "SELECT * FROM BANK WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
-                            cmd.CommandText = command;
-                            using (SQLiteDataReader read = cmd.ExecuteReader())
+                            for (int i = 0; i < result; i++)
                             {
-                                while (read.Read())
+                                command = "SELECT * FROM BANK WHERE OWNER=@owner AND SLOT=@slot";
+                                cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
+                                cmd.CommandText = command;
+                                using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    Bank[i].Name = read["NAME"].ToString();
-                                    Bank[i].Sprite = ToInt32(read["SPRITE"].ToString());
-                                    Bank[i].Damage = ToInt32(read["DAMAGE"].ToString());
-                                    Bank[i].Armor = ToInt32(read["ARMOR"].ToString());
-                                    Bank[i].Type = ToInt32(read["TYPE"].ToString());
-                                    Bank[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
-                                    Bank[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
-                                    Bank[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
-                                    Bank[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
-                                    Bank[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
-                                    Bank[i].Strength = ToInt32(read["STRENGTH"].ToString());
-                                    Bank[i].Agility = ToInt32(read["AGILITY"].ToString());
-                                    Bank[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
-                                    Bank[i].Stamina = ToInt32(read["STAMINA"].ToString());
-                                    Bank[i].Clip = ToInt32(read["CLIP"].ToString());
-                                    Bank[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
-                                    Bank[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
-                                    Bank[i].Value = ToInt32(read["VALUE"].ToString());
-                                    Bank[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
-                                    Bank[i].Price = ToInt32(read["PRICE"].ToString());
-                                    Bank[i].Rarity = ToInt32(read["RARITY"].ToString());
+                                    while (reader.Read())
+                                    {
+                                        Bank[i].Name = reader[2].ToString();
+                                        Bank[i].Sprite = ToInt32(reader[3]);
+                                        Bank[i].Damage = ToInt32(reader[4]);
+                                        Bank[i].Armor = ToInt32(reader[5]);
+                                        Bank[i].Type = ToInt32(reader[6]);
+                                        Bank[i].AttackSpeed = ToInt32(reader[7]);
+                                        Bank[i].ReloadSpeed = ToInt32(reader[8]);
+                                        Bank[i].HealthRestore = ToInt32(reader[9]);
+                                        Bank[i].HungerRestore = ToInt32(reader[10]);
+                                        Bank[i].HydrateRestore = ToInt32(reader[11]);
+                                        Bank[i].Strength = ToInt32(reader[12]);
+                                        Bank[i].Agility = ToInt32(reader[13]);
+                                        Bank[i].Endurance = ToInt32(reader[14]);
+                                        Bank[i].Stamina = ToInt32(reader[15]);
+                                        Bank[i].Clip = ToInt32(reader[16]);
+                                        Bank[i].MaxClip = ToInt32(reader[17]);
+                                        Bank[i].ItemAmmoType = ToInt32(reader[18]);
+                                        Bank[i].Value = ToInt32(reader[19]);
+                                        Bank[i].ProjectileNumber = ToInt32(reader[20]);
+                                        Bank[i].Price = ToInt32(reader[21]);
+                                        Bank[i].Rarity = ToInt32(reader[22]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
+
+                        command = "SELECT * FROM PLAYERS WHERE NAME = '" + Name + "'";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Name = read["NAME"].ToString();
+                                Pass = read["PASSWORD"].ToString();
+                                X = ToInt32(read["X"].ToString());
+                                Y = ToInt32(read["Y"].ToString());
+                                Map = ToInt32(read["MAP"].ToString());
+                                Direction = ToInt32(read["DIRECTION"].ToString());
+                                AimDirection = ToInt32(read["AIMDIRECTION"].ToString());
+                                Sprite = ToInt32(read["SPRITE"].ToString());
+                                Level = ToInt32(read["LEVEL"].ToString());
+                                Points = ToInt32(read["POINTS"].ToString());
+                                Health = ToInt32(read["HEALTH"].ToString());
+                                MaxHealth = ToInt32(read["MAXHEALTH"].ToString());
+                                Experience = ToInt32(read["EXPERIENCE"].ToString());
+                                Money = ToInt32(read["MONEY"].ToString());
+                                Armor = ToInt32(read["ARMOR"].ToString());
+                                Hunger = ToInt32(read["HUNGER"].ToString());
+                                Hydration = ToInt32(read["HYDRATION"].ToString());
+                                Strength = ToInt32(read["STRENGTH"].ToString());
+                                Agility = ToInt32(read["AGILITY"].ToString());
+                                Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                Stamina = ToInt32(read["STAMINA"].ToString());
+                                PistolAmmo = ToInt32(read["PISTOLAMMO"].ToString());
+                                AssaultAmmo = ToInt32(read["ASSAULTAMMO"].ToString());
+                                RocketAmmo = ToInt32(read["ROCKETAMMO"].ToString());
+                                GrenadeAmmo = ToInt32(read["GRENADEAMMO"].ToString());
+                                LightRadius = ToInt32(read["LIGHTRADIUS"].ToString());
+                                PlayDays = ToInt32(read["DAYS"].ToString());
+                                PlayHours = ToInt32(read["HOURS"].ToString());
+                                PlayMinutes = ToInt32(read["MINUTES"].ToString());
+                                PlaySeconds = ToInt32(read["SECONDS"].ToString());
+                                LifeDay = ToInt32(read["LDAYS"].ToString());
+                                LifeHour = ToInt32(read["LHOURS"].ToString());
+                                LifeMinute = ToInt32(read["LMINUTES"].ToString());
+                                LifeSecond = ToInt32(read["LSECONDS"].ToString());
+                                LongestLifeDay = ToInt32(read["LLDAYS"].ToString());
+                                LongestLifeHour = ToInt32(read["LLHOURS"].ToString());
+                                LongestLifeMinute = ToInt32(read["LLMINUTES"].ToString());
+                                LongestLifeSecond = ToInt32(read["LLSECONDS"].ToString());
+                                LastLoggedIn = read["LASTLOGGED"].ToString();
+                            }
+                        }
+
+                        command = "SELECT * FROM MAINWEAPONS WHERE OWNER = '" + Name + "'";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                mainWeapon.Name = read["NAME"].ToString();
+                                mainWeapon.Clip = ToInt32(read["CLIP"].ToString());
+                                mainWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                mainWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
+                                mainWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
+                                mainWeapon.Armor = ToInt32(read["ARMOR"].ToString());
+                                mainWeapon.Type = ToInt32(read["TYPE"].ToString());
+                                mainWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                mainWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                mainWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                mainWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                mainWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                mainWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
+                                mainWeapon.Agility = ToInt32(read["AGILITY"].ToString());
+                                mainWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                mainWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
+                                mainWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                mainWeapon.Value = ToInt32(read["VALUE"].ToString());
+                                mainWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                mainWeapon.Price = ToInt32(read["PRICE"].ToString());
+                                mainWeapon.Rarity = ToInt32(read["RARITY"].ToString());
+                            }
+                        }
+
+                        command = "SELECT * FROM SECONDARYWEAPONS WHERE OWNER = '" + Name + "'";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                offWeapon.Name = read["NAME"].ToString();
+                                offWeapon.Clip = ToInt32(read["CLIP"].ToString());
+                                offWeapon.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                offWeapon.Sprite = ToInt32(read["SPRITE"].ToString());
+                                offWeapon.Damage = ToInt32(read["DAMAGE"].ToString());
+                                offWeapon.Armor = ToInt32(read["ARMOR"].ToString());
+                                offWeapon.Type = ToInt32(read["TYPE"].ToString());
+                                offWeapon.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                offWeapon.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                offWeapon.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                offWeapon.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                offWeapon.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                offWeapon.Strength = ToInt32(read["STRENGTH"].ToString());
+                                offWeapon.Agility = ToInt32(read["AGILITY"].ToString());
+                                offWeapon.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                offWeapon.Stamina = ToInt32(read["STAMINA"].ToString());
+                                offWeapon.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                offWeapon.Value = ToInt32(read["VALUE"].ToString());
+                                offWeapon.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                offWeapon.Price = ToInt32(read["PRICE"].ToString());
+                                offWeapon.Rarity = ToInt32(read["RARITY"].ToString());
+                            }
+                        }
+
+                        command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 0 + ";";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Chest.Name = read["NAME"].ToString();
+                                Chest.Sprite = ToInt32(read["SPRITE"].ToString());
+                                Chest.Damage = ToInt32(read["DAMAGE"].ToString());
+                                Chest.Armor = ToInt32(read["ARMOR"].ToString());
+                                Chest.Type = ToInt32(read["TYPE"].ToString());
+                                Chest.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                Chest.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                Chest.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                Chest.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                Chest.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                Chest.Strength = ToInt32(read["STRENGTH"].ToString());
+                                Chest.Agility = ToInt32(read["AGILITY"].ToString());
+                                Chest.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                Chest.Stamina = ToInt32(read["STAMINA"].ToString());
+                                Chest.Clip = ToInt32(read["CLIP"].ToString());
+                                Chest.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                Chest.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                Chest.Value = ToInt32(read["VALUE"].ToString());
+                                Chest.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                Chest.Price = ToInt32(read["PRICE"].ToString());
+                                Chest.Rarity = ToInt32(read["RARITY"].ToString());
+                            }
+                        }
+
+                        command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 1 + ";";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Legs.Name = read["NAME"].ToString();
+                                Legs.Sprite = ToInt32(read["SPRITE"].ToString());
+                                Legs.Damage = ToInt32(read["DAMAGE"].ToString());
+                                Legs.Armor = ToInt32(read["ARMOR"].ToString());
+                                Legs.Type = ToInt32(read["TYPE"].ToString());
+                                Legs.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                Legs.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                Legs.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                Legs.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                Legs.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                Legs.Strength = ToInt32(read["STRENGTH"].ToString());
+                                Legs.Agility = ToInt32(read["AGILITY"].ToString());
+                                Legs.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                Legs.Stamina = ToInt32(read["STAMINA"].ToString());
+                                Legs.Clip = ToInt32(read["CLIP"].ToString());
+                                Legs.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                Legs.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                Legs.Value = ToInt32(read["VALUE"].ToString());
+                                Legs.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                Legs.Price = ToInt32(read["PRICE"].ToString());
+                                Legs.Rarity = ToInt32(read["RARITY"].ToString());
+                            }
+                        }
+
+                        command = "SELECT * FROM EQUIPMENT WHERE OWNER = '" + Name + "' AND ID = " + 2 + ";";
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Feet.Name = read["NAME"].ToString();
+                                Feet.Sprite = ToInt32(read["SPRITE"].ToString());
+                                Feet.Damage = ToInt32(read["DAMAGE"].ToString());
+                                Feet.Armor = ToInt32(read["ARMOR"].ToString());
+                                Feet.Type = ToInt32(read["TYPE"].ToString());
+                                Feet.AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                Feet.ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                Feet.HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                Feet.HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                Feet.HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                Feet.Strength = ToInt32(read["STRENGTH"].ToString());
+                                Feet.Agility = ToInt32(read["AGILITY"].ToString());
+                                Feet.Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                Feet.Stamina = ToInt32(read["STAMINA"].ToString());
+                                Feet.Clip = ToInt32(read["CLIP"].ToString());
+                                Feet.MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                Feet.ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                Feet.Value = ToInt32(read["VALUE"].ToString());
+                                Feet.ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                Feet.Price = ToInt32(read["PRICE"].ToString());
+                                Feet.Rarity = ToInt32(read["RARITY"].ToString());
+                            }
+                        }
+
+                        command = "SELECT COUNT(*) FROM INVENTORY WHERE OWNER = '" + Name + "'";
+                        cmd.CommandText = command;
+                        object queue = cmd.ExecuteScalar();
+                        int result = ToInt32(queue);
+
+                        if (result > 0)
+                        {
+                            for (int i = 0; i < result; i++)
+                            {
+                                command = "SELECT * FROM INVENTORY WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
+                                cmd.CommandText = command;
+                                using (SQLiteDataReader read = cmd.ExecuteReader())
+                                {
+                                    while (read.Read())
+                                    {
+                                        Backpack[i].Name = read["NAME"].ToString();
+                                        Backpack[i].Sprite = ToInt32(read["SPRITE"].ToString());
+                                        Backpack[i].Damage = ToInt32(read["DAMAGE"].ToString());
+                                        Backpack[i].Armor = ToInt32(read["ARMOR"].ToString());
+                                        Backpack[i].Type = ToInt32(read["TYPE"].ToString());
+                                        Backpack[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                        Backpack[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                        Backpack[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                        Backpack[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                        Backpack[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                        Backpack[i].Strength = ToInt32(read["STRENGTH"].ToString());
+                                        Backpack[i].Agility = ToInt32(read["AGILITY"].ToString());
+                                        Backpack[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                        Backpack[i].Stamina = ToInt32(read["STAMINA"].ToString());
+                                        Backpack[i].Clip = ToInt32(read["CLIP"].ToString());
+                                        Backpack[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                        Backpack[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                        Backpack[i].Value = ToInt32(read["VALUE"].ToString());
+                                        Backpack[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                        Backpack[i].Price = ToInt32(read["PRICE"].ToString());
+                                        Backpack[i].Rarity = ToInt32(read["RARITY"].ToString());
+                                    }
+                                }
+                            }
+                        }
+
+                        command = "SELECT COUNT(*) FROM BANK WHERE OWNER = '" + Name + "'";
+                        cmd.CommandText = command;
+                        queue = cmd.ExecuteScalar();
+                        result = ToInt32(queue);
+
+                        if (result > 0)
+                        {
+                            for (int i = 0; i < 50; i++)
+                            {
+                                command = "SELECT * FROM BANK WHERE OWNER = '" + Name + "' AND ID = " + i + ";";
+                                cmd.CommandText = command;
+                                using (SQLiteDataReader read = cmd.ExecuteReader())
+                                {
+                                    while (read.Read())
+                                    {
+                                        Bank[i].Name = read["NAME"].ToString();
+                                        Bank[i].Sprite = ToInt32(read["SPRITE"].ToString());
+                                        Bank[i].Damage = ToInt32(read["DAMAGE"].ToString());
+                                        Bank[i].Armor = ToInt32(read["ARMOR"].ToString());
+                                        Bank[i].Type = ToInt32(read["TYPE"].ToString());
+                                        Bank[i].AttackSpeed = ToInt32(read["ATTACKSPEED"].ToString());
+                                        Bank[i].ReloadSpeed = ToInt32(read["RELOADSPEED"].ToString());
+                                        Bank[i].HealthRestore = ToInt32(read["HEALTHRESTORE"].ToString());
+                                        Bank[i].HungerRestore = ToInt32(read["HUNGERRESTORE"].ToString());
+                                        Bank[i].HydrateRestore = ToInt32(read["HYDRATERESTORE"].ToString());
+                                        Bank[i].Strength = ToInt32(read["STRENGTH"].ToString());
+                                        Bank[i].Agility = ToInt32(read["AGILITY"].ToString());
+                                        Bank[i].Endurance = ToInt32(read["ENDURANCE"].ToString());
+                                        Bank[i].Stamina = ToInt32(read["STAMINA"].ToString());
+                                        Bank[i].Clip = ToInt32(read["CLIP"].ToString());
+                                        Bank[i].MaxClip = ToInt32(read["MAXCLIP"].ToString());
+                                        Bank[i].ItemAmmoType = ToInt32(read["AMMOTYPE"].ToString());
+                                        Bank[i].Value = ToInt32(read["VALUE"].ToString());
+                                        Bank[i].ProjectileNumber = ToInt32(read["PROJ"].ToString());
+                                        Bank[i].Price = ToInt32(read["PRICE"].ToString());
+                                        Bank[i].Rarity = ToInt32(read["RARITY"].ToString());
+                                    }
                                 }
                             }
                         }
