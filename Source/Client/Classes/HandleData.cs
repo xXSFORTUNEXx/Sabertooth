@@ -1083,8 +1083,8 @@ namespace SabertoothClient
             players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
-            players[myIndex].offsetX = 12;
-            players[myIndex].offsetY = 9;
+            players[myIndex].OffsetX = 12;
+            players[myIndex].OffsetY = 9;
 
             //Main Weapon
             players[myIndex].mainWeapon.Name = incMSG.ReadString();
@@ -1223,8 +1223,8 @@ namespace SabertoothClient
                 players[i].LongestLifeHour = incMSG.ReadVariableInt32();
                 players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
                 players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
-                players[i].offsetX = 12;
-                players[i].offsetY = 9;
+                players[i].OffsetX = 12;
+                players[i].OffsetY = 9;
             }
         }
 

@@ -180,6 +180,7 @@ namespace SabertoothServer
             LongestLifeHour = 0;
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
+            LastLoggedIn = "00:00:00.000";
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -1827,27 +1828,28 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                mainWeapon.Name = reader[1].ToString();
-                                mainWeapon.Clip = ToInt32(reader[2]);
-                                mainWeapon.MaxClip = ToInt32(reader[3]);
-                                mainWeapon.Sprite = ToInt32(reader[4]);
-                                mainWeapon.Damage = ToInt32(reader[5]);
-                                mainWeapon.Armor = ToInt32(reader[6]);
-                                mainWeapon.Type = ToInt32(reader[7]);
-                                mainWeapon.AttackSpeed = ToInt32(reader[8]);
-                                mainWeapon.ReloadSpeed = ToInt32(reader[9]);
-                                mainWeapon.HealthRestore = ToInt32(reader[10]);
-                                mainWeapon.HungerRestore = ToInt32(reader[11]);
-                                mainWeapon.HydrateRestore = ToInt32(reader[12]);
-                                mainWeapon.Strength = ToInt32(reader[13]);
-                                mainWeapon.Agility = ToInt32(reader[14]);
-                                mainWeapon.Endurance = ToInt32(reader[15]);
-                                mainWeapon.Stamina = ToInt32(reader[16]);
-                                mainWeapon.ItemAmmoType = ToInt32(reader[17]);
-                                mainWeapon.Value = ToInt32(reader[18]);
-                                mainWeapon.ProjectileNumber = ToInt32(reader[19]);
-                                mainWeapon.Price = ToInt32(reader[20]);
-                                mainWeapon.Rarity = ToInt32(reader[21]);
+                                mainWeapon.Id = ToInt32(reader[0]);
+                                mainWeapon.Name = reader[2].ToString();
+                                mainWeapon.Clip = ToInt32(reader[3]);
+                                mainWeapon.MaxClip = ToInt32(reader[4]);
+                                mainWeapon.Sprite = ToInt32(reader[5]);
+                                mainWeapon.Damage = ToInt32(reader[6]);
+                                mainWeapon.Armor = ToInt32(reader[7]);
+                                mainWeapon.Type = ToInt32(reader[8]);
+                                mainWeapon.AttackSpeed = ToInt32(reader[9]);
+                                mainWeapon.ReloadSpeed = ToInt32(reader[10]);
+                                mainWeapon.HealthRestore = ToInt32(reader[11]);
+                                mainWeapon.HungerRestore = ToInt32(reader[12]);
+                                mainWeapon.HydrateRestore = ToInt32(reader[13]);
+                                mainWeapon.Strength = ToInt32(reader[14]);
+                                mainWeapon.Agility = ToInt32(reader[15]);
+                                mainWeapon.Endurance = ToInt32(reader[16]);
+                                mainWeapon.Stamina = ToInt32(reader[17]);
+                                mainWeapon.ItemAmmoType = ToInt32(reader[18]);
+                                mainWeapon.Value = ToInt32(reader[19]);
+                                mainWeapon.ProjectileNumber = ToInt32(reader[20]);
+                                mainWeapon.Price = ToInt32(reader[21]);
+                                mainWeapon.Rarity = ToInt32(reader[22]);
                             }
                         }
                     }
@@ -1860,27 +1862,28 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                offWeapon.Name = reader[1].ToString();
-                                offWeapon.Clip = ToInt32(reader[2]);
-                                offWeapon.MaxClip = ToInt32(reader[3]);
-                                offWeapon.Sprite = ToInt32(reader[4]);
-                                offWeapon.Damage = ToInt32(reader[5]);
-                                offWeapon.Armor = ToInt32(reader[6]);
-                                offWeapon.Type = ToInt32(reader[7]);
-                                offWeapon.AttackSpeed = ToInt32(reader[8]);
-                                offWeapon.ReloadSpeed = ToInt32(reader[9]);
-                                offWeapon.HealthRestore = ToInt32(reader[10]);
-                                offWeapon.HungerRestore = ToInt32(reader[11]);
-                                offWeapon.HydrateRestore = ToInt32(reader[12]);
-                                offWeapon.Strength = ToInt32(reader[13]);
-                                offWeapon.Agility = ToInt32(reader[14]);
-                                offWeapon.Endurance = ToInt32(reader[15]);
-                                offWeapon.Stamina = ToInt32(reader[16]);
-                                offWeapon.ItemAmmoType = ToInt32(reader[17]);
-                                offWeapon.Value = ToInt32(reader[18]);
-                                offWeapon.ProjectileNumber = ToInt32(reader[19]);
-                                offWeapon.Price = ToInt32(reader[20]);
-                                offWeapon.Rarity = ToInt32(reader[21]);
+                                offWeapon.Id = ToInt32(reader[0]);
+                                offWeapon.Name = reader[2].ToString();
+                                offWeapon.Clip = ToInt32(reader[3]);
+                                offWeapon.MaxClip = ToInt32(reader[4]);
+                                offWeapon.Sprite = ToInt32(reader[5]);
+                                offWeapon.Damage = ToInt32(reader[6]);
+                                offWeapon.Armor = ToInt32(reader[7]);
+                                offWeapon.Type = ToInt32(reader[8]);
+                                offWeapon.AttackSpeed = ToInt32(reader[9]);
+                                offWeapon.ReloadSpeed = ToInt32(reader[10]);
+                                offWeapon.HealthRestore = ToInt32(reader[11]);
+                                offWeapon.HungerRestore = ToInt32(reader[12]);
+                                offWeapon.HydrateRestore = ToInt32(reader[13]);
+                                offWeapon.Strength = ToInt32(reader[14]);
+                                offWeapon.Agility = ToInt32(reader[15]);
+                                offWeapon.Endurance = ToInt32(reader[16]);
+                                offWeapon.Stamina = ToInt32(reader[17]);
+                                offWeapon.ItemAmmoType = ToInt32(reader[18]);
+                                offWeapon.Value = ToInt32(reader[19]);
+                                offWeapon.ProjectileNumber = ToInt32(reader[20]);
+                                offWeapon.Price = ToInt32(reader[21]);
+                                offWeapon.Rarity = ToInt32(reader[22]);
                             }
                         }
                     }
@@ -1894,27 +1897,28 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                Chest.Name = reader[2].ToString();
-                                Chest.Sprite = ToInt32(reader[3]);
-                                Chest.Damage = ToInt32(reader[4]);
-                                Chest.Armor = ToInt32(reader[5]);
-                                Chest.Type = ToInt32(reader[6]);
-                                Chest.AttackSpeed = ToInt32(reader[7]);
-                                Chest.ReloadSpeed = ToInt32(reader[8]);
-                                Chest.HealthRestore = ToInt32(reader[9]);
-                                Chest.HungerRestore = ToInt32(reader[10]);
-                                Chest.HydrateRestore = ToInt32(reader[11]);
-                                Chest.Strength = ToInt32(reader[12]);
-                                Chest.Agility = ToInt32(reader[13]);
-                                Chest.Endurance = ToInt32(reader[14]);
-                                Chest.Stamina = ToInt32(reader[15]);
-                                Chest.Clip = ToInt32(reader[16]);
-                                Chest.MaxClip = ToInt32(reader[17]);
-                                Chest.ItemAmmoType = ToInt32(reader[18]);
-                                Chest.Value = ToInt32(reader[19]);
-                                Chest.ProjectileNumber = ToInt32(reader[20]);
-                                Chest.Price = ToInt32(reader[21]);
-                                Chest.Rarity = ToInt32(reader[22]);
+                                Chest.Id = ToInt32(reader[0]);
+                                Chest.Name = reader[3].ToString();
+                                Chest.Sprite = ToInt32(reader[4]);
+                                Chest.Damage = ToInt32(reader[5]);
+                                Chest.Armor = ToInt32(reader[6]);
+                                Chest.Type = ToInt32(reader[7]);
+                                Chest.AttackSpeed = ToInt32(reader[8]);
+                                Chest.ReloadSpeed = ToInt32(reader[9]);
+                                Chest.HealthRestore = ToInt32(reader[10]);
+                                Chest.HungerRestore = ToInt32(reader[11]);
+                                Chest.HydrateRestore = ToInt32(reader[12]);
+                                Chest.Strength = ToInt32(reader[13]);
+                                Chest.Agility = ToInt32(reader[14]);
+                                Chest.Endurance = ToInt32(reader[15]);
+                                Chest.Stamina = ToInt32(reader[16]);
+                                Chest.Clip = ToInt32(reader[17]);
+                                Chest.MaxClip = ToInt32(reader[18]);
+                                Chest.ItemAmmoType = ToInt32(reader[19]);
+                                Chest.Value = ToInt32(reader[20]);
+                                Chest.ProjectileNumber = ToInt32(reader[21]);
+                                Chest.Price = ToInt32(reader[22]);
+                                Chest.Rarity = ToInt32(reader[23]);
                             }
                         }
                     }
@@ -1928,27 +1932,28 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                Legs.Name = reader[2].ToString();
-                                Legs.Sprite = ToInt32(reader[3]);
-                                Legs.Damage = ToInt32(reader[4]);
-                                Legs.Armor = ToInt32(reader[5]);
-                                Legs.Type = ToInt32(reader[6]);
-                                Legs.AttackSpeed = ToInt32(reader[7]);
-                                Legs.ReloadSpeed = ToInt32(reader[8]);
-                                Legs.HealthRestore = ToInt32(reader[9]);
-                                Legs.HungerRestore = ToInt32(reader[10]);
-                                Legs.HydrateRestore = ToInt32(reader[11]);
-                                Legs.Strength = ToInt32(reader[12]);
-                                Legs.Agility = ToInt32(reader[13]);
-                                Legs.Endurance = ToInt32(reader[14]);
-                                Legs.Stamina = ToInt32(reader[15]);
-                                Legs.Clip = ToInt32(reader[16]);
-                                Legs.MaxClip = ToInt32(reader[17]);
-                                Legs.ItemAmmoType = ToInt32(reader[18]);
-                                Legs.Value = ToInt32(reader[19]);
-                                Legs.ProjectileNumber = ToInt32(reader[20]);
-                                Legs.Price = ToInt32(reader[21]);
-                                Legs.Rarity = ToInt32(reader[22]);
+                                Legs.Id = ToInt32(reader[0]);
+                                Legs.Name = reader[3].ToString();
+                                Legs.Sprite = ToInt32(reader[4]);
+                                Legs.Damage = ToInt32(reader[5]);
+                                Legs.Armor = ToInt32(reader[6]);
+                                Legs.Type = ToInt32(reader[7]);
+                                Legs.AttackSpeed = ToInt32(reader[8]);
+                                Legs.ReloadSpeed = ToInt32(reader[9]);
+                                Legs.HealthRestore = ToInt32(reader[10]);
+                                Legs.HungerRestore = ToInt32(reader[11]);
+                                Legs.HydrateRestore = ToInt32(reader[12]);
+                                Legs.Strength = ToInt32(reader[13]);
+                                Legs.Agility = ToInt32(reader[14]);
+                                Legs.Endurance = ToInt32(reader[15]);
+                                Legs.Stamina = ToInt32(reader[16]);
+                                Legs.Clip = ToInt32(reader[17]);
+                                Legs.MaxClip = ToInt32(reader[18]);
+                                Legs.ItemAmmoType = ToInt32(reader[19]);
+                                Legs.Value = ToInt32(reader[20]);
+                                Legs.ProjectileNumber = ToInt32(reader[21]);
+                                Legs.Price = ToInt32(reader[22]);
+                                Legs.Rarity = ToInt32(reader[23]);
                             }
                         }
                     }
@@ -1962,27 +1967,28 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                Feet.Name = reader[2].ToString();
-                                Feet.Sprite = ToInt32(reader[3]);
-                                Feet.Damage = ToInt32(reader[4]);
-                                Feet.Armor = ToInt32(reader[5]);
-                                Feet.Type = ToInt32(reader[6]);
-                                Feet.AttackSpeed = ToInt32(reader[7]);
-                                Feet.ReloadSpeed = ToInt32(reader[8]);
-                                Feet.HealthRestore = ToInt32(reader[9]);
-                                Feet.HungerRestore = ToInt32(reader[10]);
-                                Feet.HydrateRestore = ToInt32(reader[11]);
-                                Feet.Strength = ToInt32(reader[12]);
-                                Feet.Agility = ToInt32(reader[13]);
-                                Feet.Endurance = ToInt32(reader[14]);
-                                Feet.Stamina = ToInt32(reader[15]);
-                                Feet.Clip = ToInt32(reader[16]);
-                                Feet.MaxClip = ToInt32(reader[17]);
-                                Feet.ItemAmmoType = ToInt32(reader[18]);
-                                Feet.Value = ToInt32(reader[19]);
-                                Feet.ProjectileNumber = ToInt32(reader[20]);
-                                Feet.Price = ToInt32(reader[21]);
-                                Feet.Rarity = ToInt32(reader[22]);
+                                Feet.Id = ToInt32(reader[0]);
+                                Feet.Name = reader[3].ToString();
+                                Feet.Sprite = ToInt32(reader[4]);
+                                Feet.Damage = ToInt32(reader[5]);
+                                Feet.Armor = ToInt32(reader[6]);
+                                Feet.Type = ToInt32(reader[7]);
+                                Feet.AttackSpeed = ToInt32(reader[8]);
+                                Feet.ReloadSpeed = ToInt32(reader[9]);
+                                Feet.HealthRestore = ToInt32(reader[10]);
+                                Feet.HungerRestore = ToInt32(reader[11]);
+                                Feet.HydrateRestore = ToInt32(reader[12]);
+                                Feet.Strength = ToInt32(reader[13]);
+                                Feet.Agility = ToInt32(reader[14]);
+                                Feet.Endurance = ToInt32(reader[15]);
+                                Feet.Stamina = ToInt32(reader[16]);
+                                Feet.Clip = ToInt32(reader[17]);
+                                Feet.MaxClip = ToInt32(reader[18]);
+                                Feet.ItemAmmoType = ToInt32(reader[19]);
+                                Feet.Value = ToInt32(reader[20]);
+                                Feet.ProjectileNumber = ToInt32(reader[21]);
+                                Feet.Price = ToInt32(reader[22]);
+                                Feet.Rarity = ToInt32(reader[23]);
                             }
                         }
                     }
@@ -2009,27 +2015,28 @@ namespace SabertoothServer
                                 {
                                     while (reader.Read())
                                     {
-                                        Backpack[i].Name = reader[2].ToString();
-                                        Backpack[i].Sprite = ToInt32(reader[3]);
-                                        Backpack[i].Damage = ToInt32(reader[4]);
-                                        Backpack[i].Armor = ToInt32(reader[5]);
-                                        Backpack[i].Type = ToInt32(reader[6]);
-                                        Backpack[i].AttackSpeed = ToInt32(reader[7]);
-                                        Backpack[i].ReloadSpeed = ToInt32(reader[8]);
-                                        Backpack[i].HealthRestore = ToInt32(reader[9]);
-                                        Backpack[i].HungerRestore = ToInt32(reader[10]);
-                                        Backpack[i].HydrateRestore = ToInt32(reader[11]);
-                                        Backpack[i].Strength = ToInt32(reader[12]);
-                                        Backpack[i].Agility = ToInt32(reader[13]);
-                                        Backpack[i].Endurance = ToInt32(reader[14]);
-                                        Backpack[i].Stamina = ToInt32(reader[15]);
-                                        Backpack[i].Clip = ToInt32(reader[16]);
-                                        Backpack[i].MaxClip = ToInt32(reader[17]);
-                                        Backpack[i].ItemAmmoType = ToInt32(reader[18]);
-                                        Backpack[i].Value = ToInt32(reader[19]);
-                                        Backpack[i].ProjectileNumber = ToInt32(reader[20]);
-                                        Backpack[i].Price = ToInt32(reader[21]);
-                                        Backpack[i].Rarity = ToInt32(reader[22]);
+                                        Backpack[i].Id = ToInt32(reader[0]);
+                                        Backpack[i].Name = reader[3].ToString();
+                                        Backpack[i].Sprite = ToInt32(reader[4]);
+                                        Backpack[i].Damage = ToInt32(reader[5]);
+                                        Backpack[i].Armor = ToInt32(reader[6]);
+                                        Backpack[i].Type = ToInt32(reader[7]);
+                                        Backpack[i].AttackSpeed = ToInt32(reader[8]);
+                                        Backpack[i].ReloadSpeed = ToInt32(reader[9]);
+                                        Backpack[i].HealthRestore = ToInt32(reader[10]);
+                                        Backpack[i].HungerRestore = ToInt32(reader[11]);
+                                        Backpack[i].HydrateRestore = ToInt32(reader[12]);
+                                        Backpack[i].Strength = ToInt32(reader[13]);
+                                        Backpack[i].Agility = ToInt32(reader[14]);
+                                        Backpack[i].Endurance = ToInt32(reader[15]);
+                                        Backpack[i].Stamina = ToInt32(reader[16]);
+                                        Backpack[i].Clip = ToInt32(reader[17]);
+                                        Backpack[i].MaxClip = ToInt32(reader[18]);
+                                        Backpack[i].ItemAmmoType = ToInt32(reader[19]);
+                                        Backpack[i].Value = ToInt32(reader[20]);
+                                        Backpack[i].ProjectileNumber = ToInt32(reader[21]);
+                                        Backpack[i].Price = ToInt32(reader[22]);
+                                        Backpack[i].Rarity = ToInt32(reader[23]);
                                     }
                                 }
                             }
@@ -2058,27 +2065,28 @@ namespace SabertoothServer
                                 {
                                     while (reader.Read())
                                     {
-                                        Bank[i].Name = reader[2].ToString();
-                                        Bank[i].Sprite = ToInt32(reader[3]);
-                                        Bank[i].Damage = ToInt32(reader[4]);
-                                        Bank[i].Armor = ToInt32(reader[5]);
-                                        Bank[i].Type = ToInt32(reader[6]);
-                                        Bank[i].AttackSpeed = ToInt32(reader[7]);
-                                        Bank[i].ReloadSpeed = ToInt32(reader[8]);
-                                        Bank[i].HealthRestore = ToInt32(reader[9]);
-                                        Bank[i].HungerRestore = ToInt32(reader[10]);
-                                        Bank[i].HydrateRestore = ToInt32(reader[11]);
-                                        Bank[i].Strength = ToInt32(reader[12]);
-                                        Bank[i].Agility = ToInt32(reader[13]);
-                                        Bank[i].Endurance = ToInt32(reader[14]);
-                                        Bank[i].Stamina = ToInt32(reader[15]);
-                                        Bank[i].Clip = ToInt32(reader[16]);
-                                        Bank[i].MaxClip = ToInt32(reader[17]);
-                                        Bank[i].ItemAmmoType = ToInt32(reader[18]);
-                                        Bank[i].Value = ToInt32(reader[19]);
-                                        Bank[i].ProjectileNumber = ToInt32(reader[20]);
-                                        Bank[i].Price = ToInt32(reader[21]);
-                                        Bank[i].Rarity = ToInt32(reader[22]);
+                                        Bank[i].Id = ToInt32(reader[0]);
+                                        Bank[i].Name = reader[3].ToString();
+                                        Bank[i].Sprite = ToInt32(reader[4]);
+                                        Bank[i].Damage = ToInt32(reader[5]);
+                                        Bank[i].Armor = ToInt32(reader[6]);
+                                        Bank[i].Type = ToInt32(reader[7]);
+                                        Bank[i].AttackSpeed = ToInt32(reader[8]);
+                                        Bank[i].ReloadSpeed = ToInt32(reader[9]);
+                                        Bank[i].HealthRestore = ToInt32(reader[10]);
+                                        Bank[i].HungerRestore = ToInt32(reader[11]);
+                                        Bank[i].HydrateRestore = ToInt32(reader[12]);
+                                        Bank[i].Strength = ToInt32(reader[13]);
+                                        Bank[i].Agility = ToInt32(reader[14]);
+                                        Bank[i].Endurance = ToInt32(reader[15]);
+                                        Bank[i].Stamina = ToInt32(reader[16]);
+                                        Bank[i].Clip = ToInt32(reader[17]);
+                                        Bank[i].MaxClip = ToInt32(reader[18]);
+                                        Bank[i].ItemAmmoType = ToInt32(reader[19]);
+                                        Bank[i].Value = ToInt32(reader[20]);
+                                        Bank[i].ProjectileNumber = ToInt32(reader[21]);
+                                        Bank[i].Price = ToInt32(reader[22]);
+                                        Bank[i].Rarity = ToInt32(reader[23]);
                                     }
                                 }
                             }
@@ -2372,6 +2380,77 @@ namespace SabertoothServer
                                         Bank[i].Rarity = ToInt32(read["RARITY"].ToString());
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void LoadPlayerNameFromDatabase(int id)
+        {
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            {
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    string command;
+                    command = "SELECT * FROM PLAYERS WHERE ID=@id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = id;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Name = reader[1].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
+
+                        command = "SELECT * FROM PLAYERS WHERE rowid = " + id;
+                        cmd.CommandText = command;
+                        using (SQLiteDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                Name = read["NAME"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void LoadPlayerIDFromDatabase(string name)
+        {
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            {
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    string command;
+                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Id = ToInt32(reader[0]);
                             }
                         }
                     }

@@ -514,8 +514,8 @@ namespace SabertoothClient
                 d_Window.Title = "Debug Window - Admin";
                 d_FPS.Text = "FPS: " + fps;
                 d_Name.Text = "Name: " + player.Name + " (" + HandleData.myIndex + ")";
-                d_X.Text = "X: " + (player.X + player.offsetX);
-                d_Y.Text = "Y: " + (player.Y + player.offsetY);
+                d_X.Text = "X: " + (player.X + player.OffsetX);
+                d_Y.Text = "Y: " + (player.Y + player.OffsetY);
                 d_Map.Text = "Map: " + player.Map;
                 d_Dir.Text = "Direction: " + player.Direction;
                 d_Sprite.Text = "Sprite: " + player.Sprite;

@@ -63,6 +63,12 @@ namespace Editor
             ChestEditor e_ChestEditor = new ChestEditor();
             e_ChestEditor.ShowDialog();
         }
+
+        private void btnPlayerEditor_Click(object sender, EventArgs e)
+        {
+            PlayerEditor e_PlayerEditor = new PlayerEditor();
+            e_PlayerEditor.ShowDialog();
+        }
     }
     static class StartUp
     {

@@ -40,6 +40,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.btnEditor = new System.Windows.Forms.Button();
             this.btnShopEditor = new System.Windows.Forms.Button();
+            this.btnPlayerEditor = new System.Windows.Forms.Button();
             this.pnlLock.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,9 +50,9 @@
             this.pnlLock.Controls.Add(this.lblIncorrect);
             this.pnlLock.Controls.Add(this.txtUnlock);
             this.pnlLock.Controls.Add(this.btnUnlock);
-            this.pnlLock.Location = new System.Drawing.Point(12, 14);
+            this.pnlLock.Location = new System.Drawing.Point(200, 12);
             this.pnlLock.Name = "pnlLock";
-            this.pnlLock.Size = new System.Drawing.Size(119, 226);
+            this.pnlLock.Size = new System.Drawing.Size(119, 256);
             this.pnlLock.TabIndex = 0;
             this.pnlLock.Visible = false;
             // 
@@ -163,11 +164,22 @@
             this.btnShopEditor.UseVisualStyleBackColor = true;
             this.btnShopEditor.Click += new System.EventHandler(this.btnShopEditor_Click);
             // 
+            // btnPlayerEditor
+            // 
+            this.btnPlayerEditor.Location = new System.Drawing.Point(12, 245);
+            this.btnPlayerEditor.Name = "btnPlayerEditor";
+            this.btnPlayerEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnPlayerEditor.TabIndex = 9;
+            this.btnPlayerEditor.Text = "Player Editor";
+            this.btnPlayerEditor.UseVisualStyleBackColor = true;
+            this.btnPlayerEditor.Click += new System.EventHandler(this.btnPlayerEditor_Click);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(144, 252);
+            this.ClientSize = new System.Drawing.Size(143, 279);
+            this.Controls.Add(this.btnPlayerEditor);
             this.Controls.Add(this.btnShopEditor);
             this.Controls.Add(this.btnEditor);
             this.Controls.Add(this.button6);
@@ -201,6 +213,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnShopEditor;
+        private System.Windows.Forms.Button btnPlayerEditor;
     }
 }
 

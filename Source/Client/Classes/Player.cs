@@ -68,6 +68,8 @@ namespace SabertoothClient
         public int LongestLifeMinute { get; set; }
         public int LongestLifeSecond { get; set; }
         public string LastLoggedIn { get; set; }
+        public int OffsetX { get; set; }
+        public int OffsetY { get; set; }
         #endregion
 
         #region Local Variables
@@ -80,8 +82,6 @@ namespace SabertoothClient
         int equipTick;
         int interactionTick;
         public int reloadTick;
-        public int offsetX;
-        public int offsetY;
         public int tempX;
         public int tempY;
         public int tempDir;
@@ -106,8 +106,8 @@ namespace SabertoothClient
             X = x;
             Y = y;
             Map = map;
-            offsetX = 12;
-            offsetY = 9;
+            OffsetX = 12;
+            OffsetY = 9;
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
@@ -157,8 +157,8 @@ namespace SabertoothClient
             Name = name;
             Pass = pass;
             Connection = conn;
-            offsetX = 12;
-            offsetY = 9;
+            OffsetX = 12;
+            OffsetY = 9;
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
@@ -219,12 +219,12 @@ namespace SabertoothClient
         #region Voids
         public virtual void Draw(RenderTarget target, RenderStates states)
         {            
-            int x = (X * 32) + (offsetX * 32);
-            int y = (Y * 32) + (offsetY * 32) - 16;
+            int x = (X * 32) + (OffsetX * 32);
+            int y = (Y * 32) + (OffsetY * 32) - 16;
             int step = (Step * 32);
             int dir = (AimDirection * 48);
-            int name_x = (X * 32) + (offsetX * 32) - (Name.Length / 2);
-            int name_y = (Y * 32) + (offsetY * 32) - 32;
+            int name_x = (X * 32) + (OffsetX * 32) - (Name.Length / 2);
+            int name_y = (Y * 32) + (OffsetY * 32) - 32;
             p_Name.Position = new Vector2f(name_x, name_y);
             p_Name.DisplayedString = Name;
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
@@ -272,9 +272,9 @@ namespace SabertoothClient
 
             if (x > deadZone)
             {
-                if (X < 49 - offsetX)
+                if (X < 49 - OffsetX)
                 {
-                    if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
@@ -289,9 +289,9 @@ namespace SabertoothClient
 
             if (x < -deadZone)
             {
-                if (X > 1 - offsetX)
+                if (X > 1 - OffsetX)
                 {
-                    if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false;
@@ -306,9 +306,9 @@ namespace SabertoothClient
 
             if (y > deadZone)
             {
-                if (Y < 49 - offsetY)
+                if (Y < 49 - OffsetY)
                 {
-                    if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false;
@@ -323,9 +323,9 @@ namespace SabertoothClient
 
             if (y < -deadZone)
             {
-                if (Y > 1 - offsetY)
+                if (Y > 1 - OffsetY)
                 {
-                    if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
@@ -480,7 +480,7 @@ namespace SabertoothClient
                 switch (AimDirection)
                 {
                     case (int)Directions.Up:
-                        if (Y > 2 - offsetY)
+                        if (Y > 2 - OffsetY)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -488,7 +488,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (map.m_MapNpc[i].Y + 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -496,15 +496,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) - 1].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Down:
-                        if (Y < 48 - offsetY)
+                        if (Y < 48 - OffsetY)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -512,7 +512,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (map.m_MapNpc[i].Y - 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -520,15 +520,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) + 1].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Left:
-                        if (X > 2 - offsetX)
+                        if (X > 2 - OffsetX)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -536,7 +536,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (map.m_MapNpc[i].X + 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -544,15 +544,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Right:
-                        if (X < 48 - offsetX)
+                        if (X < 48 - OffsetX)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -560,7 +560,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
                                     {
-                                        if (map.m_MapNpc[i].X - 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -568,9 +568,9 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].ChestNum, 1);
                             }
                         }
                         break;
@@ -599,9 +599,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
-                if (Y > 1 - offsetY)
+                if (Y > 1 - OffsetY)
                 {
-                    if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Up;
                         Moved = false;
@@ -616,9 +616,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Y < 49 - offsetY)  
+                if (Y < 49 - OffsetY)  
                 {
-                    if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Down;
                         Moved = false; 
@@ -633,9 +633,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) 
             {
-                if (X > 1 - offsetX)
+                if (X > 1 - OffsetX)
                 {
-                    if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                    if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Left;
                         Moved = false; 
@@ -650,9 +650,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                if (X < 49 - offsetX) 
+                if (X < 49 - OffsetX) 
                 {
-                    if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Blocked || map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest) 
+                    if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest) 
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
@@ -790,7 +790,7 @@ namespace SabertoothClient
                 switch (AimDirection)
                 {
                     case (int)Directions.Up:
-                        if (Y > 2 - offsetY)
+                        if (Y > 2 - OffsetY)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -798,7 +798,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
-                                        if (map.m_MapNpc[i].Y + 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -806,15 +806,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX), (Y + offsetY) - 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) - 1].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) - 1].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Down:
-                        if (Y < 48 - offsetY)
+                        if (Y < 48 - OffsetY)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -822,7 +822,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
-                                        if (map.m_MapNpc[i].Y - 1 == (Y + offsetY) && map.m_MapNpc[i].X == (X + offsetX))
+                                        if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -830,15 +830,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX), (Y + offsetY) + 1].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX), (Y + offsetY) + 1].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) + 1].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Left:
-                        if (X > 2 - offsetX)
+                        if (X > 2 - OffsetX)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -846,7 +846,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
-                                        if (map.m_MapNpc[i].X + 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -854,15 +854,15 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX) - 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX) - 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].ChestNum, 1);
                             }
                         }
                         break;
 
                     case (int)Directions.Right:
-                        if (X < 48 - offsetX)
+                        if (X < 48 - OffsetX)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -870,7 +870,7 @@ namespace SabertoothClient
                                 {
                                     if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
-                                        if (map.m_MapNpc[i].X - 1 == (X + offsetX) && map.m_MapNpc[i].Y == (Y + offsetY))
+                                        if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {
                                             SendInteraction(i, 0);
                                         }
@@ -878,9 +878,9 @@ namespace SabertoothClient
                                 }
                             }
 
-                            if (map.Ground[(X + offsetX) + 1, (Y + offsetY)].Type == (int)TileType.Chest)
+                            if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                             {
-                                SendInteraction(map.Ground[(X + offsetX) + 1, (Y + offsetY)].ChestNum, 1);
+                                SendInteraction(map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].ChestNum, 1);
                             }
                         }
                         break;

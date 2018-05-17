@@ -119,6 +119,12 @@
     <Compile Include="Forms\NpcEditor.Designer.cs">
       <DependentUpon>NpcEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PlayerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlayerEditor.Designer.cs">
+      <DependentUpon>PlayerEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ProjectileEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +155,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NpcEditor.resx">
       <DependentUpon>NpcEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PlayerEditor.resx">
+      <DependentUpon>PlayerEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProjectileEditor.resx">
       <DependentUpon>ProjectileEditor.cs</DependentUpon>
