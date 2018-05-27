@@ -278,6 +278,7 @@ namespace Editor.Forms
         {
             e_View.Reset(new FloatRect(0, 0, 800, 600));
             e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
+            //e_View.Zoom(2.0f);
             brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
             e_Window.SetView(e_View);
         }

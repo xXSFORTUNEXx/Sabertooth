@@ -5,6 +5,7 @@ using System.Threading;
 using System.Xml;
 using static System.Environment;
 using static System.IO.File;
+using static System.Convert;
 using System.IO;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
@@ -851,8 +852,66 @@ namespace SabertoothServer
                 Console.Write(">");
                 input = Console.ReadLine().ToLower();
                 bool isDynamic = false;
-                Logging.WriteLog("Command: " + input);   //Log which command was used
+                Logging.WriteLog("Command: " + input, "Commands");   //Log which command was used
+
                 //Dynamic Commands
+                //Add a latency to all clients for testing
+                if (input.Length >= 11 && input.Substring(0, 10) == "minlatency")
+                {
+                    string floatseconds = input.Substring(11);
+                    int intseconds = ToInt32(floatseconds);
+                    string mseconds = floatseconds.Insert(0, "0.0");
+                    float delay = ToSingle(mseconds);
+
+                    if (intseconds >= 15 || intseconds == 0)
+                    {
+                        SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
+                        Logging.WriteMessageLog("Minimum latency is now " + floatseconds + "ms");
+                    }
+                    else
+                    {
+                        Logging.WriteMessageLog("Value must be greater or equal to 14, value can be 0 to remove latency");
+                    }
+                    isDynamic = true;
+                }
+
+                //Checks for a 4 octect ip address (wrote this cause I wasnt paying attention to how the server pulls its ip from the host)
+                if (input.Length >= 13 && input.Substring(0, 12) == "newnetserver")
+                {
+                    string ipaddress = input.Substring(13); //Create substring of the IP address
+                    string[] octect = ipaddress.Split('.'); //Make sure we have 4 octets by splitting the ip address into seperate strings for each octet
+                    bool[] failed = { false, false };
+                    int check = 0;
+
+                    if (octect.Length == 4) { failed[0] = true; }
+                    if (failed[0] != false)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (octect[i] != null && octect[i] != "")
+                            {
+                                if (ToInt32(octect[i]) >= 0 && ToInt32(octect[i]) <= 255)
+                                {
+                                    check += 1;
+                                }
+                            }
+                        }
+                    }
+
+                    if (check == 4) { failed[1] = true; }
+
+                    if (failed[0] == true && failed[1] == true)
+                    {
+                        Console.WriteLine("Valid IP: " + ipaddress);
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid IP: " + ipaddress);
+                    }
+                    isDynamic = true;
+                }
+
                 if (input.Length >= 11 && input.Substring(0, 10) == "sqlcommand")
                 {
                     string command = input.Substring(11);
@@ -927,6 +986,7 @@ namespace SabertoothServer
                         break;
                     case "info":
                         string hostName = Dns.GetHostName();
+                        float latency = SabertoothServer.netServer.Configuration.SimulatedMinimumLatency;
                         Logging.WriteMessageLog("Statistics: ", "Commands");
                         Logging.WriteMessageLog("Version: " + sVersion, "Commands");
                         Logging.WriteMessageLog(upTime, "Commands");                        
@@ -936,6 +996,7 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("Server Address: " + NetUtility.Resolve(hostName), "Commands");
                         Logging.WriteMessageLog("Port: " + SabertoothServer.netServer.Port, "Commands");
                         Logging.WriteMessageLog(SabertoothServer.netServer.Statistics.ToString(), "Commands");
+                        if (latency > 0.000) { Logging.WriteMessageLog("Configured Latency: " + SabertoothServer.netServer.Configuration.SimulatedMinimumLatency.ToString().Trim('.', '0') + "ms", "Commands"); }
                         for (int i = 0; i < Globals.MAX_PLAYERS; i++)
                         {
                             if (players[i].Connection != null)
@@ -953,22 +1014,23 @@ namespace SabertoothServer
                         Logging.WriteMessageLog(upTime, "Commands");
                         Logging.WriteMessageLog("Local Time: " + worldTime.Time, "Commands");
                         break;
-                    case "latency":
-                        //float slatency = Sabertooth.netServer.Configuration.SimulatedMinimumLatency;
-
-                        //if (slatency != 0.065f) { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0.065f; }
-                        //else { Sabertooth.netServer.Configuration.SimulatedMinimumLatency = 0; }                        
-                        break;
                     case "accounts":
 
                         break;
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Logging.WriteMessageLog("Commands:", "Commands");
-                        Logging.WriteMessageLog("account create UN PW - creates an account with generic stats, must provide username and password", "Commands");
                         Logging.WriteMessageLog("info - shows the servers stats", "Commands");
                         Logging.WriteMessageLog("uptime - shows server uptime.", "Commands");
                         Logging.WriteMessageLog("saveall - saves all players", "Commands");
                         Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
+                        Logging.WriteMessageLog("exit - shuts down the server", "Commands");
+                        break;
+                    case "dhelp":
+                        Logging.WriteMessageLog("Dynamic Commands:", "Commands");
+                        Logging.WriteMessageLog("minlatency miliseconds - Ex: minlatency 65 (will add 65ms to latency, value must be >= 15)", "Commands");
+                        Logging.WriteMessageLog("sqlcommand command - Ex: sqlcommand select * from players (query all players from db, experimental)", "Commands");
+                        Logging.WriteMessageLog("newnetserver ipaddress - Ex: newnetserver 192.168.1.2 (checks for valid ipv4 address)", "Commands");
+                        Logging.WriteMessageLog("account create UN PW - ex: account create sfortune fortune (creates an account with default stats)", "Commands");
                         break;
                     default:    //If you entered something that wasnt a command or pure garbage
                         if (!isDynamic) { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); }                        
