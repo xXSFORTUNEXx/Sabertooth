@@ -1522,6 +1522,13 @@ namespace SabertoothClient
         #region Menu Events
         private void CheckLogOutSubmit(Base control, ClickedEventArgs e)
         {
+            if (SabertoothClient.netClient.ServerConnection != null)
+            {
+                players[HandleData.myIndex].SendUpdateClip();
+                players[HandleData.myIndex].SendUpdatePlayerTime();
+                players[HandleData.myIndex].SendUpdateLifeTime();
+            }
+
             canvas.Dispose();
             SabertoothClient.netClient.Disconnect("shutdown");
             Thread.Sleep(500);

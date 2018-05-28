@@ -220,7 +220,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    if (x >= 0 && y >= 0 && x < 50 && y < 50)
                     {
                         int fx = (x * 32);
                         int fy = (y * 32);

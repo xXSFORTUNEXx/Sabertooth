@@ -31,6 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this.tabTools = new System.Windows.Forms.TabControl();
             this.tabLayer = new System.Windows.Forms.TabPage();
+            this.pnlOptions = new System.Windows.Forms.Panel();
+            this.radScroll = new System.Windows.Forms.RadioButton();
+            this.radZoom = new System.Windows.Forms.RadioButton();
             this.chkNpc = new System.Windows.Forms.CheckBox();
             this.chkGrid = new System.Windows.Forms.CheckBox();
             this.radFringe = new System.Windows.Forms.RadioButton();
@@ -112,6 +115,7 @@
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
+            this.pnlOptions.SuspendLayout();
             this.pnlDebug.SuspendLayout();
             this.tabTypes.SuspendLayout();
             this.pnlChest.SuspendLayout();
@@ -142,6 +146,7 @@
             // 
             // tabLayer
             // 
+            this.tabLayer.Controls.Add(this.pnlOptions);
             this.tabLayer.Controls.Add(this.chkNpc);
             this.tabLayer.Controls.Add(this.chkGrid);
             this.tabLayer.Controls.Add(this.radFringe);
@@ -157,6 +162,39 @@
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
+            // 
+            // pnlOptions
+            // 
+            this.pnlOptions.Controls.Add(this.radScroll);
+            this.pnlOptions.Controls.Add(this.radZoom);
+            this.pnlOptions.Location = new System.Drawing.Point(195, 22);
+            this.pnlOptions.Name = "pnlOptions";
+            this.pnlOptions.Size = new System.Drawing.Size(86, 72);
+            this.pnlOptions.TabIndex = 15;
+            // 
+            // radScroll
+            // 
+            this.radScroll.AutoSize = true;
+            this.radScroll.Location = new System.Drawing.Point(12, 37);
+            this.radScroll.Name = "radScroll";
+            this.radScroll.Size = new System.Drawing.Size(51, 17);
+            this.radScroll.TabIndex = 1;
+            this.radScroll.Text = "Scroll";
+            this.radScroll.UseVisualStyleBackColor = true;
+            this.radScroll.CheckedChanged += new System.EventHandler(this.radScroll_CheckedChanged);
+            // 
+            // radZoom
+            // 
+            this.radZoom.AutoSize = true;
+            this.radZoom.Checked = true;
+            this.radZoom.Location = new System.Drawing.Point(12, 13);
+            this.radZoom.Name = "radZoom";
+            this.radZoom.Size = new System.Drawing.Size(52, 17);
+            this.radZoom.TabIndex = 0;
+            this.radZoom.TabStop = true;
+            this.radZoom.Text = "Zoom";
+            this.radZoom.UseVisualStyleBackColor = true;
+            this.radZoom.CheckedChanged += new System.EventHandler(this.radZoom_CheckedChanged);
             // 
             // chkNpc
             // 
@@ -1022,6 +1060,8 @@
             this.tabTools.ResumeLayout(false);
             this.tabLayer.ResumeLayout(false);
             this.tabLayer.PerformLayout();
+            this.pnlOptions.ResumeLayout(false);
+            this.pnlOptions.PerformLayout();
             this.pnlDebug.ResumeLayout(false);
             this.pnlDebug.PerformLayout();
             this.tabTypes.ResumeLayout(false);
@@ -1133,5 +1173,8 @@
         private System.Windows.Forms.CheckBox chkNight;
         private System.Windows.Forms.HScrollBar scrlIntensity;
         private System.Windows.Forms.Label lblIntensity;
+        private System.Windows.Forms.Panel pnlOptions;
+        private System.Windows.Forms.RadioButton radScroll;
+        private System.Windows.Forms.RadioButton radZoom;
     }
 }

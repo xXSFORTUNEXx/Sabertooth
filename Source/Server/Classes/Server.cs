@@ -1209,8 +1209,8 @@ namespace SabertoothServer
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
-        public const int PLAYER_START_X = 5;
-        public const int PLAYER_START_Y = 5;
+        public const int PLAYER_START_X = 8;
+        public const int PLAYER_START_Y = 8;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.8";
@@ -1242,5 +1242,11 @@ namespace SabertoothServer
         public const int MINUTES_IN_HOUR = 60;
         public const int HOURS_IN_DAY = 24;
         public const int DAYS_IN_YEAR = 365;
+        //Editor Globals
+        public const uint SCREEN_WIDTH = 800;
+        public const uint SCREEN_HEIGHT = 600;
+        public const int MAX_FPS = 85;
+        public const int PIC_X = 32;
+        public const int PIC_Y = 32;
     }
 }

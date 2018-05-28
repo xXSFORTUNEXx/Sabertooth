@@ -42,6 +42,9 @@ namespace Editor.Forms
         int e_SpawnNumber;
         int e_SpawnAmount;
         int e_Chest;
+        float e_Zoom = 1.0f;
+        int e_WheelOption = 0;
+
         static int lastFrameRate;
         static int frameRate;
         static int lastTick;
@@ -59,7 +62,7 @@ namespace Editor.Forms
         public Texture[] SpritePic = new Texture[Max_Sprites];
         public Sprite e_Sprite = new Sprite();
 
-        public RenderTexture brightness = new RenderTexture(800, 600);
+        public RenderTexture brightness = new RenderTexture(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
         public Sprite brightnessSprite = new Sprite();
         public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         public RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
@@ -73,6 +76,7 @@ namespace Editor.Forms
             picMap.KeyDown += new KeyEventHandler(EditorKeyDown);
             picMap.MouseDown += new MouseEventHandler(EditorMouseDown);
             picMap.MouseMove += new MouseEventHandler(EditorMouseMove);
+            picMap.MouseWheel += new MouseEventHandler(EditorMouseWheelScroll);
             picTileset.MouseDown += new MouseEventHandler(EditorTilesetMouseDown);
             picTileset.Paint += new PaintEventHandler(EditorTilesetPaint);
             picTileset.KeyDown += new KeyEventHandler(EditorTilesetKeyDown);
@@ -202,8 +206,8 @@ namespace Editor.Forms
         void MapEditorLoop()
         {
             e_Window = new RenderWindow(picMap.Handle);
-            e_Window.SetFramerateLimit(60);
-            cmbTileset.SelectedIndex = 0;
+            e_Window.SetFramerateLimit(Globals.MAX_FPS);
+            cmbTileset.SelectedIndex = 1;
             e_Layer = (int)TileLayers.Ground;
             e_Type = (int)TileType.None;
 
@@ -276,10 +280,10 @@ namespace Editor.Forms
 
         void UpdateView()
         {
-            e_View.Reset(new FloatRect(0, 0, 800, 600));
-            e_View.Move(new Vector2f(e_ViewX * 32, e_ViewY * 32));
-            //e_View.Zoom(2.0f);
-            brightnessSprite.Position = new Vector2f(e_ViewX * 32, e_ViewY * 32);
+            e_View.Reset(new FloatRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT));
+            e_View.Move(new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y));
+            e_View.Zoom(e_Zoom);
+            brightnessSprite.Position = new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y);
             e_Window.SetView(e_View);
         }
 
@@ -432,7 +436,7 @@ namespace Editor.Forms
 
             if (picMap.Focused && tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
             {
-                DrawSelectTile(new Vector2f((e_CursorX * 32), (e_CursorY * 32)), (e_TileX * 32), (e_TileY * 32), (e_TileW * 32), (e_TileH * 32));
+                    DrawSelectTile(new Vector2f((e_CursorX * 32), (e_CursorY * 32)), (e_TileX * 32), (e_TileY * 32), (e_TileW * 32), (e_TileH * 32));
             }
         }
 
@@ -829,11 +833,20 @@ namespace Editor.Forms
                     e_Map.Ground[e_CursorX, e_CursorY].LightRadius = 0;
                 }
             }
+
+            if (e.Button == MouseButtons.Middle)
+            {
+                e_Zoom = 1.0f;
+            }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
         }
 
         private void EditorMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            //int multiplier = 10;
+            //int finalZoom = (int)((e_Zoom - (int)e_Zoom) * multiplier);
+            int finalX = (int)(800 * e_Zoom) / 32;
+            int finalY = (int)(600 * e_Zoom) / 32;
             picMap.Focus();
             e_CursorX = (e.X / 32) + e_ViewX;
             e_CursorY = (e.Y / 32) + e_ViewY;
@@ -1028,6 +1041,46 @@ namespace Editor.Forms
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
             lblMouseLoc.Text = "Mouse X: " + e_CursorX + ", Mouse Y: " + e_CursorY;
+        }
+
+        private void EditorMouseWheelScroll(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e_WheelOption == 0)
+            {
+                //Wheel up
+                if (e.Delta > 0)
+                {
+                    e_Zoom -= 0.1f;
+                }
+
+                //Wheel down
+                if (e.Delta < 0)
+                {
+                    e_Zoom += 0.1f;
+                }
+            }
+            else
+            {
+                //Wheel up
+                if (e.Delta > 0)
+                {
+                    if (e_ViewY > 0)
+                    {
+                        e_ViewY -= 1;
+                        scrlViewY.Value = e_ViewY;
+                    }
+                }
+
+                //Wheel down
+                if (e.Delta < 0)
+                {
+                    if (e_ViewY < (50 - e_OffsetY))
+                    {
+                        e_ViewY += 1;
+                        scrlViewY.Value = e_ViewY;
+                    }
+                }
+            }
         }
 
         private void EditorTilesetKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -1538,6 +1591,16 @@ namespace Editor.Forms
         {
             lblIntensity.Text = "Intensity: " + scrlIntensity.Value;
             e_LightRadius = scrlIntensity.Value;
+        }
+
+        private void radZoom_CheckedChanged(object sender, EventArgs e)
+        {
+            e_WheelOption = 0;
+        }
+
+        private void radScroll_CheckedChanged(object sender, EventArgs e)
+        {
+            e_WheelOption = 1;
         }
     }
 
