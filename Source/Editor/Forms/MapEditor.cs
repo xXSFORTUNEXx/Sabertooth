@@ -43,6 +43,7 @@ namespace Editor.Forms
         int e_SpawnAmount;
         int e_Chest;
         float e_Zoom = 1.0f;
+        bool hScroll;
         int e_WheelOption = 0;
 
         static int lastFrameRate;
@@ -626,7 +627,33 @@ namespace Editor.Forms
                         e_ViewX += 1;
                         scrlViewX.Value = e_ViewX;
                     }
-                    break;               
+                    break;
+                case Keys.H:
+                    if (hScroll == true)
+                    {
+                        hScroll = false;
+                        chkHScroll.Checked = false;
+                    }
+                    else
+                    {
+                        hScroll = true;
+                        chkHScroll.Checked = true;
+                    }
+                    break;
+                case Keys.Z:
+                    if (radZoom.Checked == false)
+                    {
+                        radZoom.Checked = true;
+                        e_WheelOption = 0;
+                    }
+                    break;
+                case Keys.X:
+                    if (radScroll.Checked == false)
+                    {
+                        radScroll.Checked = true;
+                        e_WheelOption = 1;
+                    }
+                    break;
             }
             lblViewX.Text = "View X: " + e_ViewX;
             lblViewY.Text = "View Y: " + e_ViewY;
@@ -1061,23 +1088,48 @@ namespace Editor.Forms
             }
             else
             {
-                //Wheel up
-                if (e.Delta > 0)
+                if (hScroll == true)
                 {
-                    if (e_ViewY > 0)
+                    //Wheel up
+                    if (e.Delta > 0)
                     {
-                        e_ViewY -= 1;
-                        scrlViewY.Value = e_ViewY;
+                        if (e_ViewX > 0)
+                        {
+                            e_ViewX -= 1;
+                            scrlViewX.Value = e_ViewX;
+                        }
+                    }
+
+                    //Wheel down
+                    if (e.Delta < 0)
+                    {
+                        if (e_ViewX < (50 - e_OffsetX))
+                        {
+                            e_ViewX += 1;
+                            scrlViewX.Value = e_ViewX;
+                        }
                     }
                 }
-
-                //Wheel down
-                if (e.Delta < 0)
+                else
                 {
-                    if (e_ViewY < (50 - e_OffsetY))
+                    //Wheel up
+                    if (e.Delta > 0)
                     {
-                        e_ViewY += 1;
-                        scrlViewY.Value = e_ViewY;
+                        if (e_ViewY > 0)
+                        {
+                            e_ViewY -= 1;
+                            scrlViewY.Value = e_ViewY;
+                        }
+                    }
+
+                    //Wheel down
+                    if (e.Delta < 0)
+                    {
+                        if (e_ViewY < (50 - e_OffsetY))
+                        {
+                            e_ViewY += 1;
+                            scrlViewY.Value = e_ViewY;
+                        }
                     }
                 }
             }
@@ -1601,6 +1653,18 @@ namespace Editor.Forms
         private void radScroll_CheckedChanged(object sender, EventArgs e)
         {
             e_WheelOption = 1;
+        }
+
+        private void chkHScroll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkHScroll.Checked == true)
+            {
+                hScroll = true;
+            }
+            else
+            {
+                hScroll = false;
+            }
         }
     }
 

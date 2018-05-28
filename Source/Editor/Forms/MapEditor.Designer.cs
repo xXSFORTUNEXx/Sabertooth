@@ -32,6 +32,7 @@
             this.tabTools = new System.Windows.Forms.TabControl();
             this.tabLayer = new System.Windows.Forms.TabPage();
             this.pnlOptions = new System.Windows.Forms.Panel();
+            this.chkHScroll = new System.Windows.Forms.CheckBox();
             this.radScroll = new System.Windows.Forms.RadioButton();
             this.radZoom = new System.Windows.Forms.RadioButton();
             this.chkNpc = new System.Windows.Forms.CheckBox();
@@ -165,12 +166,24 @@
             // 
             // pnlOptions
             // 
+            this.pnlOptions.Controls.Add(this.chkHScroll);
             this.pnlOptions.Controls.Add(this.radScroll);
             this.pnlOptions.Controls.Add(this.radZoom);
             this.pnlOptions.Location = new System.Drawing.Point(195, 22);
             this.pnlOptions.Name = "pnlOptions";
-            this.pnlOptions.Size = new System.Drawing.Size(86, 72);
+            this.pnlOptions.Size = new System.Drawing.Size(86, 109);
             this.pnlOptions.TabIndex = 15;
+            // 
+            // chkHScroll
+            // 
+            this.chkHScroll.AutoSize = true;
+            this.chkHScroll.Location = new System.Drawing.Point(12, 69);
+            this.chkHScroll.Name = "chkHScroll";
+            this.chkHScroll.Size = new System.Drawing.Size(63, 17);
+            this.chkHScroll.TabIndex = 2;
+            this.chkHScroll.Text = "H Scroll";
+            this.chkHScroll.UseVisualStyleBackColor = true;
+            this.chkHScroll.CheckedChanged += new System.EventHandler(this.chkHScroll_CheckedChanged);
             // 
             // radScroll
             // 
@@ -1176,5 +1189,6 @@
         private System.Windows.Forms.Panel pnlOptions;
         private System.Windows.Forms.RadioButton radScroll;
         private System.Windows.Forms.RadioButton radZoom;
+        private System.Windows.Forms.CheckBox chkHScroll;
     }
 }
