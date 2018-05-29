@@ -25,7 +25,7 @@ namespace Editor.Forms
         Sprite e_Grid = new Sprite();
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
-        public int SelectedIndex;
+        public int SelectedIndex = 1;
         public int e_ViewX { get; set; }
         public int e_ViewY { get; set; }
         int e_OffsetX = 25;
@@ -185,8 +185,8 @@ namespace Editor.Forms
                 }
             }
 
-            LoadMapList();
             SelectedIndex = 1;
+            LoadMapList();
             e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
 
@@ -247,9 +247,9 @@ namespace Editor.Forms
                         int result = ToInt32(count);
                         treeMaps.Nodes.Clear();
                         treeMaps.BeginUpdate();
-                        for (int i = 0; i < result; i++)
+                        for (int i = 1; i <= result; i++)
                         {
-                            e_Map.LoadMapNameFromDatabase(i + 1);
+                            e_Map.LoadMapNameFromDatabase(i);
                             treeMaps.Nodes.Add(e_Map.Name);
                         }
                         treeMaps.EndUpdate();
@@ -1427,6 +1427,7 @@ namespace Editor.Forms
         {
             e_Map.SaveMapInDatabase(SelectedIndex);
             LoadMapList();
+            e_Map.LoadMapFromDatabase(SelectedIndex);
         }
 
         private void btnMapNpcs_Click(object sender, EventArgs e)

@@ -310,6 +310,7 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
+                                Id = ToInt32(reader[0]);
                                 Name = reader[1].ToString();
                                 Revision = ToInt32(reader[2]);
                                 TopMap = ToInt32(reader[3]);
