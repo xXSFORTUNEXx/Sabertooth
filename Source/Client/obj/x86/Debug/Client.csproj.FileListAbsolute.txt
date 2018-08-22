@@ -790,7 +790,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-sy
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\sfmlnet-window-2.dll
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\System.Data.SQLite.dll
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Tao.OpenGl.dll
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojResolveAssemblyReference.cache
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj.CoreCompileInputs.cache
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj.CopyComplete
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
@@ -799,3 +798,4 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Ne
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.xml
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Renderer.SFML.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.pdb
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojAssemblyReference.cache

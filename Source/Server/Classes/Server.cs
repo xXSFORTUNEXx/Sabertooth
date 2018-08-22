@@ -1213,7 +1213,7 @@ namespace SabertoothServer
         public const int PLAYER_START_Y = 8;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
-        public const string IP_ADDRESS = "10.16.0.8";
+        public const string IP_ADDRESS = "10.16.0.3";
         public const int SERVER_PORT = 14242;
         public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
         public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
