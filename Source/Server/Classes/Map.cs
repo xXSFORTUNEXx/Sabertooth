@@ -504,8 +504,20 @@ namespace SabertoothServer
             m_MapProj[slot].Speed = projectiles[projNum].Speed; 
             m_MapProj[slot].Damage = damage;
             m_MapProj[slot].Range = projectiles[projNum].Range;
-            m_MapProj[slot].X = (players[playerIndex].X + 12);
-            m_MapProj[slot].Y = (players[playerIndex].Y + 9);
+            int offsetX;
+            int offsetY;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                offsetX = 16;
+                offsetY = 11;
+            }
+            else
+            {
+                offsetX = 12;
+                offsetY = 9;
+            }
+            m_MapProj[slot].X = (players[playerIndex].X + offsetX);
+            m_MapProj[slot].Y = (players[playerIndex].Y + offsetY);
             m_MapProj[slot].Owner = playerIndex;
             m_MapProj[slot].Direction = players[playerIndex].AimDirection;
 

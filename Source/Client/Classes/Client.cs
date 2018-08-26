@@ -4,6 +4,7 @@ using Lidgren.Network;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using SFML.Audio;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -460,10 +461,25 @@ namespace SabertoothClient
 
         static void DrawNpcs()
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int i = 0; i < Globals.MAX_MAP_NPCS; i++)
             {
@@ -502,10 +518,25 @@ namespace SabertoothClient
 
         static void DrawMapItems()
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
             {
@@ -527,10 +558,25 @@ namespace SabertoothClient
 
         static void DrawChests()
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int x = minX; x < maxX; x++)
             {
@@ -550,10 +596,25 @@ namespace SabertoothClient
 
         static void DrawProjectiles()
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int i = 0; i < Globals.MAX_DRAWN_PROJECTILES; i++)
             {
@@ -760,16 +821,16 @@ namespace SabertoothClient
         public const int SERVER_PORT = 14242;
         public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
         public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
-        public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
+        public const float SIMULATED_MINIMUM_LATENCY = 0.065f;  //0.065f
         public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
         public const string VERSION = "1.0"; //For beta and alpha
         //Client Globals
-        public const uint SCREEN_WIDTH = 800;
-        public const uint SCREEN_HEIGHT = 600;
-        public const int CANVAS_WIDTH = 800;
-        public const int CANVAS_HEIGHT = 600;
-        public const int MAX_FPS = 85;
+        public const uint SCREEN_WIDTH = 1024;
+        public const uint SCREEN_HEIGHT = 768;
+        public const int CANVAS_WIDTH = 1024;
+        public const int CANVAS_HEIGHT = 768;
+        public const int MAX_FPS = 60;
         public const Styles SCREEN_STYLE = Styles.Close;
         public const int MAX_DRAWN_PROJECTILES = 200;
         public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds

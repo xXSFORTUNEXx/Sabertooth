@@ -667,7 +667,7 @@ namespace SabertoothServer
 
                                                 for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                 {
-                                                    if (players[p].Connection != null && i == players[p].Map)
+                                                    if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                     {
                                                         HandleData.SendMapItemData(players[p].Connection, i, slot);
                                                     }
@@ -712,7 +712,7 @@ namespace SabertoothServer
 
                                                         for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                         {
-                                                            if (players[p].Connection != null && i == players[p].Map)
+                                                            if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                             {
                                                                 HandleData.SendMapNpcData(players[p].Connection, i, c);
                                                             }
@@ -765,7 +765,7 @@ namespace SabertoothServer
 
                                                                 for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                                                 {
-                                                                    if (players[p].Connection != null && i == players[p].Map)
+                                                                    if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                                     {
                                                                         HandleData.SendPoolNpcData(players[p].Connection, i, n);
                                                                     }
@@ -808,7 +808,7 @@ namespace SabertoothServer
 
                                     for (int p = 0; p < Globals.MAX_PLAYERS; p++)
                                     {
-                                        if (players[p].Connection != null && players[p].Map == i)
+                                        if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
                                         {
                                             HandleData.SendUpdateNpcLoc(players[p].Connection, i, n);
                                         }
@@ -831,7 +831,7 @@ namespace SabertoothServer
 
                                     for (int p = 0; p < 5; p++)
                                     {
-                                        if (players[p].Connection != null && players[p].Map == i)
+                                        if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
                                         {
                                             HandleData.SendUpdatePoolNpcLoc(players[p].Connection, i, c);
                                         }
@@ -943,9 +943,9 @@ namespace SabertoothServer
                         {
                             string restofInfo = input.Substring(14);  //Get whats left of the string after account create (username and pass)  
                             string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
-                            if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3)   //Make sure they are both at least three characters long
+                            if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3 && finalInfo[3].Length >= 3)   //Make sure they are both at least three characters long
                             {
-                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
+                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], finalInfo[3], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
                                                                 100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
                                 ac_Player.CreatePlayerInDatabase();
                                 Logging.WriteMessageLog("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2], "Commands"); //Let the operator know
@@ -1195,6 +1195,8 @@ namespace SabertoothServer
         //Globals
         public const byte NO = 0;
         public const byte YES = 1;
+        public const string CHAR_NO = "N";
+        public const string CHAR_YES = "Y";
         public const int MAX_PLAYERS = 5;
         public const int MAX_NPCS = 10;
         public const int MAX_ITEMS = 50;
@@ -1222,10 +1224,10 @@ namespace SabertoothServer
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
         public const string VERSION = "1.0"; //For beta and alpha
         //Server Globals
-        public const string SMTP_IP_ADDRESS = "";
+        public const string SMTP_IP_ADDRESS = "mail.fortune.naw";
         public const int SMTP_SERVER_PORT = 25;
-        public const string SMTP_USER_CREDS = "";
-        public const string SMTP_PASS_CREDS = "";
+        public const string SMTP_USER_CREDS = "webmaster@fortune.naw";
+        public const string SMTP_PASS_CREDS = "Nextech789*";
         public const string SQL_SERVER_NAME = @"FDESKTOP-01\SFORTUNESQL";
         public const string SQL_SERVER_DATABASE = "Sabertooth";
         public const string SQL_LOCAL_DATABASE = "Database/Sabertooth.db";
@@ -1243,8 +1245,8 @@ namespace SabertoothServer
         public const int HOURS_IN_DAY = 24;
         public const int DAYS_IN_YEAR = 365;
         //Editor Globals
-        public const uint SCREEN_WIDTH = 800;
-        public const uint SCREEN_HEIGHT = 600;
+        public const uint SCREEN_WIDTH = 1024;
+        public const uint SCREEN_HEIGHT = 768;
         public const int MAX_FPS = 85;
         public const int PIC_X = 32;
         public const int PIC_Y = 32;

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AccountKeyGen")]
+[assembly: AssemblyTitle("AccountKeyGenClass")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AccountKeyGen")]
+[assembly: AssemblyProduct("AccountKeyGenClass")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c673ae56-421d-44d3-afcb-aca2063085c2")]
+[assembly: Guid("648328fc-7154-46b8-9c72-00f85f917879")]
 
 // Version information for an assembly consists of the following four values:
 //

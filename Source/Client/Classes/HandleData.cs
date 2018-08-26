@@ -11,6 +11,7 @@ namespace SabertoothClient
     public static class HandleData
     {
         public static int myIndex;
+        public static int tempIndex;
 
         public static void HandleDataMessage()
         {
@@ -144,7 +145,7 @@ namespace SabertoothClient
                                 break;
 
                             case (byte)PacketTypes.MapItemData:
-                                 HandleMapItemData(incMSG);
+                                HandleMapItemData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerEquip:
@@ -226,6 +227,10 @@ namespace SabertoothClient
                             case (byte)PacketTypes.DateandTime:
                                 HandleDateAndTime(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.RequestActivation:
+                                HandleActivationRequest(incMSG);
+                                break;
                         }
                         break;
                 }
@@ -237,6 +242,11 @@ namespace SabertoothClient
         }
 
         #region Handle Incoming Data
+        static void HandleActivationRequest(NetIncomingMessage incMSG)
+        {
+            tempIndex = incMSG.ReadVariableInt32();
+            gui.CreateActivateWindow(canvas);
+        }
         static void HandleDateAndTime(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -1083,8 +1093,16 @@ namespace SabertoothClient
             players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
-            players[myIndex].OffsetX = 12;
-            players[myIndex].OffsetY = 9;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                players[myIndex].OffsetX = 16;
+                players[myIndex].OffsetY = 11;
+            }
+            else
+            {
+                players[myIndex].OffsetX = 12;
+                players[myIndex].OffsetY = 9;
+            }
 
             //Main Weapon
             players[myIndex].mainWeapon.Name = incMSG.ReadString();
@@ -1223,8 +1241,16 @@ namespace SabertoothClient
                 players[i].LongestLifeHour = incMSG.ReadVariableInt32();
                 players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
                 players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
-                players[i].OffsetX = 12;
-                players[i].OffsetY = 9;
+                if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+                {
+                    players[i].OffsetX = 16;
+                    players[i].OffsetY = 11;
+                }
+                else
+                {
+                    players[i].OffsetX = 12;
+                    players[i].OffsetY = 9;
+                }
             }
         }
 
@@ -1390,6 +1416,8 @@ namespace SabertoothClient
         TakeChestItem,
         DateandTime,
         PlayTime,
-        LifeTime
+        LifeTime,
+        AccountKey,
+        RequestActivation
     }
 }

@@ -226,7 +226,7 @@ namespace Editor.Forms
 
         private void btnNewItem_Click(object sender, EventArgs e)
         {
-            e_Player = new Player("Default", "Password", Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000);
+            e_Player = new Player("Default", "Password", "Email", Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000);
             //e_Player.CreatePlayerInDatabase();
             //e_Player.LoadPlayerIDFromDatabase(e_Player.Name);
             txtName.Enabled = true;

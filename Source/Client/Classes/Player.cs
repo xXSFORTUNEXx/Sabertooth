@@ -6,6 +6,7 @@ using Gwen.Control;
 using static System.Environment;
 using System;
 using static SabertoothClient.Client;
+using AccountKeyGenClass;
 
 namespace SabertoothClient
 {
@@ -31,6 +32,7 @@ namespace SabertoothClient
         #region Stats
         public string Name { get; set; }
         public string Pass { get; set; }
+        public string EmailAddress { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Map { get; set; }
@@ -68,6 +70,8 @@ namespace SabertoothClient
         public int LongestLifeMinute { get; set; }
         public int LongestLifeSecond { get; set; }
         public string LastLoggedIn { get; set; }
+        public string AccountKey { get; set; }
+        public string Active { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
         #endregion
@@ -98,16 +102,25 @@ namespace SabertoothClient
         #endregion
 
         #region Class Constructors
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
                       int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
             Pass = pass;
+            EmailAddress = email;
             X = x;
             Y = y;
             Map = map;
-            OffsetX = 12;
-            OffsetY = 9;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                OffsetX = 16;
+                OffsetY = 11;
+            }
+            else
+            {
+                OffsetX = 12;
+                OffsetY = 9;
+            }
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
@@ -141,6 +154,8 @@ namespace SabertoothClient
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
             LastLoggedIn = "00:00:00.000";
+            AccountKey = KeyGen.Key(25);
+            Active = "N";
 
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -157,8 +172,16 @@ namespace SabertoothClient
             Name = name;
             Pass = pass;
             Connection = conn;
-            OffsetX = 12;
-            OffsetY = 9;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                OffsetX = 16;
+                OffsetY = 11;
+            }
+            else
+            {
+                OffsetX = 12;
+                OffsetY = 9;
+            }
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
@@ -218,7 +241,7 @@ namespace SabertoothClient
 
         #region Voids
         public virtual void Draw(RenderTarget target, RenderStates states)
-        {            
+        {
             int x = (X * 32) + (OffsetX * 32);
             int y = (Y * 32) + (OffsetY * 32) - 16;
             int step = (Step * 32);

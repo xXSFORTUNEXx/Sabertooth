@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using static System.Convert;
 using static System.Environment;
 using static SabertoothServer.Server;
+using AccountKeyGenClass;
 
 namespace SabertoothServer
 {
@@ -26,6 +27,7 @@ namespace SabertoothServer
         #region Stats
         public string Name { get; set; }
         public string Pass { get; set; }
+        public string EmailAddress { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Map { get; set; }
@@ -51,7 +53,6 @@ namespace SabertoothServer
         public int RocketAmmo { get; set; }
         public int GrenadeAmmo { get; set; }
         public int LightRadius { get; set; }
-
         public int PlayDays { get; set; }
         public int PlayHours { get; set; }
         public int PlayMinutes { get; set; }
@@ -65,6 +66,8 @@ namespace SabertoothServer
         public int LongestLifeMinute { get; set; }
         public int LongestLifeSecond { get; set; }
         public string LastLoggedIn { get; set; }
+        public string AccountKey { get; set; }
+        public string Active { get; set; }
         #endregion
 
         #region Local Variables
@@ -74,11 +77,12 @@ namespace SabertoothServer
         #endregion
 
         #region Class Constructors
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money, 
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money, 
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
         {
             Name = name;
             Pass = pass;
+            EmailAddress = email;
             X = x;
             Y = y;
             Map = map;
@@ -119,6 +123,8 @@ namespace SabertoothServer
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
             LastLoggedIn = "00:00:00.000";
+            AccountKey = KeyGen.Key(25);
+            Active = "N";
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -137,11 +143,12 @@ namespace SabertoothServer
             }
         }
 
-        public Player(string name, string pass, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money,
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money,
                       int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo)
         {
             Name = name;
             Pass = pass;
+            EmailAddress = email;
             X = x;
             Y = y;
             Map = map;
@@ -181,6 +188,8 @@ namespace SabertoothServer
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
             LastLoggedIn = "00:00:00.000";
+            AccountKey = KeyGen.Key(25);
+            Active = "N";
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -751,14 +760,15 @@ namespace SabertoothServer
                     sql.Open();
                     string command;
                     command = "INSERT INTO PLAYERS ";
-                    command += "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
-                    command += "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED) VALUES ";
-                    command += "(@name,@password,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
-                    command += "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds,@lastlogged);";
+                    command += "(NAME,PASSWORD,EMAILADDRESS,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
+                    command += "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED,ACCOUNTKEY,ACTIVE) VALUES ";
+                    command += "(@name,@password,@email,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
+                    command += "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds,@lastlogged,@accountkey,@active);";
                     using (var cmd = new SqlCommand(command, sql))
                     {
                         cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
                         cmd.Parameters.Add(new SqlParameter("@password", System.Data.DbType.String)).Value = Pass;
+                        cmd.Parameters.Add(new SqlParameter("@email", System.Data.DbType.String)).Value = EmailAddress;
                         cmd.Parameters.Add(new SqlParameter("@x", System.Data.DbType.Int32)).Value = X;
                         cmd.Parameters.Add(new SqlParameter("@y", System.Data.DbType.Int32)).Value = Y;
                         cmd.Parameters.Add(new SqlParameter("@map", System.Data.DbType.Int32)).Value = Map;
@@ -796,6 +806,8 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
                         cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
                         cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
+                        cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
+                        cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
                         cmd.ExecuteNonQuery();
                     }
 
@@ -962,14 +974,15 @@ namespace SabertoothServer
                         conn.Open();
                         string command;
                         command = "INSERT INTO PLAYERS";
-                        command = command + "(NAME,PASSWORD,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
-                        command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED)";
+                        command = command + "(NAME,PASSWORD,EMAILADDRESS,X,Y,MAP,DIRECTION,AIMDIRECTION,SPRITE,LEVEL,POINTS,HEALTH,MAXHEALTH,EXPERIENCE,MONEY,ARMOR,HUNGER,HYDRATION,STRENGTH,AGILITY,ENDURANCE,STAMINA,PISTOLAMMO,ASSAULTAMMO,ROCKETAMMO,GRENADEAMMO,LIGHTRADIUS,";
+                        command = command + "DAYS,HOURS,MINUTES,SECONDS,LDAYS,LHOURS,LMINUTES,LSECONDS,LLDAYS,LLHOURS,LLMINUTES,LLSECONDS,LASTLOGGED,ACCOUNTKEY,ACTIVE)";
                         command = command + " VALUES ";
-                        command = command + "(@name,@password,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
-                        command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds,@lastlogged);";
+                        command = command + "(@name,@password,@email,@x,@y,@map,@direction,@aimdirection,@sprite,@level,@points,@health,@maxhealth,@experience,@money,@armor,@hunger,@hydration,@strength,@agility,@endurance,@stamina,";
+                        command = command + "@pistolammo,@assaultammo,@rocketammo,@grenadeammo,@lightradius,@days,@hours,@minutes,@seconds,@ldays,@lhours,@lminutes,@lseconds,@lldays,@llhours,@llminutes,@llseconds,@lastlogged,@accountket,@active);";
                         cmd.CommandText = command;
                         cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                         cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
+                        cmd.Parameters.Add("@email", System.Data.DbType.String).Value = EmailAddress;
                         cmd.Parameters.Add("@x", System.Data.DbType.Int32).Value = X;
                         cmd.Parameters.Add("@y", System.Data.DbType.Int32).Value = Y;
                         cmd.Parameters.Add("@map", System.Data.DbType.Int32).Value = Map;
@@ -1007,6 +1020,8 @@ namespace SabertoothServer
                         cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
                         cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
                         cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
+                        cmd.Parameters.Add("@accountkey", System.Data.DbType.String).Value = AccountKey;
+                        cmd.Parameters.Add("@active", System.Data.DbType.String).Value = Active;
                         cmd.ExecuteNonQuery();
 
                         command = "INSERT INTO MAINWEAPONS";
@@ -1161,6 +1176,39 @@ namespace SabertoothServer
             }
         }
 
+        public void UpdateAccountStatusInDatabase()
+        {
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            {
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    string command;
+                    command = "UPDATE PLAYERS SET ACTIVE = 'Y' WHERE ID = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
+                        command = "UPDATE PLAYERS SET ACTIVE = 'Y' WHERE NAME = @name";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                    }
+                }
+            }
+        }
+
         public void SavePlayerToDatabase()
         {
             if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
@@ -1171,16 +1219,17 @@ namespace SabertoothServer
                     sql.Open();
                     string command;
                     command = "UPDATE PLAYERS SET ";
-                    command += "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
+                    command += "NAME = @name, PASSWORD = @password, EMAILADDRESS = @email, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
                     command += "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
                     command += "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
                     command += "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
-                    command += "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE ID = @id";
+                    command += "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged, ACCOUNTKEY = @accountkey, ACTIVE = @active WHERE ID = @id";
                     using (var cmd = new SqlCommand(command, sql))
                     {
                         cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
                         cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
                         cmd.Parameters.Add(new SqlParameter("@password", System.Data.DbType.String)).Value = Pass;
+                        cmd.Parameters.Add(new SqlParameter("@email", System.Data.DbType.String)).Value = EmailAddress;
                         cmd.Parameters.Add(new SqlParameter("@x", System.Data.DbType.Int32)).Value = X;
                         cmd.Parameters.Add(new SqlParameter("@y", System.Data.DbType.Int32)).Value = Y;
                         cmd.Parameters.Add(new SqlParameter("@map", System.Data.DbType.Int32)).Value = Map;
@@ -1218,6 +1267,8 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
                         cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
                         cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
+                        cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
+                        cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
                         cmd.ExecuteNonQuery();
                     }
 
@@ -1481,14 +1532,15 @@ namespace SabertoothServer
                         conn.Open();
                         string command;
                         command = "UPDATE PLAYERS SET ";
-                        command = command + "NAME = @name, PASSWORD = @password, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
+                        command = command + "NAME = @name, PASSWORD = @password, EMAILADDRESS = @email, X = @x, Y = @y, MAP = @map, DIRECTION = @direction, AIMDIRECTION = @aimdirection, SPRITE = @sprite, LEVEL = @level, POINTS = @points, HEALTH = @health, MAXHEALTH = @maxhealth, ";
                         command = command + "EXPERIENCE = @experience, MONEY = @money, ARMOR = @armor, HUNGER = @hunger, HYDRATION = @hydrate, STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, ";
                         command = command + "PISTOLAMMO = @pistolammo, ASSAULTAMMO = @assaultammo, ROCKETAMMO = @rocketammo, GRENADEAMMO = @grenadeammo, LIGHTRADIUS = @lightradius, ";
                         command = command + "DAYS = @days, HOURS = @hours, MINUTES = @minutes, SECONDS = @seconds, LDAYS = @ldays, LHOURS = @lhours, LMINUTES = @lminutes, LSECONDS = @lseconds, ";
-                        command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged WHERE NAME = '" + Name + "';";
+                        command = command + "LLDAYS = @lldays, LLHOURS = @llhours, LLMINUTES = @llminutes, LLSECONDS = @llseconds, LASTLOGGED = @lastlogged, ACCOUNTKEY = @accountkey, ACTIVE = @active WHERE NAME = '" + Name + "';";
                         cmd.CommandText = command;
                         cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                         cmd.Parameters.Add("@password", System.Data.DbType.String).Value = Pass;
+                        cmd.Parameters.Add("@email", System.Data.DbType.String).Value = EmailAddress;
                         cmd.Parameters.Add("@x", System.Data.DbType.Int32).Value = X;
                         cmd.Parameters.Add("@y", System.Data.DbType.Int32).Value = Y;
                         cmd.Parameters.Add("@map", System.Data.DbType.Int32).Value = Map;
@@ -1526,6 +1578,8 @@ namespace SabertoothServer
                         cmd.Parameters.Add("@llminutes", System.Data.DbType.Int32).Value = LongestLifeMinute;
                         cmd.Parameters.Add("@llseconds", System.Data.DbType.Int32).Value = LongestLifeSecond;
                         cmd.Parameters.Add("@lastlogged", System.Data.DbType.String).Value = LastLoggedIn;
+                        cmd.Parameters.Add("@accountkey", System.Data.DbType.String).Value = AccountKey;
+                        cmd.Parameters.Add("@active", System.Data.DbType.String).Value = Active;
                         cmd.ExecuteNonQuery();
 
                         command = "UPDATE MAINWEAPONS SET ";
@@ -1779,43 +1833,46 @@ namespace SabertoothServer
                                 Id = ToInt32(reader[0]);
                                 Name = reader[1].ToString();
                                 Pass = reader[2].ToString();
-                                X = ToInt32(reader[3]);
-                                Y = ToInt32(reader[4]);
-                                Map = ToInt32(reader[5]);
-                                Direction = ToInt32(reader[6]);
-                                AimDirection = ToInt32(reader[7]);
-                                Sprite = ToInt32(reader[8]);
-                                Level = ToInt32(reader[9]);
-                                Points = ToInt32(reader[10]);
-                                Health = ToInt32(reader[11]);
-                                MaxHealth = ToInt32(reader[12]);
-                                Experience = ToInt32(reader[13]);
-                                Money = ToInt32(reader[14]);
-                                Armor = ToInt32(reader[15]);
-                                Hunger = ToInt32(reader[16]);
-                                Hydration = ToInt32(reader[17]);
-                                Strength = ToInt32(reader[18]);
-                                Agility = ToInt32(reader[19]);
-                                Endurance = ToInt32(reader[20]);
-                                Stamina = ToInt32(reader[21]);
-                                PistolAmmo = ToInt32(reader[22]);
-                                AssaultAmmo = ToInt32(reader[23]);
-                                RocketAmmo = ToInt32(reader[24]);
-                                GrenadeAmmo = ToInt32(reader[25]);
-                                LightRadius = ToInt32(reader[26]);
-                                PlayDays = ToInt32(reader[27]);
-                                PlayHours = ToInt32(reader[28]);
-                                PlayMinutes = ToInt32(reader[29]);
-                                PlaySeconds = ToInt32(reader[30]);
-                                LifeDay = ToInt32(reader[31]);
-                                LifeHour = ToInt32(reader[32]);
-                                LifeMinute = ToInt32(reader[33]);
-                                LifeSecond = ToInt32(reader[34]);
-                                LongestLifeDay = ToInt32(reader[35]);
-                                LongestLifeHour = ToInt32(reader[36]);
-                                LongestLifeMinute = ToInt32(reader[37]);
-                                LongestLifeSecond = ToInt32(reader[38]);
-                                LastLoggedIn = reader[39].ToString();
+                                EmailAddress = reader[3].ToString();
+                                X = ToInt32(reader[4]);
+                                Y = ToInt32(reader[5]);
+                                Map = ToInt32(reader[6]);
+                                Direction = ToInt32(reader[7]);
+                                AimDirection = ToInt32(reader[8]);
+                                Sprite = ToInt32(reader[9]);
+                                Level = ToInt32(reader[10]);
+                                Points = ToInt32(reader[11]);
+                                Health = ToInt32(reader[12]);
+                                MaxHealth = ToInt32(reader[13]);
+                                Experience = ToInt32(reader[14]);
+                                Money = ToInt32(reader[15]);
+                                Armor = ToInt32(reader[16]);
+                                Hunger = ToInt32(reader[17]);
+                                Hydration = ToInt32(reader[18]);
+                                Strength = ToInt32(reader[19]);
+                                Agility = ToInt32(reader[20]);
+                                Endurance = ToInt32(reader[21]);
+                                Stamina = ToInt32(reader[22]);
+                                PistolAmmo = ToInt32(reader[23]);
+                                AssaultAmmo = ToInt32(reader[24]);
+                                RocketAmmo = ToInt32(reader[25]);
+                                GrenadeAmmo = ToInt32(reader[26]);
+                                LightRadius = ToInt32(reader[27]);
+                                PlayDays = ToInt32(reader[28]);
+                                PlayHours = ToInt32(reader[29]);
+                                PlayMinutes = ToInt32(reader[30]);
+                                PlaySeconds = ToInt32(reader[31]);
+                                LifeDay = ToInt32(reader[32]);
+                                LifeHour = ToInt32(reader[33]);
+                                LifeMinute = ToInt32(reader[34]);
+                                LifeSecond = ToInt32(reader[35]);
+                                LongestLifeDay = ToInt32(reader[36]);
+                                LongestLifeHour = ToInt32(reader[37]);
+                                LongestLifeMinute = ToInt32(reader[38]);
+                                LongestLifeSecond = ToInt32(reader[39]);
+                                LastLoggedIn = reader[40].ToString();
+                                AccountKey = reader[41].ToString();
+                                Active = reader[42].ToString();
                             }
                         }
                     }
@@ -2111,6 +2168,7 @@ namespace SabertoothServer
                             {
                                 Name = read["NAME"].ToString();
                                 Pass = read["PASSWORD"].ToString();
+                                EmailAddress = read["EMAILADDRESS"].ToString();
                                 X = ToInt32(read["X"].ToString());
                                 Y = ToInt32(read["Y"].ToString());
                                 Map = ToInt32(read["MAP"].ToString());
@@ -2148,6 +2206,8 @@ namespace SabertoothServer
                                 LongestLifeMinute = ToInt32(read["LLMINUTES"].ToString());
                                 LongestLifeSecond = ToInt32(read["LLSECONDS"].ToString());
                                 LastLoggedIn = read["LASTLOGGED"].ToString();
+                                AccountKey = read["ACCOUNTKEY"].ToString();
+                                Active = read["ACTIVE"].ToString();
                             }
                         }
 
@@ -2456,6 +2516,44 @@ namespace SabertoothServer
                     }
                 }
             }
+        }
+
+        public bool IsAccountActive()
+        {
+            string result;
+            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            {
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    string command;
+                    command = "SELECT ACTIVE FROM PLAYERS WHERE ID = @id";
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
+                        result = cmd.ExecuteScalar().ToString();
+                    }
+                }
+            }
+            else
+            {
+                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string command;
+                        command = "SELECT ACTIVE FROM PLAYERS WHERE NAME = @name";
+                        cmd.CommandText = command;
+                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
+                        result = cmd.ExecuteScalar().ToString();
+                    }
+                }
+            }
+
+            if (result == "Y") { return true; }
+            else { return false; }
         }
         #endregion
     }

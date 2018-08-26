@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using static System.Convert;
 using static SabertoothServer.Server;
+using AccountKeyGenClass;
 
 namespace SabertoothServer
 {
@@ -121,6 +122,10 @@ namespace SabertoothServer
                                 HandleLifeTime(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.AccountKey:
+                                HandleActivationKey(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -139,6 +144,45 @@ namespace SabertoothServer
         }
 
         #region Handle Incoming Data
+        static void HandleActivationKey(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            string key = incMSG.ReadString();
+
+            if (key == players[index].AccountKey)
+            {
+                players[index].Active = "Y";
+                players[index].UpdateAccountStatusInDatabase();
+                Logging.WriteMessageLog("Account activated! Key: " + key + " Account Name: " + players[index].Name);
+                int currentMap = players[index].Map;
+                Console.WriteLine("Account login by: " + players[index].Name + ", " + players[index].Pass);
+                SendAcceptLogin(index);
+                SendPlayerData(incMSG, index);
+                SendPlayers();
+                SendPlayerInv(index);
+                SendPlayerBank(index);
+                SendPlayerEquipment(index);
+                SendNpcs(incMSG);
+                SendItems(incMSG);
+                SendProjectiles(incMSG);
+                SendShops(incMSG);
+                SendChats(incMSG);
+                SendMapData(incMSG, currentMap);
+                SendMapNpcs(incMSG, currentMap);
+                SendPoolMapNpcs(incMSG, currentMap);
+                SendMapItems(incMSG, currentMap);
+                SendChests(incMSG);
+                SendDateAndTime(incMSG, index);
+                Console.WriteLine("Data sent to " + players[index].Name + ", IP: " + incMSG.SenderConnection);
+                string welcomeMsg = players[index].Name + " has joined Sabertooth!";
+                SendServerMessageToAll(welcomeMsg);
+            }
+            else
+            {
+                Console.WriteLine("Invalid activation key..");
+                SendErrorMessage("Invalid activation key! Please try again.", "Activation Key", incMSG);
+            }
+        }
         static void HandleTakeChestItem(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -484,6 +528,7 @@ namespace SabertoothServer
         {
             string username = incMSG.ReadString();
             string password = incMSG.ReadString();
+            string email = incMSG.ReadString();
 
             if (!AlreadyLogged(username))
             {
@@ -492,10 +537,13 @@ namespace SabertoothServer
                     int i = OpenSlot();
                     if (i < 5)
                     {
-                        players[i] = new Player(username, password, Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
+                        players[i] = new Player(username, password, email, Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         players[i].CreatePlayerInDatabase();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG);
+                        string subject = "Sabertooth Account Activation Key";
+                        string body = "Welcome to Sabertooth!\n\nBelow is your key which must be entered upon first login to activate your account. Enjoy!\n\nActivation Key: " + players[i].AccountKey;
+                        Email.SendActivationEmail(email, subject, body, Globals.SMTP_IP_ADDRESS, Globals.SMTP_SERVER_PORT, Globals.SMTP_USER_CREDS, Globals.SMTP_PASS_CREDS);
                         ClearSlot(incMSG.SenderConnection);
                     }
                     else
@@ -534,6 +582,7 @@ namespace SabertoothServer
                     {
                         players[i] = new Player(username, password, incMSG.SenderConnection);
                         players[i].LoadPlayerFromDatabase();
+                        if (!players[i].IsAccountActive()) { SendActivationRequest(incMSG, i); return; }
                         int currentMap = players[i].Map;
                         Console.WriteLine("Account login by: " + username + ", " + password);
                         SendAcceptLogin(i);
@@ -1597,6 +1646,14 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        static void SendActivationRequest(NetIncomingMessage incMSG, int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.RequestActivation);
+            outMSG.WriteVariableInt32(index);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         static void SendMapData(NetIncomingMessage incMSG, int map)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -1960,6 +2017,8 @@ namespace SabertoothServer
         TakeChestItem,
         DateandTime,
         PlayTime,
-        LifeTime
+        LifeTime,
+        AccountKey,
+        RequestActivation
     }
 }

@@ -5,10 +5,12 @@ using System.Threading;
 using System;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using static System.Convert;
 using System.Text;
 using System.Data.SQLite;
 using static SabertoothClient.Client;
+using AccountKeyGenClass;
 
 namespace SabertoothClient
 {
@@ -23,6 +25,7 @@ namespace SabertoothClient
         public WindowControl d_Window;
         public Label d_Controller;
         public Label d_ConDir;
+        public Label d_ConButton;
         Label d_FPS;
         Label d_Name;
         Label d_X;
@@ -48,9 +51,11 @@ namespace SabertoothClient
 
         public WindowControl regWindow;
         Label unregLabel;
+        Label emailregLabel;
         Label pwregLabel;
         Label repwLabel;
         TextBox unregBox;
+        TextBox emailregBox;
         TextBoxPassword pwregBox;
         TextBoxPassword repwBox;
         Button regButton;
@@ -63,6 +68,12 @@ namespace SabertoothClient
         TextBoxPassword pwlogBox;
         Button logButton;
         Button canlogButton;
+
+        public WindowControl activeWindow;
+        Label activeLabel;
+        TextBox activeBox;
+        Button activeOK;
+        Button activeCancel;
         #endregion
 
         #region Chat Box
@@ -527,6 +538,21 @@ namespace SabertoothClient
                     d_packetsIn.Text = "Packets Received: " + SabertoothClient.netClient.Statistics.ReceivedPackets.ToString();
                     d_packetsOut.Text = "Packets Sent: " + SabertoothClient.netClient.Statistics.SentPackets.ToString();
                 }
+                if (Joystick.IsConnected(0))
+                {
+                    uint bcount = Joystick.GetButtonCount(0);
+                    string buttonNum = "None";
+                    for (uint i = 0; i < bcount; i++)
+                    {
+                        if (Joystick.IsButtonPressed(0, i))
+                        {
+                            buttonNum = i.ToString();
+                            break;
+                        }
+                    }
+                    d_ConButton.Text = "Button: " + buttonNum;
+                }
+
             }
         }
 
@@ -1561,6 +1587,41 @@ namespace SabertoothClient
             parent.Hide();
         }
 
+        private void CheckActiveWindowCancel(Base control, ClickedEventArgs e)
+        {
+            SabertoothClient.netClient.Disconnect("Shutting Down");
+            Thread.Sleep(500);
+            Exit(0);
+        }
+
+        private void CheckActiveWindowOK(Base control, EventArgs e)
+        {
+            Base parent = control.Parent;
+
+            if (activeBox.Text != "")
+            {
+                if (activeBox.Text.Length == 25)
+                {
+                    string key = activeBox.Text;
+
+                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+                    outMSG.Write((byte)PacketTypes.AccountKey);
+                    outMSG.WriteVariableInt32(HandleData.tempIndex);
+                    outMSG.Write(key);
+                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    parent.Hide();
+                }
+                else
+                {
+                    MsgBox("Key is too short. Please enter 25 character key.", "Activation Failed", canvas);
+                }
+            }
+            else
+            {
+                MsgBox("Please enter a valid 25 character key.", "Activation Failed", canvas);
+            }
+        }
+
         private void CheckLogWindowLogin(Base control, EventArgs e)
         {
             Base parent = control.Parent;
@@ -1657,7 +1718,7 @@ namespace SabertoothClient
         {
             Base parent = control.Parent;
 
-            if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
+            if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "" && emailregBox.Text != "")
             {
                 if (SabertoothClient.netClient.ServerConnection == null)
                 {
@@ -1668,14 +1729,24 @@ namespace SabertoothClient
 
                 if (pwregBox.Text == repwBox.Text)
                 {
-                    string username = unregBox.Text;
-                    string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-                    outMSG.Write((byte)PacketTypes.Register);
-                    outMSG.Write(username);
-                    outMSG.Write(password);
-                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-                    parent.Hide();
+                    if (Email.ValidEmailAddress(emailregBox.Text))
+                    {
+                        string username = unregBox.Text;
+                        string password = pwregBox.Text;
+                        string email = emailregBox.Text;
+                        NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+                        outMSG.Write((byte)PacketTypes.Register);
+                        outMSG.Write(username);
+                        outMSG.Write(password);
+                        outMSG.Write(email);
+                        SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                        parent.Hide();
+                    }
+                    else
+                    {
+                        parent.Hide();
+                        MsgBox("Invalid email address!", "Retry", canvas);
+                    }
                 }
                 else
                 {
@@ -1694,7 +1765,7 @@ namespace SabertoothClient
         {
             Base parent = control.Parent;
 
-            if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "")
+            if (unregBox.Text != "" && pwregBox.Text != "" && repwBox.Text != "" && emailregBox.Text != "")
             {
                 if (SabertoothClient.netClient.ServerConnection == null)
                 {
@@ -1705,14 +1776,24 @@ namespace SabertoothClient
 
                 if (pwregBox.Text == repwBox.Text)
                 {
-                    string username = unregBox.Text;
-                    string password = pwregBox.Text;
-                    NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-                    outMSG.Write((byte)PacketTypes.Register);
-                    outMSG.Write(username);
-                    outMSG.Write(password);
-                    SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-                    parent.Hide();
+                    if (Email.ValidEmailAddress(emailregBox.Text))
+                    {
+                        string username = unregBox.Text;
+                        string password = pwregBox.Text;
+                        string email = emailregBox.Text;
+                        NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+                        outMSG.Write((byte)PacketTypes.Register);
+                        outMSG.Write(username);
+                        outMSG.Write(password);
+                        outMSG.Write(email);
+                        SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                        parent.Hide();
+                    }
+                    else
+                    {
+                        parent.Hide();
+                        MsgBox("Invalid email address!", "Retry", canvas);
+                    }
                 }
                 else
                 {
@@ -2665,6 +2746,37 @@ namespace SabertoothClient
             mainbuttonExit.Clicked += CheckMainWindowExit;
         }
 
+        public void CreateActivateWindow(Base parent)
+        {
+            activeWindow = new WindowControl(parent.GetCanvas());
+            activeWindow.Title = "Activation Key";
+            activeWindow.SetSize(300, 135);
+            activeWindow.Position(Gwen.Pos.Center);
+            activeWindow.IsClosable = false;
+            activeWindow.DisableResizing();
+            activeWindow.KeyboardInputEnabled = true;
+
+            activeLabel = new Label(activeWindow);
+            activeLabel.SetPosition(25, 15);
+            activeLabel.Text = "Key:";
+
+            activeBox = new TextBox(activeWindow);
+            activeBox.SetPosition(25, 35);
+            activeBox.SetSize(235, 25);
+
+            activeOK = new Button(activeWindow);
+            activeOK.SetPosition(25, 70);
+            activeOK.SetSize(60, 25);
+            activeOK.Text = "OK";
+            activeOK.Clicked += CheckActiveWindowOK;
+
+            activeCancel = new Button(activeWindow);
+            activeCancel.SetPosition(200, 70);
+            activeCancel.SetSize(60, 25);
+            activeCancel.Text = "Exit";
+            activeCancel.Clicked += CheckActiveWindowCancel;
+        }
+
         public void CreateLoginWindow(Base parent)
         {
             logWindow = new WindowControl(parent.GetCanvas());
@@ -2718,7 +2830,7 @@ namespace SabertoothClient
         {
             regWindow = new WindowControl(parent.GetCanvas());
             regWindow.Title = "Register";
-            regWindow.SetSize(200, 300);
+            regWindow.SetSize(200, 335);
             regWindow.Position(Gwen.Pos.Center);
             regWindow.IsClosable = false;
             regWindow.DisableResizing();
@@ -2733,31 +2845,39 @@ namespace SabertoothClient
             unregBox.SetSize(140, 25);
             unregBox.Focus();
 
+            emailregLabel = new Label(regWindow);
+            emailregLabel.SetPosition(25, 75);
+            emailregLabel.Text = "Email Address:";
+
+            emailregBox = new TextBox(regWindow);
+            emailregBox.SetPosition(25, 95);
+            emailregBox.SetSize(140, 25);
+
             pwregLabel = new Label(regWindow);
-            pwregLabel.SetPosition(25, 75);
+            pwregLabel.SetPosition(25, 135);
             pwregLabel.Text = "Password:";
 
             pwregBox = new TextBoxPassword(regWindow);
-            pwregBox.SetPosition(25, 95);
+            pwregBox.SetPosition(25, 155);
             pwregBox.SetSize(140, 25);
 
             repwLabel = new Label(regWindow);
-            repwLabel.SetPosition(25, 135);
+            repwLabel.SetPosition(25, 195);
             repwLabel.Text = "Re-type Password:";
 
             repwBox = new TextBoxPassword(regWindow);
-            repwBox.SetPosition(25, 155);
+            repwBox.SetPosition(25, 215);
             repwBox.SetSize(140, 25);
             repwBox.SubmitPressed += CheckRegWindowSubmit;
 
             regButton = new Button(regWindow);
-            regButton.SetPosition(25, 200);
+            regButton.SetPosition(25, 260);
             regButton.SetSize(60, 25);
             regButton.Text = "Register";
             regButton.Clicked += CheckRegWindowRegister;
 
             canregButton = new Button(regWindow);
-            canregButton.SetPosition(105, 200);
+            canregButton.SetPosition(105, 260);
             canregButton.SetSize(60, 25);
             canregButton.Text = "Cancel";
             canregButton.Clicked += CheckRegWindowCancel;
@@ -2847,6 +2967,10 @@ namespace SabertoothClient
             d_ConDir = new Label(d_Window);
             d_ConDir.SetPosition(10, 135);
             d_ConDir.Text = "Dir: ?";
+
+            d_ConButton = new Label(d_Window);
+            d_ConButton.SetPosition(10, 145);
+            d_ConButton.Text = "Button: ?";
         }
 
         public void CreatNpcChatWindow(Base parent, int chatNum)
@@ -3111,7 +3235,7 @@ namespace SabertoothClient
 
             h_Text.Font = d_Font;
             h_Text.CharacterSize = 16;
-            h_Text.Color = Color.White;
+            h_Text.Color = Color.Black;
             h_Text.Style = Text.Styles.Bold;
             h_Text.Position = new Vector2f(13, 14);
 
@@ -3129,7 +3253,7 @@ namespace SabertoothClient
 
             c_Text.Font = d_Font;
             c_Text.CharacterSize = 16;
-            c_Text.Color = Color.White;
+            c_Text.Color = Color.Black;
             c_Text.Style = Text.Styles.Bold;
             c_Text.Position = new Vector2f(13, 84);
 
@@ -3138,7 +3262,7 @@ namespace SabertoothClient
 
             hu_Text.Font = d_Font;
             hu_Text.CharacterSize = 16;
-            hu_Text.Color = Color.White;
+            hu_Text.Color = Color.Black;
             hu_Text.Style = Text.Styles.Bold;
             hu_Text.Position = new Vector2f(13, 119);
 
@@ -3147,7 +3271,7 @@ namespace SabertoothClient
 
             hy_Text.Font = d_Font;
             hy_Text.CharacterSize = 16;
-            hy_Text.Color = Color.White;
+            hy_Text.Color = Color.Black;
             hy_Text.Style = Text.Styles.Bold;
             hy_Text.Position = new Vector2f(13, 154);
         }
@@ -3192,16 +3316,37 @@ namespace SabertoothClient
                 }
                 else
                 {
-                    c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip;
-                    c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
+                    switch (player.mainWeapon.ItemAmmoType)
+                    {
+                        case (int)AmmoType.Pistol:
+                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.PistolAmmo;
+                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
+                            break;
+
+                        case (int)AmmoType.AssaultRifle:
+                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.AssaultAmmo;
+                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
+                            break;
+
+                        case (int)AmmoType.Rocket:
+                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.RocketAmmo;
+                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
+                            break;
+
+                        case (int)AmmoType.Grenade:
+                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.GrenadeAmmo;
+                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
+                            break;
+                    }
+
                 }
             }
             else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }
 
-            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Green);
-            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.Red);
-            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.Yellow);
-            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Blue);
+            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.White);
+            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.White);
+            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.White);
+            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.White);
         }
 
         public void UpdateHungerBar()

@@ -37,7 +37,7 @@ namespace SabertoothClient
         const int Max_Tilesets = 2;
         Texture[] TileSet = new Texture[Max_Tilesets];
         Texture chestSprite = new Texture("Resources/Tilesets/Chest.png");
-        RenderTexture brightness = new RenderTexture(800, 600);
+        RenderTexture brightness = new RenderTexture(1024, 768);
         Sprite brightnessSprite = new Sprite();
         VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
@@ -211,10 +211,24 @@ namespace SabertoothClient
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int x = minX; x < maxX; x++)
             {
@@ -277,10 +291,24 @@ namespace SabertoothClient
 
         public void DrawFringe(RenderTarget renderWindow)
         {
-            int minX = (players[HandleData.myIndex].X + 12) - 12;
-            int minY = (players[HandleData.myIndex].Y + 9) - 9;
-            int maxX = (players[HandleData.myIndex].X + 12) + 13;
-            int maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
 
             for (int x = minX; x < maxX; x++)
             {
@@ -360,7 +388,7 @@ namespace SabertoothClient
                     if (Ground[x, y].LightRadius > 0)
                     {
                         int centerX = ((x * 32) - players[HandleData.myIndex].X * 32) + 16;
-                        int centerY = 600 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
+                        int centerY = 1024 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = Ground[x, y].LightRadius;
 
@@ -381,8 +409,8 @@ namespace SabertoothClient
 
         void DrawPlayerLight()
         {
-            int centerX = 400;
-            int centerY = 288;
+            int centerX = 530;
+            int centerY = 400;
             Vector2f center = new Vector2f(centerX, centerY);
             double radius = players[HandleData.myIndex].LightRadius;
 
@@ -562,16 +590,12 @@ namespace SabertoothClient
         public int TileW { get; set; }
         public int TileH { get; set; }
         public int Tileset { get; set; }
-
         public int Type { get; set; }
         public bool Flagged { get; set; }
-
         public int SpawnNum { get; set; }
         public int SpawnAmount { get; set; }
-
         public int ChestNum { get; set; }
         public double LightRadius { get; set; }
-
         public Tile()
         {
             TileX = 0;
