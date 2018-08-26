@@ -35,3 +35,23 @@ else
 	maxX = (players[HandleData.myIndex].X + 12) + 13;
 	maxY = (players[HandleData.myIndex].Y + 9) + 11;
 }
+
+int minX;
+int minY;
+int maxX;
+int maxY;
+
+if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+{
+	minX = (player.X + 16) - 16;
+	minY = (player.Y + 11) - 11;
+	maxX = (player.X + 16) + 17;
+	maxY = (player.Y + 11) + 16;
+}
+else
+{
+	minX = (player.X + 12) - 12;
+	minY = (player.Y + 9) - 9;
+	maxX = (player.X + 12) + 13;
+	maxY = (player.Y + 9) + 11;
+}

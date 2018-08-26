@@ -3071,10 +3071,25 @@ namespace SabertoothClient
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int minX = (player.X + 12) - 12;
-            int minY = (player.Y + 9) - 9;
-            int maxX = (player.X + 12) + 13;
-            int maxY = (player.Y + 9) + 11;
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            {
+                minX = (player.X + 16) - 16;
+                minY = (player.Y + 11) - 11;
+                maxX = (player.X + 16) + 17;
+                maxY = (player.Y + 11) + 16;
+            }
+            else
+            {
+                minX = (player.X + 12) - 12;
+                minY = (player.Y + 9) - 9;
+                maxX = (player.X + 12) + 13;
+                maxY = (player.Y + 9) + 11;
+            }
             states.Texture = t_Mini;
 
             for (int x = minX; x < maxX; x++)
@@ -3083,7 +3098,7 @@ namespace SabertoothClient
                 {
                     if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
-                        int fx = (x * 12) - (minX * 12) + 500;
+                        int fx = (x * 12) - (minX * 12) + 625;
                         int fy = (y * 12) - (minY * 12);
                         int tx, ty, w, h;
 
@@ -3182,7 +3197,7 @@ namespace SabertoothClient
                                 }
                             }
                         }
-                        if ((player.X + 12) == x && (player.Y + 9) == y)
+                        if ((player.X + player.OffsetX) == x && (player.Y + player.OffsetY) == y)
                         {
                             tx = 60;
                             ty = 0;
