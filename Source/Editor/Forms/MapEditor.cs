@@ -63,7 +63,7 @@ namespace Editor.Forms
         public Texture[] SpritePic = new Texture[Max_Sprites];
         public Sprite e_Sprite = new Sprite();
 
-        public RenderTexture brightness = new RenderTexture(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+        public RenderTexture brightness = new RenderTexture(Globals.EDITOR_WIDTH, Globals.EDITOR_HEIGHT);
         public Sprite brightnessSprite = new Sprite();
         public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         public RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
@@ -281,7 +281,7 @@ namespace Editor.Forms
 
         void UpdateView()
         {
-            e_View.Reset(new FloatRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT));
+            e_View.Reset(new FloatRect(0, 0, Globals.EDITOR_WIDTH, Globals.EDITOR_HEIGHT));
             e_View.Move(new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y));
             e_View.Zoom(e_Zoom);
             brightnessSprite.Position = new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y);

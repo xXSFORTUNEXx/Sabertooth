@@ -1908,7 +1908,7 @@ namespace SabertoothServer
                         {
                             while (reader.Read())
                             {
-                                if (reader[1].ToString() == name)
+                                if (reader[1].ToString().ToLower() == name.ToLower())
                                 {
                                     return true;
                                 }

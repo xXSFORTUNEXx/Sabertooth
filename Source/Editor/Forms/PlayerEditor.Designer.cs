@@ -80,20 +80,26 @@
             this.lblPoints = new System.Windows.Forms.Label();
             this.scrlLevel = new System.Windows.Forms.HScrollBar();
             this.lblLevel = new System.Windows.Forms.Label();
-            this.pnlAmmo = new System.Windows.Forms.GroupBox();
-            this.scrlGrenade = new System.Windows.Forms.HScrollBar();
-            this.lblGrenade = new System.Windows.Forms.Label();
-            this.scrlRocket = new System.Windows.Forms.HScrollBar();
-            this.lblRocket = new System.Windows.Forms.Label();
-            this.scrlAssault = new System.Windows.Forms.HScrollBar();
-            this.lblAssault = new System.Windows.Forms.Label();
-            this.scrlPistol = new System.Windows.Forms.HScrollBar();
             this.lblPistol = new System.Windows.Forms.Label();
+            this.scrlPistol = new System.Windows.Forms.HScrollBar();
+            this.lblAssault = new System.Windows.Forms.Label();
+            this.scrlAssault = new System.Windows.Forms.HScrollBar();
+            this.lblRocket = new System.Windows.Forms.Label();
+            this.scrlRocket = new System.Windows.Forms.HScrollBar();
+            this.lblGrenade = new System.Windows.Forms.Label();
+            this.scrlGrenade = new System.Windows.Forms.HScrollBar();
+            this.pnlAmmo = new System.Windows.Forms.GroupBox();
+            this.pnlActivation = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtKey = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtStatus = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.pnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.pnlStats.SuspendLayout();
             this.pnlAmmo.SuspendLayout();
+            this.pnlActivation.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -591,6 +597,7 @@
             // scrlPoints
             // 
             this.scrlPoints.Location = new System.Drawing.Point(22, 89);
+            this.scrlPoints.Maximum = 32000;
             this.scrlPoints.Name = "scrlPoints";
             this.scrlPoints.Size = new System.Drawing.Size(156, 17);
             this.scrlPoints.TabIndex = 3;
@@ -622,6 +629,78 @@
             this.lblLevel.TabIndex = 0;
             this.lblLevel.Text = "Level: 1";
             // 
+            // lblPistol
+            // 
+            this.lblPistol.AutoSize = true;
+            this.lblPistol.Location = new System.Drawing.Point(16, 23);
+            this.lblPistol.Name = "lblPistol";
+            this.lblPistol.Size = new System.Drawing.Size(76, 13);
+            this.lblPistol.TabIndex = 0;
+            this.lblPistol.Text = "Pistol Ammo: 0";
+            // 
+            // scrlPistol
+            // 
+            this.scrlPistol.Location = new System.Drawing.Point(19, 40);
+            this.scrlPistol.Maximum = 2500;
+            this.scrlPistol.Name = "scrlPistol";
+            this.scrlPistol.Size = new System.Drawing.Size(158, 17);
+            this.scrlPistol.TabIndex = 1;
+            this.scrlPistol.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlPistol_Scroll);
+            // 
+            // lblAssault
+            // 
+            this.lblAssault.AutoSize = true;
+            this.lblAssault.Location = new System.Drawing.Point(16, 70);
+            this.lblAssault.Name = "lblAssault";
+            this.lblAssault.Size = new System.Drawing.Size(85, 13);
+            this.lblAssault.TabIndex = 2;
+            this.lblAssault.Text = "Assault Ammo: 0";
+            // 
+            // scrlAssault
+            // 
+            this.scrlAssault.Location = new System.Drawing.Point(19, 87);
+            this.scrlAssault.Maximum = 2500;
+            this.scrlAssault.Name = "scrlAssault";
+            this.scrlAssault.Size = new System.Drawing.Size(158, 17);
+            this.scrlAssault.TabIndex = 3;
+            this.scrlAssault.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAssault_Scroll);
+            // 
+            // lblRocket
+            // 
+            this.lblRocket.AutoSize = true;
+            this.lblRocket.Location = new System.Drawing.Point(16, 117);
+            this.lblRocket.Name = "lblRocket";
+            this.lblRocket.Size = new System.Drawing.Size(86, 13);
+            this.lblRocket.TabIndex = 4;
+            this.lblRocket.Text = "Rocket Ammo: 0";
+            // 
+            // scrlRocket
+            // 
+            this.scrlRocket.Location = new System.Drawing.Point(19, 134);
+            this.scrlRocket.Maximum = 2500;
+            this.scrlRocket.Name = "scrlRocket";
+            this.scrlRocket.Size = new System.Drawing.Size(158, 17);
+            this.scrlRocket.TabIndex = 5;
+            this.scrlRocket.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRocket_Scroll);
+            // 
+            // lblGrenade
+            // 
+            this.lblGrenade.AutoSize = true;
+            this.lblGrenade.Location = new System.Drawing.Point(16, 168);
+            this.lblGrenade.Name = "lblGrenade";
+            this.lblGrenade.Size = new System.Drawing.Size(92, 13);
+            this.lblGrenade.TabIndex = 6;
+            this.lblGrenade.Text = "Grenade Ammo: 0";
+            // 
+            // scrlGrenade
+            // 
+            this.scrlGrenade.Location = new System.Drawing.Point(19, 185);
+            this.scrlGrenade.Maximum = 2500;
+            this.scrlGrenade.Name = "scrlGrenade";
+            this.scrlGrenade.Size = new System.Drawing.Size(158, 17);
+            this.scrlGrenade.TabIndex = 7;
+            this.scrlGrenade.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlGrenade_Scroll);
+            // 
             // pnlAmmo
             // 
             this.pnlAmmo.Controls.Add(this.scrlGrenade);
@@ -640,83 +719,58 @@
             this.pnlAmmo.Text = "Ammo";
             this.pnlAmmo.Visible = false;
             // 
-            // scrlGrenade
+            // pnlActivation
             // 
-            this.scrlGrenade.Location = new System.Drawing.Point(19, 185);
-            this.scrlGrenade.Maximum = 2500;
-            this.scrlGrenade.Name = "scrlGrenade";
-            this.scrlGrenade.Size = new System.Drawing.Size(158, 17);
-            this.scrlGrenade.TabIndex = 7;
-            this.scrlGrenade.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlGrenade_Scroll);
+            this.pnlActivation.Controls.Add(this.txtStatus);
+            this.pnlActivation.Controls.Add(this.label3);
+            this.pnlActivation.Controls.Add(this.txtKey);
+            this.pnlActivation.Controls.Add(this.label2);
+            this.pnlActivation.Location = new System.Drawing.Point(567, 251);
+            this.pnlActivation.Name = "pnlActivation";
+            this.pnlActivation.Size = new System.Drawing.Size(200, 141);
+            this.pnlActivation.TabIndex = 12;
+            this.pnlActivation.TabStop = false;
+            this.pnlActivation.Text = "Activation";
+            this.pnlActivation.Visible = false;
             // 
-            // lblGrenade
+            // label2
             // 
-            this.lblGrenade.AutoSize = true;
-            this.lblGrenade.Location = new System.Drawing.Point(16, 168);
-            this.lblGrenade.Name = "lblGrenade";
-            this.lblGrenade.Size = new System.Drawing.Size(92, 13);
-            this.lblGrenade.TabIndex = 6;
-            this.lblGrenade.Text = "Grenade Ammo: 0";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Activation Key:";
             // 
-            // scrlRocket
+            // txtKey
             // 
-            this.scrlRocket.Location = new System.Drawing.Point(19, 134);
-            this.scrlRocket.Maximum = 2500;
-            this.scrlRocket.Name = "scrlRocket";
-            this.scrlRocket.Size = new System.Drawing.Size(158, 17);
-            this.scrlRocket.TabIndex = 5;
-            this.scrlRocket.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRocket_Scroll);
+            this.txtKey.Location = new System.Drawing.Point(20, 38);
+            this.txtKey.Name = "txtKey";
+            this.txtKey.Size = new System.Drawing.Size(155, 20);
+            this.txtKey.TabIndex = 1;
             // 
-            // lblRocket
+            // label3
             // 
-            this.lblRocket.AutoSize = true;
-            this.lblRocket.Location = new System.Drawing.Point(16, 117);
-            this.lblRocket.Name = "lblRocket";
-            this.lblRocket.Size = new System.Drawing.Size(86, 13);
-            this.lblRocket.TabIndex = 4;
-            this.lblRocket.Text = "Rocket Ammo: 0";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 73);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Status:";
             // 
-            // scrlAssault
+            // txtStatus
             // 
-            this.scrlAssault.Location = new System.Drawing.Point(19, 87);
-            this.scrlAssault.Maximum = 2500;
-            this.scrlAssault.Name = "scrlAssault";
-            this.scrlAssault.Size = new System.Drawing.Size(158, 17);
-            this.scrlAssault.TabIndex = 3;
-            this.scrlAssault.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAssault_Scroll);
-            // 
-            // lblAssault
-            // 
-            this.lblAssault.AutoSize = true;
-            this.lblAssault.Location = new System.Drawing.Point(16, 70);
-            this.lblAssault.Name = "lblAssault";
-            this.lblAssault.Size = new System.Drawing.Size(85, 13);
-            this.lblAssault.TabIndex = 2;
-            this.lblAssault.Text = "Assault Ammo: 0";
-            // 
-            // scrlPistol
-            // 
-            this.scrlPistol.Location = new System.Drawing.Point(19, 40);
-            this.scrlPistol.Maximum = 2500;
-            this.scrlPistol.Name = "scrlPistol";
-            this.scrlPistol.Size = new System.Drawing.Size(158, 17);
-            this.scrlPistol.TabIndex = 1;
-            this.scrlPistol.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlPistol_Scroll);
-            // 
-            // lblPistol
-            // 
-            this.lblPistol.AutoSize = true;
-            this.lblPistol.Location = new System.Drawing.Point(16, 23);
-            this.lblPistol.Name = "lblPistol";
-            this.lblPistol.Size = new System.Drawing.Size(76, 13);
-            this.lblPistol.TabIndex = 0;
-            this.lblPistol.Text = "Pistol Ammo: 0";
+            this.txtStatus.Location = new System.Drawing.Point(20, 91);
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(155, 20);
+            this.txtStatus.TabIndex = 3;
             // 
             // PlayerEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 646);
+            this.Controls.Add(this.pnlActivation);
             this.Controls.Add(this.pnlAmmo);
             this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlGeneral);
@@ -731,6 +785,8 @@
             this.pnlStats.PerformLayout();
             this.pnlAmmo.ResumeLayout(false);
             this.pnlAmmo.PerformLayout();
+            this.pnlActivation.ResumeLayout(false);
+            this.pnlActivation.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -789,14 +845,19 @@
         private System.Windows.Forms.Label lblPoints;
         private System.Windows.Forms.HScrollBar scrlLevel;
         private System.Windows.Forms.Label lblLevel;
-        private System.Windows.Forms.GroupBox pnlAmmo;
-        private System.Windows.Forms.HScrollBar scrlGrenade;
-        private System.Windows.Forms.Label lblGrenade;
-        private System.Windows.Forms.HScrollBar scrlRocket;
-        private System.Windows.Forms.Label lblRocket;
-        private System.Windows.Forms.HScrollBar scrlAssault;
-        private System.Windows.Forms.Label lblAssault;
-        private System.Windows.Forms.HScrollBar scrlPistol;
         private System.Windows.Forms.Label lblPistol;
+        private System.Windows.Forms.HScrollBar scrlPistol;
+        private System.Windows.Forms.Label lblAssault;
+        private System.Windows.Forms.HScrollBar scrlAssault;
+        private System.Windows.Forms.Label lblRocket;
+        private System.Windows.Forms.HScrollBar scrlRocket;
+        private System.Windows.Forms.Label lblGrenade;
+        private System.Windows.Forms.HScrollBar scrlGrenade;
+        private System.Windows.Forms.GroupBox pnlAmmo;
+        private System.Windows.Forms.GroupBox pnlActivation;
+        private System.Windows.Forms.TextBox txtStatus;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtKey;
+        private System.Windows.Forms.Label label2;
     }
 }

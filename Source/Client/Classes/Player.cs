@@ -418,7 +418,7 @@ namespace SabertoothClient
             if (TickCount - equipTick < 5000) { return; }
             if (inShop || inChat || inBank) { return; }
 
-            if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25)
+            if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) < -25)
             {
                 if (mainWeapon.Name != "None")
                 {
@@ -509,7 +509,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
@@ -533,7 +533,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                         {
@@ -557,7 +557,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {
@@ -581,7 +581,7 @@ namespace SabertoothClient
                             {
                                 if (map.m_MapNpc[i].IsSpawned)
                                 {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly)
+                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
                                     {
                                         if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                         {

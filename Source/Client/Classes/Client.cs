@@ -21,15 +21,15 @@ namespace SabertoothClient
     {
         public static NetClient netClient;
 
-        //[DllImport("kernel32.dll")]
-        //static extern IntPtr GetConsoleWindow();
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
 
-        //[DllImport("user32.dll")]
-        //static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [STAThread]
         static void Main(string[] args)
         {
-            //var handle = GetConsoleWindow();
+            var handle = GetConsoleWindow();
 
             Console.Title = "Sabertooth Console - Debug Info";
             Console.WriteLine(@"  _____       _               _              _   _     ");
@@ -63,7 +63,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            //ShowWindow(handle, Globals.SW_SHOW);
+            ShowWindow(handle, Globals.SW_HIDE);
             Console.WriteLine("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -815,6 +815,8 @@ namespace SabertoothClient
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
+        public const int OFFSET_X = 16;
+        public const int OFFSET_Y = 11;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.8";

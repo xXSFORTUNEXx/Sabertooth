@@ -207,11 +207,11 @@ namespace SabertoothServer
                     string command;
                     command = "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PLAYERS')";
                     command += "CREATE TABLE PLAYERS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME VARCHAR(25), PASSWORD VARCHAR(25), X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME VARCHAR(25), PASSWORD VARCHAR(25), EMAILADDRESS VARCHAR(255), X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
                     command += "SPRITE INTEGER, LEVEL INTEGER, POINTS INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, EXPERIENCE INTEGER, MONEY INTEGER, ARMOR INTEGER, HUNGER INTEGER,";
                     command += "HYDRATION INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, PISTOLAMMO INTEGER, ASSAULTAMMO INTEGER,";
                     command += "ROCKETAMMO INTEGER, GRENADEAMMO INTEGER, LIGHTRADIUS INTEGER, DAYS INTEGER, HOURS INTEGER, MINUTES INTEGER, SECONDS INTEGER, LDAYS INTEGER, LHOURS INTEGER, LMINUTES INTEGER, LSECONDS INTEGER,";
-                    command += "LLDAYS INTEGER, LLHOURS INTEGER, LLMINUTES INTEGER, LLSECONDS INTEGER, LASTLOGGED TEXT)";
+                    command += "LLDAYS INTEGER, LLHOURS INTEGER, LLMINUTES INTEGER, LLSECONDS INTEGER, LASTLOGGED TEXT, ACCOUNTKEY VARCHAR(25), ACTIVE VARCHAR(1))";
                     command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAINWEAPONS')";
                     command += "CREATE TABLE MAINWEAPONS";
                     command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
@@ -1211,8 +1211,10 @@ namespace SabertoothServer
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
-        public const int PLAYER_START_X = 8;
-        public const int PLAYER_START_Y = 8;
+        public const int PLAYER_START_X = 9;
+        public const int PLAYER_START_Y = 17;
+        public const int OFFSET_X = 16;
+        public const int OFFSET_Y = 11;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.3";
@@ -1247,6 +1249,8 @@ namespace SabertoothServer
         //Editor Globals
         public const uint SCREEN_WIDTH = 1024;
         public const uint SCREEN_HEIGHT = 768;
+        public const uint EDITOR_WIDTH = 800;
+        public const uint EDITOR_HEIGHT = 600;
         public const int MAX_FPS = 85;
         public const int PIC_X = 32;
         public const int PIC_Y = 32;

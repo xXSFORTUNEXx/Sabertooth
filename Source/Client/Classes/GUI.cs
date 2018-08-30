@@ -26,6 +26,7 @@ namespace SabertoothClient
         public Label d_Controller;
         public Label d_ConDir;
         public Label d_ConButton;
+        public Label d_Axis;
         Label d_FPS;
         Label d_Name;
         Label d_X;
@@ -551,6 +552,23 @@ namespace SabertoothClient
                         }
                     }
                     d_ConButton.Text = "Button: " + buttonNum;
+
+                    if (Joystick.GetAxisPosition(0, Joystick.Axis.V) > 35)
+                    {
+                        d_Axis.Text = "Axis: V";
+                    }
+                    else if (Joystick.GetAxisPosition(0, Joystick.Axis.U) > 35)
+                    {
+                        d_Axis.Text = "Axis: U";
+                    }
+                    else if (Joystick.GetAxisPosition(0, Joystick.Axis.R) > 35)
+                    {
+                        d_Axis.Text = "Axis: R";
+                    }
+                    else if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) > 25 || Joystick.GetAxisPosition(0, Joystick.Axis.Z) < -25)
+                    {
+                        d_Axis.Text = "Axis: Z";
+                    }
                 }
 
             }
@@ -2186,8 +2204,7 @@ namespace SabertoothClient
         public void CreateChestWindow(Base parent)
         {
             chestWindow = new WindowControl(parent.GetCanvas());
-            chestWindow.Position(Gwen.Pos.Top);
-            chestWindow.Position(Gwen.Pos.Right);
+            chestWindow.Position(Gwen.Pos.Center, -107, -77);
             chestWindow.SetSize(215, 155);
             chestWindow.DisableResizing();
             chestWindow.IsClosable = false;
@@ -2907,7 +2924,7 @@ namespace SabertoothClient
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 185);
+            d_Window.SetSize(200, 200);
             d_Window.Position(Gwen.Pos.Top);
             d_Window.Position(Gwen.Pos.Right);
             d_Window.DisableResizing();
@@ -2971,6 +2988,10 @@ namespace SabertoothClient
             d_ConButton = new Label(d_Window);
             d_ConButton.SetPosition(10, 145);
             d_ConButton.Text = "Button: ?";
+
+            d_Axis = new Label(d_Window);
+            d_Axis.SetPosition(10, 155);
+            d_Axis.Text = "Axis: ?";
         }
 
         public void CreatNpcChatWindow(Base parent, int chatNum)
@@ -3098,7 +3119,7 @@ namespace SabertoothClient
                 {
                     if (x > 0 && y > 0 && x < 50 && y < 50)
                     {
-                        int fx = (x * 12) - (minX * 12) + 625;
+                        int fx = (x * 12) - (minX * 12) + 640;
                         int fy = (y * 12) - (minY * 12);
                         int tx, ty, w, h;
 

@@ -1259,7 +1259,7 @@ namespace SabertoothClient
             string msg = incMSG.ReadString();
             string caption = incMSG.ReadString();
             MessageBox msgBox = new MessageBox(canvas, msg, caption);
-            msgBox.Position(Gwen.Pos.Center);
+            msgBox.MakeModal();
         }
 
         static void HandleMapData(NetIncomingMessage incMSG)

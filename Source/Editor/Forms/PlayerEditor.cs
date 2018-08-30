@@ -145,6 +145,8 @@ namespace Editor.Forms
                     lblAimDirection.Text = "Aim Direction: 3 - Up";
                     break;
             }
+            txtKey.Text = (e_Player.AccountKey);
+            txtStatus.Text = (e_Player.Active);
             picSprite.Image = Image.FromFile("Resources/Characters/" + (e_Player.Sprite + 1) + ".png");
             //Stats Labels
             lblLevel.Text = "Level: " + (e_Player.Level);
@@ -170,6 +172,7 @@ namespace Editor.Forms
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }
             if (pnlAmmo.Visible == false) { pnlAmmo.Visible = true; }
             if (lstIndex.Enabled == false) { lstIndex.Enabled = true; }
+            if (pnlActivation.Visible == false) { pnlActivation.Visible = true; }
             txtName.Enabled = false;
         }
 

@@ -616,8 +616,8 @@ namespace SabertoothServer
                 if (mapSlot < 20)
                 {
                     maps[mapNum].m_MapItem[mapSlot].Name = players[index].Backpack[slot].Name;
-                    maps[mapNum].m_MapItem[mapSlot].X = players[index].X + 12;
-                    maps[mapNum].m_MapItem[mapSlot].Y = players[index].Y + 9;
+                    maps[mapNum].m_MapItem[mapSlot].X = players[index].X + Globals.OFFSET_X;
+                    maps[mapNum].m_MapItem[mapSlot].Y = players[index].Y + Globals.OFFSET_Y;
                     maps[mapNum].m_MapItem[mapSlot].Sprite = players[index].Backpack[slot].Sprite;
                     maps[mapNum].m_MapItem[mapSlot].Damage = players[index].Backpack[slot].Damage;
                     maps[mapNum].m_MapItem[mapSlot].Armor = players[index].Backpack[slot].Armor;
@@ -665,7 +665,7 @@ namespace SabertoothServer
             {
                 if (maps[map].m_MapItem[c] != null && maps[map].m_MapItem[c].IsSpawned)
                 {
-                    if ((X + 12) == maps[map].m_MapItem[c].X && (Y + 9) == maps[map].m_MapItem[c].Y)
+                    if ((X + Globals.OFFSET_X) == maps[map].m_MapItem[c].X && (Y + Globals.OFFSET_Y) == maps[map].m_MapItem[c].Y)
                     {
                         PickUpItem(map, index, c);
                         break;

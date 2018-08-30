@@ -236,7 +236,7 @@ namespace Editor.Forms
         {
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
             e_Proj.LoadProjectileFromDatabase(scrlProjNum.Value);
-            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png");
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Item.ProjectileNumber + ".png");
             e_Item.ProjectileNumber = scrlProjNum.Value;
             UnModSave = true;
         }
@@ -302,7 +302,7 @@ namespace Editor.Forms
             scrlRarity.Value = e_Item.Rarity;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
-            if (pnlRanged.Visible) { picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png"); }
+            if (pnlRanged.Visible) { picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Item.ProjectileNumber + ".png"); }
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);
