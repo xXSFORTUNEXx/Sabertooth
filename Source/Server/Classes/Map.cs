@@ -10,6 +10,7 @@ using System.ComponentModel;
 using static System.Convert;
 using static SabertoothServer.Server;
 using static SabertoothServer.Globals;
+using static System.IO.File;
 
 namespace SabertoothServer
 {
@@ -130,14 +131,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/INSERT MAP.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "INSERT INTO MAPS (NAME,REVISION,UP,DOWN,LEFTSIDE,RIGHTSIDE,BRIGHTNESS,NPC,ITEM,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
-                    command = command + " VALUES ";
-                    command = command + "(@name,@revision,@top,@bottom,@left,@right,@brightness,@npc,@item,@ground,@mask,@maska,@fringe,@fringea)";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         byte[] m_Npc = ToByteArray(m_MapNpc);
                         byte[] m_Item = ToByteArray(m_MapItem);
@@ -210,13 +208,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/SAVE MAP.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "UPDATE MAPS SET NAME=@name,REVISION=@revision,UP=@top,DOWN=@bottom,LEFTSIDE=@left,RIGHTSIDE=@right,BRIGHTNESS=@brightness,NPC=@npc,ITEM=@item,GROUND=@ground,MASK=@mask,MASKA=@maska, ";
-                    command += "FRINGE=@fringe,FRINGEA=@fringea WHERE ID=@id";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         byte[] m_Npc = ToByteArray(m_MapNpc);
                         byte[] m_Item = ToByteArray(m_MapItem);
@@ -299,14 +295,13 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/LOAD MAP.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "SELECT * FROM MAPS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    using (SqlCommand cmd = new SqlCommand(script, sql))
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = mapNum;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = mapNum;
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())

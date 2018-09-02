@@ -13,7 +13,7 @@ namespace Editor
         {
             InitializeComponent();
             LoadConfiguration();
-            CheckSQL();
+            CheckSQLConnection();
         }
 
         private void btnUnlock_Click(object sender, EventArgs e)

@@ -1,0 +1,109 @@
+                /
+                {
+                    //string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                    string connection = "Data Source=" + Server.sqlServer + ";Integrated Security=True";
+                    using (var sql = new SqlConnection(connection))
+                    {
+                        sql.Open();
+                        Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
+                        string command = "IF DB_ID('Sabertooth') IS NULL CREATE DATABASE Sabertooth;";
+                        using (var cmd = new SqlCommand(command, sql))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    CreateDatabase();
+                }
+                catch (Exception e)
+                {
+                    Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
+                    Logging.WriteLog(e.Message, "SQL");
+                }
+				
+				                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    string command;
+                    command = "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PLAYERS')";
+                    command += "CREATE TABLE PLAYERS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME VARCHAR(25), PASSWORD VARCHAR(25), EMAILADDRESS VARCHAR(255), X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
+                    command += "SPRITE INTEGER, LEVEL INTEGER, POINTS INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, EXPERIENCE INTEGER, MONEY INTEGER, ARMOR INTEGER, HUNGER INTEGER,";
+                    command += "HYDRATION INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, PISTOLAMMO INTEGER, ASSAULTAMMO INTEGER,";
+                    command += "ROCKETAMMO INTEGER, GRENADEAMMO INTEGER, LIGHTRADIUS INTEGER, DAYS INTEGER, HOURS INTEGER, MINUTES INTEGER, SECONDS INTEGER, LDAYS INTEGER, LHOURS INTEGER, LMINUTES INTEGER, LSECONDS INTEGER,";
+                    command += "LLDAYS INTEGER, LLHOURS INTEGER, LLMINUTES INTEGER, LLSECONDS INTEGER, LASTLOGGED TEXT, ACCOUNTKEY VARCHAR(25), ACTIVE VARCHAR(1))";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAINWEAPONS')";
+                    command += "CREATE TABLE MAINWEAPONS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
+                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SECONDARYWEAPONS')";
+                    command += "CREATE TABLE SECONDARYWEAPONS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
+                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'EQUIPMENT')";
+                    command += "CREATE TABLE EQUIPMENT";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'INVENTORY')";
+                    command += "CREATE TABLE INVENTORY";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'BANK')";
+                    command += "CREATE TABLE BANK";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ITEMS')";
+                    command += "CREATE TABLE ITEMS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
+                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
+                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'NPCS')";
+                    command += "CREATE TABLE NPCS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, X INTEGER, Y INTEGER, DIRECTION INTEGER, SPRITE INTEGER, STEP INTEGER, OWNER INTEGER, BEHAVIOR INTEGER, SPAWNTIME INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, DAMAGE INTEGER, DESX INTEGER, DESY INTEGER,";
+                    command += "EXP INTEGER, MONEY INTEGER, RANGE INTEGER, SHOPNUM INTEGER, CHATNUM INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PROJECTILES')";
+                    command += "CREATE TABLE PROJECTILES";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, DAMAGE INTEGER, RANGE INTEGER, SPRITE INTEGER, TYPE INTEGER, SPEED INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SHOPS')";
+                    command += "CREATE TABLE SHOPS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, ITEMDATA VARBINARY(MAX))";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHAT')";
+                    command += "CREATE TABLE CHAT";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MAINMESSAGE TEXT,OPTIONA TEXT,OPTIONB TEXT,OPTIONC TEXT,OPTIOND TEXT,NEXTCHATA INTEGER,NEXTCHATB INTEGER,NEXTCHATC INTEGER,NEXTCHATD INTEGER,SHOPNUM INTEGER,MISSIONNUM INTEGER,ITEMA INTEGER,ITEMB INTEGER,ITEMC INTEGER,VALA INTEGER,";
+                    command += "VALB INTEGER,VALC INTEGER,MONEY INTEGER,TYPE INTEGER)";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAPS')";
+                    command += "CREATE TABLE MAPS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,REVISION INTEGER,UP INTEGER,DOWN INTEGER,LEFTSIDE INTEGER,RIGHTSIDE INTEGER,BRIGHTNESS INTEGER,NPC VARBINARY(MAX),ITEM VARBINARY(MAX), GROUND VARBINARY(MAX),MASK VARBINARY(MAX),MASKA VARBINARY(MAX),FRINGE VARBINARY(MAX),FRINGEA VARBINARY(MAX))";
+                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHESTS')";
+                    command += "CREATE TABLE CHESTS";
+                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM VARBINARY(MAX))";
+
+                    using (var cmd = new SqlCommand(command, sql))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+				
+				//string command;
+				//command = "INSERT INTO MAPS (NAME,REVISION,UP,DOWN,LEFTSIDE,RIGHTSIDE,BRIGHTNESS,NPC,ITEM,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
+				//command = command + " VALUES ";
+				//command = command + "(@name,@revision,@top,@bottom,@left,@right,@brightness,@npc,@item,@ground,@mask,@maska,@fringe,@fringea)";
+				
+				                    string command;
+                    command = "UPDATE MAPS SET NAME=@name,REVISION=@revision,UP=@top,DOWN=@bottom,LEFTSIDE=@left,RIGHTSIDE=@right,BRIGHTNESS=@brightness,NPC=@npc,ITEM=@item,GROUND=@ground,MASK=@mask,MASKA=@maska, ";
+                    command += "FRINGE=@fringe,FRINGEA=@fringea WHERE ID=@id";
+					
+					                    string command;
+                    command = "INSERT INTO CHAT (NAME,MAINMESSAGE,OPTIONA,OPTIONB,OPTIONC,OPTIOND,NEXTCHATA,NEXTCHATB,NEXTCHATC,NEXTCHATD,SHOPNUM,MISSIONNUM,ITEMA,ITEMB,ITEMC,VALA,VALB,VALC,MONEY,TYPE) VALUES ";
+                    command += "(@name,@msg,@optiona,@optionb,@optionc,@optiond,@nextchata,@nextchatb,@nextchatc,@nextchatd,@shopnum,@missionnum,@itema,@itemb,@itemc,@vala,@valb,@valc,@money,@type)";
+					
+					                    string command;
+                    command = "UPDATE CHAT SET ";
+                    command = command + "NAME = @name, MAINMESSAGE = @msg, OPTIONA = @optiona, OPTIONB = @optionb, OPTIONC = @optionc, OPTIOND = @optionc, NEXTCHATA = @nextchata, NEXTCHATB = @nextchatb, NEXTCHATC = @nextchatc, NEXTCHATD = @nextchatd, ";
+                    command = command + "SHOPNUM = @shopnum, MISSIONNUM = @missionnum, ITEMA = @itema, ITEMB = @itemb, ITEMC = @itemc, VALA = @vala, VALB = @valb, VALC = @valc, MONEY = @money, TYPE = @type ";
+                    command = command + "WHERE ID=@id";

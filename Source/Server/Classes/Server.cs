@@ -65,7 +65,7 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Message Types Disabled: Debug, NAT Intro Success, Receipt, UnconnectedData, Verbose Debug, Warning Message");
 
             Server.LoadConfiguration();
-            Server.CheckSQL();
+            Server.CheckSQLConnection();
             netServer = new NetServer(netConfig);
             netServer.Start();
             Logging.WriteMessageLog("Network configuration complete...");
@@ -144,26 +144,26 @@ namespace SabertoothServer
             Exit(0);
         }
 
-        public static void CheckSQL()
+        public static void CheckSQLConnection()
         {
             //MSSQL Database (remote)
-            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
+                string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
+                string script = ReadAllText("SQL Scripts/DATABASE.sql");
+
                 try
                 {
-                    //string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-                    string connection = "Data Source=" + Server.sqlServer + ";Integrated Security=True";
                     using (var sql = new SqlConnection(connection))
                     {
                         sql.Open();
-                        Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
-                        string command = "IF DB_ID('Sabertooth') IS NULL CREATE DATABASE Sabertooth;";
-                        using (var cmd = new SqlCommand(command, sql))
+                        using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.ExecuteNonQuery();
                         }
                     }
-                    CreateDatabase();
+                    Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
+                    CheckDatabaseTables();
                 }
                 catch (Exception e)
                 {
@@ -171,13 +171,13 @@ namespace SabertoothServer
                     Logging.WriteLog(e.Message, "SQL");
                 }
             }
-            //SQLite Database (local)
+            //SQLite Database (local needs updated)
             else
             {
                 if (!Directory.Exists("Database"))
                 {
                     Directory.CreateDirectory("Database");
-                    CreateDatabase();
+                    CheckDatabaseTables();
                 }
                 try
                 {
@@ -196,81 +196,47 @@ namespace SabertoothServer
             }
         }
 
-        public static void CreateDatabase()
+        public static void CheckDatabaseTables()
         {
             //MSSQL Database (remote)
-            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
-                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script;
+                try
                 {
-                    sql.Open();
-                    string command;
-                    command = "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PLAYERS')";
-                    command += "CREATE TABLE PLAYERS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME VARCHAR(25), PASSWORD VARCHAR(25), EMAILADDRESS VARCHAR(255), X INTEGER, Y INTEGER, MAP INTEGER, DIRECTION INTEGER, AIMDIRECTION INTEGER,";
-                    command += "SPRITE INTEGER, LEVEL INTEGER, POINTS INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, EXPERIENCE INTEGER, MONEY INTEGER, ARMOR INTEGER, HUNGER INTEGER,";
-                    command += "HYDRATION INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, PISTOLAMMO INTEGER, ASSAULTAMMO INTEGER,";
-                    command += "ROCKETAMMO INTEGER, GRENADEAMMO INTEGER, LIGHTRADIUS INTEGER, DAYS INTEGER, HOURS INTEGER, MINUTES INTEGER, SECONDS INTEGER, LDAYS INTEGER, LHOURS INTEGER, LMINUTES INTEGER, LSECONDS INTEGER,";
-                    command += "LLDAYS INTEGER, LLHOURS INTEGER, LLMINUTES INTEGER, LLSECONDS INTEGER, LASTLOGGED TEXT, ACCOUNTKEY VARCHAR(25), ACTIVE VARCHAR(1))";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAINWEAPONS')";
-                    command += "CREATE TABLE MAINWEAPONS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
-                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SECONDARYWEAPONS')";
-                    command += "CREATE TABLE SECONDARYWEAPONS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), NAME TEXT, CLIP INTEGER, MAXCLIP INTEGER, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER,";
-                    command += "HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER, HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'EQUIPMENT')";
-                    command += "CREATE TABLE EQUIPMENT";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
-                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'INVENTORY')";
-                    command += "CREATE TABLE INVENTORY";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
-                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'BANK')";
-                    command += "CREATE TABLE BANK";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY, OWNER VARCHAR(25), SLOT INTEGER, NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
-                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ITEMS')";
-                    command += "CREATE TABLE ITEMS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, SPRITE INTEGER, DAMAGE INTEGER, ARMOR INTEGER, TYPE INTEGER, ATTACKSPEED INTEGER, RELOADSPEED INTEGER, HEALTHRESTORE INTEGER, HUNGERRESTORE INTEGER,";
-                    command += "HYDRATERESTORE INTEGER, STRENGTH INTEGER, AGILITY INTEGER, ENDURANCE INTEGER, STAMINA INTEGER, CLIP INTEGER, MAXCLIP INTEGER, AMMOTYPE INTEGER, VALUE INTEGER,";
-                    command += "PROJ INTEGER, PRICE INTEGER, RARITY INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'NPCS')";
-                    command += "CREATE TABLE NPCS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, X INTEGER, Y INTEGER, DIRECTION INTEGER, SPRITE INTEGER, STEP INTEGER, OWNER INTEGER, BEHAVIOR INTEGER, SPAWNTIME INTEGER, HEALTH INTEGER, MAXHEALTH INTEGER, DAMAGE INTEGER, DESX INTEGER, DESY INTEGER,";
-                    command += "EXP INTEGER, MONEY INTEGER, RANGE INTEGER, SHOPNUM INTEGER, CHATNUM INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'PROJECTILES')";
-                    command += "CREATE TABLE PROJECTILES";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, DAMAGE INTEGER, RANGE INTEGER, SPRITE INTEGER, TYPE INTEGER, SPEED INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'SHOPS')";
-                    command += "CREATE TABLE SHOPS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT, ITEMDATA VARBINARY(MAX))";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHAT')";
-                    command += "CREATE TABLE CHAT";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MAINMESSAGE TEXT,OPTIONA TEXT,OPTIONB TEXT,OPTIONC TEXT,OPTIOND TEXT,NEXTCHATA INTEGER,NEXTCHATB INTEGER,NEXTCHATC INTEGER,NEXTCHATD INTEGER,SHOPNUM INTEGER,MISSIONNUM INTEGER,ITEMA INTEGER,ITEMB INTEGER,ITEMC INTEGER,VALA INTEGER,";
-                    command += "VALB INTEGER,VALC INTEGER,MONEY INTEGER,TYPE INTEGER)";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'MAPS')";
-                    command += "CREATE TABLE MAPS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,REVISION INTEGER,UP INTEGER,DOWN INTEGER,LEFTSIDE INTEGER,RIGHTSIDE INTEGER,BRIGHTNESS INTEGER,NPC VARBINARY(MAX),ITEM VARBINARY(MAX), GROUND VARBINARY(MAX),MASK VARBINARY(MAX),MASKA VARBINARY(MAX),FRINGE VARBINARY(MAX),FRINGEA VARBINARY(MAX))";
-                    command += "IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CHESTS')";
-                    command += "CREATE TABLE CHESTS";
-                    command += "(ID int IDENTITY(1,1) PRIMARY KEY,NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM VARBINARY(MAX))";
-
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var sql = new SqlConnection(connection))
                     {
-                        cmd.ExecuteNonQuery();
+                        sql.Open();
+
+                        using (var cmd = new SqlCommand())
+                        {
+                            cmd.Connection = sql;
+                            script = ReadAllText("SQL Scripts/PLAYERS.sql");
+                            script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
+                            script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
+                            script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
+                            script += ReadAllText("SQL Scripts/INVENTORY.sql");
+                            script += ReadAllText("SQL Scripts/BANK.sql");
+                            script += ReadAllText("SQL Scripts/ITEMS.sql");
+                            script += ReadAllText("SQL Scripts/NPCS.sql");
+                            script += ReadAllText("SQL Scripts/PROJECTILES.sql");
+                            script += ReadAllText("SQL Scripts/SHOPS.sql");
+                            script += ReadAllText("SQL Scripts/CHAT.sql");
+                            script += ReadAllText("SQL Scripts/MAPS.sql");
+                            script += ReadAllText("SQL Scripts/CHESTS.sql");
+                            cmd.CommandText = script;
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Logging.WriteMessageLog("SQL execution error, Check log for details...", "SQL");
+                    Logging.WriteLog(e.Message, "SQL");
+                }
             }
-            //SQLite Database (local)
+            //SQLite Database (local needs updated)
             else
             {
                 using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))

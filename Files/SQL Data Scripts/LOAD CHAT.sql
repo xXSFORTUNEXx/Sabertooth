@@ -1,0 +1,29 @@
+/*
+Created 9/2/2018 5:18AM
+Load chat data into database
+Created by Steven M Fortune
+*/
+
+SELECT ID,
+	NAME,
+	MAINMESSAGE,
+	OPTIONA,
+	OPTIONB,
+	OPTIONC,
+	OPTIOND,
+	NEXTCHATA,
+	NEXTCHATB,
+	NEXTCHATC,
+	NEXTCHATD,
+	SHOPNUM,
+	MISSIONNUM,
+	ITEMA,
+	ITEMB,
+	ITEMC,
+	VALA,
+	VALB,
+	VALC,
+	MONEY,
+	TYPE
+FROM CHAT
+WHERE ID = @id
