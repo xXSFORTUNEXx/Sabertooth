@@ -10,6 +10,7 @@ using static System.Convert;
 using System.Text;
 using System.Data.SQLite;
 using static SabertoothClient.Client;
+using static SabertoothClient.Globals;
 using AccountKeyGenClass;
 
 namespace SabertoothClient
@@ -576,8 +577,8 @@ namespace SabertoothClient
 
         void SetStatWindow(int x, int y, Item statItem)
         {
-            int locX = (x + 325);
-            int locY = (y + 170);
+            int locX = (x + INV_STAT_WINDOW_X);
+            int locY = (y + INV_STAT_WINDOW_Y);
             statWindow.SetPosition(locX, locY);
             statWindow.Title = statItem.Name;
             statPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";
@@ -807,8 +808,8 @@ namespace SabertoothClient
 
         void SetShopStatWindow(int x, int y, Item statItem, int price)
         {
-            int locX = (x + 300);
-            int locY = (y + 50);
+            int locX = (x + SHOP_STAT_WINDOW_X);
+            int locY = (y + SHOP_STAT_WINDOW_Y);
             shopStatWindow.SetPosition(locX, locY);
             shopStatWindow.Title = statItem.Name;
             shopStatPic.ImageName = "Resources/Items/" + statItem.Sprite + ".png";       
@@ -3097,11 +3098,11 @@ namespace SabertoothClient
             int maxX;
             int maxY;
 
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (player.X + 16) - 16;
                 minY = (player.Y + 11) - 11;
-                maxX = (player.X + 16) + 17;
+                maxX = (player.X + 16) + 16;
                 maxY = (player.Y + 11) + 16;
             }
             else

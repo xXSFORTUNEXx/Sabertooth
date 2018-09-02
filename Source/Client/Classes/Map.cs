@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static System.Convert;
 using static SabertoothClient.Client;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -215,7 +216,7 @@ namespace SabertoothClient
             int minY;
             int maxX;
             int maxY;
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -295,7 +296,7 @@ namespace SabertoothClient
             int minY;
             int maxX;
             int maxY;
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -381,9 +382,9 @@ namespace SabertoothClient
 
         void DrawMapLight()
         {
-            for (int x = 0; x < Globals.MAX_MAP_X; x++)
+            for (int x = 0; x < MAX_MAP_X; x++)
             {
-                for (int y = 0; y < Globals.MAX_MAP_X; y++)
+                for (int y = 0; y < MAX_MAP_X; y++)
                 {
                     if (Ground[x, y].LightRadius > 0)
                     {

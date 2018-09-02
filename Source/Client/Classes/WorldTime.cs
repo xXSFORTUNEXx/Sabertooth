@@ -3,6 +3,7 @@ using static System.Environment;
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {

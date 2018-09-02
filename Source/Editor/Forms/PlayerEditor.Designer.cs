@@ -90,10 +90,10 @@
             this.scrlGrenade = new System.Windows.Forms.HScrollBar();
             this.pnlAmmo = new System.Windows.Forms.GroupBox();
             this.pnlActivation = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtKey = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.txtStatus = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtKey = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.pnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -405,7 +405,9 @@
             // 
             // scrlStamina
             // 
+            this.scrlStamina.LargeChange = 100;
             this.scrlStamina.Location = new System.Drawing.Point(22, 586);
+            this.scrlStamina.Maximum = 100000;
             this.scrlStamina.Name = "scrlStamina";
             this.scrlStamina.Size = new System.Drawing.Size(156, 17);
             this.scrlStamina.TabIndex = 25;
@@ -422,7 +424,9 @@
             // 
             // scrlEndurance
             // 
+            this.scrlEndurance.LargeChange = 100;
             this.scrlEndurance.Location = new System.Drawing.Point(22, 544);
+            this.scrlEndurance.Maximum = 100000;
             this.scrlEndurance.Name = "scrlEndurance";
             this.scrlEndurance.Size = new System.Drawing.Size(156, 17);
             this.scrlEndurance.TabIndex = 23;
@@ -439,7 +443,9 @@
             // 
             // scrlAgility
             // 
+            this.scrlAgility.LargeChange = 100;
             this.scrlAgility.Location = new System.Drawing.Point(22, 498);
+            this.scrlAgility.Maximum = 100000;
             this.scrlAgility.Name = "scrlAgility";
             this.scrlAgility.Size = new System.Drawing.Size(156, 17);
             this.scrlAgility.TabIndex = 21;
@@ -456,7 +462,9 @@
             // 
             // scrlStrength
             // 
+            this.scrlStrength.LargeChange = 100;
             this.scrlStrength.Location = new System.Drawing.Point(22, 453);
+            this.scrlStrength.Maximum = 100000;
             this.scrlStrength.Name = "scrlStrength";
             this.scrlStrength.Size = new System.Drawing.Size(156, 17);
             this.scrlStrength.TabIndex = 19;
@@ -507,7 +515,9 @@
             // 
             // scrlArmor
             // 
+            this.scrlArmor.LargeChange = 100;
             this.scrlArmor.Location = new System.Drawing.Point(22, 320);
+            this.scrlArmor.Maximum = 100000;
             this.scrlArmor.Name = "scrlArmor";
             this.scrlArmor.Size = new System.Drawing.Size(156, 17);
             this.scrlArmor.TabIndex = 13;
@@ -524,8 +534,9 @@
             // 
             // scrlMoney
             // 
+            this.scrlMoney.LargeChange = 100;
             this.scrlMoney.Location = new System.Drawing.Point(22, 276);
-            this.scrlMoney.Maximum = 10000;
+            this.scrlMoney.Maximum = 500000;
             this.scrlMoney.Name = "scrlMoney";
             this.scrlMoney.Size = new System.Drawing.Size(156, 17);
             this.scrlMoney.TabIndex = 11;
@@ -542,8 +553,9 @@
             // 
             // scrlExp
             // 
+            this.scrlExp.LargeChange = 100;
             this.scrlExp.Location = new System.Drawing.Point(22, 232);
-            this.scrlExp.Maximum = 10000;
+            this.scrlExp.Maximum = 500000;
             this.scrlExp.Name = "scrlExp";
             this.scrlExp.Size = new System.Drawing.Size(156, 17);
             this.scrlExp.TabIndex = 9;
@@ -560,8 +572,9 @@
             // 
             // scrlMaxHealth
             // 
+            this.scrlMaxHealth.LargeChange = 100;
             this.scrlMaxHealth.Location = new System.Drawing.Point(22, 186);
-            this.scrlMaxHealth.Maximum = 10000;
+            this.scrlMaxHealth.Maximum = 500000;
             this.scrlMaxHealth.Name = "scrlMaxHealth";
             this.scrlMaxHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlMaxHealth.TabIndex = 7;
@@ -578,8 +591,9 @@
             // 
             // scrlHealth
             // 
+            this.scrlHealth.LargeChange = 100;
             this.scrlHealth.Location = new System.Drawing.Point(22, 136);
-            this.scrlHealth.Maximum = 10000;
+            this.scrlHealth.Maximum = 500000;
             this.scrlHealth.Name = "scrlHealth";
             this.scrlHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlHealth.TabIndex = 5;
@@ -596,8 +610,9 @@
             // 
             // scrlPoints
             // 
+            this.scrlPoints.LargeChange = 100;
             this.scrlPoints.Location = new System.Drawing.Point(22, 89);
-            this.scrlPoints.Maximum = 32000;
+            this.scrlPoints.Maximum = 500000;
             this.scrlPoints.Name = "scrlPoints";
             this.scrlPoints.Size = new System.Drawing.Size(156, 17);
             this.scrlPoints.TabIndex = 3;
@@ -615,6 +630,7 @@
             // scrlLevel
             // 
             this.scrlLevel.Location = new System.Drawing.Point(22, 43);
+            this.scrlLevel.Maximum = 1000;
             this.scrlLevel.Name = "scrlLevel";
             this.scrlLevel.Size = new System.Drawing.Size(156, 17);
             this.scrlLevel.TabIndex = 1;
@@ -641,7 +657,7 @@
             // scrlPistol
             // 
             this.scrlPistol.Location = new System.Drawing.Point(19, 40);
-            this.scrlPistol.Maximum = 2500;
+            this.scrlPistol.Maximum = 10000;
             this.scrlPistol.Name = "scrlPistol";
             this.scrlPistol.Size = new System.Drawing.Size(158, 17);
             this.scrlPistol.TabIndex = 1;
@@ -659,7 +675,7 @@
             // scrlAssault
             // 
             this.scrlAssault.Location = new System.Drawing.Point(19, 87);
-            this.scrlAssault.Maximum = 2500;
+            this.scrlAssault.Maximum = 10000;
             this.scrlAssault.Name = "scrlAssault";
             this.scrlAssault.Size = new System.Drawing.Size(158, 17);
             this.scrlAssault.TabIndex = 3;
@@ -677,7 +693,7 @@
             // scrlRocket
             // 
             this.scrlRocket.Location = new System.Drawing.Point(19, 134);
-            this.scrlRocket.Maximum = 2500;
+            this.scrlRocket.Maximum = 10000;
             this.scrlRocket.Name = "scrlRocket";
             this.scrlRocket.Size = new System.Drawing.Size(158, 17);
             this.scrlRocket.TabIndex = 5;
@@ -695,7 +711,7 @@
             // scrlGrenade
             // 
             this.scrlGrenade.Location = new System.Drawing.Point(19, 185);
-            this.scrlGrenade.Maximum = 2500;
+            this.scrlGrenade.Maximum = 10000;
             this.scrlGrenade.Name = "scrlGrenade";
             this.scrlGrenade.Size = new System.Drawing.Size(158, 17);
             this.scrlGrenade.TabIndex = 7;
@@ -733,21 +749,12 @@
             this.pnlActivation.Text = "Activation";
             this.pnlActivation.Visible = false;
             // 
-            // label2
+            // txtStatus
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Activation Key:";
-            // 
-            // txtKey
-            // 
-            this.txtKey.Location = new System.Drawing.Point(20, 38);
-            this.txtKey.Name = "txtKey";
-            this.txtKey.Size = new System.Drawing.Size(155, 20);
-            this.txtKey.TabIndex = 1;
+            this.txtStatus.Location = new System.Drawing.Point(20, 91);
+            this.txtStatus.Name = "txtStatus";
+            this.txtStatus.Size = new System.Drawing.Size(155, 20);
+            this.txtStatus.TabIndex = 3;
             // 
             // label3
             // 
@@ -758,12 +765,21 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Status:";
             // 
-            // txtStatus
+            // txtKey
             // 
-            this.txtStatus.Location = new System.Drawing.Point(20, 91);
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(155, 20);
-            this.txtStatus.TabIndex = 3;
+            this.txtKey.Location = new System.Drawing.Point(20, 38);
+            this.txtKey.Name = "txtKey";
+            this.txtKey.Size = new System.Drawing.Size(155, 20);
+            this.txtKey.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Activation Key:";
             // 
             // PlayerEditor
             // 

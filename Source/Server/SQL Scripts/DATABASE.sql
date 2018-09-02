@@ -1,0 +1,4 @@
+﻿IF (DB_ID('Sabertooth') IS NULL)
+BEGIN
+	CREATE DATABASE Sabertooth
+END

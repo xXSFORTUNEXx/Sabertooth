@@ -5,6 +5,7 @@ using static System.Convert;
 using static System.Environment;
 using System.Data.SqlClient;
 using static SabertoothServer.Server;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -30,6 +31,7 @@ namespace SabertoothServer
         public int Money { get; set; }
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
+        public int Speed { get; set; }
         public bool IsSpawned;
         public bool DidMove;
         public int Target;
@@ -109,7 +111,7 @@ namespace SabertoothServer
             ShopNum = 0;
             ChatNum = 0;
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -167,7 +169,7 @@ namespace SabertoothServer
 
         public void SaveNpcToDatabase(int npcNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -225,7 +227,7 @@ namespace SabertoothServer
 
         public void LoadNpcFromDatabase(int npcNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -306,7 +308,7 @@ namespace SabertoothServer
 
         public void LoadNpcNameFromDatabase(int npcNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -658,8 +660,8 @@ namespace SabertoothServer
                     {
                         if (s_Player[p].Connection != null && s_Player[p].Name != null)
                         {
-                            int s_PlayerX = s_Player[p].X + 12;
-                            int s_PlayerY = s_Player[p].Y + 9;
+                            int s_PlayerX = s_Player[p].X + OFFSET_X;
+                            int s_PlayerY = s_Player[p].Y + OFFSET_Y;
                             double s_DisX = X - s_PlayerX;
                             double s_DisY = Y - s_PlayerY;
                             double s_Final = s_DisX * s_DisX + s_DisY * s_DisY;
@@ -674,12 +676,12 @@ namespace SabertoothServer
                         }
                     }
 
-                    if ((X + Range) < (s_Player[Target].X + 12) || (X - Range) > (s_Player[Target].X + 12)) { goto case (int)BehaviorType.Friendly; }
-                    if ((Y + Range) < (s_Player[Target].Y + 9) || (Y - Range) > (s_Player[Target].Y + 9)) { goto case (int)BehaviorType.Friendly; }
+                    if ((X + Range) < (s_Player[Target].X + OFFSET_X) || (X - Range) > (s_Player[Target].X + 12)) { goto case (int)BehaviorType.Friendly; }
+                    if ((Y + Range) < (s_Player[Target].Y + OFFSET_Y) || (Y - Range) > (s_Player[Target].Y + 9)) { goto case (int)BehaviorType.Friendly; }
 
                     if (X != s_Player[Target].X)
                     {
-                        if (X > s_Player[Target].X + 12 && X > 0)
+                        if (X > s_Player[Target].X + OFFSET_X && X > 0)
                         {
                             if (s_Map.Ground[X - 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
                             {
@@ -728,7 +730,7 @@ namespace SabertoothServer
                             X -= 1;
                             DidMove = true;
                         }
-                        else if (X < s_Player[Target].X + 12 && X < 50)
+                        else if (X < s_Player[Target].X + OFFSET_X && X < 50)
                         {
                             if (s_Map.Ground[X + 1, Y].Type == (int)TileType.Blocked || s_Map.Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                             {
@@ -781,7 +783,7 @@ namespace SabertoothServer
 
                     if (Y != s_Player[Target].Y)
                     {
-                        if (Y > s_Player[Target].Y + 9 && Y > 0)
+                        if (Y > s_Player[Target].Y + OFFSET_Y && Y > 0)
                         {
                             if (s_Map.Ground[X, Y - 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
                             {
@@ -830,7 +832,7 @@ namespace SabertoothServer
                             Y -= 1;
                             DidMove = true;
                         }
-                        else if (Y < s_Player[Target].Y + 9 && Y < 50)
+                        else if (Y < s_Player[Target].Y + OFFSET_Y && Y < 50)
                         {
                             if (s_Map.Ground[X, Y + 1].Type == (int)TileType.Blocked || s_Map.Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                             {
@@ -881,7 +883,7 @@ namespace SabertoothServer
                         }
                     }
 
-                    if (X == s_Player[Target].X + 12 && Y == s_Player[Target].Y + 9)
+                    if (X == s_Player[Target].X + OFFSET_X && Y == s_Player[Target].Y + OFFSET_Y)
                     {
                         AttackPlayer(s_Server, s_Player, Target);
                     }

@@ -7,6 +7,7 @@ using static System.Environment;
 using System;
 using static SabertoothClient.Client;
 using AccountKeyGenClass;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -111,7 +112,7 @@ namespace SabertoothClient
             X = x;
             Y = y;
             Map = map;
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 OffsetX = 16;
                 OffsetY = 11;
@@ -172,7 +173,7 @@ namespace SabertoothClient
             Name = name;
             Pass = pass;
             Connection = conn;
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 OffsetX = 16;
                 OffsetY = 11;

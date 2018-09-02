@@ -2,6 +2,7 @@
 using static System.Convert;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -47,7 +48,7 @@ namespace SabertoothServer
             Type = (int)ProjType.Bullet;
             Speed = 0;
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -92,7 +93,7 @@ namespace SabertoothServer
 
         public void SaveProjectileToDatabase(int projNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -139,7 +140,7 @@ namespace SabertoothServer
 
         public void LoadProjectileFromDatabase(int projNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -192,7 +193,7 @@ namespace SabertoothServer
 
         public void LoadNameFromDatabase(int projNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

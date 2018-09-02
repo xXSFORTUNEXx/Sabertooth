@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -64,7 +65,7 @@ namespace SabertoothServer
                 shopItem[i] = new ShopItem("None", 1, 0);
             }
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -102,7 +103,7 @@ namespace SabertoothServer
 
         public void SaveShopInDatabase(int shopNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -141,7 +142,7 @@ namespace SabertoothServer
 
         public void LoadShopFromDatabase(int shopNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -191,7 +192,7 @@ namespace SabertoothServer
 
         public void LoadShopNameFromDatabase(int shopNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

@@ -11,6 +11,8 @@ using System.Data.SQLite;
 using static System.Convert;
 using SabertoothServer;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
+
 namespace Editor.Forms
 {
     public partial class ProjectileEditor : Form
@@ -29,7 +31,7 @@ namespace Editor.Forms
 
         public void LoadProjList()
         {
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

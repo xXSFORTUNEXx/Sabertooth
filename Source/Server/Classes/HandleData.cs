@@ -7,6 +7,7 @@ using System.Threading;
 using static System.Convert;
 using static SabertoothServer.Server;
 using AccountKeyGenClass;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -300,7 +301,7 @@ namespace SabertoothServer
 
             if (type == 0)
             {
-                if (maps[mapIndex].m_MapNpc[index].ShopNum > 0) { SendOpenShop(incMSG, maps[mapIndex].m_MapNpc[index].ShopNum); }
+                if (maps[mapIndex].m_MapNpc[index].ShopNum > 0) { SendOpenShop(incMSG, maps[mapIndex].m_MapNpc[index].ShopNum - 1); }
                 if (maps[mapIndex].m_MapNpc[index].ChatNum > 0) { SendOpenChat(incMSG, maps[mapIndex].m_MapNpc[index].ChatNum); }
             }
             else if (type == 1)
@@ -537,13 +538,13 @@ namespace SabertoothServer
                     int i = OpenSlot();
                     if (i < 5)
                     {
-                        players[i] = new Player(username, password, email, Globals.PLAYER_START_X, Globals.PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
+                        players[i] = new Player(username, password, email, PLAYER_START_X, PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000, incMSG.SenderConnection);
                         players[i].CreatePlayerInDatabase();
                         Console.WriteLine("Account created, " + username + ", " + password);
                         SendErrorMessage("Account Created! Please login to play!", "Account Created", incMSG);
                         string subject = "Sabertooth Account Activation Key";
                         string body = "Welcome to Sabertooth!\n\nBelow is your key which must be entered upon first login to activate your account. Enjoy!\n\nActivation Key: " + players[i].AccountKey;
-                        Email.SendActivationEmail(email, subject, body, Globals.SMTP_IP_ADDRESS, Globals.SMTP_SERVER_PORT, Globals.SMTP_USER_CREDS, Globals.SMTP_PASS_CREDS);
+                        Email.SendActivationEmail(email, subject, body, SMTP_IP_ADDRESS, SMTP_SERVER_PORT, SMTP_USER_CREDS, SMTP_PASS_CREDS);
                         ClearSlot(incMSG.SenderConnection);
                     }
                     else
@@ -1258,7 +1259,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChats);
-            for (int i = 0; i < Globals.MAX_CHATS; i++)
+            for (int i = 0; i < MAX_CHATS; i++)
             {
                 outMSG.Write(chats[i].Name);
                 outMSG.Write(chats[i].MainMessage);
@@ -1835,7 +1836,7 @@ namespace SabertoothServer
 
         static bool CheckPassword(string name, string pass)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -1893,7 +1894,7 @@ namespace SabertoothServer
 
         static bool AccountExist(string name)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

@@ -6,6 +6,7 @@ using Lidgren.Network;
 using static System.Convert;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -88,7 +89,7 @@ namespace SabertoothServer
                 ChestItem[i] = new ChestItem("None", 0, 1);
             }
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -146,7 +147,7 @@ namespace SabertoothServer
 
         public void SaveChestInDatabase(int chestNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -205,7 +206,7 @@ namespace SabertoothServer
 
         public void LoadChestFromDatabase(int chestNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -272,7 +273,7 @@ namespace SabertoothServer
 
         public void LoadChestNameFromDatabase(int chestNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

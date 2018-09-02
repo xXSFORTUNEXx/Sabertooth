@@ -6,6 +6,7 @@ using static System.Convert;
 using static System.Environment;
 using static SabertoothServer.Server;
 using AccountKeyGenClass;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -308,42 +309,26 @@ namespace SabertoothServer
             }
         }
 
-        public bool CheckPlayerLevelUp()
+        public void CheckPlayerLevelUp()
         {
-            if (Experience == (Level * 1000))
+            int exptoLevel = (Level * 1000);
+            if (Level == 1000) { Experience = exptoLevel; return; }
+            if (Experience >= exptoLevel)
             {
-                Level += 1;
-                Experience = 0;
-                Points += 100;
-                Hunger = 100;
-                Hydration = 100;
-                MaxHealth += (Level * 5) + RND.Next(0, 100);
-                Health = MaxHealth;
-                Money += 50;
-                Strength += RND.Next(1, 3);
-                Agility += RND.Next(1, 3);
-                Endurance += RND.Next(1, 3);
-                Stamina += RND.Next(1, 3);
-                return true;              
+                while (Experience >= exptoLevel)
+                {
+                    int remainingXp = (Experience - exptoLevel);
+                    Level += 1;
+                    Experience = remainingXp;
+                    Hunger = 100;
+                    MaxHealth += (Level * 5) + RND.Next(0, 100);
+                    Health = MaxHealth;
+                    Strength += RND.Next(1, 3);
+                    Agility += RND.Next(1, 3);
+                    Endurance += RND.Next(1, 3);
+                    Stamina += RND.Next(1, 3);
+                }
             }
-            else if (Experience > (Level * 1000))
-            {
-                int remaining = Experience - (Level * 1000);
-                Level += 1;
-                Experience = remaining;
-                Points += 100;
-                Hunger = 100;
-                Hydration = 100;
-                MaxHealth += (Level * 5) + RND.Next(0, 100);
-                Health = MaxHealth;
-                Money += 50;
-                Strength += RND.Next(1, 3);
-                Agility += RND.Next(1, 3);
-                Endurance += RND.Next(1, 3);
-                Stamina += RND.Next(1, 3);
-                return true;
-            }
-            return false;
         }
 
         public void DepositItem(int index, int slot)
@@ -616,8 +601,8 @@ namespace SabertoothServer
                 if (mapSlot < 20)
                 {
                     maps[mapNum].m_MapItem[mapSlot].Name = players[index].Backpack[slot].Name;
-                    maps[mapNum].m_MapItem[mapSlot].X = players[index].X + Globals.OFFSET_X;
-                    maps[mapNum].m_MapItem[mapSlot].Y = players[index].Y + Globals.OFFSET_Y;
+                    maps[mapNum].m_MapItem[mapSlot].X = players[index].X + OFFSET_X;
+                    maps[mapNum].m_MapItem[mapSlot].Y = players[index].Y + OFFSET_Y;
                     maps[mapNum].m_MapItem[mapSlot].Sprite = players[index].Backpack[slot].Sprite;
                     maps[mapNum].m_MapItem[mapSlot].Damage = players[index].Backpack[slot].Damage;
                     maps[mapNum].m_MapItem[mapSlot].Armor = players[index].Backpack[slot].Armor;
@@ -665,7 +650,7 @@ namespace SabertoothServer
             {
                 if (maps[map].m_MapItem[c] != null && maps[map].m_MapItem[c].IsSpawned)
                 {
-                    if ((X + Globals.OFFSET_X) == maps[map].m_MapItem[c].X && (Y + Globals.OFFSET_Y) == maps[map].m_MapItem[c].Y)
+                    if ((X + OFFSET_X) == maps[map].m_MapItem[c].X && (Y + OFFSET_Y) == maps[map].m_MapItem[c].Y)
                     {
                         PickUpItem(map, index, c);
                         break;
@@ -752,7 +737,7 @@ namespace SabertoothServer
         #region Database
         public void CreatePlayerInDatabase()
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -1178,7 +1163,7 @@ namespace SabertoothServer
 
         public void UpdateAccountStatusInDatabase()
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -1211,7 +1196,7 @@ namespace SabertoothServer
 
         public void SavePlayerToDatabase()
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -1814,7 +1799,7 @@ namespace SabertoothServer
 
         public void LoadPlayerFromDatabase()
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -2449,7 +2434,7 @@ namespace SabertoothServer
 
         public void LoadPlayerNameFromDatabase(int id)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -2495,7 +2480,7 @@ namespace SabertoothServer
 
         public void LoadPlayerIDFromDatabase(string name)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -2521,7 +2506,7 @@ namespace SabertoothServer
         public bool IsAccountActive()
         {
             string result;
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

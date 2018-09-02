@@ -8,6 +8,7 @@ using static System.Convert;
 using Lidgren.Network;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -66,7 +67,7 @@ namespace SabertoothServer
             Money = 0;
             Type = (int)ChatTypes.None;
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -141,7 +142,7 @@ namespace SabertoothServer
 
         public void SaveChatInDatabase(int chatNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -220,7 +221,7 @@ namespace SabertoothServer
 
         public void LoadChatFromDatabase(int chatNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -301,7 +302,7 @@ namespace SabertoothServer
 
         public void LoadChatNameFromDatabase(int chatNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

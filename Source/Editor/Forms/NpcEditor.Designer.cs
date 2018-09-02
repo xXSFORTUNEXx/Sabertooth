@@ -70,6 +70,8 @@
             this.lblSprite = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
+            this.lblMoveSpeed = new System.Windows.Forms.Label();
+            this.scrlMoveSpeed = new System.Windows.Forms.HScrollBar();
             this.groupBox1.SuspendLayout();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -140,6 +142,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlMoveSpeed);
+            this.pnlMain.Controls.Add(this.lblMoveSpeed);
             this.pnlMain.Controls.Add(this.scrlChatNum);
             this.pnlMain.Controls.Add(this.lblChatNum);
             this.pnlMain.Controls.Add(this.scrlShopNum);
@@ -249,7 +253,7 @@
             // scrlExp
             // 
             this.scrlExp.Location = new System.Drawing.Point(215, 180);
-            this.scrlExp.Maximum = 1000;
+            this.scrlExp.Maximum = 25000;
             this.scrlExp.Name = "scrlExp";
             this.scrlExp.Size = new System.Drawing.Size(156, 17);
             this.scrlExp.TabIndex = 35;
@@ -508,6 +512,23 @@
             this.lblName.TabIndex = 5;
             this.lblName.Text = "Name:";
             // 
+            // lblMoveSpeed
+            // 
+            this.lblMoveSpeed.AutoSize = true;
+            this.lblMoveSpeed.Location = new System.Drawing.Point(20, 308);
+            this.lblMoveSpeed.Name = "lblMoveSpeed";
+            this.lblMoveSpeed.Size = new System.Drawing.Size(80, 13);
+            this.lblMoveSpeed.TabIndex = 43;
+            this.lblMoveSpeed.Text = "Move Speed: 0";
+            // 
+            // scrlMoveSpeed
+            // 
+            this.scrlMoveSpeed.Location = new System.Drawing.Point(18, 321);
+            this.scrlMoveSpeed.Name = "scrlMoveSpeed";
+            this.scrlMoveSpeed.Size = new System.Drawing.Size(153, 17);
+            this.scrlMoveSpeed.TabIndex = 44;
+            this.scrlMoveSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMoveSpeed_Scroll);
+            // 
             // NpcEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -571,5 +592,7 @@
         private System.Windows.Forms.Label lblShopNum;
         private System.Windows.Forms.HScrollBar scrlChatNum;
         private System.Windows.Forms.Label lblChatNum;
+        private System.Windows.Forms.HScrollBar scrlMoveSpeed;
+        private System.Windows.Forms.Label lblMoveSpeed;
     }
 }

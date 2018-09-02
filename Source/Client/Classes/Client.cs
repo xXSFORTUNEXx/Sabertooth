@@ -11,9 +11,11 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml;
 using static System.Environment;
+using static SabertoothClient.Globals;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Data.SQLite;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -47,11 +49,11 @@ namespace SabertoothClient
                 MaximumConnections = 1,
                 MaximumTransmissionUnit = 1500,
                 EnableUPnP = false,
-                ConnectionTimeout = Globals.CONNECTION_TIMEOUT,
-                SimulatedRandomLatency = Globals.SIMULATED_RANDOM_LATENCY,
-                SimulatedMinimumLatency = Globals.SIMULATED_MINIMUM_LATENCY,
-                SimulatedLoss = Globals.SIMULATED_PACKET_LOSS,
-                SimulatedDuplicatesChance = Globals.SIMULATED_DUPLICATES_CHANCE
+                ConnectionTimeout = CONNECTION_TIMEOUT,
+                SimulatedRandomLatency = SIMULATED_RANDOM_LATENCY,
+                SimulatedMinimumLatency = SIMULATED_MINIMUM_LATENCY,
+                SimulatedLoss = SIMULATED_PACKET_LOSS,
+                SimulatedDuplicatesChance = SIMULATED_DUPLICATES_CHANCE
             };
 
             netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
@@ -63,7 +65,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, Globals.SW_HIDE);
+            ShowWindow(handle, SW_HIDE);
             Console.WriteLine("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -75,7 +77,7 @@ namespace SabertoothClient
 
     public static class Client
     {
-        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT), Globals.GAME_TITLE, Globals.SCREEN_STYLE);
+        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE, SCREEN_STYLE);
         static Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
         static Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
         static Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
@@ -83,13 +85,13 @@ namespace SabertoothClient
         public static Gwen.Input.SFML sFML = new Gwen.Input.SFML();  
         public static HUD hud = new HUD();
         public static GUI gui = new GUI();
-        public static Player[] players = new Player[Globals.MAX_PLAYERS];
-        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
-        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
-        public static Item[] items = new Item[Globals.MAX_ITEMS];
-        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
-        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
-        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
+        public static Player[] players = new Player[MAX_PLAYERS];
+        public static Npc[] npcs = new Npc[MAX_NPCS];
+        public static Shop[] shops = new Shop[MAX_SHOPS];
+        public static Item[] items = new Item[MAX_ITEMS];
+        public static Projectile[] projectiles = new Projectile[MAX_PROJECTILES];
+        public static Chat[] chats = new Chat[MAX_CHATS];
+        public static Chest[] chests = new Chest[MAX_CHESTS];
         public static Map map = new Map();
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
@@ -120,12 +122,12 @@ namespace SabertoothClient
             renderWindow.MouseButtonReleased += window_MouseButtonReleased;
             renderWindow.MouseMoved += window_MouseMoved;
             renderWindow.TextEntered += window_TextEntered;
-            renderWindow.SetFramerateLimit(Globals.MAX_FPS);
+            renderWindow.SetFramerateLimit(MAX_FPS);
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
 
-            canvas.SetSize(Globals.CANVAS_WIDTH, Globals.CANVAS_HEIGHT);
+            canvas.SetSize(CANVAS_WIDTH, CANVAS_HEIGHT);
             canvas.ShouldDrawBackground = true;
             canvas.BackgroundColor = System.Drawing.Color.Transparent;
             canvas.KeyboardInputEnabled = true;
@@ -229,37 +231,37 @@ namespace SabertoothClient
         #region Initialize Methods
         static void InitArrays()
         {
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 players[i] = new Player();
             }
 
-            for (int i = 0; i < Globals.MAX_NPCS; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
                 npcs[i] = new Npc();
             }
 
-            for (int i = 0; i < Globals.MAX_ITEMS; i++)
+            for (int i = 0; i < MAX_ITEMS; i++)
             {
                 items[i] = new Item();
             }
 
-            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
+            for (int i = 0; i < MAX_PROJECTILES; i++)
             {
                 projectiles[i] = new Projectile();
             }
 
-            for (int i = 0; i < Globals.MAX_SHOPS; i++)
+            for (int i = 0; i < MAX_SHOPS; i++)
             {
                 shops[i] = new Shop();
             }
 
-            for (int i = 0; i < Globals.MAX_CHATS; i++)
+            for (int i = 0; i < MAX_CHATS; i++)
             {
                 chats[i] = new Chat();
             }
 
-            for (int i = 0; i < Globals.MAX_CHESTS; i++)
+            for (int i = 0; i < MAX_CHESTS; i++)
             {
                 chests[i] = new Chest();
             }
@@ -447,7 +449,7 @@ namespace SabertoothClient
         #region Draw Methods
         static void DrawPlayers()
         {
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != "")
                 {
@@ -466,7 +468,7 @@ namespace SabertoothClient
             int maxX;
             int maxY;
 
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -481,7 +483,7 @@ namespace SabertoothClient
                 maxY = (players[HandleData.myIndex].Y + 9) + 11;
             }
 
-            for (int i = 0; i < Globals.MAX_MAP_NPCS; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 if (map.m_MapNpc[i].IsSpawned)
                 {
@@ -498,7 +500,7 @@ namespace SabertoothClient
                 }
             }
 
-            for (int i = 0; i < Globals.MAX_MAP_POOL_NPCS; i++)
+            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
             {
                 if (map.r_MapNpc[i].IsSpawned)
                 {
@@ -523,7 +525,7 @@ namespace SabertoothClient
             int maxX;
             int maxY;
 
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -538,7 +540,7 @@ namespace SabertoothClient
                 maxY = (players[HandleData.myIndex].Y + 9) + 11;
             }
 
-            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
+            for (int i = 0; i < MAX_MAP_ITEMS; i++)
             {
                 if (map.m_MapItem[i].IsSpawned)
                 {
@@ -563,7 +565,7 @@ namespace SabertoothClient
             int maxX;
             int maxY;
 
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -582,7 +584,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < Globals.MAX_MAP_X && y < Globals.MAX_MAP_Y)
+                    if (x > 0 && y > 0 && x < MAX_MAP_X && y < MAX_MAP_Y)
                     {
                         if (map.Ground[x, y].Type == (int)TileType.Chest)
                         {
@@ -601,7 +603,7 @@ namespace SabertoothClient
             int maxX;
             int maxY;
 
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 minX = (players[HandleData.myIndex].X + 16) - 16;
                 minY = (players[HandleData.myIndex].Y + 11) - 11;
@@ -616,7 +618,7 @@ namespace SabertoothClient
                 maxY = (players[HandleData.myIndex].Y + 9) + 11;
             }
 
-            for (int i = 0; i < Globals.MAX_DRAWN_PROJECTILES; i++)
+            for (int i = 0; i < MAX_DRAWN_PROJECTILES; i++)
             {
                 if (map.m_MapProj[i] != null)
                 {
@@ -727,7 +729,7 @@ namespace SabertoothClient
 
         static void UpdateTitle(int fps)
         {
-            string title = Globals.GAME_TITLE + " FPS: " + fps;
+            string title = GAME_TITLE + " FPS: " + fps;
 
             if (players[HandleData.myIndex].Name != null) { title += " - Logged: " + players[HandleData.myIndex].Name; }
             if (worldTime.updateTime == true) { title += " - Time: " + worldTime.Time; }
@@ -739,10 +741,10 @@ namespace SabertoothClient
         {
             if (SabertoothClient.netClient.ServerConnection == null)
             {
-                if (TickCount - discoverTick >= Globals.DISCOVERY_TIMER)
+                if (TickCount - discoverTick >= DISCOVERY_TIMER)
                 {
                     Console.WriteLine("Connecting to server...");
-                    SabertoothClient.netClient.DiscoverLocalPeers(Globals.SERVER_PORT);
+                    SabertoothClient.netClient.DiscoverLocalPeers(SERVER_PORT);
                     discoverTick = TickCount;
                 }
             }
@@ -751,8 +753,8 @@ namespace SabertoothClient
 
         static void UpdateView()
         {
-            view.Reset(new FloatRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT));
-            view.Move(new Vector2f(players[HandleData.myIndex].X * Globals.PIC_X, players[HandleData.myIndex].Y * Globals.PIC_Y));
+            view.Reset(new FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+            view.Move(new Vector2f(players[HandleData.myIndex].X * PIC_X, players[HandleData.myIndex].Y * PIC_Y));
             HandleData.HandleDataMessage();
 
             gui.SetIndexPlayer();
@@ -784,7 +786,7 @@ namespace SabertoothClient
         #region Misc Methods
         static bool isChestEmpty(int chestNum)
         {
-            for (int i = 0; i < Globals.MAX_CHESTS; i++)
+            for (int i = 0; i < MAX_CHESTS; i++)
             {
                 if (chests[chestNum].ChestItem[i].Name != "None")
                 {
@@ -840,5 +842,10 @@ namespace SabertoothClient
         public const int PIC_Y = 32;
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
+        //Screen Globals
+        public const int SHOP_STAT_WINDOW_X = 520;
+        public const int SHOP_STAT_WINDOW_Y = 65;
+        public const int INV_STAT_WINDOW_X = 530;
+        public const int INV_STAT_WINDOW_Y = 390;
     }
 }

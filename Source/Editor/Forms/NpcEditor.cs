@@ -11,6 +11,7 @@ using System.Data.SQLite;
 using SabertoothServer;
 using static System.Convert;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace Editor.Forms
 {
@@ -30,7 +31,7 @@ namespace Editor.Forms
 
         private void LoadNpcList()
         {
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -243,6 +244,12 @@ namespace Editor.Forms
         {
             lblChatNum.Text = "Chat Number: " + scrlChatNum.Value;
             e_Npc.ChatNum = scrlChatNum.Value;
+        }
+
+        private void scrlMoveSpeed_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblMoveSpeed.Text = "Move Speed: " + scrlMoveSpeed.Value;
+            e_Npc.Speed = scrlMoveSpeed.Value;
         }
     }
 }

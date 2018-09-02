@@ -5,6 +5,7 @@ using System;
 using static System.Convert;
 using static System.Environment;
 using static SabertoothClient.Client;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -660,7 +661,7 @@ namespace SabertoothClient
 
         static void HandleProjectiles(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
+            for (int i = 0; i < MAX_PROJECTILES; i++)
             {
                 if (projectiles[i] != null)
                 {
@@ -688,7 +689,7 @@ namespace SabertoothClient
 
         static void HandleItems(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_ITEMS; i++)
+            for (int i = 0; i < MAX_ITEMS; i++)
             {
                 if (items[i] != null)
                 {
@@ -742,7 +743,7 @@ namespace SabertoothClient
 
         static void HandleNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_NPCS; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
                 if (npcs[i] != null)
                 {
@@ -765,7 +766,7 @@ namespace SabertoothClient
 
         static void HandlePoolNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_MAP_POOL_NPCS; i++)
+            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
             {
                 if (map.r_MapNpc[i] != null)
                 {
@@ -788,7 +789,7 @@ namespace SabertoothClient
 
         static void HandleMapItems(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
+            for (int i = 0; i < MAX_MAP_ITEMS; i++)
             {
                 map.m_MapItem[i].Name = incMSG.ReadString();
                 map.m_MapItem[i].X = incMSG.ReadVariableInt32();
@@ -847,7 +848,7 @@ namespace SabertoothClient
 
         static void HandleMapNpcs(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_MAP_NPCS; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 if (map.m_MapNpc[i] != null)
                 {
@@ -1093,7 +1094,7 @@ namespace SabertoothClient
             players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 players[myIndex].OffsetX = 16;
                 players[myIndex].OffsetY = 11;
@@ -1202,7 +1203,7 @@ namespace SabertoothClient
 
         static void HandlePlayers(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 players[i].Name = incMSG.ReadString();
                 players[i].X = incMSG.ReadVariableInt32();
@@ -1241,7 +1242,7 @@ namespace SabertoothClient
                 players[i].LongestLifeHour = incMSG.ReadVariableInt32();
                 players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
                 players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
-                if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+                if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
                 {
                     players[i].OffsetX = 16;
                     players[i].OffsetY = 11;

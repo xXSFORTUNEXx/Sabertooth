@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {

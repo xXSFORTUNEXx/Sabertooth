@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using static System.Convert;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {

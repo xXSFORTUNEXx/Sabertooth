@@ -9,6 +9,7 @@ using static System.Environment;
 using System.ComponentModel;
 using static System.Convert;
 using static SabertoothServer.Server;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -126,7 +127,7 @@ namespace SabertoothServer
                 }
             }
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -206,7 +207,7 @@ namespace SabertoothServer
 
         public void SaveMapInDatabase(int mapNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -295,7 +296,7 @@ namespace SabertoothServer
                 m_MapItem[i] = new MapItem();
             }
 
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -412,7 +413,7 @@ namespace SabertoothServer
 
         public void LoadMapNameFromDatabase(int mapNum)
         {
-            if (DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -497,29 +498,19 @@ namespace SabertoothServer
 
             int projNum = players[playerIndex].mainWeapon.ProjectileNumber - 1;
             int damage = players[playerIndex].mainWeapon.Damage + projectiles[projNum].Damage;
-            m_MapProj[slot] = new MapProj();
-            m_MapProj[slot].Name = projectiles[projNum].Name;
-            m_MapProj[slot].Sprite = projectiles[projNum].Sprite;
-            m_MapProj[slot].Type = projectiles[projNum].Type;
-            m_MapProj[slot].Speed = projectiles[projNum].Speed; 
-            m_MapProj[slot].Damage = damage;
-            m_MapProj[slot].Range = projectiles[projNum].Range;
-            int offsetX;
-            int offsetY;
-            if (Globals.SCREEN_WIDTH == 1024 && Globals.SCREEN_HEIGHT == 768)
+            m_MapProj[slot] = new MapProj
             {
-                offsetX = 16;
-                offsetY = 11;
-            }
-            else
-            {
-                offsetX = 12;
-                offsetY = 9;
-            }
-            m_MapProj[slot].X = (players[playerIndex].X + offsetX);
-            m_MapProj[slot].Y = (players[playerIndex].Y + offsetY);
-            m_MapProj[slot].Owner = playerIndex;
-            m_MapProj[slot].Direction = players[playerIndex].AimDirection;
+                Name = projectiles[projNum].Name,
+                Sprite = projectiles[projNum].Sprite,
+                Type = projectiles[projNum].Type,
+                Speed = projectiles[projNum].Speed,
+                Damage = damage,
+                Range = projectiles[projNum].Range,
+                X = (players[playerIndex].X + OFFSET_X),
+                Y = (players[playerIndex].Y + OFFSET_Y),
+                Owner = playerIndex,
+                Direction = players[playerIndex].AimDirection
+            };
 
             for (int i = 0; i < 5; i++)
             {
@@ -535,7 +526,7 @@ namespace SabertoothServer
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
             outMSG.WriteVariableInt32(slot);
-            outMSG.WriteVariableInt32(m_MapProj[slot].projNum);
+            outMSG.WriteVariableInt32(m_MapProj[slot].ProjNum);
             outMSG.WriteVariableInt32(m_MapProj[slot].X);
             outMSG.WriteVariableInt32(m_MapProj[slot].Y);
             outMSG.WriteVariableInt32(m_MapProj[slot].Direction);            
@@ -566,6 +557,7 @@ namespace SabertoothServer
         public int Money { get; set; }
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
+        public int Speed { get; set; }
         public bool IsSpawned;
         public bool DidMove;
         public int Target;
@@ -892,8 +884,8 @@ namespace SabertoothServer
                     {
                         if (players[p].Connection != null && players[p].Name != null)
                         {
-                            int s_PlayerX = players[p].X + 12;
-                            int s_PlayerY = players[p].Y + 9;
+                            int s_PlayerX = players[p].X + OFFSET_X;
+                            int s_PlayerY = players[p].Y + OFFSET_Y;
                             double s_DisX = X - s_PlayerX;
                             double s_DisY = Y - s_PlayerY;
                             double s_Final = s_DisX * s_DisX + s_DisY * s_DisY;
@@ -908,12 +900,12 @@ namespace SabertoothServer
                         }
                     }
 
-                    if ((X + Range) < (players[Target].X + 12) || (X - Range) > (players[Target].X + 12)) { goto case (int)BehaviorType.Friendly; }
-                    if ((Y + Range) < (players[Target].Y + 9) || (Y - Range) > (players[Target].Y + 9)) { goto case (int)BehaviorType.Friendly; }
+                    if ((X + Range) < (players[Target].X + OFFSET_X) || (X - Range) > (players[Target].X + OFFSET_X)) { goto case (int)BehaviorType.Friendly; }
+                    if ((Y + Range) < (players[Target].Y + OFFSET_Y) || (Y - Range) > (players[Target].Y + OFFSET_Y)) { goto case (int)BehaviorType.Friendly; }
 
                     if (X != players[Target].X)
                     {
-                        if (X > players[Target].X + 12 && X > 0)
+                        if (X > players[Target].X + OFFSET_X && X > 0)
                         {
                             if (maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
                             {
@@ -962,7 +954,7 @@ namespace SabertoothServer
                             X -= 1;
                             DidMove = true;
                         }
-                        else if (X < players[Target].X + 12 && X < 50)
+                        else if (X < players[Target].X + OFFSET_X && X < 50)
                         {
                             if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                             {
@@ -1015,7 +1007,7 @@ namespace SabertoothServer
 
                     if (Y != players[Target].Y)
                     {
-                        if (Y > players[Target].Y + 9 && Y > 0)
+                        if (Y > players[Target].Y + OFFSET_Y && Y > 0)
                         {
                             if (maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
                             {
@@ -1064,7 +1056,7 @@ namespace SabertoothServer
                             Y -= 1;
                             DidMove = true;
                         }
-                        else if (Y < players[Target].Y + 9 && Y < 50)
+                        else if (Y < players[Target].Y + OFFSET_Y && Y < 50)
                         {
                             if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                             {
@@ -1115,7 +1107,7 @@ namespace SabertoothServer
                         }
                     }
 
-                    if (X == players[Target].X + 12 && Y == players[Target].Y + 9)
+                    if (X == players[Target].X + OFFSET_X && Y == players[Target].Y + OFFSET_Y)
                     {
                         AttackPlayer(Target);
                     }
@@ -1171,7 +1163,7 @@ namespace SabertoothServer
 
     public class MapProj : Projectile
     {
-        public int projNum { get; set; }
+        public int ProjNum { get; set; }
 
         public MapProj() { }
 
@@ -1180,7 +1172,7 @@ namespace SabertoothServer
             Name = name;
             X = x;
             Y = y;
-            projNum = projnum;
+            ProjNum = projnum;
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using System;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -25,6 +26,7 @@ namespace SabertoothClient
         public int Money { get; set; }
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
+        public int Speed { get; set; }
         public bool IsSpawned { get; set; }
         const int spriteTextures = 8;
         Texture[] c_Sprite = new Texture[spriteTextures];

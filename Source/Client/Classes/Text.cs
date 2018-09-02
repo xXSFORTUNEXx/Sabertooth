@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Runtime.InteropServices;
+using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {

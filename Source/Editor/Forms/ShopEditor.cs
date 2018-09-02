@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Windows.Forms;
 using static System.Convert;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace Editor.Forms
 {
@@ -23,7 +24,7 @@ namespace Editor.Forms
 
         private void LoadItemList()
         {
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -68,7 +69,7 @@ namespace Editor.Forms
         {
             cmbItemsToAdd.Items.Add("None");
 
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))

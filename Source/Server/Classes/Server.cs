@@ -10,6 +10,7 @@ using System.IO;
 using System.Data.SQLite;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace SabertoothServer
 {
@@ -37,15 +38,15 @@ namespace SabertoothServer
 
             NetPeerConfiguration netConfig = new NetPeerConfiguration("sabertooth")
             {
-                Port = Globals.SERVER_PORT,
+                Port = SERVER_PORT,
                 UseMessageRecycling = true,
-                MaximumConnections = Globals.MAX_PLAYERS,
+                MaximumConnections = MAX_PLAYERS,
                 EnableUPnP = false,
-                ConnectionTimeout = Globals.CONNECTION_TIMEOUT,
-                SimulatedRandomLatency = Globals.SIMULATED_RANDOM_LATENCY,
-                SimulatedMinimumLatency = Globals.SIMULATED_MINIMUM_LATENCY,
-                SimulatedLoss = Globals.SIMULATED_PACKET_LOSS,
-                SimulatedDuplicatesChance = Globals.SIMULATED_DUPLICATES_CHANCE
+                ConnectionTimeout = CONNECTION_TIMEOUT,
+                SimulatedRandomLatency = SIMULATED_RANDOM_LATENCY,
+                SimulatedMinimumLatency = SIMULATED_MINIMUM_LATENCY,
+                SimulatedLoss = SIMULATED_PACKET_LOSS,
+                SimulatedDuplicatesChance = SIMULATED_DUPLICATES_CHANCE
             };
 
             Logging.WriteMessageLog("Enabling message types...");
@@ -74,14 +75,14 @@ namespace SabertoothServer
 
     public static class Server
     {
-        public static Player[] players = new Player[Globals.MAX_PLAYERS];
-        public static Npc[] npcs = new Npc[Globals.MAX_NPCS];
-        public static Item[] items = new Item[Globals.MAX_ITEMS];
-        public static Projectile[] projectiles = new Projectile[Globals.MAX_PROJECTILES];
-        public static Map[] maps = new Map[Globals.MAX_MAPS];
-        public static Shop[] shops = new Shop[Globals.MAX_SHOPS];
-        public static Chat[] chats = new Chat[Globals.MAX_CHATS];
-        public static Chest[] chests = new Chest[Globals.MAX_CHESTS];
+        public static Player[] players = new Player[MAX_PLAYERS];
+        public static Npc[] npcs = new Npc[MAX_NPCS];
+        public static Item[] items = new Item[MAX_ITEMS];
+        public static Projectile[] projectiles = new Projectile[MAX_PROJECTILES];
+        public static Map[] maps = new Map[MAX_MAPS];
+        public static Shop[] shops = new Shop[MAX_SHOPS];
+        public static Chat[] chats = new Chat[MAX_CHATS];
+        public static Chest[] chests = new Chest[MAX_CHESTS];
         public static WorldTime worldTime = new WorldTime();
         public static Random RND = new Random();
         public static bool isRunning;
@@ -146,7 +147,7 @@ namespace SabertoothServer
         public static void CheckSQL()
         {
             //MSSQL Database (remote)
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 try
                 {
@@ -198,7 +199,7 @@ namespace SabertoothServer
         public static void CreateDatabase()
         {
             //MSSQL Database (remote)
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -370,7 +371,7 @@ namespace SabertoothServer
         {
             #region Players
             Logging.WriteMessageLog("Creating player array...");
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 players[i] = new Player();
             }
@@ -379,7 +380,7 @@ namespace SabertoothServer
 
             #region Maps
             Logging.WriteMessageLog("Loading maps...");
-            for (int i = 0; i < Globals.MAX_MAPS; i++)
+            for (int i = 0; i < MAX_MAPS; i++)
             {
                     maps[i] = new Map();
                     maps[i].LoadMapFromDatabase(i + 1);
@@ -389,7 +390,7 @@ namespace SabertoothServer
 
             #region Items
             Logging.WriteMessageLog("Loading npcs...");
-            for (int i = 0; i < Globals.MAX_ITEMS; i++)
+            for (int i = 0; i < MAX_ITEMS; i++)
             {
                 items[i] = new Item();
                 items[i].LoadItemFromDatabase(i + 1);
@@ -399,7 +400,7 @@ namespace SabertoothServer
 
             #region Projectiles
             Logging.WriteMessageLog("Loading projectiles...");
-            for (int i = 0; i < Globals.MAX_PROJECTILES; i++)
+            for (int i = 0; i < MAX_PROJECTILES; i++)
             {
                 projectiles[i] = new Projectile();
                 projectiles[i].LoadProjectileFromDatabase(i + 1);
@@ -409,12 +410,12 @@ namespace SabertoothServer
 
             #region Npcs
             Logging.WriteMessageLog("Loading npcs...");
-            for (int i = 0; i < Globals.MAX_NPCS; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
                 npcs[i] = new Npc();
                 npcs[i].LoadNpcFromDatabase((i + 1));
             }
-            for (int i = 0; i < Globals.MAX_MAPS; i++)
+            for (int i = 0; i < MAX_MAPS; i++)
             {
                 for (int n = 0; n < 10; n++)
                 {
@@ -450,7 +451,7 @@ namespace SabertoothServer
 
             #region Shops
             Logging.WriteMessageLog("Loading shops...");
-            for (int i = 0; i < Globals.MAX_SHOPS; i++)
+            for (int i = 0; i < MAX_SHOPS; i++)
             {
                 shops[i] = new Shop();
                 shops[i].LoadShopFromDatabase(i + 1);
@@ -461,7 +462,7 @@ namespace SabertoothServer
 
             #region Chats
             Logging.WriteMessageLog("Loading chats...");
-            for (int i = 0; i < Globals.MAX_CHATS; i++)
+            for (int i = 0; i < MAX_CHATS; i++)
             {
                 chats[i] = new Chat();
                 chats[i].LoadChatFromDatabase(i + 1);
@@ -471,7 +472,7 @@ namespace SabertoothServer
 
             #region Chests
             Logging.WriteMessageLog("Loading chests...");
-            for (int i = 0; i < Globals.MAX_CHESTS; i++)
+            for (int i = 0; i < MAX_CHESTS; i++)
             {
                 chests[i] = new Chest();
                 chests[i].LoadChestFromDatabase(i + 1);
@@ -486,9 +487,9 @@ namespace SabertoothServer
         #region Server Check Voids
         static void UpTime()
         {
-            if (TickCount - suptimeTick > Globals.A_MILLISECOND)
+            if (TickCount - suptimeTick > A_MILLISECOND)
             {
-                if (sSecond < Globals.SECONDS_IN_MINUTE)
+                if (sSecond < SECONDS_IN_MINUTE)
                 {
                     sSecond += 1;
                 }
@@ -498,12 +499,12 @@ namespace SabertoothServer
                     sMinute += 1;
                 }
 
-                if (sMinute >= Globals.MINUTES_IN_HOUR)
+                if (sMinute >= MINUTES_IN_HOUR)
                 {
                     sMinute = 0;
                     sHour += 1;
                 }
-                if (sHour == Globals.HOURS_IN_DAY)
+                if (sHour == HOURS_IN_DAY)
                 {
                     sHour = 0;
                     sDay += 1;
@@ -517,7 +518,7 @@ namespace SabertoothServer
         {
             if (TickCount - regenTick < regenTime) { return false; }
 
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != null)
                 {
@@ -533,7 +534,7 @@ namespace SabertoothServer
 
         static void CheckVitalLoss()
         {
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != null)
                 {
@@ -562,7 +563,7 @@ namespace SabertoothServer
 
         static bool CheckIfMapHasPlayers(int mapNum)
         {
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Connection != null && players[i].Map == mapNum)
                 {
@@ -576,13 +577,13 @@ namespace SabertoothServer
         {
             if (TickCount - removeTime < 1000) { return false; }
 
-            for (int i = 0; i < Globals.MAX_MAPS; i++)
+            for (int i = 0; i < MAX_MAPS; i++)
             {
                 if (maps[i] != null && maps[i].Name != null)
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int n = 0; n < Globals.MAX_MAP_ITEMS; n++)
+                        for (int n = 0; n < MAX_MAP_ITEMS; n++)
                         {
                             if (maps[i].m_MapItem[n].ExpireTick > 0 && maps[i].m_MapItem[n].IsSpawned)
                             {
@@ -590,7 +591,7 @@ namespace SabertoothServer
                                 {
                                     maps[i].m_MapItem[n] = new MapItem("None", 0, 0, 0);
 
-                                    for (int p = 0; p < Globals.MAX_PLAYERS; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null && i == players[p].Map)
                                         {
@@ -609,15 +610,15 @@ namespace SabertoothServer
 
         static void CheckItemSpawn()
         {
-            for (int i = 0; i < Globals.MAX_MAPS; i++)
+            for (int i = 0; i < MAX_MAPS; i++)
             {
                 if (maps[i] != null && maps[i].Name != null)
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < Globals.MAX_MAP_X; x++)
+                        for (int x = 0; x < MAX_MAP_X; x++)
                         {
-                            for (int y = 0; y < Globals.MAX_MAP_Y; y++)
+                            for (int y = 0; y < MAX_MAP_Y; y++)
                             {
                                 if (maps[i].Ground[x, y].Type == (int)TileType.MapItem)
                                 {
@@ -665,7 +666,7 @@ namespace SabertoothServer
                                                 maps[i].m_MapItem[slot].IsSpawned = true;
                                                 maps[i].Ground[x, y].NeedsSpawned = true;
 
-                                                for (int p = 0; p < Globals.MAX_PLAYERS; p++)
+                                                for (int p = 0; p < MAX_PLAYERS; p++)
                                                 {
                                                     if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                     {
@@ -685,20 +686,20 @@ namespace SabertoothServer
 
         static void CheckNpcSpawn()
         {
-            for (int i = 0; i < Globals.MAX_MAPS; i++)
+            for (int i = 0; i < MAX_MAPS; i++)
             {
                 if (maps[i] != null && maps[i].Name != null)
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < Globals.MAX_MAP_X; x++)
+                        for (int x = 0; x < MAX_MAP_X; x++)
                         {
-                            for (int y = 0; y < Globals.MAX_MAP_Y; y++)
+                            for (int y = 0; y < MAX_MAP_Y; y++)
                             {
                                 switch (maps[i].Ground[x, y].Type)
                                 {
                                     case (int)TileType.NpcSpawn:
-                                        for (int c = 0; c < Globals.MAX_MAP_NPCS; c++)
+                                        for (int c = 0; c < MAX_MAP_NPCS; c++)
                                         {
                                             if (maps[i].Ground[x, y].SpawnNum == (c + 1))
                                             {
@@ -710,7 +711,7 @@ namespace SabertoothServer
                                                         maps[i].m_MapNpc[c].Y = y;
                                                         maps[i].m_MapNpc[c].IsSpawned = true;
 
-                                                        for (int p = 0; p < Globals.MAX_PLAYERS; p++)
+                                                        for (int p = 0; p < MAX_PLAYERS; p++)
                                                         {
                                                             if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                             {
@@ -726,7 +727,7 @@ namespace SabertoothServer
                                     case (int)TileType.SpawnPool:
                                         if (maps[i].Ground[x, y].SpawnNum > 0)
                                         {
-                                            for (int n = 0; n < Globals.MAX_MAP_POOL_NPCS; n++)
+                                            for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
                                             {
                                                 if (maps[i].Ground[x, y].SpawnAmount > maps[i].Ground[x, y].CurrentSpawn)
                                                 {
@@ -763,7 +764,7 @@ namespace SabertoothServer
                                                                 maps[i].r_MapNpc[n].Range = npcs[num].Range;
                                                                 maps[i].Ground[x, y].CurrentSpawn += 1;
 
-                                                                for (int p = 0; p < Globals.MAX_PLAYERS; p++)
+                                                                for (int p = 0; p < MAX_PLAYERS; p++)
                                                                 {
                                                                     if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
                                                                     {
@@ -789,11 +790,11 @@ namespace SabertoothServer
         {
             if (TickCount - aiTick > aiTime)
             {
-                for (int i = 0; i < Globals.MAX_MAPS; i++)
+                for (int i = 0; i < MAX_MAPS; i++)
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int n = 0; n < Globals.MAX_MAP_NPCS; n++)
+                        for (int n = 0; n < MAX_MAP_NPCS; n++)
                         {
                             if (maps[i].m_MapNpc[n].IsSpawned)
                             {
@@ -806,7 +807,7 @@ namespace SabertoothServer
                                 {
                                     maps[i].m_MapNpc[n].DidMove = false;
 
-                                    for (int p = 0; p < Globals.MAX_PLAYERS; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
                                         {
@@ -816,7 +817,7 @@ namespace SabertoothServer
                                 }
                             }
                         }
-                        for (int c = 0; c < Globals.MAX_MAP_POOL_NPCS; c++)
+                        for (int c = 0; c < MAX_MAP_POOL_NPCS; c++)
                         {
                             if (maps[i].r_MapNpc[c].IsSpawned)
                             {
@@ -997,7 +998,7 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("Port: " + SabertoothServer.netServer.Port, "Commands");
                         Logging.WriteMessageLog(SabertoothServer.netServer.Statistics.ToString(), "Commands");
                         if (latency > 0.000) { Logging.WriteMessageLog("Configured Latency: " + SabertoothServer.netServer.Configuration.SimulatedMinimumLatency.ToString().Trim('.', '0') + "ms", "Commands"); }
-                        for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+                        for (int i = 0; i < MAX_PLAYERS; i++)
                         {
                             if (players[i].Connection != null)
                             {
@@ -1040,7 +1041,7 @@ namespace SabertoothServer
         }
         static int CalculateFrameRate()
         {
-            if (TickCount - lastTick >= Globals.A_MILLISECOND)
+            if (TickCount - lastTick >= A_MILLISECOND)
             {
                 lastFrameRate = frameRate;
                 frameRate = 0;
@@ -1055,7 +1056,7 @@ namespace SabertoothServer
         static void SaveAll()
         {
             Logging.WriteMessageLog("Saving players...");
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != null)
                 {
@@ -1069,7 +1070,7 @@ namespace SabertoothServer
         {
             if (TickCount - saveTick < saveTime) { return false; }
             Logging.WriteMessageLog("Saving players...");
-            for (int i = 0; i < Globals.MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != null)
                 {
@@ -1092,14 +1093,14 @@ namespace SabertoothServer
 
         public static int FindOpenMapItemSlot(Map s_Map)
         {
-            for (int i = 0; i < Globals.MAX_MAP_ITEMS; i++)
+            for (int i = 0; i < MAX_MAP_ITEMS; i++)
             {
                 if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned || s_Map.m_MapItem[i].Name == null && !s_Map.m_MapItem[i].IsSpawned)
                 {
                     return i;
                 }
             }
-            return Globals.MAX_MAP_ITEMS;
+            return MAX_MAP_ITEMS;
         }
 
         public static void DisconnectClients()
@@ -1121,16 +1122,16 @@ namespace SabertoothServer
             writer.WriteStartDocument();
             //writer.WriteComment("This file is generated by the server.");
             writer.WriteStartElement("ConfigData");
-            writer.WriteElementString("SQLServer", Globals.SQL_SERVER_NAME);
-            writer.WriteElementString("Database", Globals.SQL_SERVER_DATABASE);
+            writer.WriteElementString("SQLServer", SQL_SERVER_NAME);
+            writer.WriteElementString("Database", SQL_SERVER_DATABASE);
             writer.WriteElementString("DBType", "0");
-            writer.WriteElementString("Version", Globals.VERSION);
-            writer.WriteElementString("RegenTime", Globals.HEALTH_REGEN_TIME);
-            writer.WriteElementString("HungerTime", Globals.HUNGER_DEGEN_TIME);
-            writer.WriteElementString("HydrationTime", Globals.HYDRATION_DEGEN_TIME);
-            writer.WriteElementString("SaveTime", Globals.AUTOSAVE_TIME);
-            writer.WriteElementString("SpawnTime", Globals.SPAWN_TIME);
-            writer.WriteElementString("AiTime", Globals.AI_TIME);
+            writer.WriteElementString("Version", VERSION);
+            writer.WriteElementString("RegenTime", HEALTH_REGEN_TIME);
+            writer.WriteElementString("HungerTime", HUNGER_DEGEN_TIME);
+            writer.WriteElementString("HydrationTime", HYDRATION_DEGEN_TIME);
+            writer.WriteElementString("SaveTime", AUTOSAVE_TIME);
+            writer.WriteElementString("SpawnTime", SPAWN_TIME);
+            writer.WriteElementString("AiTime", AI_TIME);
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();

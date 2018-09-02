@@ -9,6 +9,7 @@ using static System.Convert;
 using static System.Environment;
 using static System.Windows.Forms.Application;
 using System.Data.SqlClient;
+using static SabertoothServer.Globals;
 
 namespace Editor.Forms
 {
@@ -63,7 +64,7 @@ namespace Editor.Forms
         public Texture[] SpritePic = new Texture[Max_Sprites];
         public Sprite e_Sprite = new Sprite();
 
-        public RenderTexture brightness = new RenderTexture(Globals.EDITOR_WIDTH, Globals.EDITOR_HEIGHT);
+        public RenderTexture brightness = new RenderTexture(EDITOR_WIDTH, EDITOR_HEIGHT);
         public Sprite brightnessSprite = new Sprite();
         public VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         public RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
@@ -98,7 +99,7 @@ namespace Editor.Forms
                 ItemPic[p] = new Texture("Resources/Items/" + (p + 1) + ".png");
             }
 
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -207,7 +208,7 @@ namespace Editor.Forms
         void MapEditorLoop()
         {
             e_Window = new RenderWindow(picMap.Handle);
-            e_Window.SetFramerateLimit(Globals.MAX_FPS);
+            e_Window.SetFramerateLimit(MAX_FPS);
             cmbTileset.SelectedIndex = 1;
             e_Layer = (int)TileLayers.Ground;
             e_Type = (int)TileType.None;
@@ -234,7 +235,7 @@ namespace Editor.Forms
 
         void LoadMapList()
         {
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
@@ -281,10 +282,10 @@ namespace Editor.Forms
 
         void UpdateView()
         {
-            e_View.Reset(new FloatRect(0, 0, Globals.EDITOR_WIDTH, Globals.EDITOR_HEIGHT));
-            e_View.Move(new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y));
+            e_View.Reset(new FloatRect(0, 0, EDITOR_WIDTH, EDITOR_HEIGHT));
+            e_View.Move(new Vector2f(e_ViewX * PIC_X, e_ViewY * PIC_Y));
             e_View.Zoom(e_Zoom);
-            brightnessSprite.Position = new Vector2f(e_ViewX * Globals.PIC_X, e_ViewY * Globals.PIC_Y);
+            brightnessSprite.Position = new Vector2f(e_ViewX * PIC_X, e_ViewY * PIC_Y);
             e_Window.SetView(e_View);
         }
 
@@ -1391,7 +1392,7 @@ namespace Editor.Forms
         {
             e_Map.CreateMapInDatabase();
             int result;
-            if (Server.DBType == Globals.SQL_DATABASE_REMOTE.ToString())
+            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
                 using (var sql = new SqlConnection(connection))
