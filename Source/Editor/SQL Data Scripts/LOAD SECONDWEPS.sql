@@ -1,11 +1,8 @@
-/*
-Created 9/7/2018 2:02PM
-Inserts chat data into database
-Created by Steven M Fortune
-*/
-
 SELECT ID,
+	OWNER,
 	NAME,
+	CLIP,
+	MAXCLIP,
 	SPRITE,
 	DAMAGE,
 	ARMOR,
@@ -19,12 +16,10 @@ SELECT ID,
 	AGILITY,
 	ENDURANCE,
 	STAMINA,
-	CLIP,
-	MAXCLIP,
 	AMMOTYPE,
 	VALUE,
 	PROJ,
 	PRICE,
 	RARITY
-FROM ITEMS
-WHERE ID = @id
+FROM SECONDARYWEAPONS
+WHERE OWNER = @owner

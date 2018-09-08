@@ -1,10 +1,6 @@
-/*
-Created 9/7/2018 2:02PM
-Inserts chat data into database
-Created by Steven M Fortune
-*/
-
-SELECT ID,
+﻿SELECT ID,
+	OWNER,
+	SLOT,
 	NAME,
 	SPRITE,
 	DAMAGE,
@@ -26,5 +22,6 @@ SELECT ID,
 	PROJ,
 	PRICE,
 	RARITY
-FROM ITEMS
-WHERE ID = @id
+FROM EQUIPMENT
+WHERE OWNER = @owner
+	AND SLOT = @slot
