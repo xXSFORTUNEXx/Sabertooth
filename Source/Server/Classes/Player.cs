@@ -124,7 +124,7 @@ namespace SabertoothServer
             LongestLifeHour = 0;
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
-            LastLoggedIn = "00:00:00.000";
+            LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
@@ -189,7 +189,7 @@ namespace SabertoothServer
             LongestLifeHour = 0;
             LongestLifeMinute = 0;
             LongestLifeSecond = 0;
-            LastLoggedIn = "00:00:00.000";
+            LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
@@ -250,6 +250,11 @@ namespace SabertoothServer
         #endregion
 
         #region Methods
+        public void UpdateLastLogged()
+        {
+            LastLoggedIn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.fff");
+        }
+
         public void RegenHealth()
         {
             string msg;

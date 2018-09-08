@@ -603,6 +603,7 @@ namespace SabertoothServer
                         SendMapItems(incMSG, currentMap);
                         SendChests(incMSG);
                         SendDateAndTime(incMSG, i);
+                        players[i].UpdateLastLogged();
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
                         string welcomeMsg = username + " has joined Sabertooth!";
                         SendServerMessageToAll(welcomeMsg);

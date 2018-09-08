@@ -148,6 +148,7 @@ namespace Editor.Forms
             }
             txtKey.Text = (e_Player.AccountKey);
             txtStatus.Text = (e_Player.Active);
+            txtLastLogged.Text = e_Player.LastLoggedIn;
             picSprite.Image = Image.FromFile("Resources/Characters/" + (e_Player.Sprite + 1) + ".png");
             //Stats Labels
             lblLevel.Text = "Level: " + (e_Player.Level);
@@ -173,7 +174,8 @@ namespace Editor.Forms
             if (pnlAmmo.Visible == false) { pnlAmmo.Visible = true; }
             if (lstIndex.Enabled == false) { lstIndex.Enabled = true; }
             if (pnlActivation.Visible == false) { pnlActivation.Visible = true; }
-            txtName.Enabled = false;
+            if (grpLastLogged.Visible == false) { grpLastLogged.Visible = true; }
+            txtName.ReadOnly = true;
         }
 
         private void scrlSprite_Scroll(object sender, ScrollEventArgs e)
@@ -197,12 +199,12 @@ namespace Editor.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtName.Enabled == true)
+            if (txtName.ReadOnly == false)
             {
                 e_Player.Name = txtName.Text;
                 e_Player.Pass = txtPass.Text;
                 e_Player.CreatePlayerInDatabase();
-                txtName.Enabled = false;
+                txtName.ReadOnly = true;
                 chkPassMask.Checked = true;
                 lstIndex.Enabled = true;
             }
@@ -232,9 +234,11 @@ namespace Editor.Forms
             e_Player = new Player("Default", "Password", "Email", PLAYER_START_X, PLAYER_START_Y, 0, 0, 0, 1, 100, 100, 100, 0, 100, 10, 100, 100, 1, 1, 1, 1, 1000);
             //e_Player.CreatePlayerInDatabase();
             //e_Player.LoadPlayerIDFromDatabase(e_Player.Name);
-            txtName.Enabled = true;
+            txtName.ReadOnly = false;
             chkPassMask.Checked = false;
-
+            txtKey.Text = (e_Player.AccountKey);
+            txtStatus.Text = (e_Player.Active);
+            txtLastLogged.Text = e_Player.LastLoggedIn;
             //General Textbox/Scroll Bars
             txtName.Text = e_Player.Name;
             txtPass.Text = e_Player.Pass;
@@ -321,6 +325,8 @@ namespace Editor.Forms
             pnlStats.Visible = true;
             pnlAmmo.Visible = true;
             pnlGeneral.Visible = true;
+            grpLastLogged.Visible = true;
+            pnlActivation.Visible = true;
             lstIndex.Enabled = false;
             lstIndex.Items.Add(e_Player.Name);
         }

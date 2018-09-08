@@ -141,6 +141,7 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
                         cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
                         cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
+                        cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -196,6 +197,7 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
                         cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
                         cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
+                        cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -255,6 +257,7 @@ namespace SabertoothServer
                                 Range = ToInt32(reader[17]);
                                 ShopNum = ToInt32(reader[18]);
                                 ChatNum = ToInt32(reader[19]);
+                                Speed = ToInt32(reader[20]);
                             }
                         }
                     }

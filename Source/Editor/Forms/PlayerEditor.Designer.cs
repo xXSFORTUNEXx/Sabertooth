@@ -54,6 +54,7 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
             this.pnlStats = new System.Windows.Forms.GroupBox();
+            this.txtExp = new System.Windows.Forms.TextBox();
             this.scrlStamina = new System.Windows.Forms.HScrollBar();
             this.lblStamina = new System.Windows.Forms.Label();
             this.scrlEndurance = new System.Windows.Forms.HScrollBar();
@@ -93,13 +94,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtKey = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtExp = new System.Windows.Forms.TextBox();
+            this.grpLastLogged = new System.Windows.Forms.GroupBox();
+            this.txtLastLogged = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.pnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.pnlStats.SuspendLayout();
             this.pnlAmmo.SuspendLayout();
             this.pnlActivation.SuspendLayout();
+            this.grpLastLogged.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -352,9 +355,9 @@
             // 
             // txtName
             // 
-            this.txtName.Enabled = false;
             this.txtName.Location = new System.Drawing.Point(18, 41);
             this.txtName.Name = "txtName";
+            this.txtName.ReadOnly = true;
             this.txtName.Size = new System.Drawing.Size(156, 20);
             this.txtName.TabIndex = 8;
             // 
@@ -402,6 +405,15 @@
             this.pnlStats.TabStop = false;
             this.pnlStats.Text = "Stats";
             this.pnlStats.Visible = false;
+            // 
+            // txtExp
+            // 
+            this.txtExp.Location = new System.Drawing.Point(22, 231);
+            this.txtExp.Name = "txtExp";
+            this.txtExp.Size = new System.Drawing.Size(156, 20);
+            this.txtExp.TabIndex = 26;
+            this.txtExp.Text = "0";
+            this.txtExp.TextChanged += new System.EventHandler(this.txtExp_TextChanged);
             // 
             // scrlStamina
             // 
@@ -743,6 +755,7 @@
             // 
             this.txtStatus.Location = new System.Drawing.Point(20, 91);
             this.txtStatus.Name = "txtStatus";
+            this.txtStatus.ReadOnly = true;
             this.txtStatus.Size = new System.Drawing.Size(155, 20);
             this.txtStatus.TabIndex = 3;
             // 
@@ -759,6 +772,7 @@
             // 
             this.txtKey.Location = new System.Drawing.Point(20, 38);
             this.txtKey.Name = "txtKey";
+            this.txtKey.ReadOnly = true;
             this.txtKey.Size = new System.Drawing.Size(155, 20);
             this.txtKey.TabIndex = 1;
             // 
@@ -771,20 +785,31 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Activation Key:";
             // 
-            // txtExp
+            // grpLastLogged
             // 
-            this.txtExp.Location = new System.Drawing.Point(22, 231);
-            this.txtExp.Name = "txtExp";
-            this.txtExp.Size = new System.Drawing.Size(156, 20);
-            this.txtExp.TabIndex = 26;
-            this.txtExp.Text = "0";
-            this.txtExp.TextChanged += new System.EventHandler(this.txtExp_TextChanged);
+            this.grpLastLogged.Controls.Add(this.txtLastLogged);
+            this.grpLastLogged.Location = new System.Drawing.Point(567, 403);
+            this.grpLastLogged.Name = "grpLastLogged";
+            this.grpLastLogged.Size = new System.Drawing.Size(200, 79);
+            this.grpLastLogged.TabIndex = 13;
+            this.grpLastLogged.TabStop = false;
+            this.grpLastLogged.Text = "Last Logged";
+            this.grpLastLogged.Visible = false;
+            // 
+            // txtLastLogged
+            // 
+            this.txtLastLogged.Location = new System.Drawing.Point(20, 30);
+            this.txtLastLogged.Name = "txtLastLogged";
+            this.txtLastLogged.ReadOnly = true;
+            this.txtLastLogged.Size = new System.Drawing.Size(155, 20);
+            this.txtLastLogged.TabIndex = 0;
             // 
             // PlayerEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 646);
+            this.Controls.Add(this.grpLastLogged);
             this.Controls.Add(this.pnlActivation);
             this.Controls.Add(this.pnlAmmo);
             this.Controls.Add(this.pnlStats);
@@ -802,6 +827,8 @@
             this.pnlAmmo.PerformLayout();
             this.pnlActivation.ResumeLayout(false);
             this.pnlActivation.PerformLayout();
+            this.grpLastLogged.ResumeLayout(false);
+            this.grpLastLogged.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -874,5 +901,7 @@
         private System.Windows.Forms.TextBox txtKey;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtExp;
+        private System.Windows.Forms.GroupBox grpLastLogged;
+        private System.Windows.Forms.TextBox txtLastLogged;
     }
 }

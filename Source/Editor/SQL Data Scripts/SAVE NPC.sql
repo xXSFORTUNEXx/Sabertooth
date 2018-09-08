@@ -23,5 +23,6 @@ SET NAME = @name,
 	MONEY = @money,
 	RANGE = @range,
 	SHOPNUM = @shopnum,
-	CHATNUM = @chatnum
+	CHATNUM = @chatnum,
+	SPEED = @speed
 WHERE ID = @id

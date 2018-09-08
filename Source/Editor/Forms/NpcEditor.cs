@@ -106,6 +106,7 @@ namespace Editor.Forms
             scrlRange.Value = e_Npc.Range;
             scrlShopNum.Value = e_Npc.ShopNum;
             scrlChatNum.Value = e_Npc.ChatNum;
+            scrlMoveSpeed.Value = e_Npc.Speed;
             lblX.Text = "X: " + (scrlX.Value);
             lblY.Text = "Y: " + (scrlY.Value);
             lblDirection.Text = "Direction: " + (scrlDirection.Value);
@@ -122,6 +123,7 @@ namespace Editor.Forms
             lblRange.Text = "Range: " + scrlRange.Value;
             lblShopNum.Text = "Shop: " + scrlShopNum.Value;
             lblChatNum.Text = "Chat Number: " + scrlChatNum.Value;
+            lblMoveSpeed.Text = "Move Speed: " + scrlMoveSpeed.Value;
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
         }

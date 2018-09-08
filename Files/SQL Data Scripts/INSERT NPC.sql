@@ -23,7 +23,8 @@ INSERT INTO NPCS (
 	MONEY,
 	RANGE,
 	SHOPNUM,
-	CHATNUM
+	CHATNUM,
+	SPEED
 	)
 VALUES (
 	@name,
@@ -44,5 +45,6 @@ VALUES (
 	@money,
 	@range,
 	@shopnum,
-	@chatnum
+	@chatnum,
+	@speed
 	)

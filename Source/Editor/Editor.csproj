@@ -300,7 +300,13 @@
     <Content Include="SQL Data Scripts\INSERT PLAYER.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\INSERT PROJ.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\INSERT SECONDWEPS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\INSERT SHOP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\INVCOUNT.sql">
@@ -336,7 +342,13 @@
     <Content Include="SQL Data Scripts\LOAD PLAYER.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\LOAD PROJ.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\LOAD SECONDWEPS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\LOAD SHOP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\SAVE BANK.sql">
@@ -369,7 +381,13 @@
     <Content Include="SQL Data Scripts\SAVE PLAYER.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\SAVE PROJ.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\SAVE SECONDWEPS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\SAVE SHOP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\BANK.sql">

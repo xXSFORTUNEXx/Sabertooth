@@ -225,6 +225,7 @@ namespace SabertoothServer
                             script += ReadAllText("SQL Scripts/CHAT.sql");
                             script += ReadAllText("SQL Scripts/MAPS.sql");
                             script += ReadAllText("SQL Scripts/CHESTS.sql");
+                            script += ReadAllText("SQL Scripts/STATS.sql");
                             cmd.CommandText = script;
                             cmd.ExecuteNonQuery();
                         }
