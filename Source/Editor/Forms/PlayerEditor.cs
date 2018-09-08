@@ -97,7 +97,7 @@ namespace Editor.Forms
             scrlPoints.Value = (e_Player.Points);
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
-            scrlExp.Value = (e_Player.Experience);
+            txtExp.Text = (e_Player.Experience.ToString());
             scrlMoney.Value = (e_Player.Money);
             scrlArmor.Value = (e_Player.Armor);
             scrlHunger.Value = (e_Player.Hunger);
@@ -154,7 +154,6 @@ namespace Editor.Forms
             lblPoints.Text = "Points: " + (e_Player.Points);
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
-            lblExp.Text = "Experience: " + (e_Player.Experience);
             lblMoney.Text = "Money: " + (e_Player.Money);
             lblArmor.Text = "Armor: " + (e_Player.Armor);
             lblHunger.Text = "Hunger: " + (e_Player.Hunger);
@@ -250,7 +249,7 @@ namespace Editor.Forms
             scrlPoints.Value = (e_Player.Points);
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
-            scrlExp.Value = (e_Player.Experience);
+            txtExp.Text = (e_Player.Experience.ToString());
             scrlMoney.Value = (e_Player.Money);
             scrlArmor.Value = (e_Player.Armor);
             scrlHunger.Value = (e_Player.Hunger);
@@ -305,7 +304,6 @@ namespace Editor.Forms
             lblPoints.Text = "Points: " + (e_Player.Points);
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
-            lblExp.Text = "Experience: " + (e_Player.Experience);
             lblMoney.Text = "Money: " + (e_Player.Money);
             lblArmor.Text = "Armor: " + (e_Player.Armor);
             lblHunger.Text = "Hunger: " + (e_Player.Hunger);
@@ -403,12 +401,6 @@ namespace Editor.Forms
             e_Player.MaxHealth = (scrlMaxHealth.Value);
         }
 
-        private void scrlExp_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblExp.Text = "Experience: " + (scrlExp.Value);
-            e_Player.Experience = (scrlExp.Value);
-        }
-
         private void scrlMoney_Scroll(object sender, ScrollEventArgs e)
         {
             lblMoney.Text = "Money: " + (scrlMoney.Value);
@@ -479,6 +471,11 @@ namespace Editor.Forms
         {
             lblGrenade.Text = "Grenade Ammo: " + (scrlGrenade.Value);
             e_Player.GrenadeAmmo = (scrlGrenade.Value);
+        }
+
+        private void txtExp_TextChanged(object sender, EventArgs e)
+        {
+            e_Player.Experience = ToInt32(txtExp.Text);
         }
     }
 }

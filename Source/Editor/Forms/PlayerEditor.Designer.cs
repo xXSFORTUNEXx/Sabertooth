@@ -70,7 +70,6 @@
             this.lblArmor = new System.Windows.Forms.Label();
             this.scrlMoney = new System.Windows.Forms.HScrollBar();
             this.lblMoney = new System.Windows.Forms.Label();
-            this.scrlExp = new System.Windows.Forms.HScrollBar();
             this.lblExp = new System.Windows.Forms.Label();
             this.scrlMaxHealth = new System.Windows.Forms.HScrollBar();
             this.lblMaxHealth = new System.Windows.Forms.Label();
@@ -94,6 +93,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtKey = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.txtExp = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.pnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
@@ -369,6 +369,7 @@
             // 
             // pnlStats
             // 
+            this.pnlStats.Controls.Add(this.txtExp);
             this.pnlStats.Controls.Add(this.scrlStamina);
             this.pnlStats.Controls.Add(this.lblStamina);
             this.pnlStats.Controls.Add(this.scrlEndurance);
@@ -385,7 +386,6 @@
             this.pnlStats.Controls.Add(this.lblArmor);
             this.pnlStats.Controls.Add(this.scrlMoney);
             this.pnlStats.Controls.Add(this.lblMoney);
-            this.pnlStats.Controls.Add(this.scrlExp);
             this.pnlStats.Controls.Add(this.lblExp);
             this.pnlStats.Controls.Add(this.scrlMaxHealth);
             this.pnlStats.Controls.Add(this.lblMaxHealth);
@@ -551,24 +551,14 @@
             this.lblMoney.TabIndex = 10;
             this.lblMoney.Text = "Money: 0";
             // 
-            // scrlExp
-            // 
-            this.scrlExp.LargeChange = 100;
-            this.scrlExp.Location = new System.Drawing.Point(22, 232);
-            this.scrlExp.Maximum = 500000;
-            this.scrlExp.Name = "scrlExp";
-            this.scrlExp.Size = new System.Drawing.Size(156, 17);
-            this.scrlExp.TabIndex = 9;
-            this.scrlExp.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlExp_Scroll);
-            // 
             // lblExp
             // 
             this.lblExp.AutoSize = true;
             this.lblExp.Location = new System.Drawing.Point(19, 214);
             this.lblExp.Name = "lblExp";
-            this.lblExp.Size = new System.Drawing.Size(72, 13);
+            this.lblExp.Size = new System.Drawing.Size(63, 13);
             this.lblExp.TabIndex = 8;
-            this.lblExp.Text = "Experience: 0";
+            this.lblExp.Text = "Experience:";
             // 
             // scrlMaxHealth
             // 
@@ -781,6 +771,15 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Activation Key:";
             // 
+            // txtExp
+            // 
+            this.txtExp.Location = new System.Drawing.Point(22, 231);
+            this.txtExp.Name = "txtExp";
+            this.txtExp.Size = new System.Drawing.Size(156, 20);
+            this.txtExp.TabIndex = 26;
+            this.txtExp.Text = "0";
+            this.txtExp.TextChanged += new System.EventHandler(this.txtExp_TextChanged);
+            // 
             // PlayerEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -851,7 +850,6 @@
         private System.Windows.Forms.Label lblArmor;
         private System.Windows.Forms.HScrollBar scrlMoney;
         private System.Windows.Forms.Label lblMoney;
-        private System.Windows.Forms.HScrollBar scrlExp;
         private System.Windows.Forms.Label lblExp;
         private System.Windows.Forms.HScrollBar scrlMaxHealth;
         private System.Windows.Forms.Label lblMaxHealth;
@@ -875,5 +873,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtKey;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtExp;
     }
 }

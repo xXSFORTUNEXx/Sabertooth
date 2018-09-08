@@ -107,3 +107,14 @@
                     command = command + "NAME = @name, MAINMESSAGE = @msg, OPTIONA = @optiona, OPTIONB = @optionb, OPTIONC = @optionc, OPTIOND = @optionc, NEXTCHATA = @nextchata, NEXTCHATB = @nextchatb, NEXTCHATC = @nextchatc, NEXTCHATD = @nextchatd, ";
                     command = command + "SHOPNUM = @shopnum, MISSIONNUM = @missionnum, ITEMA = @itema, ITEMB = @itemb, ITEMC = @itemc, VALA = @vala, VALB = @valb, VALC = @valc, MONEY = @money, TYPE = @type ";
                     command = command + "WHERE ID=@id";
+					
+					                    string command;
+                    command = "INSERT INTO CHESTS (NAME,MONEY,EXPERIENCE,REQUIREDLEVEL,TRAPLEVEL,REQKEY,DAMAGE,NPCSPAWN,SPAWNAMOUNT,CHESTITEM) VALUES ";
+                    command += "(@name,@money,@experience,@requiredlevel,@traplevel,@key,@damage,@npcspawn,@spawnamount,@chestitem)";
+					
+					                    string command;
+                    command = "UPDATE CHESTS SET NAME = @name, MONEY = @money, EXPERIENCE = @experience, REQUIREDLEVEL = @requiredlevel, TRAPLEVEL = @traplevel, ";
+                    command = command + "REQKEY = @key, DAMAGE = @damage, NPCSPAWN = @npcspawn, SPAWNAMOUNT = @spawnamount, CHESTITEM = @chestitem WHERE ID=@id";
+					
+					                    string command;
+                    command = "SELECT * FROM CHESTS WHERE ID=@id";

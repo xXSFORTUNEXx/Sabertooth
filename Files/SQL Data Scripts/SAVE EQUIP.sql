@@ -1,0 +1,24 @@
+UPDATE EQUIPMENT
+SET NAME = @name,
+	CLIP = @clip,
+	MAXCLIP = @maxclip,
+	SPRITE = @sprite,
+	DAMAGE = @damage,
+	ARMOR = @armor,
+	TYPE = @type,
+	ATTACKSPEED = @attackspeed,
+	RELOADSPEED = @reloadspeed,
+	HEALTHRESTORE = @healthrestore,
+	HUNGERRESTORE = @hungerrestore,
+	HYDRATERESTORE = @hydraterestore,
+	STRENGTH = @strength,
+	AGILITY = @agility,
+	ENDURANCE = @endurance,
+	STAMINA = @stamina,
+	AMMOTYPE = @ammotype,
+	VALUE = @value,
+	PROJ = @proj,
+	PRICE = @price,
+	RARITY = @rarity
+WHERE OWNER = @owner
+	AND SLOT = @id

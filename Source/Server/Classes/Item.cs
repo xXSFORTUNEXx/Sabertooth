@@ -3,6 +3,7 @@ using static System.Convert;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
+using static System.IO.File;
 
 namespace SabertoothServer
 {
@@ -91,13 +92,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/INSERT ITEM.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command = "INSERT INTO ITEMS";
-                    command += "(NAME,SPRITE,DAMAGE,ARMOR,TYPE,ATTACKSPEED,RELOADSPEED,HEALTHRESTORE,HUNGERRESTORE,HYDRATERESTORE,STRENGTH,AGILITY,ENDURANCE,STAMINA,CLIP,MAXCLIP,AMMOTYPE,VALUE,PROJ,PRICE,RARITY) VALUES ";
-                    command += "(@name,@sprite,@damage,@armor,@type,@attackspeed,@reloadspeed,@healthrestore,@hungerrestore,@hydraterestore,@strength,@agility,@endurance,@stamina,@clip,@maxclip,@ammotype,@value,@proj,@price,@rarity)";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
                         cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
@@ -169,15 +168,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/SAVE ITEM.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "UPDATE ITEMS SET ";
-                    command += "NAME = @name, SPRITE = @sprite, DAMAGE = @damage, ARMOR = @armor, TYPE = @type, ATTACKSPEED = @attackspeed, RELOADSPEED = @reloadspeed, HEALTHRESTORE = @healthrestore, HUNGERRESTORE = @hungerrestore, HYDRATERESTORE = @hydraterestore, ";
-                    command += "STRENGTH = @strength, AGILITY = @agility, ENDURANCE = @endurance, STAMINA = @stamina, CLIP = @clip, MAXCLIP = @maxclip, AMMOTYPE = @ammotype, VALUE = @value, PROJ = @proj, PRICE = @price, RARITY = @rarity ";
-                    command += "WHERE ID = @id;";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = itemNum;
                         cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -250,14 +245,13 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/LOAD ITEM.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "SELECT * FROM ITEMS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    using (SqlCommand cmd = new SqlCommand(script, sql))
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = itemNum;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = itemNum;
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())

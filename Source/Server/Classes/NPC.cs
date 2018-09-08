@@ -6,6 +6,7 @@ using static System.Environment;
 using System.Data.SqlClient;
 using static SabertoothServer.Server;
 using static SabertoothServer.Globals;
+using static System.IO.File;
 
 namespace SabertoothServer
 {
@@ -114,14 +115,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/INSERT NPC.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "INSERT INTO NPCS ";
-                    command += "(NAME,X,Y,DIRECTION,SPRITE,STEP,OWNER,BEHAVIOR,SPAWNTIME,HEALTH,MAXHEALTH,DAMAGE,DESX,DESY,EXP,MONEY,RANGE,SHOPNUM,CHATNUM) VALUES ";
-                    command += "(@name,@x,@y,@direction,@sprite,@step,@owner,@behavior,@spawntime,@health,@maxhealth,@damage,@desx,@desy,@exp,@money,@range,@shopnum,@chatnum)";
-                    using (var cmd = new SqlCommand(command, sql))
+                   using (var cmd = new SqlCommand(script, sql))
                     {
 
                         cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
@@ -172,14 +170,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/SAVE NPC.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "UPDATE NPCS SET ";
-                    command += "NAME=@name,X=@x,Y=@y,DIRECTION=@direction,SPRITE=@sprite,STEP=@step,OWNER=@owner,BEHAVIOR=@behavior,SPAWNTIME=@spawntime,HEALTH=@health,MAXHEALTH=@maxhealth,DAMAGE=@damage,";
-                    command += "DESX=@desx,DESY=@desy,EXP=@exp,MONEY=@money,RANGE=@range,SHOPNUM=@shopnum,CHATNUM=@chatnum WHERE ID=@id";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
                         cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
@@ -230,14 +225,13 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/LOAD NPC.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "SELECT * FROM NPCS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    using (SqlCommand cmd = new SqlCommand(script, sql))
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = npcNum;
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())

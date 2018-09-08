@@ -144,7 +144,7 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/INSERT CHAT.sql");
+                string script = ReadAllText("SQL Data Scripts/SAVE CHAT.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();

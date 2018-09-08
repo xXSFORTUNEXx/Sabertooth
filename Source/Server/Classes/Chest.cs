@@ -7,6 +7,7 @@ using static System.Convert;
 using static SabertoothServer.Server;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
+using static System.IO.File;
 
 namespace SabertoothServer
 {
@@ -92,13 +93,12 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/INSERT CHEST.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "INSERT INTO CHESTS (NAME,MONEY,EXPERIENCE,REQUIREDLEVEL,TRAPLEVEL,REQKEY,DAMAGE,NPCSPAWN,SPAWNAMOUNT,CHESTITEM) VALUES ";
-                    command += "(@name,@money,@experience,@requiredlevel,@traplevel,@key,@damage,@npcspawn,@spawnamount,@chestitem)";
-                    using (var cmd = new SqlCommand(command, sql))
+
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         byte[] chestData = ToByteArray(ChestItem);
 
@@ -150,13 +150,11 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/SAVE CHEST.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "UPDATE CHESTS SET NAME = @name, MONEY = @money, EXPERIENCE = @experience, REQUIREDLEVEL = @requiredlevel, TRAPLEVEL = @traplevel, ";
-                    command = command + "REQKEY = @key, DAMAGE = @damage, NPCSPAWN = @npcspawn, SPAWNAMOUNT = @spawnamount, CHESTITEM = @chestitem WHERE ID=@id";
-                    using (var cmd = new SqlCommand(command, sql))
+                    using (var cmd = new SqlCommand(script, sql))
                     {
                         byte[] chestData = ToByteArray(ChestItem);
 
@@ -209,14 +207,13 @@ namespace SabertoothServer
             if (DBType == SQL_DATABASE_REMOTE.ToString())
             {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                string script = ReadAllText("SQL Data Scripts/LOAD CHEST.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
-                    string command;
-                    command = "SELECT * FROM CHESTS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    using (SqlCommand cmd = new SqlCommand(script, sql))
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;
+                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = chestNum;
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
