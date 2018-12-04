@@ -40,7 +40,7 @@ namespace SabertoothServer
         public MapProj[] m_MapProj = new MapProj[200];
         public MapItem[] m_MapItem = new MapItem[20];
         public int Id { get; set; }
-
+        public bool isInstance { get; set; }
         private byte[] ToByteArray(object source)
         {
             var formatter = new BinaryFormatter();
@@ -582,6 +582,8 @@ namespace SabertoothServer
                 spawnTick = TickCount;
                 s_Player.Experience += Exp;
                 s_Player.Money += Money;
+                s_Player.Points += 100;
+                s_Player.Kills += 1;
                 s_Player.CheckPlayerLevelUp();
                 //s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)
@@ -1261,7 +1263,8 @@ namespace SabertoothServer
         SpawnPool,
         NpcAvoid,
         MapItem,
-        Chest
+        Chest,
+        Instance
     }
 
     public enum TileLayers

@@ -42,6 +42,8 @@ namespace SabertoothClient
         Sprite brightnessSprite = new Sprite();
         VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
+        public bool isInstance { get; set; }
+        public int Id { get; set; }
 
         public Map()
         {
@@ -622,7 +624,8 @@ namespace SabertoothClient
         SpawnPool,
         NpcAvoid,
         MapItem,
-        Chest
+        Chest,
+        Instance
     }
 
     public enum TileLayers

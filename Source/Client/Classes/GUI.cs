@@ -195,6 +195,7 @@ namespace SabertoothClient
         Label playTime;
         Label lifeTime;
         Label longestLife;
+        Label charKills;
         #endregion
 
         #region PackTab
@@ -376,6 +377,7 @@ namespace SabertoothClient
                     charExp.Text = "Experience: " + player.Experience + " / " + (player.Level * 1000);
                     charMoney.Text = "Money: " + player.Money;
                     charPoints.Text = "Points: " + player.Points;
+                    charKills.Text = "Kills: " + player.Kills;
 
                     charHealth.Text = "Health: " + player.Health + " / " + player.MaxHealth;
                     charHunger.Text = "Hunger: " + player.Hunger + " / 100";
@@ -2561,48 +2563,52 @@ namespace SabertoothClient
             charPoints.SetPosition(10, 50);
             charPoints.Text = "Points: ?";
 
+            charKills = new Label(charTab.Page);
+            charKills.SetPosition(10, 60);
+            charKills.Text = "Kills: ?";
+
             charHealth = new Label(charTab.Page);
-            charHealth.SetPosition(10, 65);
+            charHealth.SetPosition(10, 75);
             charHealth.Text = "Health: ?";
 
             charHunger = new Label(charTab.Page);
-            charHunger.SetPosition(10, 75);
+            charHunger.SetPosition(10, 85);
             charHunger.Text = "Hunger: ?";
 
             charHydration = new Label(charTab.Page);
-            charHydration.SetPosition(10, 85);
+            charHydration.SetPosition(10, 95);
             charHydration.Text = "Hydration: ?";
 
             charArmor = new Label(charTab.Page);
-            charArmor.SetPosition(10, 100);
+            charArmor.SetPosition(10, 110);
             charArmor.Text = "Armor: ?";
 
             charStr = new Label(charTab.Page);
-            charStr.SetPosition(10, 110);
+            charStr.SetPosition(10, 120);
             charStr.Text = "Strength: ?";
 
             charAgi = new Label(charTab.Page);
-            charAgi.SetPosition(10, 120);
+            charAgi.SetPosition(10, 130);
             charAgi.Text = "Agility: ?";
 
             charEnd = new Label(charTab.Page);
-            charEnd.SetPosition(10, 130);
+            charEnd.SetPosition(10, 140);
             charEnd.Text = "Endurance: ?";
 
             charSta = new Label(charTab.Page);
-            charSta.SetPosition(10, 140);
+            charSta.SetPosition(10, 150);
             charSta.Text = "Stamina: ?";
 
             lifeTime = new Label(charTab.Page);
-            lifeTime.SetPosition(10, 160);
+            lifeTime.SetPosition(10, 170);
             lifeTime.Text = "Life Time: ?";
 
             playTime = new Label(charTab.Page);
-            playTime.SetPosition(10, 170);
+            playTime.SetPosition(10, 180);
             playTime.Text = "Play Time: ?";
 
             longestLife = new Label(charTab.Page);
-            longestLife.SetPosition(10, 180);
+            longestLife.SetPosition(10, 190);
             longestLife.Text = "Longest Life: ?";
             #endregion
 

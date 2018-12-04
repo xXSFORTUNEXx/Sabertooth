@@ -84,6 +84,7 @@ namespace SabertoothServer
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
         public static WorldTime worldTime = new WorldTime();
+        public static Instance instance = new Instance();
         public static Random RND = new Random();
         public static bool isRunning;
         private static int saveTick;
@@ -1183,6 +1184,8 @@ namespace SabertoothServer
         public const int PLAYER_START_Y = 17;
         public const int OFFSET_X = 16;
         public const int OFFSET_Y = 11;
+        public const int MAX_PARTY = 4;
+        public const int MAX_INSTANCE_NPC = 20;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.3";
@@ -1207,6 +1210,7 @@ namespace SabertoothServer
         public const string AUTOSAVE_TIME = "300000"; //300000 / 1000 = 5 MIN
         public const string SPAWN_TIME = "1000"; //1000 / 1000 = 1 SECOND
         public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND
+        public const string NEXT_WAVE_COUNTDOWN = "60000"; //60000 / 1000 = 1 MIN
         public const int SQL_DATABASE_REMOTE = 0;
         public const int SQL_DATABASE_LOCAL = 1;
         public const int A_MILLISECOND = 1000;

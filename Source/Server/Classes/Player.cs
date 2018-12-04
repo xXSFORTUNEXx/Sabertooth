@@ -70,12 +70,17 @@ namespace SabertoothServer
         public string LastLoggedIn { get; set; }
         public string AccountKey { get; set; }
         public string Active { get; set; }
+        public int Kills { get; set; }
+        public int StatsId { get; set; }
         #endregion
 
         #region Local Variables
         public int hungerTick;
         public int hydrationTick;
         public int timeTick;
+        //Instant Variables
+        public int iPoints;
+        public int iKills;
         #endregion
 
         #region Class Constructors
@@ -127,6 +132,7 @@ namespace SabertoothServer
             LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
+            Kills = 0;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -192,6 +198,7 @@ namespace SabertoothServer
             LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
+            Kills = 0;
 
             mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
             offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
@@ -942,6 +949,27 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
                         cmd.ExecuteNonQuery();
                     }
+
+                    script = ReadAllText("SQL Data Scripts/INSERT STATS.sql");
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@kills", System.Data.DbType.Int32)).Value = Kills;
+                        cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
+                        cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
+                        cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
+                        cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
+                        cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
+                        cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
+                        cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
             else
@@ -1388,6 +1416,28 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Feet.ProjectileNumber;
                         cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
                         cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    script = ReadAllText("SQL Data Scripts/SAVE STATS.sql");
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = StatsId;
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                        cmd.Parameters.Add(new SqlParameter("@kills", System.Data.DbType.Int32)).Value = Kills;
+                        cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
+                        cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
+                        cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
+                        cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
+                        cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
+                        cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
+                        cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
+                        cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
+                        cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
+                        cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
                         cmd.ExecuteNonQuery();
                     }
 
@@ -2002,6 +2052,33 @@ namespace SabertoothServer
                                 Feet.ProjectileNumber = ToInt32(reader[21]);
                                 Feet.Price = ToInt32(reader[22]);
                                 Feet.Rarity = ToInt32(reader[23]);
+                            }
+                        }
+                    }
+
+                    script = ReadAllText("SQL Data Scripts/LOAD STATS.sql");
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                StatsId = ToInt32(reader[0]);
+                                Kills = ToInt32(reader[2]);
+                                Points = ToInt32(reader[3]);
+                                PlayDays = ToInt32(reader[4]);
+                                PlayHours = ToInt32(reader[5]);
+                                PlayMinutes = ToInt32(reader[6]);
+                                PlaySeconds = ToInt32(reader[7]);
+                                LifeDay = ToInt32(reader[8]);
+                                LifeHour = ToInt32(reader[9]);
+                                LifeMinute = ToInt32(reader[10]);
+                                LifeSecond = ToInt32(reader[11]);
+                                LongestLifeDay = ToInt32(reader[12]);
+                                LongestLifeHour = ToInt32(reader[13]);
+                                LongestLifeMinute = ToInt32(reader[14]);
+                                LongestLifeSecond = ToInt32(reader[15]);
                             }
                         }
                     }

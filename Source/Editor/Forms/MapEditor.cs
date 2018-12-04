@@ -481,6 +481,9 @@ namespace Editor.Forms
                                 case (int)TileType.Chest:
                                     e_Text.DrawText(e_Window, "C", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Blue);
                                     break;
+                                case (int)TileType.Instance:
+                                    e_Text.DrawText(e_Window, "I", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Magenta);
+                                    break;
                                 default:
                                     break;
                             }
@@ -1667,6 +1670,15 @@ namespace Editor.Forms
             {
                 hScroll = false;
             }
+        }
+
+        private void radInstance_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.Instance;
+            lblType.Text = "Type: Instance";
+            pnlNpcSpawn.Visible = false;
+            pnlMapItem.Visible = false;
+            pnlChest.Visible = false;
         }
     }
 

@@ -75,6 +75,7 @@ namespace SabertoothClient
         public string Active { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
+        public int Kills { get; set; }
         #endregion
 
         #region Local Variables
@@ -100,6 +101,9 @@ namespace SabertoothClient
         public bool inBank;
         public int chestNum;
         public bool inChest;
+        //Instance Variables
+        public int iKills;
+        public int iPoints;
         #endregion
 
         #region Class Constructors
@@ -157,6 +161,7 @@ namespace SabertoothClient
             LastLoggedIn = "00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
+            Kills = 0;
 
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -911,6 +916,16 @@ namespace SabertoothClient
                 }
                 interactionTick = TickCount;
             }
+        }
+
+        public void CheckPlayerCurrentTypes()
+        {
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
+            if (Attacking == true) { return; }
+            if (inShop || inChat || inBank) { return; }
+
+
         }
         #endregion
 

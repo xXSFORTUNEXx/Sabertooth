@@ -864,6 +864,7 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].LongestLifeHour);
             outMSG.WriteVariableInt32(players[index].LongestLifeMinute);
             outMSG.WriteVariableInt32(players[index].LongestLifeSecond);
+            outMSG.WriteVariableInt32(players[index].Kills);
 
             //Main weapon
             outMSG.Write(players[index].mainWeapon.Name);
@@ -937,6 +938,7 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].RocketAmmo);
             outMSG.WriteVariableInt32(players[index].GrenadeAmmo);
             outMSG.WriteVariableInt32(players[index].LightRadius);
+            outMSG.WriteVariableInt32(players[index].Kills);
 
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1172,6 +1174,7 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(players[i].LongestLifeHour);
                 outMSG.WriteVariableInt32(players[i].LongestLifeMinute);
                 outMSG.WriteVariableInt32(players[i].LongestLifeSecond);
+                outMSG.WriteVariableInt32(players[i].Kills);
             }
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1653,6 +1656,61 @@ namespace SabertoothServer
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.RequestActivation);
             outMSG.WriteVariableInt32(index);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendInstanceMapData(NetIncomingMessage incMSG, Map iMap)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.MapData);
+            outMSG.Write(iMap.Name);
+            outMSG.WriteVariableInt32(iMap.Revision);
+            outMSG.WriteVariableInt32(iMap.TopMap);
+            outMSG.WriteVariableInt32(iMap.BottomMap);
+            outMSG.WriteVariableInt32(iMap.LeftMap);
+            outMSG.WriteVariableInt32(iMap.RightMap);
+            outMSG.WriteVariableInt32(iMap.Brightness);
+
+            for (int x = 0; x < 50; x++)
+            {
+                for (int y = 0; y < 50; y++)
+                {
+                    //ground
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].TileX);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].TileY);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].TileW);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].TileH);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].Tileset);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].Type);
+                    outMSG.WriteVariableInt32(iMap.Ground[x, y].SpawnNum);
+                    outMSG.Write(iMap.Ground[x, y].LightRadius);
+                    //mask
+                    outMSG.WriteVariableInt32(iMap.Mask[x, y].TileX);
+                    outMSG.WriteVariableInt32(iMap.Mask[x, y].TileY);
+                    outMSG.WriteVariableInt32(iMap.Mask[x, y].TileW);
+                    outMSG.WriteVariableInt32(iMap.Mask[x, y].TileH);
+                    outMSG.WriteVariableInt32(iMap.Mask[x, y].Tileset);
+                    //fringe
+                    outMSG.WriteVariableInt32(iMap.Fringe[x, y].TileX);
+                    outMSG.WriteVariableInt32(iMap.Fringe[x, y].TileY);
+                    outMSG.WriteVariableInt32(iMap.Fringe[x, y].TileW);
+                    outMSG.WriteVariableInt32(iMap.Fringe[x, y].TileH);
+                    outMSG.WriteVariableInt32(iMap.Fringe[x, y].Tileset);
+                    //mask a
+                    outMSG.WriteVariableInt32(iMap.MaskA[x, y].TileX);
+                    outMSG.WriteVariableInt32(iMap.MaskA[x, y].TileY);
+                    outMSG.WriteVariableInt32(iMap.MaskA[x, y].TileW);
+                    outMSG.WriteVariableInt32(iMap.MaskA[x, y].TileH);
+                    outMSG.WriteVariableInt32(iMap.MaskA[x, y].Tileset);
+                    //fringe a
+                    outMSG.WriteVariableInt32(iMap.FringeA[x, y].TileX);
+                    outMSG.WriteVariableInt32(iMap.FringeA[x, y].TileY);
+                    outMSG.WriteVariableInt32(iMap.FringeA[x, y].TileW);
+                    outMSG.WriteVariableInt32(iMap.FringeA[x, y].TileH);
+                    outMSG.WriteVariableInt32(iMap.FringeA[x, y].Tileset);
+                }
+            }
+
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 

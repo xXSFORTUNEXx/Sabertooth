@@ -114,6 +114,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
+            this.radInstance = new System.Windows.Forms.RadioButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -401,6 +402,7 @@
             // 
             // tabTypes
             // 
+            this.tabTypes.Controls.Add(this.radInstance);
             this.tabTypes.Controls.Add(this.pnlChest);
             this.tabTypes.Controls.Add(this.radChest);
             this.tabTypes.Controls.Add(this.pnlMapItem);
@@ -1052,6 +1054,18 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
+            // radInstance
+            // 
+            this.radInstance.AutoSize = true;
+            this.radInstance.Location = new System.Drawing.Point(20, 182);
+            this.radInstance.Name = "radInstance";
+            this.radInstance.Size = new System.Drawing.Size(66, 17);
+            this.radInstance.TabIndex = 10;
+            this.radInstance.TabStop = true;
+            this.radInstance.Text = "Instance";
+            this.radInstance.UseVisualStyleBackColor = true;
+            this.radInstance.CheckedChanged += new System.EventHandler(this.radInstance_CheckedChanged);
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1190,5 +1204,6 @@
         private System.Windows.Forms.RadioButton radScroll;
         private System.Windows.Forms.RadioButton radZoom;
         private System.Windows.Forms.CheckBox chkHScroll;
+        private System.Windows.Forms.RadioButton radInstance;
     }
 }

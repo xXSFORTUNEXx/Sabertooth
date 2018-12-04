@@ -359,6 +359,8 @@ namespace SabertoothServer
                 spawnTick = TickCount;
                 s_Player.Experience += Exp;
                 s_Player.Money += Money;
+                s_Player.Points += 100;
+                s_Player.Kills += 1;
                 s_Player.CheckPlayerLevelUp();
                 //s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)

@@ -1053,6 +1053,7 @@ namespace SabertoothClient
             players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
             players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
             players[myIndex].LightRadius = incMSG.ReadVariableInt32();
+            players[myIndex].Kills = incMSG.ReadVariableInt32();
         }
 
         static void HandlePlayerData(NetIncomingMessage incMSG)
@@ -1094,6 +1095,7 @@ namespace SabertoothClient
             players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
             players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
+            players[myIndex].Kills = incMSG.ReadVariableInt32();
             if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 players[myIndex].OffsetX = 16;
@@ -1242,6 +1244,7 @@ namespace SabertoothClient
                 players[i].LongestLifeHour = incMSG.ReadVariableInt32();
                 players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
                 players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
+                players[i].Kills = incMSG.ReadVariableInt32();
                 if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
                 {
                     players[i].OffsetX = 16;

@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
+    <Compile Include="Classes\Instance.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\HandleData.cs" />
     <Compile Include="Classes\Item.cs" />
@@ -114,6 +115,9 @@
     <Content Include="SQL Data Scripts\INSERT SHOP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\INSERT STATS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\INVCOUNT.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -156,6 +160,9 @@
     <Content Include="SQL Data Scripts\LOAD SHOP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\LOAD STATS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\SAVE BANK.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -193,6 +200,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\SAVE SHOP.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\SAVE STATS.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\BANK.sql">
@@ -235,6 +245,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\SHOPS.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Scripts\STATS.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQLite.Interop.dll">
