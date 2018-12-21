@@ -15,7 +15,7 @@ INSERT INTO PLAYERS (
 	AIMDIRECTION,
 	SPRITE,
 	LEVEL,
-	POINTS,
+	/*POINTS,*/
 	HEALTH,
 	MAXHEALTH,
 	EXPERIENCE,
@@ -32,7 +32,7 @@ INSERT INTO PLAYERS (
 	ROCKETAMMO,
 	GRENADEAMMO,
 	LIGHTRADIUS,
-	DAYS,
+	/*DAYS,
 	HOURS,
 	MINUTES,
 	SECONDS,
@@ -43,7 +43,7 @@ INSERT INTO PLAYERS (
 	LLDAYS,
 	LLHOURS,
 	LLMINUTES,
-	LLSECONDS,
+	LLSECONDS,*/
 	LASTLOGGED,
 	ACCOUNTKEY,
 	ACTIVE
@@ -59,7 +59,7 @@ VALUES (
 	@aimdirection,
 	@sprite,
 	@level,
-	@points,
+	/*@points,*/
 	@health,
 	@maxhealth,
 	@experience,
@@ -76,7 +76,7 @@ VALUES (
 	@rocketammo,
 	@grenadeammo,
 	@lightradius,
-	@days,
+	/*@days,
 	@hours,
 	@minutes,
 	@seconds,
@@ -87,7 +87,7 @@ VALUES (
 	@lldays,
 	@llhours,
 	@llminutes,
-	@llseconds,
+	@llseconds,*/
 	@lastlogged,
 	@accountkey,
 	@active

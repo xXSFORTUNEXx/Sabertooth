@@ -174,6 +174,7 @@ namespace SabertoothServer
                 SendMapItems(incMSG, currentMap);
                 SendChests(incMSG);
                 SendDateAndTime(incMSG, index);
+                players[index].UpdateLastLogged();
                 Console.WriteLine("Data sent to " + players[index].Name + ", IP: " + incMSG.SenderConnection);
                 string welcomeMsg = players[index].Name + " has joined Sabertooth!";
                 SendServerMessageToAll(welcomeMsg);
@@ -184,6 +185,7 @@ namespace SabertoothServer
                 SendErrorMessage("Invalid activation key! Please try again.", "Activation Key", incMSG);
             }
         }
+
         static void HandleTakeChestItem(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
