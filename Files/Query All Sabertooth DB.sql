@@ -12,14 +12,16 @@ select * from PLAYERS
 select * from PROJECTILES
 select * from SECONDARYWEAPONS
 select * from SHOPS
+select * from STATS
 
 --*Query Player Tables*
 select * from BANK
 select * from EQUIPMENT
 select * from INVENTORY
 select * from MAINWEAPONS
-select * from PLAYERS
 select * from SECONDARYWEAPONS
+select * from PLAYERS
+select * from STATS
 
 --*Query Game Content(All)*
 select * from CHAT
@@ -30,4 +32,4 @@ select * from NPCS
 select * from PROJECTILES
 select * from SHOPS
 
-SELECT COUNT(*) FROM INVENTORY WHERE OWNER='sfortune'
+SELECT COUNT(*) AS INVCOUNT FROM INVENTORY WHERE OWNER='sfortune'

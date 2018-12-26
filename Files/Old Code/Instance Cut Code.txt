@@ -1,0 +1,72 @@
+    public class InstancePlayer : Player
+    {
+        public int iPoints { get; set; }
+        public int iKills { get; set; }
+        public int iHealth { get; set; }
+        public int iMaxHealth { get; set; }
+        public bool IsDown { get; set; }
+    }
+
+    public class InstanceNpc : Npc
+    {
+        public int iPoints { get; set; }
+
+        public InstanceNpc()
+        {
+            Name = "Zombie";
+            Health = 100;
+            MaxHealth = 100;
+            iPoints = 100;
+            Damage = 50;
+            SpawnTime = 1000;
+            Behavior = (int)BehaviorType.Aggressive;
+            Range = 50;
+            Sprite = 4;
+        }
+    }
+	
+	        public void StartInstance()
+        {
+            CreateInstanceMap();
+            CreateNpcs(iMap);
+            CurrentWave = 1;
+            TotalWaves = 10;
+            TotalWaveNpcs = (CurrentWave * (10 * TotalPlayers()));
+        }
+	
+	
+	        private void InitArrays()
+        {
+            for (int i = 0; i < MAX_PARTY; i++)
+            {
+                iPlayer[i] = new InstancePlayer();
+            }
+
+            for (int n = 0; n < MAX_INSTANCE_NPC; n++)
+            {
+                iNpc[n] = new InstanceNpc();
+            }
+        }
+		
+		
+		        public bool CheckStartNextWave()
+        {
+            if (TickCount - NextWaveTime >= ToInt32(NEXT_WAVE_COUNTDOWN))
+            {
+                return true;
+            }
+            return false;
+        }
+		        public void SetTotalNpcsInWave()
+        {
+            TotalWaveNpcs = (CurrentWave * (10 * TotalPlayers()));
+        }
+
+        public bool CheckForWaveEnd()
+        {
+            if (WaveNpcsKilled == TotalWaveNpcs)
+            {
+                return true;
+            }
+            return false;
+        }

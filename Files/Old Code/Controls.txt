@@ -1,0 +1,27 @@
+Keyboard Controls
+W - Move Up
+A - Move Left
+S - Move Down
+D - Move Right
+
+I - Look Up
+J - Look Left
+K - Look Down
+L - Look Right
+
+Space - Shoot Weapon
+O - Pickup Item
+R - Reload
+E - Interact
+
+C - Chat Window
+B - Debug Window
+M - User Interface
+
+Xbox Controls
+Left Stick - Move
+Right Stick - Aim
+Left Trigger - Shoot Weapon
+A - Pickup
+X - Reload
+B - Interact
