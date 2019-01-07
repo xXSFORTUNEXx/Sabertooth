@@ -1,7 +1,6 @@
 ﻿#undef DEBUG
 using Lidgren.Network;
 using System;
-using System.Data.SQLite;
 using System.Data.SqlClient;
 using System.Threading;
 using static System.Convert;
@@ -1897,57 +1896,27 @@ namespace SabertoothServer
 
         static bool CheckPassword(string name, string pass)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command;
+                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                using (var cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command;
-                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
-                    using (var cmd = new SqlCommand(command, sql))
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            string compare = reader[2].ToString();
+
+                            if (pass == compare)
                             {
-                                string compare = reader[2].ToString();
-
-                                if (pass == compare)
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
-                            return false;
                         }
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-
-                    sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        using (SQLiteDataReader read = cmd.ExecuteReader())
-                        {
-                            while (read.Read())
-                            {
-                                string compare = read["PASSWORD"].ToString();
-
-                                if (pass == compare)
-                                {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }
@@ -1955,53 +1924,25 @@ namespace SabertoothServer
 
         static bool AccountExist(string name)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command;
+                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                using (var cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command;
-                    command = "SELECT * FROM PLAYERS WHERE NAME=@name";
-                    using (var cmd = new SqlCommand(command, sql))
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            if (reader[1].ToString().ToLower() == name.ToLower())
                             {
-                                if (reader[1].ToString().ToLower() == name.ToLower())
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
-                            return false;
                         }
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-
-                    sql = "SELECT * FROM `PLAYERS` WHERE NAME = '" + name + "'";
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        using (SQLiteDataReader read = cmd.ExecuteReader())
-                        {
-                            while (read.Read())
-                            {
-                                if (read["NAME"].ToString() == name)
-                                {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        }
+                        return false;
                     }
                 }
             }

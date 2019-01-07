@@ -40,7 +40,7 @@ namespace SabertoothServer
             iMap.RightMap = 0;
             iMap.Revision = 0;
             iMap.Brightness = 0;
-            iMap.isInstance = true;
+            iMap.IsInstance = true;
 
             for (int i = 0; i < 10; i++)
             {

@@ -7,7 +7,6 @@ using static System.Environment;
 using static System.IO.File;
 using static System.Convert;
 using System.IO;
-using System.Data.SQLite;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
@@ -104,7 +103,6 @@ namespace SabertoothServer
         public static int suptimeTick;
         public static string upTime;
         public static string sVersion;
-        public static string DBType;
         public static string sqlServer;
         public static string sqlDatabase;
         static int lastTick;
@@ -147,191 +145,64 @@ namespace SabertoothServer
 
         public static void CheckSQLConnection()
         {
-            //MSSQL Database (remote)
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
+            string script = ReadAllText("SQL Scripts/DATABASE.sql");
+            try
             {
-                string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
-                string script = ReadAllText("SQL Scripts/DATABASE.sql");
-
-                try
+                using (var sql = new SqlConnection(connection))
                 {
-                    using (var sql = new SqlConnection(connection))
+                    sql.Open();
+                    using (var cmd = new SqlCommand(script, sql))
                     {
-                        sql.Open();
-                        using (var cmd = new SqlCommand(script, sql))
-                        {
-                            cmd.ExecuteNonQuery();
-                        }
+                        cmd.ExecuteNonQuery();
                     }
-                    Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
-                    CheckDatabaseTables();
                 }
-                catch (Exception e)
-                {
-                    Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
-                    Logging.WriteLog(e.Message, "SQL");
-                }
+                Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
+                CheckDatabaseTables();
             }
-            //SQLite Database (local needs updated)
-            else
+            catch (Exception e)
             {
-                if (!Directory.Exists("Database"))
-                {
-                    Directory.CreateDirectory("Database");
-                    CheckDatabaseTables();
-                }
-                try
-                {
-                    string connection = "Data Source=Database/Sabertooth.db;Version=3;";
-                    using (var sql = new SQLiteConnection(connection))
-                    {
-                        sql.Open();
-                        Logging.WriteMessageLog("Established SQLite connection!", "SQL");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
-                    Logging.WriteLog(e.Message, "SQL");
-                }
+                Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
+                Logging.WriteLog(e.Message, "SQL");
             }
         }
 
         public static void CheckDatabaseTables()
         {
-            //MSSQL Database (remote)
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script;
+            try
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script;
-                try
+                using (var sql = new SqlConnection(connection))
                 {
-                    using (var sql = new SqlConnection(connection))
-                    {
-                        sql.Open();
+                    sql.Open();
 
-                        using (var cmd = new SqlCommand())
-                        {
-                            cmd.Connection = sql;
-                            script = ReadAllText("SQL Scripts/PLAYERS.sql");
-                            script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
-                            script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
-                            script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
-                            script += ReadAllText("SQL Scripts/INVENTORY.sql");
-                            script += ReadAllText("SQL Scripts/BANK.sql");
-                            script += ReadAllText("SQL Scripts/ITEMS.sql");
-                            script += ReadAllText("SQL Scripts/NPCS.sql");
-                            script += ReadAllText("SQL Scripts/PROJECTILES.sql");
-                            script += ReadAllText("SQL Scripts/SHOPS.sql");
-                            script += ReadAllText("SQL Scripts/CHAT.sql");
-                            script += ReadAllText("SQL Scripts/MAPS.sql");
-                            script += ReadAllText("SQL Scripts/CHESTS.sql");
-                            script += ReadAllText("SQL Scripts/STATS.sql");
-                            cmd.CommandText = script;
-                            cmd.ExecuteNonQuery();
-                        }
+                    using (var cmd = new SqlCommand())
+                    {
+                        cmd.Connection = sql;
+                        script = ReadAllText("SQL Scripts/PLAYERS.sql");
+                        script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
+                        script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
+                        script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
+                        script += ReadAllText("SQL Scripts/INVENTORY.sql");
+                        script += ReadAllText("SQL Scripts/BANK.sql");
+                        script += ReadAllText("SQL Scripts/ITEMS.sql");
+                        script += ReadAllText("SQL Scripts/NPCS.sql");
+                        script += ReadAllText("SQL Scripts/PROJECTILES.sql");
+                        script += ReadAllText("SQL Scripts/SHOPS.sql");
+                        script += ReadAllText("SQL Scripts/CHAT.sql");
+                        script += ReadAllText("SQL Scripts/MAPS.sql");
+                        script += ReadAllText("SQL Scripts/CHESTS.sql");
+                        script += ReadAllText("SQL Scripts/STATS.sql");
+                        cmd.CommandText = script;
+                        cmd.ExecuteNonQuery();
                     }
-                }
-                catch (Exception e)
-                {
-                    Logging.WriteMessageLog("SQL execution error, Check log for details...", "SQL");
-                    Logging.WriteLog(e.Message, "SQL");
                 }
             }
-            //SQLite Database (local needs updated)
-            else
+            catch (Exception e)
             {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        string command;
-
-                        command = "CREATE TABLE `PLAYERS`";
-                        command = command + "(`NAME` TEXT, `PASSWORD` TEXT, `X` INTEGER, `Y` INTEGER, `MAP` INTEGER, `DIRECTION` INTEGER, `AIMDIRECTION` INTEGER, ";
-                        command = command + "`SPRITE` INTEGER, `LEVEL` INTEGER, `POINTS` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `EXPERIENCE` INTEGER, `MONEY` INTEGER, `ARMOR` INTEGER, `HUNGER` INTEGER, ";
-                        command = command + "`HYDRATION` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `PISTOLAMMO` INTEGER, `ASSAULTAMMO` INTEGER, ";
-                        command = command + "`ROCKETAMMO` INTEGER, `GRENADEAMMO` INTEGER, `LIGHTRADIUS` INTEGER, `DAYS` INTEGER, `HOURS` INTEGER, `MINUTES` INTEGER, `SECONDS` INTEGER, `LDAYS` INTEGER, `LHOURS` INTEGER, `LMINUTES` INTEGER, `LSECONDS` INTEGER, ";
-                        command = command + "`LLDAYS` INTEGER, `LLHOURS` INTEGER, `LLMINUTES` INTEGER, `LLSECONDS` INTEGER, `LASTLOGGED` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `MAINWEAPONS`";
-                        command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                        command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `SECONDARYWEAPONS`";
-                        command = command + "(`OWNER` TEXT, `NAME` TEXT, `CLIP` INTEGER, `MAXCLIP` INTEGER, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, ";
-                        command = command + "`HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, `HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `EQUIPMENT`";
-                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `INVENTORY`";
-                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `BANK`";
-                        command = command + "(`OWNER` TEXT, `ID` INTEGER, `NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `ITEMS`";
-                        command = command + "(`NAME` TEXT, `SPRITE` INTEGER, `DAMAGE` INTEGER, `ARMOR` INTEGER, `TYPE` INTEGER, `ATTACKSPEED` INTEGER, `RELOADSPEED` INTEGER, `HEALTHRESTORE` INTEGER, `HUNGERRESTORE` INTEGER, ";
-                        command = command + "`HYDRATERESTORE` INTEGER, `STRENGTH` INTEGER, `AGILITY` INTEGER, `ENDURANCE` INTEGER, `STAMINA` INTEGER, `CLIP` INTEGER, `MAXCLIP` INTEGER, `AMMOTYPE` INTEGER, `VALUE` INTEGER, ";
-                        command = command + "`PROJ` INTEGER, `PRICE` INTEGER, `RARITY` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `NPCS`";
-                        command = command + "(`NAME` TEXT, `X` INTEGER, `Y` INTEGER, `DIRECTION` INTEGER, `SPRITE` INTEGER, `STEP` INTEGER, `OWNER` INTEGER, `BEHAVIOR` INTEGER, `SPAWNTIME` INTEGER, `HEALTH` INTEGER, `MAXHEALTH` INTEGER, `DAMAGE` INTEGER, `DESX` INTEGER, `DESY` INTEGER, ";
-                        command = command + "`EXP` INTEGER, `MONEY` INTEGER, `RANGE` INTEGER, `SHOPNUM` INTEGER, `CHATNUM` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `PROJECTILES`";
-                        command = command + "(`NAME` TEXT, `DAMAGE` INTEGER, `RANGE` INTEGER, `SPRITE` INTEGER, `TYPE` INTEGER, `SPEED` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `SHOPS`";
-                        command = command + "(`NAME` TEXT, `ITEMDATA` BLOB)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `CHAT`";
-                        command = command + "(`NAME` TEXT,`MAINMESSAGE` TEXT,`OPTIONA` TEXT,`OPTIONB` TEXT,`OPTIONC` TEXT,`OPTIOND` TEXT,`NEXTCHATA` INTEGER,`NEXTCHATB` INTEGER,`NEXTCHATC` INTEGER,`NEXTCHATD` INTEGER,`SHOPNUM` INTEGER,`MISSIONNUM` INTEGER,`ITEMA` INTEGER,`ITEMB` INTEGER,`ITEMC` INTEGER,`VALA` INTEGER,";
-                        command = command + "`VALB` INTEGER,`VALC` INTEGER,`MONEY` INTEGER,`TYPE` INTEGER)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE `MAPS`";
-                        command = command + "(`NAME` TEXT,`REVISION` INTEGER,`UP` INTEGER,`DOWN` INTEGER,`LEFTSIDE` INTEGER,`RIGHTSIDE` INTEGER,`BRIGHTNESS` INTEGER,`NPC` BLOB,`ITEM` BLOB, `GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-
-                        command = "CREATE TABLE CHESTS";
-                        command = command + "(NAME TEXT,MONEY INTEGER,EXPERIENCE INTEGER,REQUIREDLEVEL INTEGER,TRAPLEVEL INTEGER,REQKEY INTEGER,DAMAGE INTEGER,NPCSPAWN INTEGER,SPAWNAMOUNT INTEGER,CHESTITEM BLOB)";
-                        cmd.CommandText = command;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                Logging.WriteMessageLog("SQL execution error, Check log for details...", "SQL");
+                Logging.WriteLog(e.Message, "SQL");
             }
         }
 
@@ -1092,7 +963,6 @@ namespace SabertoothServer
             writer.WriteStartElement("ConfigData");
             writer.WriteElementString("SQLServer", SQL_SERVER_NAME);
             writer.WriteElementString("Database", SQL_SERVER_DATABASE);
-            writer.WriteElementString("DBType", "0");
             writer.WriteElementString("Version", VERSION);
             writer.WriteElementString("RegenTime", HEALTH_REGEN_TIME);
             writer.WriteElementString("HungerTime", HUNGER_DEGEN_TIME);
@@ -1121,8 +991,6 @@ namespace SabertoothServer
             sqlServer = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Database");
             sqlDatabase = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("DBType");
-            DBType = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Version");
             sVersion = reader.ReadElementContentAsString();
             reader.ReadToFollowing("RegenTime");

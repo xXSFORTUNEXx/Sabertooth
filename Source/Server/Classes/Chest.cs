@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lidgren.Network;
@@ -90,178 +89,84 @@ namespace SabertoothServer
                 ChestItem[i] = new ChestItem("None", 0, 1);
             }
 
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script = ReadAllText("SQL Data Scripts/INSERT CHEST.sql");
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/INSERT CHEST.sql");
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    sql.Open();
+                    byte[] chestData = ToByteArray(ChestItem);
 
-                    using (var cmd = new SqlCommand(script, sql))
-                    {
-                        byte[] chestData = ToByteArray(ChestItem);
-
-                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
-                        cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
-                        cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
-                        cmd.Parameters.Add(new SqlParameter("@requiredlevel", System.Data.DbType.Int32)).Value = RequiredLevel;
-                        cmd.Parameters.Add(new SqlParameter("@traplevel", System.Data.DbType.Int32)).Value = TrapLevel;
-                        cmd.Parameters.Add(new SqlParameter("@key", System.Data.DbType.Int32)).Value = Key;
-                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Damage;
-                        cmd.Parameters.Add(new SqlParameter("@npcspawn", System.Data.DbType.Int32)).Value = NpcSpawn;
-                        cmd.Parameters.Add(new SqlParameter("@spawnamount", System.Data.DbType.Int32)).Value = SpawnAmount;
-                        cmd.Parameters.Add(new SqlParameter("@chestitem", System.Data.DbType.Binary)).Value = chestData;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        byte[] chestData = ToByteArray(ChestItem);
-
-                        conn.Open();
-                        string command;
-                        command = "INSERT INTO CHESTS (NAME,MONEY,EXPERIENCE,REQUIREDLEVEL,TRAPLEVEL,KEY,DAMAGE,NPCSPAWN,SPAWNAMOUNT,CHESTITEM) VALUES ";
-                        command = command + "(@name,@money,@experience,@requiredlevel,@traplevel,@key,@damage,@npcspawn,@spawnamount,@chestitem)";
-                        cmd.CommandText = command;
-                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
-                        cmd.Parameters.Add("@money", System.Data.DbType.Int32).Value = Money;
-                        cmd.Parameters.Add("@experience", System.Data.DbType.Int32).Value = Experience;
-                        cmd.Parameters.Add("@requiredlevel", System.Data.DbType.Int32).Value = RequiredLevel;
-                        cmd.Parameters.Add("@traplevel", System.Data.DbType.Int32).Value = TrapLevel;
-                        cmd.Parameters.Add("@key", System.Data.DbType.Int32).Value = Key;
-                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
-                        cmd.Parameters.Add("@npcspawn", System.Data.DbType.Int32).Value = NpcSpawn;
-                        cmd.Parameters.Add("@spawnamount", System.Data.DbType.Int32).Value = SpawnAmount;
-                        cmd.Parameters.Add("@chestitem", System.Data.DbType.Binary).Value = chestData;
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
+                    cmd.Parameters.Add(new SqlParameter("@requiredlevel", System.Data.DbType.Int32)).Value = RequiredLevel;
+                    cmd.Parameters.Add(new SqlParameter("@traplevel", System.Data.DbType.Int32)).Value = TrapLevel;
+                    cmd.Parameters.Add(new SqlParameter("@key", System.Data.DbType.Int32)).Value = Key;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Damage;
+                    cmd.Parameters.Add(new SqlParameter("@npcspawn", System.Data.DbType.Int32)).Value = NpcSpawn;
+                    cmd.Parameters.Add(new SqlParameter("@spawnamount", System.Data.DbType.Int32)).Value = SpawnAmount;
+                    cmd.Parameters.Add(new SqlParameter("@chestitem", System.Data.DbType.Binary)).Value = chestData;
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         public void SaveChestInDatabase(int chestNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script = ReadAllText("SQL Data Scripts/SAVE CHEST.sql");
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/SAVE CHEST.sql");
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    sql.Open();
-                    using (var cmd = new SqlCommand(script, sql))
-                    {
-                        byte[] chestData = ToByteArray(ChestItem);
+                    byte[] chestData = ToByteArray(ChestItem);
 
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;
-                        cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
-                        cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
-                        cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
-                        cmd.Parameters.Add(new SqlParameter("@requiredlevel", System.Data.DbType.Int32)).Value = RequiredLevel;
-                        cmd.Parameters.Add(new SqlParameter("@traplevel", System.Data.DbType.Int32)).Value = TrapLevel;
-                        cmd.Parameters.Add(new SqlParameter("@key", System.Data.DbType.Int32)).Value = Key;
-                        cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Damage;
-                        cmd.Parameters.Add(new SqlParameter("@npcspawn", System.Data.DbType.Int32)).Value = NpcSpawn;
-                        cmd.Parameters.Add(new SqlParameter("@spawnamount", System.Data.DbType.Int32)).Value = SpawnAmount;
-                        cmd.Parameters.Add(new SqlParameter("@chestitem", System.Data.DbType.Binary)).Value = chestData;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        byte[] chestData = ToByteArray(ChestItem);
-
-                        conn.Open();
-                        string command;
-                        command = "UPDATE CHESTS SET NAME = @name, MONEY = @money, EXPERIENCE = @experience, REQUIREDLEVEL = @requiredlevel, TRAPLEVEL = @traplevel, ";
-                        command = command + "KEY = @key, DAMAGE = @damage, NPCSPAWN = @npcspawn, SPAWNAMOUNT = @spawnamount, CHESTITEM = @chestitem WHERE rowid = " + chestNum + ";";
-                        cmd.CommandText = command;
-                        cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
-                        cmd.Parameters.Add("@money", System.Data.DbType.Int32).Value = Money;
-                        cmd.Parameters.Add("@experience", System.Data.DbType.Int32).Value = Experience;
-                        cmd.Parameters.Add("@requiredlevel", System.Data.DbType.Int32).Value = RequiredLevel;
-                        cmd.Parameters.Add("@traplevel", System.Data.DbType.Int32).Value = TrapLevel;
-                        cmd.Parameters.Add("@key", System.Data.DbType.Int32).Value = Key;
-                        cmd.Parameters.Add("@damage", System.Data.DbType.Int32).Value = Damage;
-                        cmd.Parameters.Add("@npcspawn", System.Data.DbType.Int32).Value = NpcSpawn;
-                        cmd.Parameters.Add("@spawnamount", System.Data.DbType.Int32).Value = SpawnAmount;
-                        cmd.Parameters.Add("@chestitem", System.Data.DbType.Binary).Value = chestData;
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
+                    cmd.Parameters.Add(new SqlParameter("@requiredlevel", System.Data.DbType.Int32)).Value = RequiredLevel;
+                    cmd.Parameters.Add(new SqlParameter("@traplevel", System.Data.DbType.Int32)).Value = TrapLevel;
+                    cmd.Parameters.Add(new SqlParameter("@key", System.Data.DbType.Int32)).Value = Key;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Damage;
+                    cmd.Parameters.Add(new SqlParameter("@npcspawn", System.Data.DbType.Int32)).Value = NpcSpawn;
+                    cmd.Parameters.Add(new SqlParameter("@spawnamount", System.Data.DbType.Int32)).Value = SpawnAmount;
+                    cmd.Parameters.Add(new SqlParameter("@chestitem", System.Data.DbType.Binary)).Value = chestData;
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         public void LoadChestFromDatabase(int chestNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script = ReadAllText("SQL Data Scripts/LOAD CHEST.sql");
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/LOAD CHEST.sql");
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                using (SqlCommand cmd = new SqlCommand(script, sql))
                 {
-                    sql.Open();
-                    using (SqlCommand cmd = new SqlCommand(script, sql))
+                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = chestNum;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = chestNum;
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                Name = reader[1].ToString();
-                                Money = ToInt32(reader[2]);
-                                Experience = ToInt32(reader[3]);
-                                RequiredLevel = ToInt32(reader[4]);
-                                TrapLevel = ToInt32(reader[5]);
-                                Key = ToInt32(reader[6]);
-                                Damage = ToInt32(reader[7]);
-                                NpcSpawn = ToInt32(reader[8]);
-                                SpawnAmount = ToInt32(reader[9]);
-                                byte[] buffer = (byte[])reader[10];
-                                object load = ByteArrayToObject(buffer);
-                                ChestItem = (ChestItem[])load;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        string command;
-                        command = "SELECT * FROM CHESTS WHERE rowid = " + chestNum;
-                        cmd.CommandText = command;
-                        using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
-                        {
-                            while (read.Read())
-                            {
-                                Name = read["NAME"].ToString();
-                                Money = ToInt32(read["MONEY"].ToString());
-                                Experience = ToInt32(read["EXPERIENCE"].ToString());
-                                RequiredLevel = ToInt32(read["REQUIREDLEVEL"].ToString());
-                                TrapLevel = ToInt32(read["TRAPLEVEL"].ToString());
-                                Key = ToInt32(read["KEY"].ToString());
-                                Damage = ToInt32(read["DAMAGE"].ToString());
-                                NpcSpawn = ToInt32(read["NPCSPAWN"].ToString());
-                                SpawnAmount = ToInt32(read["SPAWNAMOUNT"].ToString());
-                                byte[] buffer = (byte[])read["CHESTITEM"];
-                                object load = ByteArrayToObject(buffer);
-                                ChestItem = (ChestItem[])load;
-                            }
+                            Name = reader[1].ToString();
+                            Money = ToInt32(reader[2]);
+                            Experience = ToInt32(reader[3]);
+                            RequiredLevel = ToInt32(reader[4]);
+                            TrapLevel = ToInt32(reader[5]);
+                            Key = ToInt32(reader[6]);
+                            Damage = ToInt32(reader[7]);
+                            NpcSpawn = ToInt32(reader[8]);
+                            SpawnAmount = ToInt32(reader[9]);
+                            byte[] buffer = (byte[])reader[10];
+                            object load = ByteArrayToObject(buffer);
+                            ChestItem = (ChestItem[])load;
                         }
                     }
                 }
@@ -270,43 +175,20 @@ namespace SabertoothServer
 
         public void LoadChestNameFromDatabase(int chestNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command;
+                command = "SELECT NAME FROM CHESTS WHERE ID=@id";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command;
-                    command = "SELECT NAME FROM CHESTS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                Name = reader[0].ToString();
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        string command;
-                        command = "SELECT * FROM CHESTS WHERE rowid = " + chestNum;
-                        cmd.CommandText = command;
-                        using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
-                        {
-                            while (read.Read())
-                            {
-                                Name = read["NAME"].ToString();
-                            }
+                            Name = reader[0].ToString();
                         }
                     }
                 }

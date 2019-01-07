@@ -1,6 +1,5 @@
 ﻿using Lidgren.Network;
 using System;
-using System.Data.SQLite;
 using static System.Convert;
 using static System.Environment;
 using System.Data.SqlClient;
@@ -112,120 +111,76 @@ namespace SabertoothServer
             ShopNum = 0;
             ChatNum = 0;
 
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script = ReadAllText("SQL Data Scripts/INSERT NPC.sql");
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/INSERT NPC.sql");
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    sql.Open();
-                   using (var cmd = new SqlCommand(script, sql))
-                    {
 
-                        cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
-                        cmd.Parameters.Add(new SqlParameter("x", System.Data.SqlDbType.Int)).Value = X;
-                        cmd.Parameters.Add(new SqlParameter("y", System.Data.SqlDbType.Int)).Value = Y;
-                        cmd.Parameters.Add(new SqlParameter("direction", System.Data.SqlDbType.Int)).Value = Direction;
-                        cmd.Parameters.Add(new SqlParameter("sprite", System.Data.SqlDbType.Int)).Value = Sprite;
-                        cmd.Parameters.Add(new SqlParameter("step", System.Data.SqlDbType.Int)).Value = Step;
-                        cmd.Parameters.Add(new SqlParameter("owner", System.Data.SqlDbType.Int)).Value = Owner;
-                        cmd.Parameters.Add(new SqlParameter("behavior", System.Data.SqlDbType.Int)).Value = Behavior;
-                        cmd.Parameters.Add(new SqlParameter("spawntime", System.Data.SqlDbType.Int)).Value = SpawnTime;
-                        cmd.Parameters.Add(new SqlParameter("health", System.Data.SqlDbType.Int)).Value = Health;
-                        cmd.Parameters.Add(new SqlParameter("maxhealth", System.Data.SqlDbType.Int)).Value = MaxHealth;
-                        cmd.Parameters.Add(new SqlParameter("damage", System.Data.SqlDbType.Int)).Value = Damage;
-                        cmd.Parameters.Add(new SqlParameter("desx", System.Data.SqlDbType.Int)).Value = DesX;
-                        cmd.Parameters.Add(new SqlParameter("desy", System.Data.SqlDbType.Int)).Value = DesY;
-                        cmd.Parameters.Add(new SqlParameter("exp", System.Data.SqlDbType.Int)).Value = Exp;
-                        cmd.Parameters.Add(new SqlParameter("money", System.Data.SqlDbType.Int)).Value = Money;
-                        cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
-                        cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
-                        cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
-                        cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-                    sql = "INSERT INTO NPCS";
-                    sql = sql + "(`NAME`,`X`,`Y`,`DIRECTION`,`SPRITE`,`STEP`,`OWNER`,`BEHAVIOR`,`SPAWNTIME`,`HEALTH`,`MAXHEALTH`,`DAMAGE`,`DESX`,`DESY`,`EXP`,`MONEY`,`RANGE`,`SHOPNUM`,`CHATNUM`)";
-                    sql = sql + " VALUES ";
-                    sql = sql + "('" + Name + "','" + X + "','" + Y + "','" + Direction + "','" + Sprite + "','" + Step + "','" + Owner + "','" + Behavior + "',";
-                    sql = sql + "'" + SpawnTime + "','" + Health + "','" + MaxHealth + "','" + Damage + "','" + DesX + "','" + DesY + "','" + Exp + "','" + Money + "','" + Range + "','" + ShopNum + "','" + ChatNum + "');";
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("x", System.Data.SqlDbType.Int)).Value = X;
+                    cmd.Parameters.Add(new SqlParameter("y", System.Data.SqlDbType.Int)).Value = Y;
+                    cmd.Parameters.Add(new SqlParameter("direction", System.Data.SqlDbType.Int)).Value = Direction;
+                    cmd.Parameters.Add(new SqlParameter("sprite", System.Data.SqlDbType.Int)).Value = Sprite;
+                    cmd.Parameters.Add(new SqlParameter("step", System.Data.SqlDbType.Int)).Value = Step;
+                    cmd.Parameters.Add(new SqlParameter("owner", System.Data.SqlDbType.Int)).Value = Owner;
+                    cmd.Parameters.Add(new SqlParameter("behavior", System.Data.SqlDbType.Int)).Value = Behavior;
+                    cmd.Parameters.Add(new SqlParameter("spawntime", System.Data.SqlDbType.Int)).Value = SpawnTime;
+                    cmd.Parameters.Add(new SqlParameter("health", System.Data.SqlDbType.Int)).Value = Health;
+                    cmd.Parameters.Add(new SqlParameter("maxhealth", System.Data.SqlDbType.Int)).Value = MaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("damage", System.Data.SqlDbType.Int)).Value = Damage;
+                    cmd.Parameters.Add(new SqlParameter("desx", System.Data.SqlDbType.Int)).Value = DesX;
+                    cmd.Parameters.Add(new SqlParameter("desy", System.Data.SqlDbType.Int)).Value = DesY;
+                    cmd.Parameters.Add(new SqlParameter("exp", System.Data.SqlDbType.Int)).Value = Exp;
+                    cmd.Parameters.Add(new SqlParameter("money", System.Data.SqlDbType.Int)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
+                    cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
+                    cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
+                    cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         public void SaveNpcToDatabase(int npcNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script = ReadAllText("SQL Data Scripts/SAVE NPC.sql");
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/SAVE NPC.sql");
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    sql.Open();
-                    using (var cmd = new SqlCommand(script, sql))
-                    {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
-                        cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
-                        cmd.Parameters.Add(new SqlParameter("x", System.Data.SqlDbType.Int)).Value = X;
-                        cmd.Parameters.Add(new SqlParameter("y", System.Data.SqlDbType.Int)).Value = Y;
-                        cmd.Parameters.Add(new SqlParameter("direction", System.Data.SqlDbType.Int)).Value = Direction;
-                        cmd.Parameters.Add(new SqlParameter("sprite", System.Data.SqlDbType.Int)).Value = Sprite;
-                        cmd.Parameters.Add(new SqlParameter("step", System.Data.SqlDbType.Int)).Value = Step;
-                        cmd.Parameters.Add(new SqlParameter("owner", System.Data.SqlDbType.Int)).Value = Owner;
-                        cmd.Parameters.Add(new SqlParameter("behavior", System.Data.SqlDbType.Int)).Value = Behavior;
-                        cmd.Parameters.Add(new SqlParameter("spawntime", System.Data.SqlDbType.Int)).Value = SpawnTime;
-                        cmd.Parameters.Add(new SqlParameter("health", System.Data.SqlDbType.Int)).Value = Health;
-                        cmd.Parameters.Add(new SqlParameter("maxhealth", System.Data.SqlDbType.Int)).Value = MaxHealth;
-                        cmd.Parameters.Add(new SqlParameter("damage", System.Data.SqlDbType.Int)).Value = Damage;
-                        cmd.Parameters.Add(new SqlParameter("desx", System.Data.SqlDbType.Int)).Value = DesX;
-                        cmd.Parameters.Add(new SqlParameter("desy", System.Data.SqlDbType.Int)).Value = DesY;
-                        cmd.Parameters.Add(new SqlParameter("exp", System.Data.SqlDbType.Int)).Value = Exp;
-                        cmd.Parameters.Add(new SqlParameter("money", System.Data.SqlDbType.Int)).Value = Money;
-                        cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
-                        cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
-                        cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
-                        cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-                    sql = "UPDATE NPCS SET ";
-                    sql = sql + "NAME = '" + Name + "', X = '" + X + "', Y = '" + Y + "', DIRECTION = '" + Direction + "', SPRITE = '" + Sprite + "', STEP = '" + Step + "', ";
-                    sql = sql + "OWNER = '" + Owner + "', BEHAVIOR = '" + Behavior + "', SPAWNTIME = '" + SpawnTime + "', HEALTH = '" + Health + "', MAXHEALTH = '" + MaxHealth + "', DAMAGE = '" + Damage + "', DESX = '" + DesX + "', DESY = '" + DesY + "', ";
-                    sql = sql + "EXP = '" + Exp + "', MONEY = '" + Money + "', RANGE = '" + Range + "', SHOPNUM = '" + ShopNum + "', CHATNUM = '" + ChatNum + "' ";
-                    sql = sql + "WHERE rowid = '" + npcNum + "';";
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
+                    cmd.Parameters.Add(new SqlParameter("name", System.Data.SqlDbType.Text)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("x", System.Data.SqlDbType.Int)).Value = X;
+                    cmd.Parameters.Add(new SqlParameter("y", System.Data.SqlDbType.Int)).Value = Y;
+                    cmd.Parameters.Add(new SqlParameter("direction", System.Data.SqlDbType.Int)).Value = Direction;
+                    cmd.Parameters.Add(new SqlParameter("sprite", System.Data.SqlDbType.Int)).Value = Sprite;
+                    cmd.Parameters.Add(new SqlParameter("step", System.Data.SqlDbType.Int)).Value = Step;
+                    cmd.Parameters.Add(new SqlParameter("owner", System.Data.SqlDbType.Int)).Value = Owner;
+                    cmd.Parameters.Add(new SqlParameter("behavior", System.Data.SqlDbType.Int)).Value = Behavior;
+                    cmd.Parameters.Add(new SqlParameter("spawntime", System.Data.SqlDbType.Int)).Value = SpawnTime;
+                    cmd.Parameters.Add(new SqlParameter("health", System.Data.SqlDbType.Int)).Value = Health;
+                    cmd.Parameters.Add(new SqlParameter("maxhealth", System.Data.SqlDbType.Int)).Value = MaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("damage", System.Data.SqlDbType.Int)).Value = Damage;
+                    cmd.Parameters.Add(new SqlParameter("desx", System.Data.SqlDbType.Int)).Value = DesX;
+                    cmd.Parameters.Add(new SqlParameter("desy", System.Data.SqlDbType.Int)).Value = DesY;
+                    cmd.Parameters.Add(new SqlParameter("exp", System.Data.SqlDbType.Int)).Value = Exp;
+                    cmd.Parameters.Add(new SqlParameter("money", System.Data.SqlDbType.Int)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("range", System.Data.SqlDbType.Int)).Value = Range;
+                    cmd.Parameters.Add(new SqlParameter("shopnum", System.Data.SqlDbType.Int)).Value = ShopNum;
+                    cmd.Parameters.Add(new SqlParameter("chatnum", System.Data.SqlDbType.Int)).Value = ChatNum;
+                    cmd.Parameters.Add(new SqlParameter("speed", System.Data.SqlDbType.Int)).Value = Speed;
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         public void LoadNpcFromDatabase(int npcNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
-            {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
                 string script = ReadAllText("SQL Data Scripts/LOAD NPC.sql");
                 using (var sql = new SqlConnection(connection))
@@ -262,86 +217,24 @@ namespace SabertoothServer
                         }
                     }
                 }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-                    sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        using (SQLiteDataReader read = cmd.ExecuteReader())
-                        {
-                            while (read.Read())
-                            {
-                                Name = read["NAME"].ToString();
-                                X = ToInt32(read["X"].ToString());
-                                Y = ToInt32(read["Y"].ToString());
-                                Direction = ToInt32(read["DIRECTION"].ToString());
-                                Sprite = ToInt32(read["SPRITE"].ToString());
-                                Step = ToInt32(read["STEP"].ToString());
-                                Owner = ToInt32(read["OWNER"].ToString());
-                                Behavior = ToInt32(read["BEHAVIOR"].ToString());
-                                SpawnTime = ToInt32(read["SPAWNTIME"].ToString());
-                                Health = ToInt32(read["HEALTH"].ToString());
-                                MaxHealth = ToInt32(read["MAXHEALTH"].ToString());
-                                Damage = ToInt32(read["DAMAGE"].ToString());
-                                DesX = ToInt32(read["DESX"].ToString());
-                                DesY = ToInt32(read["DESY"].ToString());
-                                Exp = ToInt32(read["EXP"].ToString());
-                                Money = ToInt32(read["MONEY"].ToString());
-                                Range = ToInt32(read["RANGE"].ToString());
-                                ShopNum = ToInt32(read["SHOPNUM"].ToString());
-                                ChatNum = ToInt32(read["CHATNUM"].ToString());
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         public void LoadNpcNameFromDatabase(int npcNum)
         {
-            if (DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command;
+                command = "SELECT NAME FROM NPCS WHERE ID=@id";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command;
-                    command = "SELECT NAME FROM NPCS WHERE ID=@id";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                Name = reader[0].ToString();
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-                    sql = "SELECT * FROM NPCS WHERE rowid = " + npcNum;
-
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        using (SQLiteDataReader read = cmd.ExecuteReader())
-                        {
-                            while (read.Read())
-                            {
-                                Name = read["NAME"].ToString();
-                            }
+                            Name = reader[0].ToString();
                         }
                     }
                 }
