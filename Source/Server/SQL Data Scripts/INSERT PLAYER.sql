@@ -88,7 +88,7 @@ VALUES (
 	@llhours,
 	@llminutes,
 	@llseconds,*/
-	@lastlogged,
+	GETDATE(),
 	@accountkey,
 	@active
 	);

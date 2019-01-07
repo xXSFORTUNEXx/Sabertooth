@@ -69,7 +69,7 @@ namespace SabertoothClient
                         {
                             Direction = (int)Directions.Down;
                             Moved = false;
-                            SendClearProjectile( slot);
+                            SendClearProjectile(slot);
                             return;
                         }
                         for (int i = 0; i < 10; i++)
