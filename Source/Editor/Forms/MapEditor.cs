@@ -2,7 +2,6 @@
 using SFML.Graphics;
 using SFML.System;
 using System;
-using System.Data.SQLite;
 using System.Drawing;
 using System.Windows.Forms;
 using static System.Convert;
@@ -99,61 +98,15 @@ namespace Editor.Forms
                 ItemPic[p] = new Texture("Resources/Items/" + (p + 1) + ".png");
             }
 
-            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM NPCS";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command = "SELECT COUNT(*) FROM NPCS";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
-                    {
-                        object count = cmd.ExecuteScalar();
-                        int result = ToInt32(count);
-                        for (int i = 0; i < result; i++)
-                        {
-                            e_Npc.LoadNpcNameFromDatabase(i + 1);
-                            cmbNpc1.Items.Add(e_Npc.Name);
-                            cmbNpc2.Items.Add(e_Npc.Name);
-                            cmbNpc3.Items.Add(e_Npc.Name);
-                            cmbNpc4.Items.Add(e_Npc.Name);
-                            cmbNpc5.Items.Add(e_Npc.Name);
-                            cmbNpc6.Items.Add(e_Npc.Name);
-                            cmbNpc7.Items.Add(e_Npc.Name);
-                            cmbNpc8.Items.Add(e_Npc.Name);
-                            cmbNpc9.Items.Add(e_Npc.Name);
-                            cmbNpc10.Items.Add(e_Npc.Name);
-                        }
-                    }
-
-                    command = "SELECT COUNT(*) FROM MAPS";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
-                    {
-                        object queue = cmd.ExecuteScalar();
-                        int result = ToInt32(queue);
-                        if (result == 0)
-                        {
-                            e_Map.CreateMapInDatabase();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    conn.Open();
-                    string sql;
-
-                    sql = "SELECT COUNT(*) FROM NPCS";
-
-                    object queue;
-                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                    {
-                        queue = cmd.ExecuteScalar();
-                    }
-                    int result = ToInt32(queue);
-
+                    object count = cmd.ExecuteScalar();
+                    int result = ToInt32(count);
                     for (int i = 0; i < result; i++)
                     {
                         e_Npc.LoadNpcNameFromDatabase(i + 1);
@@ -170,18 +123,14 @@ namespace Editor.Forms
                     }
                 }
 
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
+                command = "SELECT COUNT(*) FROM MAPS";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    using (var cmd = new SQLiteCommand(conn))
+                    object queue = cmd.ExecuteScalar();
+                    int result = ToInt32(queue);
+                    if (result == 0)
                     {
-                        conn.Open();
-                        cmd.CommandText = "SELECT COUNT(*) FROM MAPS";
-                        object queue = cmd.ExecuteScalar();
-                        int result = ToInt32(queue);
-                        if (result == 0)
-                        {
-                            e_Map.CreateMapInDatabase();
-                        }
+                        e_Map.CreateMapInDatabase();
                     }
                 }
             }
@@ -235,49 +184,25 @@ namespace Editor.Forms
 
         void LoadMapList()
         {
-            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM MAPS";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command = "SELECT COUNT(*) FROM MAPS";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
+                    object count = cmd.ExecuteScalar();
+                    int result = ToInt32(count);
+                    treeMaps.Nodes.Clear();
+                    treeMaps.BeginUpdate();
+                    for (int i = 1; i <= result; i++)
                     {
-                        object count = cmd.ExecuteScalar();
-                        int result = ToInt32(count);
-                        treeMaps.Nodes.Clear();
-                        treeMaps.BeginUpdate();
-                        for (int i = 1; i <= result; i++)
-                        {
-                            e_Map.LoadMapNameFromDatabase(i);
-                            treeMaps.Nodes.Add(e_Map.Name);
-                        }
-                        treeMaps.EndUpdate();
+                        e_Map.LoadMapNameFromDatabase(i);
+                        treeMaps.Nodes.Add(e_Map.Name);
                     }
+                    treeMaps.EndUpdate();
                 }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        cmd.CommandText = "SELECT COUNT(*) FROM MAPS";
-                        object queue = cmd.ExecuteScalar();
-                        int result = ToInt32(queue);
-                        treeMaps.Nodes.Clear();
-                        treeMaps.BeginUpdate();
-                        for (int i = 0; i < result; i++)
-                        {
-                            e_Map.LoadMapNameFromDatabase(i + 1);
-                            treeMaps.Nodes.Add(e_Map.Name);
-                        }
-                        treeMaps.EndUpdate();
-                    }
-                }
-            }        
+            }     
         }
 
         void UpdateView()
@@ -1395,31 +1320,15 @@ namespace Editor.Forms
         {
             e_Map.CreateMapInDatabase();
             int result;
-            if (Server.DBType == SQL_DATABASE_REMOTE.ToString())
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-                using (var sql = new SqlConnection(connection))
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM MAPS";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
-                    sql.Open();
-                    string command = "SELECT COUNT(*) FROM MAPS";
-                    using (SqlCommand cmd = new SqlCommand(command, sql))
-                    {
-                        object count = cmd.ExecuteScalar();
-                        result = ToInt32(count);
-                    }
-                }
-            }
-            else
-            {
-                using (var conn = new SQLiteConnection("Data Source=Database/Sabertooth.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        cmd.CommandText = "SELECT COUNT(*) FROM MAPS";
-                        object queue = cmd.ExecuteScalar();
-                        result = ToInt32(queue);
-                    }
+                    object count = cmd.ExecuteScalar();
+                    result = ToInt32(count);
                 }
             }
             SelectedIndex = result;
