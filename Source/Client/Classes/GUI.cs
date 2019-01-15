@@ -1964,7 +1964,6 @@ namespace SabertoothClient
             ImagePanel invPicE = (ImagePanel)sender;
             int itemSlot = ToInt32(invPicE.Name);
             
-
             if (player.Backpack[itemSlot].Name != "None")
             {
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
@@ -3087,7 +3086,7 @@ namespace SabertoothClient
         VertexArray m_Item = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_NpcSpawn = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_NpcAvoid = new VertexArray(PrimitiveType.Quads, 4);
-        Texture t_Mini = new Texture("Resources/Tilesets/minimap.png");
+        Texture t_Mini = new Texture("Resources/minimap.png");
 
         public void UpdateMiniMap() { }
 

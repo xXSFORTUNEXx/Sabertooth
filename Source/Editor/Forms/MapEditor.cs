@@ -9,6 +9,7 @@ using static System.Environment;
 using static System.Windows.Forms.Application;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
+using System.IO;
 
 namespace Editor.Forms
 {
@@ -18,10 +19,8 @@ namespace Editor.Forms
         RenderText e_Text = new RenderText();
         Map e_Map = new Map();
         SFML.Graphics.View e_View = new SFML.Graphics.View();
-        Texture[] e_Tileset = new Texture[2];
         public RenderStates states;
-        Sprite e_SelectedTile = new Sprite();
-        Texture e_GridTexture = new Texture("Resources/Tilesets/Grid.png");
+        Texture e_GridTexture = new Texture("Resources/Grid.png");
         Sprite e_Grid = new Sprite();
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
@@ -56,12 +55,15 @@ namespace Editor.Forms
         public VertexArray f_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
 
-        public const int Max_ItemPics = 8;
-        public const int Max_Sprites = 8;
+        public static int Max_ItemPics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
+        public static int Max_Sprites = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
+        public static int Max_Tilesets = Directory.GetFiles("Resources/Tilesets/", "*", SearchOption.TopDirectoryOnly).Length;
         public Texture[] ItemPic = new Texture[Max_ItemPics];
         public Sprite ItemSprite = new Sprite();
         public Texture[] SpritePic = new Texture[Max_Sprites];
         public Sprite e_Sprite = new Sprite();
+        public Texture[] e_Tileset = new Texture[Max_Tilesets];
+        public Sprite e_SelectedTile = new Sprite();
 
         public RenderTexture brightness = new RenderTexture(EDITOR_WIDTH, EDITOR_HEIGHT);
         public Sprite brightnessSprite = new Sprite();
@@ -82,7 +84,7 @@ namespace Editor.Forms
             picTileset.Paint += new PaintEventHandler(EditorTilesetPaint);
             picTileset.KeyDown += new KeyEventHandler(EditorTilesetKeyDown);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < Max_Tilesets; i++)
             {
                 cmbTileset.Items.Add("Tileset: " + (i + 1));
                 e_Tileset[i] = new Texture("Resources/Tilesets/" + (i + 1) + ".png");

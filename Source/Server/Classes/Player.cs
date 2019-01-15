@@ -610,7 +610,7 @@ namespace SabertoothServer
             if (players[index].Backpack[slot].Name != "None")
             {
                 int mapSlot = FindOpenMapItemSlot(maps[mapNum]);
-                if (mapSlot < 20)
+                if (mapSlot < MAX_MAP_ITEMS)
                 {
                     maps[mapNum].m_MapItem[mapSlot].Name = players[index].Backpack[slot].Name;
                     maps[mapNum].m_MapItem[mapSlot].X = players[index].X + OFFSET_X;
@@ -641,7 +641,7 @@ namespace SabertoothServer
                     players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
                     HandleData.SendPlayerInv(index);
 
-                    for (int p = 0; p < 5; p++)
+                    for (int p = 0; p < MAX_PLAYERS; p++)
                     {
                         if (players[p].Connection != null && mapNum == players[p].Map)
                         {
@@ -658,7 +658,7 @@ namespace SabertoothServer
 
         public void CheckPickup(int index, int map)
         {
-            for (int c = 0; c < 20; c++)
+            for (int c = 0; c < MAX_MAP_ITEMS; c++)
             {
                 if (maps[map].m_MapItem[c] != null && maps[map].m_MapItem[c].IsSpawned)
                 {
@@ -675,29 +675,29 @@ namespace SabertoothServer
         {
             int itemSlot = FindOpenInvSlot(Backpack);
 
-            if (itemSlot < 25)
+            if (itemSlot < MAX_INV_SLOTS)
             {
-                Backpack[itemSlot].Name = items[itemNum].Name;
-                Backpack[itemSlot].Sprite = items[itemNum].Sprite;
-                Backpack[itemSlot].Damage = items[itemNum].Damage;
-                Backpack[itemSlot].Armor = items[itemNum].Armor;
-                Backpack[itemSlot].Type = items[itemNum].Type;
-                Backpack[itemSlot].AttackSpeed = items[itemNum].AttackSpeed;
-                Backpack[itemSlot].ReloadSpeed = items[itemNum].ReloadSpeed;
-                Backpack[itemSlot].HealthRestore = items[itemNum].HealthRestore;
-                Backpack[itemSlot].HungerRestore = items[itemNum].HungerRestore;
-                Backpack[itemSlot].HydrateRestore = items[itemNum].HydrateRestore;
-                Backpack[itemSlot].Strength = items[itemNum].Strength;
-                Backpack[itemSlot].Agility = items[itemNum].Agility;
-                Backpack[itemSlot].Endurance = items[itemNum].Endurance;
-                Backpack[itemSlot].Stamina = items[itemNum].Stamina;
-                Backpack[itemSlot].Clip = items[itemNum].Clip;
-                Backpack[itemSlot].MaxClip = items[itemNum].MaxClip;
-                Backpack[itemSlot].ItemAmmoType = items[itemNum].ItemAmmoType;
-                Backpack[itemSlot].Value = items[itemNum].Value;
-                Backpack[itemSlot].ProjectileNumber = items[itemNum].ProjectileNumber;
-                Backpack[itemSlot].Price = items[itemNum].Price;
-                Backpack[itemSlot].Rarity = items[itemNum].Rarity;
+                Backpack[itemSlot].Name = maps[map].m_MapItem[itemNum].Name;
+                Backpack[itemSlot].Sprite = maps[map].m_MapItem[itemNum].Sprite;
+                Backpack[itemSlot].Damage = maps[map].m_MapItem[itemNum].Damage;
+                Backpack[itemSlot].Armor = maps[map].m_MapItem[itemNum].Armor;
+                Backpack[itemSlot].Type = maps[map].m_MapItem[itemNum].Type;
+                Backpack[itemSlot].AttackSpeed = maps[map].m_MapItem[itemNum].AttackSpeed;
+                Backpack[itemSlot].ReloadSpeed = maps[map].m_MapItem[itemNum].ReloadSpeed;
+                Backpack[itemSlot].HealthRestore = maps[map].m_MapItem[itemNum].HealthRestore;
+                Backpack[itemSlot].HungerRestore = maps[map].m_MapItem[itemNum].HungerRestore;
+                Backpack[itemSlot].HydrateRestore = maps[map].m_MapItem[itemNum].HydrateRestore;
+                Backpack[itemSlot].Strength = maps[map].m_MapItem[itemNum].Strength;
+                Backpack[itemSlot].Agility = maps[map].m_MapItem[itemNum].Agility;
+                Backpack[itemSlot].Endurance = maps[map].m_MapItem[itemNum].Endurance;
+                Backpack[itemSlot].Stamina = maps[map].m_MapItem[itemNum].Stamina;
+                Backpack[itemSlot].Clip = maps[map].m_MapItem[itemNum].Clip;
+                Backpack[itemSlot].MaxClip = maps[map].m_MapItem[itemNum].MaxClip;
+                Backpack[itemSlot].ItemAmmoType = maps[map].m_MapItem[itemNum].ItemAmmoType;
+                Backpack[itemSlot].Value = maps[map].m_MapItem[itemNum].Value;
+                Backpack[itemSlot].ProjectileNumber = maps[map].m_MapItem[itemNum].ProjectileNumber;
+                Backpack[itemSlot].Price = maps[map].m_MapItem[itemNum].Price;
+                Backpack[itemSlot].Rarity = maps[map].m_MapItem[itemNum].Rarity;
 
                 int TileX = maps[map].m_MapItem[itemNum].X;
                 int TileY = maps[map].m_MapItem[itemNum].Y;
@@ -705,7 +705,7 @@ namespace SabertoothServer
                 maps[map].m_MapItem[itemNum].Name = "None";
                 maps[map].m_MapItem[itemNum].IsSpawned = false;
 
-                for (int p = 0; p < 5; p++)
+                for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && Map == players[p].Map)
                     {

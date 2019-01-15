@@ -35,9 +35,9 @@ namespace SabertoothClient
         public MapProj[] m_MapProj = new MapProj[200];
         public MapItem[] m_MapItem = new MapItem[20];        
         public RenderStates ustates;
-        const int Max_Tilesets = 2;
+        public static int Max_Tilesets = Directory.GetFiles("Resources/Tilesets/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] TileSet = new Texture[Max_Tilesets];
-        Texture chestSprite = new Texture("Resources/Tilesets/Chest.png");
+        Texture chestSprite = new Texture("Resources/Chest.png");
         RenderTexture brightness = new RenderTexture(1024, 768);
         Sprite brightnessSprite = new Sprite();
         VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
@@ -453,7 +453,7 @@ namespace SabertoothClient
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
         public bool IsSpawned;
-        const int spriteTextures = 8;
+        static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
@@ -548,7 +548,7 @@ namespace SabertoothClient
         public int Rarity { get; set; }
 
         public bool IsSpawned;
-        const int spritePics = 8;
+        static int spritePics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
         VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] c_ItemSprite = new Texture[spritePics];
 

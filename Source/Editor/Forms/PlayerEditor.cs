@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using SabertoothServer;
 using static System.Convert;
 using static SabertoothServer.Globals;
+using System.IO;
 
 namespace Editor.Forms
 {
@@ -26,7 +27,7 @@ namespace Editor.Forms
         {
             InitializeComponent();
             picSprite.Image = Image.FromFile("Resources/Characters/1.png");
-            scrlSprite.Maximum = 7;
+            scrlSprite.Maximum = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
             LoadPlayerList();
         }
 

@@ -256,7 +256,7 @@ namespace SabertoothServer
             }
             for (int i = 0; i < MAX_MAPS; i++)
             {
-                for (int n = 0; n < 10; n++)
+                for (int n = 0; n < MAX_MAPS; n++)
                 {
                     int num = (maps[i].m_MapNpc[n].NpcNum - 1);
 
@@ -1054,6 +1054,7 @@ namespace SabertoothServer
         public const int OFFSET_Y = 11;
         public const int MAX_PARTY = 4;
         public const int MAX_INSTANCE_NPC = 20;
+        public const int MAX_INV_SLOTS = 25;
         //Config Globals
         public const string GAME_TITLE = "Sabertooth";
         public const string IP_ADDRESS = "10.16.0.3";

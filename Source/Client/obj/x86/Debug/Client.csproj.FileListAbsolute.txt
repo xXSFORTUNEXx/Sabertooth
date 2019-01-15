@@ -762,9 +762,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\2.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\1.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\2.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Chest.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\Grid.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\minimap.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-audio-2.dll
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-graphics-2.dll
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-system-2.dll
@@ -800,3 +797,13 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.Rende
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojAssemblyReference.cache
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\AccountKeyGenClass.dll
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\9.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Chest.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Grid.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\minimap.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\3.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\4.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\5.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\6.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\7.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\9.png
