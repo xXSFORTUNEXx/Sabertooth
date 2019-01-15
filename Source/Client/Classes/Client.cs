@@ -825,7 +825,7 @@ namespace SabertoothClient
         public const int SERVER_PORT = 14242;
         public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
         public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
-        public const float SIMULATED_MINIMUM_LATENCY = 0.065f;  //0.065f
+        public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
         public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
         public const string VERSION = "1.0"; //For beta and alpha

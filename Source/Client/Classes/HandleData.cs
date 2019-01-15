@@ -981,7 +981,8 @@ namespace SabertoothClient
         static void HandleConnectionData(NetIncomingMessage incMSG)
         {
             if (SabertoothClient.netClient.ServerConnection != null) { return; }
-            Console.WriteLine("Connected to server!");        }
+            Console.WriteLine("Connected to server!");
+        }
 
         static void HandleChatMessage(NetIncomingMessage incMSG)
         {

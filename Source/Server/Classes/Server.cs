@@ -1071,7 +1071,6 @@ namespace SabertoothServer
         public const string SMTP_PASS_CREDS = "Nextech789*";
         public const string SQL_SERVER_NAME = @"FDESKTOP-01\SFORTUNESQL";
         public const string SQL_SERVER_DATABASE = "Sabertooth";
-        public const string SQL_LOCAL_DATABASE = "Database/Sabertooth.db";
         public const string HEALTH_REGEN_TIME = "60000"; //60000 / 1000 = 1 MIN
         public const string HUNGER_DEGEN_TIME = "600000"; //600000 / 1000 = 10 MIN
         public const string HYDRATION_DEGEN_TIME = "300000"; //300000 / 1000 = 5 MIN
