@@ -558,6 +558,43 @@ namespace SabertoothClient
             }
         }
 
+        static void DrawBlood()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int i = 0; i < MAX_BLOOD_SPLATS; i++)
+            {
+                if (map.m_BloodSplats[i] != null)
+                {
+                    if (map.m_BloodSplats[i].X > minX && map.m_BloodSplats[i].X < maxX)
+                    {
+                        if (map.m_BloodSplats[i].X > minX && map.m_BloodSplats[i].X < maxX)
+                        {
+                            renderWindow.Draw(map.m_BloodSplats[i]);
+                        }
+                    }
+                }
+            }
+        }
+
         static void DrawChests()
         {
             int minX;
@@ -646,6 +683,7 @@ namespace SabertoothClient
                 renderWindow.Draw(map);
                 DrawChests();
                 DrawMapItems();
+                DrawBlood();
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
@@ -796,56 +834,5 @@ namespace SabertoothClient
             return true;
         }
         #endregion
-    }
-
-    public static class Globals
-    {
-        //Globals
-        public const byte NO = 0;
-        public const byte YES = 1;
-        public const int MAX_PLAYERS = 5;
-        public const int MAX_NPCS = 10;
-        public const int MAX_ITEMS = 50;
-        public const int MAX_PROJECTILES = 10;
-        public const int MAX_MAPS = 10;
-        public const int MAX_MAP_NPCS = 10;
-        public const int MAX_MAP_POOL_NPCS = 20;
-        public const int MAX_MAP_ITEMS = 20;
-        public const int MAX_MAP_X = 50;
-        public const int MAX_MAP_Y = 50;
-        public const int MAX_SHOPS = 10;
-        public const int MAX_CHATS = 15;
-        public const int MAX_CHESTS = 10;
-        public const int MAX_CHEST_ITEMS = 10;
-        public const int OFFSET_X = 16;
-        public const int OFFSET_Y = 11;
-        //Config Globals
-        public const string GAME_TITLE = "Sabertooth";
-        public const string IP_ADDRESS = "10.16.0.8";
-        public const int SERVER_PORT = 14242;
-        public const float CONNECTION_TIMEOUT = 5.0f;   //Was 25.0
-        public const float SIMULATED_RANDOM_LATENCY = 0f;   //0.085f
-        public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
-        public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
-        public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
-        public const string VERSION = "1.0"; //For beta and alpha
-        //Client Globals
-        public const uint SCREEN_WIDTH = 1024;
-        public const uint SCREEN_HEIGHT = 768;
-        public const int CANVAS_WIDTH = 1024;
-        public const int CANVAS_HEIGHT = 768;
-        public const int MAX_FPS = 60;
-        public const Styles SCREEN_STYLE = Styles.Titlebar;
-        public const int MAX_DRAWN_PROJECTILES = 200;
-        public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds
-        public const int PIC_X = 32;
-        public const int PIC_Y = 32;
-        public const int SW_HIDE = 0;
-        public const int SW_SHOW = 5;
-        //Screen Globals
-        public const int SHOP_STAT_WINDOW_X = 520;
-        public const int SHOP_STAT_WINDOW_Y = 65;
-        public const int INV_STAT_WINDOW_X = 530;
-        public const int INV_STAT_WINDOW_Y = 390;
     }
 }

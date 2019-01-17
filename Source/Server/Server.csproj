@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
+    <Compile Include="Classes\Globals.cs" />
     <Compile Include="Classes\Instance.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\HandleData.cs" />

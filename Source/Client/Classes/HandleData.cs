@@ -13,6 +13,7 @@ namespace SabertoothClient
     {
         public static int myIndex;
         public static int tempIndex;
+        static Random RND = new Random();
 
         public static void HandleDataMessage()
         {
@@ -231,6 +232,10 @@ namespace SabertoothClient
 
                             case (byte)PacketTypes.RequestActivation:
                                 HandleActivationRequest(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.CreateBlood:
+                                HandleCreateBlood(incMSG);
                                 break;
                         }
                         break;
@@ -646,6 +651,20 @@ namespace SabertoothClient
             map.m_MapProj[slot].Type = projectiles[proj].Type;
             map.m_MapProj[slot].Sprite = projectiles[proj].Sprite;
             map.m_MapProj[slot].Range = projectiles[proj].Range;
+        }
+
+        static void HandleCreateBlood(NetIncomingMessage incMSG)
+        {
+            int slot = incMSG.ReadVariableInt32();
+            int x = incMSG.ReadVariableInt32();
+            int y = incMSG.ReadVariableInt32();
+
+            map.m_BloodSplats[slot] = new BloodSplat();
+
+            map.m_BloodSplats[slot].X = x;
+            map.m_BloodSplats[slot].Y = y;
+            map.m_BloodSplats[slot].TexX = RND.Next(0, 5);
+            map.m_BloodSplats[slot].TexY = RND.Next(0, 5);
         }
 
         static void HandleUpdateAmmo(NetIncomingMessage incMSG)
@@ -1423,6 +1442,8 @@ namespace SabertoothClient
         PlayTime,
         LifeTime,
         AccountKey,
-        RequestActivation
+        RequestActivation,
+        CreateBlood,
+        ClearBlood
     }
 }

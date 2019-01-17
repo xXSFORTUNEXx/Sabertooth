@@ -10,11 +10,12 @@ using static System.Convert;
 using static SabertoothServer.Server;
 using static SabertoothServer.Globals;
 using static System.IO.File;
-
+using static SabertoothServer.Logging;
 namespace SabertoothServer
 {
     public class Map
     {
+        #region Properties
         [Category("Properties"), Description("Name of the map.")]
         public string Name { get; set; }
         [Category("Properties"), Description("Revision of the map.")]
@@ -29,17 +30,24 @@ namespace SabertoothServer
         public int RightMap { get; set; }
         [Category("Brightness"), Description("Brightness of the map. (0 - 255)")]
         public int Brightness { get; set; }
+        public int Id { get; set; }
+        public bool IsInstance { get; set; }
+        #endregion
+
+        #region Classes
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
         public Tile[,] MaskA = new Tile[50, 50];
         public Tile[,] FringeA = new Tile[50, 50];
-        public MapNpc[] m_MapNpc = new MapNpc[10];
-        public MapNpc[] r_MapNpc = new MapNpc[20];
-        public MapProj[] m_MapProj = new MapProj[200];
-        public MapItem[] m_MapItem = new MapItem[20];
-        public int Id { get; set; }
-        public bool IsInstance { get; set; }
+        public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
+        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
+        public MapProj[] m_MapProj = new MapProj[MAX_MAP_PROJECTILES];
+        public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
+        public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
+        #endregion
+
+        #region Database
         private byte[] ToByteArray(object source)
         {
             var formatter = new BinaryFormatter();
@@ -288,17 +296,19 @@ namespace SabertoothServer
                 }
             }
         }
+        #endregion
 
+        #region Projectiles
         public int FindOpenProjSlot()
         {
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
             {
                 if (m_MapProj[i] == null)
                 {
                     return i;
                 }
             }
-            return 200;
+            return MAX_MAP_PROJECTILES;
         }
 
         public void ClearProjSlot(int mapIndex, int slot)
@@ -306,30 +316,20 @@ namespace SabertoothServer
             if (m_MapProj[slot] != null)
             {
                 m_MapProj[slot] = null;
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < MAX_PLAYERS; i++)
                 {
                     if (players[i].Connection != null && players[i].Map == mapIndex)
                     {
-                        SendClearProjectileToAll(players[i].Connection, mapIndex, slot);
+                        SendClearProjectileTo(players[i].Connection, mapIndex, slot);
                     }
                 }
             }
         }
 
-        void SendClearProjectileToAll(NetConnection p_Conn, int mapIndex, int slot)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.ClearProj);
-            outMSG.Write(maps[mapIndex].Name);
-            outMSG.WriteVariableInt32(slot);
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-
         public void CreateProjectile(int mapIndex, int playerIndex)
         {
             int slot = FindOpenProjSlot();
-
-            if (slot == 200) { WriteLine("Bullet max reached!"); return; }
+            if (slot == MAX_MAP_PROJECTILES) { WriteMessageLog("Bullet max reached!"); return; }
 
             int projNum = players[playerIndex].mainWeapon.ProjectileNumber - 1;
             int damage = players[playerIndex].mainWeapon.Damage + projectiles[projNum].Damage;
@@ -347,16 +347,16 @@ namespace SabertoothServer
                 Direction = players[playerIndex].AimDirection
             };
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Connection != null && players[i].Map == mapIndex)
                 {
-                    SendNewProjectileToAll(players[i].Connection, mapIndex, slot, projNum);
+                    SendNewProjectileTo(players[i].Connection, mapIndex, slot, projNum);
                 }
             }
         }
 
-        void SendNewProjectileToAll(NetConnection p_Conn, int mapIndex, int slot, int projNum)
+        void SendNewProjectileTo(NetConnection p_Conn, int mapIndex, int slot, int projNum)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.CreateProj);
@@ -367,11 +367,85 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(m_MapProj[slot].Direction);            
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
+
+        void SendClearProjectileTo(NetConnection p_Conn, int mapIndex, int slot)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ClearProj);
+            outMSG.Write(maps[mapIndex].Name);
+            outMSG.WriteVariableInt32(slot);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+        #endregion
+
+        #region Blood
+        public int FindOpenBloodSlot()
+        {
+            for (int i = 0; i < MAX_BLOOD_SPLATS; i++)
+            {
+                if (m_BloodSplats[i] == null)
+                {
+                    return i;
+                }
+            }
+            return MAX_BLOOD_SPLATS;
+        }
+
+        public void ClearBloodSlot(int mapIndex, int slot)
+        {
+            if (m_BloodSplats[slot] != null)
+            {
+                m_BloodSplats[slot] = null;
+                for (int i = 0; i < MAX_PLAYERS; i++)
+                {
+                    if (players[i].Connection != null && players[i].Map == mapIndex)
+                    {
+                        SendClearBloodSplatTo(players[i].Connection, mapIndex, slot);
+                    }
+                }
+            }
+        }
+
+        public void CreateBloodSplat(int mapIndex, int x, int y)
+        {
+            int slot = FindOpenBloodSlot();
+            if (slot == MAX_BLOOD_SPLATS) { WriteMessageLog("Bloodspat max reached!"); return; }
+            m_BloodSplats[slot] = new BloodSplat(x, y);
+
+            for (int i = 0; i < MAX_PLAYERS; i++)
+            {
+                if (players[i].Connection != null && players[i].Map == mapIndex)
+                {
+                    SendCreateBloodSplatTo(players[i].Connection, mapIndex, slot);
+                }
+            }
+        }
+
+        public void SendCreateBloodSplatTo(NetConnection p_Conn, int mapIndex, int slot)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.CreateBlood);
+            outMSG.WriteVariableInt32(slot);
+            outMSG.WriteVariableInt32(m_BloodSplats[slot].X);
+            outMSG.WriteVariableInt32(m_BloodSplats[slot].Y);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendClearBloodSplatTo(NetConnection p_Conn, int mapIndex, int slot)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ClearBlood);
+            outMSG.Write(maps[mapIndex].Name);
+            outMSG.WriteVariableInt32(slot);
+            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
+        }
+        #endregion
     }
 
     [Serializable()]
     public class MapNpc
     {
+        #region Properties
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -393,6 +467,8 @@ namespace SabertoothServer
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
         public int Speed { get; set; }
+        #endregion
+
         public bool IsSpawned;
         public bool DidMove;
         public int Target;
@@ -1013,9 +1089,28 @@ namespace SabertoothServer
         }
     }
 
+    public class BloodSplat
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int TexX { get; set; }
+        public int TexY { get; set; }
+        public bool Active { get; set; }
+
+        public BloodSplat() { }
+
+        public BloodSplat(int x, int y)
+        {
+            X = x;
+            Y = y;
+            Active = true;
+        }
+    }
+
     [Serializable()]
     public class MapItem
     {
+        #region Properties
         public string Name { get; set; }
         public int Sprite { get; set; }
         public int Damage { get; set; }
@@ -1037,10 +1132,11 @@ namespace SabertoothServer
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
         public int Rarity { get; set; }
-
         public int ItemNum { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        #endregion
+
         public int ExpireTick;
 
         public bool IsSpawned;

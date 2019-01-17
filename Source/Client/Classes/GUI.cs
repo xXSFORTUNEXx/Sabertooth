@@ -3086,7 +3086,7 @@ namespace SabertoothClient
         VertexArray m_Item = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_NpcSpawn = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray m_NpcAvoid = new VertexArray(PrimitiveType.Quads, 4);
-        Texture t_Mini = new Texture("Resources/minimap.png");
+        Texture t_Mini = new Texture("Resources/Minimap.png");
 
         public void UpdateMiniMap() { }
 

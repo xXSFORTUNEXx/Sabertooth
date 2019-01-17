@@ -12,6 +12,7 @@ namespace SabertoothClient
 {
     public class Map : Drawable
     {
+        #region Properties
         public string Name { get; set; }
         public int Revision { get; set; }
         public int TopMap { get; set; }
@@ -19,6 +20,11 @@ namespace SabertoothClient
         public int LeftMap { get; set; }
         public int RightMap { get; set; }
         public int Brightness { get; set; }
+        public bool isInstance { get; set; }
+        public int Id { get; set; }
+        #endregion
+
+        #region Classes
         public Tile[,] Ground = new Tile[50, 50];
         public Tile[,] Mask = new Tile[50, 50];
         public Tile[,] Fringe = new Tile[50, 50];
@@ -30,10 +36,11 @@ namespace SabertoothClient
         public VertexArray f_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray chestPic = new VertexArray(PrimitiveType.Quads, 4);
-        public MapNpc[] m_MapNpc = new MapNpc[10];
-        public MapNpc[] r_MapNpc = new MapNpc[20];
-        public MapProj[] m_MapProj = new MapProj[200];
-        public MapItem[] m_MapItem = new MapItem[20];        
+        public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
+        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
+        public MapProj[] m_MapProj = new MapProj[MAX_MAP_PROJECTILES];
+        public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
+        public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         public RenderStates ustates;
         public static int Max_Tilesets = Directory.GetFiles("Resources/Tilesets/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] TileSet = new Texture[Max_Tilesets];
@@ -42,8 +49,7 @@ namespace SabertoothClient
         Sprite brightnessSprite = new Sprite();
         VertexArray LightParticle = new VertexArray(PrimitiveType.TrianglesFan, 18);
         RenderStates overlayStates = new RenderStates(BlendMode.Multiply);
-        public bool isInstance { get; set; }
-        public int Id { get; set; }
+        #endregion
 
         public Map()
         {
@@ -53,6 +59,7 @@ namespace SabertoothClient
             }
         }
 
+        #region Database
         private byte[] ToByteArray(object source)
         {
             var formatter = new BinaryFormatter();
@@ -94,7 +101,7 @@ namespace SabertoothClient
                             {
                                 exists = true;
                                 currentRevision = ToInt32(read["REVISION"].ToString());
-                            }                      
+                            }
                         }
                     }
                     finally
@@ -212,6 +219,9 @@ namespace SabertoothClient
             }
         }
 
+        #endregion
+
+        #region Graphics
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
             int minX;
@@ -428,10 +438,12 @@ namespace SabertoothClient
             }
             brightness.Draw(LightParticle, overlayStates);
         }
+        #endregion
     }
 
     public class MapNpc : Drawable
     {
+        #region Properties
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -452,6 +464,8 @@ namespace SabertoothClient
         public int Money { get; set; }
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
+        #endregion
+
         public bool IsSpawned;
         static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
@@ -520,8 +534,43 @@ namespace SabertoothClient
         }
     }
 
+    public class BloodSplat : Drawable
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int TexX { get; set; }
+        public int TexY { get; set; }
+        public bool Active { get; set; }
+        VertexArray bloodPic = new VertexArray(PrimitiveType.Quads, 4);
+        Texture c_bloodSprite = new Texture("Resources/Blood.png");
+
+        public BloodSplat() { }
+
+        public BloodSplat(int x, int y, int tx, int ty)
+        {
+            X = x;
+            Y = y;
+            TexX = tx;
+            TexY = ty;
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            int tx = (TexX * PIC_X);
+            int ty = (TexY * PIC_Y);
+            bloodPic[0] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y)), new Vector2f(tx, ty));
+            bloodPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(tx + PIC_X, ty));
+            bloodPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(tx + PIC_X,  ty + PIC_Y));
+            bloodPic[3] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y) + PIC_Y), new Vector2f(tx, ty + PIC_Y));
+
+            states.Texture = c_bloodSprite;
+            target.Draw(bloodPic, states);
+        }
+    }
+
     public class MapItem : Drawable
     {
+        #region Properties
         public string Name { get; set; }
         public int ItemNum { get; set; }
         public int X { get; set; }
@@ -546,6 +595,7 @@ namespace SabertoothClient
         public int ProjectileNumber { get; set; }
         public int Price { get; set; }
         public int Rarity { get; set; }
+        #endregion
 
         public bool IsSpawned;
         static int spritePics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;

@@ -1,4 +1,4 @@
 # Sabertooth
-Zombie survival ORPG. You can build a town, make food, hunt, fight for your life against zombies and humans the world is at your disposal.
+Its an ORPG engine thing I like to develop.
 
 Developed by Steven Fortune.

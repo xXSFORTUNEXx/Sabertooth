@@ -384,9 +384,10 @@ namespace SabertoothServer
                 if (maps[c_Map].m_MapProj[slot] == null) { return; }
 
                 maps[c_Map].ClearProjSlot(c_Map, slot);
+                maps[c_Map].CreateBloodSplat(c_Map, maps[c_Map].m_MapNpc[npc].X, maps[c_Map].m_MapNpc[npc].Y);
                 bool updatePlayer = maps[c_Map].m_MapNpc[npc].DamageNpc(players[owner], maps[c_Map], damage);
 
-                for (int p = 0; p < 5; p++)
+                for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && c_Map == players[p].Map)
                     {
@@ -401,9 +402,10 @@ namespace SabertoothServer
                 if (maps[c_Map].m_MapProj[slot] == null) { return; }
 
                 maps[c_Map].ClearProjSlot(c_Map, slot);
+                maps[c_Map].CreateBloodSplat(c_Map, maps[c_Map].r_MapNpc[npc].X, maps[c_Map].r_MapNpc[npc].Y);
                 bool updatePlayer = maps[c_Map].r_MapNpc[npc].DamageNpc(players[owner], maps[c_Map], damage);
 
-                for (int p = 0; p < 5; p++)
+                for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && c_Map == players[p].Map)
                     {
@@ -2022,6 +2024,8 @@ namespace SabertoothServer
         PlayTime,
         LifeTime,
         AccountKey,
-        RequestActivation
+        RequestActivation,
+        CreateBlood,
+        ClearBlood
     }
 }

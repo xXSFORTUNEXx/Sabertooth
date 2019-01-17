@@ -120,6 +120,7 @@
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
     <Compile Include="Classes\Client.cs" />
+    <Compile Include="Classes\Globals.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\GUI.cs" />
     <Compile Include="Classes\HandleData.cs" />
@@ -169,6 +170,9 @@
     </Content>
     <Content Include="csfml-window-2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Blood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Characters\1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -245,7 +249,7 @@
     <Content Include="Resources\Grid.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\minimap.png">
+    <Content Include="Resources\Minimap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Tilesets\3.png">

@@ -11,6 +11,7 @@ namespace SabertoothServer
 {
     public class Npc
     {
+        #region Properties
         public int Id { get; set; }
         public string Name { get; set; }
         public int X { get; set; }
@@ -32,6 +33,9 @@ namespace SabertoothServer
         public int ShopNum { get; set; }
         public int ChatNum { get; set; }
         public int Speed { get; set; }
+        #endregion
+
+        #region Variables
         public bool IsSpawned;
         public bool DidMove;
         public int Target;
@@ -39,7 +43,9 @@ namespace SabertoothServer
         public int spawnTick;
         public int SpawnX;
         public int SpawnY;
+        #endregion
 
+        #region Constructors
         public Npc() { }
 
         public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy,
@@ -88,7 +94,9 @@ namespace SabertoothServer
             ShopNum = 0;
             ChatNum = 0;
         }
+        #endregion
 
+        #region Database
         public void CreateNpcInDatabase()
         {
             Name = "Default";
@@ -240,7 +248,9 @@ namespace SabertoothServer
                 }
             }
         }
+        #endregion
 
+        #region Voids
         public bool DamageNpc(Player s_Player, Map s_Map, int damage)
         {
             Health -= damage;
@@ -827,6 +837,7 @@ namespace SabertoothServer
                     break;
             }
         }
+        #endregion
     }
 
     public enum BehaviorType
