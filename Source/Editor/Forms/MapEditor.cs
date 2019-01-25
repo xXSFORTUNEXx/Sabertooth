@@ -1215,6 +1215,9 @@ namespace Editor.Forms
             lblType.Text = "Type: Map Item";
             e_SpawnNumber = 1;
             e_SpawnAmount = 1;
+            e_Item.LoadItemFromDatabase(scrlItemNum.Value);
+            lblItemNum.Text = "Item: " + scrlItemNum.Value + " - " + e_Item.Name;
+            picItem.Image = System.Drawing.Image.FromFile("Resources/Items/" + e_Item.Sprite + ".png");
             pnlMapItem.Visible = true;
             pnlNpcSpawn.Visible = false;
             pnlChest.Visible = false;
@@ -1223,7 +1226,9 @@ namespace Editor.Forms
         private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)
         {
             e_SpawnNumber = scrlItemNum.Value;            
-            lblItemNum.Text = "Item Number: " + scrlItemNum.Value;
+            e_Item.LoadItemFromDatabase(scrlItemNum.Value);
+            lblItemNum.Text = "Item: " + scrlItemNum.Value + " - " + e_Item.Name;
+            picItem.Image = System.Drawing.Image.FromFile("Resources/Items/" + e_Item.Sprite + ".png");
         }
 
         private void scrlItemAmount_Scroll(object sender, ScrollEventArgs e)

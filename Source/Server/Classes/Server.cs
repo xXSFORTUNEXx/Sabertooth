@@ -74,6 +74,7 @@ namespace SabertoothServer
 
     public static class Server
     {
+        #region Classes
         public static Player[] players = new Player[MAX_PLAYERS];
         public static Npc[] npcs = new Npc[MAX_NPCS];
         public static Item[] items = new Item[MAX_ITEMS];
@@ -85,6 +86,9 @@ namespace SabertoothServer
         public static WorldTime worldTime = new WorldTime();
         public static Instance instance = new Instance();
         public static Random RND = new Random();
+        #endregion
+
+        #region Variables
         public static bool isRunning;
         private static int saveTick;
         private static int aiTick;
@@ -109,6 +113,7 @@ namespace SabertoothServer
         static int lastFrameRate;
         static int frameRate;
         static int fps;
+        #endregion
 
         public static void ServerLoop()
         {
@@ -143,69 +148,6 @@ namespace SabertoothServer
             Exit(0);
         }
 
-        public static void CheckSQLConnection()
-        {
-            string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
-            string script = ReadAllText("SQL Scripts/DATABASE.sql");
-            try
-            {
-                using (var sql = new SqlConnection(connection))
-                {
-                    sql.Open();
-                    using (var cmd = new SqlCommand(script, sql))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
-                CheckDatabaseTables();
-            }
-            catch (Exception e)
-            {
-                Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
-                Logging.WriteLog(e.Message, "SQL");
-            }
-        }
-
-        public static void CheckDatabaseTables()
-        {
-            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script;
-            try
-            {
-                using (var sql = new SqlConnection(connection))
-                {
-                    sql.Open();
-
-                    using (var cmd = new SqlCommand())
-                    {
-                        cmd.Connection = sql;
-                        script = ReadAllText("SQL Scripts/PLAYERS.sql");
-                        script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
-                        script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
-                        script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
-                        script += ReadAllText("SQL Scripts/INVENTORY.sql");
-                        script += ReadAllText("SQL Scripts/BANK.sql");
-                        script += ReadAllText("SQL Scripts/ITEMS.sql");
-                        script += ReadAllText("SQL Scripts/NPCS.sql");
-                        script += ReadAllText("SQL Scripts/PROJECTILES.sql");
-                        script += ReadAllText("SQL Scripts/SHOPS.sql");
-                        script += ReadAllText("SQL Scripts/CHAT.sql");
-                        script += ReadAllText("SQL Scripts/MAPS.sql");
-                        script += ReadAllText("SQL Scripts/CHESTS.sql");
-                        script += ReadAllText("SQL Scripts/STATS.sql");
-                        cmd.CommandText = script;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.WriteMessageLog("SQL execution error, Check log for details...", "SQL");
-                Logging.WriteLog(e.Message, "SQL");
-            }
-        }
-
         private static void InitArrays()
         {
             #region Players
@@ -221,8 +163,8 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Loading maps...");
             for (int i = 0; i < MAX_MAPS; i++)
             {
-                    maps[i] = new Map();
-                    maps[i].LoadMapFromDatabase(i + 1);
+                maps[i] = new Map();
+                maps[i].LoadMapFromDatabase(i + 1);
             }
             Logging.WriteMessageLog("Maps loaded successfully");
             #endregion
@@ -323,7 +265,73 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Server is listening for connections...");
         }
 
-        #region Server Check Voids
+
+        #region Database
+        public static void CheckSQLConnection()
+        {
+            string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
+            string script = ReadAllText("SQL Scripts/DATABASE.sql");
+            try
+            {
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
+                CheckDatabaseTables();
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
+                Logging.WriteLog(e.Message, "SQL");
+            }
+        }
+
+        public static void CheckDatabaseTables()
+        {
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            string script;
+            try
+            {
+                using (var sql = new SqlConnection(connection))
+                {
+                    sql.Open();
+
+                    using (var cmd = new SqlCommand())
+                    {
+                        cmd.Connection = sql;
+                        script = ReadAllText("SQL Scripts/PLAYERS.sql");
+                        script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
+                        script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
+                        script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
+                        script += ReadAllText("SQL Scripts/INVENTORY.sql");
+                        script += ReadAllText("SQL Scripts/BANK.sql");
+                        script += ReadAllText("SQL Scripts/ITEMS.sql");
+                        script += ReadAllText("SQL Scripts/NPCS.sql");
+                        script += ReadAllText("SQL Scripts/PROJECTILES.sql");
+                        script += ReadAllText("SQL Scripts/SHOPS.sql");
+                        script += ReadAllText("SQL Scripts/CHAT.sql");
+                        script += ReadAllText("SQL Scripts/MAPS.sql");
+                        script += ReadAllText("SQL Scripts/CHESTS.sql");
+                        script += ReadAllText("SQL Scripts/STATS.sql");
+                        cmd.CommandText = script;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog("SQL execution error, Check log for details...", "SQL");
+                Logging.WriteLog(e.Message, "SQL");
+            }
+        }
+        #endregion
+
+        #region Server Logic
         static void UpTime()
         {
             if (TickCount - suptimeTick > A_MILLISECOND)
@@ -684,6 +692,7 @@ namespace SabertoothServer
                 aiTick = TickCount;
             }
         }
+
         static void CommandWindow()
         {
             string input;
@@ -694,136 +703,21 @@ namespace SabertoothServer
                 bool isDynamic = false;
                 Logging.WriteLog("Command: " + input, "Commands");   //Log which command was used
 
-                //Dynamic Commands
-                //Add a latency to all clients for testing
-                if (input.Length >= 11 && input.Substring(0, 10) == "minlatency")
-                {
-                    string floatseconds = input.Substring(11);
-                    int intseconds = ToInt32(floatseconds);
-                    string mseconds = floatseconds.Insert(0, "0.0");
-                    float delay = ToSingle(mseconds);
-
-                    if (intseconds >= 15 || intseconds == 0)
-                    {
-                        SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
-                        Logging.WriteMessageLog("Minimum latency is now " + floatseconds + "ms");
-                    }
-                    else
-                    {
-                        Logging.WriteMessageLog("Value must be greater or equal to 14, value can be 0 to remove latency");
-                    }
-                    isDynamic = true;
-                }
-
-                //Checks for a 4 octect ip address (wrote this cause I wasnt paying attention to how the server pulls its ip from the host)
-                if (input.Length >= 13 && input.Substring(0, 12) == "newnetserver")
-                {
-                    string ipaddress = input.Substring(13); //Create substring of the IP address
-                    string[] octect = ipaddress.Split('.'); //Make sure we have 4 octets by splitting the ip address into seperate strings for each octet
-                    bool[] failed = { false, false };
-                    int check = 0;
-
-                    if (octect.Length == 4) { failed[0] = true; }
-                    if (failed[0] != false)
-                    {
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (octect[i] != null && octect[i] != "")
-                            {
-                                if (ToInt32(octect[i]) >= 0 && ToInt32(octect[i]) <= 255)
-                                {
-                                    check += 1;
-                                }
-                            }
-                        }
-                    }
-
-                    if (check == 4) { failed[1] = true; }
-
-                    if (failed[0] == true && failed[1] == true)
-                    {
-                        Console.WriteLine("Valid IP: " + ipaddress);
-                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid IP: " + ipaddress);
-                    }
-                    isDynamic = true;
-                }
-
-                if (input.Length >= 11 && input.Substring(0, 10) == "sqlcommand")
-                {
-                    string command = input.Substring(11);
-                    try
-                    {
-                        string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                        using (var sql = new SqlConnection(connection))
-                        {
-                            sql.Open();
-                            using (var cmd = new SqlCommand(command, sql))
-                            {
-                                cmd.ExecuteNonQuery();
-                                Logging.WriteMessageLog("Command: " + cmd.CommandText);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.WriteMessageLog(e.Message, "SQL");
-                    }
-                    isDynamic = true;
-                }
-
-                if (input.Length >= 7 && input.Substring(0, 7) == "account")    //Check for account command
-                {
-                    if (input.Substring(8, 6) == "create")    //Create
-                    {
-                        if (input.Length >= 14)
-                        {
-                            string restofInfo = input.Substring(14);  //Get whats left of the string after account create (username and pass)  
-                            string[] finalInfo = restofInfo.Split(' '); //Split the username and password into their own strings
-                            if (finalInfo[1].Length >= 3 && finalInfo[2].Length >= 3 && finalInfo[3].Length >= 3)   //Make sure they are both at least three characters long
-                            {
-                                Player ac_Player = new Player(finalInfo[1], finalInfo[2], finalInfo[3], 0, 0, 0, 0, 0, 1, 100, 100, 100, 0,
-                                                                100, 10, 100, 100, 5, 5, 5, 5, 1000);   //Create the player in an array so we can save it
-                                ac_Player.CreatePlayerInDatabase();
-                                Logging.WriteMessageLog("Account create! Username: " + finalInfo[1] + ", Password: " + finalInfo[2], "Commands"); //Let the operator know
-                            }
-                            else { Logging.WriteMessageLog("USERNAME and PASSWORD must be 3 characters each!", "Commands"); } //Dont fuck it up by making basic shit
-
-                        }
-                    }
-                    else if (input.Substring(8, 6) == "delete")
-                    {
-                        if (input.Length >= 14)
-                        {
-                            string restofInfo = input.Substring(14);
-                            if (AccountExist(restofInfo))
-                            {
-                                Console.Write("Are you sure? (y/n)");
-                                string answer = Console.ReadLine();
-                                if (answer == "y") { Delete("Players / " + restofInfo + ".xml"); return; }
-                            }
-                            else { Logging.WriteMessageLog("Account doesnt exist!", "Commands"); return; }
-                        }
-                    }
-                    else { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); return; }  //Did you provide a modifier?
-                    isDynamic = true;
-                }
-
-                //Basic commands
+                #region Commands
                 switch (input)  //Basic commands can be ran in a switch statement since they dont require modifiers and arguments
                 {
                     case "shutdown":    //Shutdown the server in about 3 seconds
                         isRunning = false;  //Break the loop
                         break;
+
                     case "exit":    //Same as shutdown command but shorter and it was the first command it wrote
                         isRunning = false;  //Break the loop
                         break;
+
                     case "saveall":    //Save all players (online) which just saves all accounts to their respective XML files
                         SaveAll();  //The void for this command
                         break;
+
                     case "info":
                         string hostName = Dns.GetHostName();
                         float latency = SabertoothServer.netServer.Configuration.SimulatedMinimumLatency;
@@ -850,34 +744,159 @@ namespace SabertoothServer
                             }
                         }
                         break;
+
                     case "uptime":
                         Logging.WriteMessageLog(upTime, "Commands");
                         Logging.WriteMessageLog("Local Time: " + worldTime.Time, "Commands");
                         break;
-                    case "accounts":
 
+                    case "createaccount":
+                        Logging.WriteMessageLogLine("Username: ", "Commands");
+                        string name = Console.ReadLine();
+                        Logging.WriteMessageLogLine("Password: ", "Commands");
+                        string pass = Console.ReadLine();
+                        Logging.WriteMessageLogLine("Email Address: ", "Commands");
+                        string email = Console.ReadLine();
+
+                        if (name.Length >= 3 && pass.Length >= 3 && email.Length >= 5)
+                        {
+                            Player c_Player = new Player(name, pass, email, 0, 0, 0, 0, 0, 1, 100, 100, 100, 0, 0, 0, 100, 100, 1, 1, 1, 1, 1000);
+                            c_Player.CreatePlayerInDatabase();
+                            Logging.WriteMessageLog("Account created! UN: " + name + " EA: " + email, "Commands");
+                        } else { Logging.WriteMessageLog("Name, Password or Email invalid. Please try again!"); }
                         break;
+
+                    case "execsql":
+                        string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+                        Logging.WriteMessageLogLine("Script location: ", "Commands");
+                        string scriptFile = Console.ReadLine();
+                        if (Exists(scriptFile) || scriptFile == null)
+                        {
+                            string script = ReadAllText(scriptFile);
+
+                            using (var sql = new SqlConnection(connection))
+                            {
+                                sql.Open();
+                                using (var cmd = new SqlCommand(script, sql))
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                Logging.WriteMessageLog("Script executed successfully!");
+                            }
+                        }
+                        else
+                        {
+                            Logging.WriteMessageLog("Invalid file/location...");
+                        }
+                        break;
+
+                    case "activeacc":
+                        Logging.WriteMessageLogLine("Username: ", "Commands");
+                        string aname = Console.ReadLine();
+
+                        if (AccountExist(aname))
+                        {
+                            Player c_Player = new Player();
+                            c_Player.LoadPlayerIDFromDatabase(aname);
+                            c_Player.LoadPlayerNameFromDatabase(c_Player.Id);
+
+                            if (!c_Player.IsAccountActive())
+                            {
+                                c_Player.UpdateAccountStatusInDatabase();
+                                Logging.WriteMessageLog("Account " + aname + " now activated!");
+                            }
+                            else { Logging.WriteMessageLog("Accounts is already active!"); }
+                        }
+                        else { Logging.WriteMessageLog("Accounts doesnt exist!"); }
+                        break;
+
+                    case "projcheck":
+                        Logging.WriteMessageLogLine("Map number: ", "Commands");
+                        string m_Num = Console.ReadLine();
+                        
+                        int total = 0;
+                        for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
+                        {
+                            if (maps[ToInt32(m_Num)].m_MapProj[i] != null)
+                            {
+                                total += 1;
+                            }
+                        }
+                        Logging.WriteMessageLog("Currently [" + total + "] projectiles in use", "Commands");
+
+                        if (total > 0)
+                        {
+                            Logging.WriteMessageLogLine("View them? (y/n): ", "Commands");
+                            string info = Console.ReadLine();
+                            if (info.ToLower() == "y")
+                            {
+                                for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
+                                {
+                                    if (maps[ToInt32(m_Num)].m_MapProj[i] != null)
+                                    {
+                                        Logging.WriteLog("Name: " + maps[ToInt32(m_Num)].m_MapProj[i].Name, "Commands");
+                                        Logging.WriteLog("X: " + maps[ToInt32(m_Num)].m_MapProj[i].X, "Commands");
+                                        Logging.WriteLog("Y: " + maps[ToInt32(m_Num)].m_MapProj[i].Y, "Commands");
+                                        Logging.WriteLog("Direction: " + maps[ToInt32(m_Num)].m_MapProj[i].Direction, "Commands");
+                                        Logging.WriteLog("Damage: " + maps[ToInt32(m_Num)].m_MapProj[i].Damage, "Commands");
+                                        Logging.WriteLog("Range: " + maps[ToInt32(m_Num)].m_MapProj[i].Range, "Commands");
+                                        Logging.WriteLog("Sprite: " + maps[ToInt32(m_Num)].m_MapProj[i].Sprite, "Commands");
+                                        Logging.WriteLog("Owner:" + players[maps[ToInt32(m_Num)].m_MapProj[i].Owner].Name, "Commands");
+                                        Logging.WriteLog("Type: " + maps[ToInt32(m_Num)].m_MapProj[i].Type, "Commands");
+                                        Logging.WriteLog("Speed: " + maps[ToInt32(m_Num)].m_MapProj[i].Speed, "Commands");
+                                    }
+                                }
+                                Logging.WriteMessageLog("Projectiles written to file..check log..");
+                            }
+                        }
+
+                        Logging.WriteMessageLogLine("Would you like to reset them? (y/n): ", "Commands");
+                        string reset = Console.ReadLine();
+                        if (reset.ToLower() == "y")
+                        {
+                            for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
+                            {
+                                maps[ToInt32(m_Num)].m_MapProj[i] = null;
+                            }
+                            Logging.WriteMessageLog("Projectiles reset...", "Commands");
+                        }
+                        break;
+
+                    case "minlat":
+                        Logging.WriteMessageLogLine("Set latency too: ", "Commands");
+                        string lat = Console.ReadLine();
+                        int intseconds = ToInt32(lat);
+                        string msec = lat.Insert(0, "0.0");
+                        float delay = ToSingle(msec);
+
+                        if (intseconds < 15 || intseconds > 150) { Logging.WriteMessageLog("Invalid command format: > 15 and < 150", "Commands"); return; }
+
+                        SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
+                        Logging.WriteMessageLog("Minimum latency is now " + lat + "ms");
+                        break;
+
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Logging.WriteMessageLog("Commands:", "Commands");
                         Logging.WriteMessageLog("info - shows the servers stats", "Commands");
                         Logging.WriteMessageLog("uptime - shows server uptime.", "Commands");
                         Logging.WriteMessageLog("saveall - saves all players", "Commands");
+                        Logging.WriteMessageLog("minlat - sets latency", "Commands");
+                        Logging.WriteMessageLog("execsql - executes a sql script", "Commands");
+                        Logging.WriteMessageLog("activeacc - actives account with name provided", "Commands");
+                        Logging.WriteMessageLog("projcheck - follow prompts to check map projectiles", "Commands");
+                        Logging.WriteMessageLog("createaccount - follow prompts to create an account", "Commands");
                         Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
                         Logging.WriteMessageLog("exit - shuts down the server", "Commands");
                         break;
-                    case "dhelp":
-                        Logging.WriteMessageLog("Dynamic Commands:", "Commands");
-                        Logging.WriteMessageLog("minlatency miliseconds - Ex: minlatency 65 (will add 65ms to latency, value must be >= 15)", "Commands");
-                        Logging.WriteMessageLog("sqlcommand command - Ex: sqlcommand select * from players (query all players from db, experimental)", "Commands");
-                        Logging.WriteMessageLog("newnetserver ipaddress - Ex: newnetserver 192.168.1.2 (checks for valid ipv4 address)", "Commands");
-                        Logging.WriteMessageLog("account create UN PW - ex: account create sfortune fortune (creates an account with default stats)", "Commands");
-                        break;
+
                     default:    //If you entered something that wasnt a command or pure garbage
                         if (!isDynamic) { Logging.WriteMessageLog("Please enter a valid command!", "Commands"); }                        
                         break;
                 }
+                #endregion
             }
         }
+
         static int CalculateFrameRate()
         {
             if (TickCount - lastTick >= A_MILLISECOND)
@@ -923,11 +942,28 @@ namespace SabertoothServer
 
         static bool AccountExist(string name)
         {
-            if (Exists("Players/" + name + ".xml"))
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
             {
-                return true;
+                sql.Open();
+                string command;
+                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                using (var cmd = new SqlCommand(command, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader[1].ToString().ToLower() == name.ToLower())
+                            {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }
             }
-            return false;
         }
 
         public static int FindOpenMapItemSlot(Map s_Map)
@@ -1013,6 +1049,7 @@ namespace SabertoothServer
         {
             Console.Title = "Sabertooth Server - " + worldTime.Time;
         }
+
         private static string GetPublicIPAddress()
         {
             try

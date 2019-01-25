@@ -253,6 +253,7 @@ namespace SabertoothClient
             tempIndex = incMSG.ReadVariableInt32();
             gui.CreateActivateWindow(canvas);
         }
+    
         static void HandleDateAndTime(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -664,7 +665,7 @@ namespace SabertoothClient
             map.m_BloodSplats[slot].X = x;
             map.m_BloodSplats[slot].Y = y;
             map.m_BloodSplats[slot].TexX = RND.Next(0, 5);
-            map.m_BloodSplats[slot].TexY = RND.Next(0, 5);
+            map.m_BloodSplats[slot].TexY = RND.Next(0, 4);
         }
 
         static void HandleUpdateAmmo(NetIncomingMessage incMSG)

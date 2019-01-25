@@ -54,11 +54,13 @@
             this.radMask = new System.Windows.Forms.RadioButton();
             this.radGround = new System.Windows.Forms.RadioButton();
             this.tabTypes = new System.Windows.Forms.TabPage();
+            this.radInstance = new System.Windows.Forms.RadioButton();
             this.pnlChest = new System.Windows.Forms.Panel();
             this.scrlChest = new System.Windows.Forms.HScrollBar();
             this.lblChest = new System.Windows.Forms.Label();
             this.radChest = new System.Windows.Forms.RadioButton();
             this.pnlMapItem = new System.Windows.Forms.Panel();
+            this.picItem = new System.Windows.Forms.PictureBox();
             this.scrlItemAmount = new System.Windows.Forms.HScrollBar();
             this.lblItemAmount = new System.Windows.Forms.Label();
             this.scrlItemNum = new System.Windows.Forms.HScrollBar();
@@ -114,7 +116,6 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
-            this.radInstance = new System.Windows.Forms.RadioButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -122,6 +123,7 @@
             this.tabTypes.SuspendLayout();
             this.pnlChest.SuspendLayout();
             this.pnlMapItem.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picItem)).BeginInit();
             this.pnlNpcSpawn.SuspendLayout();
             this.tabTiles.SuspendLayout();
             this.pnlTile.SuspendLayout();
@@ -421,6 +423,18 @@
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
             // 
+            // radInstance
+            // 
+            this.radInstance.AutoSize = true;
+            this.radInstance.Location = new System.Drawing.Point(20, 182);
+            this.radInstance.Name = "radInstance";
+            this.radInstance.Size = new System.Drawing.Size(66, 17);
+            this.radInstance.TabIndex = 10;
+            this.radInstance.TabStop = true;
+            this.radInstance.Text = "Instance";
+            this.radInstance.UseVisualStyleBackColor = true;
+            this.radInstance.CheckedChanged += new System.EventHandler(this.radInstance_CheckedChanged);
+            // 
             // pnlChest
             // 
             this.pnlChest.Controls.Add(this.scrlChest);
@@ -467,6 +481,7 @@
             // pnlMapItem
             // 
             this.pnlMapItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMapItem.Controls.Add(this.picItem);
             this.pnlMapItem.Controls.Add(this.scrlItemAmount);
             this.pnlMapItem.Controls.Add(this.lblItemAmount);
             this.pnlMapItem.Controls.Add(this.scrlItemNum);
@@ -477,10 +492,19 @@
             this.pnlMapItem.TabIndex = 6;
             this.pnlMapItem.Visible = false;
             // 
+            // picItem
+            // 
+            this.picItem.BackColor = System.Drawing.Color.Black;
+            this.picItem.Location = new System.Drawing.Point(19, 12);
+            this.picItem.Name = "picItem";
+            this.picItem.Size = new System.Drawing.Size(32, 32);
+            this.picItem.TabIndex = 4;
+            this.picItem.TabStop = false;
+            // 
             // scrlItemAmount
             // 
             this.scrlItemAmount.LargeChange = 100;
-            this.scrlItemAmount.Location = new System.Drawing.Point(19, 90);
+            this.scrlItemAmount.Location = new System.Drawing.Point(19, 99);
             this.scrlItemAmount.Maximum = 5000;
             this.scrlItemAmount.Name = "scrlItemAmount";
             this.scrlItemAmount.Size = new System.Drawing.Size(123, 17);
@@ -491,7 +515,7 @@
             // lblItemAmount
             // 
             this.lblItemAmount.AutoSize = true;
-            this.lblItemAmount.Location = new System.Drawing.Point(16, 71);
+            this.lblItemAmount.Location = new System.Drawing.Point(16, 86);
             this.lblItemAmount.Name = "lblItemAmount";
             this.lblItemAmount.Size = new System.Drawing.Size(55, 13);
             this.lblItemAmount.TabIndex = 2;
@@ -500,7 +524,7 @@
             // scrlItemNum
             // 
             this.scrlItemNum.LargeChange = 1;
-            this.scrlItemNum.Location = new System.Drawing.Point(19, 37);
+            this.scrlItemNum.Location = new System.Drawing.Point(19, 63);
             this.scrlItemNum.Maximum = 50;
             this.scrlItemNum.Minimum = 1;
             this.scrlItemNum.Name = "scrlItemNum";
@@ -512,11 +536,11 @@
             // lblItemNum
             // 
             this.lblItemNum.AutoSize = true;
-            this.lblItemNum.Location = new System.Drawing.Point(16, 16);
+            this.lblItemNum.Location = new System.Drawing.Point(16, 47);
             this.lblItemNum.Name = "lblItemNum";
-            this.lblItemNum.Size = new System.Drawing.Size(79, 13);
+            this.lblItemNum.Size = new System.Drawing.Size(74, 13);
             this.lblItemNum.TabIndex = 0;
-            this.lblItemNum.Text = "Item Number: 1";
+            this.lblItemNum.Text = "Item: 0 - None";
             // 
             // radMapItem
             // 
@@ -1054,18 +1078,6 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // radInstance
-            // 
-            this.radInstance.AutoSize = true;
-            this.radInstance.Location = new System.Drawing.Point(20, 182);
-            this.radInstance.Name = "radInstance";
-            this.radInstance.Size = new System.Drawing.Size(66, 17);
-            this.radInstance.TabIndex = 10;
-            this.radInstance.TabStop = true;
-            this.radInstance.Text = "Instance";
-            this.radInstance.UseVisualStyleBackColor = true;
-            this.radInstance.CheckedChanged += new System.EventHandler(this.radInstance_CheckedChanged);
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1097,6 +1109,7 @@
             this.pnlChest.PerformLayout();
             this.pnlMapItem.ResumeLayout(false);
             this.pnlMapItem.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picItem)).EndInit();
             this.pnlNpcSpawn.ResumeLayout(false);
             this.pnlNpcSpawn.PerformLayout();
             this.tabTiles.ResumeLayout(false);
@@ -1205,5 +1218,6 @@
         private System.Windows.Forms.RadioButton radZoom;
         private System.Windows.Forms.CheckBox chkHScroll;
         private System.Windows.Forms.RadioButton radInstance;
+        private System.Windows.Forms.PictureBox picItem;
     }
 }

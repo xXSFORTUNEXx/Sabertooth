@@ -11,6 +11,7 @@ using static SabertoothServer.Server;
 using static SabertoothServer.Globals;
 using static System.IO.File;
 using static SabertoothServer.Logging;
+
 namespace SabertoothServer
 {
     public class Map
@@ -409,7 +410,15 @@ namespace SabertoothServer
         public void CreateBloodSplat(int mapIndex, int x, int y)
         {
             int slot = FindOpenBloodSlot();
-            if (slot == MAX_BLOOD_SPLATS) { WriteMessageLog("Bloodspat max reached!"); return; }
+            if (slot == MAX_BLOOD_SPLATS)
+            {
+                WriteMessageLog("Bloodspat max reached! Resetting...");
+                for (int b = 0; b < MAX_BLOOD_SPLATS; b++)
+                {
+                    ClearBloodSlot(mapIndex, b);
+                }
+                return;
+            }
             m_BloodSplats[slot] = new BloodSplat(x, y);
 
             for (int i = 0; i < MAX_PLAYERS; i++)

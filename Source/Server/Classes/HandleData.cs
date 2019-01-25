@@ -1800,7 +1800,6 @@ namespace SabertoothServer
             {
                 if (players[i].Name != null)
                 {
-                    //s_Player[i].SavePlayerXML();
                     players[i].SavePlayerToDatabase();
                 }
             }
