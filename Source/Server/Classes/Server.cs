@@ -574,9 +574,10 @@ namespace SabertoothServer
                                     case (int)TileType.SpawnPool:
                                         if (maps[i].Ground[x, y].SpawnNum > 0)
                                         {
-                                            for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
+                                            for (int n = 0; n < maps[i].Ground[x, y].SpawnAmount; n++)
                                             {
-                                                if (maps[i].Ground[x, y].SpawnAmount > maps[i].Ground[x, y].CurrentSpawn)
+                                                //if (maps[i].Ground[x, y].SpawnAmount >= maps[i].Ground[x, y].CurrentSpawn)
+                                                if (maps[i].Ground[x, y].CurrentSpawn < maps[i].Ground[x, y].SpawnAmount)
                                                 {
                                                     if (!maps[i].r_MapNpc[n].IsSpawned)
                                                     {

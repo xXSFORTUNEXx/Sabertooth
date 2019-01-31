@@ -1183,6 +1183,9 @@ namespace SabertoothServer
         public int NeedsSpawnedTick;
 
         public double LightRadius { get; set; }
+        public int Map { get; set; }
+        public int MapX { get; set; }
+        public int MapY { get; set; }
 
         public Tile()
         {
@@ -1197,6 +1200,9 @@ namespace SabertoothServer
             SpawnNum = 0;
             ChestNum = 0;
             LightRadius = 0;
+            Map = 0;
+            MapX = 0;
+            MapY = 0;
         }
     }
 
@@ -1209,7 +1215,7 @@ namespace SabertoothServer
         NpcAvoid,
         MapItem,
         Chest,
-        Instance
+        Warp
     }
 
     public enum TileLayers

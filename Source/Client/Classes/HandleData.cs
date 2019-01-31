@@ -1445,6 +1445,7 @@ namespace SabertoothClient
         AccountKey,
         RequestActivation,
         CreateBlood,
-        ClearBlood
+        ClearBlood,
+        PlayerWarp
     }
 }

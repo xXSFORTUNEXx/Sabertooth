@@ -649,6 +649,9 @@ namespace SabertoothClient
         public int SpawnAmount { get; set; }
         public int ChestNum { get; set; }
         public double LightRadius { get; set; }
+        public int Map { get; set; }
+        public int MapX { get; set; }
+        public int MapY { get; set; }
         public Tile()
         {
             TileX = 0;
@@ -663,6 +666,9 @@ namespace SabertoothClient
             SpawnNum = 0;
             ChestNum = 0;
             LightRadius = 0;
+            Map = 0;
+            MapX = 0;
+            MapY = 0;
         }
     }
 
@@ -675,7 +681,7 @@ namespace SabertoothClient
         NpcAvoid,
         MapItem,
         Chest,
-        Instance
+        Warp
     }
 
     public enum TileLayers

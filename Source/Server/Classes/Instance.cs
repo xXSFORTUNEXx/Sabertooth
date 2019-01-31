@@ -6,33 +6,25 @@ using System.Threading.Tasks;
 using static SabertoothServer.Globals;
 using static System.Environment;
 using static System.Convert;
+using Lidgren.Network;
 
 namespace SabertoothServer
 {
     public class Instance
     {
         public string Name { get; set; }
-        public int CurrentWave { get; set; }
-        public int TotalWaves { get; set; }
-        public int TotalWaveNpcs { get; set; }
-        public int WaveNpcsKilled { get; set; }
 
-        public bool[] PlayerReady = new bool[MAX_PARTY];
-        public int NextWaveTime;
-
-        public Player[] iPlayer = new Player[MAX_PARTY];
-        public Map iMap = new Map();
+        public static Map iMap = new Map();
 
         public Instance()
         {
-            Name = "Zombies";
+            Name = "Instance Test";
             CreateInstanceMap();
-            CreateNpcs(iMap);
         }
 
         private void CreateInstanceMap()
         {
-            iMap.Name = "Zombies";
+            iMap.Name = "Instance Test";
             iMap.Id = 10;
             iMap.TopMap = 0;
             iMap.BottomMap = 0;
@@ -101,74 +93,6 @@ namespace SabertoothServer
                     iMap.FringeA[x, y].Tileset = 0;
                 }
             }
-        }
-
-        private void CreateNpcs(Map map)
-        {
-            for (int i = 0; i < MAX_NPCS; i++)
-            {
-                map.m_MapNpc[i].Name = "Zombie";
-                map.m_MapNpc[i].Sprite = 4;
-                map.m_MapNpc[i].Health = 100;
-                map.m_MapNpc[i].MaxHealth = 100;
-                map.m_MapNpc[i].Behavior = (int)BehaviorType.Aggressive;
-                map.m_MapNpc[i].Range = 50;
-                map.m_MapNpc[i].Damage = 50;
-                map.m_MapNpc[i].SpawnTime = 1000;
-                map.m_MapNpc[i].X = 10;
-                map.m_MapNpc[i].Y = 10;
-            }
-
-            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-            {
-                map.r_MapNpc[i].Name = "Zombie";
-                map.r_MapNpc[i].Sprite = 4;
-                map.r_MapNpc[i].Health = 100;
-                map.r_MapNpc[i].MaxHealth = 100;
-                map.r_MapNpc[i].Behavior = (int)BehaviorType.Aggressive;
-                map.r_MapNpc[i].Range = 50;
-                map.r_MapNpc[i].Damage = 50;
-                map.r_MapNpc[i].SpawnTime = 1000;
-                map.r_MapNpc[i].X = 10;
-                map.r_MapNpc[i].Y = 10;
-            }
-        }
-
-        public void PlayerJoinInstance(Player player)
-        {
-            int i = OpenInstanceSlot();
-            if (i < MAX_PARTY)
-            {
-                iPlayer[i] = new Player();
-                iPlayer[i] = player;
-                iPlayer[i].iPoints = 0;
-                iPlayer[i].iKills = 0;
-            }
-        }
-
-        private int TotalPlayers()
-        {
-            int n = 0;
-            for (int i = 0; i < MAX_PARTY; i++)
-            {
-                if (iPlayer[i].Name != null)
-                {
-                    n += 1;
-                }
-            }
-            return n;
-        }
-
-        private int OpenInstanceSlot()
-        {
-            for (int i = 0; i < MAX_PARTY; i++)
-            {
-                if (iPlayer[i].Name == null)
-                {
-                    return i;
-                }
-            }
-            return 4;
         }
     }
 }

@@ -126,6 +126,10 @@ namespace SabertoothServer
                                 HandleActivationKey(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.PlayerWarp:
+                                HandlePlayerWarp(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -144,6 +148,31 @@ namespace SabertoothServer
         }
 
         #region Handle Incoming Data
+        static void HandlePlayerWarp(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int map = players[index].Map;
+            int x = players[index].X + OFFSET_X;
+            int y = players[index].Y + OFFSET_Y;
+            int warpMap = maps[map].Ground[x, y].Map - 1;
+            int warpX = maps[map].Ground[x, y].MapX - OFFSET_X;
+            int warpY = maps[map].Ground[x, y].MapY - OFFSET_Y;
+
+            Logging.WriteMessageLog("Warp detected, Index: " + index + ", Map: " + warpMap + ", X: " + warpX + ", Y: " + warpY);
+
+            if (warpMap < 0) { Logging.WriteMessageLog("Invalid map number upon warp: " + warpMap); return; }
+
+            SendMapData(incMSG, warpMap);
+            SendMapNpcs(incMSG, warpMap);
+            SendPoolMapNpcs(incMSG, warpMap);
+
+            players[index].X = warpX;
+            players[index].Y = warpY;
+            players[index].Map = warpMap;
+
+            SendPlayerData(incMSG, index);
+        }
+
         static void HandleActivationKey(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -462,6 +491,7 @@ namespace SabertoothServer
             int direction = incMSG.ReadVariableInt32();
             int aimdirection = incMSG.ReadVariableInt32();
             int step = incMSG.ReadVariableInt32();
+            int map = players[index].Map;
 
             players[index].AimDirection = aimdirection;
 
@@ -475,7 +505,7 @@ namespace SabertoothServer
 
             for (int i = 0; i < 5; i++)
             {
-                if (players[i].Connection != null && players[i].Map == players[index].Map)
+                if (players[i].Connection != null && players[i].Map == map)
                 {
                     SendUpdateMovementData(players[i].Connection, index, x, y, direction, aimdirection, step);
                 }
@@ -2025,6 +2055,7 @@ namespace SabertoothServer
         AccountKey,
         RequestActivation,
         CreateBlood,
-        ClearBlood
+        ClearBlood,
+        PlayerWarp
     }
 }

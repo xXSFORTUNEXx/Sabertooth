@@ -639,7 +639,7 @@ namespace SabertoothClient
                     }
                     Y -= 1;
                     Direction = (int)Directions.Up; 
-                    Moved = true; 
+                    Moved = true;
                 }
             }
 
@@ -700,6 +700,11 @@ namespace SabertoothClient
                 if (Step == 4) { Step = 0; }
                 Moved = false;
                 SendMovementData();
+            }
+
+            if (map.Ground[(X + OffsetX), (Y + OffsetY)].Type == (int)TileType.Warp)
+            {
+                SendPlayerWarp();
             }
         }
         
@@ -1070,6 +1075,14 @@ namespace SabertoothClient
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage(2);
             outMSG.Write((byte)PacketTypes.RangedAttack);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        void SendPlayerWarp()
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.PlayerWarp);
             outMSG.WriteVariableInt32(HandleData.myIndex);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
