@@ -82,7 +82,7 @@ namespace SabertoothClient
             }
         }
 
-        public void MapDatabaseCache(int mapNum)
+        public void MapDatabaseCache(int index)
         {
             bool exists = false;
             int currentRevision = -1;
@@ -94,7 +94,7 @@ namespace SabertoothClient
                     conn.Open();
                     try
                     {
-                        cmd.CommandText = "SELECT * FROM `MAPS` WHERE rowid = " + mapNum;
+                        cmd.CommandText = "SELECT * FROM MAPS WHERE ID = " + index;
                         using (SQLiteDataReader read = cmd.ExecuteReader())
                         {
                             while (read.Read())
@@ -115,16 +115,18 @@ namespace SabertoothClient
                             byte[] m_FringeA = ToByteArray(FringeA);
                             string sql;
 
-                            sql = "INSERT INTO `MAPS` (`NAME`,`REVISION`,`TOP`,`BOTTOM`,`LEFT`,`RIGHT`,`GROUND`,`MASK`,`MASKA`,`FRINGE`,`FRINGEA`) ";
+                            sql = "INSERT INTO MAPS (ID,NAME,REVISION,TOP,BOTTOM,LEFT,RIGHT,BRIGHTNESS,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
                             sql = sql + " VALUES ";
-                            sql = sql + "(@name, @revision, @top, @bottom, @left, @right, @ground, @mask, @maska, @fringe, @fringea)";
+                            sql = sql + "(@id,@name,@revision,@top,@bottom,@left,@right,@brightness,@ground,@mask,@maska,@fringe,@fringea)";
                             cmd.CommandText = sql;
+                            cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = Id;
                             cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                             cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
                             cmd.Parameters.Add("@top", System.Data.DbType.Int32).Value = TopMap;
                             cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
                             cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                             cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                            cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
                             cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
                             cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
                             cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
@@ -141,8 +143,8 @@ namespace SabertoothClient
                             byte[] m_FringeA = ToByteArray(FringeA);
                             string sql;
 
-                            sql = "UPDATE MAPS SET NAME = @name, REVISION = @revision, TOP = @top, BOTTOM = @bottom, LEFT = @left, RIGHT = @right, GROUND = @ground, MASK = @mask, MASKA = @maska, ";
-                            sql = sql + "FRINGE = @fringe, FRINGEA = @fringea WHERE rowid = " + mapNum;
+                            sql = "UPDATE MAPS SET NAME = @name,REVISION = @revision,TOP = @top,BOTTOM = @bottom,LEFT = @left,RIGHT = @right,BRIGHTNESS = @brightness,GROUND = @ground,MASK = @mask,MASKA = @maska,";
+                            sql = sql + "FRINGE = @fringe,FRINGEA = @fringea WHERE ID = " + index;
                             cmd.CommandText = sql;
                             cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                             cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
@@ -150,6 +152,7 @@ namespace SabertoothClient
                             cmd.Parameters.Add("@bottom", System.Data.DbType.Int32).Value = BottomMap;
                             cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                             cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
+                            cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
                             cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
                             cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
                             cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
@@ -162,7 +165,7 @@ namespace SabertoothClient
             }
         }
 
-        public void LoadMapFromCache(int mapNum)
+        public void LoadMapFromCache(int index)
         {
             for (int i = 0; i < 20; i++)
             {
@@ -178,17 +181,19 @@ namespace SabertoothClient
                     using (var cmd = new SQLiteCommand(conn))
                     {
                         conn.Open();
-                        cmd.CommandText = "SELECT * FROM MAPS WHERE rowid = " + mapNum;
+                        cmd.CommandText = "SELECT * FROM MAPS WHERE ID = " + index;
                         using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
                         {
                             while (read.Read())
                             {
+                                Id = ToInt32(read["ID"].ToString());
                                 Name = read["NAME"].ToString();
                                 Revision = ToInt32(read["REVISION"].ToString());
                                 TopMap = ToInt32(read["TOP"].ToString());
                                 BottomMap = ToInt32(read["BOTTOM"].ToString());
                                 LeftMap = ToInt32(read["LEFT"].ToString());
                                 RightMap = ToInt32(read["RIGHT"].ToString());
+                                Brightness = ToInt32(read["BRIGHTNESS"].ToString());
 
                                 byte[] buffer;
                                 object load;
@@ -218,7 +223,6 @@ namespace SabertoothClient
                 }
             }
         }
-
         #endregion
 
         #region Graphics
@@ -380,7 +384,7 @@ namespace SabertoothClient
             renderWindow.Draw(chestPic, ustates);
         }
 
-       public void DrawBrightness()
+        public void DrawBrightness()
         {
             int overlay;
             if (worldTime.g_Night) { overlay = 200; }

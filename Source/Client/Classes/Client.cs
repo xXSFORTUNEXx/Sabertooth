@@ -1,5 +1,4 @@
-﻿#define DEBUG
-using Gwen.Control;
+﻿using Gwen.Control;
 using Lidgren.Network;
 using SFML.Graphics;
 using SFML.System;
@@ -15,7 +14,6 @@ using static SabertoothClient.Globals;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Data.SQLite;
-using static SabertoothClient.Globals;
 
 namespace SabertoothClient
 {
@@ -34,14 +32,14 @@ namespace SabertoothClient
             var handle = GetConsoleWindow();
 
             Console.Title = "Sabertooth Console - Debug Info";
-            Console.WriteLine(@"  _____       _               _              _   _     ");
-            Console.WriteLine(@" / ____|     | |             | |            | | | |    ");
-            Console.WriteLine(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
-            Console.WriteLine(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
-            Console.WriteLine(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
-            Console.WriteLine(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
-            Console.WriteLine(@"                              Created by Steven Fortune");
-            Console.WriteLine("Initializing client...");
+            Logging.WriteMessageLog(@"  _____       _               _              _   _     ");
+            Logging.WriteMessageLog(@" / ____|     | |             | |            | | | |    ");
+            Logging.WriteMessageLog(@"| (___   __ _| |__   ___ _ __| |_ ___   ___ | |_| |__  ");
+            Logging.WriteMessageLog(@" \___ \ / _` | '_ \ / _ \ '__| __/ _ \ / _ \| __| '_ \ ");
+            Logging.WriteMessageLog(@" ____) | (_| | |_) |  __/ |  | || (_) | (_) | |_| | | |");
+            Logging.WriteMessageLog(@"|_____/ \__,_|_.__/ \___|_|   \__\___/ \___/ \__|_| |_|");
+            Logging.WriteMessageLog(@"                              Created by Steven Fortune");
+            Logging.WriteMessageLog("Initializing client...");
 
             NetPeerConfiguration netConfig = new NetPeerConfiguration("sabertooth")
             {
@@ -65,11 +63,11 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_HIDE);
-            Console.WriteLine("Enabling message types...");
+            ShowWindow(handle, SW_SHOW);
+            Logging.WriteMessageLog("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
-            Console.WriteLine("Network configuration complete...");
+            Logging.WriteMessageLog("Network configuration complete...");
             Client.LoadConfiguration();
             Client.GameLoop();
         }
@@ -136,6 +134,9 @@ namespace SabertoothClient
 
             InitArrays();
 
+            Thread commandThread = new Thread(() => CommandWindow());
+            commandThread.Start();
+
             while (renderWindow.IsOpen)
             {
                 CheckForConnection();
@@ -160,6 +161,36 @@ namespace SabertoothClient
             Exit(0);
         }
 
+        static void CommandWindow()
+        {
+            string input;
+            while (true)
+            {
+                Console.Write(">");
+                input = Console.ReadLine().ToLower();
+                Logging.WriteLog("Command: " + input, "Commands");
+
+                #region Commands
+                switch (input)
+                {
+                    case "cmcache":
+                        CreateMapCache();
+                        Logging.WriteMessageLog("Map cache created successfully!", "Commands");
+                        break;
+
+                    case "help":
+                        Logging.WriteMessageLog("Commands:", "Commands");
+                        Logging.WriteMessageLog("cmcache - create mapcache.db", "Commands");
+                        break;
+
+                    default:
+                        Logging.WriteMessageLog("Please enter a valid command!", "Commands");
+                        break;
+                }
+                #endregion
+            }
+        }
+
         public static void LoadConfiguration()
         {
             if (!File.Exists("Config.xml"))
@@ -170,6 +201,7 @@ namespace SabertoothClient
                 CurrentVersion = "1.0";
                 SaveConfiguration();
                 CreateMapCache();
+                Logging.WriteMessageLog("Config and map cache created!");
             }
 
             XmlReader reader = XmlReader.Create("Config.xml");
@@ -186,6 +218,7 @@ namespace SabertoothClient
             reader.ReadToFollowing("Version");
             CurrentVersion = reader.ReadElementContentAsString();
             reader.Close();
+            Logging.WriteMessageLog("Configuration file loaded...");
         }
 
         static void SaveConfiguration()
@@ -207,6 +240,7 @@ namespace SabertoothClient
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
+            Logging.WriteMessageLog("Configuration Saved!");
         }
 
         static void CreateMapCache()
@@ -219,8 +253,8 @@ namespace SabertoothClient
                     {
                         conn.Open();
                         string sql;
-                        sql = "CREATE TABLE `MAPS`";
-                        sql = sql + "(`NAME` TEXT,`REVISION` INTEGER,`TOP` INTEGER,`BOTTOM` INTEGER,`LEFT` INTEGER,`RIGHT` INTEGER,`GROUND` BLOB,`MASK` BLOB,`MASKA` BLOB,`FRINGE` BLOB,`FRINGEA` BLOB)";
+                        sql = "CREATE TABLE MAPS";
+                        sql = sql + "(ID INTEGER,NAME TEXT,REVISION INTEGER,TOP INTEGER,BOTTOM INTEGER,LEFT INTEGER,RIGHT INTEGER,BRIGHTNESS INTEGER,NPC BLOB,ITEM BLOB,GROUND BLOB,MASK BLOB,MASKA BLOB,FRINGE BLOB,FRINGEA BLOB)";
                         cmd.CommandText = sql;
                         cmd.ExecuteNonQuery();
                     }
@@ -233,7 +267,7 @@ namespace SabertoothClient
         {
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
-                players[i] = new Player();
+                players[i] = new Player();                
             }
 
             for (int i = 0; i < MAX_NPCS; i++)
@@ -265,6 +299,7 @@ namespace SabertoothClient
             {
                 chests[i] = new Chest();
             }
+            Logging.WriteMessageLog("All array successfully created!");
         }
         #endregion
 
@@ -781,12 +816,12 @@ namespace SabertoothClient
             {
                 if (TickCount - discoverTick >= DISCOVERY_TIMER)
                 {
-                    Console.WriteLine("Connecting to server...");
+                    Logging.WriteMessageLog("Connecting to server...");
                     SabertoothClient.netClient.DiscoverLocalPeers(SERVER_PORT);
                     discoverTick = TickCount;
                 }
             }
-            //Console.WriteLine("Status: " + SabertoothClient.netClient.ConnectionStatus.ToString());            
+            //Logging.WriteMessageLog("Status: " + SabertoothClient.netClient.ConnectionStatus.ToString());            
         }
 
         static void UpdateView()

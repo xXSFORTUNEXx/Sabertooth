@@ -726,6 +726,7 @@
             this.scrlSpawnAmount.LargeChange = 1;
             this.scrlSpawnAmount.Location = new System.Drawing.Point(19, 125);
             this.scrlSpawnAmount.Maximum = 20;
+            this.scrlSpawnAmount.Minimum = 1;
             this.scrlSpawnAmount.Name = "scrlSpawnAmount";
             this.scrlSpawnAmount.Size = new System.Drawing.Size(123, 17);
             this.scrlSpawnAmount.TabIndex = 3;

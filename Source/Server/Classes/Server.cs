@@ -265,7 +265,6 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Server is listening for connections...");
         }
 
-
         #region Database
         public static void CheckSQLConnection()
         {
@@ -575,6 +574,7 @@ namespace SabertoothServer
                                         if (maps[i].Ground[x, y].SpawnNum > 0)
                                         {
                                             for (int n = 0; n < maps[i].Ground[x, y].SpawnAmount; n++)
+                                            //for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
                                             {
                                                 //if (maps[i].Ground[x, y].SpawnAmount >= maps[i].Ground[x, y].CurrentSpawn)
                                                 if (maps[i].Ground[x, y].CurrentSpawn < maps[i].Ground[x, y].SpawnAmount)

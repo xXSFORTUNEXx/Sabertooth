@@ -1,5 +1,4 @@
-﻿#undef DEBUG
-using Gwen.Control;
+﻿using Gwen.Control;
 using Lidgren.Network;
 using System;
 using static System.Convert;
@@ -239,10 +238,12 @@ namespace SabertoothClient
                                 break;
                         }
                         break;
-                }
-                #if DEBUG
-                Console.WriteLine("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString());
-                #endif
+
+                    case NetIncomingMessageType.StatusChanged:
+                        HandleStatusChange(incMSG);
+                        break;
+                }                
+                //Logging.WriteLog("INCMSG Size: " + incMSG.LengthBytes + " btyes, " + incMSG.LengthBits + " bits, " + incMSG.DeliveryMethod.ToString(), "Networking");
         }
             SabertoothClient.netClient.Recycle(incMSG);
         }
@@ -1289,6 +1290,7 @@ namespace SabertoothClient
 
         static void HandleMapData(NetIncomingMessage incMSG)
         {
+            map.Id = incMSG.ReadVariableInt32();
             map.Name = incMSG.ReadString();
             map.Revision = incMSG.ReadVariableInt32();
             map.TopMap = incMSG.ReadVariableInt32();
@@ -1353,7 +1355,12 @@ namespace SabertoothClient
                     map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
-            map.MapDatabaseCache(players[myIndex].Map + 1);
+            map.MapDatabaseCache(map.Id);
+        }
+
+        static void HandleStatusChange(NetIncomingMessage incMSG)
+        {
+            Logging.WriteMessageLog(incMSG.SenderConnection.ToString() + " status changed. " + incMSG.SenderConnection.Status);
         }
         #endregion
 

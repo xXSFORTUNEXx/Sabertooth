@@ -1192,6 +1192,8 @@ namespace Editor.Forms
         {
             e_Type = (int)TileType.NpcSpawn;
             lblType.Text = "Type: Npc Spawn";
+            scrlNpcNum.Value = 1;
+            scrlSpawnAmount.Value = 1;
             e_SpawnNumber = 1;
             e_SpawnAmount = 1;
             scrlNpcNum.Maximum = MAX_MAP_NPCS;
@@ -1219,6 +1221,8 @@ namespace Editor.Forms
         {
             e_Type = (int)TileType.SpawnPool;
             lblType.Text = "Type: Spawn Pool";
+            scrlNpcNum.Value = 1;
+            scrlSpawnAmount.Value = 1;
             e_SpawnNumber = 1;
             e_SpawnAmount = 1;
             scrlNpcNum.Maximum = MAX_MAP_NPCS;

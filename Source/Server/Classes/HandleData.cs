@@ -1751,6 +1751,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapData);
+            outMSG.WriteVariableInt32(maps[map].Id);
             outMSG.Write(maps[map].Name);
             outMSG.WriteVariableInt32(maps[map].Revision);
             outMSG.WriteVariableInt32(maps[map].TopMap);

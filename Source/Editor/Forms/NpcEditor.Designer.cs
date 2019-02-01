@@ -327,7 +327,7 @@
             // scrlMaxHealth
             // 
             this.scrlMaxHealth.Location = new System.Drawing.Point(215, 112);
-            this.scrlMaxHealth.Maximum = 1000;
+            this.scrlMaxHealth.Maximum = 100000;
             this.scrlMaxHealth.Name = "scrlMaxHealth";
             this.scrlMaxHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlMaxHealth.TabIndex = 29;
@@ -345,7 +345,7 @@
             // scrlHealth
             // 
             this.scrlHealth.Location = new System.Drawing.Point(215, 82);
-            this.scrlHealth.Maximum = 1000;
+            this.scrlHealth.Maximum = 100000;
             this.scrlHealth.Name = "scrlHealth";
             this.scrlHealth.Size = new System.Drawing.Size(156, 17);
             this.scrlHealth.TabIndex = 27;
