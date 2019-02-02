@@ -301,7 +301,7 @@ namespace SabertoothClient
             outMSG.Write((byte)PacketTypes.ClearProj);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(Owner);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableSequenced, 2);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             map.m_MapProj[slot] = null;
         }
 
@@ -313,7 +313,7 @@ namespace SabertoothClient
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(Owner);
             outMSG.WriteVariableInt32(spawntype);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableSequenced, 1);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             map.m_MapProj[slot] = null;
         }
 

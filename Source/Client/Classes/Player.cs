@@ -455,8 +455,7 @@ namespace SabertoothClient
                         if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
                         break;
                 }
-                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                SendCreateBullet();
+                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }                
                 RemoveBulletFromClip();
                 Attacking = false;
                 attackTick = TickCount;
@@ -1073,7 +1072,7 @@ namespace SabertoothClient
 
         void SendCreateBullet()
         {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage(2);
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.RangedAttack);
             outMSG.WriteVariableInt32(HandleData.myIndex);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
