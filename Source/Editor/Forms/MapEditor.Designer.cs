@@ -90,13 +90,6 @@
             this.lblTileset = new System.Windows.Forms.Label();
             this.cmbTileset = new System.Windows.Forms.ComboBox();
             this.tabLight = new System.Windows.Forms.TabPage();
-            this.scrlIntensity = new System.Windows.Forms.HScrollBar();
-            this.lblIntensity = new System.Windows.Forms.Label();
-            this.chkNight = new System.Windows.Forms.CheckBox();
-            this.tabHelp = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.picMap = new System.Windows.Forms.PictureBox();
-            this.pnlMapNpcs = new System.Windows.Forms.Panel();
             this.cmbNpc10 = new System.Windows.Forms.ComboBox();
             this.cmbNpc9 = new System.Windows.Forms.ComboBox();
             this.cmbNpc8 = new System.Windows.Forms.ComboBox();
@@ -107,12 +100,15 @@
             this.cmbNpc3 = new System.Windows.Forms.ComboBox();
             this.cmbNpc2 = new System.Windows.Forms.ComboBox();
             this.cmbNpc1 = new System.Windows.Forms.ComboBox();
-            this.btnCloseNpcs = new System.Windows.Forms.Button();
             this.lblNpcs = new System.Windows.Forms.Label();
+            this.scrlIntensity = new System.Windows.Forms.HScrollBar();
+            this.lblIntensity = new System.Windows.Forms.Label();
+            this.chkNight = new System.Windows.Forms.CheckBox();
+            this.tabHelp = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.picMap = new System.Windows.Forms.PictureBox();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
-            this.treeMaps = new System.Windows.Forms.TreeView();
-            this.mapProperties = new System.Windows.Forms.PropertyGrid();
             this.tosMenu = new System.Windows.Forms.ToolStrip();
             this.btnNewMap = new System.Windows.Forms.ToolStripButton();
             this.btnSaveMap = new System.Windows.Forms.ToolStripButton();
@@ -124,6 +120,9 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
+            this.tabMapDetails = new System.Windows.Forms.TabPage();
+            this.mapProperties = new System.Windows.Forms.PropertyGrid();
+            this.treeMaps = new System.Windows.Forms.TreeView();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -141,21 +140,22 @@
             this.tabLight.SuspendLayout();
             this.tabHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
-            this.pnlMapNpcs.SuspendLayout();
             this.tosMenu.SuspendLayout();
+            this.tabMapDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabTools
             // 
+            this.tabTools.Controls.Add(this.tabMapDetails);
             this.tabTools.Controls.Add(this.tabLayer);
             this.tabTools.Controls.Add(this.tabTypes);
             this.tabTools.Controls.Add(this.tabTiles);
             this.tabTools.Controls.Add(this.tabLight);
             this.tabTools.Controls.Add(this.tabHelp);
-            this.tabTools.Location = new System.Drawing.Point(12, 36);
+            this.tabTools.Location = new System.Drawing.Point(11, 31);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
-            this.tabTools.Size = new System.Drawing.Size(307, 615);
+            this.tabTools.Size = new System.Drawing.Size(307, 620);
             this.tabTools.TabIndex = 1;
             // 
             // tabLayer
@@ -172,7 +172,7 @@
             this.tabLayer.Location = new System.Drawing.Point(4, 22);
             this.tabLayer.Name = "tabLayer";
             this.tabLayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLayer.Size = new System.Drawing.Size(299, 589);
+            this.tabLayer.Size = new System.Drawing.Size(299, 594);
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
@@ -184,13 +184,13 @@
             this.pnlOptions.Controls.Add(this.radZoom);
             this.pnlOptions.Location = new System.Drawing.Point(195, 22);
             this.pnlOptions.Name = "pnlOptions";
-            this.pnlOptions.Size = new System.Drawing.Size(86, 109);
+            this.pnlOptions.Size = new System.Drawing.Size(83, 86);
             this.pnlOptions.TabIndex = 15;
             // 
             // chkHScroll
             // 
             this.chkHScroll.AutoSize = true;
-            this.chkHScroll.Location = new System.Drawing.Point(12, 69);
+            this.chkHScroll.Location = new System.Drawing.Point(12, 36);
             this.chkHScroll.Name = "chkHScroll";
             this.chkHScroll.Size = new System.Drawing.Size(63, 17);
             this.chkHScroll.TabIndex = 2;
@@ -201,10 +201,12 @@
             // radScroll
             // 
             this.radScroll.AutoSize = true;
-            this.radScroll.Location = new System.Drawing.Point(12, 37);
+            this.radScroll.Checked = true;
+            this.radScroll.Location = new System.Drawing.Point(12, 13);
             this.radScroll.Name = "radScroll";
             this.radScroll.Size = new System.Drawing.Size(51, 17);
             this.radScroll.TabIndex = 1;
+            this.radScroll.TabStop = true;
             this.radScroll.Text = "Scroll";
             this.radScroll.UseVisualStyleBackColor = true;
             this.radScroll.CheckedChanged += new System.EventHandler(this.radScroll_CheckedChanged);
@@ -212,12 +214,10 @@
             // radZoom
             // 
             this.radZoom.AutoSize = true;
-            this.radZoom.Checked = true;
-            this.radZoom.Location = new System.Drawing.Point(12, 13);
+            this.radZoom.Location = new System.Drawing.Point(12, 59);
             this.radZoom.Name = "radZoom";
             this.radZoom.Size = new System.Drawing.Size(52, 17);
             this.radZoom.TabIndex = 0;
-            this.radZoom.TabStop = true;
             this.radZoom.Text = "Zoom";
             this.radZoom.UseVisualStyleBackColor = true;
             this.radZoom.CheckedChanged += new System.EventHandler(this.radZoom_CheckedChanged);
@@ -813,6 +813,17 @@
             // 
             // tabLight
             // 
+            this.tabLight.Controls.Add(this.cmbNpc10);
+            this.tabLight.Controls.Add(this.cmbNpc9);
+            this.tabLight.Controls.Add(this.cmbNpc8);
+            this.tabLight.Controls.Add(this.cmbNpc7);
+            this.tabLight.Controls.Add(this.cmbNpc6);
+            this.tabLight.Controls.Add(this.cmbNpc5);
+            this.tabLight.Controls.Add(this.cmbNpc4);
+            this.tabLight.Controls.Add(this.cmbNpc3);
+            this.tabLight.Controls.Add(this.cmbNpc2);
+            this.tabLight.Controls.Add(this.cmbNpc1);
+            this.tabLight.Controls.Add(this.lblNpcs);
             this.tabLight.Controls.Add(this.scrlIntensity);
             this.tabLight.Controls.Add(this.lblIntensity);
             this.tabLight.Controls.Add(this.chkNight);
@@ -820,8 +831,117 @@
             this.tabLight.Name = "tabLight";
             this.tabLight.Size = new System.Drawing.Size(299, 589);
             this.tabLight.TabIndex = 4;
-            this.tabLight.Text = "Light";
+            this.tabLight.Text = "Light/NPCs";
             this.tabLight.UseVisualStyleBackColor = true;
+            // 
+            // cmbNpc10
+            // 
+            this.cmbNpc10.FormattingEnabled = true;
+            this.cmbNpc10.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc10.Location = new System.Drawing.Point(23, 360);
+            this.cmbNpc10.Name = "cmbNpc10";
+            this.cmbNpc10.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc10.TabIndex = 22;
+            // 
+            // cmbNpc9
+            // 
+            this.cmbNpc9.FormattingEnabled = true;
+            this.cmbNpc9.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc9.Location = new System.Drawing.Point(23, 333);
+            this.cmbNpc9.Name = "cmbNpc9";
+            this.cmbNpc9.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc9.TabIndex = 21;
+            // 
+            // cmbNpc8
+            // 
+            this.cmbNpc8.FormattingEnabled = true;
+            this.cmbNpc8.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc8.Location = new System.Drawing.Point(23, 306);
+            this.cmbNpc8.Name = "cmbNpc8";
+            this.cmbNpc8.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc8.TabIndex = 20;
+            // 
+            // cmbNpc7
+            // 
+            this.cmbNpc7.FormattingEnabled = true;
+            this.cmbNpc7.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc7.Location = new System.Drawing.Point(23, 279);
+            this.cmbNpc7.Name = "cmbNpc7";
+            this.cmbNpc7.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc7.TabIndex = 19;
+            // 
+            // cmbNpc6
+            // 
+            this.cmbNpc6.FormattingEnabled = true;
+            this.cmbNpc6.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc6.Location = new System.Drawing.Point(23, 252);
+            this.cmbNpc6.Name = "cmbNpc6";
+            this.cmbNpc6.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc6.TabIndex = 18;
+            // 
+            // cmbNpc5
+            // 
+            this.cmbNpc5.FormattingEnabled = true;
+            this.cmbNpc5.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc5.Location = new System.Drawing.Point(23, 225);
+            this.cmbNpc5.Name = "cmbNpc5";
+            this.cmbNpc5.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc5.TabIndex = 17;
+            // 
+            // cmbNpc4
+            // 
+            this.cmbNpc4.FormattingEnabled = true;
+            this.cmbNpc4.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc4.Location = new System.Drawing.Point(23, 198);
+            this.cmbNpc4.Name = "cmbNpc4";
+            this.cmbNpc4.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc4.TabIndex = 16;
+            // 
+            // cmbNpc3
+            // 
+            this.cmbNpc3.FormattingEnabled = true;
+            this.cmbNpc3.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc3.Location = new System.Drawing.Point(23, 169);
+            this.cmbNpc3.Name = "cmbNpc3";
+            this.cmbNpc3.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc3.TabIndex = 15;
+            // 
+            // cmbNpc2
+            // 
+            this.cmbNpc2.FormattingEnabled = true;
+            this.cmbNpc2.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc2.Location = new System.Drawing.Point(23, 142);
+            this.cmbNpc2.Name = "cmbNpc2";
+            this.cmbNpc2.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc2.TabIndex = 14;
+            // 
+            // cmbNpc1
+            // 
+            this.cmbNpc1.FormattingEnabled = true;
+            this.cmbNpc1.Items.AddRange(new object[] {
+            "None"});
+            this.cmbNpc1.Location = new System.Drawing.Point(23, 115);
+            this.cmbNpc1.Name = "cmbNpc1";
+            this.cmbNpc1.Size = new System.Drawing.Size(252, 21);
+            this.cmbNpc1.TabIndex = 13;
+            // 
+            // lblNpcs
+            // 
+            this.lblNpcs.AutoSize = true;
+            this.lblNpcs.Location = new System.Drawing.Point(20, 97);
+            this.lblNpcs.Name = "lblNpcs";
+            this.lblNpcs.Size = new System.Drawing.Size(68, 13);
+            this.lblNpcs.TabIndex = 12;
+            this.lblNpcs.Text = "Select Npcs:";
             // 
             // scrlIntensity
             // 
@@ -875,167 +995,17 @@
             // 
             // picMap
             // 
-            this.picMap.Location = new System.Drawing.Point(321, 31);
+            this.picMap.Location = new System.Drawing.Point(324, 31);
             this.picMap.Name = "picMap";
             this.picMap.Size = new System.Drawing.Size(800, 600);
             this.picMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picMap.TabIndex = 14;
             this.picMap.TabStop = false;
             // 
-            // pnlMapNpcs
-            // 
-            this.pnlMapNpcs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc10);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc9);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc8);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc7);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc6);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc5);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc4);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc3);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc2);
-            this.pnlMapNpcs.Controls.Add(this.cmbNpc1);
-            this.pnlMapNpcs.Controls.Add(this.btnCloseNpcs);
-            this.pnlMapNpcs.Controls.Add(this.lblNpcs);
-            this.pnlMapNpcs.Location = new System.Drawing.Point(593, 133);
-            this.pnlMapNpcs.Name = "pnlMapNpcs";
-            this.pnlMapNpcs.Size = new System.Drawing.Size(281, 345);
-            this.pnlMapNpcs.TabIndex = 15;
-            this.pnlMapNpcs.Visible = false;
-            // 
-            // cmbNpc10
-            // 
-            this.cmbNpc10.FormattingEnabled = true;
-            this.cmbNpc10.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc10.Location = new System.Drawing.Point(20, 282);
-            this.cmbNpc10.Name = "cmbNpc10";
-            this.cmbNpc10.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc10.TabIndex = 11;
-            this.cmbNpc10.SelectedIndexChanged += new System.EventHandler(this.cmbNpc10_SelectedIndexChanged);
-            // 
-            // cmbNpc9
-            // 
-            this.cmbNpc9.FormattingEnabled = true;
-            this.cmbNpc9.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc9.Location = new System.Drawing.Point(20, 255);
-            this.cmbNpc9.Name = "cmbNpc9";
-            this.cmbNpc9.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc9.TabIndex = 10;
-            this.cmbNpc9.SelectedIndexChanged += new System.EventHandler(this.cmbNpc9_SelectedIndexChanged);
-            // 
-            // cmbNpc8
-            // 
-            this.cmbNpc8.FormattingEnabled = true;
-            this.cmbNpc8.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc8.Location = new System.Drawing.Point(20, 228);
-            this.cmbNpc8.Name = "cmbNpc8";
-            this.cmbNpc8.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc8.TabIndex = 9;
-            this.cmbNpc8.SelectedIndexChanged += new System.EventHandler(this.cmbNpc8_SelectedIndexChanged);
-            // 
-            // cmbNpc7
-            // 
-            this.cmbNpc7.FormattingEnabled = true;
-            this.cmbNpc7.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc7.Location = new System.Drawing.Point(20, 201);
-            this.cmbNpc7.Name = "cmbNpc7";
-            this.cmbNpc7.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc7.TabIndex = 8;
-            this.cmbNpc7.SelectedIndexChanged += new System.EventHandler(this.cmbNpc7_SelectedIndexChanged);
-            // 
-            // cmbNpc6
-            // 
-            this.cmbNpc6.FormattingEnabled = true;
-            this.cmbNpc6.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc6.Location = new System.Drawing.Point(20, 174);
-            this.cmbNpc6.Name = "cmbNpc6";
-            this.cmbNpc6.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc6.TabIndex = 7;
-            this.cmbNpc6.SelectedIndexChanged += new System.EventHandler(this.cmbNpc6_SelectedIndexChanged);
-            // 
-            // cmbNpc5
-            // 
-            this.cmbNpc5.FormattingEnabled = true;
-            this.cmbNpc5.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc5.Location = new System.Drawing.Point(20, 147);
-            this.cmbNpc5.Name = "cmbNpc5";
-            this.cmbNpc5.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc5.TabIndex = 6;
-            this.cmbNpc5.SelectedIndexChanged += new System.EventHandler(this.cmbNpc5_SelectedIndexChanged);
-            // 
-            // cmbNpc4
-            // 
-            this.cmbNpc4.FormattingEnabled = true;
-            this.cmbNpc4.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc4.Location = new System.Drawing.Point(20, 120);
-            this.cmbNpc4.Name = "cmbNpc4";
-            this.cmbNpc4.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc4.TabIndex = 5;
-            this.cmbNpc4.SelectedIndexChanged += new System.EventHandler(this.cmbNpc4_SelectedIndexChanged);
-            // 
-            // cmbNpc3
-            // 
-            this.cmbNpc3.FormattingEnabled = true;
-            this.cmbNpc3.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc3.Location = new System.Drawing.Point(20, 91);
-            this.cmbNpc3.Name = "cmbNpc3";
-            this.cmbNpc3.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc3.TabIndex = 4;
-            this.cmbNpc3.SelectedIndexChanged += new System.EventHandler(this.cmbNpc3_SelectedIndexChanged);
-            // 
-            // cmbNpc2
-            // 
-            this.cmbNpc2.FormattingEnabled = true;
-            this.cmbNpc2.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc2.Location = new System.Drawing.Point(20, 64);
-            this.cmbNpc2.Name = "cmbNpc2";
-            this.cmbNpc2.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc2.TabIndex = 3;
-            this.cmbNpc2.SelectedIndexChanged += new System.EventHandler(this.cmbNpc2_SelectedIndexChanged);
-            // 
-            // cmbNpc1
-            // 
-            this.cmbNpc1.FormattingEnabled = true;
-            this.cmbNpc1.Items.AddRange(new object[] {
-            "None"});
-            this.cmbNpc1.Location = new System.Drawing.Point(20, 37);
-            this.cmbNpc1.Name = "cmbNpc1";
-            this.cmbNpc1.Size = new System.Drawing.Size(242, 21);
-            this.cmbNpc1.TabIndex = 2;
-            this.cmbNpc1.SelectedIndexChanged += new System.EventHandler(this.cmbNpc1_SelectedIndexChanged);
-            // 
-            // btnCloseNpcs
-            // 
-            this.btnCloseNpcs.Location = new System.Drawing.Point(187, 309);
-            this.btnCloseNpcs.Name = "btnCloseNpcs";
-            this.btnCloseNpcs.Size = new System.Drawing.Size(75, 23);
-            this.btnCloseNpcs.TabIndex = 1;
-            this.btnCloseNpcs.Text = "Close";
-            this.btnCloseNpcs.UseVisualStyleBackColor = true;
-            this.btnCloseNpcs.Click += new System.EventHandler(this.btnCloseNpcs_Click);
-            // 
-            // lblNpcs
-            // 
-            this.lblNpcs.AutoSize = true;
-            this.lblNpcs.Location = new System.Drawing.Point(17, 19);
-            this.lblNpcs.Name = "lblNpcs";
-            this.lblNpcs.Size = new System.Drawing.Size(68, 13);
-            this.lblNpcs.TabIndex = 0;
-            this.lblNpcs.Text = "Select Npcs:";
-            // 
             // scrlViewX
             // 
             this.scrlViewX.LargeChange = 1;
-            this.scrlViewX.Location = new System.Drawing.Point(321, 634);
+            this.scrlViewX.Location = new System.Drawing.Point(324, 634);
             this.scrlViewX.Maximum = 25;
             this.scrlViewX.Name = "scrlViewX";
             this.scrlViewX.Size = new System.Drawing.Size(800, 17);
@@ -1045,27 +1015,12 @@
             // scrlViewY
             // 
             this.scrlViewY.LargeChange = 1;
-            this.scrlViewY.Location = new System.Drawing.Point(1124, 31);
+            this.scrlViewY.Location = new System.Drawing.Point(1127, 31);
             this.scrlViewY.Maximum = 31;
             this.scrlViewY.Name = "scrlViewY";
             this.scrlViewY.Size = new System.Drawing.Size(17, 600);
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
-            // 
-            // treeMaps
-            // 
-            this.treeMaps.Location = new System.Drawing.Point(1144, 36);
-            this.treeMaps.Name = "treeMaps";
-            this.treeMaps.Size = new System.Drawing.Size(241, 414);
-            this.treeMaps.TabIndex = 18;
-            this.treeMaps.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaps_AfterSelect);
-            // 
-            // mapProperties
-            // 
-            this.mapProperties.Location = new System.Drawing.Point(1144, 456);
-            this.mapProperties.Name = "mapProperties";
-            this.mapProperties.Size = new System.Drawing.Size(241, 195);
-            this.mapProperties.TabIndex = 19;
             // 
             // tosMenu
             // 
@@ -1082,7 +1037,7 @@
             this.btnHelp});
             this.tosMenu.Location = new System.Drawing.Point(0, 0);
             this.tosMenu.Name = "tosMenu";
-            this.tosMenu.Size = new System.Drawing.Size(1397, 25);
+            this.tosMenu.Size = new System.Drawing.Size(1162, 25);
             this.tosMenu.TabIndex = 20;
             this.tosMenu.Text = "toolStrip1";
             // 
@@ -1172,20 +1127,42 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
+            // tabMapDetails
+            // 
+            this.tabMapDetails.Controls.Add(this.mapProperties);
+            this.tabMapDetails.Controls.Add(this.treeMaps);
+            this.tabMapDetails.Location = new System.Drawing.Point(4, 22);
+            this.tabMapDetails.Name = "tabMapDetails";
+            this.tabMapDetails.Size = new System.Drawing.Size(299, 594);
+            this.tabMapDetails.TabIndex = 5;
+            this.tabMapDetails.Text = "Map Details";
+            this.tabMapDetails.UseVisualStyleBackColor = true;
+            // 
+            // mapProperties
+            // 
+            this.mapProperties.Location = new System.Drawing.Point(3, 310);
+            this.mapProperties.Name = "mapProperties";
+            this.mapProperties.Size = new System.Drawing.Size(293, 281);
+            this.mapProperties.TabIndex = 21;
+            // 
+            // treeMaps
+            // 
+            this.treeMaps.Location = new System.Drawing.Point(3, 3);
+            this.treeMaps.Name = "treeMaps";
+            this.treeMaps.Size = new System.Drawing.Size(293, 301);
+            this.treeMaps.TabIndex = 20;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1397, 663);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1162, 663);
             this.Controls.Add(this.tosMenu);
-            this.Controls.Add(this.mapProperties);
-            this.Controls.Add(this.treeMaps);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
-            this.Controls.Add(this.pnlMapNpcs);
             this.Controls.Add(this.picMap);
             this.Controls.Add(this.tabTools);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.HelpButton = true;
             this.Name = "MapEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1219,10 +1196,9 @@
             this.tabHelp.ResumeLayout(false);
             this.tabHelp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
-            this.pnlMapNpcs.ResumeLayout(false);
-            this.pnlMapNpcs.PerformLayout();
             this.tosMenu.ResumeLayout(false);
             this.tosMenu.PerformLayout();
+            this.tabMapDetails.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1261,19 +1237,6 @@
         private System.Windows.Forms.HScrollBar scrlNpcNum;
         private System.Windows.Forms.Label lblNpcSpawn;
         private System.Windows.Forms.PictureBox picMap;
-        private System.Windows.Forms.Panel pnlMapNpcs;
-        private System.Windows.Forms.ComboBox cmbNpc10;
-        private System.Windows.Forms.ComboBox cmbNpc9;
-        private System.Windows.Forms.ComboBox cmbNpc8;
-        private System.Windows.Forms.ComboBox cmbNpc7;
-        private System.Windows.Forms.ComboBox cmbNpc6;
-        private System.Windows.Forms.ComboBox cmbNpc5;
-        private System.Windows.Forms.ComboBox cmbNpc4;
-        private System.Windows.Forms.ComboBox cmbNpc3;
-        private System.Windows.Forms.ComboBox cmbNpc2;
-        private System.Windows.Forms.ComboBox cmbNpc1;
-        private System.Windows.Forms.Button btnCloseNpcs;
-        private System.Windows.Forms.Label lblNpcs;
         private System.Windows.Forms.HScrollBar scrlViewX;
         private System.Windows.Forms.VScrollBar scrlViewY;
         private System.Windows.Forms.CheckBox chkNpc;
@@ -1287,8 +1250,6 @@
         private System.Windows.Forms.HScrollBar scrlItemNum;
         private System.Windows.Forms.Label lblItemNum;
         private System.Windows.Forms.RadioButton radMapItem;
-        private System.Windows.Forms.TreeView treeMaps;
-        private System.Windows.Forms.PropertyGrid mapProperties;
         private System.Windows.Forms.ToolStrip tosMenu;
         private System.Windows.Forms.ToolStripButton btnNewMap;
         private System.Windows.Forms.ToolStripButton btnSaveMap;
@@ -1324,5 +1285,19 @@
         private System.Windows.Forms.HScrollBar scrlMapY;
         private System.Windows.Forms.HScrollBar scrlMapX;
         private System.Windows.Forms.HScrollBar scrlMapNum;
+        private System.Windows.Forms.ComboBox cmbNpc10;
+        private System.Windows.Forms.ComboBox cmbNpc9;
+        private System.Windows.Forms.ComboBox cmbNpc8;
+        private System.Windows.Forms.ComboBox cmbNpc7;
+        private System.Windows.Forms.ComboBox cmbNpc6;
+        private System.Windows.Forms.ComboBox cmbNpc5;
+        private System.Windows.Forms.ComboBox cmbNpc4;
+        private System.Windows.Forms.ComboBox cmbNpc3;
+        private System.Windows.Forms.ComboBox cmbNpc2;
+        private System.Windows.Forms.ComboBox cmbNpc1;
+        private System.Windows.Forms.Label lblNpcs;
+        private System.Windows.Forms.TabPage tabMapDetails;
+        private System.Windows.Forms.PropertyGrid mapProperties;
+        private System.Windows.Forms.TreeView treeMaps;
     }
 }

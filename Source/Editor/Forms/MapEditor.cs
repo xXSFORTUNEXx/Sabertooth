@@ -47,7 +47,7 @@ namespace Editor.Forms
         int e_WarpY;
         float e_Zoom = 1.0f;
         bool hScroll;
-        int e_WheelOption = 0;
+        int e_WheelOption = 1;
 
         static int lastFrameRate;
         static int frameRate;
@@ -283,8 +283,7 @@ namespace Editor.Forms
         }
 
         void DrawTiles(RenderTarget target)
-        {
-            if (pnlMapNpcs.Visible) { return; }
+        {            
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -377,8 +376,7 @@ namespace Editor.Forms
         }
 
         void DrawTypes()
-        {
-            if (pnlMapNpcs.Visible) { return; }
+        {            
             if (tabTools.SelectedTab == tabTypes)
             {
                 for (int x = 0; x < 50; x++)
@@ -437,8 +435,6 @@ namespace Editor.Forms
 
         void DrawGrid()
         {
-            if (pnlMapNpcs.Visible) { return; }
-
             if (chkGrid.Checked)
             {
                 e_Grid.Texture = e_GridTexture;
@@ -457,8 +453,6 @@ namespace Editor.Forms
 
         void DrawNpcs()
         {
-            if (pnlMapNpcs.Visible) { return; }
-
             if (chkNpc.Checked)
             {
                 for (int x = 0; x < 50; x++)
@@ -490,8 +484,6 @@ namespace Editor.Forms
 
         void DrawItems()
         {
-            if (pnlMapNpcs.Visible) { return; }
-
             for (int x = 0; x < 50; x++)
             {
                 for (int y = 0; y < 50; y++)
@@ -806,7 +798,21 @@ namespace Editor.Forms
 
             if (e.Button == MouseButtons.Middle)
             {
-                e_Zoom = 1.0f;
+                if (e_WheelOption == 0)
+                {
+                    e_Zoom = 1.0f;
+                }
+                else
+                {
+                    if (chkHScroll.Checked == true)
+                    {
+                        chkHScroll.Checked = false;
+                    }
+                    else
+                    {
+                        chkHScroll.Checked = true;
+                    }
+                }
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
         }
@@ -1312,11 +1318,6 @@ namespace Editor.Forms
             lblSpawnAmount.Text = "Amount: " + (scrlSpawnAmount.Value);
         }
 
-        private void btnCloseNpcs_Click(object sender, EventArgs e)
-        {
-            pnlMapNpcs.Visible = false;
-        }
-
         private void cmbNpc1_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Map.m_MapNpc[0].NpcNum = cmbNpc1.SelectedIndex;
@@ -1416,7 +1417,7 @@ namespace Editor.Forms
 
         private void btnMapNpcs_Click(object sender, EventArgs e)
         {
-            pnlMapNpcs.Visible = true;
+            tabLight.Select();
         }
 
         private void btnFillMap_Click(object sender, EventArgs e)

@@ -494,6 +494,50 @@ namespace SabertoothClient
             }
         }
 
+        public void CheckControllerButtonPress()
+        {
+            if (!Joystick.IsConnected(0)) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
+            if (Attacking == true) { return; }            
+            if (inShop || inChat || inBank) { return; }
+
+            if (Joystick.IsButtonPressed(0, 6))
+            {
+                if (gui.chatWindow != null)
+                {
+                    if (gui.inputChat.HasFocus) { return; }
+
+                    if (gui.chatWindow.IsVisible)
+                    {
+                        gui.chatWindow.Hide();
+                    }
+                    else
+                    {
+                        gui.chatWindow.Show();
+                    }
+                }
+            }
+
+            if (Joystick.IsButtonPressed(0, 7))
+            {
+                if (gui.menuWindow != null)
+                {
+                    if (gui.inputChat.HasFocus) { return; }
+
+                    if (gui.menuWindow.IsVisible)
+                    {
+                        gui.menuWindow.Hide();
+                    }
+                    else
+                    {
+                        gui.menuWindow.Show();
+                        gui.charTab.Focus();
+                    }
+                }
+            }
+        }
+
         public void CheckControllerPlayerInteraction()
         {
             if (!Joystick.IsConnected(0)) { return; }

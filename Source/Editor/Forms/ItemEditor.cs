@@ -211,7 +211,7 @@ namespace Editor.Forms
         {
             lblProjNum.Text = "Projectile: " + scrlProjNum.Value;
             e_Proj.LoadProjectileFromDatabase(scrlProjNum.Value);
-            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Item.ProjectileNumber + ".png");
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png");
             e_Item.ProjectileNumber = scrlProjNum.Value;
             UnModSave = true;
         }

@@ -4,6 +4,7 @@ using SFML.System;
 using System;
 using static SabertoothClient.Client;
 using static SabertoothClient.Globals;
+using System.IO;
 
 namespace SabertoothClient
 {
@@ -21,7 +22,7 @@ namespace SabertoothClient
         public int Speed { get; set; }
         public bool Moved;
         public int RangeCounter;
-        const int maxprojSprites = 2;
+        static int maxprojSprites = Directory.GetFiles("Resources/Projectiles/", "*", SearchOption.TopDirectoryOnly).Length;
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] proj_Texture = new Texture[maxprojSprites];
         Random RND = new Random();
