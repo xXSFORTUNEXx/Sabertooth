@@ -28,8 +28,8 @@ namespace Editor.Forms
         public int SelectedIndex = 1;
         public int e_ViewX { get; set; }
         public int e_ViewY { get; set; }
-        int e_OffsetX = 25;
-        int e_OffsetY = 19;
+        int e_OffsetX = EDITOR_OFFSET_X;
+        int e_OffsetY = EDITOR_OFFSET_Y;
         int e_CursorX;
         int e_CursorY;
         int e_TileX;
@@ -47,7 +47,7 @@ namespace Editor.Forms
         int e_WarpY;
         float e_Zoom = 1.0f;
         bool hScroll;
-        int e_WheelOption = 1;
+        int e_WheelOption = WHEEL_OPTION_SCROLL;
 
         static int lastFrameRate;
         static int frameRate;
@@ -596,8 +596,8 @@ namespace Editor.Forms
         private void EditorMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             picMap.Focus();
-            e_CursorX = (e.X / 32) + e_ViewX;
-            e_CursorY = (e.Y / 32) + e_ViewY;
+            e_CursorX = (e.X / PIC_X) + e_ViewX;
+            e_CursorY = (e.Y / PIC_Y) + e_ViewY;
             if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
             {
                 if (e.Button == MouseButtons.Left)
@@ -798,7 +798,7 @@ namespace Editor.Forms
 
             if (e.Button == MouseButtons.Middle)
             {
-                if (e_WheelOption == 0)
+                if (e_WheelOption == WHEEL_OPTION_ZOOM)
                 {
                     e_Zoom = 1.0f;
                 }
@@ -821,11 +821,11 @@ namespace Editor.Forms
         {
             //int multiplier = 10;
             //int finalZoom = (int)((e_Zoom - (int)e_Zoom) * multiplier);
-            int finalX = (int)(800 * e_Zoom) / 32;
-            int finalY = (int)(600 * e_Zoom) / 32;
+            int finalX = (int)(EDITOR_WIDTH * e_Zoom) / 32;
+            int finalY = (int)(EDITOR_HEIGHT * e_Zoom) / 32;
             picMap.Focus();
-            e_CursorX = (e.X / 32) + e_ViewX;
-            e_CursorY = (e.Y / 32) + e_ViewY;
+            e_CursorX = (e.X / PIC_X) + e_ViewX;
+            e_CursorY = (e.Y / PIC_Y) + e_ViewY;
 
             if (e_CursorX < 0 || e_CursorX >= 50 || e_CursorY < 0 || e_CursorY >= 50) { return; }
 
@@ -1021,7 +1021,7 @@ namespace Editor.Forms
 
         private void EditorMouseWheelScroll(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e_WheelOption == 0)
+            if (e_WheelOption == WHEEL_OPTION_ZOOM)
             {
                 //Wheel up
                 if (e.Delta > 0)
@@ -1417,7 +1417,7 @@ namespace Editor.Forms
 
         private void btnMapNpcs_Click(object sender, EventArgs e)
         {
-            tabLight.Select();
+            tabTools.SelectTab(4);
         }
 
         private void btnFillMap_Click(object sender, EventArgs e)

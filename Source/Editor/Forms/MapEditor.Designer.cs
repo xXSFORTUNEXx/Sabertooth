@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this.tabTools = new System.Windows.Forms.TabControl();
+            this.tabMapDetails = new System.Windows.Forms.TabPage();
+            this.mapProperties = new System.Windows.Forms.PropertyGrid();
+            this.treeMaps = new System.Windows.Forms.TreeView();
             this.tabLayer = new System.Windows.Forms.TabPage();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.chkHScroll = new System.Windows.Forms.CheckBox();
@@ -104,8 +107,6 @@
             this.scrlIntensity = new System.Windows.Forms.HScrollBar();
             this.lblIntensity = new System.Windows.Forms.Label();
             this.chkNight = new System.Windows.Forms.CheckBox();
-            this.tabHelp = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
             this.picMap = new System.Windows.Forms.PictureBox();
             this.scrlViewX = new System.Windows.Forms.HScrollBar();
             this.scrlViewY = new System.Windows.Forms.VScrollBar();
@@ -120,10 +121,8 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
-            this.tabMapDetails = new System.Windows.Forms.TabPage();
-            this.mapProperties = new System.Windows.Forms.PropertyGrid();
-            this.treeMaps = new System.Windows.Forms.TreeView();
             this.tabTools.SuspendLayout();
+            this.tabMapDetails.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlOptions.SuspendLayout();
             this.pnlDebug.SuspendLayout();
@@ -138,10 +137,8 @@
             this.pnlTile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
             this.tabLight.SuspendLayout();
-            this.tabHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.tosMenu.SuspendLayout();
-            this.tabMapDetails.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabTools
@@ -151,12 +148,37 @@
             this.tabTools.Controls.Add(this.tabTypes);
             this.tabTools.Controls.Add(this.tabTiles);
             this.tabTools.Controls.Add(this.tabLight);
-            this.tabTools.Controls.Add(this.tabHelp);
             this.tabTools.Location = new System.Drawing.Point(11, 31);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
             this.tabTools.Size = new System.Drawing.Size(307, 620);
             this.tabTools.TabIndex = 1;
+            // 
+            // tabMapDetails
+            // 
+            this.tabMapDetails.Controls.Add(this.mapProperties);
+            this.tabMapDetails.Controls.Add(this.treeMaps);
+            this.tabMapDetails.Location = new System.Drawing.Point(4, 22);
+            this.tabMapDetails.Name = "tabMapDetails";
+            this.tabMapDetails.Size = new System.Drawing.Size(299, 594);
+            this.tabMapDetails.TabIndex = 5;
+            this.tabMapDetails.Text = "Map Details";
+            this.tabMapDetails.UseVisualStyleBackColor = true;
+            // 
+            // mapProperties
+            // 
+            this.mapProperties.Location = new System.Drawing.Point(3, 310);
+            this.mapProperties.Name = "mapProperties";
+            this.mapProperties.Size = new System.Drawing.Size(293, 281);
+            this.mapProperties.TabIndex = 21;
+            // 
+            // treeMaps
+            // 
+            this.treeMaps.Location = new System.Drawing.Point(3, 3);
+            this.treeMaps.Name = "treeMaps";
+            this.treeMaps.Size = new System.Drawing.Size(293, 301);
+            this.treeMaps.TabIndex = 20;
+            this.treeMaps.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaps_AfterSelect);
             // 
             // tabLayer
             // 
@@ -429,7 +451,7 @@
             this.tabTypes.Location = new System.Drawing.Point(4, 22);
             this.tabTypes.Name = "tabTypes";
             this.tabTypes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTypes.Size = new System.Drawing.Size(299, 589);
+            this.tabTypes.Size = new System.Drawing.Size(299, 594);
             this.tabTypes.TabIndex = 1;
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
@@ -770,7 +792,7 @@
             this.tabTiles.Controls.Add(this.cmbTileset);
             this.tabTiles.Location = new System.Drawing.Point(4, 22);
             this.tabTiles.Name = "tabTiles";
-            this.tabTiles.Size = new System.Drawing.Size(299, 589);
+            this.tabTiles.Size = new System.Drawing.Size(299, 594);
             this.tabTiles.TabIndex = 2;
             this.tabTiles.Text = "Tiles";
             this.tabTiles.UseVisualStyleBackColor = true;
@@ -829,7 +851,7 @@
             this.tabLight.Controls.Add(this.chkNight);
             this.tabLight.Location = new System.Drawing.Point(4, 22);
             this.tabLight.Name = "tabLight";
-            this.tabLight.Size = new System.Drawing.Size(299, 589);
+            this.tabLight.Size = new System.Drawing.Size(299, 594);
             this.tabLight.TabIndex = 4;
             this.tabLight.Text = "Light/NPCs";
             this.tabLight.UseVisualStyleBackColor = true;
@@ -972,27 +994,6 @@
             this.chkNight.Text = "Night";
             this.chkNight.UseVisualStyleBackColor = true;
             // 
-            // tabHelp
-            // 
-            this.tabHelp.Controls.Add(this.label1);
-            this.tabHelp.Location = new System.Drawing.Point(4, 22);
-            this.tabHelp.Name = "tabHelp";
-            this.tabHelp.Padding = new System.Windows.Forms.Padding(3);
-            this.tabHelp.Size = new System.Drawing.Size(299, 589);
-            this.tabHelp.TabIndex = 3;
-            this.tabHelp.Text = "Help";
-            this.tabHelp.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(273, 495);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
-            // 
             // picMap
             // 
             this.picMap.Location = new System.Drawing.Point(324, 31);
@@ -1037,7 +1038,7 @@
             this.btnHelp});
             this.tosMenu.Location = new System.Drawing.Point(0, 0);
             this.tosMenu.Name = "tosMenu";
-            this.tosMenu.Size = new System.Drawing.Size(1162, 25);
+            this.tosMenu.Size = new System.Drawing.Size(1153, 25);
             this.tosMenu.TabIndex = 20;
             this.tosMenu.Text = "toolStrip1";
             // 
@@ -1127,37 +1128,12 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // tabMapDetails
-            // 
-            this.tabMapDetails.Controls.Add(this.mapProperties);
-            this.tabMapDetails.Controls.Add(this.treeMaps);
-            this.tabMapDetails.Location = new System.Drawing.Point(4, 22);
-            this.tabMapDetails.Name = "tabMapDetails";
-            this.tabMapDetails.Size = new System.Drawing.Size(299, 594);
-            this.tabMapDetails.TabIndex = 5;
-            this.tabMapDetails.Text = "Map Details";
-            this.tabMapDetails.UseVisualStyleBackColor = true;
-            // 
-            // mapProperties
-            // 
-            this.mapProperties.Location = new System.Drawing.Point(3, 310);
-            this.mapProperties.Name = "mapProperties";
-            this.mapProperties.Size = new System.Drawing.Size(293, 281);
-            this.mapProperties.TabIndex = 21;
-            // 
-            // treeMaps
-            // 
-            this.treeMaps.Location = new System.Drawing.Point(3, 3);
-            this.treeMaps.Name = "treeMaps";
-            this.treeMaps.Size = new System.Drawing.Size(293, 301);
-            this.treeMaps.TabIndex = 20;
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1162, 663);
+            this.ClientSize = new System.Drawing.Size(1153, 663);
             this.Controls.Add(this.tosMenu);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
@@ -1168,6 +1144,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Map Editor";
             this.tabTools.ResumeLayout(false);
+            this.tabMapDetails.ResumeLayout(false);
             this.tabLayer.ResumeLayout(false);
             this.tabLayer.PerformLayout();
             this.pnlOptions.ResumeLayout(false);
@@ -1193,12 +1170,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
             this.tabLight.ResumeLayout(false);
             this.tabLight.PerformLayout();
-            this.tabHelp.ResumeLayout(false);
-            this.tabHelp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.tosMenu.ResumeLayout(false);
             this.tosMenu.PerformLayout();
-            this.tabMapDetails.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1258,8 +1232,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnFillMap;
         private System.Windows.Forms.ToolStripButton btnDebug;
-        private System.Windows.Forms.TabPage tabHelp;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnHelp;
         private System.Windows.Forms.ToolStripButton btnDeleteLayer;

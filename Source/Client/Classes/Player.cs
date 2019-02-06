@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
 using Gwen.Control;
+using SFML.Audio;
 using static System.Environment;
 using System;
 using static SabertoothClient.Client;
@@ -17,7 +18,7 @@ namespace SabertoothClient
         public NetConnection Connection;
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
-        public Item[] Backpack = new Item[25];
+        public Item[] Backpack = new Item[MAX_INV_SLOTS];
         public Item[] Bank = new Item[50];
         public Item Chest = new Item();
         public Item Legs = new Item();
@@ -27,7 +28,8 @@ namespace SabertoothClient
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] c_Sprite = new Texture[spriteTextures];
         Font font = new Font("Resources/Fonts/Arial.ttf");
-        Text p_Name = new Text();
+        Text p_Name = new Text();        
+        Sound gunShot = new Sound();
         #endregion
 
         #region Stats
@@ -455,7 +457,8 @@ namespace SabertoothClient
                         if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
                         break;
                 }
-                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }                
+                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
+                CreateBulletSound();
                 RemoveBulletFromClip();
                 Attacking = false;
                 attackTick = TickCount;
@@ -977,6 +980,13 @@ namespace SabertoothClient
         }
         #endregion
 
+        public void CreateBulletSound()
+        {
+            SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Shot.wav");
+            gunShot = new Sound(soundBuffer);
+            gunShot.Play();
+        }
+
         public void RemoveBulletFromClip()
         {
             if (mainWeapon.Clip > 0)
@@ -1030,7 +1040,7 @@ namespace SabertoothClient
                         {
                             int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
                             mainWeapon.Clip = mainWeapon.MaxClip;
-                            AssaultAmmo -= leftOver;
+                            AssaultAmmo -= leftOver;                         
                         }
                         else
                         {

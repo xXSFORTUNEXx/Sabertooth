@@ -137,7 +137,7 @@ namespace SabertoothServer
                 CheckNpcAi();
                 UpTime();
                 fps = CalculateFrameRate();
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
             DisconnectClients();
             Logging.WriteMessageLog("Disconnecting clients...");

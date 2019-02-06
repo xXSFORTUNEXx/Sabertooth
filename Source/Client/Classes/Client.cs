@@ -94,12 +94,18 @@ namespace SabertoothClient
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
         public static WorldTime worldTime = new WorldTime();
+
+        #region Configuration
         public static string Username { get; set; }
         public static string Password { get; set; }
         public static string Remember { get; set; }
         public static string IPAddress { get; set; }
         public static string Port { get; set; }
         public static string CurrentVersion { get; set; }
+        public static bool VSync { get; set; }
+        #endregion
+
+        #region Local Variables
         static int lastTick;
         static int lastFrameRate;  
         static int frameRate; 
@@ -110,6 +116,7 @@ namespace SabertoothClient
         static int attackTick;
         static int pickupTick;
         static int saveTime;
+        #endregion
 
         public static void GameLoop()  
         {
@@ -121,6 +128,7 @@ namespace SabertoothClient
             renderWindow.MouseMoved += window_MouseMoved;
             renderWindow.TextEntered += window_TextEntered;
             renderWindow.SetFramerateLimit(MAX_FPS);
+            //renderWindow.SetVerticalSyncEnabled(true);
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
@@ -134,8 +142,8 @@ namespace SabertoothClient
 
             InitArrays();
 
-            Thread commandThread = new Thread(() => CommandWindow());
-            commandThread.Start();
+            //Thread commandThread = new Thread(() => CommandWindow());
+            //commandThread.Start();
 
             while (renderWindow.IsOpen)
             {
@@ -199,6 +207,7 @@ namespace SabertoothClient
                 IPAddress = "127.0.0.1";
                 Port = "14242";
                 CurrentVersion = "1.0";
+                VSync = false;
                 SaveConfiguration();
                 CreateMapCache();
                 Logging.WriteMessageLog("Config and map cache created!");
@@ -217,6 +226,8 @@ namespace SabertoothClient
             Port = reader.ReadElementContentAsString();
             reader.ReadToFollowing("Version");
             CurrentVersion = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("VSync");
+            VSync = reader.ReadElementContentAsBoolean();
             reader.Close();
             Logging.WriteMessageLog("Configuration file loaded...");
         }
@@ -236,6 +247,7 @@ namespace SabertoothClient
             writer.WriteElementString("IPAddress", IPAddress);
             writer.WriteElementString("Port", Port);
             writer.WriteElementString("Version", CurrentVersion);
+            writer.WriteElementString("VSync", VSync.ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
