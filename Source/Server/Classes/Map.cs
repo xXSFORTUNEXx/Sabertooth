@@ -485,6 +485,7 @@ namespace SabertoothServer
         public int spawnTick;
         public int SpawnX;
         public int SpawnY;
+        public int aiTick;
 
         public MapNpc() { }
 
@@ -804,7 +805,7 @@ namespace SabertoothServer
 
                     for (int p = 0; p < 5; p++)
                     {
-                        if (players[p].Connection != null && players[p].Name != null)
+                        if (players[p].Connection != null && players[p].Name != null && mapNum == players[p].Map)
                         {
                             int s_PlayerX = players[p].X + OFFSET_X;
                             int s_PlayerY = players[p].Y + OFFSET_Y;

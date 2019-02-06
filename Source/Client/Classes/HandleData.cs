@@ -1052,7 +1052,7 @@ namespace SabertoothClient
             int index = incMSG.ReadVariableInt32();
             int health = incMSG.ReadVariableInt32();
 
-            players[myIndex].Health = health;
+            players[index].Health = health;
         }
 
         static void HandleUpdatePlayerStats(NetIncomingMessage incMSG)

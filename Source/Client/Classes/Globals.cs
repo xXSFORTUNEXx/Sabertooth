@@ -85,7 +85,7 @@ namespace SabertoothClient
         public const uint SCREEN_HEIGHT = 768;
         public const int CANVAS_WIDTH = 1024;
         public const int CANVAS_HEIGHT = 768;
-        public const int MAX_FPS = 80;
+        public const int MAX_FPS = 144;
         public const Styles SCREEN_STYLE = Styles.Titlebar;
         public const int MAX_DRAWN_PROJECTILES = 200;
         public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds

@@ -224,6 +224,7 @@ namespace SabertoothServer
                         maps[i].m_MapNpc[n].Range = npcs[num].Range;
                         maps[i].m_MapNpc[n].ShopNum = npcs[num].ShopNum;
                         maps[i].m_MapNpc[n].ChatNum = npcs[num].ChatNum;
+                        maps[i].m_MapNpc[n].Speed = npcs[num].Speed;
                     }
                 }
             }
@@ -610,6 +611,7 @@ namespace SabertoothServer
                                                                 maps[i].r_MapNpc[n].SpawnTime = npcs[num].SpawnTime;
                                                                 maps[i].r_MapNpc[n].IsSpawned = true;
                                                                 maps[i].r_MapNpc[n].Range = npcs[num].Range;
+                                                                maps[i].r_MapNpc[n].Speed = npcs[num].Speed;
                                                                 maps[i].Ground[x, y].CurrentSpawn += 1;
 
                                                                 for (int p = 0; p < MAX_PLAYERS; p++)
@@ -646,22 +648,26 @@ namespace SabertoothServer
                         {
                             if (maps[i].m_MapNpc[n].IsSpawned)
                             {
-                                int canMove = RND.Next(0, 100);
-                                int dir = RND.Next(0, 3);
-
-                                maps[i].m_MapNpc[n].NpcAI(canMove, dir, i);
-
-                                if (maps[i].m_MapNpc[n].DidMove)
+                                if (TickCount - maps[i].m_MapNpc[n].aiTick > (maps[i].m_MapNpc[n].Speed))
                                 {
-                                    maps[i].m_MapNpc[n].DidMove = false;
+                                    int canMove = RND.Next(0, 100);
+                                    int dir = RND.Next(0, 3);
 
-                                    for (int p = 0; p < MAX_PLAYERS; p++)
+                                    maps[i].m_MapNpc[n].NpcAI(canMove, dir, i);
+
+                                    if (maps[i].m_MapNpc[n].DidMove)
                                     {
-                                        if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
+                                        maps[i].m_MapNpc[n].DidMove = false;
+
+                                        for (int p = 0; p < MAX_PLAYERS; p++)
                                         {
-                                            HandleData.SendUpdateNpcLoc(players[p].Connection, i, n);
+                                            if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
+                                            {
+                                                HandleData.SendUpdateNpcLoc(players[p].Connection, i, n);
+                                            }
                                         }
                                     }
+                                    maps[i].m_MapNpc[n].aiTick = TickCount;
                                 }
                             }
                         }
@@ -669,22 +675,26 @@ namespace SabertoothServer
                         {
                             if (maps[i].r_MapNpc[c].IsSpawned)
                             {
-                                int canMove = RND.Next(0, 100);
-                                int dir = RND.Next(0, 3);
-
-                                maps[i].r_MapNpc[c].NpcAI(canMove, dir, i);
-
-                                if (maps[i].r_MapNpc[c].DidMove)
+                                if (TickCount - maps[i].r_MapNpc[c].aiTick > (maps[i].r_MapNpc[c].Speed))
                                 {
-                                    maps[i].r_MapNpc[c].DidMove = false;
+                                    int canMove = RND.Next(0, 100);
+                                    int dir = RND.Next(0, 3);
 
-                                    for (int p = 0; p < 5; p++)
+                                    maps[i].r_MapNpc[c].NpcAI(canMove, dir, i);
+
+                                    if (maps[i].r_MapNpc[c].DidMove)
                                     {
-                                        if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
+                                        maps[i].r_MapNpc[c].DidMove = false;
+
+                                        for (int p = 0; p < 5; p++)
                                         {
-                                            HandleData.SendUpdatePoolNpcLoc(players[p].Connection, i, c);
+                                            if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
+                                            {
+                                                HandleData.SendUpdatePoolNpcLoc(players[p].Connection, i, c);
+                                            }
                                         }
                                     }
+                                    maps[i].r_MapNpc[c].aiTick = TickCount;
                                 }
                             }
                         }

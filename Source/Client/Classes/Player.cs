@@ -30,6 +30,7 @@ namespace SabertoothClient
         Font font = new Font("Resources/Fonts/Arial.ttf");
         Text p_Name = new Text();        
         Sound gunShot = new Sound();
+        Sound gunReload = new Sound();
         #endregion
 
         #region Stats
@@ -473,6 +474,7 @@ namespace SabertoothClient
             if (Joystick.IsButtonPressed(0, 2))
             {
                 if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
+                CreateReloadSound();
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip();
@@ -823,6 +825,7 @@ namespace SabertoothClient
                         break;
                 }
                 if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
+                CreateBulletSound();
                 RemoveBulletFromClip();
                 Attacking = false;
                 attackTick = TickCount;
@@ -836,6 +839,7 @@ namespace SabertoothClient
             if (Keyboard.IsKeyPressed(Keyboard.Key.R))
             {
                 if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
+                CreateReloadSound();
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip();
@@ -987,6 +991,13 @@ namespace SabertoothClient
             gunShot.Play();
         }
 
+        public void CreateReloadSound()
+        {
+            SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Reload.wav");
+            gunReload = new Sound(soundBuffer);
+            gunReload.Play();
+        }
+
         public void RemoveBulletFromClip()
         {
             if (mainWeapon.Clip > 0)
@@ -997,6 +1008,7 @@ namespace SabertoothClient
             }
             else
             {
+                CreateReloadSound();
                 Reload();
                 reloadTick = TickCount;
                 SendUpdateClip();

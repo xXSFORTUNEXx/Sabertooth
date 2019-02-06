@@ -498,7 +498,7 @@ namespace SabertoothClient
         {
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
-                if (players[i].Name != "")
+                if (players[i] != null && players[i].Name != "")
                 {
                     if (i != HandleData.myIndex && players[i].Map == players[HandleData.myIndex].Map)
                     {
@@ -730,7 +730,7 @@ namespace SabertoothClient
                 renderWindow.Draw(map);
                 DrawChests();
                 DrawMapItems();
-                DrawBlood();
+                //DrawBlood();
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();

@@ -189,10 +189,15 @@
             // 
             // scrlMoveSpeed
             // 
+            this.scrlMoveSpeed.LargeChange = 100;
             this.scrlMoveSpeed.Location = new System.Drawing.Point(18, 321);
+            this.scrlMoveSpeed.Maximum = 10000;
+            this.scrlMoveSpeed.Minimum = 100;
             this.scrlMoveSpeed.Name = "scrlMoveSpeed";
             this.scrlMoveSpeed.Size = new System.Drawing.Size(153, 17);
+            this.scrlMoveSpeed.SmallChange = 100;
             this.scrlMoveSpeed.TabIndex = 44;
+            this.scrlMoveSpeed.Value = 100;
             this.scrlMoveSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMoveSpeed_Scroll);
             // 
             // lblMoveSpeed
@@ -200,9 +205,9 @@
             this.lblMoveSpeed.AutoSize = true;
             this.lblMoveSpeed.Location = new System.Drawing.Point(20, 308);
             this.lblMoveSpeed.Name = "lblMoveSpeed";
-            this.lblMoveSpeed.Size = new System.Drawing.Size(80, 13);
+            this.lblMoveSpeed.Size = new System.Drawing.Size(92, 13);
             this.lblMoveSpeed.TabIndex = 43;
-            this.lblMoveSpeed.Text = "Move Speed: 0";
+            this.lblMoveSpeed.Text = "Move Speed: 100";
             // 
             // scrlChatNum
             // 
