@@ -1401,6 +1401,7 @@ namespace Editor.Forms
             mapProperties.SelectedObject = e_Map;
             UpdateMapNpcs();
             UpdateMaxTiles();
+            UpdateViewScrollBars();
         }
 
         private void btnNewMap_Click(object sender, EventArgs e)

@@ -1298,21 +1298,31 @@ namespace SabertoothClient
             map.LeftMap = incMSG.ReadVariableInt32();
             map.RightMap = incMSG.ReadVariableInt32();
             map.Brightness = incMSG.ReadVariableInt32();
+            int maxx = incMSG.ReadVariableInt32();
+            int maxy = incMSG.ReadVariableInt32();
+            map.MaxX = maxx;
+            map.MaxY = maxy;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 map.m_MapNpc[i] = new MapNpc();
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
             {
                 map.r_MapNpc[i] = new MapNpc();
                 map.m_MapItem[i] = new MapItem();
             }
 
-            for (int x = 0; x < 50; x++)
+            map.Ground = new Tile[maxx, maxy];
+            map.Mask = new Tile[maxx, maxy];
+            map.MaskA = new Tile[maxx, maxy];
+            map.Fringe = new Tile[maxx, maxy];
+            map.FringeA = new Tile[maxx, maxy];
+
+            for (int x = 0; x < maxx; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < maxy; y++)
                 {
                     map.Ground[x, y] = new Tile();
                     map.Mask[x, y] = new Tile();

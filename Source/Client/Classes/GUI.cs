@@ -3123,7 +3123,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    if (x > 0 && y > 0 && x < m_Map.MaxX && y < m_Map.MaxY)
                     {
                         int fx = (x * 12) - (minX * 12) + 640;
                         int fy = (y * 12) - (minY * 12);

@@ -142,8 +142,8 @@ namespace SabertoothClient
 
             InitArrays();
 
-            //Thread commandThread = new Thread(() => CommandWindow());
-            //commandThread.Start();
+            Thread commandThread = new Thread(() => CommandWindow());
+            commandThread.Start();
 
             while (renderWindow.IsOpen)
             {
@@ -266,7 +266,7 @@ namespace SabertoothClient
                         conn.Open();
                         string sql;
                         sql = "CREATE TABLE MAPS";
-                        sql = sql + "(ID INTEGER,NAME TEXT,REVISION INTEGER,TOP INTEGER,BOTTOM INTEGER,LEFT INTEGER,RIGHT INTEGER,BRIGHTNESS INTEGER,NPC BLOB,ITEM BLOB,GROUND BLOB,MASK BLOB,MASKA BLOB,FRINGE BLOB,FRINGEA BLOB)";
+                        sql = sql + "(ID INTEGER,NAME TEXT,REVISION INTEGER,TOP INTEGER,BOTTOM INTEGER,LEFT INTEGER,RIGHT INTEGER,BRIGHTNESS INTEGER,MAXX INTEGER,MAXY INTEGER,NPC BLOB,ITEM BLOB,GROUND BLOB,MASK BLOB,MASKA BLOB,FRINGE BLOB,FRINGEA BLOB)";
                         cmd.CommandText = sql;
                         cmd.ExecuteNonQuery();
                     }

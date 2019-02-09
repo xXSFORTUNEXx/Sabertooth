@@ -19,7 +19,7 @@ namespace SabertoothClient
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
         public Item[] Backpack = new Item[MAX_INV_SLOTS];
-        public Item[] Bank = new Item[50];
+        public Item[] Bank = new Item[MAX_BANK_SLOTS];
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
@@ -304,7 +304,7 @@ namespace SabertoothClient
 
             if (x > deadZone)
             {
-                if (X < 49 - OffsetX)
+                if (X < (map.MaxX - 1) - OffsetX)
                 {
                     if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
@@ -321,7 +321,7 @@ namespace SabertoothClient
 
             if (x < -deadZone)
             {
-                if (X > 1 - OffsetX)
+                if (X > 0 - OffsetX)
                 {
                     if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
@@ -338,7 +338,7 @@ namespace SabertoothClient
 
             if (y > deadZone)
             {
-                if (Y < 49 - OffsetY)
+                if (Y < (map.MaxY - 1) - OffsetY)
                 {
                     if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                     {
@@ -355,7 +355,7 @@ namespace SabertoothClient
 
             if (y < -deadZone)
             {
-                if (Y > 1 - OffsetY)
+                if (Y > 0 - OffsetY)
                 {
                     if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                     {
@@ -676,7 +676,7 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
-                if (Y > 1 - OffsetY)
+                if (Y > 0 - OffsetY)
                 {
                     if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
                     {
@@ -693,7 +693,7 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Y < 49 - OffsetY)  
+                if (Y < (map.MaxY - 1) - OffsetY)  
                 {
                     if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                     {
@@ -710,7 +710,7 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) 
             {
-                if (X > 1 - OffsetX)
+                if (X > 0 - OffsetX)
                 {
                     if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
@@ -727,7 +727,7 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                if (X < 49 - OffsetX) 
+                if (X < (map.MaxX - 1) - OffsetX) 
                 {
                     if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest) 
                     {

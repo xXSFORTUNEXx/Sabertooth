@@ -117,7 +117,7 @@ namespace SabertoothClient
                             byte[] m_FringeA = ToByteArray(FringeA);
                             string sql;
 
-                            sql = "INSERT INTO MAPS (ID,NAME,REVISION,TOP,BOTTOM,LEFT,RIGHT,BRIGHTNESS,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
+                            sql = "INSERT INTO MAPS (ID,NAME,REVISION,TOP,BOTTOM,LEFT,RIGHT,BRIGHTNESS,MAXX,MAXY,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
                             sql = sql + " VALUES ";
                             sql = sql + "(@id,@name,@revision,@top,@bottom,@left,@right,@brightness,@maxx,@maxy,@ground,@mask,@maska,@fringe,@fringea)";
                             cmd.CommandText = sql;
@@ -259,7 +259,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x >= 0 && y >= 0 && x < 50 && y < 50)
+                    if (x >= 0 && y >= 0 && x < MaxX && y < MaxY)
                     {
                         int fx = (x * 32);
                         int fy = (y * 32);
@@ -339,7 +339,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x >= 0 && y >= 0 && x < 50 && y < 50)
+                    if (x >= 0 && y >= 0 && x < MaxX && y < MaxY)
                     {
                         int fx = (x * 32);
                         int fy = (y * 32);
@@ -406,9 +406,9 @@ namespace SabertoothClient
 
         void DrawMapLight()
         {
-            for (int x = 0; x < MAX_MAP_X; x++)
+            for (int x = 0; x < MaxX; x++)
             {
-                for (int y = 0; y < MAX_MAP_X; y++)
+                for (int y = 0; y < MaxY; y++)
                 {
                     if (Ground[x, y].LightRadius > 0)
                     {

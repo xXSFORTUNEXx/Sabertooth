@@ -1703,10 +1703,14 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(iMap.LeftMap);
             outMSG.WriteVariableInt32(iMap.RightMap);
             outMSG.WriteVariableInt32(iMap.Brightness);
+            int maxx = iMap.MaxX;
+            int maxy = iMap.MaxY;
+            outMSG.WriteVariableInt32(maxx);
+            outMSG.WriteVariableInt32(maxy);
 
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < maxx; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < maxy; y++)
                 {
                     //ground
                     outMSG.WriteVariableInt32(iMap.Ground[x, y].TileX);
@@ -1759,10 +1763,14 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(maps[map].LeftMap);
             outMSG.WriteVariableInt32(maps[map].RightMap);
             outMSG.WriteVariableInt32(maps[map].Brightness);
+            int maxx = maps[map].MaxX;
+            int maxy = maps[map].MaxY;
+            outMSG.WriteVariableInt32(maxx);
+            outMSG.WriteVariableInt32(maxy);
 
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < maxx; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < maxy; y++)
                 {
                     //ground
                     outMSG.WriteVariableInt32(maps[map].Ground[x, y].TileX);

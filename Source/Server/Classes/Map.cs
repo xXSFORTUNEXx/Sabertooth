@@ -414,7 +414,7 @@ namespace SabertoothServer
                 }
             }
 
-            //SaveMapInDatabase(Id);
+            SaveMapInDatabase(Id);
         }
         #endregion
 
