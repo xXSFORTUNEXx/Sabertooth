@@ -32,6 +32,8 @@ namespace SabertoothServer
             iMap.RightMap = 0;
             iMap.Revision = 0;
             iMap.Brightness = 0;
+            iMap.MaxX = MAX_MAP_X;
+            iMap.MaxY = MAX_MAP_Y;
             iMap.IsInstance = true;
 
             for (int i = 0; i < 10; i++)
@@ -49,9 +51,15 @@ namespace SabertoothServer
                 iMap.m_MapItem[i] = new MapItem("None", 0, 0, 0);
             }
 
-            for (int x = 0; x < 50; x++)
+            iMap.Ground = new Tile[iMap.MaxX, iMap.MaxY];
+            iMap.Mask = new Tile[iMap.MaxX, iMap.MaxY];
+            iMap.MaskA = new Tile[iMap.MaxX, iMap.MaxY];
+            iMap.Fringe = new Tile[iMap.MaxX, iMap.MaxY];
+            iMap.FringeA = new Tile[iMap.MaxX, iMap.MaxY];
+
+            for (int x = 0; x < iMap.MaxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < iMap.MaxY; y++)
                 {
                     iMap.Ground[x, y] = new Tile();
                     iMap.Mask[x, y] = new Tile();

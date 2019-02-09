@@ -146,6 +146,7 @@ namespace Editor.Forms
             e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
             UpdateMapNpcs();
+            UpdateMaxTiles();
             MapEditorLoop();
         }
 
@@ -214,6 +215,12 @@ namespace Editor.Forms
             cmbNpc10.SelectedIndex = e_Map.m_MapNpc[9].NpcNum;
         }
 
+        void UpdateMaxTiles()
+        {
+            txtMaxX.Text = e_Map.MaxX.ToString();
+            txtMaxY.Text = e_Map.MaxY.ToString();
+        }
+
         void UpdateView()
         {
             e_View.Reset(new FloatRect(0, 0, EDITOR_WIDTH, EDITOR_HEIGHT));
@@ -244,14 +251,14 @@ namespace Editor.Forms
 
         void DrawMapLight()
         {
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < e_Map.MaxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < e_Map.MaxY; y++)
                 {
                     if (e_Map.Ground[x, y].LightRadius > 0)
                     {
-                        int centerX = ((x * 32) + 16) - (e_ViewX * 32);
-                        int centerY = 600 - (((y * 32) + 16) - (e_ViewY * 32));
+                        int centerX = ((x * PIC_X) + 16) - (e_ViewX * PIC_X);
+                        int centerY = 600 - (((y * PIC_Y) + 16) - (e_ViewY * PIC_Y));
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = e_Map.Ground[x, y].LightRadius;
 
@@ -284,12 +291,12 @@ namespace Editor.Forms
 
         void DrawTiles(RenderTarget target)
         {            
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < e_Map.MaxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < e_Map.MaxY; y++)
                 {
-                    int fx = (x * 32);
-                    int fy = (y * 32);
+                    int fx = (x * PIC_Y);
+                    int fy = (y * PIC_Y);
                     int tx, ty, w, h, set;
 
                     tx = (e_Map.Ground[x, y].TileX);
@@ -379,9 +386,9 @@ namespace Editor.Forms
         {            
             if (tabTools.SelectedTab == tabTypes)
             {
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < e_Map.MaxX; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < e_Map.MaxY; y++)
                     {
                         if (e_Map.Ground[x, y].Type != (int)TileType.None)
                         {
@@ -420,9 +427,9 @@ namespace Editor.Forms
             }
             if (tabTools.SelectedTab == tabLight)
             {
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < e_Map.MaxX; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < e_Map.MaxY; y++)
                     {
                         if (e_Map.Ground[x, y].LightRadius > 0)
                         {
@@ -439,9 +446,9 @@ namespace Editor.Forms
             {
                 e_Grid.Texture = e_GridTexture;
 
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < e_Map.MaxX; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < e_Map.MaxY; y++)
                     {
                         e_Grid.TextureRect = new IntRect(0, 0, 32, 32);
                         e_Grid.Position = new Vector2f(x * 32, y * 32);
@@ -455,9 +462,9 @@ namespace Editor.Forms
         {
             if (chkNpc.Checked)
             {
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < e_Map.MaxX; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < e_Map.MaxY; y++)
                     {
                         if (e_Map.Ground[x, y].Type == (int)TileType.NpcSpawn)
                         {
@@ -484,9 +491,9 @@ namespace Editor.Forms
 
         void DrawItems()
         {
-            for (int x = 0; x < 50; x++)
+            for (int x = 0; x < e_Map.MaxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < e_Map.MaxY; y++)
                 {
                     if (e_Map.Ground[x, y].Type == (int)TileType.MapItem)
                     {
@@ -542,7 +549,7 @@ namespace Editor.Forms
                     }
                     break;
                 case Keys.S:
-                    if (e_ViewY < (50 - e_OffsetY))
+                    if (e_ViewY < (e_Map.MaxX - e_OffsetY))
                     {
                         e_ViewY += 1;
                         scrlViewY.Value = e_ViewY;
@@ -556,7 +563,7 @@ namespace Editor.Forms
                     }
                     break;
                 case Keys.D:
-                    if (e_ViewX < (50 - e_OffsetX))
+                    if (e_ViewX < (e_Map.MaxY - e_OffsetX))
                     {
                         e_ViewX += 1;
                         scrlViewX.Value = e_ViewX;
@@ -827,7 +834,7 @@ namespace Editor.Forms
             e_CursorX = (e.X / PIC_X) + e_ViewX;
             e_CursorY = (e.Y / PIC_Y) + e_ViewY;
 
-            if (e_CursorX < 0 || e_CursorX >= 50 || e_CursorY < 0 || e_CursorY >= 50) { return; }
+            if (e_CursorX < 0 || e_CursorX >= e_Map.MaxX || e_CursorY < 0 || e_CursorY >= e_Map.MaxY) { return; }
 
             if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
             {
@@ -1016,7 +1023,7 @@ namespace Editor.Forms
                 }
             }
             lblButtonDown.Text = "Button Down: " + e.Button.ToString();
-            lblMouseLoc.Text = "Mouse X: " + e_CursorX + ", Mouse Y: " + e_CursorY;
+            lblMouseLoc.Text = "Cur X: " + e_CursorX + ", Cur Y: " + e_CursorY;
         }
 
         private void EditorMouseWheelScroll(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -1052,7 +1059,7 @@ namespace Editor.Forms
                     //Wheel down
                     if (e.Delta < 0)
                     {
-                        if (e_ViewX < (50 - e_OffsetX))
+                        if (e_ViewX < (e_Map.MaxX - e_OffsetX))
                         {
                             e_ViewX += 1;
                             scrlViewX.Value = e_ViewX;
@@ -1074,7 +1081,7 @@ namespace Editor.Forms
                     //Wheel down
                     if (e.Delta < 0)
                     {
-                        if (e_ViewY < (50 - e_OffsetY))
+                        if (e_ViewY < (e_Map.MaxY - e_OffsetY))
                         {
                             e_ViewY += 1;
                             scrlViewY.Value = e_ViewY;
@@ -1380,16 +1387,31 @@ namespace Editor.Forms
             lblViewX.Text = "View X: " + (scrlViewX.Value);
         }
 
+        private void UpdateViewScrollBars()
+        {
+            //Default: X 25, Y 19
+            scrlViewX.Maximum = (e_Map.MaxX - 25);
+            scrlViewY.Maximum = (e_Map.MaxY - 19);
+        }
+
         private void treeMaps_AfterSelect(object sender, TreeViewEventArgs e)
         {
             SelectedIndex = treeMaps.SelectedNode.Index + 1;
             e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
             UpdateMapNpcs();
+            UpdateMaxTiles();
         }
 
         private void btnNewMap_Click(object sender, EventArgs e)
         {
+            string w_Message = "Would you like to create a new map?";
+            string w_Caption = "New Map";
+            MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
+            DialogResult w_Result;
+            w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
+            if (w_Result == DialogResult.No) { return; }
+
             e_Map.CreateMapInDatabase();
             int result;
             string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
@@ -1410,6 +1432,13 @@ namespace Editor.Forms
 
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
+            string w_Message = "Overwrite existing map?";
+            string w_Caption = "Save Map";
+            MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
+            DialogResult w_Result;
+            w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
+            if (w_Result == DialogResult.No) { return; }
+
             e_Map.SaveMapInDatabase(SelectedIndex);
             LoadMapList();
             e_Map.LoadMapFromDatabase(SelectedIndex);
@@ -1425,9 +1454,9 @@ namespace Editor.Forms
             switch (e_Layer)
             {
                 case (int)TileLayers.Ground:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Ground[x, y].TileX = (e_TileX * 32);
                             e_Map.Ground[x, y].TileY = (e_TileY * 32);
@@ -1438,9 +1467,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.Mask:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Mask[x, y].TileX = (e_TileX * 32);
                             e_Map.Mask[x, y].TileY = (e_TileY * 32);
@@ -1451,9 +1480,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.MaskA:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.MaskA[x, y].TileX = (e_TileX * 32);
                             e_Map.MaskA[x, y].TileY = (e_TileY * 32);
@@ -1464,9 +1493,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.Fringe:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Fringe[x, y].TileX = (e_TileX * 32);
                             e_Map.Fringe[x, y].TileY = (e_TileY * 32);
@@ -1477,9 +1506,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.FringeA:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.FringeA[x, y].TileX = (e_TileX * 32);
                             e_Map.FringeA[x, y].TileY = (e_TileY * 32);
@@ -1524,7 +1553,7 @@ namespace Editor.Forms
         private void btnDeleteLayer_Click(object sender, EventArgs e)
         {
             string w_Message = "Are you sure you want to delete this layer?";
-            string w_Caption = "Unsaved data";
+            string w_Caption = "Delete Layer";
             MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
             DialogResult w_Result;
             w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
@@ -1533,9 +1562,9 @@ namespace Editor.Forms
             switch (e_Layer)
             {
                 case (int)TileLayers.Ground:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Ground[x, y].TileX = 0;
                             e_Map.Ground[x, y].TileY = 0;
@@ -1546,9 +1575,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.Mask:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Mask[x, y].TileX = 0;
                             e_Map.Mask[x, y].TileY = 0;
@@ -1559,9 +1588,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.MaskA:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.MaskA[x, y].TileX = 0;
                             e_Map.MaskA[x, y].TileY = 0;
@@ -1572,9 +1601,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.Fringe:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.Fringe[x, y].TileX = 0;
                             e_Map.Fringe[x, y].TileY = 0;
@@ -1585,9 +1614,9 @@ namespace Editor.Forms
                     }
                     break;
                 case (int)TileLayers.FringeA:
-                    for (int x = 0; x < 50; x++)
+                    for (int x = 0; x < e_Map.MaxX; x++)
                     {
-                        for (int y = 0; y < 50; y++)
+                        for (int y = 0; y < e_Map.MaxY; y++)
                         {
                             e_Map.FringeA[x, y].TileX = 0;
                             e_Map.FringeA[x, y].TileY = 0;
@@ -1600,9 +1629,9 @@ namespace Editor.Forms
             }
             if (tabTypes.Focused)
             {
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < e_Map.MaxX; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < e_Map.MaxY; y++)
                     {
                         e_Map.Ground[x, y].Type = (int)TileType.None;
                     }
@@ -1720,6 +1749,22 @@ namespace Editor.Forms
         {
             e_WarpY = scrlMapY.Value;
             lblMapY.Text = "Y: " + scrlMapY.Value;
+        }
+
+        private void btnRestruct_Click(object sender, EventArgs e)
+        {
+            string w_Message = "Resturcture map? WARNING: Currently in DEBUG";
+            string w_Caption = "Restructure Map";
+            MessageBoxButtons w_Buttons = MessageBoxButtons.YesNo;
+            DialogResult w_Result;
+            w_Result = MessageBox.Show(w_Message, w_Caption, w_Buttons);
+            if (w_Result == DialogResult.No) { return; }
+
+            int x = ToInt32(txtMaxX.Text);
+            int y = ToInt32(txtMaxY.Text);
+
+            e_Map.RestructureMap(x, y, e_Map.MaxX, e_Map.MaxY);
+            UpdateViewScrollBars();
         }
     }
 

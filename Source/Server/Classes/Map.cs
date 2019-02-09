@@ -31,16 +31,20 @@ namespace SabertoothServer
         public int RightMap { get; set; }
         [Category("Brightness"), Description("Brightness of the map. (0 - 255)")]
         public int Brightness { get; set; }
+        [Category("ID"), Description("Maps identification number.")]
         public int Id { get; set; }
         public bool IsInstance { get; set; }
         #endregion
 
+        public int MaxX;
+        public int MaxY;
+
         #region Classes
-        public Tile[,] Ground = new Tile[50, 50];
-        public Tile[,] Mask = new Tile[50, 50];
-        public Tile[,] Fringe = new Tile[50, 50];
-        public Tile[,] MaskA = new Tile[50, 50];
-        public Tile[,] FringeA = new Tile[50, 50];
+        public Tile[,] Ground;
+        public Tile[,] Mask;
+        public Tile[,] Fringe;
+        public Tile[,] MaskA;
+        public Tile[,] FringeA;
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
         public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
         public MapProj[] m_MapProj = new MapProj[MAX_MAP_PROJECTILES];
@@ -80,6 +84,8 @@ namespace SabertoothServer
             RightMap = 0;
             Revision = 0;
             Brightness = 0;
+            MaxX = MAX_MAP_X;
+            MaxY = MAX_MAP_Y;
 
             for (int i = 0; i < 10; i++)
             {
@@ -91,9 +97,15 @@ namespace SabertoothServer
                 m_MapItem[i] = new MapItem("None", 0, 0, 0);
             }
 
-            for (int x = 0; x < 50; x++)
+            Ground = new Tile[MaxX, MaxY];
+            Mask = new Tile[MaxX, MaxY];
+            MaskA = new Tile[MaxX, MaxY];
+            Fringe = new Tile[MaxX, MaxY];
+            FringeA = new Tile[MaxX, MaxY];
+
+            for (int x = 0; x < MaxX; x++)
             {
-                for (int y = 0; y < 50; y++)
+                for (int y = 0; y < MaxY; y++)
                 {
                     Ground[x, y] = new Tile();
                     Mask[x, y] = new Tile();
@@ -158,6 +170,8 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@left", System.Data.SqlDbType.Int)).Value = LeftMap;
                     cmd.Parameters.Add(new SqlParameter("@right", System.Data.SqlDbType.Int)).Value = RightMap;
                     cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
+                    cmd.Parameters.Add(new SqlParameter("@maxx", System.Data.SqlDbType.Int)).Value = MaxX;
+                    cmd.Parameters.Add(new SqlParameter("@maxy", System.Data.SqlDbType.Int)).Value = MaxY;
                     cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
                     cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
                     cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
@@ -195,6 +209,8 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@left", System.Data.SqlDbType.Int)).Value = LeftMap;
                     cmd.Parameters.Add(new SqlParameter("@right", System.Data.SqlDbType.Int)).Value = RightMap;
                     cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
+                    cmd.Parameters.Add(new SqlParameter("@maxx", System.Data.SqlDbType.Int)).Value = MaxX;
+                    cmd.Parameters.Add(new SqlParameter("@maxy", System.Data.SqlDbType.Int)).Value = MaxY;
                     cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
                     cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
                     cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
@@ -239,35 +255,43 @@ namespace SabertoothServer
                             LeftMap = ToInt32(reader[5]);
                             RightMap = ToInt32(reader[6]);
                             Brightness = ToInt32(reader[7]);
+                            MaxX = ToInt32(reader[8]);
+                            MaxY = ToInt32(reader[9]);
+
+                            Ground = new Tile[MaxX, MaxY];
+                            Mask = new Tile[MaxX, MaxY];
+                            MaskA = new Tile[MaxX, MaxY];
+                            Fringe = new Tile[MaxX, MaxY];
+                            FringeA = new Tile[MaxX, MaxY];
 
                             byte[] buffer;
                             object load;
 
-                            buffer = (byte[])reader[8];
+                            buffer = (byte[])reader[10];
                             load = ByteArrayToObject(buffer);
                             m_MapNpc = (MapNpc[])load;
 
-                            buffer = (byte[])reader[9];
+                            buffer = (byte[])reader[11];
                             load = ByteArrayToObject(buffer);
                             m_MapItem = (MapItem[])load;
 
-                            buffer = (byte[])reader[10];
+                            buffer = (byte[])reader[12];
                             load = ByteArrayToObject(buffer);
                             Ground = (Tile[,])load;
 
-                            buffer = (byte[])reader[11];
+                            buffer = (byte[])reader[13];
                             load = ByteArrayToObject(buffer);
                             Mask = (Tile[,])load;
 
-                            buffer = (byte[])reader[12];
+                            buffer = (byte[])reader[14];
                             load = ByteArrayToObject(buffer);
                             MaskA = (Tile[,])load;
 
-                            buffer = (byte[])reader[13];
+                            buffer = (byte[])reader[15];
                             load = ByteArrayToObject(buffer);
                             Fringe = (Tile[,])load;
 
-                            buffer = (byte[])reader[14];
+                            buffer = (byte[])reader[16];
                             load = ByteArrayToObject(buffer);
                             FringeA = (Tile[,])load;
                         }
@@ -296,6 +320,101 @@ namespace SabertoothServer
                     }
                 }
             }
+        }
+
+        public void RestructureMap(int newx, int newy, int oldx, int oldy)
+        {
+            //Create temp arrays to hold what data we already have
+            Tile[,] tGround = new Tile[oldx, oldy];
+            Tile[,] tMask = new Tile[oldx, oldy];
+            Tile[,] tMaskA = new Tile[oldx, oldy];
+            Tile[,] tFringe = new Tile[oldx, oldy];
+            Tile[,] tFringeA = new Tile[oldx, oldy];
+
+            //Set the temp data to the current data
+            for (int x = 0; x < oldx; x++)
+            {
+                for (int y = 0; y < oldy; y++)
+                {
+                    tGround[x, y] = Ground[x, y];
+                    tMask[x, y] = Mask[x, y];
+                    tMaskA[x, y] = MaskA[x, y];
+                    tFringe[x, y] = Fringe[x, y];
+                    tFringeA[x, y] = FringeA[x, y];
+                }
+            }
+
+            //Adjust the new max length
+            MaxX = newx;
+            MaxY = newy;
+
+            //Reset the max length of the array to fit the new length
+            Ground = new Tile[MaxX, MaxY];
+            Mask = new Tile[MaxX, MaxY];
+            MaskA = new Tile[MaxX, MaxY];
+            Fringe = new Tile[MaxX, MaxY];
+            FringeA = new Tile[MaxX, MaxY];
+
+            //Create all arrays
+            for (int x = 0; x < newx; x++)
+            {
+                for (int y = 0; y < newy; y++)
+                {
+                    Ground[x, y] = new Tile();
+                    Mask[x, y] = new Tile();
+                    Fringe[x, y] = new Tile();
+                    MaskA[x, y] = new Tile();
+                    FringeA[x, y] = new Tile();
+
+                    Ground[x, y].TileX = 0;
+                    Ground[x, y].TileY = 32;
+                    Ground[x, y].TileW = 32;
+                    Ground[x, y].TileH = 32;
+                    Ground[x, y].Tileset = 0;
+                    Ground[x, y].Type = (int)TileType.None;
+                    Ground[x, y].SpawnNum = 0;
+                    Ground[x, y].SpawnAmount = 0;
+
+                    Mask[x, y].TileX = 0;
+                    Mask[x, y].TileY = 0;
+                    Mask[x, y].TileW = 32;
+                    Mask[x, y].TileH = 32;
+                    Mask[x, y].Tileset = 0;
+
+                    Fringe[x, y].TileX = 0;
+                    Fringe[x, y].TileY = 0;
+                    Fringe[x, y].TileW = 0;
+                    Fringe[x, y].TileH = 0;
+                    Fringe[x, y].Tileset = 0;
+
+                    MaskA[x, y].TileX = 0;
+                    MaskA[x, y].TileY = 0;
+                    MaskA[x, y].TileW = 0;
+                    MaskA[x, y].TileH = 0;
+                    MaskA[x, y].Tileset = 0;
+
+                    FringeA[x, y].TileX = 0;
+                    FringeA[x, y].TileY = 0;
+                    FringeA[x, y].TileW = 0;
+                    FringeA[x, y].TileH = 0;
+                    FringeA[x, y].Tileset = 0;
+                }
+            }
+
+            //Offload the old data
+            for (int x = 0; x < oldx; x++)
+            {
+                for (int y = 0; y < oldy; y++)
+                {
+                    Ground[x, y] = tGround[x, y];
+                    Mask[x, y] = tMask[x, y];
+                    MaskA[x, y] = tMaskA[x, y];
+                    Fringe[x, y] = tFringe[x, y];
+                    FringeA[x, y] = tFringeA[x, y];
+                }
+            }
+
+            //SaveMapInDatabase(Id);
         }
         #endregion
 

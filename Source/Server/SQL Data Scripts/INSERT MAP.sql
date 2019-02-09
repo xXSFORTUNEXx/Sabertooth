@@ -2,6 +2,7 @@
 Created 9/2/2018 6:58AM
 Inserts MAP data into database
 Created by Steven M Fortune
+Updated 2019-02-07 14:40:57.820
 */
 
 INSERT INTO MAPS (
@@ -12,6 +13,8 @@ INSERT INTO MAPS (
 	LEFTSIDE,
 	RIGHTSIDE,
 	BRIGHTNESS,
+	MAXX,
+	MAXY,
 	NPC,
 	ITEM,
 	GROUND,
@@ -28,6 +31,8 @@ VALUES (
 	@left,
 	@right,
 	@brightness,
+	@maxx,
+	@maxy,
 	@npc,
 	@item,
 	@ground,

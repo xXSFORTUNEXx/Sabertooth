@@ -20,16 +20,18 @@ namespace SabertoothClient
         public int LeftMap { get; set; }
         public int RightMap { get; set; }
         public int Brightness { get; set; }
-        public bool isInstance { get; set; }
         public int Id { get; set; }
+        public int MaxX { get; set; }
+        public int MaxY { get; set; }
+        public bool IsInstance { get; set; }
         #endregion
 
         #region Classes
-        public Tile[,] Ground = new Tile[50, 50];
-        public Tile[,] Mask = new Tile[50, 50];
-        public Tile[,] Fringe = new Tile[50, 50];
-        public Tile[,] MaskA = new Tile[50, 50];
-        public Tile[,] FringeA = new Tile[50, 50];
+        public Tile[,] Ground;
+        public Tile[,] Mask;
+        public Tile[,] Fringe;
+        public Tile[,] MaskA;
+        public Tile[,] FringeA;
         public VertexArray g_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray m_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray m2_Tile = new VertexArray(PrimitiveType.Quads, 4);
@@ -117,7 +119,7 @@ namespace SabertoothClient
 
                             sql = "INSERT INTO MAPS (ID,NAME,REVISION,TOP,BOTTOM,LEFT,RIGHT,BRIGHTNESS,GROUND,MASK,MASKA,FRINGE,FRINGEA) ";
                             sql = sql + " VALUES ";
-                            sql = sql + "(@id,@name,@revision,@top,@bottom,@left,@right,@brightness,@ground,@mask,@maska,@fringe,@fringea)";
+                            sql = sql + "(@id,@name,@revision,@top,@bottom,@left,@right,@brightness,@maxx,@maxy,@ground,@mask,@maska,@fringe,@fringea)";
                             cmd.CommandText = sql;
                             cmd.Parameters.Add("@id", System.Data.DbType.Int32).Value = Id;
                             cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
@@ -127,6 +129,8 @@ namespace SabertoothClient
                             cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                             cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
                             cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
+                            cmd.Parameters.Add("@maxx", System.Data.DbType.Int32).Value = MaxX;
+                            cmd.Parameters.Add("@maxy", System.Data.DbType.Int32).Value = MaxY;
                             cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
                             cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
                             cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
@@ -143,8 +147,8 @@ namespace SabertoothClient
                             byte[] m_FringeA = ToByteArray(FringeA);
                             string sql;
 
-                            sql = "UPDATE MAPS SET NAME = @name,REVISION = @revision,TOP = @top,BOTTOM = @bottom,LEFT = @left,RIGHT = @right,BRIGHTNESS = @brightness,GROUND = @ground,MASK = @mask,MASKA = @maska,";
-                            sql = sql + "FRINGE = @fringe,FRINGEA = @fringea WHERE ID = " + index;
+                            sql = "UPDATE MAPS SET NAME = @name,REVISION = @revision,TOP = @top,BOTTOM = @bottom,LEFT = @left,RIGHT = @right,BRIGHTNESS = @brightness,MAXX = @maxx,MAXY = @maxy";
+                            sql = sql + "GROUND = @ground,MASK = @mask,MASKA = @maska,FRINGE = @fringe,FRINGEA = @fringea WHERE ID = " + index;
                             cmd.CommandText = sql;
                             cmd.Parameters.Add("@name", System.Data.DbType.String).Value = Name;
                             cmd.Parameters.Add("@revision", System.Data.DbType.Int32).Value = Revision;
@@ -153,6 +157,8 @@ namespace SabertoothClient
                             cmd.Parameters.Add("@left", System.Data.DbType.Int32).Value = LeftMap;
                             cmd.Parameters.Add("@right", System.Data.DbType.Int32).Value = RightMap;
                             cmd.Parameters.Add("@brightness", System.Data.DbType.Int32).Value = Brightness;
+                            cmd.Parameters.Add("@maxx", System.Data.DbType.Int32).Value = MaxX;
+                            cmd.Parameters.Add("@maxy", System.Data.DbType.Int32).Value = MaxY;
                             cmd.Parameters.Add("@ground", System.Data.DbType.Binary).Value = m_Ground;
                             cmd.Parameters.Add("@mask", System.Data.DbType.Binary).Value = m_Mask;
                             cmd.Parameters.Add("@maska", System.Data.DbType.Binary).Value = m_MaskA;
@@ -194,6 +200,8 @@ namespace SabertoothClient
                                 LeftMap = ToInt32(read["LEFT"].ToString());
                                 RightMap = ToInt32(read["RIGHT"].ToString());
                                 Brightness = ToInt32(read["BRIGHTNESS"].ToString());
+                                MaxX = ToInt32(read["MAXX"].ToString());
+                                MaxY = ToInt32(read["MAXY"].ToString());
 
                                 byte[] buffer;
                                 object load;
@@ -331,7 +339,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < 50 && y < 50)
+                    if (x >= 0 && y >= 0 && x < 50 && y < 50)
                     {
                         int fx = (x * 32);
                         int fy = (y * 32);

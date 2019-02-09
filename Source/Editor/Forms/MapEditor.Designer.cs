@@ -34,6 +34,12 @@
             this.mapProperties = new System.Windows.Forms.PropertyGrid();
             this.treeMaps = new System.Windows.Forms.TreeView();
             this.tabLayer = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnRestruct = new System.Windows.Forms.Button();
+            this.txtMaxY = new System.Windows.Forms.TextBox();
+            this.txtMaxX = new System.Windows.Forms.TextBox();
+            this.lblMaxY = new System.Windows.Forms.Label();
+            this.lblMaxX = new System.Windows.Forms.Label();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.chkHScroll = new System.Windows.Forms.CheckBox();
             this.radScroll = new System.Windows.Forms.RadioButton();
@@ -124,6 +130,7 @@
             this.tabTools.SuspendLayout();
             this.tabMapDetails.SuspendLayout();
             this.tabLayer.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.pnlOptions.SuspendLayout();
             this.pnlDebug.SuspendLayout();
             this.tabTypes.SuspendLayout();
@@ -151,7 +158,7 @@
             this.tabTools.Location = new System.Drawing.Point(11, 31);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
-            this.tabTools.Size = new System.Drawing.Size(307, 620);
+            this.tabTools.Size = new System.Drawing.Size(307, 628);
             this.tabTools.TabIndex = 1;
             // 
             // tabMapDetails
@@ -160,7 +167,7 @@
             this.tabMapDetails.Controls.Add(this.treeMaps);
             this.tabMapDetails.Location = new System.Drawing.Point(4, 22);
             this.tabMapDetails.Name = "tabMapDetails";
-            this.tabMapDetails.Size = new System.Drawing.Size(299, 594);
+            this.tabMapDetails.Size = new System.Drawing.Size(299, 602);
             this.tabMapDetails.TabIndex = 5;
             this.tabMapDetails.Text = "Map Details";
             this.tabMapDetails.UseVisualStyleBackColor = true;
@@ -169,6 +176,7 @@
             // 
             this.mapProperties.Location = new System.Drawing.Point(3, 310);
             this.mapProperties.Name = "mapProperties";
+            this.mapProperties.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.mapProperties.Size = new System.Drawing.Size(293, 281);
             this.mapProperties.TabIndex = 21;
             // 
@@ -182,6 +190,7 @@
             // 
             // tabLayer
             // 
+            this.tabLayer.Controls.Add(this.panel1);
             this.tabLayer.Controls.Add(this.pnlOptions);
             this.tabLayer.Controls.Add(this.chkNpc);
             this.tabLayer.Controls.Add(this.chkGrid);
@@ -194,19 +203,73 @@
             this.tabLayer.Location = new System.Drawing.Point(4, 22);
             this.tabLayer.Name = "tabLayer";
             this.tabLayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLayer.Size = new System.Drawing.Size(299, 594);
+            this.tabLayer.Size = new System.Drawing.Size(299, 602);
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnRestruct);
+            this.panel1.Controls.Add(this.txtMaxY);
+            this.panel1.Controls.Add(this.txtMaxX);
+            this.panel1.Controls.Add(this.lblMaxY);
+            this.panel1.Controls.Add(this.lblMaxX);
+            this.panel1.Location = new System.Drawing.Point(154, 119);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(124, 131);
+            this.panel1.TabIndex = 16;
+            // 
+            // btnRestruct
+            // 
+            this.btnRestruct.Location = new System.Drawing.Point(35, 94);
+            this.btnRestruct.Name = "btnRestruct";
+            this.btnRestruct.Size = new System.Drawing.Size(75, 23);
+            this.btnRestruct.TabIndex = 4;
+            this.btnRestruct.Text = "Restructure";
+            this.btnRestruct.UseVisualStyleBackColor = true;
+            this.btnRestruct.Click += new System.EventHandler(this.btnRestruct_Click);
+            // 
+            // txtMaxY
+            // 
+            this.txtMaxY.Location = new System.Drawing.Point(16, 68);
+            this.txtMaxY.Name = "txtMaxY";
+            this.txtMaxY.Size = new System.Drawing.Size(94, 20);
+            this.txtMaxY.TabIndex = 3;
+            // 
+            // txtMaxX
+            // 
+            this.txtMaxX.Location = new System.Drawing.Point(16, 29);
+            this.txtMaxX.Name = "txtMaxX";
+            this.txtMaxX.Size = new System.Drawing.Size(94, 20);
+            this.txtMaxX.TabIndex = 2;
+            // 
+            // lblMaxY
+            // 
+            this.lblMaxY.AutoSize = true;
+            this.lblMaxY.Location = new System.Drawing.Point(13, 52);
+            this.lblMaxY.Name = "lblMaxY";
+            this.lblMaxY.Size = new System.Drawing.Size(40, 13);
+            this.lblMaxY.TabIndex = 1;
+            this.lblMaxY.Text = "Max Y:";
+            // 
+            // lblMaxX
+            // 
+            this.lblMaxX.AutoSize = true;
+            this.lblMaxX.Location = new System.Drawing.Point(13, 12);
+            this.lblMaxX.Name = "lblMaxX";
+            this.lblMaxX.Size = new System.Drawing.Size(40, 13);
+            this.lblMaxX.TabIndex = 0;
+            this.lblMaxX.Text = "Max X:";
             // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.chkHScroll);
             this.pnlOptions.Controls.Add(this.radScroll);
             this.pnlOptions.Controls.Add(this.radZoom);
-            this.pnlOptions.Location = new System.Drawing.Point(195, 22);
+            this.pnlOptions.Location = new System.Drawing.Point(154, 22);
             this.pnlOptions.Name = "pnlOptions";
-            this.pnlOptions.Size = new System.Drawing.Size(83, 86);
+            this.pnlOptions.Size = new System.Drawing.Size(124, 86);
             this.pnlOptions.TabIndex = 15;
             // 
             // chkHScroll
@@ -313,16 +376,16 @@
             this.pnlDebug.Controls.Add(this.lblSelectY);
             this.pnlDebug.Controls.Add(this.lblSelectX);
             this.pnlDebug.Controls.Add(this.lblMouseLoc);
-            this.pnlDebug.Location = new System.Drawing.Point(36, 293);
+            this.pnlDebug.Location = new System.Drawing.Point(154, 256);
             this.pnlDebug.Name = "pnlDebug";
-            this.pnlDebug.Size = new System.Drawing.Size(228, 259);
+            this.pnlDebug.Size = new System.Drawing.Size(124, 163);
             this.pnlDebug.TabIndex = 13;
             this.pnlDebug.Visible = false;
             // 
             // lblType
             // 
             this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(16, 218);
+            this.lblType.Location = new System.Drawing.Point(8, 130);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(63, 13);
             this.lblType.TabIndex = 21;
@@ -331,7 +394,7 @@
             // lblLayer
             // 
             this.lblLayer.AutoSize = true;
-            this.lblLayer.Location = new System.Drawing.Point(16, 203);
+            this.lblLayer.Location = new System.Drawing.Point(8, 117);
             this.lblLayer.Name = "lblLayer";
             this.lblLayer.Size = new System.Drawing.Size(74, 13);
             this.lblLayer.TabIndex = 20;
@@ -340,7 +403,7 @@
             // lblViewX
             // 
             this.lblViewX.AutoSize = true;
-            this.lblViewX.Location = new System.Drawing.Point(16, 160);
+            this.lblViewX.Location = new System.Drawing.Point(8, 91);
             this.lblViewX.Name = "lblViewX";
             this.lblViewX.Size = new System.Drawing.Size(52, 13);
             this.lblViewX.TabIndex = 19;
@@ -349,7 +412,7 @@
             // lblViewY
             // 
             this.lblViewY.AutoSize = true;
-            this.lblViewY.Location = new System.Drawing.Point(16, 176);
+            this.lblViewY.Location = new System.Drawing.Point(8, 104);
             this.lblViewY.Name = "lblViewY";
             this.lblViewY.Size = new System.Drawing.Size(52, 13);
             this.lblViewY.TabIndex = 18;
@@ -358,7 +421,7 @@
             // lblSelectW
             // 
             this.lblSelectW.AutoSize = true;
-            this.lblSelectW.Location = new System.Drawing.Point(16, 85);
+            this.lblSelectW.Location = new System.Drawing.Point(8, 52);
             this.lblSelectW.Name = "lblSelectW";
             this.lblSelectW.Size = new System.Drawing.Size(77, 13);
             this.lblSelectW.TabIndex = 17;
@@ -367,7 +430,7 @@
             // lblSelectH
             // 
             this.lblSelectH.AutoSize = true;
-            this.lblSelectH.Location = new System.Drawing.Point(16, 101);
+            this.lblSelectH.Location = new System.Drawing.Point(8, 65);
             this.lblSelectH.Name = "lblSelectH";
             this.lblSelectH.Size = new System.Drawing.Size(74, 13);
             this.lblSelectH.TabIndex = 16;
@@ -376,7 +439,7 @@
             // lblButtonDown
             // 
             this.lblButtonDown.AutoSize = true;
-            this.lblButtonDown.Location = new System.Drawing.Point(16, 135);
+            this.lblButtonDown.Location = new System.Drawing.Point(8, 78);
             this.lblButtonDown.Name = "lblButtonDown";
             this.lblButtonDown.Size = new System.Drawing.Size(81, 13);
             this.lblButtonDown.TabIndex = 15;
@@ -385,7 +448,7 @@
             // lblSelectY
             // 
             this.lblSelectY.AutoSize = true;
-            this.lblSelectY.Location = new System.Drawing.Point(16, 40);
+            this.lblSelectY.Location = new System.Drawing.Point(8, 26);
             this.lblSelectY.Name = "lblSelectY";
             this.lblSelectY.Size = new System.Drawing.Size(73, 13);
             this.lblSelectY.TabIndex = 14;
@@ -394,7 +457,7 @@
             // lblSelectX
             // 
             this.lblSelectX.AutoSize = true;
-            this.lblSelectX.Location = new System.Drawing.Point(16, 56);
+            this.lblSelectX.Location = new System.Drawing.Point(8, 39);
             this.lblSelectX.Name = "lblSelectX";
             this.lblSelectX.Size = new System.Drawing.Size(73, 13);
             this.lblSelectX.TabIndex = 13;
@@ -403,7 +466,7 @@
             // lblMouseLoc
             // 
             this.lblMouseLoc.AutoSize = true;
-            this.lblMouseLoc.Location = new System.Drawing.Point(16, 13);
+            this.lblMouseLoc.Location = new System.Drawing.Point(8, 13);
             this.lblMouseLoc.Name = "lblMouseLoc";
             this.lblMouseLoc.Size = new System.Drawing.Size(92, 13);
             this.lblMouseLoc.TabIndex = 12;
@@ -451,7 +514,7 @@
             this.tabTypes.Location = new System.Drawing.Point(4, 22);
             this.tabTypes.Name = "tabTypes";
             this.tabTypes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTypes.Size = new System.Drawing.Size(299, 594);
+            this.tabTypes.Size = new System.Drawing.Size(299, 602);
             this.tabTypes.TabIndex = 1;
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
@@ -792,7 +855,7 @@
             this.tabTiles.Controls.Add(this.cmbTileset);
             this.tabTiles.Location = new System.Drawing.Point(4, 22);
             this.tabTiles.Name = "tabTiles";
-            this.tabTiles.Size = new System.Drawing.Size(299, 594);
+            this.tabTiles.Size = new System.Drawing.Size(299, 602);
             this.tabTiles.TabIndex = 2;
             this.tabTiles.Text = "Tiles";
             this.tabTiles.UseVisualStyleBackColor = true;
@@ -851,7 +914,7 @@
             this.tabLight.Controls.Add(this.chkNight);
             this.tabLight.Location = new System.Drawing.Point(4, 22);
             this.tabLight.Name = "tabLight";
-            this.tabLight.Size = new System.Drawing.Size(299, 594);
+            this.tabLight.Size = new System.Drawing.Size(299, 602);
             this.tabLight.TabIndex = 4;
             this.tabLight.Text = "Light/NPCs";
             this.tabLight.UseVisualStyleBackColor = true;
@@ -998,7 +1061,7 @@
             // 
             this.picMap.Location = new System.Drawing.Point(324, 31);
             this.picMap.Name = "picMap";
-            this.picMap.Size = new System.Drawing.Size(800, 600);
+            this.picMap.Size = new System.Drawing.Size(800, 608);
             this.picMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picMap.TabIndex = 14;
             this.picMap.TabStop = false;
@@ -1006,7 +1069,7 @@
             // scrlViewX
             // 
             this.scrlViewX.LargeChange = 1;
-            this.scrlViewX.Location = new System.Drawing.Point(324, 634);
+            this.scrlViewX.Location = new System.Drawing.Point(324, 642);
             this.scrlViewX.Maximum = 25;
             this.scrlViewX.Name = "scrlViewX";
             this.scrlViewX.Size = new System.Drawing.Size(800, 17);
@@ -1019,7 +1082,7 @@
             this.scrlViewY.Location = new System.Drawing.Point(1127, 31);
             this.scrlViewY.Maximum = 31;
             this.scrlViewY.Name = "scrlViewY";
-            this.scrlViewY.Size = new System.Drawing.Size(17, 600);
+            this.scrlViewY.Size = new System.Drawing.Size(17, 608);
             this.scrlViewY.TabIndex = 17;
             this.scrlViewY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlViewY_Scroll);
             // 
@@ -1133,7 +1196,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1153, 663);
+            this.ClientSize = new System.Drawing.Size(1153, 667);
             this.Controls.Add(this.tosMenu);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
@@ -1147,6 +1210,8 @@
             this.tabMapDetails.ResumeLayout(false);
             this.tabLayer.ResumeLayout(false);
             this.tabLayer.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.pnlOptions.ResumeLayout(false);
             this.pnlOptions.PerformLayout();
             this.pnlDebug.ResumeLayout(false);
@@ -1271,5 +1336,11 @@
         private System.Windows.Forms.TabPage tabMapDetails;
         private System.Windows.Forms.PropertyGrid mapProperties;
         private System.Windows.Forms.TreeView treeMaps;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnRestruct;
+        private System.Windows.Forms.TextBox txtMaxY;
+        private System.Windows.Forms.TextBox txtMaxX;
+        private System.Windows.Forms.Label lblMaxY;
+        private System.Windows.Forms.Label lblMaxX;
     }
 }

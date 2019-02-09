@@ -70,7 +70,7 @@
         #region Editor Globals
         //Editor Globals
         public const uint EDITOR_WIDTH = 800;
-        public const uint EDITOR_HEIGHT = 600;
+        public const uint EDITOR_HEIGHT = 608;
         public const int WHEEL_OPTION_ZOOM = 0;
         public const int WHEEL_OPTION_SCROLL = 1;
         public const int EDITOR_OFFSET_X = 25;
