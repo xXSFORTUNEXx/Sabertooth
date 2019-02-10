@@ -162,15 +162,16 @@ namespace SabertoothServer
 
             if (warpMap < 0) { Logging.WriteMessageLog("Invalid map number upon warp: " + warpMap); return; }
 
-            SendMapData(incMSG, warpMap);
-            SendMapNpcs(incMSG, warpMap);
-            SendPoolMapNpcs(incMSG, warpMap);
-
             players[index].X = warpX;
             players[index].Y = warpY;
             players[index].Map = warpMap;
 
             SendPlayerData(incMSG, index);
+
+            SendMapData(incMSG, warpMap);
+            SendMapNpcs(incMSG, warpMap);
+            SendPoolMapNpcs(incMSG, warpMap);
+            SendMapItems(incMSG, warpMap);
         }
 
         static void HandleActivationKey(NetIncomingMessage incMSG)

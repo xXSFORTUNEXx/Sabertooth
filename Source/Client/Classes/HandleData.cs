@@ -1366,6 +1366,7 @@ namespace SabertoothClient
                 }
             }
             map.MapDatabaseCache(map.Id);
+            players[myIndex].isChangingMaps = false;
         }
 
         static void HandleStatusChange(NetIncomingMessage incMSG)

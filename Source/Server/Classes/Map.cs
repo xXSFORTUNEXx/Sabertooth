@@ -400,20 +400,39 @@ namespace SabertoothServer
                     FringeA[x, y].Tileset = 0;
                 }
             }
+            
 
             //Offload the old data
-            for (int x = 0; x < oldx; x++)
+            if (newx > oldx && newy > oldy)
             {
-                for (int y = 0; y < oldy; y++)
+                for (int x = 0; x < oldx; x++)
                 {
-                    Ground[x, y] = tGround[x, y];
-                    Mask[x, y] = tMask[x, y];
-                    MaskA[x, y] = tMaskA[x, y];
-                    Fringe[x, y] = tFringe[x, y];
-                    FringeA[x, y] = tFringeA[x, y];
+                    for (int y = 0; y < oldy; y++)
+                    {
+                        Ground[x, y] = tGround[x, y];
+                        Mask[x, y] = tMask[x, y];
+                        MaskA[x, y] = tMaskA[x, y];
+                        Fringe[x, y] = tFringe[x, y];
+                        FringeA[x, y] = tFringeA[x, y];
+                    }
+                }
+            }
+            else
+            {
+                for (int x = 0; x < newx; x++)
+                {
+                    for (int y = 0; y < newy; y++)
+                    {
+                        Ground[x, y] = tGround[x, y];
+                        Mask[x, y] = tMask[x, y];
+                        MaskA[x, y] = tMaskA[x, y];
+                        Fringe[x, y] = tFringe[x, y];
+                        FringeA[x, y] = tFringeA[x, y];
+                    }
                 }
             }
 
+            //Save the new map
             SaveMapInDatabase(Id);
         }
         #endregion

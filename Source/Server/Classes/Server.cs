@@ -463,9 +463,9 @@ namespace SabertoothServer
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < MAX_MAP_X; x++)
+                        for (int x = 0; x < maps[i].MaxX; x++)
                         {
-                            for (int y = 0; y < MAX_MAP_Y; y++)
+                            for (int y = 0; y < maps[i].MaxY; y++)
                             {
                                 if (maps[i].Ground[x, y].Type == (int)TileType.MapItem)
                                 {
@@ -539,9 +539,9 @@ namespace SabertoothServer
                 {
                     if (CheckIfMapHasPlayers(i))
                     {
-                        for (int x = 0; x < MAX_MAP_X; x++)
+                        for (int x = 0; x < maps[i].MaxX; x++)
                         {
-                            for (int y = 0; y < MAX_MAP_Y; y++)
+                            for (int y = 0; y < maps[i].MaxY; y++)
                             {
                                 switch (maps[i].Ground[x, y].Type)
                                 {

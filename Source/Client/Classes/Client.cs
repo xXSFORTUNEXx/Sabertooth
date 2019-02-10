@@ -496,13 +496,42 @@ namespace SabertoothClient
         #region Draw Methods
         static void DrawPlayers()
         {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i] != null && players[i].Name != "")
                 {
-                    if (i != HandleData.myIndex && players[i].Map == players[HandleData.myIndex].Map)
+                    if (players[i].Map == players[HandleData.myIndex].Map)
                     {
-                        renderWindow.Draw(players[i]);
+                        if (players[i].X > minX && players[i].X < maxX)
+                        {
+                            if (players[i].Y > minY && players[i].Y < maxY)
+                            {
+                                if (i != HandleData.myIndex)
+                                {
+                                    renderWindow.Draw(players[i]);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -668,7 +697,7 @@ namespace SabertoothClient
             {
                 for (int y = minY; y < maxY; y++)
                 {
-                    if (x > 0 && y > 0 && x < MAX_MAP_X && y < MAX_MAP_Y)
+                    if (x > 0 && y > 0 && x < map.MaxX && y < map.MaxY)
                     {
                         if (map.Ground[x, y].Type == (int)TileType.Chest)
                         {
@@ -730,7 +759,7 @@ namespace SabertoothClient
                 renderWindow.Draw(map);
                 DrawChests();
                 DrawMapItems();
-                //DrawBlood();
+                DrawBlood();
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();

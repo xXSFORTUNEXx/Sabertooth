@@ -104,9 +104,7 @@ namespace SabertoothClient
         public bool inBank;
         public int chestNum;
         public bool inChest;
-        //Instance Variables
-        public int iKills;
-        public int iPoints;
+        public bool isChangingMaps;
         #endregion
 
         #region Class Constructors
@@ -294,7 +292,8 @@ namespace SabertoothClient
             if (Moved == true) { Moved = false; return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
-            if (inShop|| inChat || inBank) { return; }       
+            if (inShop|| inChat || inBank) { return; }
+            if (isChangingMaps) { return; }
 
             float deadZone = 35;
             float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
@@ -376,6 +375,11 @@ namespace SabertoothClient
                 if (Step == 4) { Step = 0; }
                 Moved = false;
                 SendMovementData();
+            }
+
+            if (map.Ground[(X + OffsetX), (Y + OffsetY)].Type == (int)TileType.Warp)
+            {
+                SendPlayerWarp();
             }
         }
 
@@ -673,6 +677,7 @@ namespace SabertoothClient
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
+            if (isChangingMaps) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
             {
@@ -1146,6 +1151,9 @@ namespace SabertoothClient
 
         void SendPlayerWarp()
         {
+            isChangingMaps = true;            
+            gui.CreateLoadingWindow(canvas);
+            gui.Ready = false;
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerWarp);
             outMSG.WriteVariableInt32(HandleData.myIndex);
