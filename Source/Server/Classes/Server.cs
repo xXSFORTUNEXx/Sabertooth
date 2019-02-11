@@ -572,46 +572,44 @@ namespace SabertoothServer
                                         break;
 
                                     case (int)TileType.SpawnPool:
-                                        if (maps[i].Ground[x, y].SpawnNum > 0)
+                                        if (maps[i].Ground[x, y].SpawnNum > 0)  //Usually greater than one otherwise we should use npcspawn
                                         {
                                             for (int n = 0; n < maps[i].Ground[x, y].SpawnAmount; n++)
-                                            //for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
                                             {
-                                                //if (maps[i].Ground[x, y].SpawnAmount >= maps[i].Ground[x, y].CurrentSpawn)
                                                 if (maps[i].Ground[x, y].CurrentSpawn < maps[i].Ground[x, y].SpawnAmount)
                                                 {
                                                     if (!maps[i].r_MapNpc[n].IsSpawned)
                                                     {
                                                         if (TickCount - maps[i].r_MapNpc[n].spawnTick > (maps[i].r_MapNpc[n].SpawnTime * 1000))
                                                         {
-                                                            int num = (maps[i].Ground[x, y].SpawnNum - 1);
+                                                            int npcNum = maps[i].m_MapNpc[maps[i].Ground[x, y].SpawnNum - 1].NpcNum - 1;
 
-                                                            if (num > -1)
+                                                            //if (npcNum > 0)
                                                             {
-                                                                maps[i].r_MapNpc[n].NpcNum = num;
+                                                                maps[i].r_MapNpc[n].NpcNum = npcNum;
                                                                 int genX = (x + RND.Next(1, 3));
                                                                 int genY = (y + RND.Next(1, 3));
-                                                                maps[i].r_MapNpc[n].Name = npcs[num].Name;
+                                                                maps[i].r_MapNpc[n].Name = npcs[npcNum].Name;
                                                                 maps[i].r_MapNpc[n].X = genX;
                                                                 maps[i].r_MapNpc[n].Y = genY;
-                                                                maps[i].r_MapNpc[n].Health = npcs[num].Health;
-                                                                maps[i].r_MapNpc[n].MaxHealth = npcs[num].MaxHealth;
+                                                                maps[i].r_MapNpc[n].Health = npcs[npcNum].Health;
+                                                                maps[i].r_MapNpc[n].MaxHealth = npcs[npcNum].MaxHealth;
                                                                 maps[i].r_MapNpc[n].SpawnX = x;
                                                                 maps[i].r_MapNpc[n].SpawnY = y;
-                                                                maps[i].r_MapNpc[n].Direction = npcs[num].Direction;
-                                                                maps[i].r_MapNpc[n].Step = npcs[num].Step;
-                                                                maps[i].r_MapNpc[n].Sprite = npcs[num].Sprite;
-                                                                maps[i].r_MapNpc[n].Behavior = npcs[num].Behavior;
-                                                                maps[i].r_MapNpc[n].Owner = npcs[num].Owner;
-                                                                maps[i].r_MapNpc[n].Damage = npcs[num].Damage;
-                                                                maps[i].r_MapNpc[n].DesX = npcs[num].DesX;
-                                                                maps[i].r_MapNpc[n].DesY = npcs[num].DesY;
-                                                                maps[i].r_MapNpc[n].Exp = npcs[num].Exp;
-                                                                maps[i].r_MapNpc[n].Money = npcs[num].Money;
-                                                                maps[i].r_MapNpc[n].SpawnTime = npcs[num].SpawnTime;
+                                                                maps[i].r_MapNpc[n].Direction = npcs[npcNum].Direction;
+                                                                maps[i].r_MapNpc[n].Step = npcs[npcNum].Step;
+                                                                maps[i].r_MapNpc[n].Sprite = npcs[npcNum].Sprite;
+                                                                maps[i].r_MapNpc[n].Behavior = npcs[npcNum].Behavior;
+                                                                maps[i].r_MapNpc[n].Owner = npcs[npcNum].Owner;
+                                                                maps[i].r_MapNpc[n].Damage = npcs[npcNum].Damage;
+                                                                maps[i].r_MapNpc[n].DesX = npcs[npcNum].DesX;
+                                                                maps[i].r_MapNpc[n].DesY = npcs[npcNum].DesY;
+                                                                maps[i].r_MapNpc[n].Exp = npcs[npcNum].Exp;
+                                                                maps[i].r_MapNpc[n].Money = npcs[npcNum].Money;
+                                                                maps[i].r_MapNpc[n].SpawnTime = npcs[npcNum].SpawnTime;
                                                                 maps[i].r_MapNpc[n].IsSpawned = true;
-                                                                maps[i].r_MapNpc[n].Range = npcs[num].Range;
-                                                                maps[i].r_MapNpc[n].Speed = npcs[num].Speed;
+                                                                maps[i].r_MapNpc[n].Range = npcs[npcNum].Range;
+                                                                maps[i].r_MapNpc[n].Speed = npcs[npcNum].Speed;
                                                                 maps[i].Ground[x, y].CurrentSpawn += 1;
 
                                                                 for (int p = 0; p < MAX_PLAYERS; p++)

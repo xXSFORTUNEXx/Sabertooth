@@ -928,6 +928,7 @@
             this.cmbNpc10.Name = "cmbNpc10";
             this.cmbNpc10.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc10.TabIndex = 22;
+            this.cmbNpc10.SelectedIndexChanged += new System.EventHandler(this.cmbNpc10_SelectedIndexChanged);
             // 
             // cmbNpc9
             // 
@@ -938,6 +939,7 @@
             this.cmbNpc9.Name = "cmbNpc9";
             this.cmbNpc9.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc9.TabIndex = 21;
+            this.cmbNpc9.SelectedIndexChanged += new System.EventHandler(this.cmbNpc9_SelectedIndexChanged);
             // 
             // cmbNpc8
             // 
@@ -948,6 +950,7 @@
             this.cmbNpc8.Name = "cmbNpc8";
             this.cmbNpc8.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc8.TabIndex = 20;
+            this.cmbNpc8.SelectedIndexChanged += new System.EventHandler(this.cmbNpc8_SelectedIndexChanged);
             // 
             // cmbNpc7
             // 
@@ -958,6 +961,7 @@
             this.cmbNpc7.Name = "cmbNpc7";
             this.cmbNpc7.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc7.TabIndex = 19;
+            this.cmbNpc7.SelectedIndexChanged += new System.EventHandler(this.cmbNpc7_SelectedIndexChanged);
             // 
             // cmbNpc6
             // 
@@ -968,6 +972,7 @@
             this.cmbNpc6.Name = "cmbNpc6";
             this.cmbNpc6.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc6.TabIndex = 18;
+            this.cmbNpc6.SelectedIndexChanged += new System.EventHandler(this.cmbNpc6_SelectedIndexChanged);
             // 
             // cmbNpc5
             // 
@@ -978,6 +983,7 @@
             this.cmbNpc5.Name = "cmbNpc5";
             this.cmbNpc5.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc5.TabIndex = 17;
+            this.cmbNpc5.SelectedIndexChanged += new System.EventHandler(this.cmbNpc5_SelectedIndexChanged);
             // 
             // cmbNpc4
             // 
@@ -988,6 +994,7 @@
             this.cmbNpc4.Name = "cmbNpc4";
             this.cmbNpc4.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc4.TabIndex = 16;
+            this.cmbNpc4.SelectedIndexChanged += new System.EventHandler(this.cmbNpc4_SelectedIndexChanged);
             // 
             // cmbNpc3
             // 
@@ -998,6 +1005,7 @@
             this.cmbNpc3.Name = "cmbNpc3";
             this.cmbNpc3.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc3.TabIndex = 15;
+            this.cmbNpc3.SelectedIndexChanged += new System.EventHandler(this.cmbNpc3_SelectedIndexChanged);
             // 
             // cmbNpc2
             // 
@@ -1008,6 +1016,7 @@
             this.cmbNpc2.Name = "cmbNpc2";
             this.cmbNpc2.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc2.TabIndex = 14;
+            this.cmbNpc2.SelectedIndexChanged += new System.EventHandler(this.cmbNpc2_SelectedIndexChanged);
             // 
             // cmbNpc1
             // 
@@ -1018,6 +1027,7 @@
             this.cmbNpc1.Name = "cmbNpc1";
             this.cmbNpc1.Size = new System.Drawing.Size(252, 21);
             this.cmbNpc1.TabIndex = 13;
+            this.cmbNpc1.SelectedIndexChanged += new System.EventHandler(this.cmbNpc1_SelectedIndexChanged);
             // 
             // lblNpcs
             // 

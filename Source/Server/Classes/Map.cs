@@ -724,7 +724,7 @@ namespace SabertoothServer
                         switch (s_Direction)
                         {
                             case (int)Directions.Down:
-                                if (Y < 49)
+                                if (Y < maps[mapNum].MaxY)
                                 {
                                     if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                                     {
@@ -732,7 +732,7 @@ namespace SabertoothServer
                                         DidMove = true;
                                         return;
                                     }
-                                    for (int i = 0; i < 10; i++)
+                                    for (int i = 0; i < MAX_MAP_NPCS; i++)
                                     {
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
@@ -744,7 +744,7 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < 20; i++)
+                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
                                     {
                                         if (maps[mapNum].r_MapNpc[i].IsSpawned)
                                         {
@@ -756,11 +756,11 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
                                         {
-                                            if ((Y + 1) == (players[p].Y + 9) && X == (players[p].X + 12))
+                                            if ((Y + 1) == (players[p].Y + OFFSET_Y) && X == (players[p].X + OFFSET_X))
                                             {
                                                 Direction = (int)Directions.Down;
                                                 DidMove = true;
@@ -783,7 +783,7 @@ namespace SabertoothServer
                                         DidMove = true;
                                         return;
                                     }
-                                    for (int i = 0; i < 10; i++)
+                                    for (int i = 0; i < MAX_MAP_NPCS; i++)
                                     {
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
@@ -795,7 +795,7 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < 20; i++)
+                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
                                     {
                                         if (maps[mapNum].r_MapNpc[i].IsSpawned)
                                         {
@@ -807,11 +807,11 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
                                         {
-                                            if ((X - 1) == (players[p].X + 12) && Y == (players[p].Y + 9))
+                                            if ((X - 1) == (players[p].X + OFFSET_X) && Y == (players[p].Y + OFFSET_Y))
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -826,7 +826,7 @@ namespace SabertoothServer
                                 break;
 
                             case (int)Directions.Right:
-                                if (X < 49)
+                                if (X < maps[mapNum].MaxX)
                                 {
                                     if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                                     {
@@ -834,7 +834,7 @@ namespace SabertoothServer
                                         DidMove = true;
                                         return;
                                     }
-                                    for (int i = 0; i < 10; i++)
+                                    for (int i = 0; i < MAX_MAP_NPCS; i++)
                                     {
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
@@ -846,7 +846,7 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < 20; i++)
+                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
                                     {
                                         if (maps[mapNum].r_MapNpc[i].IsSpawned)
                                         {
@@ -858,11 +858,11 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
                                         {
-                                            if ((X + 1) == (players[p].X + 12) && Y == (players[p].Y + 9))
+                                            if ((X + 1) == (players[p].X + OFFSET_X) && Y == (players[p].Y + OFFSET_Y))
                                             {
                                                 Direction = (int)Directions.Right;
                                                 DidMove = true;
@@ -885,7 +885,7 @@ namespace SabertoothServer
                                         DidMove = true;
                                         return;
                                     }
-                                    for (int i = 0; i < 10; i++)
+                                    for (int i = 0; i < MAX_MAP_NPCS; i++)
                                     {
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
@@ -897,7 +897,7 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < 20; i++)
+                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
                                     {
                                         if (maps[mapNum].r_MapNpc[i].IsSpawned)
                                         {
@@ -909,11 +909,11 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int p = 0; p < 5; p++)
+                                    for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
                                         {
-                                            if ((Y - 1) == (players[p].Y + 9) && X == (players[p].X + 12))
+                                            if ((Y - 1) == (players[p].Y + OFFSET_Y) && X == (players[p].X + OFFSET_X))
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
@@ -941,7 +941,7 @@ namespace SabertoothServer
 
                 case (int)BehaviorType.Aggressive:
 
-                    for (int p = 0; p < 5; p++)
+                    for (int p = 0; p < MAX_PLAYERS; p++)
                     {
                         if (players[p].Connection != null && players[p].Name != null && mapNum == players[p].Map)
                         {
@@ -1015,7 +1015,7 @@ namespace SabertoothServer
                             X -= 1;
                             DidMove = true;
                         }
-                        else if (X < players[Target].X + OFFSET_X && X < 50)
+                        else if (X < players[Target].X + OFFSET_X && X < maps[mapNum].MaxX)
                         {
                             if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                             {
@@ -1117,7 +1117,7 @@ namespace SabertoothServer
                             Y -= 1;
                             DidMove = true;
                         }
-                        else if (Y < players[Target].Y + OFFSET_Y && Y < 50)
+                        else if (Y < players[Target].Y + OFFSET_Y && Y < maps[mapNum].MaxY)
                         {
                             if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                             {

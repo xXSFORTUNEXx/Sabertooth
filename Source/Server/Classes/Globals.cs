@@ -28,6 +28,7 @@
         public const int MAX_PARTY = 4;
         public const int MAX_INSTANCE_NPC = 20;
         public const int MAX_INV_SLOTS = 25;
+        public const int MAX_BANK_SLOTS = 50;
         public const int MAX_BLOOD_SPLATS = 50;
         public const int MAX_MAP_PROJECTILES = 200;
         #endregion

@@ -479,7 +479,7 @@ namespace Editor.Forms
                         {
                             if (e_Map.Ground[x, y].SpawnNum > 0)
                             {
-                                int npcNum = e_Map.Ground[x, y].SpawnNum;
+                                int npcNum = e_Map.m_MapNpc[e_Map.Ground[x, y].SpawnNum - 1].NpcNum;
                                 e_Npc.LoadNpcFromDatabase(npcNum);
                                 DrawNpc(e_Window, SpritePic[e_Npc.Sprite - 1], x, y);
                             }

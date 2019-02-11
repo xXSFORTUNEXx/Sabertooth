@@ -1217,7 +1217,7 @@ namespace SabertoothServer
                 }
 
                 int n = 0;
-                for (int i = 0; i < 25; i++)
+                for (int i = 0; i < MAX_INV_SLOTS; i++)
                 {
                     if (Backpack[i].Name != "None")
                     {
@@ -1261,7 +1261,7 @@ namespace SabertoothServer
                 }
                     
                 int m = 0;
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < MAX_BANK_SLOTS; i++)
                 {
                     if (Bank[i].Name != "None")
                     {
