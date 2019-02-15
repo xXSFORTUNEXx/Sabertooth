@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml;
 using static System.Environment;
+using static System.Convert;
 using static SabertoothClient.Globals;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -26,6 +27,19 @@ namespace SabertoothClient
 
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        #region Configuration
+        public static string Username { get; set; }
+        public static string Password { get; set; }
+        public static bool Remember { get; set; }
+        public static string IPAddress { get; set; }
+        public static string Port { get; set; }
+        public static string CurrentVersion { get; set; }
+        public static bool VSync { get; set; }
+        public static bool Fullscreen { get; set; }
+        public static Styles style { get; set; }
+        #endregion
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -68,14 +82,97 @@ namespace SabertoothClient
             netClient = new NetClient(netConfig);
             netClient.Start();
             Logging.WriteMessageLog("Network configuration complete...");
-            Client.LoadConfiguration();
+            LoadConfiguration();
             Client.GameLoop();
+        }
+
+        public static void LoadConfiguration()
+        {
+            if (!File.Exists("Config.xml"))
+            {
+                Remember = false;
+                IPAddress = "127.0.0.1";
+                Port = "14242";
+                CurrentVersion = "1.0";
+                VSync = false;
+                Fullscreen = false;
+                SaveConfiguration();
+                CreateMapCache();
+                Logging.WriteMessageLog("Config and map cache created!");
+            }
+
+            XmlReader reader = XmlReader.Create("Config.xml");
+            reader.ReadToFollowing("Username");
+            Username = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Password");
+            Password = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Remember");
+            Remember = reader.ReadElementContentAsBoolean();
+            reader.ReadToFollowing("IPAddress");
+            IPAddress = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Port");
+            Port = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("Version");
+            CurrentVersion = reader.ReadElementContentAsString();
+            reader.ReadToFollowing("VSync");
+            VSync = reader.ReadElementContentAsBoolean();
+            reader.ReadToFollowing("Fullscreen");
+            Fullscreen = reader.ReadElementContentAsBoolean();
+            reader.Close();
+
+            Logging.WriteMessageLog("Configuration file loaded...");
+
+            if (Fullscreen) { style = Styles.Fullscreen; }
+            else { style = SCREEN_STYLE; }
+        }
+
+        public static void SaveConfiguration()
+        {
+            XmlWriterSettings configData = new XmlWriterSettings()
+            {
+                Indent = true
+            };
+            XmlWriter writer = XmlWriter.Create("Config.xml", configData);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Configuration");
+            writer.WriteElementString("Username", Username);
+            writer.WriteElementString("Password", Password);
+            writer.WriteElementString("Remember", ToInt32(Remember).ToString());
+            writer.WriteElementString("IPAddress", IPAddress);
+            writer.WriteElementString("Port", Port);
+            writer.WriteElementString("Version", CurrentVersion);
+            writer.WriteElementString("VSync", ToInt32(VSync).ToString());
+            writer.WriteElementString("Fullscreen", ToInt32(Fullscreen).ToString());
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            writer.Close();
+            Logging.WriteMessageLog("Configuration Saved!");
+        }
+
+        public static void CreateMapCache()
+        {
+            if (!File.Exists("MapCache.db"))
+            {
+                using (var conn = new SQLiteConnection("Data Source=MapCache.db;Version=3;"))
+                {
+                    using (var cmd = new SQLiteCommand(conn))
+                    {
+                        conn.Open();
+                        string sql;
+                        sql = "CREATE TABLE MAPS";
+                        sql = sql + "(ID INTEGER,NAME TEXT,REVISION INTEGER,TOP INTEGER,BOTTOM INTEGER,LEFT INTEGER,RIGHT INTEGER,BRIGHTNESS INTEGER,MAXX INTEGER,MAXY INTEGER,NPC BLOB,ITEM BLOB,GROUND BLOB,MASK BLOB,MASKA BLOB,FRINGE BLOB,FRINGEA BLOB)";
+                        cmd.CommandText = sql;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
     }
 
     public static class Client
     {
-        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE, SCREEN_STYLE);
+        public static RenderWindow renderWindow = new RenderWindow(new VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), GAME_TITLE, SabertoothClient.style);
         static Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
         static Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
         static Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
@@ -94,16 +191,6 @@ namespace SabertoothClient
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
         public static WorldTime worldTime = new WorldTime();
-
-        #region Configuration
-        public static string Username { get; set; }
-        public static string Password { get; set; }
-        public static string Remember { get; set; }
-        public static string IPAddress { get; set; }
-        public static string Port { get; set; }
-        public static string CurrentVersion { get; set; }
-        public static bool VSync { get; set; }
-        #endregion
 
         #region Local Variables
         static int lastTick;
@@ -126,12 +213,14 @@ namespace SabertoothClient
             renderWindow.MouseButtonPressed += window_MouseButtonPressed;
             renderWindow.MouseButtonReleased += window_MouseButtonReleased;
             renderWindow.MouseMoved += window_MouseMoved;
-            renderWindow.TextEntered += window_TextEntered;
-            renderWindow.SetFramerateLimit(MAX_FPS);
-            //renderWindow.SetVerticalSyncEnabled(true);
+            renderWindow.TextEntered += window_TextEntered;            
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
+
+            if (SabertoothClient.VSync == true) { renderWindow.SetVerticalSyncEnabled(true); }
+            else { renderWindow.SetFramerateLimit(MAX_FPS); }
+
 
             canvas.SetSize(CANVAS_WIDTH, CANVAS_HEIGHT);
             canvas.ShouldDrawBackground = true;
@@ -182,7 +271,7 @@ namespace SabertoothClient
                 switch (input)
                 {
                     case "cmcache":
-                        CreateMapCache();
+                        SabertoothClient.CreateMapCache();
                         Logging.WriteMessageLog("Map cache created successfully!", "Commands");
                         break;
 
@@ -196,81 +285,6 @@ namespace SabertoothClient
                         break;
                 }
                 #endregion
-            }
-        }
-
-        public static void LoadConfiguration()
-        {
-            if (!File.Exists("Config.xml"))
-            {
-                Remember = "0";
-                IPAddress = "127.0.0.1";
-                Port = "14242";
-                CurrentVersion = "1.0";
-                VSync = false;
-                SaveConfiguration();
-                CreateMapCache();
-                Logging.WriteMessageLog("Config and map cache created!");
-            }
-
-            XmlReader reader = XmlReader.Create("Config.xml");
-            reader.ReadToFollowing("Username");
-            Username = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Password");
-            Password = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Remember");
-            Remember = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("IPAddress");
-            IPAddress = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Port");
-            Port = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("Version");
-            CurrentVersion = reader.ReadElementContentAsString();
-            reader.ReadToFollowing("VSync");
-            VSync = reader.ReadElementContentAsBoolean();
-            reader.Close();
-            Logging.WriteMessageLog("Configuration file loaded...");
-        }
-
-        static void SaveConfiguration()
-        {
-            XmlWriterSettings configData = new XmlWriterSettings()
-            {
-                Indent = true
-            };
-            XmlWriter writer = XmlWriter.Create("Config.xml", configData);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Configuration");
-            writer.WriteElementString("Username", Username);
-            writer.WriteElementString("Password", Password);
-            writer.WriteElementString("Remember", Remember);
-            writer.WriteElementString("IPAddress", IPAddress);
-            writer.WriteElementString("Port", Port);
-            writer.WriteElementString("Version", CurrentVersion);
-            writer.WriteElementString("VSync", VSync.ToString());
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            writer.Close();
-            Logging.WriteMessageLog("Configuration Saved!");
-        }
-
-        static void CreateMapCache()
-        {
-            if (!File.Exists("MapCache.db"))
-            {
-                using (var conn = new SQLiteConnection("Data Source=MapCache.db;Version=3;"))
-                {
-                    using (var cmd = new SQLiteCommand(conn))
-                    {
-                        conn.Open();
-                        string sql;
-                        sql = "CREATE TABLE MAPS";
-                        sql = sql + "(ID INTEGER,NAME TEXT,REVISION INTEGER,TOP INTEGER,BOTTOM INTEGER,LEFT INTEGER,RIGHT INTEGER,BRIGHTNESS INTEGER,MAXX INTEGER,MAXY INTEGER,NPC BLOB,ITEM BLOB,GROUND BLOB,MASK BLOB,MASKA BLOB,FRINGE BLOB,FRINGEA BLOB)";
-                        cmd.CommandText = sql;
-                        cmd.ExecuteNonQuery();
-                    }
-                }
             }
         }
 

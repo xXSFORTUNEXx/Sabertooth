@@ -1,0 +1,55 @@
+if (maps[i].Ground[x, y].SpawnNum > 0)
+{
+	for (int n = 0; n < maps[i].Ground[x, y].SpawnAmount; n++)
+	//for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
+	{
+		//if (maps[i].Ground[x, y].SpawnAmount >= maps[i].Ground[x, y].CurrentSpawn)
+		if (maps[i].Ground[x, y].CurrentSpawn < maps[i].Ground[x, y].SpawnAmount)
+		{
+			if (!maps[i].r_MapNpc[n].IsSpawned)
+			{
+				exit
+				{
+					int num = (maps[i].Ground[x, y].SpawnNum);
+
+					if (num > 0)
+					{
+						maps[i].r_MapNpc[n].NpcNum = num;
+						int genX = (x + RND.Next(1, 3));
+						int genY = (y + RND.Next(1, 3));
+						maps[i].r_MapNpc[n].Name = npcs[num].Name;
+						maps[i].r_MapNpc[n].X = genX;
+						maps[i].r_MapNpc[n].Y = genY;
+						maps[i].r_MapNpc[n].Health = npcs[num].Health;
+						maps[i].r_MapNpc[n].MaxHealth = npcs[num].MaxHealth;
+						maps[i].r_MapNpc[n].SpawnX = x;
+						maps[i].r_MapNpc[n].SpawnY = y;
+						maps[i].r_MapNpc[n].Direction = npcs[num].Direction;
+						maps[i].r_MapNpc[n].Step = npcs[num].Step;
+						maps[i].r_MapNpc[n].Sprite = npcs[num].Sprite;
+						maps[i].r_MapNpc[n].Behavior = npcs[num].Behavior;
+						maps[i].r_MapNpc[n].Owner = npcs[num].Owner;
+						maps[i].r_MapNpc[n].Damage = npcs[num].Damage;
+						maps[i].r_MapNpc[n].DesX = npcs[num].DesX;
+						maps[i].r_MapNpc[n].DesY = npcs[num].DesY;
+						maps[i].r_MapNpc[n].Exp = npcs[num].Exp;
+						maps[i].r_MapNpc[n].Money = npcs[num].Money;
+						maps[i].r_MapNpc[n].SpawnTime = npcs[num].SpawnTime;
+						maps[i].r_MapNpc[n].IsSpawned = true;
+						maps[i].r_MapNpc[n].Range = npcs[num].Range;
+						maps[i].r_MapNpc[n].Speed = npcs[num].Speed;
+						maps[i].Ground[x, y].CurrentSpawn += 1;
+
+						for (int p = 0; p < MAX_PLAYERS; p++)
+						{
+							if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
+							{
+								HandleData.SendPoolNpcData(players[p].Connection, i, n);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

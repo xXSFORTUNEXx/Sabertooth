@@ -49,6 +49,7 @@ namespace SabertoothClient
         public WindowControl mainWindow;
         Button mainbuttonLog;
         Button mainbuttonReg;
+        Button mainbuttonOpt;
         Button mainbuttonExit;
 
         public WindowControl regWindow;
@@ -68,8 +69,15 @@ namespace SabertoothClient
         Label pwloglabel;
         TextBox unlogBox;
         TextBoxPassword pwlogBox;
+        LabeledCheckBox logRemember;
         Button logButton;
         Button canlogButton;
+
+        public WindowControl optWindow;
+        LabeledCheckBox enableFullscreen;
+        LabeledCheckBox enableVsync;
+        Button saveoptButton;
+        Button canoptButton;
 
         public WindowControl activeWindow;
         Label activeLabel;
@@ -1588,6 +1596,12 @@ namespace SabertoothClient
             CreateLoginWindow(button.GetCanvas());
         }
 
+        private void CheckMainWindowOptions(Base control, ClickedEventArgs e)
+        {
+            Button button = control as Button;
+            CreateOptionsWindow(button.GetCanvas());
+        }
+
         private void CheckMainWindowRegister(Base control, ClickedEventArgs e)
         {
             Button button = control as Button;
@@ -1602,6 +1616,13 @@ namespace SabertoothClient
         }
 
         private void CheckLogWindowCancel(Base control, ClickedEventArgs e)
+        {
+            Button button = control as Button;
+            Base parent = button.Parent;
+            parent.Hide();
+        }
+
+        private void CheckOptionsWindowCancel(Base control, ClickedEventArgs e)
         {
             Button button = control as Button;
             Base parent = button.Parent;
@@ -1657,12 +1678,21 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = CurrentVersion;
+                string version = SabertoothClient.CurrentVersion;
 
-                if (Remember == "1")
+                if (logRemember.IsChecked == true)
                 {
-                    Username = username;
-                    Password = password;
+                    SabertoothClient.Remember = true;
+                    SabertoothClient.Username = username;
+                    SabertoothClient.Password = password;
+                    SabertoothClient.SaveConfiguration();
+                }
+                else
+                {
+                    SabertoothClient.Remember = false;
+                    SabertoothClient.Username = null;
+                    SabertoothClient.Password = null;
+                    SabertoothClient.SaveConfiguration();
                 }
 
                 int result = 0;                
@@ -1706,12 +1736,21 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = CurrentVersion;
+                string version = SabertoothClient.CurrentVersion;
 
-                if (Remember == "1")
+                if (logRemember.IsChecked == true)
                 {
-                    Username = username;
-                    Password = password;
+                    SabertoothClient.Remember = true;
+                    SabertoothClient.Username = username;
+                    SabertoothClient.Password = password;
+                    SabertoothClient.SaveConfiguration();
+                }
+                else
+                {
+                    SabertoothClient.Remember = false;
+                    SabertoothClient.Username = null;
+                    SabertoothClient.Password = null;
+                    SabertoothClient.SaveConfiguration();
                 }
 
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
@@ -1840,6 +1879,21 @@ namespace SabertoothClient
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 inputChat.Text = "";
             }
+        }
+
+        private void CheckOptionWindowSave(Base control, EventArgs e)
+        {
+            Base parent = control.Parent;
+
+            if (enableFullscreen.IsChecked) { SabertoothClient.Fullscreen = true; }
+            else { SabertoothClient.Fullscreen = false; }
+
+            if (enableVsync.IsChecked) { SabertoothClient.VSync = true; renderWindow.SetFramerateLimit(0); }
+            else { SabertoothClient.VSync = false; renderWindow.SetFramerateLimit(MAX_FPS); }
+
+            renderWindow.SetVerticalSyncEnabled(SabertoothClient.VSync);
+            SabertoothClient.SaveConfiguration();
+            parent.Hide();
         }
 
         private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
@@ -2745,7 +2799,7 @@ namespace SabertoothClient
         {
             mainWindow = new WindowControl(parent.GetCanvas());
             mainWindow.Title = "Main Menu";
-            mainWindow.SetSize(200, 200);
+            mainWindow.SetSize(200, 235);
             mainWindow.Position(Gwen.Pos.Center);
             mainWindow.DisableResizing();
             mainWindow.IsClosable = false;
@@ -2762,11 +2816,49 @@ namespace SabertoothClient
             mainbuttonLog.Text = "Login";
             mainbuttonLog.Clicked += CheckMainWindowLogin;
 
+            mainbuttonOpt = new Button(mainWindow);
+            mainbuttonOpt.SetSize(100, 25);
+            mainbuttonOpt.SetPosition(45, 115);
+            mainbuttonOpt.Text = "Options";
+            mainbuttonOpt.Clicked += CheckMainWindowOptions;
+
             mainbuttonExit = new Button(mainWindow);
             mainbuttonExit.SetSize(100, 25);
-            mainbuttonExit.SetPosition(45, 115);
+            mainbuttonExit.SetPosition(45, 150);
             mainbuttonExit.Text = "Exit";
             mainbuttonExit.Clicked += CheckMainWindowExit;
+        }
+
+        public void CreateOptionsWindow(Base parent)
+        {
+            optWindow = new WindowControl(parent.GetCanvas());
+            optWindow.Title = "Options";
+            optWindow.SetSize(200, 250);
+            optWindow.Position(Gwen.Pos.Center);
+            optWindow.DisableResizing();
+            optWindow.IsClosable = false;
+
+            enableFullscreen = new LabeledCheckBox(optWindow);
+            enableFullscreen.Text = "Enable Fullscreen";            
+            enableFullscreen.SetPosition(25, 25);
+            if (SabertoothClient.Fullscreen) { enableFullscreen.IsChecked = true; }
+
+            enableVsync = new LabeledCheckBox(optWindow);
+            enableVsync.Text = "Enable VSync";
+            enableVsync.SetPosition(25, 50);
+            if (SabertoothClient.VSync) { enableVsync.IsChecked = true; }
+
+            saveoptButton = new Button(optWindow);
+            saveoptButton.SetPosition(25, 175);
+            saveoptButton.SetSize(60, 25);
+            saveoptButton.Text = "Save";
+            saveoptButton.Clicked += CheckOptionWindowSave;
+
+            canoptButton = new Button(optWindow);
+            canoptButton.SetPosition(105, 175);
+            canoptButton.SetSize(60, 25);
+            canoptButton.Text = "Cancel";
+            canoptButton.Clicked += CheckOptionsWindowCancel;
         }
 
         public void CreateActivateWindow(Base parent)
@@ -2804,7 +2896,7 @@ namespace SabertoothClient
         {
             logWindow = new WindowControl(parent.GetCanvas());
             logWindow.Title = "Login";
-            logWindow.SetSize(200, 200);
+            logWindow.SetSize(200, 250);
             logWindow.Position(Gwen.Pos.Center);
             logWindow.IsClosable = false;
             logWindow.DisableResizing();
@@ -2818,10 +2910,8 @@ namespace SabertoothClient
             unlogBox.SetPosition(25, 35);
             unlogBox.SetSize(140, 25);
             unlogBox.Focus();
-            if (Remember == "1")
-            {
-                unlogBox.Text = Username;
-            }
+            if (SabertoothClient.Remember) { unlogBox.Text = SabertoothClient.Username; }
+
             pwloglabel = new Label(logWindow);
             pwloglabel.SetPosition(25, 75);
             pwloglabel.Text = "Password:";
@@ -2829,21 +2919,23 @@ namespace SabertoothClient
             pwlogBox = new TextBoxPassword(logWindow);
             pwlogBox.SetPosition(25, 95);
             pwlogBox.SetSize(140, 25);
-            if (Remember == "1")
-            {
-                pwlogBox.Text = Password;
-            }
+            if (SabertoothClient.Remember) { pwlogBox.Text = SabertoothClient.Password; }
             //pwlogBox.Focus();
             pwlogBox.SubmitPressed += CheckLogWindowSubmit;
 
+            logRemember = new LabeledCheckBox(logWindow);
+            logRemember.Text = "Remember me?";
+            logRemember.SetPosition(25, 135);
+            if (SabertoothClient.Remember) { logRemember.IsChecked = true; }
+
             logButton = new Button(logWindow);
-            logButton.SetPosition(25, 135);
+            logButton.SetPosition(25, 175);
             logButton.SetSize(60, 25);
             logButton.Text = "Login";
             logButton.Clicked += CheckLogWindowLogin;
 
             canlogButton = new Button(logWindow);
-            canlogButton.SetPosition(105, 135);
+            canlogButton.SetPosition(105, 175);
             canlogButton.SetSize(60, 25);
             canlogButton.Text = "Cancel";
             canlogButton.Clicked += CheckLogWindowCancel;

@@ -996,7 +996,7 @@ namespace SabertoothClient
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.Connection);
             outMSG.Write("sabertooth");
-            SabertoothClient.netClient.Connect(IPAddress, ToInt32(Port), outMSG);
+            SabertoothClient.netClient.Connect(SabertoothClient.IPAddress, ToInt32(SabertoothClient.Port), outMSG);
         }
 
         static void HandleConnectionData(NetIncomingMessage incMSG)
