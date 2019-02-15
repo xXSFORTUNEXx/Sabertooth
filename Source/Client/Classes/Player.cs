@@ -29,8 +29,8 @@ namespace SabertoothClient
         Texture[] c_Sprite = new Texture[spriteTextures];
         Font font = new Font("Resources/Fonts/Arial.ttf");
         Text p_Name = new Text();        
-        Sound gunShot = new Sound();
-        Sound gunReload = new Sound();
+        //Sound gunShot = new Sound();
+        //Sound gunReload = new Sound();
         #endregion
 
         #region Stats
@@ -991,16 +991,16 @@ namespace SabertoothClient
 
         public void CreateBulletSound()
         {
-            SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Shot.wav");
-            gunShot = new Sound(soundBuffer);
-            gunShot.Play();
+            //SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Shot.wav");
+            //gunShot = new Sound(soundBuffer);
+            //gunShot.Play();
         }
 
         public void CreateReloadSound()
         {
-            SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Reload.wav");
-            gunReload = new Sound(soundBuffer);
-            gunReload.Play();
+            //SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Reload.wav");
+            //gunReload = new Sound(soundBuffer);
+            //gunReload.Play();
         }
 
         public void RemoveBulletFromClip()

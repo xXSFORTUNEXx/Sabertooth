@@ -167,7 +167,7 @@ namespace SabertoothServer
             players[index].Map = warpMap;
 
             SendPlayerData(incMSG, index);
-
+            SendPlayers();
             SendMapData(incMSG, warpMap);
             SendMapNpcs(incMSG, warpMap);
             SendPoolMapNpcs(incMSG, warpMap);

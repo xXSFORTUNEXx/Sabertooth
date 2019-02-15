@@ -199,7 +199,7 @@ namespace SabertoothServer
         {
             int slot = players[index].FindOpenInvSlot(players[index].Backpack);
 
-            if (slot < 25)
+            if (slot < MAX_INV_SLOTS)
             {
                 players[index].Backpack[slot] = items[itemNum];
                 HandleData.SendServerMessageTo(players[index].Connection, "You took " + items[itemNum].Name + " from the chest.");

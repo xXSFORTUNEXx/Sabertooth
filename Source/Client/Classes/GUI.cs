@@ -275,6 +275,7 @@ namespace SabertoothClient
         {
             player = players[HandleData.myIndex];
         }
+
         public void UpdateBankWindow()
         {
             if (bankWindow != null && bankWindow.IsVisible)

@@ -3,7 +3,6 @@ using Lidgren.Network;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
-using SFML.Audio;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -77,7 +76,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_HIDE);
+            ShowWindow(handle, SW_SHOW);
             Logging.WriteMessageLog("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -536,9 +535,9 @@ namespace SabertoothClient
                 {
                     if (players[i].Map == players[HandleData.myIndex].Map)
                     {
-                        if (players[i].X > minX && players[i].X < maxX)
+                        if (players[i].X + OFFSET_X > minX && players[i].X + OFFSET_X < maxX)
                         {
-                            if (players[i].Y > minY && players[i].Y < maxY)
+                            if (players[i].Y + OFFSET_Y > minY && players[i].Y + OFFSET_Y < maxY)
                             {
                                 if (i != HandleData.myIndex)
                                 {
