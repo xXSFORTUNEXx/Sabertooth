@@ -62,6 +62,7 @@ namespace Editor.Forms
                 if (w_Result == DialogResult.No) { return; }
             }
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Npc.LoadNpcFromDatabase(SelectedIndex);
             txtName.Text = e_Npc.Name;
             scrlX.Value = e_Npc.DesX;

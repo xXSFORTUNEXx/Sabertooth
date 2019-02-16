@@ -49,17 +49,6 @@
             this.radFringe = new System.Windows.Forms.RadioButton();
             this.radFringe2 = new System.Windows.Forms.RadioButton();
             this.radMask2 = new System.Windows.Forms.RadioButton();
-            this.pnlDebug = new System.Windows.Forms.Panel();
-            this.lblType = new System.Windows.Forms.Label();
-            this.lblLayer = new System.Windows.Forms.Label();
-            this.lblViewX = new System.Windows.Forms.Label();
-            this.lblViewY = new System.Windows.Forms.Label();
-            this.lblSelectW = new System.Windows.Forms.Label();
-            this.lblSelectH = new System.Windows.Forms.Label();
-            this.lblButtonDown = new System.Windows.Forms.Label();
-            this.lblSelectY = new System.Windows.Forms.Label();
-            this.lblSelectX = new System.Windows.Forms.Label();
-            this.lblMouseLoc = new System.Windows.Forms.Label();
             this.radMask = new System.Windows.Forms.RadioButton();
             this.radGround = new System.Windows.Forms.RadioButton();
             this.tabTypes = new System.Windows.Forms.TabPage();
@@ -127,12 +116,22 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebug = new System.Windows.Forms.ToolStripButton();
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
+            this.pnlDebug = new System.Windows.Forms.Panel();
+            this.lblType = new System.Windows.Forms.Label();
+            this.lblLayer = new System.Windows.Forms.Label();
+            this.lblViewX = new System.Windows.Forms.Label();
+            this.lblViewY = new System.Windows.Forms.Label();
+            this.lblSelectW = new System.Windows.Forms.Label();
+            this.lblSelectH = new System.Windows.Forms.Label();
+            this.lblButtonDown = new System.Windows.Forms.Label();
+            this.lblSelectY = new System.Windows.Forms.Label();
+            this.lblSelectX = new System.Windows.Forms.Label();
+            this.lblMouseLoc = new System.Windows.Forms.Label();
             this.tabTools.SuspendLayout();
             this.tabMapDetails.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.pnlOptions.SuspendLayout();
-            this.pnlDebug.SuspendLayout();
             this.tabTypes.SuspendLayout();
             this.pnlWarp.SuspendLayout();
             this.pnlChest.SuspendLayout();
@@ -146,6 +145,7 @@
             this.tabLight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.tosMenu.SuspendLayout();
+            this.pnlDebug.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabTools
@@ -158,7 +158,7 @@
             this.tabTools.Location = new System.Drawing.Point(11, 31);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
-            this.tabTools.Size = new System.Drawing.Size(307, 628);
+            this.tabTools.Size = new System.Drawing.Size(307, 849);
             this.tabTools.TabIndex = 1;
             // 
             // tabMapDetails
@@ -167,7 +167,7 @@
             this.tabMapDetails.Controls.Add(this.treeMaps);
             this.tabMapDetails.Location = new System.Drawing.Point(4, 22);
             this.tabMapDetails.Name = "tabMapDetails";
-            this.tabMapDetails.Size = new System.Drawing.Size(299, 602);
+            this.tabMapDetails.Size = new System.Drawing.Size(299, 823);
             this.tabMapDetails.TabIndex = 5;
             this.tabMapDetails.Text = "Map Details";
             this.tabMapDetails.UseVisualStyleBackColor = true;
@@ -177,7 +177,7 @@
             this.mapProperties.Location = new System.Drawing.Point(3, 310);
             this.mapProperties.Name = "mapProperties";
             this.mapProperties.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.mapProperties.Size = new System.Drawing.Size(293, 281);
+            this.mapProperties.Size = new System.Drawing.Size(293, 469);
             this.mapProperties.TabIndex = 21;
             // 
             // treeMaps
@@ -197,13 +197,12 @@
             this.tabLayer.Controls.Add(this.radFringe);
             this.tabLayer.Controls.Add(this.radFringe2);
             this.tabLayer.Controls.Add(this.radMask2);
-            this.tabLayer.Controls.Add(this.pnlDebug);
             this.tabLayer.Controls.Add(this.radMask);
             this.tabLayer.Controls.Add(this.radGround);
             this.tabLayer.Location = new System.Drawing.Point(4, 22);
             this.tabLayer.Name = "tabLayer";
             this.tabLayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLayer.Size = new System.Drawing.Size(299, 602);
+            this.tabLayer.Size = new System.Drawing.Size(299, 823);
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
@@ -363,115 +362,6 @@
             this.radMask2.UseVisualStyleBackColor = true;
             this.radMask2.CheckedChanged += new System.EventHandler(this.radMask2_CheckedChanged);
             // 
-            // pnlDebug
-            // 
-            this.pnlDebug.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDebug.Controls.Add(this.lblType);
-            this.pnlDebug.Controls.Add(this.lblLayer);
-            this.pnlDebug.Controls.Add(this.lblViewX);
-            this.pnlDebug.Controls.Add(this.lblViewY);
-            this.pnlDebug.Controls.Add(this.lblSelectW);
-            this.pnlDebug.Controls.Add(this.lblSelectH);
-            this.pnlDebug.Controls.Add(this.lblButtonDown);
-            this.pnlDebug.Controls.Add(this.lblSelectY);
-            this.pnlDebug.Controls.Add(this.lblSelectX);
-            this.pnlDebug.Controls.Add(this.lblMouseLoc);
-            this.pnlDebug.Location = new System.Drawing.Point(154, 256);
-            this.pnlDebug.Name = "pnlDebug";
-            this.pnlDebug.Size = new System.Drawing.Size(124, 163);
-            this.pnlDebug.TabIndex = 13;
-            this.pnlDebug.Visible = false;
-            // 
-            // lblType
-            // 
-            this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(8, 130);
-            this.lblType.Name = "lblType";
-            this.lblType.Size = new System.Drawing.Size(63, 13);
-            this.lblType.TabIndex = 21;
-            this.lblType.Text = "Type: None";
-            // 
-            // lblLayer
-            // 
-            this.lblLayer.AutoSize = true;
-            this.lblLayer.Location = new System.Drawing.Point(8, 117);
-            this.lblLayer.Name = "lblLayer";
-            this.lblLayer.Size = new System.Drawing.Size(74, 13);
-            this.lblLayer.TabIndex = 20;
-            this.lblLayer.Text = "Layer: Ground";
-            // 
-            // lblViewX
-            // 
-            this.lblViewX.AutoSize = true;
-            this.lblViewX.Location = new System.Drawing.Point(8, 91);
-            this.lblViewX.Name = "lblViewX";
-            this.lblViewX.Size = new System.Drawing.Size(52, 13);
-            this.lblViewX.TabIndex = 19;
-            this.lblViewX.Text = "View X: 0";
-            // 
-            // lblViewY
-            // 
-            this.lblViewY.AutoSize = true;
-            this.lblViewY.Location = new System.Drawing.Point(8, 104);
-            this.lblViewY.Name = "lblViewY";
-            this.lblViewY.Size = new System.Drawing.Size(52, 13);
-            this.lblViewY.TabIndex = 18;
-            this.lblViewY.Text = "View Y: 0";
-            // 
-            // lblSelectW
-            // 
-            this.lblSelectW.AutoSize = true;
-            this.lblSelectW.Location = new System.Drawing.Point(8, 52);
-            this.lblSelectW.Name = "lblSelectW";
-            this.lblSelectW.Size = new System.Drawing.Size(77, 13);
-            this.lblSelectW.TabIndex = 17;
-            this.lblSelectW.Text = "SelectTileW: 0";
-            // 
-            // lblSelectH
-            // 
-            this.lblSelectH.AutoSize = true;
-            this.lblSelectH.Location = new System.Drawing.Point(8, 65);
-            this.lblSelectH.Name = "lblSelectH";
-            this.lblSelectH.Size = new System.Drawing.Size(74, 13);
-            this.lblSelectH.TabIndex = 16;
-            this.lblSelectH.Text = "SelectTileH: 0";
-            // 
-            // lblButtonDown
-            // 
-            this.lblButtonDown.AutoSize = true;
-            this.lblButtonDown.Location = new System.Drawing.Point(8, 78);
-            this.lblButtonDown.Name = "lblButtonDown";
-            this.lblButtonDown.Size = new System.Drawing.Size(81, 13);
-            this.lblButtonDown.TabIndex = 15;
-            this.lblButtonDown.Text = "Button Down: ?";
-            // 
-            // lblSelectY
-            // 
-            this.lblSelectY.AutoSize = true;
-            this.lblSelectY.Location = new System.Drawing.Point(8, 26);
-            this.lblSelectY.Name = "lblSelectY";
-            this.lblSelectY.Size = new System.Drawing.Size(73, 13);
-            this.lblSelectY.TabIndex = 14;
-            this.lblSelectY.Text = "SelectTileY: 0";
-            // 
-            // lblSelectX
-            // 
-            this.lblSelectX.AutoSize = true;
-            this.lblSelectX.Location = new System.Drawing.Point(8, 39);
-            this.lblSelectX.Name = "lblSelectX";
-            this.lblSelectX.Size = new System.Drawing.Size(73, 13);
-            this.lblSelectX.TabIndex = 13;
-            this.lblSelectX.Text = "SelectTileX: 0";
-            // 
-            // lblMouseLoc
-            // 
-            this.lblMouseLoc.AutoSize = true;
-            this.lblMouseLoc.Location = new System.Drawing.Point(8, 13);
-            this.lblMouseLoc.Name = "lblMouseLoc";
-            this.lblMouseLoc.Size = new System.Drawing.Size(92, 13);
-            this.lblMouseLoc.TabIndex = 12;
-            this.lblMouseLoc.Text = "Mouse - X: 0, Y: 0";
-            // 
             // radMask
             // 
             this.radMask.AutoSize = true;
@@ -514,7 +404,7 @@
             this.tabTypes.Location = new System.Drawing.Point(4, 22);
             this.tabTypes.Name = "tabTypes";
             this.tabTypes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTypes.Size = new System.Drawing.Size(299, 602);
+            this.tabTypes.Size = new System.Drawing.Size(299, 823);
             this.tabTypes.TabIndex = 1;
             this.tabTypes.Text = "Types";
             this.tabTypes.UseVisualStyleBackColor = true;
@@ -855,7 +745,7 @@
             this.tabTiles.Controls.Add(this.cmbTileset);
             this.tabTiles.Location = new System.Drawing.Point(4, 22);
             this.tabTiles.Name = "tabTiles";
-            this.tabTiles.Size = new System.Drawing.Size(299, 602);
+            this.tabTiles.Size = new System.Drawing.Size(299, 823);
             this.tabTiles.TabIndex = 2;
             this.tabTiles.Text = "Tiles";
             this.tabTiles.UseVisualStyleBackColor = true;
@@ -866,7 +756,7 @@
             this.pnlTile.Controls.Add(this.picTileset);
             this.pnlTile.Location = new System.Drawing.Point(3, 59);
             this.pnlTile.Name = "pnlTile";
-            this.pnlTile.Size = new System.Drawing.Size(293, 527);
+            this.pnlTile.Size = new System.Drawing.Size(293, 720);
             this.pnlTile.TabIndex = 4;
             // 
             // picTileset
@@ -914,7 +804,7 @@
             this.tabLight.Controls.Add(this.chkNight);
             this.tabLight.Location = new System.Drawing.Point(4, 22);
             this.tabLight.Name = "tabLight";
-            this.tabLight.Size = new System.Drawing.Size(299, 602);
+            this.tabLight.Size = new System.Drawing.Size(299, 823);
             this.tabLight.TabIndex = 4;
             this.tabLight.Text = "Light/NPCs";
             this.tabLight.UseVisualStyleBackColor = true;
@@ -1201,18 +1091,130 @@
             this.btnHelp.Text = "Help";
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
+            // pnlDebug
+            // 
+            this.pnlDebug.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDebug.Controls.Add(this.lblType);
+            this.pnlDebug.Controls.Add(this.lblLayer);
+            this.pnlDebug.Controls.Add(this.lblViewX);
+            this.pnlDebug.Controls.Add(this.lblViewY);
+            this.pnlDebug.Controls.Add(this.lblSelectW);
+            this.pnlDebug.Controls.Add(this.lblSelectH);
+            this.pnlDebug.Controls.Add(this.lblButtonDown);
+            this.pnlDebug.Controls.Add(this.lblSelectY);
+            this.pnlDebug.Controls.Add(this.lblSelectX);
+            this.pnlDebug.Controls.Add(this.lblMouseLoc);
+            this.pnlDebug.Location = new System.Drawing.Point(324, 668);
+            this.pnlDebug.Name = "pnlDebug";
+            this.pnlDebug.Size = new System.Drawing.Size(267, 208);
+            this.pnlDebug.TabIndex = 22;
+            this.pnlDebug.Visible = false;
+            // 
+            // lblType
+            // 
+            this.lblType.AutoSize = true;
+            this.lblType.Location = new System.Drawing.Point(8, 130);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(63, 13);
+            this.lblType.TabIndex = 21;
+            this.lblType.Text = "Type: None";
+            // 
+            // lblLayer
+            // 
+            this.lblLayer.AutoSize = true;
+            this.lblLayer.Location = new System.Drawing.Point(8, 117);
+            this.lblLayer.Name = "lblLayer";
+            this.lblLayer.Size = new System.Drawing.Size(74, 13);
+            this.lblLayer.TabIndex = 20;
+            this.lblLayer.Text = "Layer: Ground";
+            // 
+            // lblViewX
+            // 
+            this.lblViewX.AutoSize = true;
+            this.lblViewX.Location = new System.Drawing.Point(8, 91);
+            this.lblViewX.Name = "lblViewX";
+            this.lblViewX.Size = new System.Drawing.Size(52, 13);
+            this.lblViewX.TabIndex = 19;
+            this.lblViewX.Text = "View X: 0";
+            // 
+            // lblViewY
+            // 
+            this.lblViewY.AutoSize = true;
+            this.lblViewY.Location = new System.Drawing.Point(8, 104);
+            this.lblViewY.Name = "lblViewY";
+            this.lblViewY.Size = new System.Drawing.Size(52, 13);
+            this.lblViewY.TabIndex = 18;
+            this.lblViewY.Text = "View Y: 0";
+            // 
+            // lblSelectW
+            // 
+            this.lblSelectW.AutoSize = true;
+            this.lblSelectW.Location = new System.Drawing.Point(8, 52);
+            this.lblSelectW.Name = "lblSelectW";
+            this.lblSelectW.Size = new System.Drawing.Size(77, 13);
+            this.lblSelectW.TabIndex = 17;
+            this.lblSelectW.Text = "SelectTileW: 0";
+            // 
+            // lblSelectH
+            // 
+            this.lblSelectH.AutoSize = true;
+            this.lblSelectH.Location = new System.Drawing.Point(8, 65);
+            this.lblSelectH.Name = "lblSelectH";
+            this.lblSelectH.Size = new System.Drawing.Size(74, 13);
+            this.lblSelectH.TabIndex = 16;
+            this.lblSelectH.Text = "SelectTileH: 0";
+            // 
+            // lblButtonDown
+            // 
+            this.lblButtonDown.AutoSize = true;
+            this.lblButtonDown.Location = new System.Drawing.Point(8, 78);
+            this.lblButtonDown.Name = "lblButtonDown";
+            this.lblButtonDown.Size = new System.Drawing.Size(81, 13);
+            this.lblButtonDown.TabIndex = 15;
+            this.lblButtonDown.Text = "Button Down: ?";
+            // 
+            // lblSelectY
+            // 
+            this.lblSelectY.AutoSize = true;
+            this.lblSelectY.Location = new System.Drawing.Point(8, 26);
+            this.lblSelectY.Name = "lblSelectY";
+            this.lblSelectY.Size = new System.Drawing.Size(73, 13);
+            this.lblSelectY.TabIndex = 14;
+            this.lblSelectY.Text = "SelectTileY: 0";
+            // 
+            // lblSelectX
+            // 
+            this.lblSelectX.AutoSize = true;
+            this.lblSelectX.Location = new System.Drawing.Point(8, 39);
+            this.lblSelectX.Name = "lblSelectX";
+            this.lblSelectX.Size = new System.Drawing.Size(73, 13);
+            this.lblSelectX.TabIndex = 13;
+            this.lblSelectX.Text = "SelectTileX: 0";
+            // 
+            // lblMouseLoc
+            // 
+            this.lblMouseLoc.AutoSize = true;
+            this.lblMouseLoc.Location = new System.Drawing.Point(8, 13);
+            this.lblMouseLoc.Name = "lblMouseLoc";
+            this.lblMouseLoc.Size = new System.Drawing.Size(92, 13);
+            this.lblMouseLoc.TabIndex = 12;
+            this.lblMouseLoc.Text = "Mouse - X: 0, Y: 0";
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1153, 667);
+            this.ClientSize = new System.Drawing.Size(1153, 892);
+            this.Controls.Add(this.pnlDebug);
             this.Controls.Add(this.tosMenu);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
             this.Controls.Add(this.picMap);
             this.Controls.Add(this.tabTools);
             this.HelpButton = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MapEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Map Editor";
@@ -1224,8 +1226,6 @@
             this.panel1.PerformLayout();
             this.pnlOptions.ResumeLayout(false);
             this.pnlOptions.PerformLayout();
-            this.pnlDebug.ResumeLayout(false);
-            this.pnlDebug.PerformLayout();
             this.tabTypes.ResumeLayout(false);
             this.tabTypes.PerformLayout();
             this.pnlWarp.ResumeLayout(false);
@@ -1248,6 +1248,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.tosMenu.ResumeLayout(false);
             this.tosMenu.PerformLayout();
+            this.pnlDebug.ResumeLayout(false);
+            this.pnlDebug.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1271,17 +1273,6 @@
         private System.Windows.Forms.CheckBox chkGrid;
         private System.Windows.Forms.Panel pnlTile;
         private System.Windows.Forms.PictureBox picTileset;
-        private System.Windows.Forms.Panel pnlDebug;
-        private System.Windows.Forms.Label lblType;
-        private System.Windows.Forms.Label lblLayer;
-        private System.Windows.Forms.Label lblViewX;
-        private System.Windows.Forms.Label lblViewY;
-        private System.Windows.Forms.Label lblSelectW;
-        private System.Windows.Forms.Label lblSelectH;
-        private System.Windows.Forms.Label lblButtonDown;
-        private System.Windows.Forms.Label lblSelectY;
-        private System.Windows.Forms.Label lblSelectX;
-        private System.Windows.Forms.Label lblMouseLoc;
         private System.Windows.Forms.Panel pnlNpcSpawn;
         private System.Windows.Forms.HScrollBar scrlNpcNum;
         private System.Windows.Forms.Label lblNpcSpawn;
@@ -1352,5 +1343,16 @@
         private System.Windows.Forms.TextBox txtMaxX;
         private System.Windows.Forms.Label lblMaxY;
         private System.Windows.Forms.Label lblMaxX;
+        private System.Windows.Forms.Panel pnlDebug;
+        private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.Label lblLayer;
+        private System.Windows.Forms.Label lblViewX;
+        private System.Windows.Forms.Label lblViewY;
+        private System.Windows.Forms.Label lblSelectW;
+        private System.Windows.Forms.Label lblSelectH;
+        private System.Windows.Forms.Label lblButtonDown;
+        private System.Windows.Forms.Label lblSelectY;
+        private System.Windows.Forms.Label lblSelectX;
+        private System.Windows.Forms.Label lblMouseLoc;
     }
 }

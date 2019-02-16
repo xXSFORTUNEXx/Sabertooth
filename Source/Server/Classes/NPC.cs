@@ -49,7 +49,7 @@ namespace SabertoothServer
         public Npc() { }
 
         public Npc(string name, int x, int y, int direction, int sprite, int step, int owner, int behavior, int spawnTime, int health, int maxhealth, int damage, int desx, int desy,
-                    int exp, int money, int range, int shopnum, int chatnum)
+                    int exp, int money, int range, int shopnum, int chatnum, int speed)
         {
             Name = name;
             X = x;
@@ -70,6 +70,7 @@ namespace SabertoothServer
             Range = range;
             ShopNum = shopnum;
             ChatNum = chatnum;
+            Speed = speed;
         }
 
         public Npc(int x, int y)
@@ -118,6 +119,7 @@ namespace SabertoothServer
             Range = 0;
             ShopNum = 0;
             ChatNum = 0;
+            Speed = 1000;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             string script = ReadAllText("SQL Data Scripts/INSERT NPC.sql");

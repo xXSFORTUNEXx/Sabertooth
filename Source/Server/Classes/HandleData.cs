@@ -130,6 +130,10 @@ namespace SabertoothServer
                                 HandlePlayerWarp(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.MeleeAttack:
+                                HandleMeleeAttack(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -148,6 +152,49 @@ namespace SabertoothServer
         }
 
         #region Handle Incoming Data
+        static void HandleMeleeAttack(NetIncomingMessage incMSG)
+        {
+            int npcNum = incMSG.ReadVariableInt32();
+            int index = incMSG.ReadVariableInt32();
+            int map = players[index].Map;
+            int direction = players[index].Direction;
+            int damage = players[index].offWeapon.Damage;
+
+            if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }
+            
+            maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
+            bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
+
+
+            switch (direction)
+            {
+                case (int)Directions.Up:
+                    maps[map].m_MapNpc[npcNum].Y =- 1;
+                    break;
+
+                case (int)Directions.Down:
+                    maps[map].m_MapNpc[npcNum].Y += 1;
+                    break;
+
+                case (int)Directions.Left:
+                    maps[map].m_MapNpc[npcNum].X -= 1;
+                    break;
+
+                case (int)Directions.Right:
+                    maps[map].m_MapNpc[npcNum].X += -1;
+                    break;
+            }
+
+            for (int p = 0; p < MAX_PLAYERS; p++)
+            {
+                if (players[p].Connection != null && map == players[p].Map)
+                {
+                    SendNpcVitalData(players[p].Connection, map, npcNum);
+                }
+            }
+            if (updatePlayer) { SendUpdatePlayerStats(index); }
+        }
+
         static void HandlePlayerWarp(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -1596,7 +1643,9 @@ namespace SabertoothServer
             outMSG.Write((byte)PacketTypes.NpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Health);
-            outMSG.Write(maps[map].m_MapNpc[npcNum].IsSpawned);            
+            outMSG.Write(maps[map].m_MapNpc[npcNum].IsSpawned);
+            outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Y);
 
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -2066,6 +2115,7 @@ namespace SabertoothServer
         RequestActivation,
         CreateBlood,
         ClearBlood,
-        PlayerWarp
+        PlayerWarp,
+        MeleeAttack
     }
 }

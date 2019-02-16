@@ -253,6 +253,7 @@ namespace Editor.Forms
             }
 
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Item.LoadItemFromDatabase(SelectedIndex);
             if (e_Item.Type == (int)ItemType.RangedWeapon) { e_Proj.LoadProjectileFromDatabase(e_Item.ProjectileNumber); }
             txtName.Text = e_Item.Name;

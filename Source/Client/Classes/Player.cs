@@ -798,11 +798,14 @@ namespace SabertoothClient
             if (TickCount - equipTick < 5000) { return; }
             if (inShop || inChat || inBank) { return; }
 
+            bool isGun = false;
+
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
                 if (mainWeapon.Name != "None")
                 {
                     Attacking = true;
+                    isGun = true;
                 }
                 else
                 {
@@ -812,28 +815,146 @@ namespace SabertoothClient
                 }
             }
 
+            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
+            {
+                if (offWeapon.Name != "None")
+                {
+                    Attacking = true;
+                    isGun = false;
+                }
+                else
+                {
+                    gui.AddText("You need a melee weapon equiped to attack!");
+                    equipTick = TickCount;
+                }
+            }
+
             if (Attacking == true)
             {
-                switch (mainWeapon.ItemAmmoType)
+                if (isGun)
                 {
-                    case (int)AmmoType.Pistol:
-                        if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
-                        break;
-                    case (int)AmmoType.Rocket:
-                        if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
-                        break;
-                    case (int)AmmoType.Grenade:
-                        if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
-                        break;
+                    switch (mainWeapon.ItemAmmoType)
+                    {
+                        case (int)AmmoType.Pistol:
+                            if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
+                            break;
+                        case (int)AmmoType.AssaultRifle:
+                            if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
+                            break;
+                        case (int)AmmoType.Rocket:
+                            if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
+                            break;
+                        case (int)AmmoType.Grenade:
+                            if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
+                            break;
+                    }
+                    if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
+                    CreateBulletSound();
+                    RemoveBulletFromClip();
+                    Attacking = false;
+                    attackTick = TickCount;
                 }
-                if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                CreateBulletSound();
-                RemoveBulletFromClip();
-                Attacking = false;
-                attackTick = TickCount;
+                else
+                {
+                    if (TickCount - attackTick < offWeapon.AttackSpeed) { Attacking = false; return; }
+                    switch (AimDirection)
+                    {
+                        case (int)Directions.Up:
+                            if (Y > 2 - OffsetY)
+                            {
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                {
+                                    if (map.m_MapNpc[i].IsSpawned)
+                                    {
+                                        if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
+                                        {
+                                            if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                            else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case (int)Directions.Down:
+                            if (Y < (map.MaxY - 2) - OffsetY)
+                            {
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                {
+                                    if (map.m_MapNpc[i].IsSpawned)
+                                    {
+                                        if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
+                                        {
+                                            if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                            else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case (int)Directions.Left:
+                            if (X > 2 - OffsetX)
+                            {
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                {
+                                    if (map.m_MapNpc[i].IsSpawned)
+                                    {
+                                        if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
+                                        {
+                                            if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                            else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+
+                        case (int)Directions.Right:
+                            if (X < (map.MaxX - 2) - OffsetX)
+                            {
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                {
+                                    if (map.m_MapNpc[i].IsSpawned)
+                                    {
+                                        if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
+                                        {
+                                            if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                            else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                            {
+                                                SendMeleeAttack(i);
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            break;
+                    }
+                    Attacking = false;
+                    attackTick = TickCount;
+                }
             }
         }
 
@@ -903,7 +1024,7 @@ namespace SabertoothClient
                         break;
 
                     case (int)Directions.Down:
-                        if (Y < 48 - OffsetY)
+                        if (Y < (map.MaxY - 2) - OffsetY)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -951,7 +1072,7 @@ namespace SabertoothClient
                         break;
 
                     case (int)Directions.Right:
-                        if (X < 48 - OffsetX)
+                        if (X < (map.MaxX - 2) - OffsetX)
                         {
                             for (int i = 0; i < 10; i++)
                             {
@@ -988,6 +1109,15 @@ namespace SabertoothClient
 
         }
         #endregion
+
+        public void SendMeleeAttack(int npcNum)
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.MeleeAttack);
+            outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
 
         public void CreateBulletSound()
         {

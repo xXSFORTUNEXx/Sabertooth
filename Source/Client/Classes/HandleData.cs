@@ -935,6 +935,8 @@ namespace SabertoothClient
 
             map.m_MapNpc[index].Health = incMSG.ReadVariableInt32();
             map.m_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
+            map.m_MapNpc[index].X = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].Y = incMSG.ReadVariableInt32();
         }
 
         static void HandlePoolNpcVitals(NetIncomingMessage incMSG)
@@ -1464,6 +1466,7 @@ namespace SabertoothClient
         RequestActivation,
         CreateBlood,
         ClearBlood,
-        PlayerWarp
+        PlayerWarp,
+        MeleeAttack
     }
 }
