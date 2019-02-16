@@ -156,43 +156,83 @@ namespace SabertoothServer
         {
             int npcNum = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
+            int type = incMSG.ReadVariableInt32();
             int map = players[index].Map;
             int direction = players[index].Direction;
             int damage = players[index].offWeapon.Damage;
 
-            if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }
-            
-            maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
-            bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
-
-
-            switch (direction)
+            if (type == 0)
             {
-                case (int)Directions.Up:
-                    maps[map].m_MapNpc[npcNum].Y =- 1;
-                    break;
+                if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }
 
-                case (int)Directions.Down:
-                    maps[map].m_MapNpc[npcNum].Y += 1;
-                    break;
+                maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
+                bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
 
-                case (int)Directions.Left:
-                    maps[map].m_MapNpc[npcNum].X -= 1;
-                    break;
 
-                case (int)Directions.Right:
-                    maps[map].m_MapNpc[npcNum].X += -1;
-                    break;
-            }
-
-            for (int p = 0; p < MAX_PLAYERS; p++)
-            {
-                if (players[p].Connection != null && map == players[p].Map)
+                switch (direction)
                 {
-                    SendNpcVitalData(players[p].Connection, map, npcNum);
+                    case (int)Directions.Up:
+                        maps[map].m_MapNpc[npcNum].Y -= 1;
+                        break;
+
+                    case (int)Directions.Down:
+                        maps[map].m_MapNpc[npcNum].Y += 1;
+                        break;
+
+                    case (int)Directions.Left:
+                        maps[map].m_MapNpc[npcNum].X -= 1;
+                        break;
+
+                    case (int)Directions.Right:
+                        maps[map].m_MapNpc[npcNum].X += -1;
+                        break;
                 }
+
+                for (int p = 0; p < MAX_PLAYERS; p++)
+                {
+                    if (players[p].Connection != null && map == players[p].Map)
+                    {
+                        SendNpcVitalData(players[p].Connection, map, npcNum);
+                    }
+                }
+                if (updatePlayer) { SendUpdatePlayerStats(index); }
             }
-            if (updatePlayer) { SendUpdatePlayerStats(index); }
+            else
+            {
+                if (!maps[map].r_MapNpc[npcNum].IsSpawned) { return; }
+
+                maps[map].CreateBloodSplat(map, maps[map].r_MapNpc[npcNum].X, maps[map].r_MapNpc[npcNum].Y);
+                bool updatePlayer = maps[map].r_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
+
+
+                switch (direction)
+                {
+                    case (int)Directions.Up:
+                        maps[map].r_MapNpc[npcNum].Y -= 1;
+                        break;
+
+                    case (int)Directions.Down:
+                        maps[map].r_MapNpc[npcNum].Y += 1;
+                        break;
+
+                    case (int)Directions.Left:
+                        maps[map].r_MapNpc[npcNum].X -= 1;
+                        break;
+
+                    case (int)Directions.Right:
+                        maps[map].r_MapNpc[npcNum].X += -1;
+                        break;
+                }
+
+                for (int p = 0; p < MAX_PLAYERS; p++)
+                {
+                    if (players[p].Connection != null && map == players[p].Map)
+                    {
+                        SendPoolNpcVitalData(players[p].Connection, map, npcNum);
+                    }
+                }
+                if (updatePlayer) { SendUpdatePlayerStats(index); }
+            }
         }
 
         static void HandlePlayerWarp(NetIncomingMessage incMSG)
@@ -1656,7 +1696,9 @@ namespace SabertoothServer
             outMSG.Write((byte)PacketTypes.PoolNpcVitals);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Health);
-            outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);            
+            outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);
+            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].X);
+            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Y);
 
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1872,7 +1914,7 @@ namespace SabertoothServer
         #region Processing and Checking Voids
         static void ClearSlot(NetConnection conn)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i] != null && players[i].Connection == conn)
                 {
@@ -1885,7 +1927,7 @@ namespace SabertoothServer
 
         static void SavePlayers()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name != null)
                 {

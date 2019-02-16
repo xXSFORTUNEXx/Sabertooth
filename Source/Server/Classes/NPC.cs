@@ -290,10 +290,6 @@ namespace SabertoothServer
                 int hour = s_Player[index].LifeHour;
                 int minute = s_Player[index].LifeMinute;
                 int second = s_Player[index].LifeSecond;
-                s_Player[index].LifeDay = 0;
-                s_Player[index].LifeHour = 0;
-                s_Player[index].LifeMinute = 0;
-                s_Player[index].LifeSecond = 0;
                 if (NewLongestLife(s_Player[index]))
                 {
                     s_Player[index].LongestLifeDay = day;
@@ -301,6 +297,10 @@ namespace SabertoothServer
                     s_Player[index].LongestLifeMinute = minute;
                     s_Player[index].LongestLifeSecond = second;
                 }
+                s_Player[index].LifeDay = 0;
+                s_Player[index].LifeHour = 0;
+                s_Player[index].LifeMinute = 0;
+                s_Player[index].LifeSecond = 0;
                 HandleData.SendPlayers();
                 string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
                 HandleData.SendServerMessageToAll(deathMsg);
@@ -560,7 +560,7 @@ namespace SabertoothServer
 
                 case (int)BehaviorType.Aggressive:
 
-                    for (int p = 0; p < 5; p++)
+                    for (int p = 0; p < MAX_PLAYERS; p++)
                     {
                         if (s_Player[p].Connection != null && s_Player[p].Name != null)
                         {

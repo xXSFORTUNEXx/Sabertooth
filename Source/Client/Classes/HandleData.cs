@@ -945,6 +945,8 @@ namespace SabertoothClient
 
             map.r_MapNpc[index].Health = incMSG.ReadVariableInt32();
             map.r_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
+            map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
+            map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
         }
 
         static void HandleNpcData(NetIncomingMessage incMSG)

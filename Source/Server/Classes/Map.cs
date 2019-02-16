@@ -724,7 +724,7 @@ namespace SabertoothServer
                         switch (s_Direction)
                         {
                             case (int)Directions.Down:
-                                if (Y < maps[mapNum].MaxY)
+                                if (Y < maps[mapNum].MaxY - 1)
                                 {
                                     if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                                     {
@@ -826,7 +826,7 @@ namespace SabertoothServer
                                 break;
 
                             case (int)Directions.Right:
-                                if (X < maps[mapNum].MaxX)
+                                if (X < maps[mapNum].MaxX - 1)
                                 {
                                     if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                                     {
