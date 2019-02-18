@@ -41,6 +41,7 @@
             this.btnEditor = new System.Windows.Forms.Button();
             this.btnShopEditor = new System.Windows.Forms.Button();
             this.btnPlayerEditor = new System.Windows.Forms.Button();
+            this.btnQuestEditor = new System.Windows.Forms.Button();
             this.pnlLock.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -174,11 +175,22 @@
             this.btnPlayerEditor.UseVisualStyleBackColor = true;
             this.btnPlayerEditor.Click += new System.EventHandler(this.btnPlayerEditor_Click);
             // 
+            // btnQuestEditor
+            // 
+            this.btnQuestEditor.Location = new System.Drawing.Point(13, 275);
+            this.btnQuestEditor.Name = "btnQuestEditor";
+            this.btnQuestEditor.Size = new System.Drawing.Size(118, 23);
+            this.btnQuestEditor.TabIndex = 10;
+            this.btnQuestEditor.Text = "Quest Editor";
+            this.btnQuestEditor.UseVisualStyleBackColor = true;
+            this.btnQuestEditor.Click += new System.EventHandler(this.btnQuestEditor_Click);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(143, 279);
+            this.ClientSize = new System.Drawing.Size(143, 309);
+            this.Controls.Add(this.btnQuestEditor);
             this.Controls.Add(this.btnPlayerEditor);
             this.Controls.Add(this.btnShopEditor);
             this.Controls.Add(this.btnEditor);
@@ -214,6 +226,7 @@
         private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnShopEditor;
         private System.Windows.Forms.Button btnPlayerEditor;
+        private System.Windows.Forms.Button btnQuestEditor;
     }
 }
 

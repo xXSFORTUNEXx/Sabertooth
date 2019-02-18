@@ -160,10 +160,12 @@ namespace Editor.Forms
 
         private void scrlItem_Scroll(object sender, ScrollEventArgs e)
         {
-            lblItem.Text = "Item : " + scrlItem.Value;
+            lblItem.Text = "Item: " + scrlItem.Value;
             SelectedItem = (scrlItem.Value - 1);
             scrlItemNum.Value = e_Chat.ItemNum[SelectedItem];
+            lblItemNum.Text = "Item Number: " + scrlItemNum.Value;
             scrlValue.Value = e_Chat.ItemVal[SelectedItem];
+            lblItemVal.Text = "Value: " + scrlValue.Value;
         }
 
         private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)

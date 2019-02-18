@@ -69,6 +69,12 @@ namespace Editor
             PlayerEditor e_PlayerEditor = new PlayerEditor();
             e_PlayerEditor.ShowDialog();
         }
+
+        private void btnQuestEditor_Click(object sender, EventArgs e)
+        {
+            QuestEditor e_QuestEditor = new QuestEditor();
+            e_QuestEditor.ShowDialog();
+        }
     }
     static class StartUp
     {

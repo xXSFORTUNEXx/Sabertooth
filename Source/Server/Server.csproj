@@ -59,6 +59,7 @@
     <Compile Include="Classes\Chest.cs" />
     <Compile Include="Classes\Globals.cs" />
     <Compile Include="Classes\Instance.cs" />
+    <Compile Include="Classes\Quests.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\HandleData.cs" />
     <Compile Include="Classes\Item.cs" />
@@ -106,6 +107,9 @@
     <Content Include="SQL Data Scripts\INSERT PROJ.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\INSERT QUEST.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\INSERT SECONDWEPS.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -151,6 +155,9 @@
     <Content Include="SQL Data Scripts\LOAD PROJ.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\LOAD QUEST.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\LOAD SECONDWEPS.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -191,6 +198,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\SAVE PROJ.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\SAVE QUEST.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\SAVE SECONDWEPS.sql">
@@ -238,6 +248,7 @@
     <Content Include="SQL Scripts\PROJECTILES.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Scripts\QUESTS.sql" />
     <Content Include="SQL Scripts\SECONDARYWEAPONS.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

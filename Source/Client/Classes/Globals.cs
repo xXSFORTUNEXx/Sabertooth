@@ -33,6 +33,10 @@ namespace SabertoothClient
         public const int MAX_BANK_SLOTS = 50;
         public const int MAX_BLOOD_SPLATS = 50;
         public const int MAX_MAP_PROJECTILES = 200;
+        public const int MAX_QUESTS = 50;
+        public const int MAX_QUEST_REWARDS = 5;
+        public const int MAX_QUEST_ITEMS_REQ = 5;
+        public const int MAX_QUEST_NPCS_REQ = 3;
         #endregion
 
         #region Config Globals

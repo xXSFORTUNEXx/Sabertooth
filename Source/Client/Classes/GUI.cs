@@ -76,6 +76,10 @@ namespace SabertoothClient
         public WindowControl optWindow;
         LabeledCheckBox enableFullscreen;
         LabeledCheckBox enableVsync;
+        TextBox optipAddress;
+        TextBox optPort;
+        Label optipLabel;
+        Label optportLabel;
         Button saveoptButton;
         Button canoptButton;
 
@@ -1893,6 +1897,10 @@ namespace SabertoothClient
             else { SabertoothClient.VSync = false; renderWindow.SetFramerateLimit(MAX_FPS); }
 
             renderWindow.SetVerticalSyncEnabled(SabertoothClient.VSync);
+
+            SabertoothClient.IPAddress = optipAddress.Text;
+            SabertoothClient.Port = optPort.Text;
+
             SabertoothClient.SaveConfiguration();
             parent.Hide();
         }
@@ -2849,14 +2857,32 @@ namespace SabertoothClient
             enableVsync.SetPosition(25, 50);
             if (SabertoothClient.VSync) { enableVsync.IsChecked = true; }
 
+            optipLabel = new Label(optWindow);
+            optipLabel.SetPosition(25, 85);
+            optipLabel.Text = "IP Address:";
+
+            optipAddress = new TextBox(optWindow);
+            optipAddress.SetPosition(25, 100);
+            optipAddress.SetSize(140, 25);
+            optipAddress.Text = SabertoothClient.IPAddress;
+
+            optportLabel = new Label(optWindow);
+            optportLabel.SetPosition(25, 130);
+            optportLabel.Text = "Port:";
+
+            optPort = new TextBox(optWindow);
+            optPort.SetPosition(25, 145);
+            optPort.SetSize(140, 25);
+            optPort.Text = SabertoothClient.Port;
+
             saveoptButton = new Button(optWindow);
-            saveoptButton.SetPosition(25, 175);
+            saveoptButton.SetPosition(25, 185);
             saveoptButton.SetSize(60, 25);
             saveoptButton.Text = "Save";
             saveoptButton.Clicked += CheckOptionWindowSave;
 
             canoptButton = new Button(optWindow);
-            canoptButton.SetPosition(105, 175);
+            canoptButton.SetPosition(105, 185);
             canoptButton.SetSize(60, 25);
             canoptButton.Text = "Cancel";
             canoptButton.Clicked += CheckOptionsWindowCancel;

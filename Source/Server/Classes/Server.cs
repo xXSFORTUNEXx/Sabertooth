@@ -83,6 +83,7 @@ namespace SabertoothServer
         public static Shop[] shops = new Shop[MAX_SHOPS];
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
+        public static Quests[] quests = new Quests[MAX_QUESTS];
         public static WorldTime worldTime = new WorldTime();
         public static Instance instance = new Instance();
         public static Random RND = new Random();
@@ -252,6 +253,16 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Chats loaded successfully");
             #endregion
 
+            #region Quests
+            Logging.WriteMessageLog("Loading quests...");
+            for (int i = 0; i < MAX_QUESTS; i++)
+            {
+                quests[i] = new Quests();
+                quests[i].LoadQuestFromDatabase(i + 1);
+            }
+            Logging.WriteMessageLog("Quests loaded successfully");
+            #endregion
+
             #region Chests
             Logging.WriteMessageLog("Loading chests...");
             for (int i = 0; i < MAX_CHESTS; i++)
@@ -315,6 +326,7 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/PROJECTILES.sql");
                         script += ReadAllText("SQL Scripts/SHOPS.sql");
                         script += ReadAllText("SQL Scripts/CHAT.sql");
+                        script += ReadAllText("SQL Scripts/QUESTS.sql");
                         script += ReadAllText("SQL Scripts/MAPS.sql");
                         script += ReadAllText("SQL Scripts/CHESTS.sql");
                         script += ReadAllText("SQL Scripts/STATS.sql");
