@@ -20,7 +20,7 @@ namespace SabertoothServer
         public string[] Option = new string[4];
         public int[] NextChat = new int[4];
         public int ShopNum { get; set; }
-        public int MissionNum { get; set; }
+        public int QuestNum { get; set; }
         public int[] ItemNum = new int[3];
         public int[] ItemVal = new int[3];
         public int Money { get; set; }
@@ -38,7 +38,7 @@ namespace SabertoothServer
             Option[3] = opt4;
             NextChat = nextchat;
             ShopNum = shopnum;
-            MissionNum = missionnum;
+            QuestNum = missionnum;
             ItemNum = itemNum;
             ItemVal = itemVal;
             Money = money;
@@ -58,7 +58,7 @@ namespace SabertoothServer
             NextChat[2] = 0;
             NextChat[3] = 0;
             ShopNum = 0;
-            MissionNum = 0;
+            QuestNum = 0;
             for (int i = 0; i < 3; i++)
             {
                 ItemNum[i] = 0;
@@ -85,7 +85,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@nextchatc", System.Data.DbType.Int32)).Value = NextChat[2];
                     cmd.Parameters.Add(new SqlParameter("@nextchatd", System.Data.DbType.Int32)).Value = NextChat[3];
                     cmd.Parameters.Add(new SqlParameter("@shopnum", System.Data.DbType.Int32)).Value = ShopNum;
-                    cmd.Parameters.Add(new SqlParameter("@missionnum", System.Data.DbType.Int32)).Value = MissionNum;
+                    cmd.Parameters.Add(new SqlParameter("@questnum", System.Data.DbType.Int32)).Value = QuestNum;
                     cmd.Parameters.Add(new SqlParameter("@itema", System.Data.DbType.Int32)).Value = ItemNum[0];
                     cmd.Parameters.Add(new SqlParameter("@itemb", System.Data.DbType.Int32)).Value = ItemNum[1];
                     cmd.Parameters.Add(new SqlParameter("@itemc", System.Data.DbType.Int32)).Value = ItemNum[2];
@@ -121,7 +121,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@nextchatc", System.Data.DbType.Int32)).Value = NextChat[2];
                     cmd.Parameters.Add(new SqlParameter("@nextchatd", System.Data.DbType.Int32)).Value = NextChat[3];
                     cmd.Parameters.Add(new SqlParameter("@shopnum", System.Data.DbType.Int32)).Value = ShopNum;
-                    cmd.Parameters.Add(new SqlParameter("@missionnum", System.Data.DbType.Int32)).Value = MissionNum;
+                    cmd.Parameters.Add(new SqlParameter("@questnum", System.Data.DbType.Int32)).Value = QuestNum;
                     cmd.Parameters.Add(new SqlParameter("@itema", System.Data.DbType.Int32)).Value = ItemNum[0];
                     cmd.Parameters.Add(new SqlParameter("@itemb", System.Data.DbType.Int32)).Value = ItemNum[1];
                     cmd.Parameters.Add(new SqlParameter("@itemc", System.Data.DbType.Int32)).Value = ItemNum[2];
@@ -160,7 +160,7 @@ namespace SabertoothServer
                             NextChat[2] = ToInt32(reader[9]);
                             NextChat[3] = ToInt32(reader[10]);
                             ShopNum = ToInt32(reader[11]);
-                            MissionNum = ToInt32(reader[12]);
+                            QuestNum = ToInt32(reader[12]);
                             ItemNum[0] = ToInt32(reader[13]);
                             ItemNum[1] = ToInt32(reader[14]);
                             ItemNum[2] = ToInt32(reader[15]);

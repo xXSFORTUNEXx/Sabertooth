@@ -14,7 +14,7 @@ namespace SabertoothClient
         public string[] Option = new string[4];
         public int[] NextChat = new int[4];
         public int ShopNum { get; set; }
-        public int MissionNum { get; set; }
+        public int QuestNum { get; set; }
         public int[] ItemNum = new int[3];
         public int[] ItemVal = new int[3];
         public int Money { get; set; }
@@ -32,7 +32,7 @@ namespace SabertoothClient
             Option[3] = opt4;
             NextChat = nextchat;
             ShopNum = shopnum;
-            MissionNum = missionnum;
+            QuestNum = missionnum;
             ItemNum = itemNum;
             ItemVal = itemVal;
             Money = money;

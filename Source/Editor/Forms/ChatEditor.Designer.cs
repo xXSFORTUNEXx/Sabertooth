@@ -40,8 +40,8 @@
             this.txtMainMessage = new System.Windows.Forms.RichTextBox();
             this.lblShopNum = new System.Windows.Forms.Label();
             this.scrlShopNum = new System.Windows.Forms.HScrollBar();
-            this.lblMissionNum = new System.Windows.Forms.Label();
-            this.scrlMissionNum = new System.Windows.Forms.HScrollBar();
+            this.lblQuestNum = new System.Windows.Forms.Label();
+            this.scrlQuestNum = new System.Windows.Forms.HScrollBar();
             this.label7 = new System.Windows.Forms.Label();
             this.cmbType = new System.Windows.Forms.ComboBox();
             this.lblMoney = new System.Windows.Forms.Label();
@@ -192,22 +192,22 @@
             this.scrlShopNum.TabIndex = 15;
             this.scrlShopNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlShopNum_Scroll);
             // 
-            // lblMissionNum
+            // lblQuestNum
             // 
-            this.lblMissionNum.AutoSize = true;
-            this.lblMissionNum.Location = new System.Drawing.Point(16, 251);
-            this.lblMissionNum.Name = "lblMissionNum";
-            this.lblMissionNum.Size = new System.Drawing.Size(94, 13);
-            this.lblMissionNum.TabIndex = 16;
-            this.lblMissionNum.Text = "Mission Number: 0";
+            this.lblQuestNum.AutoSize = true;
+            this.lblQuestNum.Location = new System.Drawing.Point(16, 251);
+            this.lblQuestNum.Name = "lblQuestNum";
+            this.lblQuestNum.Size = new System.Drawing.Size(87, 13);
+            this.lblQuestNum.TabIndex = 16;
+            this.lblQuestNum.Text = "Quest Number: 0";
             // 
-            // scrlMissionNum
+            // scrlQuestNum
             // 
-            this.scrlMissionNum.Location = new System.Drawing.Point(19, 266);
-            this.scrlMissionNum.Name = "scrlMissionNum";
-            this.scrlMissionNum.Size = new System.Drawing.Size(213, 17);
-            this.scrlMissionNum.TabIndex = 17;
-            this.scrlMissionNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMissionNum_Scroll);
+            this.scrlQuestNum.Location = new System.Drawing.Point(19, 266);
+            this.scrlQuestNum.Name = "scrlQuestNum";
+            this.scrlQuestNum.Size = new System.Drawing.Size(213, 17);
+            this.scrlQuestNum.TabIndex = 17;
+            this.scrlQuestNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlQuestNum_Scroll);
             // 
             // label7
             // 
@@ -226,7 +226,7 @@
             "Open Shop",
             "Open Bank",
             "Reward",
-            "Mission"});
+            "Quest"});
             this.cmbType.Location = new System.Drawing.Point(19, 189);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(213, 21);
@@ -320,8 +320,8 @@
             this.pnlMain.Controls.Add(this.lblMoney);
             this.pnlMain.Controls.Add(this.cmbType);
             this.pnlMain.Controls.Add(this.label7);
-            this.pnlMain.Controls.Add(this.scrlMissionNum);
-            this.pnlMain.Controls.Add(this.lblMissionNum);
+            this.pnlMain.Controls.Add(this.scrlQuestNum);
+            this.pnlMain.Controls.Add(this.lblQuestNum);
             this.pnlMain.Controls.Add(this.scrlShopNum);
             this.pnlMain.Controls.Add(this.lblShopNum);
             this.pnlMain.Controls.Add(this.txtMainMessage);
@@ -371,7 +371,7 @@
             this.label8.Size = new System.Drawing.Size(228, 52);
             this.label8.TabIndex = 28;
             this.label8.Text = "To assign an option to mission or shop use the \r\nfollowing keywords: \r\n\r\n\"Accept " +
-    "Mission\",\"Shop\",\"Bank\"";
+    "Quest\",\"Shop\",\"Bank\"";
             // 
             // scrlNextChatD
             // 
@@ -544,8 +544,8 @@
         private System.Windows.Forms.RichTextBox txtMainMessage;
         private System.Windows.Forms.Label lblShopNum;
         private System.Windows.Forms.HScrollBar scrlShopNum;
-        private System.Windows.Forms.Label lblMissionNum;
-        private System.Windows.Forms.HScrollBar scrlMissionNum;
+        private System.Windows.Forms.Label lblQuestNum;
+        private System.Windows.Forms.HScrollBar scrlQuestNum;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cmbType;
         private System.Windows.Forms.Label lblMoney;

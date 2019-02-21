@@ -81,6 +81,7 @@ namespace Editor.Forms
                 if (w_Result == DialogResult.No) { return; }
             }
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Chat.LoadChatFromDatabase(SelectedIndex);
             txtName.Text = e_Chat.Name;
             txtMainMessage.Text = e_Chat.MainMessage;
@@ -94,7 +95,7 @@ namespace Editor.Forms
             scrlNextChatC.Value = e_Chat.NextChat[2];
             scrlNextChatD.Value = e_Chat.NextChat[3];
             scrlShopNum.Value = e_Chat.ShopNum;
-            scrlMissionNum.Value = e_Chat.MissionNum;
+            scrlQuestNum.Value = e_Chat.QuestNum;
             scrlMoney.Value = e_Chat.Money;
             scrlItem.Value = 1;
             SelectedItem = 1;
@@ -105,7 +106,7 @@ namespace Editor.Forms
             lblNextChatC.Text = "Next Chat: " + scrlNextChatC.Value;
             lblNextChatD.Text = "Next Chat: " + scrlNextChatD.Value;
             lblShopNum.Text = "Shop Number: " + scrlShopNum.Value;
-            lblMissionNum.Text = "Mission Number: " + scrlMissionNum.Value;
+            lblQuestNum.Text = "Mission Number: " + scrlQuestNum.Value;
             lblMoney.Text = "Money: " + scrlMoney.Value;
             lblItem.Text = "Item: " + scrlItem.Value;
             lblItemNum.Text = "Item Number: " + scrlItemNum.Value;
@@ -146,10 +147,10 @@ namespace Editor.Forms
             e_Chat.ShopNum = scrlShopNum.Value;
         }
 
-        private void scrlMissionNum_Scroll(object sender, ScrollEventArgs e)
+        private void scrlQuestNum_Scroll(object sender, ScrollEventArgs e)
         {
-            lblMissionNum.Text = "Mission Number: " + scrlMissionNum.Value;
-            e_Chat.MissionNum = scrlMissionNum.Value;
+            lblQuestNum.Text = "Quest Number: " + scrlQuestNum.Value;
+            e_Chat.QuestNum = scrlQuestNum.Value;
         }
 
         private void scrlMoney_Scroll(object sender, ScrollEventArgs e)

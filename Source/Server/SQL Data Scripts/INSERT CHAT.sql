@@ -2,6 +2,7 @@
 Created 9/2/2018 5:18AM
 Inserts chat data into database
 Created by Steven M Fortune
+Updated 2019-02-20 15:31:30.060
 */
 
 INSERT INTO CHAT (
@@ -16,7 +17,7 @@ INSERT INTO CHAT (
 	NEXTCHATC,
 	NEXTCHATD,
 	SHOPNUM,
-	MISSIONNUM,
+	QUESTNUM,
 	ITEMA,
 	ITEMB,
 	ITEMC,
@@ -38,7 +39,7 @@ VALUES (
 	@nextchatc,
 	@nextchatd,
 	@shopnum,
-	@missionnum,
+	@questnum,
 	@itema,
 	@itemb,
 	@itemc,

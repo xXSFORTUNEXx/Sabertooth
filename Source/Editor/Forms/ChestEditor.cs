@@ -120,6 +120,7 @@ namespace Editor.Forms
             }
 
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Chest.LoadChestFromDatabase(SelectedIndex);
             txtName.Text = e_Chest.Name;
             scrlMoney.Value = e_Chest.Money;

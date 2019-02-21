@@ -164,6 +164,7 @@ namespace Editor.Forms
             }
 
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Shop.LoadShopFromDatabase(SelectedIndex);
             txtName.Text = e_Shop.Name;
             LoadShopItemList();

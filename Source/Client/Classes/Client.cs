@@ -185,6 +185,7 @@ namespace SabertoothClient
         public static Item[] items = new Item[MAX_ITEMS];
         public static Projectile[] projectiles = new Projectile[MAX_PROJECTILES];
         public static Chat[] chats = new Chat[MAX_CHATS];
+        public static Quests[] quests = new Quests[MAX_QUESTS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
         public static Map map = new Map();
         public static MiniMap miniMap = new MiniMap();
@@ -318,6 +319,11 @@ namespace SabertoothClient
             for (int i = 0; i < MAX_CHATS; i++)
             {
                 chats[i] = new Chat();
+            }
+
+            for (int i = 0; i < MAX_QUESTS; i++)
+            {
+                quests[i] = new Quests();
             }
 
             for (int i = 0; i < MAX_CHESTS; i++)

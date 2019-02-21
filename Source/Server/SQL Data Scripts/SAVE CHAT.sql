@@ -2,6 +2,7 @@
 Created 9/2/2018 5:18AM
 Saves chat data into database
 Created by Steven M Fortune
+Updated 2019-02-20 15:31:30.060
 */
 
 UPDATE CHAT
@@ -16,7 +17,7 @@ SET NAME = @name,
 	NEXTCHATC = @nextchatc,
 	NEXTCHATD = @nextchatd,
 	SHOPNUM = @shopnum,
-	MISSIONNUM = @missionnum,
+	QUESTNUM = @questnum,
 	ITEMA = @itema,
 	ITEMB = @itemb,
 	ITEMC = @itemc,

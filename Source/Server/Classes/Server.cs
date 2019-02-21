@@ -896,6 +896,48 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("Minimum latency is now " + lat + "ms");
                         break;
 
+                    case "settime":
+                        Logging.WriteMessageLog("Format: MMM dd, yyyy hh:mm:ss tt");
+                        Logging.WriteMessageLogLine("Second(0-59): ");
+                        string second = Console.ReadLine();
+                        worldTime.g_Second = ToInt32(second);
+
+                        Logging.WriteMessageLogLine("Minute(0-59): ");
+                        string minute = Console.ReadLine();
+                        worldTime.g_Minute = ToInt32(minute);
+
+                        Logging.WriteMessageLogLine("Hour(0-24): ");
+                        string hour = Console.ReadLine();
+                        worldTime.g_Hour = ToInt32(hour);
+
+                        Logging.WriteMessageLogLine("Day(1-31): ");
+                        string day = Console.ReadLine();
+                        worldTime.g_DayOfWeek  = ToInt32(day);
+
+                        Logging.WriteMessageLogLine("Month(1-12): ");
+                        string month = Console.ReadLine();
+                        worldTime.g_Month = ToInt32(month);
+
+                        Logging.WriteMessageLogLine("Year(1-5000): ");
+                        string year = Console.ReadLine();
+                        worldTime.g_Year = ToInt32(year);
+
+                        Thread.Sleep(1000);
+                        Logging.WriteMessageLog("Time set to: " + worldTime.Time);
+                        break;
+
+                    case "randomtime":
+                        worldTime.g_Second = RND.Next(0, 59);
+                        worldTime.g_Minute = RND.Next(0, 59);
+                        worldTime.g_Hour = RND.Next(0, 24);
+                        worldTime.g_DayOfWeek = RND.Next(1, 31);
+                        worldTime.g_Month = RND.Next(1, 12);
+                        worldTime.g_Year = RND.Next(0, 5000);
+
+                        Thread.Sleep(1000);
+                        Logging.WriteMessageLog("Time set to: " + worldTime.Time);
+                        break;
+
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments
                         Logging.WriteMessageLog("Commands:", "Commands");
                         Logging.WriteMessageLog("info - shows the servers stats", "Commands");
@@ -906,6 +948,8 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("activeacc - actives account with name provided", "Commands");
                         Logging.WriteMessageLog("projcheck - follow prompts to check map projectiles", "Commands");
                         Logging.WriteMessageLog("createaccount - follow prompts to create an account", "Commands");
+                        Logging.WriteMessageLog("settime - follow prompts to set the games time", "Commands");
+                        Logging.WriteMessageLog("randomtime - set the game time to a random value", "Commands");
                         Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
                         Logging.WriteMessageLog("exit - shuts down the server", "Commands");
                         break;

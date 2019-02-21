@@ -2,6 +2,7 @@
 Created 9/2/2018 5:18AM
 Load chat data into database
 Created by Steven M Fortune
+Updated 2019-02-20 15:31:30.060
 */
 
 SELECT ID,
@@ -16,7 +17,7 @@ SELECT ID,
 	NEXTCHATC,
 	NEXTCHATD,
 	SHOPNUM,
-	MISSIONNUM,
+	QUESTNUM,
 	ITEMA,
 	ITEMB,
 	ITEMC,

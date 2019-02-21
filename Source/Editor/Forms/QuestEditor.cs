@@ -77,6 +77,7 @@ namespace Editor.Forms
                 if (w_Result == DialogResult.No) { return; }
             }
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Quest.LoadQuestFromDatabase(SelectedIndex);
             txtName.Text = e_Quest.Name;
             txtStartMessage.Text = e_Quest.StartMessage;

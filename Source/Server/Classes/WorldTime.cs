@@ -6,7 +6,7 @@ namespace SabertoothServer
 {
     public class WorldTime
     {
-        DateTime g_GameTime;
+        public DateTime g_GameTime;
         public int g_Second { get; set; }
         public int g_Minute { get; set; }
         public int g_Hour { get; set; }

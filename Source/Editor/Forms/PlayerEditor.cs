@@ -55,6 +55,7 @@ namespace Editor.Forms
         private void lstIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedIndex = (lstIndex.SelectedIndex + 1);
+            if (SelectedIndex == 0) { return; }
             e_Player.LoadPlayerNameFromDatabase(SelectedIndex);
             e_Player.LoadPlayerFromDatabase();
             //General Textbox/Scroll Bars

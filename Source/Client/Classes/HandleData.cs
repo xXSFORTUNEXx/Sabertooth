@@ -236,6 +236,14 @@ namespace SabertoothClient
                             case (byte)PacketTypes.CreateBlood:
                                 HandleCreateBlood(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.SendQuests:
+                                HandleQuests(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.SendQuestData:
+                                HandleQuestData(incMSG);
+                                break;
                         }
                         break;
 
@@ -373,9 +381,78 @@ namespace SabertoothClient
             }
         }
 
+        static void HandleQuests(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_QUESTS; i++)
+            {
+                quests[i].Name = incMSG.ReadString();
+                quests[i].StartMessage = incMSG.ReadString();
+                quests[i].InProgressMessage = incMSG.ReadString();
+                quests[i].CompleteMessage = incMSG.ReadString();
+                quests[i].PrerequisiteQuest = incMSG.ReadVariableInt32();
+                quests[i].LevelRequired = incMSG.ReadVariableInt32();
+
+                for (int m = 0; m < MAX_QUEST_ITEMS_REQ; m++)
+                {
+                    quests[i].ItemNum[m] = incMSG.ReadVariableInt32();
+                    quests[i].ItemValue[m] = incMSG.ReadVariableInt32();
+                }
+
+                for (int n = 0; n < MAX_QUEST_NPCS_REQ; n++)
+                {
+                    quests[i].NpcNum[n] = incMSG.ReadVariableInt32();
+                    quests[i].NpcValue[n] = incMSG.ReadVariableInt32();
+                }
+
+                for (int o = 0; o < MAX_QUEST_REWARDS; o++)
+                {
+                    quests[i].RewardItem[o] = incMSG.ReadVariableInt32();
+                    quests[i].RewardValue[o] = incMSG.ReadVariableInt32();
+                }
+
+                quests[i].Experience = incMSG.ReadVariableInt32();
+                quests[i].Money = incMSG.ReadVariableInt32();
+                quests[i].Type = incMSG.ReadVariableInt32();
+            }
+        }
+
+        static void HandleQuestData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            quests[index].Name = incMSG.ReadString();
+            quests[index].StartMessage = incMSG.ReadString();
+            quests[index].InProgressMessage = incMSG.ReadString();
+            quests[index].CompleteMessage = incMSG.ReadString();
+            quests[index].PrerequisiteQuest = incMSG.ReadVariableInt32();
+            quests[index].LevelRequired = incMSG.ReadVariableInt32();
+
+            for (int m = 0; m < MAX_QUEST_ITEMS_REQ; m++)
+            {
+                quests[index].ItemNum[m] = incMSG.ReadVariableInt32();
+                quests[index].ItemValue[m] = incMSG.ReadVariableInt32();
+            }
+
+            for (int n = 0; n < MAX_QUEST_NPCS_REQ; n++)
+            {
+                quests[index].NpcNum[n] = incMSG.ReadVariableInt32();
+                quests[index].NpcValue[n] = incMSG.ReadVariableInt32();
+            }
+
+            for (int o = 0; o < MAX_QUEST_REWARDS; o++)
+            {
+                quests[index].RewardItem[o] = incMSG.ReadVariableInt32();
+                quests[index].RewardValue[o] = incMSG.ReadVariableInt32();
+            }
+
+            quests[index].Experience = incMSG.ReadVariableInt32();
+            quests[index].Money = incMSG.ReadVariableInt32();
+            quests[index].Type = incMSG.ReadVariableInt32();
+        }
+
         static void HandleChats(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < MAX_CHATS; i++)
             {
                 chats[i].Name = incMSG.ReadString();
                 chats[i].MainMessage = incMSG.ReadString();
@@ -388,7 +465,7 @@ namespace SabertoothClient
                 chats[i].NextChat[2] = incMSG.ReadVariableInt32();
                 chats[i].NextChat[3] = incMSG.ReadVariableInt32();
                 chats[i].ShopNum = incMSG.ReadVariableInt32();
-                chats[i].MissionNum = incMSG.ReadVariableInt32();
+                chats[i].QuestNum = incMSG.ReadVariableInt32();
                 chats[i].ItemNum[0] = incMSG.ReadVariableInt32();
                 chats[i].ItemNum[1] = incMSG.ReadVariableInt32();
                 chats[i].ItemNum[2] = incMSG.ReadVariableInt32();
@@ -415,7 +492,7 @@ namespace SabertoothClient
             chats[index].NextChat[2] = incMSG.ReadVariableInt32();
             chats[index].NextChat[3] = incMSG.ReadVariableInt32();
             chats[index].ShopNum = incMSG.ReadVariableInt32();
-            chats[index].MissionNum = incMSG.ReadVariableInt32();
+            chats[index].QuestNum = incMSG.ReadVariableInt32();
             chats[index].ItemNum[0] = incMSG.ReadVariableInt32();
             chats[index].ItemNum[1] = incMSG.ReadVariableInt32();
             chats[index].ItemNum[2] = incMSG.ReadVariableInt32();
@@ -1469,6 +1546,8 @@ namespace SabertoothClient
         CreateBlood,
         ClearBlood,
         PlayerWarp,
-        MeleeAttack
+        MeleeAttack,
+        SendQuests,
+        SendQuestData
     }
 }
