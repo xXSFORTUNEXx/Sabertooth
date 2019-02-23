@@ -244,6 +244,10 @@ namespace SabertoothClient
                             case (byte)PacketTypes.SendQuestData:
                                 HandleQuestData(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.SendQuestList:
+                                HandlePlayerQuestList(incMSG);
+                                break;
                         }
                         break;
 
@@ -296,7 +300,7 @@ namespace SabertoothClient
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
                 gui.skillsTab.Hide();
-                gui.missionTab.Hide();
+                gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
         }
@@ -389,6 +393,7 @@ namespace SabertoothClient
                 quests[i].StartMessage = incMSG.ReadString();
                 quests[i].InProgressMessage = incMSG.ReadString();
                 quests[i].CompleteMessage = incMSG.ReadString();
+                quests[i].Description = incMSG.ReadString();
                 quests[i].PrerequisiteQuest = incMSG.ReadVariableInt32();
                 quests[i].LevelRequired = incMSG.ReadVariableInt32();
 
@@ -424,6 +429,7 @@ namespace SabertoothClient
             quests[index].StartMessage = incMSG.ReadString();
             quests[index].InProgressMessage = incMSG.ReadString();
             quests[index].CompleteMessage = incMSG.ReadString();
+            quests[index].Description = incMSG.ReadString();
             quests[index].PrerequisiteQuest = incMSG.ReadVariableInt32();
             quests[index].LevelRequired = incMSG.ReadVariableInt32();
 
@@ -517,7 +523,7 @@ namespace SabertoothClient
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
                 gui.skillsTab.Hide();
-                gui.missionTab.Hide();
+                gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
         }
@@ -533,7 +539,7 @@ namespace SabertoothClient
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
                 gui.skillsTab.Hide();
-                gui.missionTab.Hide();
+                gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
         }
@@ -643,9 +649,18 @@ namespace SabertoothClient
             players[myIndex].Feet.Rarity = incMSG.ReadVariableInt32();
         }
 
+        static void HandlePlayerQuestList(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                players[myIndex].QuestList[i] = incMSG.ReadVariableInt32();
+                players[myIndex].QuestStatus[i] = incMSG.ReadVariableInt32();
+            }
+        }
+
         static void HandlePlayerInv(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 if (players[myIndex].Backpack[i] != null)
                 {
@@ -676,7 +691,7 @@ namespace SabertoothClient
 
         static void HandlePlayerBank(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 if (players[myIndex].Bank[i] != null)
                 {
@@ -1548,6 +1563,7 @@ namespace SabertoothClient
         PlayerWarp,
         MeleeAttack,
         SendQuests,
-        SendQuestData
+        SendQuestData,
+        SendQuestList
     }
 }

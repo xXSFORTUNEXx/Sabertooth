@@ -14,6 +14,7 @@ namespace SabertoothClient
         public string StartMessage { get; set; }
         public string InProgressMessage { get; set; }
         public string CompleteMessage { get; set; }
+        public string Description { get; set; }
         public int PrerequisiteQuest { get; set; }
         public int LevelRequired { get; set; }
         public int[] ItemNum = new int[MAX_QUEST_ITEMS_REQ];
@@ -34,5 +35,12 @@ namespace SabertoothClient
         TalkToNpc,
         KillNpc,
         GetItemForNpc
+    }
+
+    public enum QuestStatus : int
+    {
+        NotStarted,
+        Inprogress,
+        Complete
     }
 }

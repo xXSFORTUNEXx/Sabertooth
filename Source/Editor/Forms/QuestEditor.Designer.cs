@@ -75,6 +75,8 @@
             this.lblRewardNum = new System.Windows.Forms.Label();
             this.scrlReward = new System.Windows.Forms.HScrollBar();
             this.lblReward = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtDesc = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
             this.pnlProperties.SuspendLayout();
             this.pnlReq.SuspendLayout();
@@ -148,6 +150,8 @@
             // 
             // pnlProperties
             // 
+            this.pnlProperties.Controls.Add(this.txtDesc);
+            this.pnlProperties.Controls.Add(this.label5);
             this.pnlProperties.Controls.Add(this.cmbType);
             this.pnlProperties.Controls.Add(this.label6);
             this.pnlProperties.Controls.Add(this.txtCompleteMessage);
@@ -160,7 +164,7 @@
             this.pnlProperties.Controls.Add(this.label1);
             this.pnlProperties.Location = new System.Drawing.Point(160, 13);
             this.pnlProperties.Name = "pnlProperties";
-            this.pnlProperties.Size = new System.Drawing.Size(253, 491);
+            this.pnlProperties.Size = new System.Drawing.Size(253, 647);
             this.pnlProperties.TabIndex = 10;
             this.pnlProperties.TabStop = false;
             this.pnlProperties.Text = "Properties";
@@ -174,7 +178,7 @@
             "Talk to NPC",
             "Kill NPC",
             "Get Item For NPC"});
-            this.cmbType.Location = new System.Drawing.Point(23, 454);
+            this.cmbType.Location = new System.Drawing.Point(23, 608);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(209, 21);
             this.cmbType.TabIndex = 17;
@@ -183,7 +187,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(23, 437);
+            this.label6.Location = new System.Drawing.Point(23, 591);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(65, 13);
             this.label6.TabIndex = 16;
@@ -266,7 +270,7 @@
             this.pnlReq.Controls.Add(this.lblLevelReq);
             this.pnlReq.Controls.Add(this.scrlPreQuest);
             this.pnlReq.Controls.Add(this.lblPreReq);
-            this.pnlReq.Location = new System.Drawing.Point(419, 16);
+            this.pnlReq.Location = new System.Drawing.Point(419, 13);
             this.pnlReq.Name = "pnlReq";
             this.pnlReq.Size = new System.Drawing.Size(185, 132);
             this.pnlReq.TabIndex = 11;
@@ -316,7 +320,7 @@
             this.pnlReqItems.Controls.Add(this.lblItemNum);
             this.pnlReqItems.Controls.Add(this.scrlItem);
             this.pnlReqItems.Controls.Add(this.lblItem);
-            this.pnlReqItems.Location = new System.Drawing.Point(419, 154);
+            this.pnlReqItems.Location = new System.Drawing.Point(419, 150);
             this.pnlReqItems.Name = "pnlReqItems";
             this.pnlReqItems.Size = new System.Drawing.Size(185, 173);
             this.pnlReqItems.TabIndex = 12;
@@ -386,9 +390,9 @@
             this.pnlReqNpcs.Controls.Add(this.lblNpcNum);
             this.pnlReqNpcs.Controls.Add(this.scrlNpc);
             this.pnlReqNpcs.Controls.Add(this.lblNpc);
-            this.pnlReqNpcs.Location = new System.Drawing.Point(419, 331);
+            this.pnlReqNpcs.Location = new System.Drawing.Point(419, 329);
             this.pnlReqNpcs.Name = "pnlReqNpcs";
-            this.pnlReqNpcs.Size = new System.Drawing.Size(185, 173);
+            this.pnlReqNpcs.Size = new System.Drawing.Size(185, 175);
             this.pnlReqNpcs.TabIndex = 13;
             this.pnlReqNpcs.TabStop = false;
             this.pnlReqNpcs.Text = "Required Npcs";
@@ -460,7 +464,7 @@
             this.pnlRewards.Controls.Add(this.lblRewardNum);
             this.pnlRewards.Controls.Add(this.scrlReward);
             this.pnlRewards.Controls.Add(this.lblReward);
-            this.pnlRewards.Location = new System.Drawing.Point(610, 16);
+            this.pnlRewards.Location = new System.Drawing.Point(610, 12);
             this.pnlRewards.Name = "pnlRewards";
             this.pnlRewards.Size = new System.Drawing.Size(185, 311);
             this.pnlRewards.TabIndex = 14;
@@ -559,11 +563,29 @@
             this.lblReward.TabIndex = 16;
             this.lblReward.Text = "Reward: 1";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(26, 437);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 13);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Description";
+            // 
+            // txtDesc
+            // 
+            this.txtDesc.Location = new System.Drawing.Point(23, 454);
+            this.txtDesc.Name = "txtDesc";
+            this.txtDesc.Size = new System.Drawing.Size(209, 134);
+            this.txtDesc.TabIndex = 19;
+            this.txtDesc.Text = "";
+            this.txtDesc.TextChanged += new System.EventHandler(this.txtDesc_TextChanged);
+            // 
             // QuestEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(809, 519);
+            this.ClientSize = new System.Drawing.Size(809, 679);
             this.Controls.Add(this.pnlRewards);
             this.Controls.Add(this.pnlReqNpcs);
             this.Controls.Add(this.pnlReqItems);
@@ -638,5 +660,7 @@
         private System.Windows.Forms.Label lblReward;
         private System.Windows.Forms.HScrollBar scrlMoney;
         private System.Windows.Forms.Label lblMoney;
+        private System.Windows.Forms.RichTextBox txtDesc;
+        private System.Windows.Forms.Label label5;
     }
 }

@@ -16,16 +16,18 @@ namespace SabertoothServer
         public NetConnection Connection;
         public Item mainWeapon = new Item();
         public Item offWeapon = new Item();
-        public Item[] Backpack = new Item[25];
-        public Item[] Bank = new Item[50];
+        public Item[] Backpack = new Item[MAX_INV_SLOTS];
+        public Item[] Bank = new Item[MAX_BANK_SLOTS];
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
+        public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
+        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
         Random RND = new Random();
-        public int Id { get; set; }
         #endregion
 
         #region Stats
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Pass { get; set; }
         public string EmailAddress { get; set; }
@@ -139,14 +141,20 @@ namespace SabertoothServer
             Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            }
+
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                QuestList[i] = 0;
+                QuestStatus[i] = 0;
             }
         }
 
@@ -205,14 +213,20 @@ namespace SabertoothServer
             Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            }
+
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                QuestList[i] = 0;
+                QuestStatus[i] = 0;
             }
         }
 
@@ -225,14 +239,20 @@ namespace SabertoothServer
             hydrationTick = TickCount;
             timeTick = TickCount;
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            }
+
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                QuestList[i] = 0;
+                QuestStatus[i] = 0;
             }
         }
 
@@ -243,14 +263,20 @@ namespace SabertoothServer
 
         public Player()
         {
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            }
+
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                QuestList[i] = 0;
+                QuestStatus[i] = 0;
             }
         }
         #endregion
@@ -765,8 +791,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@direction", System.Data.DbType.Int32)).Value = Direction;
                     cmd.Parameters.Add(new SqlParameter("@aimdirection", System.Data.DbType.Int32)).Value = AimDirection;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;
-                    //cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
+                    cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;                    
                     cmd.Parameters.Add(new SqlParameter("@health", System.Data.DbType.Int32)).Value = Health;
                     cmd.Parameters.Add(new SqlParameter("@maxhealth", System.Data.DbType.Int32)).Value = MaxHealth;
                     cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
@@ -783,19 +808,6 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
                     cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
                     cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
-                    /*cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
-                    cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
-                    cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
-                    cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
-                    cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
-                    cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;*/
-                    //cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
                     cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
                     cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
                     cmd.ExecuteNonQuery();
@@ -819,6 +831,33 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
                     cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
                     cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
+                    cmd.ExecuteNonQuery();
+                }
+
+                script = ReadAllText("SQL Data Scripts/INSERT QUESTLIST.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("@quest1", System.Data.DbType.Int32)).Value = QuestList[0];
+                    cmd.Parameters.Add(new SqlParameter("@quest1status", System.Data.DbType.Int32)).Value = QuestStatus[0];
+                    cmd.Parameters.Add(new SqlParameter("@quest2", System.Data.DbType.Int32)).Value = QuestList[1];
+                    cmd.Parameters.Add(new SqlParameter("@quest2status", System.Data.DbType.Int32)).Value = QuestStatus[1];
+                    cmd.Parameters.Add(new SqlParameter("@quest3", System.Data.DbType.Int32)).Value = QuestList[2];
+                    cmd.Parameters.Add(new SqlParameter("@quest3status", System.Data.DbType.Int32)).Value = QuestStatus[2];
+                    cmd.Parameters.Add(new SqlParameter("@quest4", System.Data.DbType.Int32)).Value = QuestList[3];
+                    cmd.Parameters.Add(new SqlParameter("@quest4status", System.Data.DbType.Int32)).Value = QuestStatus[3];
+                    cmd.Parameters.Add(new SqlParameter("@quest5", System.Data.DbType.Int32)).Value = QuestList[4];
+                    cmd.Parameters.Add(new SqlParameter("@quest5status", System.Data.DbType.Int32)).Value = QuestStatus[4];
+                    cmd.Parameters.Add(new SqlParameter("@quest6", System.Data.DbType.Int32)).Value = QuestList[5];
+                    cmd.Parameters.Add(new SqlParameter("@quest6status", System.Data.DbType.Int32)).Value = QuestStatus[5];
+                    cmd.Parameters.Add(new SqlParameter("@quest7", System.Data.DbType.Int32)).Value = QuestList[6];
+                    cmd.Parameters.Add(new SqlParameter("@quest7status", System.Data.DbType.Int32)).Value = QuestStatus[6];
+                    cmd.Parameters.Add(new SqlParameter("@quest8", System.Data.DbType.Int32)).Value = QuestList[7];
+                    cmd.Parameters.Add(new SqlParameter("@quest8status", System.Data.DbType.Int32)).Value = QuestStatus[7];
+                    cmd.Parameters.Add(new SqlParameter("@quest9", System.Data.DbType.Int32)).Value = QuestList[8];
+                    cmd.Parameters.Add(new SqlParameter("@quest9status", System.Data.DbType.Int32)).Value = QuestStatus[8];
+                    cmd.Parameters.Add(new SqlParameter("@quest10", System.Data.DbType.Int32)).Value = QuestList[9];
+                    cmd.Parameters.Add(new SqlParameter("@quest10status", System.Data.DbType.Int32)).Value = QuestStatus[9];
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1005,8 +1044,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@direction", System.Data.DbType.Int32)).Value = Direction;
                     cmd.Parameters.Add(new SqlParameter("@aimdirection", System.Data.DbType.Int32)).Value = AimDirection;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;
-                    //cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
+                    cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;                    
                     cmd.Parameters.Add(new SqlParameter("@health", System.Data.DbType.Int32)).Value = Health;
                     cmd.Parameters.Add(new SqlParameter("@maxhealth", System.Data.DbType.Int32)).Value = MaxHealth;
                     cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
@@ -1023,18 +1061,6 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
                     cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
                     cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
-                    /*cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
-                    cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
-                    cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
-                    cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
-                    cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
-                    cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;*/
                     cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
                     cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
                     cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
@@ -1060,6 +1086,33 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
                     cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
                     cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
+                    cmd.ExecuteNonQuery();
+                }
+
+                script = ReadAllText("SQL Data Scripts/SAVE QUESTLIST.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                    cmd.Parameters.Add(new SqlParameter("@quest1", System.Data.DbType.Int32)).Value = QuestList[0];
+                    cmd.Parameters.Add(new SqlParameter("@quest1status", System.Data.DbType.Int32)).Value = QuestStatus[0];
+                    cmd.Parameters.Add(new SqlParameter("@quest2", System.Data.DbType.Int32)).Value = QuestList[1];
+                    cmd.Parameters.Add(new SqlParameter("@quest2status", System.Data.DbType.Int32)).Value = QuestStatus[1];
+                    cmd.Parameters.Add(new SqlParameter("@quest3", System.Data.DbType.Int32)).Value = QuestList[2];
+                    cmd.Parameters.Add(new SqlParameter("@quest3status", System.Data.DbType.Int32)).Value = QuestStatus[2];
+                    cmd.Parameters.Add(new SqlParameter("@quest4", System.Data.DbType.Int32)).Value = QuestList[3];
+                    cmd.Parameters.Add(new SqlParameter("@quest4status", System.Data.DbType.Int32)).Value = QuestStatus[3];
+                    cmd.Parameters.Add(new SqlParameter("@quest5", System.Data.DbType.Int32)).Value = QuestList[4];
+                    cmd.Parameters.Add(new SqlParameter("@quest5status", System.Data.DbType.Int32)).Value = QuestStatus[4];
+                    cmd.Parameters.Add(new SqlParameter("@quest6", System.Data.DbType.Int32)).Value = QuestList[5];
+                    cmd.Parameters.Add(new SqlParameter("@quest6status", System.Data.DbType.Int32)).Value = QuestStatus[5];
+                    cmd.Parameters.Add(new SqlParameter("@quest7", System.Data.DbType.Int32)).Value = QuestList[6];
+                    cmd.Parameters.Add(new SqlParameter("@quest7status", System.Data.DbType.Int32)).Value = QuestStatus[6];
+                    cmd.Parameters.Add(new SqlParameter("@quest8", System.Data.DbType.Int32)).Value = QuestList[7];
+                    cmd.Parameters.Add(new SqlParameter("@quest8status", System.Data.DbType.Int32)).Value = QuestStatus[7];
+                    cmd.Parameters.Add(new SqlParameter("@quest9", System.Data.DbType.Int32)).Value = QuestList[8];
+                    cmd.Parameters.Add(new SqlParameter("@quest9status", System.Data.DbType.Int32)).Value = QuestStatus[8];
+                    cmd.Parameters.Add(new SqlParameter("@quest10", System.Data.DbType.Int32)).Value = QuestList[9];
+                    cmd.Parameters.Add(new SqlParameter("@quest10status", System.Data.DbType.Int32)).Value = QuestStatus[9];
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1327,8 +1380,7 @@ namespace SabertoothServer
                             Direction = ToInt32(reader[i]); i += 1;
                             AimDirection = ToInt32(reader[i]); i += 1;
                             Sprite = ToInt32(reader[i]); i += 1;
-                            Level = ToInt32(reader[i]); /*i += 1;
-                            Points = ToInt32(reader[i]);*/ i += 1;
+                            Level = ToInt32(reader[i]); i += 1;
                             Health = ToInt32(reader[i]); i += 1;
                             MaxHealth = ToInt32(reader[i]); i += 1;
                             Experience = ToInt32(reader[i]); i += 1;
@@ -1344,19 +1396,7 @@ namespace SabertoothServer
                             AssaultAmmo = ToInt32(reader[i]); i += 1;
                             RocketAmmo = ToInt32(reader[i]); i += 1;
                             GrenadeAmmo = ToInt32(reader[i]); i += 1;
-                            LightRadius = ToInt32(reader[i]); /*i += 1;
-                            PlayDays = ToInt32(reader[i]); i += 1;
-                            PlayHours = ToInt32(reader[i]); i += 1;
-                            PlayMinutes = ToInt32(reader[i]); i += 1;
-                            PlaySeconds = ToInt32(reader[i]); i += 1;
-                            LifeDay = ToInt32(reader[i]); i += 1;
-                            LifeHour = ToInt32(reader[i]); i += 1;
-                            LifeMinute = ToInt32(reader[i]); i += 1;
-                            LifeSecond = ToInt32(reader[i]); i += 1;
-                            LongestLifeDay = ToInt32(reader[i]); i += 1;
-                            LongestLifeHour = ToInt32(reader[i]); i += 1;
-                            LongestLifeMinute = ToInt32(reader[i]); i += 1;
-                            LongestLifeSecond = ToInt32(reader[i]);*/ i += 1;
+                            LightRadius = ToInt32(reader[i]); i += 1;
                             LastLoggedIn = reader[i].ToString(); i += 1;
                             AccountKey = reader[i].ToString(); i += 1;
                             Active = reader[i].ToString();
@@ -1388,6 +1428,38 @@ namespace SabertoothServer
                             LongestLifeHour = ToInt32(reader[i]); i += 1;
                             LongestLifeMinute = ToInt32(reader[i]); i += 1;
                             LongestLifeSecond = ToInt32(reader[i]); i += 1;
+                        }
+                    }
+                }
+
+                script = ReadAllText("SQL Data Scripts/LOAD QUESTLIST.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            QuestList[0] = ToInt32(reader[2]);
+                            QuestStatus[0] = ToInt32(reader[3]);
+                            QuestList[1] = ToInt32(reader[4]);
+                            QuestStatus[1] = ToInt32(reader[5]);
+                            QuestList[2] = ToInt32(reader[6]);
+                            QuestStatus[2] = ToInt32(reader[7]);
+                            QuestList[3] = ToInt32(reader[8]);
+                            QuestStatus[3] = ToInt32(reader[9]);
+                            QuestList[4] = ToInt32(reader[10]);
+                            QuestStatus[4] = ToInt32(reader[11]);
+                            QuestList[5] = ToInt32(reader[12]);
+                            QuestStatus[5] = ToInt32(reader[13]);
+                            QuestList[6] = ToInt32(reader[14]);
+                            QuestStatus[6] = ToInt32(reader[15]);
+                            QuestList[7] = ToInt32(reader[16]);
+                            QuestStatus[7] = ToInt32(reader[17]);
+                            QuestList[8] = ToInt32(reader[18]);
+                            QuestStatus[8] = ToInt32(reader[19]);
+                            QuestList[9] = ToInt32(reader[20]);
+                            QuestStatus[9] = ToInt32(reader[21]);
                         }
                     }
                 }

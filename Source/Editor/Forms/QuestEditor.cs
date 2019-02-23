@@ -83,6 +83,7 @@ namespace Editor.Forms
             txtStartMessage.Text = e_Quest.StartMessage;
             txtInprogressMessage.Text = e_Quest.InProgressMessage;
             txtCompleteMessage.Text = e_Quest.CompleteMessage;
+            txtDesc.Text = e_Quest.Description;
             cmbType.SelectedIndex = e_Quest.Type;
             scrlPreQuest.Value = e_Quest.PrerequisiteQuest;
             scrlLevelRequired.Value = e_Quest.LevelRequired;
@@ -233,6 +234,11 @@ namespace Editor.Forms
         {
             lblMoney.Text = "Money: " + scrlMoney.Value;
             e_Quest.Money = scrlMoney.Value;
+        }
+
+        private void txtDesc_TextChanged(object sender, EventArgs e)
+        {
+            e_Quest.Description = txtDesc.Text;
         }
     }
 }

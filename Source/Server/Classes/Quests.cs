@@ -19,6 +19,7 @@ namespace SabertoothServer
         public string StartMessage { get; set; }
         public string InProgressMessage { get; set; }
         public string CompleteMessage { get; set; }
+        public string Description { get; set; }
         public int PrerequisiteQuest { get; set; }
         public int LevelRequired { get; set; }
         public int[] ItemNum = new int[MAX_QUEST_ITEMS_REQ];
@@ -39,6 +40,7 @@ namespace SabertoothServer
             StartMessage = "None";
             InProgressMessage = "None";
             CompleteMessage = "None";
+            Description = "None";
             PrerequisiteQuest = 0;
             LevelRequired = 0;
 
@@ -71,6 +73,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@startmsg", System.Data.DbType.String)).Value = StartMessage;                    
                     cmd.Parameters.Add(new SqlParameter("@inprogressmsg", System.Data.DbType.String)).Value = InProgressMessage;
                     cmd.Parameters.Add(new SqlParameter("@completemsg", System.Data.DbType.String)).Value = CompleteMessage;
+                    cmd.Parameters.Add(new SqlParameter("@desc", System.Data.DbType.String)).Value = Description;
                     cmd.Parameters.Add(new SqlParameter("@prereqquest", System.Data.DbType.Int32)).Value = PrerequisiteQuest;
                     cmd.Parameters.Add(new SqlParameter("@levelreq", System.Data.DbType.Int32)).Value = LevelRequired;
                     cmd.Parameters.Add(new SqlParameter("@reqitem1", System.Data.DbType.Int32)).Value = ItemNum[0];
@@ -122,6 +125,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@startmsg", System.Data.DbType.String)).Value = StartMessage;
                     cmd.Parameters.Add(new SqlParameter("@inprogressmsg", System.Data.DbType.String)).Value = InProgressMessage;
                     cmd.Parameters.Add(new SqlParameter("@completemsg", System.Data.DbType.String)).Value = CompleteMessage;
+                    cmd.Parameters.Add(new SqlParameter("@desc", System.Data.DbType.String)).Value = Description;
                     cmd.Parameters.Add(new SqlParameter("@prereqquest", System.Data.DbType.Int32)).Value = PrerequisiteQuest;
                     cmd.Parameters.Add(new SqlParameter("@levelreq", System.Data.DbType.Int32)).Value = LevelRequired;
                     cmd.Parameters.Add(new SqlParameter("@reqitem1", System.Data.DbType.Int32)).Value = ItemNum[0];
@@ -176,37 +180,38 @@ namespace SabertoothServer
                             StartMessage = reader[2].ToString();
                             InProgressMessage = reader[3].ToString();
                             CompleteMessage = reader[4].ToString();
-                            PrerequisiteQuest = ToInt32(reader[5]);
-                            LevelRequired = ToInt32(reader[6]);
-                            ItemNum[0] = ToInt32(reader[7]);
-                            ItemNum[1] = ToInt32(reader[8]);
-                            ItemNum[2] = ToInt32(reader[9]);
-                            ItemNum[3] = ToInt32(reader[10]);
-                            ItemNum[4] = ToInt32(reader[11]);
-                            ItemValue[0] = ToInt32(reader[12]);
-                            ItemValue[1] = ToInt32(reader[13]);
-                            ItemValue[2] = ToInt32(reader[14]);
-                            ItemValue[3] = ToInt32(reader[15]);
-                            ItemValue[4] = ToInt32(reader[16]);
-                            NpcNum[0] = ToInt32(reader[17]);
-                            NpcNum[1] = ToInt32(reader[18]);
-                            NpcNum[2] = ToInt32(reader[19]);
-                            NpcValue[0] = ToInt32(reader[20]);
-                            NpcValue[1] = ToInt32(reader[21]);
-                            NpcValue[2] = ToInt32(reader[22]);
-                            RewardItem[0] = ToInt32(reader[23]);
-                            RewardItem[1] = ToInt32(reader[24]);
-                            RewardItem[2] = ToInt32(reader[25]);
-                            RewardItem[3] = ToInt32(reader[26]);
-                            RewardItem[4] = ToInt32(reader[27]);
-                            RewardValue[0] = ToInt32(reader[28]);
-                            RewardValue[1] = ToInt32(reader[29]);
-                            RewardValue[2] = ToInt32(reader[30]);
-                            RewardValue[3] = ToInt32(reader[31]);
-                            RewardValue[4] = ToInt32(reader[32]);
-                            Experience = ToInt32(reader[33]);
-                            Money = ToInt32(reader[34]);
-                            Type = ToInt32(reader[35]);
+                            Description = reader[5].ToString();
+                            PrerequisiteQuest = ToInt32(reader[6]);                            
+                            LevelRequired = ToInt32(reader[7]);
+                            ItemNum[0] = ToInt32(reader[8]);
+                            ItemNum[1] = ToInt32(reader[9]);
+                            ItemNum[2] = ToInt32(reader[10]);
+                            ItemNum[3] = ToInt32(reader[11]);
+                            ItemNum[4] = ToInt32(reader[12]);
+                            ItemValue[0] = ToInt32(reader[13]);
+                            ItemValue[1] = ToInt32(reader[14]);
+                            ItemValue[2] = ToInt32(reader[15]);
+                            ItemValue[3] = ToInt32(reader[16]);
+                            ItemValue[4] = ToInt32(reader[17]);
+                            NpcNum[0] = ToInt32(reader[18]);
+                            NpcNum[1] = ToInt32(reader[19]);
+                            NpcNum[2] = ToInt32(reader[20]);
+                            NpcValue[0] = ToInt32(reader[21]);
+                            NpcValue[1] = ToInt32(reader[22]);
+                            NpcValue[2] = ToInt32(reader[23]);
+                            RewardItem[0] = ToInt32(reader[24]);
+                            RewardItem[1] = ToInt32(reader[25]);
+                            RewardItem[2] = ToInt32(reader[26]);
+                            RewardItem[3] = ToInt32(reader[27]);
+                            RewardItem[4] = ToInt32(reader[28]);
+                            RewardValue[0] = ToInt32(reader[29]);
+                            RewardValue[1] = ToInt32(reader[30]);
+                            RewardValue[2] = ToInt32(reader[31]);
+                            RewardValue[3] = ToInt32(reader[32]);
+                            RewardValue[4] = ToInt32(reader[33]);
+                            Experience = ToInt32(reader[34]);
+                            Money = ToInt32(reader[35]);
+                            Type = ToInt32(reader[36]);
                         }
                     }
                 }
@@ -242,5 +247,12 @@ namespace SabertoothServer
         TalkToNpc,
         KillNpc,
         GetItemForNpc
+    }
+
+    public enum QuestStatus : int
+    {
+        NotStarted,
+        Inprogress,
+        Complete
     }
 }

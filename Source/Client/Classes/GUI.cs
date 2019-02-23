@@ -263,8 +263,10 @@ namespace SabertoothClient
         public TabButton skillsTab;
         #endregion
 
-        #region MissionTab
-        public TabButton missionTab;
+        #region QuestTab
+        public TabButton questTab;
+        public ListBox questList;
+        public ListBox questDetails;
         #endregion
 
         #region OptionsTab
@@ -2081,7 +2083,7 @@ namespace SabertoothClient
             charTab.Show();
             equipTab.Show();
             skillsTab.Show();
-            missionTab.Show();
+            questTab.Show();
             optionsTab.Show();
         }
 
@@ -2110,7 +2112,7 @@ namespace SabertoothClient
             charTab.Show();
             equipTab.Show();
             skillsTab.Show();
-            missionTab.Show();
+            questTab.Show();
             optionsTab.Show();
         }
 
@@ -2141,8 +2143,47 @@ namespace SabertoothClient
             charTab.Show();
             equipTab.Show();
             skillsTab.Show();
-            missionTab.Show();
+            questTab.Show();
             optionsTab.Show();
+        }
+
+        private void QuestList_Clicked(Base sender, ItemSelectedEventArgs arguments)
+        {
+            questDetails.Clear();
+            questDetails.AddRow(quests[questList.SelectedRowIndex].Name);
+
+            switch (players[HandleData.myIndex].QuestStatus[questList.SelectedRowIndex])
+            {
+                case (int)QuestStatus.NotStarted:
+                    questDetails.AddRow("Status: Not Started");
+                    break;
+
+                case (int)QuestStatus.Inprogress:
+                    questDetails.AddRow("Status: Inprogress");
+                    break;
+
+                case (int)QuestStatus.Complete:
+                    questDetails.AddRow("Status: Complete");
+                    break;
+            }
+            questDetails.AddRow("Description:");
+            string msg = quests[questList.SelectedRowIndex].Description;
+            int msgLength = msg.Length;
+            int maxLength = 30;
+
+            if (msgLength > maxLength)
+            {
+                string[] splitMsg = new string[2];
+                int splitLength = msgLength - maxLength;
+                splitMsg[0] = msg.Substring(0, maxLength);
+                splitMsg[1] = msg.Substring(maxLength, splitLength);
+                questDetails.AddRow(splitMsg[0]);
+                questDetails.AddRow(splitMsg[1]);
+            }
+            else
+            {
+                questDetails.AddRow(msg);
+            }
         }
         #endregion
 
@@ -2777,9 +2818,36 @@ namespace SabertoothClient
             equipSta.Text = "Stamina: ?";
             #endregion
 
-            skillsTab = menuTabs.AddPage("Skills");
+            //skillsTab = menuTabs.AddPage("Skills");
 
-            missionTab = menuTabs.AddPage("Missions");
+            questTab = menuTabs.AddPage("Quests");
+
+            #region Quests
+            questList = new ListBox(questTab.Page);
+            questList.SetPosition(10, 10);
+            questList.SetSize(140, 200);
+            questList.RowSelected += QuestList_Clicked;
+
+            questDetails = new ListBox(questTab.Page);
+            questDetails.SetPosition(165, 10);
+            questDetails.SetSize(140, 200);
+            questDetails.IsDisabled = true;
+
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                if (players[HandleData.myIndex].QuestList[i] == 0)
+                {
+                    questList.AddRow((i + 1) + ": None");
+                }
+                else
+                {
+                    if (quests[players[HandleData.myIndex].QuestList[i] - 1].Name != null)
+                    {
+                        questList.AddRow((i + 1) + ": " + quests[players[HandleData.myIndex].QuestList[i] - 1].Name);
+                    }
+                }
+            }
+            #endregion
 
             optionsTab = menuTabs.AddPage("Options");
 
@@ -3132,17 +3200,21 @@ namespace SabertoothClient
             npcChatName.Text = chats[chatNum].Name;
             npcChatName.SetPosition(5, 5);
 
+            //Needs to be changed so that words dont get cut off and that enough lines are provided for the max length of the messages
             npcChatMessage = new ListBox(npcChatWindow);
             npcChatMessage.RenderColor = System.Drawing.Color.Transparent;
             npcChatMessage.SetBounds(5, 20, 380, 220);
 
-            string msg = chats[chatNum].MainMessage;
+            //Add quest stuff
+            string msg;
+            if (chats[chatNum].QuestNum > 0) { msg = quests[chats[chatNum].QuestNum - 1].StartMessage; }
+            else { msg = chats[chatNum].MainMessage; }
             int msgLength = msg.Length;
-            int maxLength = 70;
+            int maxLength = 50;
 
             if (msgLength > maxLength)
             {
-                int lines = msgLength / maxLength;
+                int lines = (msgLength / maxLength);
                 string[] splitMsg = new string[lines];
                 int start = 0;
 

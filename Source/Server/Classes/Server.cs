@@ -330,6 +330,7 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/MAPS.sql");
                         script += ReadAllText("SQL Scripts/CHESTS.sql");
                         script += ReadAllText("SQL Scripts/STATS.sql");
+                        script += ReadAllText("SQL Scripts/QUESTLIST.sql");
                         cmd.CommandText = script;
                         cmd.ExecuteNonQuery();
                     }
@@ -924,6 +925,14 @@ namespace SabertoothServer
 
                         Thread.Sleep(1000);
                         Logging.WriteMessageLog("Time set to: " + worldTime.Time);
+
+                        for (int i = 0; i < MAX_PLAYERS; i++)
+                        {
+                            if (players[i].Name != null && players[i].Connection.Status == NetConnectionStatus.Connected)
+                            {
+                                HandleData.UpdatePlayersWithTimeChange(players[i].Connection, i);
+                            }
+                        }
                         break;
 
                     case "randomtime":
@@ -936,6 +945,14 @@ namespace SabertoothServer
 
                         Thread.Sleep(1000);
                         Logging.WriteMessageLog("Time set to: " + worldTime.Time);
+
+                        for (int i = 0; i < MAX_PLAYERS; i++)
+                        {
+                            if (players[i].Name != null && players[i].Connection.Status == NetConnectionStatus.Connected)
+                            {
+                                HandleData.UpdatePlayersWithTimeChange(players[i].Connection, i);
+                            }
+                        }
                         break;
 
                     case "help":    //Help command which displays all commands, modifiers, and possible arguments

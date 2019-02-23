@@ -106,7 +106,7 @@ namespace Editor.Forms
             lblNextChatC.Text = "Next Chat: " + scrlNextChatC.Value;
             lblNextChatD.Text = "Next Chat: " + scrlNextChatD.Value;
             lblShopNum.Text = "Shop Number: " + scrlShopNum.Value;
-            lblQuestNum.Text = "Mission Number: " + scrlQuestNum.Value;
+            lblQuestNum.Text = "Quest Number: " + scrlQuestNum.Value;
             lblMoney.Text = "Money: " + scrlMoney.Value;
             lblItem.Text = "Item: " + scrlItem.Value;
             lblItemNum.Text = "Item Number: " + scrlItemNum.Value;

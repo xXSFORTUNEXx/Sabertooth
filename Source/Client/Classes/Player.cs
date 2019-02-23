@@ -9,6 +9,7 @@ using System;
 using static SabertoothClient.Client;
 using AccountKeyGenClass;
 using static SabertoothClient.Globals;
+using System.IO;
 
 namespace SabertoothClient
 {
@@ -23,8 +24,10 @@ namespace SabertoothClient
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
+        public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
+        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
         RenderText rText = new RenderText();
-        const int spriteTextures = 8;
+        static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         Texture[] c_Sprite = new Texture[spriteTextures];
         Font font = new Font("Resources/Fonts/Arial.ttf");

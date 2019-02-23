@@ -279,6 +279,7 @@ namespace SabertoothServer
                 SendPlayerInv(index);
                 SendPlayerBank(index);
                 SendPlayerEquipment(index);
+                SendPlayerQuestList(index);
                 SendNpcs(incMSG);
                 SendItems(incMSG);
                 SendProjectiles(incMSG);
@@ -714,6 +715,7 @@ namespace SabertoothServer
                         SendPlayerInv(i);
                         SendPlayerBank(i);
                         SendPlayerEquipment(i);
+                        SendPlayerQuestList(i);
                         SendNpcs(incMSG);
                         SendItems(incMSG);
                         SendProjectiles(incMSG);
@@ -823,12 +825,27 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(worldTime.g_Year);
             outMSG.WriteVariableInt32(worldTime.g_Month);
-            outMSG.WriteVariableInt32((int)worldTime.g_DayOfWeek);
+            outMSG.WriteVariableInt32(worldTime.g_DayOfWeek);
             outMSG.WriteVariableInt32(worldTime.g_Hour);
             outMSG.WriteVariableInt32(worldTime.g_Minute);
             outMSG.WriteVariableInt32(worldTime.g_Second);
 
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void UpdatePlayersWithTimeChange(NetConnection conn, int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.DateandTime);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(worldTime.g_Year);
+            outMSG.WriteVariableInt32(worldTime.g_Month);
+            outMSG.WriteVariableInt32(worldTime.g_DayOfWeek);
+            outMSG.WriteVariableInt32(worldTime.g_Hour);
+            outMSG.WriteVariableInt32(worldTime.g_Minute);
+            outMSG.WriteVariableInt32(worldTime.g_Second);
+
+            SabertoothServer.netServer.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendOpenChest(NetIncomingMessage incMSG, int index)
@@ -1066,11 +1083,23 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendPlayerQuestList(int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SendQuestList);
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                outMSG.WriteVariableInt32(players[index].QuestList[i]);
+                outMSG.WriteVariableInt32(players[index].QuestStatus[i]);
+            }
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public static void SendPlayerInv(int index)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerInv);
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 outMSG.Write(players[index].Backpack[i].Name);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Sprite);
@@ -1101,7 +1130,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerBank);
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 outMSG.Write(players[index].Bank[i].Name);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Sprite);
@@ -1392,6 +1421,7 @@ namespace SabertoothServer
                 outMSG.Write(quests[i].StartMessage);
                 outMSG.Write(quests[i].InProgressMessage);
                 outMSG.Write(quests[i].CompleteMessage);
+                outMSG.Write(quests[i].Description);
                 outMSG.WriteVariableInt32(quests[i].PrerequisiteQuest);
                 outMSG.WriteVariableInt32(quests[i].LevelRequired);
 
@@ -1429,6 +1459,7 @@ namespace SabertoothServer
             outMSG.Write(quests[index].StartMessage);
             outMSG.Write(quests[index].InProgressMessage);
             outMSG.Write(quests[index].CompleteMessage);
+            outMSG.Write(quests[index].Description);
             outMSG.WriteVariableInt32(quests[index].PrerequisiteQuest);
             outMSG.WriteVariableInt32(quests[index].LevelRequired);
 
@@ -2236,6 +2267,7 @@ namespace SabertoothServer
         PlayerWarp,
         MeleeAttack,
         SendQuests,
-        SendQuestData
+        SendQuestData,
+        SendQuestList
     }
 }

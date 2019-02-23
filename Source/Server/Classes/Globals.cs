@@ -35,6 +35,7 @@
         public const int MAX_QUEST_REWARDS = 5;
         public const int MAX_QUEST_ITEMS_REQ = 5;
         public const int MAX_QUEST_NPCS_REQ = 3;
+        public const int MAX_PLAYER_QUEST_LIST = 10;
         #endregion
 
         #region Config Globals

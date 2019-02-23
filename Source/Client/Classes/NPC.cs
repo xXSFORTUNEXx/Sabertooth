@@ -2,6 +2,7 @@
 using SFML.System;
 using System;
 using static SabertoothClient.Globals;
+using System.IO;
 
 namespace SabertoothClient
 {
@@ -28,7 +29,7 @@ namespace SabertoothClient
         public int ChatNum { get; set; }
         public int Speed { get; set; }
         public bool IsSpawned { get; set; }
-        const int spriteTextures = 8;
+        static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
