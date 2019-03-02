@@ -160,7 +160,7 @@ namespace Editor.Forms
 
             while (Visible)
             {
-                if (tabTools.SelectedTab == tabTiles) { picTileset.Invalidate(); }
+                if (tabTools.SelectedTab == tabLayer) { picTileset.Invalidate(); }
 
                 UpdateView();
                 DoEvents();
@@ -376,7 +376,7 @@ namespace Editor.Forms
                 }
             }
 
-            if (picMap.Focused && tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
+            if (picMap.Focused && tabTools.SelectedTab == tabLayer)
             {
                     DrawSelectTile(new Vector2f((e_CursorX * 32), (e_CursorY * 32)), (e_TileX * 32), (e_TileY * 32), (e_TileW * 32), (e_TileH * 32));
             }
@@ -605,7 +605,7 @@ namespace Editor.Forms
             picMap.Focus();
             e_CursorX = (e.X / PIC_X) + e_ViewX;
             e_CursorY = (e.Y / PIC_Y) + e_ViewY;
-            if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
+            if (tabTools.SelectedTab == tabLayer)
             {
                 if (e.Button == MouseButtons.Left)
                 {
@@ -836,7 +836,7 @@ namespace Editor.Forms
 
             if (e_CursorX < 0 || e_CursorX >= e_Map.MaxX || e_CursorY < 0 || e_CursorY >= e_Map.MaxY) { return; }
 
-            if (tabTools.SelectedTab == tabLayer || tabTools.SelectedTab == tabTiles)
+            if (tabTools.SelectedTab == tabLayer)
             {
                 if (e.Button == MouseButtons.Left)
                 {
@@ -1447,7 +1447,7 @@ namespace Editor.Forms
 
         private void btnMapNpcs_Click(object sender, EventArgs e)
         {
-            tabTools.SelectTab(4);
+            tabTools.SelectTab(2);
         }
 
         private void btnFillMap_Click(object sender, EventArgs e)

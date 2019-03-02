@@ -49,7 +49,7 @@ namespace SabertoothServer
             Speed = 0;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT PROJ.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Proj.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();                    
@@ -69,7 +69,7 @@ namespace SabertoothServer
         public void SaveProjectileToDatabase(int projNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE PROJ.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Proj.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -90,7 +90,7 @@ namespace SabertoothServer
         public void LoadProjectileFromDatabase(int projNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD PROJ.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Proj.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -120,7 +120,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM PROJECTILES WHERE ID=@id";
+                command = "SELECT Name FROM Projectiles WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = projNum;

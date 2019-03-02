@@ -1762,6 +1762,30 @@ namespace SabertoothClient
 
             return bonus;
         }
+
+        public bool CheckPlayerHasQuest(int questNum)
+        {
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                if (QuestList[i] == questNum)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int GetPlayerQuestSlot(int questNum)
+        {
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                if (QuestList[i] == questNum)
+                {
+                    return i;
+                }
+            }
+            return MAX_PLAYER_QUEST_LIST;
+        }
         #endregion
     }
 

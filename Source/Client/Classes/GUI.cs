@@ -2148,11 +2148,17 @@ namespace SabertoothClient
         }
 
         private void QuestList_Clicked(Base sender, ItemSelectedEventArgs arguments)
-        {
-            questDetails.Clear();
-            questDetails.AddRow(quests[questList.SelectedRowIndex].Name);
+        {            
+            int SelectedIndex = questList.SelectedRowIndex;
+            int questId = players[HandleData.myIndex].QuestList[SelectedIndex];
+            int questStatus = players[HandleData.myIndex].QuestStatus[SelectedIndex];
 
-            switch (players[HandleData.myIndex].QuestStatus[questList.SelectedRowIndex])
+            if (questId == 0) { questDetails.Clear(); return; }
+
+            questDetails.Clear();            
+            questDetails.AddRow(quests[questId - 1].Name);
+
+            switch (questStatus)
             {
                 case (int)QuestStatus.NotStarted:
                     questDetails.AddRow("Status: Not Started");
@@ -2166,8 +2172,8 @@ namespace SabertoothClient
                     questDetails.AddRow("Status: Complete");
                     break;
             }
-            questDetails.AddRow("Description:");
-            string msg = quests[questList.SelectedRowIndex].Description;
+            questDetails.AddRow("Details:");
+            string msg = quests[questId - 1].Description;
             int msgLength = msg.Length;
             int maxLength = 30;
 
@@ -3187,7 +3193,7 @@ namespace SabertoothClient
             d_Axis.Text = "Axis: ?";
         }
 
-        public void CreatNpcChatWindow(Base parent, int chatNum)
+        public void CreateNpcChatWindow(Base parent, int chatNum)
         {
             npcChatWindow = new WindowControl(parent.GetCanvas());
             npcChatWindow.Title = chats[chatNum].Name;
@@ -3207,8 +3213,16 @@ namespace SabertoothClient
 
             //Add quest stuff
             string msg;
-            if (chats[chatNum].QuestNum > 0) { msg = quests[chats[chatNum].QuestNum - 1].StartMessage; }
-            else { msg = chats[chatNum].MainMessage; }
+            if (chats[chatNum].QuestNum > 0)
+            {
+                int questNum = chats[chatNum].QuestNum - 1;
+
+                msg = quests[questNum].StartMessage;                             
+            }
+            else
+            {
+                msg = chats[chatNum].MainMessage;
+            }
             int msgLength = msg.Length;
             int maxLength = 50;
 

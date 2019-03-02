@@ -749,26 +749,50 @@ namespace SabertoothServer
 
         public int FindOpenInvSlot(Item[] s_Backpack)
         {
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 if (s_Backpack[i].Name == "None")
                 {
                     return i;
                 }
             }
-            return 25;
+            return MAX_INV_SLOTS;
         }
 
         public int FindOpenBankSlot(Item[] s_Bank)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
                 if (s_Bank[i].Name == "None")
                 {
                     return i;
                 }
             }
-            return 50;
+            return MAX_BANK_SLOTS;
+        }
+
+        public int FindOpenQuestListSlot()
+        {
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                if (QuestList[i] == 0)
+                {
+                    return i;
+                }
+            }
+            return MAX_PLAYER_QUEST_LIST;
+        }
+
+        public bool CheckPlayerHasQuest(int questNum)
+        {
+            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            {
+                if (QuestList[i] == questNum)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         #endregion
 
@@ -776,7 +800,7 @@ namespace SabertoothServer
         public void CreatePlayerInDatabase()
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT PLAYER.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Player.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -808,12 +832,13 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
                     cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
                     cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
+                    cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.Int32)).Value = LastLoggedIn;
                     cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
                     cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT STATS.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Stats.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -834,7 +859,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT QUESTLIST.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Quest_List.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -861,7 +886,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT MAINWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Main_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -889,7 +914,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT SECONDWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Secondary_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -917,7 +942,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -947,7 +972,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -977,7 +1002,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/INSERT EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Insert_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1016,7 +1041,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "UPDATE PLAYERS SET ACTIVE = 'Y' WHERE ID = @id";
+                command = "UPDATE Players SET Active = 'Y' WHERE ID = @id";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
@@ -1028,7 +1053,7 @@ namespace SabertoothServer
         public void SavePlayerToDatabase()
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE PLAYER.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Player.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -1067,7 +1092,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE STATS.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Stats.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = StatsId;
@@ -1089,7 +1114,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE QUESTLIST.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Quest_List.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -1116,7 +1141,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE MAINWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Main_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1144,7 +1169,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE SECONDWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Secondary_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1172,7 +1197,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1202,7 +1227,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1232,7 +1257,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = ReadAllText("SQL Data Scripts/SAVE EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Save_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1262,7 +1287,7 @@ namespace SabertoothServer
                     cmd.ExecuteNonQuery();
                 }
 
-                script = "DELETE FROM INVENTORY WHERE OWNER=@owner;";
+                script = "DELETE FROM Inventory WHERE Owner=@owner;";
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1274,7 +1299,7 @@ namespace SabertoothServer
                 {
                     if (Backpack[i].Name != "None")
                     {
-                        script = ReadAllText("SQL Data Scripts/SAVE INVENTORY.sql");
+                        script = ReadAllText("SQL Data Scripts/Save_Inventory.sql");
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1306,7 +1331,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = "DELETE FROM BANK WHERE OWNER=@owner";
+                script = "DELETE FROM Bank WHERE Owner=@owner";
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1318,7 +1343,7 @@ namespace SabertoothServer
                 {
                     if (Bank[i].Name != "None")
                     {
-                        script = ReadAllText("SQL Data Scripts/SAVE BANK.sql");
+                        script = ReadAllText("SQL Data Scripts/Save_Bank.sql");
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1355,7 +1380,7 @@ namespace SabertoothServer
         public void LoadPlayerFromDatabase()
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD PLAYER.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Player.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -1404,7 +1429,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD STATS.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Stats.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -1432,7 +1457,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD QUESTLIST.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Quest_List.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -1464,7 +1489,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD MAINWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Main_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1499,7 +1524,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD SECONDWEPS.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Secondary_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1534,7 +1559,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1546,6 +1571,8 @@ namespace SabertoothServer
                             i = 0;
                             Chest.Id = ToInt32(reader[i]); i = 3;
                             Chest.Name = reader[i].ToString(); i += 1;
+                            Chest.Clip = ToInt32(reader[i]); i += 1;
+                            Chest.MaxClip = ToInt32(reader[i]); i += 1;
                             Chest.Sprite = ToInt32(reader[i]); i += 1;
                             Chest.Damage = ToInt32(reader[i]); i += 1;
                             Chest.Armor = ToInt32(reader[i]); i += 1;
@@ -1559,8 +1586,6 @@ namespace SabertoothServer
                             Chest.Agility = ToInt32(reader[i]); i += 1;
                             Chest.Endurance = ToInt32(reader[i]); i += 1;
                             Chest.Stamina = ToInt32(reader[i]); i += 1;
-                            Chest.Clip = ToInt32(reader[i]); i += 1;
-                            Chest.MaxClip = ToInt32(reader[i]); i += 1;
                             Chest.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Chest.Value = ToInt32(reader[i]); i += 1;
                             Chest.ProjectileNumber = ToInt32(reader[i]); i += 1;
@@ -1570,7 +1595,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1582,6 +1607,8 @@ namespace SabertoothServer
                             i = 0;
                             Legs.Id = ToInt32(reader[i]); i = 3;
                             Legs.Name = reader[i].ToString(); i += 1;
+                            Legs.Clip = ToInt32(reader[i]); i += 1;
+                            Legs.MaxClip = ToInt32(reader[i]); i += 1;
                             Legs.Sprite = ToInt32(reader[i]); i += 1;
                             Legs.Damage = ToInt32(reader[i]); i += 1;
                             Legs.Armor = ToInt32(reader[i]); i += 1;
@@ -1595,8 +1622,6 @@ namespace SabertoothServer
                             Legs.Agility = ToInt32(reader[i]); i += 1;
                             Legs.Endurance = ToInt32(reader[i]); i += 1;
                             Legs.Stamina = ToInt32(reader[i]); i += 1;
-                            Legs.Clip = ToInt32(reader[i]); i += 1;
-                            Legs.MaxClip = ToInt32(reader[i]); i += 1;
                             Legs.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Legs.Value = ToInt32(reader[i]); i += 1;
                             Legs.ProjectileNumber = ToInt32(reader[i]); i += 1;
@@ -1606,7 +1631,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/LOAD EQUIP.sql");
+                script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1618,6 +1643,8 @@ namespace SabertoothServer
                             i = 0;
                             Feet.Id = ToInt32(reader[i]); i = 3;
                             Feet.Name = reader[i].ToString(); i += 1;
+                            Feet.Clip = ToInt32(reader[i]); i += 1;
+                            Feet.MaxClip = ToInt32(reader[i]); i += 1;
                             Feet.Sprite = ToInt32(reader[i]); i += 1;
                             Feet.Damage = ToInt32(reader[i]); i += 1;
                             Feet.Armor = ToInt32(reader[i]); i += 1;
@@ -1631,8 +1658,6 @@ namespace SabertoothServer
                             Feet.Agility = ToInt32(reader[i]); i += 1;
                             Feet.Endurance = ToInt32(reader[i]); i += 1;
                             Feet.Stamina = ToInt32(reader[i]); i += 1;
-                            Feet.Clip = ToInt32(reader[i]); i += 1;
-                            Feet.MaxClip = ToInt32(reader[i]); i += 1;
                             Feet.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Feet.Value = ToInt32(reader[i]); i += 1;
                             Feet.ProjectileNumber = ToInt32(reader[i]); i += 1;
@@ -1642,7 +1667,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/INVCOUNT.sql");
+                script = ReadAllText("SQL Data Scripts/Inventory_Count.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1654,7 +1679,7 @@ namespace SabertoothServer
                 {
                     for (i = 0; i < result; i++)
                     {
-                        script = ReadAllText("SQL Data Scripts/LOAD INVENTORY.sql");
+                        script = ReadAllText("SQL Data Scripts/Load_Inventory.sql");
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1667,6 +1692,8 @@ namespace SabertoothServer
                                     n = 0;
                                     Backpack[i].Id = ToInt32(reader[n]); n = 3;
                                     Backpack[i].Name = reader[n].ToString(); n += 1;
+                                    Backpack[i].Clip = ToInt32(reader[n]); n += 1;
+                                    Backpack[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Sprite = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Damage = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Armor = ToInt32(reader[n]); n += 1;
@@ -1680,8 +1707,6 @@ namespace SabertoothServer
                                     Backpack[i].Agility = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Endurance = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Clip = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Backpack[i].ItemAmmoType = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Value = ToInt32(reader[n]); n += 1;
                                     Backpack[i].ProjectileNumber = ToInt32(reader[n]); n += 1;
@@ -1693,7 +1718,7 @@ namespace SabertoothServer
                     }
                 }
 
-                script = ReadAllText("SQL Data Scripts/BANKCOUNT.sql");
+                script = ReadAllText("SQL Data Scripts/Bank_Count.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1705,7 +1730,7 @@ namespace SabertoothServer
                 {
                     for (i = 0; i < result; i++)
                     {
-                        script = ReadAllText("SQL Data Scripts/LOAD BANK.sql");
+                        script = ReadAllText("SQL Data Scripts/Load_Bank.sql");
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
@@ -1718,6 +1743,8 @@ namespace SabertoothServer
                                     n = 0;
                                     Bank[i].Id = ToInt32(reader[n]); n = 3;
                                     Bank[i].Name = reader[n].ToString(); n += 1;
+                                    Bank[i].Clip = ToInt32(reader[n]); n += 1;
+                                    Bank[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Bank[i].Sprite = ToInt32(reader[n]); n += 1;
                                     Bank[i].Damage = ToInt32(reader[n]); n += 1;
                                     Bank[i].Armor = ToInt32(reader[n]); n += 1;
@@ -1731,8 +1758,6 @@ namespace SabertoothServer
                                     Bank[i].Agility = ToInt32(reader[n]); n += 1;
                                     Bank[i].Endurance = ToInt32(reader[n]); n += 1;
                                     Bank[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Clip = ToInt32(reader[n]); n += 1;
-                                    Bank[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Bank[i].ItemAmmoType = ToInt32(reader[n]); n += 1;
                                     Bank[i].Value = ToInt32(reader[n]); n += 1;
                                     Bank[i].ProjectileNumber = ToInt32(reader[n]); n += 1;
@@ -1753,7 +1778,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT * FROM PLAYERS WHERE ID=@id";
+                command = "SELECT Name FROM Players WHERE ID=@id";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = id;
@@ -1775,7 +1800,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                command = "SELECT ID FROM Players WHERE Name=@name";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
@@ -1798,7 +1823,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT ACTIVE FROM PLAYERS WHERE ID = @id";
+                command = "SELECT Active FROM Players WHERE ID = @id";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;

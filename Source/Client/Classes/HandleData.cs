@@ -336,7 +336,7 @@ namespace SabertoothClient
             {
                 players[myIndex].chatNum = index;
                 players[myIndex].inChat = true;
-                gui.CreatNpcChatWindow(canvas, index - 1);
+                gui.CreateNpcChatWindow(canvas, index - 1);
             }          
         }
 
@@ -651,10 +651,34 @@ namespace SabertoothClient
 
         static void HandlePlayerQuestList(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+            if (gui.questList != null)
             {
-                players[myIndex].QuestList[i] = incMSG.ReadVariableInt32();
-                players[myIndex].QuestStatus[i] = incMSG.ReadVariableInt32();
+                gui.questList.Clear();
+                for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+                {
+                    players[myIndex].QuestList[i] = incMSG.ReadVariableInt32();
+                    players[myIndex].QuestStatus[i] = incMSG.ReadVariableInt32();
+
+                    if (players[myIndex].QuestList[i] == 0)
+                    {
+                        gui.questList.AddRow((i + 1) + ": None");
+                    }
+                    else
+                    {
+                        if (quests[players[myIndex].QuestList[i] - 1].Name != null)
+                        {
+                            gui.questList.AddRow((i + 1) + ": " + quests[players[HandleData.myIndex].QuestList[i] - 1].Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
+                {
+                    players[myIndex].QuestList[i] = incMSG.ReadVariableInt32();
+                    players[myIndex].QuestStatus[i] = incMSG.ReadVariableInt32();
+                }
             }
         }
 

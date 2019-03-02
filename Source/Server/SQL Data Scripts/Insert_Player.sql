@@ -1,0 +1,68 @@
+/*
+Created 9/7/2018 3:52PM
+Inserts player data database
+Created by Steven M Fortune
+*/
+
+INSERT INTO Players (
+	Name,
+	Password,
+	Email_Address,
+	X,
+	Y,
+	Map,
+	Direction,
+	Aim_Direction,
+	Sprite,
+	Level,
+	Health,
+	Max_Health,
+	Experience,
+	Money,
+	Armor,
+	Hunger,
+	Hydration,
+	Strength,
+	Agility,
+	Endurance,
+	Stamina,
+	Pistol_Ammo,
+	Assault_Ammo,
+	Rocket_Ammo,
+	Grenade_ammo,
+	Light_Radius,
+	Last_Logged,
+	Account_Key,
+	Active
+	)
+VALUES (
+	@name,
+	@password,
+	@email,
+	@x,
+	@y,
+	@map,
+	@direction,
+	@aimdirection,
+	@sprite,
+	@level,
+	@health,
+	@maxhealth,
+	@experience,
+	@money,
+	@armor,
+	@hunger,
+	@hydration,
+	@strength,
+	@agility,
+	@endurance,
+	@stamina,
+	@pistolammo,
+	@assaultammo,
+	@rocketammo,
+	@grenadeammo,
+	@lightradius,
+	@lastlogged,
+	@accountkey,
+	@active
+	);

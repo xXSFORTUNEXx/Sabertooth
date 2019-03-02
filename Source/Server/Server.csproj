@@ -77,199 +77,199 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Server.ico" />
-    <Content Include="SQL Data Scripts\BANKCOUNT.sql">
+    <Content Include="SQL Data Scripts\Bank_Count.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT CHAT.sql">
+    <Content Include="SQL Data Scripts\Insert_Chat.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT CHEST.sql">
+    <Content Include="SQL Data Scripts\Insert_Chest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT EQUIP.sql">
+    <Content Include="SQL Data Scripts\Insert_Equipment.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT ITEM.sql">
+    <Content Include="SQL Data Scripts\Insert_Item.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT MAINWEPS.sql">
+    <Content Include="SQL Data Scripts\Insert_Main_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT MAP.sql">
+    <Content Include="SQL Data Scripts\Insert_Map.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT NPC.sql">
+    <Content Include="SQL Data Scripts\Insert_Npc.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT PLAYER.sql">
+    <Content Include="SQL Data Scripts\Insert_Player.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT PROJ.sql">
+    <Content Include="SQL Data Scripts\Insert_Proj.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT QUEST.sql">
+    <Content Include="SQL Data Scripts\Insert_Quest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT QUESTLIST.sql">
+    <Content Include="SQL Data Scripts\Insert_Quest_List.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT SECONDWEPS.sql">
+    <Content Include="SQL Data Scripts\Insert_Secondary_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT SHOP.sql">
+    <Content Include="SQL Data Scripts\Insert_Shop.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INSERT STATS.sql">
+    <Content Include="SQL Data Scripts\Insert_Stats.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\INVCOUNT.sql">
+    <Content Include="SQL Data Scripts\Inventory_Count.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD BANK.sql">
+    <Content Include="SQL Data Scripts\Load_Bank.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD CHAT.sql">
+    <Content Include="SQL Data Scripts\Load_Chat.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD CHEST.sql">
+    <Content Include="SQL Data Scripts\Load_Chest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD EQUIP.sql">
+    <Content Include="SQL Data Scripts\Load_Equipment.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD INVENTORY.sql">
+    <Content Include="SQL Data Scripts\Load_Inventory.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD ITEM.sql">
+    <Content Include="SQL Data Scripts\Load_Item.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD MAINWEPS.sql">
+    <Content Include="SQL Data Scripts\Load_Main_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD MAP.sql">
+    <Content Include="SQL Data Scripts\Load_Map.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD NPC.sql">
+    <Content Include="SQL Data Scripts\Load_Npc.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD PLAYER.sql">
+    <Content Include="SQL Data Scripts\Load_Player.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD PROJ.sql">
+    <Content Include="SQL Data Scripts\Load_Proj.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD QUEST.sql">
+    <Content Include="SQL Data Scripts\Load_Quest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD QUESTLIST.sql">
+    <Content Include="SQL Data Scripts\Load_Quest_List.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD SECONDWEPS.sql">
+    <Content Include="SQL Data Scripts\Load_Secondary_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD SHOP.sql">
+    <Content Include="SQL Data Scripts\Load_Shop.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\LOAD STATS.sql">
+    <Content Include="SQL Data Scripts\Load_Stats.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE BANK.sql">
+    <Content Include="SQL Data Scripts\Save_Bank.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE CHAT.sql">
+    <Content Include="SQL Data Scripts\Save_Chat.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE CHEST.sql">
+    <Content Include="SQL Data Scripts\Save_Chest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE EQUIP.sql">
+    <Content Include="SQL Data Scripts\Save_Equipment.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE INVENTORY.sql">
+    <Content Include="SQL Data Scripts\Save_Inventory.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE ITEM.sql">
+    <Content Include="SQL Data Scripts\Save_Item.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE MAINWEPS.sql">
+    <Content Include="SQL Data Scripts\Save_Main_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE MAP.sql">
+    <Content Include="SQL Data Scripts\Save_Map.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE NPC.sql">
+    <Content Include="SQL Data Scripts\Save_Npc.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE PLAYER.sql">
+    <Content Include="SQL Data Scripts\Save_Player.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE PROJ.sql">
+    <Content Include="SQL Data Scripts\Save_Proj.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE QUEST.sql">
+    <Content Include="SQL Data Scripts\Save_Quest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE QUESTLIST.sql">
+    <Content Include="SQL Data Scripts\Save_Quest_List.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE SECONDWEPS.sql">
+    <Content Include="SQL Data Scripts\Save_Secondary_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE SHOP.sql">
+    <Content Include="SQL Data Scripts\Save_Shop.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\SAVE STATS.sql">
+    <Content Include="SQL Data Scripts\Save_Stats.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\BANK.sql">
+    <Content Include="SQL Scripts\Bank.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\CHAT.sql">
+    <Content Include="SQL Scripts\Chat.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\CHESTS.sql">
+    <Content Include="SQL Scripts\Chests.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\DATABASE.sql">
+    <Content Include="SQL Scripts\Database.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\EQUIPMENT.sql">
+    <Content Include="SQL Scripts\Equipment.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\INVENTORY.sql">
+    <Content Include="SQL Scripts\Inventory.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\ITEMS.sql">
+    <Content Include="SQL Scripts\Items.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\MAINWEAPONS.sql">
+    <Content Include="SQL Scripts\Main_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\MAPS.sql">
+    <Content Include="SQL Scripts\Maps.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\NPCS.sql">
+    <Content Include="SQL Scripts\Npcs.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\PLAYERS.sql">
+    <Content Include="SQL Scripts\Players.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\PROJECTILES.sql">
+    <Content Include="SQL Scripts\Projectiles.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\QUESTLIST.sql">
+    <Content Include="SQL Scripts\Quests.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\QUESTS.sql">
+    <Content Include="SQL Scripts\Quest_List.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\SECONDARYWEAPONS.sql">
+    <Content Include="SQL Scripts\Secondary_Weapons.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\SHOPS.sql">
+    <Content Include="SQL Scripts\Shops.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Scripts\STATS.sql">
+    <Content Include="SQL Scripts\Stats.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

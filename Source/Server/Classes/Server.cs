@@ -281,7 +281,7 @@ namespace SabertoothServer
         public static void CheckSQLConnection()
         {
             string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
-            string script = ReadAllText("SQL Scripts/DATABASE.sql");
+            string script = ReadAllText("SQL Scripts/Database.sql");
             try
             {
                 using (var sql = new SqlConnection(connection))
@@ -315,22 +315,22 @@ namespace SabertoothServer
                     using (var cmd = new SqlCommand())
                     {
                         cmd.Connection = sql;
-                        script = ReadAllText("SQL Scripts/PLAYERS.sql");
-                        script += ReadAllText("SQL Scripts/MAINWEAPONS.sql");
-                        script += ReadAllText("SQL Scripts/SECONDARYWEAPONS.sql");
-                        script += ReadAllText("SQL Scripts/EQUIPMENT.sql");
-                        script += ReadAllText("SQL Scripts/INVENTORY.sql");
-                        script += ReadAllText("SQL Scripts/BANK.sql");
-                        script += ReadAllText("SQL Scripts/ITEMS.sql");
-                        script += ReadAllText("SQL Scripts/NPCS.sql");
-                        script += ReadAllText("SQL Scripts/PROJECTILES.sql");
-                        script += ReadAllText("SQL Scripts/SHOPS.sql");
-                        script += ReadAllText("SQL Scripts/CHAT.sql");
-                        script += ReadAllText("SQL Scripts/QUESTS.sql");
-                        script += ReadAllText("SQL Scripts/MAPS.sql");
-                        script += ReadAllText("SQL Scripts/CHESTS.sql");
-                        script += ReadAllText("SQL Scripts/STATS.sql");
-                        script += ReadAllText("SQL Scripts/QUESTLIST.sql");
+                        script = ReadAllText("SQL Scripts/Players.sql");
+                        script += ReadAllText("SQL Scripts/Main_Weapons.sql");
+                        script += ReadAllText("SQL Scripts/Secondary_Weapons.sql");
+                        script += ReadAllText("SQL Scripts/Equipment.sql");
+                        script += ReadAllText("SQL Scripts/Inventory.sql");
+                        script += ReadAllText("SQL Scripts/Bank.sql");
+                        script += ReadAllText("SQL Scripts/Items.sql");
+                        script += ReadAllText("SQL Scripts/Npcs.sql");
+                        script += ReadAllText("SQL Scripts/Projectiles.sql");
+                        script += ReadAllText("SQL Scripts/Shops.sql");
+                        script += ReadAllText("SQL Scripts/Chat.sql");
+                        script += ReadAllText("SQL Scripts/Quests.sql");
+                        script += ReadAllText("SQL Scripts/Maps.sql");
+                        script += ReadAllText("SQL Scripts/Chests.sql");
+                        script += ReadAllText("SQL Scripts/Stats.sql");
+                        script += ReadAllText("SQL Scripts/Quest_List.sql");
                         cmd.CommandText = script;
                         cmd.ExecuteNonQuery();
                     }

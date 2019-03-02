@@ -63,7 +63,7 @@ namespace SabertoothServer
             Type = (int)QuestType.None;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT QUEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Quest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -113,7 +113,7 @@ namespace SabertoothServer
         public void SaveQuestInDatabase(int questNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE QUEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Quest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -165,7 +165,7 @@ namespace SabertoothServer
         public void LoadQuestFromDatabase(int questNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD QUEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Quest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -225,7 +225,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM  WHERE ID=@id";
+                command = "SELECT Name FROM WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = questNum;

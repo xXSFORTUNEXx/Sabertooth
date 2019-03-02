@@ -68,7 +68,7 @@ namespace SabertoothServer
             Type = (int)ChatTypes.None;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT CHAT.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Chat.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -102,7 +102,7 @@ namespace SabertoothServer
         public void SaveChatInDatabase(int chatNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE CHAT.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Chat.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -138,7 +138,7 @@ namespace SabertoothServer
         public void LoadChatFromDatabase(int chatNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD CHAT.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Chat.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -182,7 +182,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM CHAT WHERE ID=@id";
+                command = "SELECT Name FROM Chat WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chatNum;

@@ -90,7 +90,7 @@ namespace SabertoothServer
             }
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT CHEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Chest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -117,7 +117,7 @@ namespace SabertoothServer
         public void SaveChestInDatabase(int chestNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE CHEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Chest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -144,7 +144,7 @@ namespace SabertoothServer
         public void LoadChestFromDatabase(int chestNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD CHEST.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Chest.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -180,7 +180,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM CHESTS WHERE ID=@id";
+                command = "SELECT Name FROM Chests WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = chestNum;

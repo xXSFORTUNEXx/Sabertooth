@@ -149,7 +149,7 @@ namespace SabertoothServer
             }
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT MAP.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Map.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -187,7 +187,7 @@ namespace SabertoothServer
         public void SaveMapInDatabase(int mapNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE MAP.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Map.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -236,7 +236,7 @@ namespace SabertoothServer
             }
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD MAP.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Map.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -307,7 +307,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM MAPS WHERE ID=@id";
+                command = "SELECT Name FROM Maps WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = mapNum;

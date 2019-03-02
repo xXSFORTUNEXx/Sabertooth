@@ -66,7 +66,7 @@ namespace SabertoothServer
             }
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT SHOP.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Shop.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -84,7 +84,7 @@ namespace SabertoothServer
         public void SaveShopInDatabase(int shopNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE SHOP.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Shop.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -103,7 +103,7 @@ namespace SabertoothServer
         public void LoadShopFromDatabase(int shopNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD SHOP.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Shop.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -131,7 +131,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM SHOPS WHERE ID=@id";
+                command = "SELECT Name FROM Shops WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = shopNum;

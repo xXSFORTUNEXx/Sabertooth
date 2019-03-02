@@ -122,7 +122,7 @@ namespace SabertoothServer
             Speed = 1000;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT NPC.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Npc.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -157,7 +157,7 @@ namespace SabertoothServer
         public void SaveNpcToDatabase(int npcNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE NPC.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Npc.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -192,7 +192,7 @@ namespace SabertoothServer
         public void LoadNpcFromDatabase(int npcNum)
         {
                 string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-                string script = ReadAllText("SQL Data Scripts/LOAD NPC.sql");
+                string script = ReadAllText("SQL Data Scripts/Load_Npc.sql");
                 using (var sql = new SqlConnection(connection))
                 {
                     sql.Open();
@@ -236,7 +236,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM NPCS WHERE ID=@id";
+                command = "SELECT Name FROM Npcs WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = npcNum;

@@ -337,6 +337,22 @@ namespace SabertoothServer
                 return;
             }
 
+            if (chats[index].Option[optionSlot] == "Accept Quest")
+            {
+                if (players[playerIndex].CheckPlayerHasQuest(chats[index].QuestNum)) { SendCloseChat(incMSG); return; }
+
+                int slot = players[playerIndex].FindOpenQuestListSlot();
+
+                if (slot < MAX_PLAYER_QUEST_LIST)
+                {
+                    players[playerIndex].QuestList[slot] = chats[index].QuestNum;
+                    players[playerIndex].QuestStatus[slot] = (int)QuestStatus.Inprogress;
+                    SendPlayerQuestList(playerIndex);
+                    SendCloseChat(incMSG);
+                }
+                return;
+            }
+
             if (nextChat > 0)
             {
                 SendOpenNextChat(incMSG, nextChat);
@@ -357,7 +373,7 @@ namespace SabertoothServer
                 {
                     int openSlot = players[playerIndex].FindOpenInvSlot(players[playerIndex].Backpack);
 
-                    if (openSlot < 25)
+                    if (openSlot < MAX_INV_SLOTS)
                     {
                         players[playerIndex].Backpack[openSlot] = items[chats[index].ItemNum[i] - 1];
                         if (chats[index].ItemVal[i] > 1)
@@ -2140,7 +2156,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                command = "SELECT * FROM Players WHERE Name=@name";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;
@@ -2168,7 +2184,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT * FROM PLAYERS WHERE NAME=@name";
+                command = "SELECT * FROM Players WHERE Name=@name";
                 using (var cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = name;

@@ -89,7 +89,7 @@ namespace SabertoothServer
             Rarity = 0;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/INSERT ITEM.sql");
+            string script = ReadAllText("SQL Data Scripts/Insert_Item.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -124,7 +124,7 @@ namespace SabertoothServer
         public void SaveItemToDatabase(int itemNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/SAVE ITEM.sql");
+            string script = ReadAllText("SQL Data Scripts/Save_Item.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -160,7 +160,7 @@ namespace SabertoothServer
         public void LoadItemFromDatabase(int itemNum)
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/LOAD ITEM.sql");
+            string script = ReadAllText("SQL Data Scripts/Load_Item.sql");
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -205,7 +205,7 @@ namespace SabertoothServer
             {
                 sql.Open();
                 string command;
-                command = "SELECT NAME FROM ITEMS WHERE ID=@id";
+                command = "SELECT Name FROM Items WHERE ID=@id";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = itemNum;
