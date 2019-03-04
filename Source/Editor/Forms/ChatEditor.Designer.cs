@@ -85,7 +85,7 @@
             this.groupBox1.Controls.Add(this.lstIndex);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(141, 380);
+            this.groupBox1.Size = new System.Drawing.Size(141, 387);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Index";
@@ -112,7 +112,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(6, 350);
+            this.btnExit.Location = new System.Drawing.Point(6, 351);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(129, 23);
             this.btnExit.TabIndex = 5;

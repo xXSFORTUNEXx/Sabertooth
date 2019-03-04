@@ -37,12 +37,15 @@
             this.btnItemEditor = new System.Windows.Forms.Button();
             this.btnProjectileEditor = new System.Windows.Forms.Button();
             this.btnChestEditor = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.btnEditor = new System.Windows.Forms.Button();
             this.btnShopEditor = new System.Windows.Forms.Button();
             this.btnPlayerEditor = new System.Windows.Forms.Button();
             this.btnQuestEditor = new System.Windows.Forms.Button();
+            this.dtViewGrid = new System.Windows.Forms.DataGridView();
+            this.lstViews = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.pnlLock.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtViewGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlLock
@@ -51,9 +54,9 @@
             this.pnlLock.Controls.Add(this.lblIncorrect);
             this.pnlLock.Controls.Add(this.txtUnlock);
             this.pnlLock.Controls.Add(this.btnUnlock);
-            this.pnlLock.Location = new System.Drawing.Point(200, 12);
+            this.pnlLock.Location = new System.Drawing.Point(11, 643);
             this.pnlLock.Name = "pnlLock";
-            this.pnlLock.Size = new System.Drawing.Size(119, 256);
+            this.pnlLock.Size = new System.Drawing.Size(119, 91);
             this.pnlLock.TabIndex = 0;
             this.pnlLock.Visible = false;
             // 
@@ -98,7 +101,7 @@
             // 
             // btnNpcEditor
             // 
-            this.btnNpcEditor.Location = new System.Drawing.Point(12, 41);
+            this.btnNpcEditor.Location = new System.Drawing.Point(12, 101);
             this.btnNpcEditor.Name = "btnNpcEditor";
             this.btnNpcEditor.Size = new System.Drawing.Size(119, 23);
             this.btnNpcEditor.TabIndex = 2;
@@ -108,7 +111,7 @@
             // 
             // btnItemEditor
             // 
-            this.btnItemEditor.Location = new System.Drawing.Point(12, 70);
+            this.btnItemEditor.Location = new System.Drawing.Point(12, 72);
             this.btnItemEditor.Name = "btnItemEditor";
             this.btnItemEditor.Size = new System.Drawing.Size(119, 23);
             this.btnItemEditor.TabIndex = 3;
@@ -118,9 +121,9 @@
             // 
             // btnProjectileEditor
             // 
-            this.btnProjectileEditor.Location = new System.Drawing.Point(12, 99);
+            this.btnProjectileEditor.Location = new System.Drawing.Point(12, 218);
             this.btnProjectileEditor.Name = "btnProjectileEditor";
-            this.btnProjectileEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnProjectileEditor.Size = new System.Drawing.Size(118, 23);
             this.btnProjectileEditor.TabIndex = 4;
             this.btnProjectileEditor.Text = "Projectile Editor";
             this.btnProjectileEditor.UseVisualStyleBackColor = true;
@@ -128,7 +131,7 @@
             // 
             // btnChestEditor
             // 
-            this.btnChestEditor.Location = new System.Drawing.Point(12, 128);
+            this.btnChestEditor.Location = new System.Drawing.Point(12, 41);
             this.btnChestEditor.Name = "btnChestEditor";
             this.btnChestEditor.Size = new System.Drawing.Size(119, 23);
             this.btnChestEditor.TabIndex = 5;
@@ -136,18 +139,9 @@
             this.btnChestEditor.UseVisualStyleBackColor = true;
             this.btnChestEditor.Click += new System.EventHandler(this.btnChestEditor_Click);
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(12, 157);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(119, 23);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "Skill Editor";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
             // btnEditor
             // 
-            this.btnEditor.Location = new System.Drawing.Point(12, 186);
+            this.btnEditor.Location = new System.Drawing.Point(12, 160);
             this.btnEditor.Name = "btnEditor";
             this.btnEditor.Size = new System.Drawing.Size(119, 23);
             this.btnEditor.TabIndex = 7;
@@ -157,7 +151,7 @@
             // 
             // btnShopEditor
             // 
-            this.btnShopEditor.Location = new System.Drawing.Point(12, 215);
+            this.btnShopEditor.Location = new System.Drawing.Point(12, 130);
             this.btnShopEditor.Name = "btnShopEditor";
             this.btnShopEditor.Size = new System.Drawing.Size(119, 23);
             this.btnShopEditor.TabIndex = 8;
@@ -167,9 +161,9 @@
             // 
             // btnPlayerEditor
             // 
-            this.btnPlayerEditor.Location = new System.Drawing.Point(12, 245);
+            this.btnPlayerEditor.Location = new System.Drawing.Point(12, 247);
             this.btnPlayerEditor.Name = "btnPlayerEditor";
-            this.btnPlayerEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnPlayerEditor.Size = new System.Drawing.Size(118, 23);
             this.btnPlayerEditor.TabIndex = 9;
             this.btnPlayerEditor.Text = "Player Editor";
             this.btnPlayerEditor.UseVisualStyleBackColor = true;
@@ -177,7 +171,7 @@
             // 
             // btnQuestEditor
             // 
-            this.btnQuestEditor.Location = new System.Drawing.Point(13, 275);
+            this.btnQuestEditor.Location = new System.Drawing.Point(12, 189);
             this.btnQuestEditor.Name = "btnQuestEditor";
             this.btnQuestEditor.Size = new System.Drawing.Size(118, 23);
             this.btnQuestEditor.TabIndex = 10;
@@ -185,29 +179,61 @@
             this.btnQuestEditor.UseVisualStyleBackColor = true;
             this.btnQuestEditor.Click += new System.EventHandler(this.btnQuestEditor_Click);
             // 
+            // dtViewGrid
+            // 
+            this.dtViewGrid.AllowUserToAddRows = false;
+            this.dtViewGrid.AllowUserToDeleteRows = false;
+            this.dtViewGrid.AllowUserToOrderColumns = true;
+            this.dtViewGrid.Location = new System.Drawing.Point(138, 12);
+            this.dtViewGrid.Name = "dtViewGrid";
+            this.dtViewGrid.ReadOnly = true;
+            this.dtViewGrid.Size = new System.Drawing.Size(1347, 779);
+            this.dtViewGrid.TabIndex = 11;
+            // 
+            // lstViews
+            // 
+            this.lstViews.FormattingEnabled = true;
+            this.lstViews.Location = new System.Drawing.Point(12, 301);
+            this.lstViews.Name = "lstViews";
+            this.lstViews.Size = new System.Drawing.Size(118, 264);
+            this.lstViews.TabIndex = 12;
+            this.lstViews.SelectedIndexChanged += new System.EventHandler(this.lstViews_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 282);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Views:";
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(143, 309);
+            this.ClientSize = new System.Drawing.Size(1497, 806);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lstViews);
+            this.Controls.Add(this.dtViewGrid);
             this.Controls.Add(this.btnQuestEditor);
             this.Controls.Add(this.btnPlayerEditor);
             this.Controls.Add(this.btnShopEditor);
             this.Controls.Add(this.btnEditor);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.btnChestEditor);
             this.Controls.Add(this.btnProjectileEditor);
             this.Controls.Add(this.btnItemEditor);
             this.Controls.Add(this.btnNpcEditor);
             this.Controls.Add(this.btnMapEditor);
             this.Controls.Add(this.pnlLock);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Editor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Editor";
             this.pnlLock.ResumeLayout(false);
             this.pnlLock.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtViewGrid)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -222,11 +248,13 @@
         private System.Windows.Forms.Button btnItemEditor;
         private System.Windows.Forms.Button btnProjectileEditor;
         private System.Windows.Forms.Button btnChestEditor;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnShopEditor;
         private System.Windows.Forms.Button btnPlayerEditor;
         private System.Windows.Forms.Button btnQuestEditor;
+        private System.Windows.Forms.DataGridView dtViewGrid;
+        private System.Windows.Forms.ListBox lstViews;
+        private System.Windows.Forms.Label label1;
     }
 }
 

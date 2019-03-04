@@ -1,29 +1,28 @@
 /*
-Created 9/2/2018 5:18AM
+Created 2019-03-04 15:44:07.190
 Creates vPlayerInfo view in Sabertooths Database
 Created by Steven M Fortune
-Updated 2019-02-27 10:53:50.457
 */
-IF EXISTS(SELECT * FROM SYS.views WHERE name = 'vPlayerInfo')
+IF EXISTS (SELECT * FROM SYS.VIEWS WHERE name = 'vPlayerInfo')
 BEGIN
 	DROP VIEW vPlayerInfo
 END
 GO
 CREATE VIEW vPlayerInfo
 AS
-SELECT PLAYERS.ID,
-	PLAYERS.NAME,
-	PLAYERS.EMAILADDRESS,
-	PLAYERS.LEVEL,
-	PLAYERS.HEALTH,
-	PLAYERS.MAXHEALTH,
-	PLAYERS.EXPERIENCE,
-	PLAYERS.MONEY,
-	PLAYERS.ARMOR,
-	PLAYERS.HUNGER,
-	PLAYERS.HYDRATION,
-	PLAYERS.STRENGTH,
-	PLAYERS.AGILITY,
-	PLAYERS.ENDURANCE,
-	PLAYERS.STAMINA
-FROM PLAYERS
+SELECT Players.ID,
+	Players.Name,
+	Players.Email_Address,
+	Players.Level,
+	Players.Health,
+	Players.Max_Health,
+	Players.Experience,
+	Players.Money,
+	Players.Armor,
+	Players.Hunger,
+	Players.Hydration,
+	Players.Strength,
+	Players.Agility,
+	Players.Endurance,
+	Players.Stamina
+FROM Players

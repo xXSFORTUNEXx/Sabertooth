@@ -11,13 +11,13 @@ END
 GO
 CREATE VIEW vMapBlobInfo
 AS
-SELECT MAPS.ID,
-	MAPS.NAME,
-	MAPS.NPC,
-	MAPS.ITEM,
-	MAPS.GROUND,
-	MAPS.MASK,
-	MAPS.MASKA,
-	MAPS.FRINGE,
-	MAPS.FRINGEA
-FROM MAPS
+SELECT Maps.ID,
+	Maps.Name,
+	Maps.Npc,
+	Maps.Item,
+	Maps.Ground,
+	Maps.Mask,
+	Maps.Mask_A,
+	Maps.Fringe,
+	Maps.Fringe_A
+FROM Maps

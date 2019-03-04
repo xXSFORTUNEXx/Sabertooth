@@ -10,11 +10,11 @@ END
 GO
 CREATE VIEW vMapInfo
 AS
-SELECT MAPS.ID,
-	MAPS.NAME,
-	MAPS.REVISION,
-	MAPS.UP,
-	MAPS.DOWN,
-	MAPS.LEFTSIDE,
-	MAPS.RIGHTSIDE
-FROM MAPS
+SELECT Maps.ID,
+	Maps.Name,
+	Maps.Revision,
+	Maps.UP,
+	Maps.DOWN,
+	Maps.Left_Side,
+	Maps.Right_Side
+FROM Maps

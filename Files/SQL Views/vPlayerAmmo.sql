@@ -11,10 +11,10 @@ END
 GO
 CREATE VIEW vPlayerAmmo
 AS
-SELECT PLAYERS.ID,
-	PLAYERS.NAME,
-	PLAYERS.PISTOLAMMO,
-	PLAYERS.ASSAULTAMMO,
-	PLAYERS.ROCKETAMMO,
-	PLAYERS.GRENADEAMMO
-FROM PLAYERS
+SELECT Players.ID,
+	Players.NAME,
+	Players.Pistol_Ammo,
+	Players.Assault_Ammo,
+	Players.Rocket_Ammo,
+	Players.Grenade_ammo
+FROM Players

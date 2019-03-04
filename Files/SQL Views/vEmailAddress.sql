@@ -11,7 +11,7 @@ END
 GO
 CREATE VIEW vEmailAddress
 AS
-SELECT PLAYERS.ID,
-	PLAYERS.NAME,
-	PLAYERS.EMAILADDRESS
-FROM PLAYERS
+SELECT Players.ID,
+	Players.Name,
+	Players.Email_Address
+FROM Players

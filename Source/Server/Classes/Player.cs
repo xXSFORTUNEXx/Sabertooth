@@ -1786,7 +1786,7 @@ namespace SabertoothServer
                     {
                         while (reader.Read())
                         {
-                            Name = reader[1].ToString();
+                            Name = reader[0].ToString();
                         }
                     }
                 }

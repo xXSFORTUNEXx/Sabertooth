@@ -11,13 +11,13 @@ END
 GO
 CREATE VIEW vPlayerMiscInfo
 AS
-SELECT PLAYERS.ID,
-	PLAYERS.NAME,
-	PLAYERS.X,
-	PLAYERS.Y,
-	PLAYERS.AIMDIRECTION,
-	PLAYERS.SPRITE,
-	PLAYERS.LIGHTRADIUS,
-	PLAYERS.ACCOUNTKEY,
-	PLAYERS.ACTIVE
-FROM PLAYERS
+SELECT Players.ID,
+	Players.Name,
+	Players.X,
+	Players.Y,
+	Players.Aim_Direction,
+	Players.Sprite,
+	Players.Light_Radius,
+	Players.Account_Key,
+	Players.Active
+FROM Players

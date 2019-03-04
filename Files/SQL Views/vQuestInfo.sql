@@ -11,13 +11,13 @@ END
 GO
 CREATE VIEW vQuestInfo
 AS
-SELECT QUESTS.ID,
-	QUESTS.NAME,
-	QUESTS.STARTMESSAGE,
-	QUESTS.INPROGRESSMESSAGE,
-	QUESTS.COMPLETEMESSAGE,
-	QUESTS.PREREQUISITEQUEST,
-	QUESTS.LEVELREQUIRED, 
-	QUESTS.QUESTTPYE,
-	QUESTS.DESCRIPTION
-FROM QUESTS
+SELECT Quests.ID,
+	Quests.Name,
+	Quests.Start_Message,
+	Quests.Inprogress_Message,
+	Quests.Complete_Message,
+	Quests.Prerequisite_Quest,
+	Quests.Level_Required, 
+	Quests.Quest_Type,
+	Quests.Description
+FROM Quests
