@@ -145,6 +145,7 @@ namespace Editor.Forms
             LoadMapList();
             e_Map.LoadMapFromDatabase(SelectedIndex);
             mapProperties.SelectedObject = e_Map;
+            UpdateViewScrollBars();
             UpdateMapNpcs();
             UpdateMaxTiles();
             MapEditorLoop();
@@ -232,8 +233,8 @@ namespace Editor.Forms
 
         void DrawCursorLight()
         {
-            int centerX = ((e_CursorX * 32) + 16) - (e_ViewX * 32);
-            int centerY = 600 - ((e_CursorY * 32) + 16) + (e_ViewY * 32);
+            int centerX = ((e_CursorX * PIC_X) + 16) - (e_ViewX * PIC_X);
+            int centerY = 600 - ((e_CursorY * PIC_Y) + 16) + (e_ViewY * PIC_Y);
             Vector2f center = new Vector2f(centerX, centerY);
             double radius = e_LightRadius;
 

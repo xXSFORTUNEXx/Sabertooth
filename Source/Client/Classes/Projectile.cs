@@ -64,7 +64,7 @@ namespace SabertoothClient
             switch (map.m_MapProj[slot].Direction)
             {
                 case (int)Directions.Down:
-                    if (Y < map.MaxY)
+                    if (Y < map.MaxY - 1)
                     {
                         if (map.Ground[X, (Y + 1)].Type == (int)TileType.Blocked)
                         {

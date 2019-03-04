@@ -31,17 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapEditor));
             this.tabTools = new System.Windows.Forms.TabControl();
             this.tabLayer = new System.Windows.Forms.TabPage();
-            this.pnlDebug = new System.Windows.Forms.Panel();
-            this.lblType = new System.Windows.Forms.Label();
-            this.lblLayer = new System.Windows.Forms.Label();
-            this.lblViewX = new System.Windows.Forms.Label();
-            this.lblViewY = new System.Windows.Forms.Label();
-            this.lblSelectW = new System.Windows.Forms.Label();
-            this.lblSelectH = new System.Windows.Forms.Label();
-            this.lblButtonDown = new System.Windows.Forms.Label();
-            this.lblSelectY = new System.Windows.Forms.Label();
-            this.lblSelectX = new System.Windows.Forms.Label();
-            this.lblMouseLoc = new System.Windows.Forms.Label();
+            this.pnlTile = new System.Windows.Forms.Panel();
+            this.picTileset = new System.Windows.Forms.PictureBox();
+            this.cmbTileset = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRestruct = new System.Windows.Forms.Button();
             this.txtMaxY = new System.Windows.Forms.TextBox();
@@ -121,13 +113,21 @@
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
             this.treeMaps = new System.Windows.Forms.TreeView();
             this.mapProperties = new System.Windows.Forms.PropertyGrid();
-            this.pnlTile = new System.Windows.Forms.Panel();
-            this.picTileset = new System.Windows.Forms.PictureBox();
-            this.lblTileset = new System.Windows.Forms.Label();
-            this.cmbTileset = new System.Windows.Forms.ComboBox();
+            this.pnlDebug = new System.Windows.Forms.Panel();
+            this.lblType = new System.Windows.Forms.Label();
+            this.lblLayer = new System.Windows.Forms.Label();
+            this.lblViewX = new System.Windows.Forms.Label();
+            this.lblViewY = new System.Windows.Forms.Label();
+            this.lblSelectW = new System.Windows.Forms.Label();
+            this.lblSelectH = new System.Windows.Forms.Label();
+            this.lblButtonDown = new System.Windows.Forms.Label();
+            this.lblSelectY = new System.Windows.Forms.Label();
+            this.lblSelectX = new System.Windows.Forms.Label();
+            this.lblMouseLoc = new System.Windows.Forms.Label();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
-            this.pnlDebug.SuspendLayout();
+            this.pnlTile.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
             this.panel1.SuspendLayout();
             this.pnlOptions.SuspendLayout();
             this.tabTypes.SuspendLayout();
@@ -140,8 +140,7 @@
             this.tabLight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).BeginInit();
             this.tosMenu.SuspendLayout();
-            this.pnlTile.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picTileset)).BeginInit();
+            this.pnlDebug.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabTools
@@ -152,13 +151,12 @@
             this.tabTools.Location = new System.Drawing.Point(11, 31);
             this.tabTools.Name = "tabTools";
             this.tabTools.SelectedIndex = 0;
-            this.tabTools.Size = new System.Drawing.Size(322, 795);
+            this.tabTools.Size = new System.Drawing.Size(322, 726);
             this.tabTools.TabIndex = 1;
             // 
             // tabLayer
             // 
             this.tabLayer.Controls.Add(this.pnlTile);
-            this.tabLayer.Controls.Add(this.lblTileset);
             this.tabLayer.Controls.Add(this.cmbTileset);
             this.tabLayer.Controls.Add(this.panel1);
             this.tabLayer.Controls.Add(this.pnlOptions);
@@ -172,119 +170,37 @@
             this.tabLayer.Location = new System.Drawing.Point(4, 22);
             this.tabLayer.Name = "tabLayer";
             this.tabLayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLayer.Size = new System.Drawing.Size(314, 769);
+            this.tabLayer.Size = new System.Drawing.Size(314, 700);
             this.tabLayer.TabIndex = 0;
             this.tabLayer.Text = "Layer";
             this.tabLayer.UseVisualStyleBackColor = true;
             // 
-            // pnlDebug
+            // pnlTile
             // 
-            this.pnlDebug.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDebug.Controls.Add(this.lblType);
-            this.pnlDebug.Controls.Add(this.lblLayer);
-            this.pnlDebug.Controls.Add(this.lblViewX);
-            this.pnlDebug.Controls.Add(this.lblViewY);
-            this.pnlDebug.Controls.Add(this.lblSelectW);
-            this.pnlDebug.Controls.Add(this.lblSelectH);
-            this.pnlDebug.Controls.Add(this.lblButtonDown);
-            this.pnlDebug.Controls.Add(this.lblSelectY);
-            this.pnlDebug.Controls.Add(this.lblSelectX);
-            this.pnlDebug.Controls.Add(this.lblMouseLoc);
-            this.pnlDebug.Location = new System.Drawing.Point(1166, 665);
-            this.pnlDebug.Name = "pnlDebug";
-            this.pnlDebug.Size = new System.Drawing.Size(124, 153);
-            this.pnlDebug.TabIndex = 23;
-            this.pnlDebug.Visible = false;
+            this.pnlTile.AutoScroll = true;
+            this.pnlTile.Controls.Add(this.picTileset);
+            this.pnlTile.Location = new System.Drawing.Point(11, 169);
+            this.pnlTile.Name = "pnlTile";
+            this.pnlTile.Size = new System.Drawing.Size(293, 527);
+            this.pnlTile.TabIndex = 26;
             // 
-            // lblType
+            // picTileset
             // 
-            this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(8, 130);
-            this.lblType.Name = "lblType";
-            this.lblType.Size = new System.Drawing.Size(63, 13);
-            this.lblType.TabIndex = 21;
-            this.lblType.Text = "Type: None";
+            this.picTileset.Location = new System.Drawing.Point(3, 5);
+            this.picTileset.Name = "picTileset";
+            this.picTileset.Size = new System.Drawing.Size(100, 50);
+            this.picTileset.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.picTileset.TabIndex = 0;
+            this.picTileset.TabStop = false;
             // 
-            // lblLayer
+            // cmbTileset
             // 
-            this.lblLayer.AutoSize = true;
-            this.lblLayer.Location = new System.Drawing.Point(8, 117);
-            this.lblLayer.Name = "lblLayer";
-            this.lblLayer.Size = new System.Drawing.Size(74, 13);
-            this.lblLayer.TabIndex = 20;
-            this.lblLayer.Text = "Layer: Ground";
-            // 
-            // lblViewX
-            // 
-            this.lblViewX.AutoSize = true;
-            this.lblViewX.Location = new System.Drawing.Point(8, 91);
-            this.lblViewX.Name = "lblViewX";
-            this.lblViewX.Size = new System.Drawing.Size(52, 13);
-            this.lblViewX.TabIndex = 19;
-            this.lblViewX.Text = "View X: 0";
-            // 
-            // lblViewY
-            // 
-            this.lblViewY.AutoSize = true;
-            this.lblViewY.Location = new System.Drawing.Point(8, 104);
-            this.lblViewY.Name = "lblViewY";
-            this.lblViewY.Size = new System.Drawing.Size(52, 13);
-            this.lblViewY.TabIndex = 18;
-            this.lblViewY.Text = "View Y: 0";
-            // 
-            // lblSelectW
-            // 
-            this.lblSelectW.AutoSize = true;
-            this.lblSelectW.Location = new System.Drawing.Point(8, 52);
-            this.lblSelectW.Name = "lblSelectW";
-            this.lblSelectW.Size = new System.Drawing.Size(77, 13);
-            this.lblSelectW.TabIndex = 17;
-            this.lblSelectW.Text = "SelectTileW: 0";
-            // 
-            // lblSelectH
-            // 
-            this.lblSelectH.AutoSize = true;
-            this.lblSelectH.Location = new System.Drawing.Point(8, 65);
-            this.lblSelectH.Name = "lblSelectH";
-            this.lblSelectH.Size = new System.Drawing.Size(74, 13);
-            this.lblSelectH.TabIndex = 16;
-            this.lblSelectH.Text = "SelectTileH: 0";
-            // 
-            // lblButtonDown
-            // 
-            this.lblButtonDown.AutoSize = true;
-            this.lblButtonDown.Location = new System.Drawing.Point(8, 78);
-            this.lblButtonDown.Name = "lblButtonDown";
-            this.lblButtonDown.Size = new System.Drawing.Size(81, 13);
-            this.lblButtonDown.TabIndex = 15;
-            this.lblButtonDown.Text = "Button Down: ?";
-            // 
-            // lblSelectY
-            // 
-            this.lblSelectY.AutoSize = true;
-            this.lblSelectY.Location = new System.Drawing.Point(8, 26);
-            this.lblSelectY.Name = "lblSelectY";
-            this.lblSelectY.Size = new System.Drawing.Size(73, 13);
-            this.lblSelectY.TabIndex = 14;
-            this.lblSelectY.Text = "SelectTileY: 0";
-            // 
-            // lblSelectX
-            // 
-            this.lblSelectX.AutoSize = true;
-            this.lblSelectX.Location = new System.Drawing.Point(8, 39);
-            this.lblSelectX.Name = "lblSelectX";
-            this.lblSelectX.Size = new System.Drawing.Size(73, 13);
-            this.lblSelectX.TabIndex = 13;
-            this.lblSelectX.Text = "SelectTileX: 0";
-            // 
-            // lblMouseLoc
-            // 
-            this.lblMouseLoc.AutoSize = true;
-            this.lblMouseLoc.Location = new System.Drawing.Point(8, 13);
-            this.lblMouseLoc.Name = "lblMouseLoc";
-            this.lblMouseLoc.Size = new System.Drawing.Size(92, 13);
-            this.lblMouseLoc.TabIndex = 12;
-            this.lblMouseLoc.Text = "Mouse - X: 0, Y: 0";
+            this.cmbTileset.FormattingEnabled = true;
+            this.cmbTileset.Location = new System.Drawing.Point(11, 142);
+            this.cmbTileset.Name = "cmbTileset";
+            this.cmbTileset.Size = new System.Drawing.Size(293, 21);
+            this.cmbTileset.TabIndex = 24;
+            this.cmbTileset.SelectedIndexChanged += new System.EventHandler(this.cmbTileset_SelectedIndexChanged);
             // 
             // panel1
             // 
@@ -293,7 +209,7 @@
             this.panel1.Controls.Add(this.txtMaxX);
             this.panel1.Controls.Add(this.lblMaxY);
             this.panel1.Controls.Add(this.lblMaxX);
-            this.panel1.Location = new System.Drawing.Point(198, 81);
+            this.panel1.Location = new System.Drawing.Point(111, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(106, 123);
             this.panel1.TabIndex = 16;
@@ -388,7 +304,7 @@
             // chkNpc
             // 
             this.chkNpc.AutoSize = true;
-            this.chkNpc.Location = new System.Drawing.Point(19, 137);
+            this.chkNpc.Location = new System.Drawing.Point(225, 85);
             this.chkNpc.Name = "chkNpc";
             this.chkNpc.Size = new System.Drawing.Size(79, 17);
             this.chkNpc.TabIndex = 14;
@@ -398,7 +314,7 @@
             // chkGrid
             // 
             this.chkGrid.AutoSize = true;
-            this.chkGrid.Location = new System.Drawing.Point(19, 160);
+            this.chkGrid.Location = new System.Drawing.Point(225, 108);
             this.chkGrid.Name = "chkGrid";
             this.chkGrid.Size = new System.Drawing.Size(45, 17);
             this.chkGrid.TabIndex = 5;
@@ -819,6 +735,7 @@
             // 
             // tabLight
             // 
+            this.tabLight.Controls.Add(this.pnlDebug);
             this.tabLight.Controls.Add(this.cmbNpc10);
             this.tabLight.Controls.Add(this.cmbNpc9);
             this.tabLight.Controls.Add(this.cmbNpc8);
@@ -835,7 +752,7 @@
             this.tabLight.Controls.Add(this.chkNight);
             this.tabLight.Location = new System.Drawing.Point(4, 22);
             this.tabLight.Name = "tabLight";
-            this.tabLight.Size = new System.Drawing.Size(314, 769);
+            this.tabLight.Size = new System.Drawing.Size(314, 700);
             this.tabLight.TabIndex = 4;
             this.tabLight.Text = "Light/NPCs";
             this.tabLight.UseVisualStyleBackColor = true;
@@ -990,6 +907,7 @@
             // 
             // picMap
             // 
+            this.picMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picMap.Location = new System.Drawing.Point(335, 51);
             this.picMap.Name = "picMap";
             this.picMap.Size = new System.Drawing.Size(800, 608);
@@ -1126,64 +1044,136 @@
             // 
             this.treeMaps.Location = new System.Drawing.Point(1166, 31);
             this.treeMaps.Name = "treeMaps";
-            this.treeMaps.Size = new System.Drawing.Size(228, 301);
+            this.treeMaps.Size = new System.Drawing.Size(228, 257);
             this.treeMaps.TabIndex = 23;
             this.treeMaps.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaps_AfterSelect);
             // 
             // mapProperties
             // 
-            this.mapProperties.Location = new System.Drawing.Point(1166, 338);
+            this.mapProperties.Location = new System.Drawing.Point(1166, 294);
             this.mapProperties.Name = "mapProperties";
             this.mapProperties.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.mapProperties.Size = new System.Drawing.Size(228, 321);
+            this.mapProperties.Size = new System.Drawing.Size(228, 459);
             this.mapProperties.TabIndex = 24;
             // 
-            // pnlTile
+            // pnlDebug
             // 
-            this.pnlTile.AutoScroll = true;
-            this.pnlTile.Controls.Add(this.picTileset);
-            this.pnlTile.Location = new System.Drawing.Point(11, 234);
-            this.pnlTile.Name = "pnlTile";
-            this.pnlTile.Size = new System.Drawing.Size(293, 527);
-            this.pnlTile.TabIndex = 26;
+            this.pnlDebug.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDebug.Controls.Add(this.lblType);
+            this.pnlDebug.Controls.Add(this.lblLayer);
+            this.pnlDebug.Controls.Add(this.lblViewX);
+            this.pnlDebug.Controls.Add(this.lblViewY);
+            this.pnlDebug.Controls.Add(this.lblSelectW);
+            this.pnlDebug.Controls.Add(this.lblSelectH);
+            this.pnlDebug.Controls.Add(this.lblButtonDown);
+            this.pnlDebug.Controls.Add(this.lblSelectY);
+            this.pnlDebug.Controls.Add(this.lblSelectX);
+            this.pnlDebug.Controls.Add(this.lblMouseLoc);
+            this.pnlDebug.Location = new System.Drawing.Point(87, 402);
+            this.pnlDebug.Name = "pnlDebug";
+            this.pnlDebug.Size = new System.Drawing.Size(124, 153);
+            this.pnlDebug.TabIndex = 24;
+            this.pnlDebug.Visible = false;
             // 
-            // picTileset
+            // lblType
             // 
-            this.picTileset.Location = new System.Drawing.Point(3, 5);
-            this.picTileset.Name = "picTileset";
-            this.picTileset.Size = new System.Drawing.Size(100, 50);
-            this.picTileset.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picTileset.TabIndex = 0;
-            this.picTileset.TabStop = false;
+            this.lblType.AutoSize = true;
+            this.lblType.Location = new System.Drawing.Point(8, 130);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(63, 13);
+            this.lblType.TabIndex = 21;
+            this.lblType.Text = "Type: None";
             // 
-            // lblTileset
+            // lblLayer
             // 
-            this.lblTileset.AutoSize = true;
-            this.lblTileset.Location = new System.Drawing.Point(11, 191);
-            this.lblTileset.Name = "lblTileset";
-            this.lblTileset.Size = new System.Drawing.Size(41, 13);
-            this.lblTileset.TabIndex = 25;
-            this.lblTileset.Text = "Tileset:";
+            this.lblLayer.AutoSize = true;
+            this.lblLayer.Location = new System.Drawing.Point(8, 117);
+            this.lblLayer.Name = "lblLayer";
+            this.lblLayer.Size = new System.Drawing.Size(74, 13);
+            this.lblLayer.TabIndex = 20;
+            this.lblLayer.Text = "Layer: Ground";
             // 
-            // cmbTileset
+            // lblViewX
             // 
-            this.cmbTileset.FormattingEnabled = true;
-            this.cmbTileset.Location = new System.Drawing.Point(11, 207);
-            this.cmbTileset.Name = "cmbTileset";
-            this.cmbTileset.Size = new System.Drawing.Size(293, 21);
-            this.cmbTileset.TabIndex = 24;
-            this.cmbTileset.SelectedIndexChanged += new System.EventHandler(this.cmbTileset_SelectedIndexChanged);
+            this.lblViewX.AutoSize = true;
+            this.lblViewX.Location = new System.Drawing.Point(8, 91);
+            this.lblViewX.Name = "lblViewX";
+            this.lblViewX.Size = new System.Drawing.Size(52, 13);
+            this.lblViewX.TabIndex = 19;
+            this.lblViewX.Text = "View X: 0";
+            // 
+            // lblViewY
+            // 
+            this.lblViewY.AutoSize = true;
+            this.lblViewY.Location = new System.Drawing.Point(8, 104);
+            this.lblViewY.Name = "lblViewY";
+            this.lblViewY.Size = new System.Drawing.Size(52, 13);
+            this.lblViewY.TabIndex = 18;
+            this.lblViewY.Text = "View Y: 0";
+            // 
+            // lblSelectW
+            // 
+            this.lblSelectW.AutoSize = true;
+            this.lblSelectW.Location = new System.Drawing.Point(8, 52);
+            this.lblSelectW.Name = "lblSelectW";
+            this.lblSelectW.Size = new System.Drawing.Size(77, 13);
+            this.lblSelectW.TabIndex = 17;
+            this.lblSelectW.Text = "SelectTileW: 0";
+            // 
+            // lblSelectH
+            // 
+            this.lblSelectH.AutoSize = true;
+            this.lblSelectH.Location = new System.Drawing.Point(8, 65);
+            this.lblSelectH.Name = "lblSelectH";
+            this.lblSelectH.Size = new System.Drawing.Size(74, 13);
+            this.lblSelectH.TabIndex = 16;
+            this.lblSelectH.Text = "SelectTileH: 0";
+            // 
+            // lblButtonDown
+            // 
+            this.lblButtonDown.AutoSize = true;
+            this.lblButtonDown.Location = new System.Drawing.Point(8, 78);
+            this.lblButtonDown.Name = "lblButtonDown";
+            this.lblButtonDown.Size = new System.Drawing.Size(81, 13);
+            this.lblButtonDown.TabIndex = 15;
+            this.lblButtonDown.Text = "Button Down: ?";
+            // 
+            // lblSelectY
+            // 
+            this.lblSelectY.AutoSize = true;
+            this.lblSelectY.Location = new System.Drawing.Point(8, 26);
+            this.lblSelectY.Name = "lblSelectY";
+            this.lblSelectY.Size = new System.Drawing.Size(73, 13);
+            this.lblSelectY.TabIndex = 14;
+            this.lblSelectY.Text = "SelectTileY: 0";
+            // 
+            // lblSelectX
+            // 
+            this.lblSelectX.AutoSize = true;
+            this.lblSelectX.Location = new System.Drawing.Point(8, 39);
+            this.lblSelectX.Name = "lblSelectX";
+            this.lblSelectX.Size = new System.Drawing.Size(73, 13);
+            this.lblSelectX.TabIndex = 13;
+            this.lblSelectX.Text = "SelectTileX: 0";
+            // 
+            // lblMouseLoc
+            // 
+            this.lblMouseLoc.AutoSize = true;
+            this.lblMouseLoc.Location = new System.Drawing.Point(8, 13);
+            this.lblMouseLoc.Name = "lblMouseLoc";
+            this.lblMouseLoc.Size = new System.Drawing.Size(92, 13);
+            this.lblMouseLoc.TabIndex = 12;
+            this.lblMouseLoc.Text = "Mouse - X: 0, Y: 0";
             // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1404, 837);
+            this.ClientSize = new System.Drawing.Size(1404, 765);
             this.Controls.Add(this.mapProperties);
             this.Controls.Add(this.treeMaps);
             this.Controls.Add(this.tosMenu);
-            this.Controls.Add(this.pnlDebug);
             this.Controls.Add(this.scrlViewY);
             this.Controls.Add(this.scrlViewX);
             this.Controls.Add(this.picMap);
@@ -1197,8 +1187,9 @@
             this.tabTools.ResumeLayout(false);
             this.tabLayer.ResumeLayout(false);
             this.tabLayer.PerformLayout();
-            this.pnlDebug.ResumeLayout(false);
-            this.pnlDebug.PerformLayout();
+            this.pnlTile.ResumeLayout(false);
+            this.pnlTile.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.pnlOptions.ResumeLayout(false);
@@ -1220,9 +1211,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picMap)).EndInit();
             this.tosMenu.ResumeLayout(false);
             this.tosMenu.PerformLayout();
-            this.pnlTile.ResumeLayout(false);
-            this.pnlTile.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picTileset)).EndInit();
+            this.pnlDebug.ResumeLayout(false);
+            this.pnlDebug.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1308,6 +1298,11 @@
         private System.Windows.Forms.TextBox txtMaxX;
         private System.Windows.Forms.Label lblMaxY;
         private System.Windows.Forms.Label lblMaxX;
+        private System.Windows.Forms.TreeView treeMaps;
+        private System.Windows.Forms.PropertyGrid mapProperties;
+        private System.Windows.Forms.Panel pnlTile;
+        private System.Windows.Forms.PictureBox picTileset;
+        private System.Windows.Forms.ComboBox cmbTileset;
         private System.Windows.Forms.Panel pnlDebug;
         private System.Windows.Forms.Label lblType;
         private System.Windows.Forms.Label lblLayer;
@@ -1319,11 +1314,5 @@
         private System.Windows.Forms.Label lblSelectY;
         private System.Windows.Forms.Label lblSelectX;
         private System.Windows.Forms.Label lblMouseLoc;
-        private System.Windows.Forms.TreeView treeMaps;
-        private System.Windows.Forms.PropertyGrid mapProperties;
-        private System.Windows.Forms.Panel pnlTile;
-        private System.Windows.Forms.PictureBox picTileset;
-        private System.Windows.Forms.Label lblTileset;
-        private System.Windows.Forms.ComboBox cmbTileset;
     }
 }

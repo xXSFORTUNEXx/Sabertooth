@@ -2082,7 +2082,7 @@ namespace SabertoothClient
             shopWindow.Close();
             charTab.Show();
             equipTab.Show();
-            skillsTab.Show();
+            // skillsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
@@ -2111,7 +2111,7 @@ namespace SabertoothClient
             bankWindow.Close();
             charTab.Show();
             equipTab.Show();
-            skillsTab.Show();
+            //skillsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
@@ -2142,7 +2142,7 @@ namespace SabertoothClient
             chestWindow.Close();
             charTab.Show();
             equipTab.Show();
-            skillsTab.Show();
+            //skillsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
