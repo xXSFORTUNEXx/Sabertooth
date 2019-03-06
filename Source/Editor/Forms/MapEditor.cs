@@ -155,7 +155,7 @@ namespace Editor.Forms
         {
             e_Window = new RenderWindow(picMap.Handle);
             e_Window.SetFramerateLimit(MAX_FPS);
-            cmbTileset.SelectedIndex = 1;
+            cmbTileset.SelectedIndex = 0;
             e_Layer = (int)TileLayers.Ground;
             e_Type = (int)TileType.None;
 

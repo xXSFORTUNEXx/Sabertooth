@@ -1117,7 +1117,7 @@ namespace SabertoothServer
                             Y -= 1;
                             DidMove = true;
                         }
-                        else if (Y < players[Target].Y + OFFSET_Y && Y < maps[mapNum].MaxY)
+                        else if (Y < players[Target].Y + OFFSET_Y && Y < maps[mapNum].MaxY - 1)
                         {
                             if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                             {

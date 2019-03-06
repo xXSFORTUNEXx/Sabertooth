@@ -21,8 +21,8 @@
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
         public const int MAX_CHEST_ITEMS = 10;
-        public const int PLAYER_START_X = 9;
-        public const int PLAYER_START_Y = 17;
+        public const int PLAYER_START_X = -2;
+        public const int PLAYER_START_Y = -5;
         public const int OFFSET_X = 16;
         public const int OFFSET_Y = 11;
         public const int MAX_PARTY = 4;

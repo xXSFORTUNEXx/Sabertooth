@@ -27,7 +27,7 @@ namespace Editor.Forms
             InitializeComponent();
             picSprite.Image = Image.FromFile("Resources/Items/1.png"); 
             scrlSprite.Maximum = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
-            scrlProjNum.Maximum = 2;
+            scrlProjNum.Maximum = LoadProjectileCount();
             LoadItemList();
         }
 
@@ -37,7 +37,7 @@ namespace Editor.Forms
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
-                string command = "SELECT COUNT(*) FROM ITEMS";
+                string command = "SELECT COUNT(*) FROM Items";
                 using (SqlCommand cmd = new SqlCommand(command, sql))
                 {
                     object count = cmd.ExecuteScalar();
@@ -48,6 +48,21 @@ namespace Editor.Forms
                         e_Item.LoadNameFromDatabase(i + 1);
                         lstIndex.Items.Add(e_Item.Name);
                     }
+                }
+            }
+        }
+
+        private int LoadProjectileCount()
+        {
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
+            {
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM Projectiles";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
+                {
+                    object count = cmd.ExecuteScalar();
+                    return ToInt32(count);
                 }
             }
         }
@@ -278,7 +293,8 @@ namespace Editor.Forms
             scrlRarity.Value = e_Item.Rarity;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
-            if (pnlRanged.Visible) { picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Item.ProjectileNumber + ".png"); }
+            e_Proj.LoadProjectileFromDatabase(e_Item.ProjectileNumber);
+            if (pnlRanged.Visible) { picProj.Image = Image.FromFile("Resources/Projectiles/" + e_Proj.Sprite + ".png"); }
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);

@@ -18,23 +18,7 @@ namespace Editor
             InitializeComponent();
             LoadConfiguration();
             CheckSQLConnection();
-
-            string script = "SELECT Name from SYS.views";
-            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            SqlConnection c = new SqlConnection(connection);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(script, c);
-            SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
-            DataTable ds = new DataTable();
-            dataAdapter.Fill(ds);
-            lstViews.DisplayMember = "Name";
-            lstViews.DataSource = ds;
-        }
-
-        private void btnUnlock_Click(object sender, EventArgs e)
-        {
-            string unlockPass = txtUnlock.Text;
-            if (unlockPass == "fortune") { pnlLock.Visible = false; }
-            else { lblIncorrect.Visible = true; }
+            LoadViews();
         }
 
         private void btnItemEditor_Click(object sender, EventArgs e)
@@ -66,7 +50,7 @@ namespace Editor
             e_ShopEditor.Show();
         }
 
-        private void btnEditor_Click(object sender, EventArgs e)
+        private void btnChatEditor_Click(object sender, EventArgs e)
         {
             ChatEditor e_ChatEditor = new ChatEditor();
             e_ChatEditor.Show();
@@ -95,7 +79,7 @@ namespace Editor
             dtViewGrid.DataSource = null;
             dtViewGrid.Rows.Clear();
             string view = lstViews.GetItemText(lstViews.SelectedItem);
-            string script = "SELECT * from " + view;
+            string script = "SELECT * FROM " + view;
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             SqlConnection c = new SqlConnection(connection);
             SqlDataAdapter dataAdapter = new SqlDataAdapter(script, c);
@@ -105,6 +89,70 @@ namespace Editor
             dtViewGrid.ReadOnly = true;
             dtViewGrid.DataSource = ds;
             dtViewGrid.AutoResizeColumns();
+        }
+
+        private void btnCloseWindow_Click(object sender, EventArgs e)
+        {
+            if (pnlEditorsViews.Visible)
+            {
+                showHideViewWindowToolStripMenuItem.Checked = false;
+                pnlEditorsViews.Visible = false;
+            }
+        }
+
+        private void showHideViewWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showHideViewWindowToolStripMenuItem.Checked)
+            {
+                showHideViewWindowToolStripMenuItem.Checked = false;
+                pnlEditorsViews.Visible = false;
+            }
+            else
+            {
+                showHideViewWindowToolStripMenuItem.Checked = true;
+                pnlEditorsViews.Visible = true;
+            }
+        }
+
+        private void btnCloseEditors_Click(object sender, EventArgs e)
+        {
+            if (pnlEditors.Visible)
+            {
+                showHideEditorsToolStripMenuItem.Checked = false;
+                pnlEditors.Visible = false;
+            }
+        }
+
+        private void showHideEditorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (showHideEditorsToolStripMenuItem.Checked)
+            {
+                showHideEditorsToolStripMenuItem.Checked = false;
+                pnlEditors.Visible = false;
+            }
+            else
+            {
+                showHideEditorsToolStripMenuItem.Checked = true;
+                pnlEditors.Visible = true;
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Exit();
+        }
+
+        private void LoadViews()
+        {
+            string script = "SELECT Name FROM SYS.views ORDER BY Name ASC";
+            string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
+            SqlConnection c = new SqlConnection(connection);
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(script, c);
+            SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
+            DataTable ds = new DataTable();
+            dataAdapter.Fill(ds);
+            lstViews.DisplayMember = "Name";
+            lstViews.DataSource = ds;
         }
     }
 
