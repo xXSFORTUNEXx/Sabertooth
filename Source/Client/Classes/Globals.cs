@@ -97,6 +97,8 @@ namespace SabertoothClient
         public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds
         public const int PIC_X = 32;
         public const int PIC_Y = 32;
+        public const int PIC_W = 32;
+        public const int PIC_H = 32;
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
         #endregion

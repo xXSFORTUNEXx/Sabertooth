@@ -1391,8 +1391,8 @@ namespace Editor.Forms
         private void UpdateViewScrollBars()
         {
             //Default: X 25, Y 19
-            scrlViewX.Maximum = (e_Map.MaxX - 25);
-            scrlViewY.Maximum = (e_Map.MaxY - 19);
+            scrlViewX.Maximum = (e_Map.MaxX - EDITOR_OFFSET_X);
+            scrlViewY.Maximum = (e_Map.MaxY - EDITOR_OFFSET_Y);
         }
 
         private void treeMaps_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1460,10 +1460,10 @@ namespace Editor.Forms
                     {
                         for (int y = 0; y < e_Map.MaxY; y++)
                         {
-                            e_Map.Ground[x, y].TileX = (e_TileX * 32);
-                            e_Map.Ground[x, y].TileY = (e_TileY * 32);
-                            e_Map.Ground[x, y].TileW = 32;
-                            e_Map.Ground[x, y].TileH = 32;
+                            e_Map.Ground[x, y].TileX = (e_TileX * PIC_X);
+                            e_Map.Ground[x, y].TileY = (e_TileY * PIC_Y);
+                            e_Map.Ground[x, y].TileW = PIC_W;
+                            e_Map.Ground[x, y].TileH = PIC_H;
                             e_Map.Ground[x, y].Tileset = e_SelectTileset;
                         }
                     }
@@ -1473,10 +1473,10 @@ namespace Editor.Forms
                     {
                         for (int y = 0; y < e_Map.MaxY; y++)
                         {
-                            e_Map.Mask[x, y].TileX = (e_TileX * 32);
-                            e_Map.Mask[x, y].TileY = (e_TileY * 32);
-                            e_Map.Mask[x, y].TileW = 32;
-                            e_Map.Mask[x, y].TileH = 32;
+                            e_Map.Mask[x, y].TileX = (e_TileX * PIC_X);
+                            e_Map.Mask[x, y].TileY = (e_TileY * PIC_Y);
+                            e_Map.Mask[x, y].TileW = PIC_W;
+                            e_Map.Mask[x, y].TileH = PIC_H;
                             e_Map.Mask[x, y].Tileset = e_SelectTileset;
                         }
                     }
@@ -1486,10 +1486,10 @@ namespace Editor.Forms
                     {
                         for (int y = 0; y < e_Map.MaxY; y++)
                         {
-                            e_Map.MaskA[x, y].TileX = (e_TileX * 32);
-                            e_Map.MaskA[x, y].TileY = (e_TileY * 32);
-                            e_Map.MaskA[x, y].TileW = 32;
-                            e_Map.MaskA[x, y].TileH = 32;
+                            e_Map.MaskA[x, y].TileX = (e_TileX * PIC_X);
+                            e_Map.MaskA[x, y].TileY = (e_TileY * PIC_Y);
+                            e_Map.MaskA[x, y].TileW = PIC_W;
+                            e_Map.MaskA[x, y].TileH = PIC_H;
                             e_Map.MaskA[x, y].Tileset = e_SelectTileset;
                         }
                     }
@@ -1499,10 +1499,10 @@ namespace Editor.Forms
                     {
                         for (int y = 0; y < e_Map.MaxY; y++)
                         {
-                            e_Map.Fringe[x, y].TileX = (e_TileX * 32);
-                            e_Map.Fringe[x, y].TileY = (e_TileY * 32);
-                            e_Map.Fringe[x, y].TileW = 32;
-                            e_Map.Fringe[x, y].TileH = 32;
+                            e_Map.Fringe[x, y].TileX = (e_TileX * PIC_X);
+                            e_Map.Fringe[x, y].TileY = (e_TileY * PIC_Y);
+                            e_Map.Fringe[x, y].TileW = PIC_W;
+                            e_Map.Fringe[x, y].TileH = PIC_H;
                             e_Map.Fringe[x, y].Tileset = e_SelectTileset;
                         }
                     }
@@ -1512,10 +1512,10 @@ namespace Editor.Forms
                     {
                         for (int y = 0; y < e_Map.MaxY; y++)
                         {
-                            e_Map.FringeA[x, y].TileX = (e_TileX * 32);
-                            e_Map.FringeA[x, y].TileY = (e_TileY * 32);
-                            e_Map.FringeA[x, y].TileW = 32;
-                            e_Map.FringeA[x, y].TileH = 32;
+                            e_Map.FringeA[x, y].TileX = (e_TileX * PIC_X);
+                            e_Map.FringeA[x, y].TileY = (e_TileY * PIC_Y);
+                            e_Map.FringeA[x, y].TileW = PIC_W;
+                            e_Map.FringeA[x, y].TileH = PIC_H;
                             e_Map.FringeA[x, y].Tileset = e_SelectTileset;
                         }
                     }

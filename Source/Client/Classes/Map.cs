@@ -413,7 +413,7 @@ namespace SabertoothClient
                     if (Ground[x, y].LightRadius > 0)
                     {
                         int centerX = ((x * 32) - players[HandleData.myIndex].X * 32) + 16;
-                        int centerY = 1024 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
+                        int centerY = 768 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = Ground[x, y].LightRadius;
 

@@ -75,12 +75,12 @@
 
         #region Editor Globals
         //Editor Globals
-        public const uint EDITOR_WIDTH = 800;
-        public const uint EDITOR_HEIGHT = 608;
+        public const uint EDITOR_WIDTH = 1024;
+        public const uint EDITOR_HEIGHT = 768;
         public const int WHEEL_OPTION_ZOOM = 0;
         public const int WHEEL_OPTION_SCROLL = 1;
-        public const int EDITOR_OFFSET_X = 25;
-        public const int EDITOR_OFFSET_Y = 19;
+        public const int EDITOR_OFFSET_X = 32;
+        public const int EDITOR_OFFSET_Y = 24;
         #endregion
 
         #region Client Globals
@@ -95,6 +95,8 @@
         public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds
         public const int PIC_X = 32;
         public const int PIC_Y = 32;
+        public const int PIC_W = 32;
+        public const int PIC_H = 32;
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
         #endregion
