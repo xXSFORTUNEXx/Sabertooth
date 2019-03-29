@@ -66,7 +66,7 @@ namespace SabertoothServer
             Server.LoadConfiguration();
             Server.CheckSQLConnection();
             netServer = new NetServer(netConfig);
-            netServer.Start();
+            netServer.Start();            
             Logging.WriteMessageLog("Network configuration complete...");
             Server.ServerLoop();
         }
@@ -122,7 +122,7 @@ namespace SabertoothServer
 
             Thread commandThread = new Thread(() => CommandWindow());
             commandThread.Start();
-
+           
             isRunning = true;
             while (isRunning)
             {
@@ -747,9 +747,9 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("Version: " + sVersion, "Commands");
                         Logging.WriteMessageLog(upTime, "Commands");                        
                         Logging.WriteMessageLog("CPS: " + fps, "Commands");
-                        Logging.WriteMessageLog("Public IP: " + GetPublicIPAddress());
+                        Logging.WriteMessageLog("Public IP Address: " + GetPublicIPAddress());
                         Logging.WriteMessageLog("Host Name: " + hostName, "Commands");
-                        Logging.WriteMessageLog("Server Address: " + NetUtility.Resolve(hostName), "Commands");
+                        Logging.WriteMessageLog("Local IP Address: " + NetUtility.Resolve(hostName), "Commands");
                         Logging.WriteMessageLog("Port: " + SabertoothServer.netServer.Port, "Commands");
                         Logging.WriteMessageLog(SabertoothServer.netServer.Statistics.ToString(), "Commands");
                         if (latency > 0.000) { Logging.WriteMessageLog("Configured Latency: " + SabertoothServer.netServer.Configuration.SimulatedMinimumLatency.ToString().Trim('.', '0') + "ms", "Commands"); }
@@ -863,6 +863,7 @@ namespace SabertoothServer
                                         Logging.WriteLog("Damage: " + maps[ToInt32(m_Num)].m_MapProj[i].Damage, "Commands");
                                         Logging.WriteLog("Range: " + maps[ToInt32(m_Num)].m_MapProj[i].Range, "Commands");
                                         Logging.WriteLog("Sprite: " + maps[ToInt32(m_Num)].m_MapProj[i].Sprite, "Commands");
+                                        Logging.WriteLog("Owner #:" + maps[ToInt32(m_Num)].m_MapProj[i].Owner, "Commands");
                                         Logging.WriteLog("Owner:" + players[maps[ToInt32(m_Num)].m_MapProj[i].Owner].Name, "Commands");
                                         Logging.WriteLog("Type: " + maps[ToInt32(m_Num)].m_MapProj[i].Type, "Commands");
                                         Logging.WriteLog("Speed: " + maps[ToInt32(m_Num)].m_MapProj[i].Speed, "Commands");
@@ -898,40 +899,47 @@ namespace SabertoothServer
                         break;
 
                     case "settime":
-                        Logging.WriteMessageLog("Format: MMM dd, yyyy hh:mm:ss tt");
-                        Logging.WriteMessageLogLine("Second(0-59): ");
-                        string second = Console.ReadLine();
-                        worldTime.g_Second = ToInt32(second);
-
-                        Logging.WriteMessageLogLine("Minute(0-59): ");
-                        string minute = Console.ReadLine();
-                        worldTime.g_Minute = ToInt32(minute);
-
-                        Logging.WriteMessageLogLine("Hour(0-24): ");
-                        string hour = Console.ReadLine();
-                        worldTime.g_Hour = ToInt32(hour);
-
-                        Logging.WriteMessageLogLine("Day(1-31): ");
-                        string day = Console.ReadLine();
-                        worldTime.g_DayOfWeek  = ToInt32(day);
-
-                        Logging.WriteMessageLogLine("Month(1-12): ");
-                        string month = Console.ReadLine();
-                        worldTime.g_Month = ToInt32(month);
-
-                        Logging.WriteMessageLogLine("Year(1-5000): ");
-                        string year = Console.ReadLine();
-                        worldTime.g_Year = ToInt32(year);
-
-                        Thread.Sleep(1000);
-                        Logging.WriteMessageLog("Time set to: " + worldTime.Time);
-
-                        for (int i = 0; i < MAX_PLAYERS; i++)
+                        try
                         {
-                            if (players[i].Name != null && players[i].Connection.Status == NetConnectionStatus.Connected)
+                            Logging.WriteMessageLog("Format: MMM dd, yyyy hh:mm:ss tt");
+                            Logging.WriteMessageLogLine("Second(0-59): ");
+                            string second = Console.ReadLine();
+                            worldTime.g_Second = ToInt32(second);
+
+                            Logging.WriteMessageLogLine("Minute(0-59): ");
+                            string minute = Console.ReadLine();
+                            worldTime.g_Minute = ToInt32(minute);
+
+                            Logging.WriteMessageLogLine("Hour(0-24): ");
+                            string hour = Console.ReadLine();
+                            worldTime.g_Hour = ToInt32(hour);
+
+                            Logging.WriteMessageLogLine("Day(1-31): ");
+                            string day = Console.ReadLine();
+                            worldTime.g_DayOfWeek = ToInt32(day);
+
+                            Logging.WriteMessageLogLine("Month(1-12): ");
+                            string month = Console.ReadLine();
+                            worldTime.g_Month = ToInt32(month);
+
+                            Logging.WriteMessageLogLine("Year(1-5000): ");
+                            string year = Console.ReadLine();
+                            worldTime.g_Year = ToInt32(year);
+
+                            Thread.Sleep(1000);
+                            Logging.WriteMessageLog("Time set to: " + worldTime.Time);
+
+                            for (int i = 0; i < MAX_PLAYERS; i++)
                             {
-                                HandleData.UpdatePlayersWithTimeChange(players[i].Connection, i);
+                                if (players[i].Name != null && players[i].Connection.Status == NetConnectionStatus.Connected)
+                                {
+                                    HandleData.UpdatePlayersWithTimeChange(players[i].Connection, i);
+                                }
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.WriteMessageLog(e.Message);
                         }
                         break;
 

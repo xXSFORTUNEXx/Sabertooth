@@ -36,6 +36,7 @@ namespace SabertoothClient
         public static string CurrentVersion { get; set; }
         public static bool VSync { get; set; }
         public static bool Fullscreen { get; set; }
+        public static bool LanConnection { get; set; }
         public static Styles style { get; set; }
         #endregion
 
@@ -95,6 +96,7 @@ namespace SabertoothClient
                 CurrentVersion = "1.0";
                 VSync = false;
                 Fullscreen = false;
+                LanConnection = true;
                 SaveConfiguration();
                 CreateMapCache();
                 Logging.WriteMessageLog("Config and map cache created!");
@@ -117,6 +119,8 @@ namespace SabertoothClient
             VSync = reader.ReadElementContentAsBoolean();
             reader.ReadToFollowing("Fullscreen");
             Fullscreen = reader.ReadElementContentAsBoolean();
+            reader.ReadToFollowing("LAN");
+            LanConnection = reader.ReadElementContentAsBoolean();
             reader.Close();
 
             Logging.WriteMessageLog("Configuration file loaded...");
@@ -142,6 +146,7 @@ namespace SabertoothClient
             writer.WriteElementString("Version", CurrentVersion);
             writer.WriteElementString("VSync", ToInt32(VSync).ToString());
             writer.WriteElementString("Fullscreen", ToInt32(Fullscreen).ToString());
+            writer.WriteElementString("LAN", ToInt32(LanConnection).ToString());
             writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
@@ -877,8 +882,27 @@ namespace SabertoothClient
             {
                 if (TickCount - discoverTick >= DISCOVERY_TIMER)
                 {
+
                     Logging.WriteMessageLog("Connecting to server...");
-                    SabertoothClient.netClient.DiscoverLocalPeers(SERVER_PORT);
+                    if (SabertoothClient.LanConnection)
+                    {
+                        int port = ToInt32(SabertoothClient.Port);
+                        SabertoothClient.netClient.DiscoverLocalPeers(port);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+                            outMSG.Write((byte)PacketTypes.Connection);
+                            outMSG.Write("sabertooth");
+                            SabertoothClient.netClient.Connect(SabertoothClient.IPAddress, ToInt32(SabertoothClient.Port), outMSG);
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.WriteMessageLog(e.Message);
+                        }
+                    }
                     discoverTick = TickCount;
                 }
             }

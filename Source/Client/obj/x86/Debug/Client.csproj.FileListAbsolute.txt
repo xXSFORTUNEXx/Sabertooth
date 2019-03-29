@@ -859,3 +859,4 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\RedSkin.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\GreySkin.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\RainbowSkin.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\10.png
