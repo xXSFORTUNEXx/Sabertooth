@@ -69,6 +69,11 @@ namespace SabertoothServer
             netServer.Start();            
             Logging.WriteMessageLog("Network configuration complete...");
             Server.ServerLoop();
+            Server.DisconnectClients();
+            netServer.Shutdown("Exiting");
+            Logging.WriteMessageLog("Shutting down...");
+            Thread.Sleep(500);
+            Exit(0);
         }
     }
 
@@ -140,13 +145,6 @@ namespace SabertoothServer
                 fps = CalculateFrameRate();
                 Thread.Sleep(1);
             }
-            DisconnectClients();
-            Logging.WriteMessageLog("Disconnecting clients...");
-            Thread.Sleep(2500);
-            SabertoothServer.netServer.Shutdown("Shutting down");
-            Logging.WriteMessageLog("Shutting down...");
-            Thread.Sleep(500);
-            Exit(0);
         }
 
         private static void InitArrays()
@@ -886,16 +884,23 @@ namespace SabertoothServer
                         break;
 
                     case "minlat":
-                        Logging.WriteMessageLogLine("Set latency too: ", "Commands");
-                        string lat = Console.ReadLine();
-                        int intseconds = ToInt32(lat);
-                        string msec = lat.Insert(0, "0.0");
-                        float delay = ToSingle(msec);
+                        try
+                        {
+                            Logging.WriteMessageLogLine("Set latency too: ", "Commands");
+                            string lat = Console.ReadLine();
+                            int intseconds = ToInt32(lat);
+                            string msec = lat.Insert(0, "0.0");
+                            float delay = ToSingle(msec);
 
-                        if (intseconds < 15 || intseconds > 150) { Logging.WriteMessageLog("Invalid command format: > 15 and < 150", "Commands"); return; }
+                            if (intseconds < 15 || intseconds > 150) { Logging.WriteMessageLog("Invalid command format: > 15 and < 150", "Commands"); return; }
 
-                        SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
-                        Logging.WriteMessageLog("Minimum latency is now " + lat + "ms");
+                            SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
+                            Logging.WriteMessageLog("Minimum latency is now " + lat + "ms");
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.WriteMessageLog(e.Message);
+                        }
                         break;
 
                     case "settime":
@@ -1070,10 +1075,12 @@ namespace SabertoothServer
 
         public static void DisconnectClients()
         {
+            Logging.WriteMessageLog("Disconnecting clients...");
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
 
             outMSG.Write((byte)PacketTypes.Shutdown);
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.Unreliable);
+            Thread.Sleep(2500);
         }
 
         public static void SaveConfiguration()
