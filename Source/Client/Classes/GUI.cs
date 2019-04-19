@@ -1685,7 +1685,6 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = SabertoothClient.CurrentVersion;
 
                 if (logRemember.IsChecked == true)
                 {
@@ -1718,7 +1717,7 @@ namespace SabertoothClient
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
-                outMSG.Write(version);
+                outMSG.Write(VERSION);
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }
@@ -1743,7 +1742,6 @@ namespace SabertoothClient
                 }
                 string username = unlogBox.Text;
                 string password = pwlogBox.Text;
-                string version = SabertoothClient.CurrentVersion;
 
                 if (logRemember.IsChecked == true)
                 {
@@ -1764,7 +1762,7 @@ namespace SabertoothClient
                 outMSG.Write((byte)PacketTypes.Login);
                 outMSG.Write(username);
                 outMSG.Write(password);
-                outMSG.Write(version);
+                outMSG.Write(VERSION);
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 parent.Hide();
             }

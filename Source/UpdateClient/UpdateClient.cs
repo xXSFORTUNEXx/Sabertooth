@@ -4,6 +4,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using static System.Environment;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace UpdateClient
 {
@@ -145,9 +147,27 @@ namespace UpdateClient
         static void Disconnect()
         {
             updateClient.Disconnect("File transfer complete, closing connection");
-
             Thread.Sleep(2000);
+            LaunchClient();
+            Thread.Sleep(5000);
             Exit(0);
+        }
+
+        static void LaunchClient()
+        {
+            try
+            {
+                using (Process sClient = new Process())
+                {
+                    sClient.StartInfo.UseShellExecute = false;
+                    sClient.StartInfo.FileName = "Client.exe";
+                    sClient.Start();
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog(e.Message);
+            }
         }
 
         static void Connect()

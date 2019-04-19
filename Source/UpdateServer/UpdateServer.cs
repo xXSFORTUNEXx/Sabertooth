@@ -12,6 +12,7 @@ namespace UpdateServer
         private static NetServer updateServer;
         private static List<string> files = new List<string>();
         private static bool isRunning;
+        private static int totalFiles;
 
         static void Main(string[] args)
         {
@@ -47,12 +48,12 @@ namespace UpdateServer
         static void LoadFiles()
         {
             files.Clear();
-            int count = Directory.GetFiles("Updates", "*", SearchOption.AllDirectories).Length;
+            totalFiles = Directory.GetFiles("Updates", "*", SearchOption.AllDirectories).Length;
             string[] dirFiles = Directory.GetFiles("Updates", "*", SearchOption.AllDirectories);
 
-            Logging.WriteMessageLog("Files in update directory: " + count);
+            Logging.WriteMessageLog("Files in update directory: " + totalFiles);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < totalFiles; i++)
             {
                 string filePath = Path.GetFullPath(dirFiles[i]);
                 files.Add(filePath);
@@ -148,6 +149,10 @@ namespace UpdateServer
                     case "help":
                         Logging.WriteMessageLog("Commands:", "Commands");
                         Logging.WriteMessageLog("help - shows a list of commands and their use", "Commands");
+                        Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
+                        Logging.WriteMessageLog("exit - shuts down the server", "Commands");
+                        Logging.WriteMessageLog("reloadfiles - reloads the files being updated from the updates directory", "Commands");
+                        Logging.WriteMessageLog("checkfiles - checks what files are in the update queue", "Commands");
                         break;
 
                     default:

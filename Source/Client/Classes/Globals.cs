@@ -49,7 +49,7 @@ namespace SabertoothClient
         public const float SIMULATED_MINIMUM_LATENCY = 0.000f;  //0.065f
         public const float SIMULATED_PACKET_LOSS = 0f;  //0.5f
         public const float SIMULATED_DUPLICATES_CHANCE = 0f; //0.5f
-        public const string VERSION = "1.0"; //For beta and alpha
+        public const string VERSION = "1.0.0"; //For beta and alpha
         #endregion
 
         #region Server Globals

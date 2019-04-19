@@ -14,6 +14,9 @@ using static SabertoothClient.Globals;
 using KeyEventArgs = SFML.Window.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.Data.SQLite;
+using System.Diagnostics;
+using System.ComponentModel;
+
 
 namespace SabertoothClient
 {
@@ -261,6 +264,24 @@ namespace SabertoothClient
             SabertoothClient.netClient.Disconnect("shutdown");
             Thread.Sleep(500);
             Exit(0);
+        }
+
+        public static void LaunchUpdateClient()
+        {
+            try
+            {
+                using (Process sClient = new Process())
+                {
+                    sClient.StartInfo.UseShellExecute = true;
+                    sClient.StartInfo.FileName = "UpdateClient.exe";
+                    sClient.Start();
+                    Exit(0);
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog(e.Message);
+            }
         }
 
         static void CommandWindow()
@@ -868,7 +889,7 @@ namespace SabertoothClient
 
         static void UpdateTitle(int fps)
         {
-            string title = GAME_TITLE + " FPS: " + fps;
+            string title = GAME_TITLE + " FPS: " + fps + " - Version: " + VERSION;
 
             if (players[HandleData.myIndex].Name != null) { title += " - Logged: " + players[HandleData.myIndex].Name; }
             if (worldTime.updateTime == true) { title += " - Time: " + worldTime.Time; }

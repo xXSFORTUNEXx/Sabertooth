@@ -10,6 +10,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace SabertoothServer
 {
@@ -119,6 +121,7 @@ namespace SabertoothServer
         static int lastFrameRate;
         static int frameRate;
         static int fps;
+        static int usPid;
         #endregion
 
         public static void ServerLoop()
@@ -738,11 +741,23 @@ namespace SabertoothServer
                         SaveAll();  //The void for this command
                         break;
 
+                    case "updateserver":
+                        Logging.WriteMessageLog("Launching update server...Please wait...");
+                        LaunchUpdateServer();
+                        Logging.WriteMessageLog("Update server launched successfully...Check window for status...");
+                        break;
+
+                    case "closeuserver":
+                        Logging.WriteMessageLog("Closing update server...");
+                        CloseUpdateServer();
+                        Logging.WriteMessageLog("Update server closed successfully!");
+                        break;
+
                     case "info":
                         string hostName = Dns.GetHostName();
                         float latency = SabertoothServer.netServer.Configuration.SimulatedMinimumLatency;
                         Logging.WriteMessageLog("Statistics: ", "Commands");
-                        Logging.WriteMessageLog("Version: " + sVersion, "Commands");
+                        Logging.WriteMessageLog("Version: " + VERSION, "Commands");
                         Logging.WriteMessageLog(upTime, "Commands");                        
                         Logging.WriteMessageLog("CPS: " + fps, "Commands");
                         Logging.WriteMessageLog("Public IP Address: " + GetPublicIPAddress());
@@ -981,6 +996,8 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("settime - follow prompts to set the games time", "Commands");
                         Logging.WriteMessageLog("randomtime - set the game time to a random value", "Commands");
                         Logging.WriteMessageLog("shutdown - shuts down the server", "Commands");
+                        Logging.WriteMessageLog("updateserver - launches the update server", "Commands");
+                        Logging.WriteMessageLog("closeuserver - closes the update server", "Commands");
                         Logging.WriteMessageLog("exit - shuts down the server", "Commands");
                         break;
 
@@ -1083,6 +1100,36 @@ namespace SabertoothServer
             Thread.Sleep(2500);
         }
 
+        public static void CloseUpdateServer()
+        {
+            try
+            {
+                Process.GetProcessById(usPid).Kill();
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog(e.Message);
+            }
+        }
+
+        public static void LaunchUpdateServer()
+        {
+            try
+            {
+                using (Process sServer = new Process())
+                {
+                    sServer.StartInfo.UseShellExecute = true;
+                    sServer.StartInfo.FileName = "UpdateServer.exe";
+                    sServer.Start();
+                    usPid = sServer.Id;
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog(e.Message);
+            }
+        }
+
         public static void SaveConfiguration()
         {
             XmlWriterSettings userData = new XmlWriterSettings
@@ -1144,7 +1191,7 @@ namespace SabertoothServer
 
         static void UpdateTitle()
         {
-            Console.Title = "Sabertooth Server - " + worldTime.Time;
+            Console.Title = "Sabertooth Server - " + worldTime.Time + " - CPS: " + fps + " - Version: " + VERSION;
         }
 
         private static string GetPublicIPAddress()

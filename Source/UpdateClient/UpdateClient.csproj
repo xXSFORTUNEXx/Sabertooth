@@ -61,7 +61,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Oxygen-Icons.org-Oxygen-Actions-edit-redo.ico" />
     <Content Include="Update.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

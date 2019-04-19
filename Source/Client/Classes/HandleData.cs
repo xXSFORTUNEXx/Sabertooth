@@ -5,6 +5,7 @@ using static System.Convert;
 using static System.Environment;
 using static SabertoothClient.Client;
 using static SabertoothClient.Globals;
+using System.Threading;
 
 namespace SabertoothClient
 {
@@ -1405,7 +1406,12 @@ namespace SabertoothClient
             string msg = incMSG.ReadString();
             string caption = incMSG.ReadString();
             MessageBox msgBox = new MessageBox(canvas, msg, caption);
-            msgBox.MakeModal();
+            msgBox.Show();
+
+            if (caption == "Update")
+            {
+                LaunchUpdateClient();
+            }
         }
 
         static void HandleMapData(NetIncomingMessage incMSG)
