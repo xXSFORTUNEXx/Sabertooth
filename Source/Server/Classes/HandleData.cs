@@ -711,7 +711,7 @@ namespace SabertoothServer
             string password = incMSG.ReadString();
             string version = incMSG.ReadString();
 
-            if (version != VERSION) { SendErrorMessage("An update is available, starting updater...", "Update", incMSG); return; }
+            if (version != sVersion) { SendErrorMessage("An update is available, starting updater...", "Update", incMSG); return; }
 
             if (!AlreadyLogged(username))
             {
