@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using System.Net;
 
 namespace AccountKeyGenClass
@@ -7,17 +8,25 @@ namespace AccountKeyGenClass
     {
         public static void SendActivationEmail(string email, string subject, string body, string ipAddress, int port, string username, string pass)
         {
-            MailMessage mailMessage = new MailMessage("webmaster@fortune.naw", email);
-            SmtpClient smtpClient = new SmtpClient
+            try
             {
-                Host = ipAddress,
-                Port = port,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(username, pass)
-            };
-            mailMessage.Subject = subject;
-            mailMessage.Body = body;
-            smtpClient.Send(mailMessage);
+
+                MailMessage mailMessage = new MailMessage("webmaster@fortune.naw", email);
+                SmtpClient smtpClient = new SmtpClient
+                {
+                    Host = ipAddress,
+                    Port = port,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(username, pass)
+                };
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                smtpClient.Send(mailMessage);
+            }
+            catch
+            {
+                Console.WriteLine("Couldnt send activation email! Please check configuration...");
+            }
         }
 
         public static bool ValidEmailAddress(string email)
