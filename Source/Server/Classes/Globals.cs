@@ -81,6 +81,7 @@
         public const int WHEEL_OPTION_SCROLL = 1;
         public const int EDITOR_OFFSET_X = 32;
         public const int EDITOR_OFFSET_Y = 24;
+        public const int EDITOR_OFFSET_LIGHT = 762;
         #endregion
 
         #region Client Globals

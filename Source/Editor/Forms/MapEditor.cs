@@ -234,7 +234,7 @@ namespace Editor.Forms
         void DrawCursorLight()
         {
             int centerX = ((e_CursorX * PIC_X) + 16) - (e_ViewX * PIC_X);
-            int centerY = 600 - ((e_CursorY * PIC_Y) + 16) + (e_ViewY * PIC_Y);
+            int centerY = EDITOR_OFFSET_LIGHT - ((e_CursorY * PIC_Y) + 16) + (e_ViewY * PIC_Y);
             Vector2f center = new Vector2f(centerX, centerY);
             double radius = e_LightRadius;
 
@@ -259,7 +259,7 @@ namespace Editor.Forms
                     if (e_Map.Ground[x, y].LightRadius > 0)
                     {
                         int centerX = ((x * PIC_X) + 16) - (e_ViewX * PIC_X);
-                        int centerY = 600 - (((y * PIC_Y) + 16) - (e_ViewY * PIC_Y));
+                        int centerY = EDITOR_OFFSET_LIGHT - (((y * PIC_Y) + 16) - (e_ViewY * PIC_Y));
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = e_Map.Ground[x, y].LightRadius;
 
