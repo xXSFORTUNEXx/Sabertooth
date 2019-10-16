@@ -281,7 +281,7 @@ namespace SabertoothServer
         }
 
         #region Database
-        public static void CheckSQLConnection()
+        public static bool CheckSQLConnection()
         {
             string connection = "Data Source=" + sqlServer + ";Integrated Security=True";
             string script = ReadAllText("SQL Scripts/Database.sql");
@@ -297,12 +297,15 @@ namespace SabertoothServer
                 }
                 Logging.WriteMessageLog("Established SQL Server connection!", "SQL");
                 CheckDatabaseTables();
+                return true;
             }
             catch (Exception e)
             {
                 Logging.WriteMessageLog("Error esablishing SQL connection, Check log for details...", "SQL");
                 Logging.WriteLog(e.Message, "SQL");
+                Exit(0);
             }
+            return false;
         }
 
         public static void CheckDatabaseTables()
