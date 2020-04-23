@@ -82,6 +82,10 @@
     <Reference Include="AccountKeyGenClass">
       <HintPath>..\..\Libs\AccountKeyGenClass.dll</HintPath>
     </Reference>
+    <Reference Include="Gwen.Renderer.SFML, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\Gwen.Renderer.SFML.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\sfmlnet-audio-2.dll</HintPath>
@@ -433,10 +437,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gwen.Renderer.SFML\Gwen.Renderer.SFML.csproj">
-      <Project>{d97b4f91-9fc8-46e0-a511-68d006662051}</Project>
-      <Name>Gwen.Renderer.SFML</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Gwen\Gwen.csproj">
       <Project>{adda2f43-96c0-497f-8216-29c67abc9806}</Project>
       <Name>Gwen</Name>
