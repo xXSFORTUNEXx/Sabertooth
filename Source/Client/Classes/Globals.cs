@@ -10,9 +10,9 @@ namespace SabertoothClient
         public const char CHAR_NO = 'N';
         public const char CHAR_YES = 'Y';
         public const int MAX_PLAYERS = 5;
+        public const int MAX_LEVEL = 30;
         public const int MAX_NPCS = 10;
-        public const int MAX_ITEMS = 50;
-        public const int MAX_PROJECTILES = 10;
+        public const int MAX_ITEMS = 50;        
         public const int MAX_MAPS = 10;
         public const int MAX_MAP_NPCS = 10;
         public const int MAX_MAP_POOL_NPCS = 20;
@@ -31,8 +31,7 @@ namespace SabertoothClient
         public const int MAX_INSTANCE_NPC = 20;
         public const int MAX_INV_SLOTS = 25;
         public const int MAX_BANK_SLOTS = 50;
-        public const int MAX_BLOOD_SPLATS = 50;
-        public const int MAX_MAP_PROJECTILES = 200;
+        public const int MAX_BLOOD_SPLATS = 50;        
         public const int MAX_QUESTS = 50;
         public const int MAX_QUEST_REWARDS = 5;
         public const int MAX_QUEST_ITEMS_REQ = 5;

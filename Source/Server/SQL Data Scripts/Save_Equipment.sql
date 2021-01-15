@@ -1,23 +1,16 @@
 UPDATE Equipment
 SET Name = @name,
-	Clip = @clip,
-	Max_Clip = @maxclip,
 	Sprite = @sprite,
 	Damage = @damage,
 	Armor = @armor,
 	Type = @type,
 	Attack_Speed = @attackspeed,
-	Reload_Speed = @reloadspeed,
 	Health_Restore = @healthrestore,
-	Hunger_Restore = @hungerrestore,
-	Hydrate_Restore = @hydraterestore,
 	Strength = @strength,
 	Agility = @agility,
 	Endurance = @endurance,
 	Stamina = @stamina,
-	Ammo_Type = @ammotype,
 	Value = @value,
-	Proj = @proj,
 	Price = @price,
 	Rarity = @rarity
 WHERE Owner = @owner

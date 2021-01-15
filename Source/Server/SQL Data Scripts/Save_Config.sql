@@ -9,8 +9,6 @@ declare @id integer = 1
 */
 UPDATE Configuration
 SET Regen_Time = @regentime,
-	Hunger_Time = @hungertime,
-	Hydration_Time = @hydrationtime,
 	Save_Time = @savetime,
 	Spawn_Time = @spawntime,
 	AiTime = @aitime

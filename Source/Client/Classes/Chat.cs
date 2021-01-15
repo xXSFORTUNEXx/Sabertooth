@@ -46,6 +46,6 @@ namespace SabertoothClient
         OpenShop,
         OpenBank,
         Reward,
-        Mission
+        Quest
     }
 }

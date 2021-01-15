@@ -191,7 +191,6 @@ namespace SabertoothClient
         public static Npc[] npcs = new Npc[MAX_NPCS];
         public static Shop[] shops = new Shop[MAX_SHOPS];
         public static Item[] items = new Item[MAX_ITEMS];
-        public static Projectile[] projectiles = new Projectile[MAX_PROJECTILES];
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Quests[] quests = new Quests[MAX_QUESTS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
@@ -252,10 +251,8 @@ namespace SabertoothClient
             }
 
             if (SabertoothClient.netClient.ServerConnection != null)
-            {
-                players[HandleData.myIndex].SendUpdateClip();
+            {                
                 players[HandleData.myIndex].SendUpdatePlayerTime();
-                players[HandleData.myIndex].SendUpdateLifeTime();
             }      
 
             canvas.Dispose(); 
@@ -330,11 +327,6 @@ namespace SabertoothClient
             for (int i = 0; i < MAX_ITEMS; i++)
             {
                 items[i] = new Item();
-            }
-
-            for (int i = 0; i < MAX_PROJECTILES; i++)
-            {
-                projectiles[i] = new Projectile();
             }
 
             for (int i = 0; i < MAX_SHOPS; i++)
@@ -754,44 +746,6 @@ namespace SabertoothClient
             }
         }
 
-        static void DrawProjectiles()
-        {
-            int minX;
-            int minY;
-            int maxX;
-            int maxY;
-
-            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
-            {
-                minX = (players[HandleData.myIndex].X + 16) - 16;
-                minY = (players[HandleData.myIndex].Y + 11) - 11;
-                maxX = (players[HandleData.myIndex].X + 16) + 17;
-                maxY = (players[HandleData.myIndex].Y + 11) + 16;
-            }
-            else
-            {
-                minX = (players[HandleData.myIndex].X + 12) - 12;
-                minY = (players[HandleData.myIndex].Y + 9) - 9;
-                maxX = (players[HandleData.myIndex].X + 12) + 13;
-                maxY = (players[HandleData.myIndex].Y + 9) + 11;
-            }
-
-            for (int i = 0; i < MAX_DRAWN_PROJECTILES; i++)
-            {
-                if (map.m_MapProj[i] != null)
-                {
-                    if (map.m_MapProj[i].X > minX && map.m_MapProj[i].X < maxX)
-                    {
-                        if (map.m_MapProj[i].Y > minY && map.m_MapProj[i].Y < maxY)
-                        {
-                            renderWindow.Draw(map.m_MapProj[i]);
-                        }
-                    }
-                    map.m_MapProj[i].CheckMovment(i);
-                }
-            }
-        }
-
         static void DrawIndexPlayer()
         {
             renderWindow.Draw(players[HandleData.myIndex]);
@@ -808,7 +762,6 @@ namespace SabertoothClient
                 DrawNpcs();
                 DrawPlayers();
                 DrawIndexPlayer();
-                DrawProjectiles();
                 map.DrawFringe(renderWindow);
                 if (TickCount - walkTick > 100)
                 {
@@ -816,8 +769,6 @@ namespace SabertoothClient
                     players[HandleData.myIndex].CheckControllerMovement();
                     players[HandleData.myIndex].CheckChangeDirection();
                     players[HandleData.myIndex].CheckControllerChangeDirection();
-                    players[HandleData.myIndex].CheckReload();
-                    players[HandleData.myIndex].CheckControllerReload();
                     players[HandleData.myIndex].CheckPlayerInteraction();
                     players[HandleData.myIndex].CheckControllerPlayerInteraction();
                     players[HandleData.myIndex].CheckControllerButtonPress();
@@ -842,10 +793,8 @@ namespace SabertoothClient
             {
                 map.DrawBrightness();
                 hud.UpdateHealthBar();
+                hud.UpdateManaBar();
                 hud.UpdateExpBar();
-                hud.UpdateClipBar();
-                hud.UpdateHungerBar();
-                hud.UpdateHydrationBar();
                 renderWindow.Draw(hud);
                 miniMap.UpdateMiniMap();
                 renderWindow.Draw(miniMap);
@@ -860,12 +809,10 @@ namespace SabertoothClient
             if (SabertoothClient.netClient.ServerConnection == null || players[HandleData.myIndex].Name == null) { return; }
 
             players[HandleData.myIndex].UpdatePlayerTime();
-            players[HandleData.myIndex].UpdateLifeTime();
 
             if (TickCount - saveTime >= 297000)
             {
                 players[HandleData.myIndex].SendUpdatePlayerTime();
-                players[HandleData.myIndex].SendUpdateLifeTime();
                 saveTime = TickCount;
             }
         }

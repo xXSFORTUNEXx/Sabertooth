@@ -17,8 +17,8 @@ namespace SabertoothClient
     {
         #region Main Classes
         public NetConnection Connection;
-        public Item mainWeapon = new Item();
-        public Item offWeapon = new Item();
+        public Item MainHand = new Item();
+        public Item OffHand = new Item();
         public Item[] Backpack = new Item[MAX_INV_SLOTS];
         public Item[] Bank = new Item[MAX_BANK_SLOTS];
         public Item Chest = new Item();
@@ -32,8 +32,6 @@ namespace SabertoothClient
         Texture[] c_Sprite = new Texture[spriteTextures];
         Font font = new Font("Resources/Fonts/Arial.ttf");
         Text p_Name = new Text();        
-        //Sound gunShot = new Sound();
-        //Sound gunReload = new Sound();
         #endregion
 
         #region Stats
@@ -50,38 +48,26 @@ namespace SabertoothClient
         public int Points { get; set; }
         public int Health { get; set; }
         public int MaxHealth { get; set; }
-        public int Hunger { get; set; }
-        public int Hydration { get; set; }
+        public int Mana { get; set; }
+        public int MaxMana { get; set; }
         public int Experience { get; set; }
-        public int Money { get; set; }
+        public int Wallet { get; set; }
         public int Armor { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Endurance { get; set; }
+        public int Intelligence { get; set; }
         public int Stamina { get; set; }
-        public int PistolAmmo { get; set; }
-        public int AssaultAmmo { get; set; }
-        public int RocketAmmo { get; set; }
-        public int GrenadeAmmo { get; set; }
+        public int Energy { get; set; }
         public int LightRadius { get; set; }
         public int PlayDays { get; set; }
         public int PlayHours { get; set; }
         public int PlayMinutes { get; set; }
         public int PlaySeconds { get; set; }
-        public int LifeDay { get; set; }
-        public int LifeHour { get; set; }
-        public int LifeMinute { get; set; }
-        public int LifeSecond { get; set; }
-        public int LongestLifeDay { get; set; }
-        public int LongestLifeHour { get; set; }
-        public int LongestLifeMinute { get; set; }
-        public int LongestLifeSecond { get; set; }
         public string LastLoggedIn { get; set; }
         public string AccountKey { get; set; }
         public string Active { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
-        public int Kills { get; set; }
         #endregion
 
         #region Local Variables
@@ -89,7 +75,6 @@ namespace SabertoothClient
         bool Attacking;
         int attackTick;
         int timeTick;
-        int lifeTick;
         int pickupTick;
         int equipTick;
         int interactionTick;
@@ -111,8 +96,8 @@ namespace SabertoothClient
         #endregion
 
         #region Class Constructors
-        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int exp, int money, int armor, int hunger, 
-                      int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int mana, int maxmana,
+            int exp, int wallet, int armor, int str, int agi, int inte, int sta, int eng, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -135,37 +120,26 @@ namespace SabertoothClient
             Level = level;
             Points = points;
             Health = health;
+            MaxHealth = maxhealth;
+            Mana = mana;
+            MaxMana = maxmana;
             Experience = exp;
-            Money = money;
+            Wallet = wallet;
             Armor = armor;
-            Hunger = hunger;
-            Hydration = hydration;
             Strength = str;
             Agility = agi;
-            Endurance = end;
+            Intelligence = inte;
             Stamina = sta;
+            Energy = eng;
             Connection = conn;
-            PistolAmmo = defaultAmmo;
-            AssaultAmmo = defaultAmmo;
-            RocketAmmo = 5;
-            GrenadeAmmo = 3;
             LightRadius = 100;
             PlayDays = 0;
             PlayHours = 0;
             PlayMinutes = 0;
             PlaySeconds = 0;
-            LifeDay = 0;
-            LifeHour = 0;
-            LifeMinute = 0;
-            LifeSecond = 0;
-            LongestLifeDay = 0;
-            LongestLifeHour = 0;
-            LongestLifeMinute = 0;
-            LongestLifeSecond = 0;
             LastLoggedIn = "00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
-            Kills = 0;
 
             for (int i = 0; i < spriteTextures; i++)
             {
@@ -429,19 +403,15 @@ namespace SabertoothClient
             if (!Joystick.IsConnected(0)) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
+            if (Attacking == true) { return; }            
             if (TickCount - equipTick < 5000) { return; }
             if (inShop || inChat || inBank) { return; }
 
-            bool isGun = false;
-
             if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) < -25)
             {
-                if (mainWeapon.Name != "None")
+                if (MainHand.Name != "None")
                 {
                     Attacking = true;
-                    isGun = true;
                 }
                 else
                 {
@@ -453,10 +423,9 @@ namespace SabertoothClient
 
             if (Joystick.IsButtonPressed(0, 1))
             {
-                if (offWeapon.Name != "None")
+                if (OffHand.Name != "None")
                 {
                     Attacking = true;
-                    isGun = false;
                 }
                 else
                 {
@@ -466,33 +435,9 @@ namespace SabertoothClient
             }
 
             if (Attacking == true)
-            {
-                if (isGun)
+            {             
                 {
-                    switch (mainWeapon.ItemAmmoType)
-                    {
-                        case (int)AmmoType.Pistol:
-                            if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.AssaultRifle:
-                            if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Rocket:
-                            if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Grenade:
-                            if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
-                            break;
-                    }
-                    if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                    CreateBulletSound();
-                    RemoveBulletFromClip();
-                    Attacking = false;
-                    attackTick = TickCount;
-                }
-                else
-                {
-                    if (TickCount - attackTick < offWeapon.AttackSpeed) { Attacking = false; return; }
+                    if (TickCount - attackTick < OffHand.AttackSpeed) { Attacking = false; return; }
                     switch (AimDirection)
                     {
                         case (int)Directions.Up:
@@ -660,23 +605,7 @@ namespace SabertoothClient
                     attackTick = TickCount;
                 }
             }
-        }
-
-        public void CheckControllerReload()
-        {
-            if (inShop || inChat || inBank) { return; }
-
-            if (!Joystick.IsConnected(0)) { return; }
-            if (Joystick.IsButtonPressed(0, 2))
-            {
-                if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
-                CreateReloadSound();
-                Reload();
-                reloadTick = TickCount;
-                SendUpdateClip();
-                SendUpdateAmmo();
-            }
-        }
+        }        
 
         public void CheckControllerItemPickUp()
         {
@@ -985,19 +914,15 @@ namespace SabertoothClient
         {
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (TickCount - reloadTick < mainWeapon.ReloadSpeed) { return; }
+            if (Attacking == true) { return; }            
             if (TickCount - equipTick < 5000) { return; }
-            if (inShop || inChat || inBank) { return; }
-
-            bool isGun = false;
+            if (inShop || inChat || inBank) { return; }            
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
             {
-                if (mainWeapon.Name != "None")
+                if (MainHand.Name != "None")
                 {
-                    Attacking = true;
-                    isGun = true;
+                    Attacking = true;                    
                 }
                 else
                 {
@@ -1009,10 +934,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.F))
             {
-                if (offWeapon.Name != "None")
+                if (OffHand.Name != "None")
                 {
-                    Attacking = true;
-                    isGun = false;
+                    Attacking = true;                    
                 }
                 else
                 {
@@ -1023,32 +947,8 @@ namespace SabertoothClient
 
             if (Attacking == true)
             {
-                if (isGun)
                 {
-                    switch (mainWeapon.ItemAmmoType)
-                    {
-                        case (int)AmmoType.Pistol:
-                            if (mainWeapon.Clip == 0 && PistolAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.AssaultRifle:
-                            if (mainWeapon.Clip == 0 && AssaultAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Rocket:
-                            if (mainWeapon.Clip == 0 && RocketAmmo == 0) { Attacking = false; return; }
-                            break;
-                        case (int)AmmoType.Grenade:
-                            if (mainWeapon.Clip == 0 && GrenadeAmmo == 0) { Attacking = false; return; }
-                            break;
-                    }
-                    if (TickCount - attackTick < mainWeapon.AttackSpeed) { Attacking = false; return; }
-                    CreateBulletSound();
-                    RemoveBulletFromClip();
-                    Attacking = false;
-                    attackTick = TickCount;
-                }
-                else
-                {
-                    if (TickCount - attackTick < offWeapon.AttackSpeed) { Attacking = false; return; }
+                    if (TickCount - attackTick < OffHand.AttackSpeed) { Attacking = false; return; }
                     switch (AimDirection)
                     {
                         case (int)Directions.Up:
@@ -1218,21 +1118,6 @@ namespace SabertoothClient
             }
         }
 
-        public void CheckReload()
-        {
-            if (inShop || inChat || inBank) { return; }
-
-            if (Keyboard.IsKeyPressed(Keyboard.Key.R))
-            {
-                if (mainWeapon.Clip == mainWeapon.MaxClip) { return; }
-                CreateReloadSound();
-                Reload();
-                reloadTick = TickCount;
-                SendUpdateClip();
-                SendUpdateAmmo();
-            }
-        }
-
         public void CheckItemPickUp()
         {
             if (gui.inputChat.HasFocus == true) { return; }
@@ -1378,167 +1263,7 @@ namespace SabertoothClient
             outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(type);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        public void CreateBulletSound()
-        {
-            //SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Shot.wav");
-            //gunShot = new Sound(soundBuffer);
-            //gunShot.Play();
-        }
-
-        public void CreateReloadSound()
-        {
-            //SoundBuffer soundBuffer = new SoundBuffer("Resources/Sounds/M4A1Reload.wav");
-            //gunReload = new Sound(soundBuffer);
-            //gunReload.Play();
-        }
-
-        public void RemoveBulletFromClip()
-        {
-            if (mainWeapon.Clip > 0)
-            {
-                SendCreateBullet();
-                mainWeapon.Clip -= 1;
-                SendUpdateClip();
-            }
-            else
-            {
-                CreateReloadSound();
-                Reload();
-                reloadTick = TickCount;
-                SendUpdateClip();
-                SendUpdateAmmo();
-            }
-        }
-
-        public void Reload()
-        {
-            switch (mainWeapon.ItemAmmoType)
-            {
-                case (int)AmmoType.Pistol:
-                    if (PistolAmmo == 0) { break; }
-                    if (PistolAmmo > mainWeapon.MaxClip)
-                    {
-                        if (mainWeapon.Clip > 0)
-                        {
-                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            PistolAmmo -= leftOver;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            PistolAmmo -= mainWeapon.MaxClip;
-                        }
-                    }
-                    else
-                    {
-                        mainWeapon.Clip = PistolAmmo;
-                        PistolAmmo = 0;
-                    }
-                    break;
-
-                case (int)AmmoType.AssaultRifle:
-                    if (AssaultAmmo == 0) { break; }
-
-                    if (AssaultAmmo > mainWeapon.MaxClip)
-                    {
-                        if (mainWeapon.Clip > 0)
-                        {
-                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            AssaultAmmo -= leftOver;                         
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            AssaultAmmo -= mainWeapon.MaxClip;
-                        }
-                    }
-                    else
-                    {
-                        mainWeapon.Clip = AssaultAmmo;
-                        AssaultAmmo = 0;
-                    }
-                    break;
-
-                case (int)AmmoType.Rocket:
-                    if (RocketAmmo == 0) { break; }
-                    if (RocketAmmo > mainWeapon.MaxClip)
-                    {
-                        if (mainWeapon.Clip > 0)
-                        {
-                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            RocketAmmo -= leftOver;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            RocketAmmo -= mainWeapon.MaxClip;
-                        }
-                    }
-                    else
-                    {
-                        mainWeapon.Clip = RocketAmmo;
-                        RocketAmmo = 0;
-                    }
-                    break;
-                case (int)AmmoType.Grenade:
-                    if (GrenadeAmmo == 0) { break; }
-                    if (GrenadeAmmo > mainWeapon.MaxClip)
-                    {
-                        if (mainWeapon.Clip > 0)
-                        {
-                            int leftOver = mainWeapon.MaxClip - mainWeapon.Clip;
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            GrenadeAmmo -= leftOver;
-                        }
-                        else
-                        {
-                            mainWeapon.Clip = mainWeapon.MaxClip;
-                            GrenadeAmmo -= mainWeapon.MaxClip;
-                        }
-                    }
-                    else
-                    {
-                        mainWeapon.Clip = GrenadeAmmo;
-                        GrenadeAmmo = 0;
-                    }
-                    break;
-            }            
-        }
-
-        public void SendUpdateClip()
-        {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.UpdateClip);
-            outMSG.WriteVariableInt32(HandleData.myIndex);
-            outMSG.WriteVariableInt32(mainWeapon.Clip);
-            outMSG.WriteVariableInt32(offWeapon.Clip);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        void SendUpdateAmmo()
-        {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.UpdateAmmo);
-            outMSG.WriteVariableInt32(HandleData.myIndex);
-            outMSG.WriteVariableInt32(PistolAmmo);
-            outMSG.WriteVariableInt32(AssaultAmmo);
-            outMSG.WriteVariableInt32(RocketAmmo);
-            outMSG.WriteVariableInt32(GrenadeAmmo);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        void SendCreateBullet()
-        {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.RangedAttack);
-            outMSG.WriteVariableInt32(HandleData.myIndex);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
+        }              
 
         void SendPlayerWarp()
         {
@@ -1605,18 +1330,6 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendUpdateLifeTime()
-        {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.LifeTime);
-            outMSG.WriteVariableInt32(HandleData.myIndex);
-            outMSG.WriteVariableInt32(LifeDay);
-            outMSG.WriteVariableInt32(LifeHour);
-            outMSG.WriteVariableInt32(LifeMinute);
-            outMSG.WriteVariableInt32(LifeSecond);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
         public void UpdatePlayerTime()
         {
             if (TickCount - timeTick >= 1000)
@@ -1646,33 +1359,6 @@ namespace SabertoothClient
             }
         }
 
-        public void UpdateLifeTime()
-        {
-            if (TickCount - lifeTick >= 1000)
-            {
-                if (LifeSecond < 59)
-                {
-                    LifeSecond += 1;
-                }
-                else
-                {
-                    LifeSecond = 0;
-                    LifeMinute += 1;
-                }
-                if (LifeMinute >= 60)
-                {
-                    LifeMinute = 0;
-                    LifeHour += 1;
-                }
-                if (LifeHour == 24)
-                {
-                    LifeHour = 0;
-                    LifeDay += 1;
-                }
-                lifeTick = TickCount;
-            }
-        }
-
         public int ArmorBonus(bool isBonus)
         {
             int bonus = 0;
@@ -1682,8 +1368,8 @@ namespace SabertoothClient
                 bonus = Armor;
             }
 
-            bonus += mainWeapon.Armor;
-            bonus += offWeapon.Armor;
+            bonus += MainHand.Armor;
+            bonus += OffHand.Armor;
             bonus += Chest.Armor;
             bonus += Legs.Armor;
             bonus += Feet.Armor;
@@ -1700,8 +1386,8 @@ namespace SabertoothClient
                 bonus = Strength;
             }
 
-            bonus += mainWeapon.Strength;
-            bonus += offWeapon.Strength;
+            bonus += MainHand.Strength;
+            bonus += OffHand.Strength;
             bonus += Chest.Strength;
             bonus += Legs.Strength;
             bonus += Feet.Strength;
@@ -1718,8 +1404,8 @@ namespace SabertoothClient
                 bonus = Agility;
             }
 
-            bonus += mainWeapon.Agility;
-            bonus += offWeapon.Agility;
+            bonus += MainHand.Agility;
+            bonus += OffHand.Agility;
             bonus += Chest.Agility;
             bonus += Legs.Agility;
             bonus += Feet.Agility;
@@ -1727,17 +1413,17 @@ namespace SabertoothClient
             return bonus;
         }
 
-        public int EnduranceBonus(bool isBonus)
+        public int IntelligenceBonus(bool isBonus)
         {
             int bonus = 0;
 
             if (!isBonus)
             {
-                bonus = Endurance;
+                bonus = Intelligence;
             }
 
-            bonus += mainWeapon.Endurance;
-            bonus += offWeapon.Endurance;
+            bonus += MainHand.Endurance;
+            bonus += OffHand.Endurance;
             bonus += Chest.Endurance;
             bonus += Legs.Endurance;
             bonus += Feet.Endurance;
@@ -1754,11 +1440,29 @@ namespace SabertoothClient
                 bonus = Stamina;
             }
 
-            bonus += mainWeapon.Stamina;
-            bonus += offWeapon.Stamina;
+            bonus += MainHand.Stamina;
+            bonus += OffHand.Stamina;
             bonus += Chest.Stamina;
             bonus += Legs.Stamina;
             bonus += Feet.Stamina;
+
+            return bonus;
+        }
+
+        public int EnergyBonus(bool isBonus)
+        {
+            int bonus = 0;
+
+            if (!isBonus)
+            {
+                bonus = Energy;
+            }
+
+            //bonus += MainHand.Energy;
+            //bonus += OffHand.Energy;
+            //bonus += Chest.Energy;
+            //bonus += Legs.Energy;
+            //bonus += Feet.Energy;
 
             return bonus;
         }

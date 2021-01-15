@@ -204,6 +204,6 @@ namespace SabertoothServer
         OpenShop,
         OpenBank,
         Reward,
-        Mission
+        Quest
     }
 }

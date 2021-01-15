@@ -52,23 +52,7 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
-            this.pnlRanged = new System.Windows.Forms.GroupBox();
-            this.scrlReloadSpeed = new System.Windows.Forms.HScrollBar();
-            this.lblReloadSpeed = new System.Windows.Forms.Label();
-            this.cmbAmmoType = new System.Windows.Forms.ComboBox();
-            this.lblAmmoType = new System.Windows.Forms.Label();
-            this.picProj = new System.Windows.Forms.PictureBox();
-            this.scrlProjNum = new System.Windows.Forms.HScrollBar();
-            this.lblProjNum = new System.Windows.Forms.Label();
-            this.scrlMaxClip = new System.Windows.Forms.HScrollBar();
-            this.lblMaxClip = new System.Windows.Forms.Label();
-            this.scrlClip = new System.Windows.Forms.HScrollBar();
-            this.lblClip = new System.Windows.Forms.Label();
             this.pnlConsume = new System.Windows.Forms.GroupBox();
-            this.scrlHydrateRestore = new System.Windows.Forms.HScrollBar();
-            this.lblHydrateRestore = new System.Windows.Forms.Label();
-            this.scrlHungerRestore = new System.Windows.Forms.HScrollBar();
-            this.lblHungerRestore = new System.Windows.Forms.Label();
             this.scrlHealthRestore = new System.Windows.Forms.HScrollBar();
             this.lblHealthRestore = new System.Windows.Forms.Label();
             this.pnlStats = new System.Windows.Forms.GroupBox();
@@ -83,8 +67,6 @@
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.pnlRanged.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picProj)).BeginInit();
             this.pnlConsume.SuspendLayout();
             this.pnlStats.SuspendLayout();
             this.SuspendLayout();
@@ -354,142 +336,8 @@
             this.lstIndex.TabIndex = 3;
             this.lstIndex.SelectedIndexChanged += new System.EventHandler(this.lstIndex_SelectedIndexChanged);
             // 
-            // pnlRanged
-            // 
-            this.pnlRanged.Controls.Add(this.scrlReloadSpeed);
-            this.pnlRanged.Controls.Add(this.lblReloadSpeed);
-            this.pnlRanged.Controls.Add(this.cmbAmmoType);
-            this.pnlRanged.Controls.Add(this.lblAmmoType);
-            this.pnlRanged.Controls.Add(this.picProj);
-            this.pnlRanged.Controls.Add(this.scrlProjNum);
-            this.pnlRanged.Controls.Add(this.lblProjNum);
-            this.pnlRanged.Controls.Add(this.scrlMaxClip);
-            this.pnlRanged.Controls.Add(this.lblMaxClip);
-            this.pnlRanged.Controls.Add(this.scrlClip);
-            this.pnlRanged.Controls.Add(this.lblClip);
-            this.pnlRanged.Location = new System.Drawing.Point(568, 13);
-            this.pnlRanged.Name = "pnlRanged";
-            this.pnlRanged.Size = new System.Drawing.Size(184, 256);
-            this.pnlRanged.TabIndex = 8;
-            this.pnlRanged.TabStop = false;
-            this.pnlRanged.Text = "Ranged Properties";
-            this.pnlRanged.Visible = false;
-            // 
-            // scrlReloadSpeed
-            // 
-            this.scrlReloadSpeed.LargeChange = 100;
-            this.scrlReloadSpeed.Location = new System.Drawing.Point(15, 138);
-            this.scrlReloadSpeed.Maximum = 5000;
-            this.scrlReloadSpeed.Name = "scrlReloadSpeed";
-            this.scrlReloadSpeed.Size = new System.Drawing.Size(156, 17);
-            this.scrlReloadSpeed.SmallChange = 100;
-            this.scrlReloadSpeed.TabIndex = 52;
-            this.scrlReloadSpeed.Value = 1;
-            this.scrlReloadSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlReloadSpeed_Scroll);
-            // 
-            // lblReloadSpeed
-            // 
-            this.lblReloadSpeed.AutoSize = true;
-            this.lblReloadSpeed.Location = new System.Drawing.Point(12, 126);
-            this.lblReloadSpeed.Name = "lblReloadSpeed";
-            this.lblReloadSpeed.Size = new System.Drawing.Size(87, 13);
-            this.lblReloadSpeed.TabIndex = 51;
-            this.lblReloadSpeed.Text = "Reload Speed: 0";
-            // 
-            // cmbAmmoType
-            // 
-            this.cmbAmmoType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAmmoType.FormattingEnabled = true;
-            this.cmbAmmoType.Items.AddRange(new object[] {
-            "None",
-            "Pistol",
-            "Assault Rifle",
-            "Rocket",
-            "Grenade"});
-            this.cmbAmmoType.Location = new System.Drawing.Point(15, 32);
-            this.cmbAmmoType.Name = "cmbAmmoType";
-            this.cmbAmmoType.Size = new System.Drawing.Size(156, 21);
-            this.cmbAmmoType.TabIndex = 50;
-            this.cmbAmmoType.SelectedIndexChanged += new System.EventHandler(this.cmbAmmoType_SelectedIndexChanged);
-            // 
-            // lblAmmoType
-            // 
-            this.lblAmmoType.AutoSize = true;
-            this.lblAmmoType.Location = new System.Drawing.Point(12, 18);
-            this.lblAmmoType.Name = "lblAmmoType";
-            this.lblAmmoType.Size = new System.Drawing.Size(66, 13);
-            this.lblAmmoType.TabIndex = 49;
-            this.lblAmmoType.Text = "Ammo Type:";
-            // 
-            // picProj
-            // 
-            this.picProj.BackColor = System.Drawing.Color.Black;
-            this.picProj.Location = new System.Drawing.Point(15, 203);
-            this.picProj.Name = "picProj";
-            this.picProj.Size = new System.Drawing.Size(32, 32);
-            this.picProj.TabIndex = 48;
-            this.picProj.TabStop = false;
-            // 
-            // scrlProjNum
-            // 
-            this.scrlProjNum.LargeChange = 1;
-            this.scrlProjNum.Location = new System.Drawing.Point(15, 175);
-            this.scrlProjNum.Minimum = 1;
-            this.scrlProjNum.Name = "scrlProjNum";
-            this.scrlProjNum.Size = new System.Drawing.Size(154, 17);
-            this.scrlProjNum.TabIndex = 47;
-            this.scrlProjNum.Value = 1;
-            this.scrlProjNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlProjNum_Scroll);
-            // 
-            // lblProjNum
-            // 
-            this.lblProjNum.AutoSize = true;
-            this.lblProjNum.Location = new System.Drawing.Point(12, 160);
-            this.lblProjNum.Name = "lblProjNum";
-            this.lblProjNum.Size = new System.Drawing.Size(62, 13);
-            this.lblProjNum.TabIndex = 46;
-            this.lblProjNum.Text = "Projectile: 0";
-            // 
-            // scrlMaxClip
-            // 
-            this.scrlMaxClip.Location = new System.Drawing.Point(15, 104);
-            this.scrlMaxClip.Name = "scrlMaxClip";
-            this.scrlMaxClip.Size = new System.Drawing.Size(156, 17);
-            this.scrlMaxClip.TabIndex = 45;
-            this.scrlMaxClip.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMaxClip_Scroll);
-            // 
-            // lblMaxClip
-            // 
-            this.lblMaxClip.AutoSize = true;
-            this.lblMaxClip.Location = new System.Drawing.Point(12, 89);
-            this.lblMaxClip.Name = "lblMaxClip";
-            this.lblMaxClip.Size = new System.Drawing.Size(59, 13);
-            this.lblMaxClip.TabIndex = 44;
-            this.lblMaxClip.Text = "Max Clip: 0";
-            // 
-            // scrlClip
-            // 
-            this.scrlClip.Location = new System.Drawing.Point(15, 69);
-            this.scrlClip.Name = "scrlClip";
-            this.scrlClip.Size = new System.Drawing.Size(156, 17);
-            this.scrlClip.TabIndex = 43;
-            this.scrlClip.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlClip_Scroll);
-            // 
-            // lblClip
-            // 
-            this.lblClip.AutoSize = true;
-            this.lblClip.Location = new System.Drawing.Point(12, 56);
-            this.lblClip.Name = "lblClip";
-            this.lblClip.Size = new System.Drawing.Size(36, 13);
-            this.lblClip.TabIndex = 42;
-            this.lblClip.Text = "Clip: 0";
-            // 
             // pnlConsume
             // 
-            this.pnlConsume.Controls.Add(this.scrlHydrateRestore);
-            this.pnlConsume.Controls.Add(this.lblHydrateRestore);
-            this.pnlConsume.Controls.Add(this.scrlHungerRestore);
-            this.pnlConsume.Controls.Add(this.lblHungerRestore);
             this.pnlConsume.Controls.Add(this.scrlHealthRestore);
             this.pnlConsume.Controls.Add(this.lblHealthRestore);
             this.pnlConsume.Location = new System.Drawing.Point(362, 188);
@@ -499,42 +347,6 @@
             this.pnlConsume.TabStop = false;
             this.pnlConsume.Text = "Consumable";
             this.pnlConsume.Visible = false;
-            // 
-            // scrlHydrateRestore
-            // 
-            this.scrlHydrateRestore.Location = new System.Drawing.Point(23, 96);
-            this.scrlHydrateRestore.Maximum = 1000;
-            this.scrlHydrateRestore.Name = "scrlHydrateRestore";
-            this.scrlHydrateRestore.Size = new System.Drawing.Size(156, 17);
-            this.scrlHydrateRestore.TabIndex = 33;
-            this.scrlHydrateRestore.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlHydrateRestore_Scroll);
-            // 
-            // lblHydrateRestore
-            // 
-            this.lblHydrateRestore.AutoSize = true;
-            this.lblHydrateRestore.Location = new System.Drawing.Point(23, 83);
-            this.lblHydrateRestore.Name = "lblHydrateRestore";
-            this.lblHydrateRestore.Size = new System.Drawing.Size(96, 13);
-            this.lblHydrateRestore.TabIndex = 32;
-            this.lblHydrateRestore.Text = "Hydrate Restore: 0";
-            // 
-            // scrlHungerRestore
-            // 
-            this.scrlHungerRestore.Location = new System.Drawing.Point(23, 66);
-            this.scrlHungerRestore.Maximum = 1000;
-            this.scrlHungerRestore.Name = "scrlHungerRestore";
-            this.scrlHungerRestore.Size = new System.Drawing.Size(156, 17);
-            this.scrlHungerRestore.TabIndex = 31;
-            this.scrlHungerRestore.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlHungerRestore_Scroll);
-            // 
-            // lblHungerRestore
-            // 
-            this.lblHungerRestore.AutoSize = true;
-            this.lblHungerRestore.Location = new System.Drawing.Point(23, 53);
-            this.lblHungerRestore.Name = "lblHungerRestore";
-            this.lblHungerRestore.Size = new System.Drawing.Size(94, 13);
-            this.lblHungerRestore.TabIndex = 30;
-            this.lblHungerRestore.Text = "Hunger Restore: 0";
             // 
             // scrlHealthRestore
             // 
@@ -648,10 +460,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(764, 401);
+            this.ClientSize = new System.Drawing.Size(575, 401);
             this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlConsume);
-            this.Controls.Add(this.pnlRanged);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -662,9 +473,6 @@
             this.pnlMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            this.pnlRanged.ResumeLayout(false);
-            this.pnlRanged.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picProj)).EndInit();
             this.pnlConsume.ResumeLayout(false);
             this.pnlConsume.PerformLayout();
             this.pnlStats.ResumeLayout(false);
@@ -695,23 +503,7 @@
         private System.Windows.Forms.Label lblType;
         private System.Windows.Forms.HScrollBar scrlAttackSpeed;
         private System.Windows.Forms.Label lblAttackSpeed;
-        private System.Windows.Forms.GroupBox pnlRanged;
-        private System.Windows.Forms.HScrollBar scrlReloadSpeed;
-        private System.Windows.Forms.Label lblReloadSpeed;
-        private System.Windows.Forms.ComboBox cmbAmmoType;
-        private System.Windows.Forms.Label lblAmmoType;
-        private System.Windows.Forms.PictureBox picProj;
-        private System.Windows.Forms.HScrollBar scrlProjNum;
-        private System.Windows.Forms.Label lblProjNum;
-        private System.Windows.Forms.HScrollBar scrlMaxClip;
-        private System.Windows.Forms.Label lblMaxClip;
-        private System.Windows.Forms.HScrollBar scrlClip;
-        private System.Windows.Forms.Label lblClip;
         private System.Windows.Forms.GroupBox pnlConsume;
-        private System.Windows.Forms.HScrollBar scrlHydrateRestore;
-        private System.Windows.Forms.Label lblHydrateRestore;
-        private System.Windows.Forms.HScrollBar scrlHungerRestore;
-        private System.Windows.Forms.Label lblHungerRestore;
         private System.Windows.Forms.HScrollBar scrlHealthRestore;
         private System.Windows.Forms.Label lblHealthRestore;
         private System.Windows.Forms.GroupBox pnlStats;

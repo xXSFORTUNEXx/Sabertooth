@@ -46,8 +46,7 @@ namespace SabertoothServer
         public Tile[,] MaskA;
         public Tile[,] FringeA;
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
-        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
-        public MapProj[] m_MapProj = new MapProj[MAX_MAP_PROJECTILES];
+        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];        
         public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
         public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         #endregion
@@ -435,87 +434,7 @@ namespace SabertoothServer
             //Save the new map
             SaveMapInDatabase(Id);
         }
-        #endregion
-
-        #region Projectiles
-        public int FindOpenProjSlot()
-        {
-            for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
-            {
-                if (m_MapProj[i] == null)
-                {
-                    return i;
-                }
-            }
-            return MAX_MAP_PROJECTILES;
-        }
-
-        public void ClearProjSlot(int mapIndex, int slot)
-        {
-            if (m_MapProj[slot] != null)
-            {
-                m_MapProj[slot] = null;
-                for (int i = 0; i < MAX_PLAYERS; i++)
-                {
-                    if (players[i].Connection != null && players[i].Map == mapIndex)
-                    {
-                        SendClearProjectileTo(players[i].Connection, mapIndex, slot);
-                    }
-                }
-            }
-        }
-
-        public void CreateProjectile(int mapIndex, int playerIndex)
-        {
-            int slot = FindOpenProjSlot();
-            if (slot == MAX_MAP_PROJECTILES) { WriteMessageLog("Bullet max reached!"); return; }
-
-            int projNum = players[playerIndex].mainWeapon.ProjectileNumber - 1;
-            int damage = players[playerIndex].mainWeapon.Damage + projectiles[projNum].Damage;
-            m_MapProj[slot] = new MapProj
-            {
-                Name = projectiles[projNum].Name,
-                Sprite = projectiles[projNum].Sprite,
-                Type = projectiles[projNum].Type,
-                Speed = projectiles[projNum].Speed,
-                Damage = damage,
-                Range = projectiles[projNum].Range,
-                X = (players[playerIndex].X + OFFSET_X),
-                Y = (players[playerIndex].Y + OFFSET_Y),
-                Owner = playerIndex,
-                Direction = players[playerIndex].AimDirection
-            };
-
-            for (int i = 0; i < MAX_PLAYERS; i++)
-            {
-                if (players[i].Connection != null && players[i].Map == mapIndex)
-                {
-                    SendNewProjectileTo(players[i].Connection, mapIndex, slot, projNum);
-                }
-            }
-        }
-
-        void SendNewProjectileTo(NetConnection p_Conn, int mapIndex, int slot, int projNum)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.CreateProj);
-            outMSG.WriteVariableInt32(slot);
-            outMSG.WriteVariableInt32(m_MapProj[slot].ProjNum);
-            outMSG.WriteVariableInt32(m_MapProj[slot].X);
-            outMSG.WriteVariableInt32(m_MapProj[slot].Y);
-            outMSG.WriteVariableInt32(m_MapProj[slot].Direction);            
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        void SendClearProjectileTo(NetConnection p_Conn, int mapIndex, int slot)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.ClearProj);
-            outMSG.Write(maps[mapIndex].Name);
-            outMSG.WriteVariableInt32(slot);
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-        #endregion
+        #endregion        
 
         #region Blood
         public int FindOpenBloodSlot()
@@ -645,9 +564,7 @@ namespace SabertoothServer
                 Health = MaxHealth;
                 spawnTick = TickCount;
                 s_Player.Experience += Exp;
-                s_Player.Money += Money;
-                s_Player.Points += 100;
-                s_Player.Kills += 1;
+                s_Player.Wallet += Money;
                 s_Player.CheckPlayerLevelUp();
                 //s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)
@@ -667,21 +584,6 @@ namespace SabertoothServer
                 players[index].Health = players[index].MaxHealth;
                 players[index].X = 0;
                 players[index].Y = 0;
-                int day = players[index].LifeDay;
-                int hour = players[index].LifeHour;
-                int minute = players[index].LifeMinute;
-                int second = players[index].LifeSecond;
-                players[index].LifeDay = 0;
-                players[index].LifeHour = 0;
-                players[index].LifeMinute = 0;
-                players[index].LifeSecond = 0;
-                if (NewLongestLife(players[index]))
-                {
-                    players[index].LongestLifeDay = day;
-                    players[index].LongestLifeHour = hour;
-                    players[index].LongestLifeMinute = minute;
-                    players[index].LongestLifeSecond = second;
-                }
                 HandleData.SendPlayers();
                 string deathMsg = players[index].Name + " has been killed by " + Name + ".";
                 HandleData.SendServerMessageToAll(deathMsg);
@@ -690,25 +592,6 @@ namespace SabertoothServer
             {
                 HandleData.SendUpdatePlayerStats(index);
             }
-        }
-
-        bool NewLongestLife(Player s_Player)
-        {
-            if (s_Player.LifeDay > s_Player.LongestLifeDay)
-            {
-                return true;
-            }
-
-            if (s_Player.LifeHour > s_Player.LongestLifeHour)
-            {
-                return true;
-            }
-
-            if (s_Player.LifeMinute > s_Player.LongestLifeMinute)
-            {
-                return true;
-            }
-            return false;
         }
 
         public void NpcAI(int s_CanMove, int s_Direction, int mapNum)
@@ -1220,22 +1103,7 @@ namespace SabertoothServer
                     break;
             }
         }
-    }
-
-    public class MapProj : Projectile
-    {
-        public int ProjNum { get; set; }
-
-        public MapProj() { }
-
-        public MapProj(string name, int x, int y, int projnum)
-        {
-            Name = name;
-            X = x;
-            Y = y;
-            ProjNum = projnum;
-        }
-    }
+    }    
 
     public class BloodSplat
     {

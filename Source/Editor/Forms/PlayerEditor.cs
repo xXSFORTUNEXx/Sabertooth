@@ -73,19 +73,12 @@ namespace Editor.Forms
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
             txtExp.Text = (e_Player.Experience.ToString());
-            scrlMoney.Value = (e_Player.Money);
+            scrlMoney.Value = (e_Player.Wallet);
             scrlArmor.Value = (e_Player.Armor);
-            scrlHunger.Value = (e_Player.Hunger);
-            scrlHydration.Value = (e_Player.Hydration);
             scrlStrength.Value = (e_Player.Strength);
             scrlAgility.Value = (e_Player.Agility);
-            scrlEndurance.Value = (e_Player.Endurance);
+            scrlEndurance.Value = (e_Player.Intelligence);
             scrlStamina.Value = (e_Player.Stamina);
-            //Ammo Scroll Bars
-            scrlPistol.Value = (e_Player.PistolAmmo);
-            scrlAssault.Value = (e_Player.AssaultAmmo);
-            scrlRocket.Value = (e_Player.RocketAmmo);
-            scrlGrenade.Value = (e_Player.GrenadeAmmo);
             //General Labels
             lblSprite.Text = "Sprite: " + (e_Player.Sprite + 1);
             lblMap.Text = "Map: " + (e_Player.Map + 1);
@@ -130,23 +123,15 @@ namespace Editor.Forms
             lblPoints.Text = "Points: " + (e_Player.Points);
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
-            lblMoney.Text = "Money: " + (e_Player.Money);
+            lblMoney.Text = "Money: " + (e_Player.Wallet);
             lblArmor.Text = "Armor: " + (e_Player.Armor);
-            lblHunger.Text = "Hunger: " + (e_Player.Hunger);
-            lblHydration.Text = "Hydration: " + (e_Player.Hydration);
             lblStrength.Text = "Strength: " + (e_Player.Strength);
             lblAgility.Text = "Agility: " + (e_Player.Agility);
-            lblEndurance.Text = "Endurance: " + (e_Player.Endurance);
+            lblEndurance.Text = "Endurance: " + (e_Player.Intelligence);
             lblStamina.Text = "Stamina: " + (e_Player.Stamina);
-            //Ammo Labels
-            lblPistol.Text = "Pistol Ammo: " + (e_Player.PistolAmmo);
-            lblAssault.Text = "Assault Ammo: " + (e_Player.AssaultAmmo);
-            lblRocket.Text = "Rocket Ammo: " + (e_Player.RocketAmmo);
-            lblGrenade.Text = "Grenade Ammo: " + (e_Player.GrenadeAmmo);
 
             if (pnlGeneral.Visible == false) { pnlGeneral.Visible = true; }
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }
-            if (pnlAmmo.Visible == false) { pnlAmmo.Visible = true; }
             if (lstIndex.Enabled == false) { lstIndex.Enabled = true; }
             if (pnlActivation.Visible == false) { pnlActivation.Visible = true; }
             if (grpLastLogged.Visible == false) { grpLastLogged.Visible = true; }
@@ -229,19 +214,12 @@ namespace Editor.Forms
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
             txtExp.Text = (e_Player.Experience.ToString());
-            scrlMoney.Value = (e_Player.Money);
+            scrlMoney.Value = (e_Player.Wallet);
             scrlArmor.Value = (e_Player.Armor);
-            scrlHunger.Value = (e_Player.Hunger);
-            scrlHydration.Value = (e_Player.Hydration);
             scrlStrength.Value = (e_Player.Strength);
             scrlAgility.Value = (e_Player.Agility);
-            scrlEndurance.Value = (e_Player.Endurance);
+            scrlEndurance.Value = (e_Player.Intelligence);
             scrlStamina.Value = (e_Player.Stamina);
-            //Ammo Scroll Bars
-            scrlPistol.Value = (e_Player.PistolAmmo);
-            scrlAssault.Value = (e_Player.AssaultAmmo);
-            scrlRocket.Value = (e_Player.RocketAmmo);
-            scrlGrenade.Value = (e_Player.GrenadeAmmo);
             //General Labels
             lblSprite.Text = "Sprite: " + (e_Player.Sprite + 1);
             lblMap.Text = "Map: " + (e_Player.Map + 1);
@@ -283,22 +261,14 @@ namespace Editor.Forms
             lblPoints.Text = "Points: " + (e_Player.Points);
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
-            lblMoney.Text = "Money: " + (e_Player.Money);
+            lblMoney.Text = "Money: " + (e_Player.Wallet);
             lblArmor.Text = "Armor: " + (e_Player.Armor);
-            lblHunger.Text = "Hunger: " + (e_Player.Hunger);
-            lblHydration.Text = "Hydration: " + (e_Player.Hydration);
             lblStrength.Text = "Strength: " + (e_Player.Strength);
             lblAgility.Text = "Agility: " + (e_Player.Agility);
-            lblEndurance.Text = "Endurance: " + (e_Player.Endurance);
+            lblEndurance.Text = "Endurance: " + (e_Player.Intelligence);
             lblStamina.Text = "Stamina: " + (e_Player.Stamina);
-            //Ammo Labels
-            lblPistol.Text = "Pistol Ammo: " + (e_Player.PistolAmmo);
-            lblAssault.Text = "Assault Ammo: " + (e_Player.AssaultAmmo);
-            lblRocket.Text = "Rocket Ammo: " + (e_Player.RocketAmmo);
-            lblGrenade.Text = "Grenade Ammo: " + (e_Player.GrenadeAmmo);
 
-            pnlStats.Visible = true;
-            pnlAmmo.Visible = true;
+            pnlStats.Visible = true;            
             pnlGeneral.Visible = true;
             grpLastLogged.Visible = true;
             pnlActivation.Visible = true;
@@ -385,26 +355,14 @@ namespace Editor.Forms
         private void scrlMoney_Scroll(object sender, ScrollEventArgs e)
         {
             lblMoney.Text = "Money: " + (scrlMoney.Value);
-            e_Player.Money = (scrlMoney.Value);
+            e_Player.Wallet = (scrlMoney.Value);
         }
 
         private void scrlArmor_Scroll(object sender, ScrollEventArgs e)
         {
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             e_Player.Armor = (scrlArmor.Value);
-        }
-
-        private void scrlHunger_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblHunger.Text = "Hunger: " + (scrlHunger.Value);
-            e_Player.Hunger = (scrlHunger.Value);
-        }
-
-        private void scrlHydration_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblHydration.Text = "Hydration: " + (scrlHydration.Value);
-            e_Player.Hydration = (scrlHydration.Value);
-        }
+        }        
 
         private void scrlStrength_Scroll(object sender, ScrollEventArgs e)
         {
@@ -421,38 +379,14 @@ namespace Editor.Forms
         private void scrlEndurance_Scroll(object sender, ScrollEventArgs e)
         {
             lblEndurance.Text = "Endurance: " + (scrlEndurance.Value);
-            e_Player.Endurance = (scrlEndurance.Value);
+            e_Player.Intelligence = (scrlEndurance.Value);
         }
 
         private void scrlStamina_Scroll(object sender, ScrollEventArgs e)
         {
             lblStamina.Text = "Stamina: " + (scrlStamina.Value);
             e_Player.Stamina = (scrlStamina.Value);
-        }
-
-        private void scrlPistol_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblPistol.Text = "Pistol Ammo: " + (scrlPistol.Value);
-            e_Player.PistolAmmo = (scrlPistol.Value);
-        }
-
-        private void scrlAssault_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblAssault.Text = "Assault Ammo: " + (scrlAssault.Value);
-            e_Player.AssaultAmmo = (scrlAssault.Value);
-        }
-
-        private void scrlRocket_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblRocket.Text = "Rocket Ammo: " + (scrlRocket.Value);
-            e_Player.RocketAmmo = (scrlRocket.Value);
-        }
-
-        private void scrlGrenade_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblGrenade.Text = "Grenade Ammo: " + (scrlGrenade.Value);
-            e_Player.GrenadeAmmo = (scrlGrenade.Value);
-        }
+        }        
 
         private void txtExp_TextChanged(object sender, EventArgs e)
         {

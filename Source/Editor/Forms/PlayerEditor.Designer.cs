@@ -63,10 +63,6 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
-            this.scrlHydration = new System.Windows.Forms.HScrollBar();
-            this.lblHydration = new System.Windows.Forms.Label();
-            this.scrlHunger = new System.Windows.Forms.HScrollBar();
-            this.lblHunger = new System.Windows.Forms.Label();
             this.scrlArmor = new System.Windows.Forms.HScrollBar();
             this.lblArmor = new System.Windows.Forms.Label();
             this.scrlMoney = new System.Windows.Forms.HScrollBar();
@@ -80,15 +76,6 @@
             this.lblPoints = new System.Windows.Forms.Label();
             this.scrlLevel = new System.Windows.Forms.HScrollBar();
             this.lblLevel = new System.Windows.Forms.Label();
-            this.lblPistol = new System.Windows.Forms.Label();
-            this.scrlPistol = new System.Windows.Forms.HScrollBar();
-            this.lblAssault = new System.Windows.Forms.Label();
-            this.scrlAssault = new System.Windows.Forms.HScrollBar();
-            this.lblRocket = new System.Windows.Forms.Label();
-            this.scrlRocket = new System.Windows.Forms.HScrollBar();
-            this.lblGrenade = new System.Windows.Forms.Label();
-            this.scrlGrenade = new System.Windows.Forms.HScrollBar();
-            this.pnlAmmo = new System.Windows.Forms.GroupBox();
             this.pnlActivation = new System.Windows.Forms.GroupBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -100,7 +87,6 @@
             this.pnlGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.pnlStats.SuspendLayout();
-            this.pnlAmmo.SuspendLayout();
             this.pnlActivation.SuspendLayout();
             this.grpLastLogged.SuspendLayout();
             this.SuspendLayout();
@@ -381,10 +367,6 @@
             this.pnlStats.Controls.Add(this.lblAgility);
             this.pnlStats.Controls.Add(this.scrlStrength);
             this.pnlStats.Controls.Add(this.lblStrength);
-            this.pnlStats.Controls.Add(this.scrlHydration);
-            this.pnlStats.Controls.Add(this.lblHydration);
-            this.pnlStats.Controls.Add(this.scrlHunger);
-            this.pnlStats.Controls.Add(this.lblHunger);
             this.pnlStats.Controls.Add(this.scrlArmor);
             this.pnlStats.Controls.Add(this.lblArmor);
             this.pnlStats.Controls.Add(this.scrlMoney);
@@ -400,7 +382,7 @@
             this.pnlStats.Controls.Add(this.lblLevel);
             this.pnlStats.Location = new System.Drawing.Point(358, 12);
             this.pnlStats.Name = "pnlStats";
-            this.pnlStats.Size = new System.Drawing.Size(200, 617);
+            this.pnlStats.Size = new System.Drawing.Size(200, 533);
             this.pnlStats.TabIndex = 10;
             this.pnlStats.TabStop = false;
             this.pnlStats.Text = "Stats";
@@ -418,7 +400,7 @@
             // scrlStamina
             // 
             this.scrlStamina.LargeChange = 100;
-            this.scrlStamina.Location = new System.Drawing.Point(22, 586);
+            this.scrlStamina.Location = new System.Drawing.Point(22, 501);
             this.scrlStamina.Maximum = 100000;
             this.scrlStamina.Name = "scrlStamina";
             this.scrlStamina.Size = new System.Drawing.Size(156, 17);
@@ -428,7 +410,7 @@
             // lblStamina
             // 
             this.lblStamina.AutoSize = true;
-            this.lblStamina.Location = new System.Drawing.Point(19, 568);
+            this.lblStamina.Location = new System.Drawing.Point(19, 483);
             this.lblStamina.Name = "lblStamina";
             this.lblStamina.Size = new System.Drawing.Size(57, 13);
             this.lblStamina.TabIndex = 24;
@@ -437,7 +419,7 @@
             // scrlEndurance
             // 
             this.scrlEndurance.LargeChange = 100;
-            this.scrlEndurance.Location = new System.Drawing.Point(22, 544);
+            this.scrlEndurance.Location = new System.Drawing.Point(22, 459);
             this.scrlEndurance.Maximum = 100000;
             this.scrlEndurance.Name = "scrlEndurance";
             this.scrlEndurance.Size = new System.Drawing.Size(156, 17);
@@ -447,7 +429,7 @@
             // lblEndurance
             // 
             this.lblEndurance.AutoSize = true;
-            this.lblEndurance.Location = new System.Drawing.Point(19, 526);
+            this.lblEndurance.Location = new System.Drawing.Point(19, 441);
             this.lblEndurance.Name = "lblEndurance";
             this.lblEndurance.Size = new System.Drawing.Size(71, 13);
             this.lblEndurance.TabIndex = 22;
@@ -456,7 +438,7 @@
             // scrlAgility
             // 
             this.scrlAgility.LargeChange = 100;
-            this.scrlAgility.Location = new System.Drawing.Point(22, 498);
+            this.scrlAgility.Location = new System.Drawing.Point(22, 413);
             this.scrlAgility.Maximum = 100000;
             this.scrlAgility.Name = "scrlAgility";
             this.scrlAgility.Size = new System.Drawing.Size(156, 17);
@@ -466,7 +448,7 @@
             // lblAgility
             // 
             this.lblAgility.AutoSize = true;
-            this.lblAgility.Location = new System.Drawing.Point(19, 480);
+            this.lblAgility.Location = new System.Drawing.Point(19, 395);
             this.lblAgility.Name = "lblAgility";
             this.lblAgility.Size = new System.Drawing.Size(46, 13);
             this.lblAgility.TabIndex = 20;
@@ -475,7 +457,7 @@
             // scrlStrength
             // 
             this.scrlStrength.LargeChange = 100;
-            this.scrlStrength.Location = new System.Drawing.Point(22, 453);
+            this.scrlStrength.Location = new System.Drawing.Point(22, 368);
             this.scrlStrength.Maximum = 100000;
             this.scrlStrength.Name = "scrlStrength";
             this.scrlStrength.Size = new System.Drawing.Size(156, 17);
@@ -485,45 +467,11 @@
             // lblStrength
             // 
             this.lblStrength.AutoSize = true;
-            this.lblStrength.Location = new System.Drawing.Point(19, 435);
+            this.lblStrength.Location = new System.Drawing.Point(19, 350);
             this.lblStrength.Name = "lblStrength";
             this.lblStrength.Size = new System.Drawing.Size(59, 13);
             this.lblStrength.TabIndex = 18;
             this.lblStrength.Text = "Strength: 0";
-            // 
-            // scrlHydration
-            // 
-            this.scrlHydration.Location = new System.Drawing.Point(22, 409);
-            this.scrlHydration.Name = "scrlHydration";
-            this.scrlHydration.Size = new System.Drawing.Size(156, 17);
-            this.scrlHydration.TabIndex = 17;
-            this.scrlHydration.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlHydration_Scroll);
-            // 
-            // lblHydration
-            // 
-            this.lblHydration.AutoSize = true;
-            this.lblHydration.Location = new System.Drawing.Point(19, 391);
-            this.lblHydration.Name = "lblHydration";
-            this.lblHydration.Size = new System.Drawing.Size(64, 13);
-            this.lblHydration.TabIndex = 16;
-            this.lblHydration.Text = "Hydration: 0";
-            // 
-            // scrlHunger
-            // 
-            this.scrlHunger.Location = new System.Drawing.Point(22, 368);
-            this.scrlHunger.Name = "scrlHunger";
-            this.scrlHunger.Size = new System.Drawing.Size(156, 17);
-            this.scrlHunger.TabIndex = 15;
-            this.scrlHunger.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlHunger_Scroll);
-            // 
-            // lblHunger
-            // 
-            this.lblHunger.AutoSize = true;
-            this.lblHunger.Location = new System.Drawing.Point(19, 350);
-            this.lblHunger.Name = "lblHunger";
-            this.lblHunger.Size = new System.Drawing.Size(54, 13);
-            this.lblHunger.TabIndex = 14;
-            this.lblHunger.Text = "Hunger: 0";
             // 
             // scrlArmor
             // 
@@ -647,105 +595,15 @@
             this.lblLevel.TabIndex = 0;
             this.lblLevel.Text = "Level: 1";
             // 
-            // lblPistol
-            // 
-            this.lblPistol.AutoSize = true;
-            this.lblPistol.Location = new System.Drawing.Point(16, 23);
-            this.lblPistol.Name = "lblPistol";
-            this.lblPistol.Size = new System.Drawing.Size(76, 13);
-            this.lblPistol.TabIndex = 0;
-            this.lblPistol.Text = "Pistol Ammo: 0";
-            // 
-            // scrlPistol
-            // 
-            this.scrlPistol.Location = new System.Drawing.Point(19, 40);
-            this.scrlPistol.Maximum = 10000;
-            this.scrlPistol.Name = "scrlPistol";
-            this.scrlPistol.Size = new System.Drawing.Size(158, 17);
-            this.scrlPistol.TabIndex = 1;
-            this.scrlPistol.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlPistol_Scroll);
-            // 
-            // lblAssault
-            // 
-            this.lblAssault.AutoSize = true;
-            this.lblAssault.Location = new System.Drawing.Point(16, 70);
-            this.lblAssault.Name = "lblAssault";
-            this.lblAssault.Size = new System.Drawing.Size(85, 13);
-            this.lblAssault.TabIndex = 2;
-            this.lblAssault.Text = "Assault Ammo: 0";
-            // 
-            // scrlAssault
-            // 
-            this.scrlAssault.Location = new System.Drawing.Point(19, 87);
-            this.scrlAssault.Maximum = 10000;
-            this.scrlAssault.Name = "scrlAssault";
-            this.scrlAssault.Size = new System.Drawing.Size(158, 17);
-            this.scrlAssault.TabIndex = 3;
-            this.scrlAssault.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAssault_Scroll);
-            // 
-            // lblRocket
-            // 
-            this.lblRocket.AutoSize = true;
-            this.lblRocket.Location = new System.Drawing.Point(16, 117);
-            this.lblRocket.Name = "lblRocket";
-            this.lblRocket.Size = new System.Drawing.Size(86, 13);
-            this.lblRocket.TabIndex = 4;
-            this.lblRocket.Text = "Rocket Ammo: 0";
-            // 
-            // scrlRocket
-            // 
-            this.scrlRocket.Location = new System.Drawing.Point(19, 134);
-            this.scrlRocket.Maximum = 10000;
-            this.scrlRocket.Name = "scrlRocket";
-            this.scrlRocket.Size = new System.Drawing.Size(158, 17);
-            this.scrlRocket.TabIndex = 5;
-            this.scrlRocket.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRocket_Scroll);
-            // 
-            // lblGrenade
-            // 
-            this.lblGrenade.AutoSize = true;
-            this.lblGrenade.Location = new System.Drawing.Point(16, 168);
-            this.lblGrenade.Name = "lblGrenade";
-            this.lblGrenade.Size = new System.Drawing.Size(92, 13);
-            this.lblGrenade.TabIndex = 6;
-            this.lblGrenade.Text = "Grenade Ammo: 0";
-            // 
-            // scrlGrenade
-            // 
-            this.scrlGrenade.Location = new System.Drawing.Point(19, 185);
-            this.scrlGrenade.Maximum = 10000;
-            this.scrlGrenade.Name = "scrlGrenade";
-            this.scrlGrenade.Size = new System.Drawing.Size(158, 17);
-            this.scrlGrenade.TabIndex = 7;
-            this.scrlGrenade.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlGrenade_Scroll);
-            // 
-            // pnlAmmo
-            // 
-            this.pnlAmmo.Controls.Add(this.scrlGrenade);
-            this.pnlAmmo.Controls.Add(this.lblGrenade);
-            this.pnlAmmo.Controls.Add(this.scrlRocket);
-            this.pnlAmmo.Controls.Add(this.lblRocket);
-            this.pnlAmmo.Controls.Add(this.scrlAssault);
-            this.pnlAmmo.Controls.Add(this.lblAssault);
-            this.pnlAmmo.Controls.Add(this.scrlPistol);
-            this.pnlAmmo.Controls.Add(this.lblPistol);
-            this.pnlAmmo.Location = new System.Drawing.Point(565, 13);
-            this.pnlAmmo.Name = "pnlAmmo";
-            this.pnlAmmo.Size = new System.Drawing.Size(196, 226);
-            this.pnlAmmo.TabIndex = 11;
-            this.pnlAmmo.TabStop = false;
-            this.pnlAmmo.Text = "Ammo";
-            this.pnlAmmo.Visible = false;
-            // 
             // pnlActivation
             // 
             this.pnlActivation.Controls.Add(this.txtStatus);
             this.pnlActivation.Controls.Add(this.label3);
             this.pnlActivation.Controls.Add(this.txtKey);
             this.pnlActivation.Controls.Add(this.label2);
-            this.pnlActivation.Location = new System.Drawing.Point(567, 251);
+            this.pnlActivation.Location = new System.Drawing.Point(159, 506);
             this.pnlActivation.Name = "pnlActivation";
-            this.pnlActivation.Size = new System.Drawing.Size(200, 141);
+            this.pnlActivation.Size = new System.Drawing.Size(193, 131);
             this.pnlActivation.TabIndex = 12;
             this.pnlActivation.TabStop = false;
             this.pnlActivation.Text = "Activation";
@@ -788,9 +646,9 @@
             // grpLastLogged
             // 
             this.grpLastLogged.Controls.Add(this.txtLastLogged);
-            this.grpLastLogged.Location = new System.Drawing.Point(567, 403);
+            this.grpLastLogged.Location = new System.Drawing.Point(159, 421);
             this.grpLastLogged.Name = "grpLastLogged";
-            this.grpLastLogged.Size = new System.Drawing.Size(200, 79);
+            this.grpLastLogged.Size = new System.Drawing.Size(193, 79);
             this.grpLastLogged.TabIndex = 13;
             this.grpLastLogged.TabStop = false;
             this.grpLastLogged.Text = "Last Logged";
@@ -798,7 +656,7 @@
             // 
             // txtLastLogged
             // 
-            this.txtLastLogged.Location = new System.Drawing.Point(20, 30);
+            this.txtLastLogged.Location = new System.Drawing.Point(21, 30);
             this.txtLastLogged.Name = "txtLastLogged";
             this.txtLastLogged.ReadOnly = true;
             this.txtLastLogged.Size = new System.Drawing.Size(155, 20);
@@ -808,10 +666,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 646);
+            this.ClientSize = new System.Drawing.Size(574, 651);
             this.Controls.Add(this.grpLastLogged);
             this.Controls.Add(this.pnlActivation);
-            this.Controls.Add(this.pnlAmmo);
             this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlGeneral);
             this.Controls.Add(this.groupBox1);
@@ -823,8 +680,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).EndInit();
             this.pnlStats.ResumeLayout(false);
             this.pnlStats.PerformLayout();
-            this.pnlAmmo.ResumeLayout(false);
-            this.pnlAmmo.PerformLayout();
             this.pnlActivation.ResumeLayout(false);
             this.pnlActivation.PerformLayout();
             this.grpLastLogged.ResumeLayout(false);
@@ -869,10 +724,6 @@
         private System.Windows.Forms.Label lblAgility;
         private System.Windows.Forms.HScrollBar scrlStrength;
         private System.Windows.Forms.Label lblStrength;
-        private System.Windows.Forms.HScrollBar scrlHydration;
-        private System.Windows.Forms.Label lblHydration;
-        private System.Windows.Forms.HScrollBar scrlHunger;
-        private System.Windows.Forms.Label lblHunger;
         private System.Windows.Forms.HScrollBar scrlArmor;
         private System.Windows.Forms.Label lblArmor;
         private System.Windows.Forms.HScrollBar scrlMoney;
@@ -886,15 +737,6 @@
         private System.Windows.Forms.Label lblPoints;
         private System.Windows.Forms.HScrollBar scrlLevel;
         private System.Windows.Forms.Label lblLevel;
-        private System.Windows.Forms.Label lblPistol;
-        private System.Windows.Forms.HScrollBar scrlPistol;
-        private System.Windows.Forms.Label lblAssault;
-        private System.Windows.Forms.HScrollBar scrlAssault;
-        private System.Windows.Forms.Label lblRocket;
-        private System.Windows.Forms.HScrollBar scrlRocket;
-        private System.Windows.Forms.Label lblGrenade;
-        private System.Windows.Forms.HScrollBar scrlGrenade;
-        private System.Windows.Forms.GroupBox pnlAmmo;
         private System.Windows.Forms.GroupBox pnlActivation;
         private System.Windows.Forms.TextBox txtStatus;
         private System.Windows.Forms.Label label3;

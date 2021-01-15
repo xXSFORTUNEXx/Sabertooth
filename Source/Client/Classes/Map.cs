@@ -40,7 +40,6 @@ namespace SabertoothClient
         public VertexArray chestPic = new VertexArray(PrimitiveType.Quads, 4);
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
         public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
-        public MapProj[] m_MapProj = new MapProj[MAX_MAP_PROJECTILES];
         public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
         public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         public RenderStates ustates;
@@ -528,21 +527,6 @@ namespace SabertoothClient
             state.Texture = c_Sprite[Sprite - 1];
             target.Draw(spritePic, state);
             target.Draw(healthBar);
-        }
-    }
-
-    public class MapProj : Projectile
-    {
-        public int projNum { get; set; }
-
-        public MapProj() { }
-
-        public MapProj(string name, int x, int y, int projnum)
-        {
-            Name = name;
-            X = x;
-            Y = y;
-            projNum = projnum;
         }
     }
 

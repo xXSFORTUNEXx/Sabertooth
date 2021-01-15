@@ -67,7 +67,6 @@
     <Compile Include="Classes\Map.cs" />
     <Compile Include="Classes\Npc.cs" />
     <Compile Include="Classes\Player.cs" />
-    <Compile Include="Classes\Projectile.cs" />
     <Compile Include="Classes\Server.cs" />
     <Compile Include="Classes\Shop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,9 +104,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Insert_Player.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SQL Data Scripts\Insert_Proj.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Insert_Quest.sql">
@@ -164,9 +160,6 @@
     <Content Include="SQL Data Scripts\Load_Player.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL Data Scripts\Load_Proj.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="SQL Data Scripts\Load_Quest.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -216,9 +209,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Save_Player.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SQL Data Scripts\Save_Proj.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Save_Quest.sql">
@@ -273,9 +263,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\Players.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SQL Scripts\Projectiles.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\Quests.sql">

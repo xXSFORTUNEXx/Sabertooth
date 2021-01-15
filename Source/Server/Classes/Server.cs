@@ -86,8 +86,7 @@ namespace SabertoothServer
         #region Classes
         public static Player[] players = new Player[MAX_PLAYERS];
         public static Npc[] npcs = new Npc[MAX_NPCS];
-        public static Item[] items = new Item[MAX_ITEMS];
-        public static Projectile[] projectiles = new Projectile[MAX_PROJECTILES];
+        public static Item[] items = new Item[MAX_ITEMS];        
         public static Map[] maps = new Map[MAX_MAPS];
         public static Shop[] shops = new Shop[MAX_SHOPS];
         public static Chat[] chats = new Chat[MAX_CHATS];
@@ -104,8 +103,6 @@ namespace SabertoothServer
         private static int aiTick;
         private static int regenTick;
         private static int regenTime;
-        private static int hungerTime;
-        private static int hydrationTime;
         private static int saveTime;
         private static int spawnTime;
         private static int aiTime;
@@ -143,8 +140,7 @@ namespace SabertoothServer
                 CheckNpcSpawn();
                 CheckItemSpawn();
                 CheckClearMapItem();
-                CheckHealthRegen();
-                CheckVitalLoss();
+                CheckHealthRegen();                
                 CheckNpcAi();
                 UpTime();
                 fps = CalculateFrameRate();
@@ -181,17 +177,7 @@ namespace SabertoothServer
                 items[i].LoadItemFromDatabase(i + 1);
             }
             Logging.WriteMessageLog("Items loaded successfully");
-            #endregion
-
-            #region Projectiles
-            Logging.WriteMessageLog("Loading projectiles...");
-            for (int i = 0; i < MAX_PROJECTILES; i++)
-            {
-                projectiles[i] = new Projectile();
-                projectiles[i].LoadProjectileFromDatabase(i + 1);
-            }
-            Logging.WriteMessageLog("Projectiles loaded successfully");
-            #endregion
+            #endregion                       
 
             #region Npcs
             Logging.WriteMessageLog("Loading npcs...");
@@ -399,35 +385,7 @@ namespace SabertoothServer
             regenTick = TickCount;
             return true;
         }
-
-        static void CheckVitalLoss()
-        {
-            for (int i = 0; i < MAX_PLAYERS; i++)
-            {
-                if (players[i].Name != null)
-                {
-                    //Check for hunger
-                    if (TickCount - players[i].hungerTick >= hungerTime)
-                    {
-                        Logging.WriteMessageLog("Checking for hunger loss...");
-
-                        players[i].VitalLoss("food");
-                        HandleData.SendUpdateVitalData(i, "food", players[i].Hunger);
-                        players[i].hungerTick = TickCount;
-                    }
-
-                    if (TickCount - players[i].hydrationTick >= hydrationTime)
-                    {
-
-                        Logging.WriteMessageLog("Checking for hydration loss...");
-
-                        players[i].VitalLoss("water");
-                        HandleData.SendUpdateVitalData(i, "water", players[i].Hydration);
-                        players[i].hydrationTick = TickCount;
-                    }
-                }
-            }
-        }
+        
 
         static bool CheckIfMapHasPlayers(int mapNum)
         {
@@ -516,18 +474,11 @@ namespace SabertoothServer
                                                 maps[i].m_MapItem[slot].Armor = items[itemNum].Armor;
                                                 maps[i].m_MapItem[slot].Type = items[itemNum].Type;
                                                 maps[i].m_MapItem[slot].AttackSpeed = items[itemNum].AttackSpeed;
-                                                maps[i].m_MapItem[slot].ReloadSpeed = items[itemNum].ReloadSpeed;
                                                 maps[i].m_MapItem[slot].HealthRestore = items[itemNum].HealthRestore;
-                                                maps[i].m_MapItem[slot].HungerRestore = items[itemNum].HungerRestore;
-                                                maps[i].m_MapItem[slot].HydrateRestore = items[itemNum].HydrateRestore;
                                                 maps[i].m_MapItem[slot].Strength = items[itemNum].Strength;
                                                 maps[i].m_MapItem[slot].Agility = items[itemNum].Agility;
                                                 maps[i].m_MapItem[slot].Endurance = items[itemNum].Endurance;
                                                 maps[i].m_MapItem[slot].Stamina = items[itemNum].Stamina;
-                                                maps[i].m_MapItem[slot].Clip = items[itemNum].Clip;
-                                                maps[i].m_MapItem[slot].MaxClip = items[itemNum].MaxClip;
-                                                maps[i].m_MapItem[slot].ItemAmmoType = items[itemNum].ItemAmmoType;
-                                                maps[i].m_MapItem[slot].ProjectileNumber = items[itemNum].ProjectileNumber;
                                                 maps[i].m_MapItem[slot].Price = items[itemNum].Price;
                                                 maps[i].m_MapItem[slot].Value = maps[i].Ground[x, y].SpawnAmount;
                                                 maps[i].m_MapItem[slot].Rarity = items[itemNum].Rarity;
@@ -802,7 +753,7 @@ namespace SabertoothServer
 
                         if (name.Length >= 3 && pass.Length >= 3 && email.Length >= 5)
                         {
-                            Player c_Player = new Player(name, pass, email, 0, 0, 0, 0, 0, 1, 100, 100, 100, 0, 0, 0, 100, 100, 1, 1, 1, 1, 1000);
+                            Player c_Player = new Player(name, pass, email, 0, 0, 0, 0, 0, 1, 100, 100, 100, 100, 100, 0, 100, 1, 1, 1, 1, 1, 0);
                             c_Player.CreatePlayerInDatabase();
                             Logging.WriteMessageLog("Account created! UN: " + name + " EA: " + email, "Commands");
                         } else { Logging.WriteMessageLog("Name, Password or Email invalid. Please try again!"); }
@@ -851,60 +802,7 @@ namespace SabertoothServer
                         }
                         else { Logging.WriteMessageLog("Accounts doesnt exist!"); }
                         break;
-
-                    case "projcheck":
-                        Logging.WriteMessageLogLine("Map number: ", "Commands");
-                        string m_Num = Console.ReadLine();
                         
-                        int total = 0;
-                        for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
-                        {
-                            if (maps[ToInt32(m_Num)].m_MapProj[i] != null)
-                            {
-                                total += 1;
-                            }
-                        }
-                        Logging.WriteMessageLog("Currently [" + total + "] projectiles in use", "Commands");
-
-                        if (total > 0)
-                        {
-                            Logging.WriteMessageLogLine("View them? (y/n): ", "Commands");
-                            string info = Console.ReadLine();
-                            if (info.ToLower() == "y")
-                            {
-                                for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
-                                {
-                                    if (maps[ToInt32(m_Num)].m_MapProj[i] != null)
-                                    {
-                                        Logging.WriteLog("Name: " + maps[ToInt32(m_Num)].m_MapProj[i].Name, "Commands");
-                                        Logging.WriteLog("X: " + maps[ToInt32(m_Num)].m_MapProj[i].X, "Commands");
-                                        Logging.WriteLog("Y: " + maps[ToInt32(m_Num)].m_MapProj[i].Y, "Commands");
-                                        Logging.WriteLog("Direction: " + maps[ToInt32(m_Num)].m_MapProj[i].Direction, "Commands");
-                                        Logging.WriteLog("Damage: " + maps[ToInt32(m_Num)].m_MapProj[i].Damage, "Commands");
-                                        Logging.WriteLog("Range: " + maps[ToInt32(m_Num)].m_MapProj[i].Range, "Commands");
-                                        Logging.WriteLog("Sprite: " + maps[ToInt32(m_Num)].m_MapProj[i].Sprite, "Commands");
-                                        Logging.WriteLog("Owner #:" + maps[ToInt32(m_Num)].m_MapProj[i].Owner, "Commands");
-                                        Logging.WriteLog("Owner:" + players[maps[ToInt32(m_Num)].m_MapProj[i].Owner].Name, "Commands");
-                                        Logging.WriteLog("Type: " + maps[ToInt32(m_Num)].m_MapProj[i].Type, "Commands");
-                                        Logging.WriteLog("Speed: " + maps[ToInt32(m_Num)].m_MapProj[i].Speed, "Commands");
-                                    }
-                                }
-                                Logging.WriteMessageLog("Projectiles written to file..check log..");
-                            }
-                        }
-
-                        Logging.WriteMessageLogLine("Would you like to reset them? (y/n): ", "Commands");
-                        string reset = Console.ReadLine();
-                        if (reset.ToLower() == "y")
-                        {
-                            for (int i = 0; i < MAX_MAP_PROJECTILES; i++)
-                            {
-                                maps[ToInt32(m_Num)].m_MapProj[i] = null;
-                            }
-                            Logging.WriteMessageLog("Projectiles reset...", "Commands");
-                        }
-                        break;
-
                     case "minlat":
                         try
                         {
@@ -914,7 +812,7 @@ namespace SabertoothServer
                             string msec = lat.Insert(0, "0.0");
                             float delay = ToSingle(msec);
 
-                            if (intseconds < 15 || intseconds > 150) { Logging.WriteMessageLog("Invalid command format: > 15 and < 150", "Commands"); return; }
+                            if (intseconds < 15 || intseconds > 150) { Logging.WriteMessageLog("Invalid command format: > 15 and < 150", "Commands"); break; }
 
                             SabertoothServer.netServer.Configuration.SimulatedMinimumLatency = delay;
                             Logging.WriteMessageLog("Minimum latency is now " + lat + "ms");
@@ -997,8 +895,7 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("saveall - saves all players", "Commands");
                         Logging.WriteMessageLog("minlat - sets latency", "Commands");
                         Logging.WriteMessageLog("execsql - executes a sql script", "Commands");
-                        Logging.WriteMessageLog("activeacc - actives account with name provided", "Commands");
-                        Logging.WriteMessageLog("projcheck - follow prompts to check map projectiles", "Commands");
+                        Logging.WriteMessageLog("activeacc - actives account with name provided", "Commands");                        
                         Logging.WriteMessageLog("createaccount - follow prompts to create an account", "Commands");
                         Logging.WriteMessageLog("settime - follow prompts to set the games time", "Commands");
                         Logging.WriteMessageLog("randomtime - set the game time to a random value", "Commands");
@@ -1144,6 +1041,7 @@ namespace SabertoothServer
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
+                int i;
                 using (SqlCommand cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = 1;
@@ -1151,12 +1049,11 @@ namespace SabertoothServer
                     {
                         while (reader.Read())
                         {
-                            regenTime = ToInt32(reader[1]);
-                            hungerTime = ToInt32(reader[2]);
-                            hydrationTime = ToInt32(reader[3]);
-                            saveTime = ToInt32(reader[4]);
-                            spawnTime = ToInt32(reader[5]);
-                            aiTime = ToInt32(reader[6]);
+                            i = 1;
+                            regenTime = ToInt32(reader[i]); i += 1;
+                            saveTime = ToInt32(reader[i]); i += 1;
+                            spawnTime = ToInt32(reader[i]); i += 1;
+                            aiTime = ToInt32(reader[i]);
                         }
                     }
                 }

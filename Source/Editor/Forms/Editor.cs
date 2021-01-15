@@ -36,13 +36,7 @@ namespace Editor
         private void btnMapEditor_Click(object sender, EventArgs e)
         {
             MapEditor e_MapEditor = new MapEditor();
-        }
-
-        private void btnProjectileEditor_Click(object sender, EventArgs e)
-        {
-            ProjectileEditor e_ProjEditor = new ProjectileEditor();
-            e_ProjEditor.Show();
-        }
+        }        
 
         private void btnShopEditor_Click(object sender, EventArgs e)
         {

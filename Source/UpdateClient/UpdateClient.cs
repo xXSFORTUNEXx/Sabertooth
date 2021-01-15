@@ -43,76 +43,83 @@ namespace UpdateClient
         static void UpdateClientLoop()
         {
             isRunning = true;
-            while (isRunning)
+            try
             {
-                Connect();
-                NetIncomingMessage incMSG;
-                while ((incMSG = updateClient.ReadMessage()) != null)
+                while (isRunning)
                 {
-                    switch (incMSG.MessageType)
+                    Connect();
+                    NetIncomingMessage incMSG;
+                    while ((incMSG = updateClient.ReadMessage()) != null)
                     {
-                        case NetIncomingMessageType.Data:
-                            int chunkLen = incMSG.LengthBytes;
-                            if (s_length == 0)
-                            {
-                                s_length = incMSG.ReadUInt64();
-                                string filename = incMSG.ReadString();
-                                currentFile = incMSG.ReadInt32();
-                                totalFiles = incMSG.ReadInt32();
-                                Logging.WriteMessageLog("Downloading " + filename + "...Please Wait...");
-                                s_writeStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-                                s_timeStarted = Environment.TickCount;
-                                break;
-                            }
-
-                            byte[] all = incMSG.ReadBytes(incMSG.LengthBytes);
-                            s_received += (ulong)all.Length;
-                            s_writeStream.Write(all, 0, all.Length);
-
-                            int v = (int)((float)s_received / s_length * 100.0f);
-                            if (lastV < v)
-                            {
-                                Logging.WriteMessageLog("Percent Complete: " + v + "%");
-                                lastV = v;
-                                int passed = Environment.TickCount - s_timeStarted;
-                                double psec = (double)passed / 1000.0;
-                                double bps = (double)s_received / psec;
-                                //Logging.WriteMessageLog(NetUtility.ToHumanReadable((long)bps) + " per second");
-                                Console.Title = "Sabertooth Update Client - Progress: " + v + "% - Download Speed: " + NetUtility.ToHumanReadable((long)bps) + " per second";
-                            }
-
-                            if (s_received >= s_length)
-                            {
-                                int passed = Environment.TickCount - s_timeStarted;
-                                double psec = (double)passed / 1000.0;
-                                double bps = (double)s_received / psec;
-                                string extension = Path.GetExtension(s_writeStream.Name);
-                                string fileName = Path.GetFileName(s_writeStream.Name);
-                                string filePath = Path.GetDirectoryName(s_writeStream.Name);
-                                string zipDir = Path.GetFileNameWithoutExtension(s_writeStream.Name);
-
-                                Logging.WriteMessageLog("Downloaded " + Path.GetFileName(s_writeStream.Name) + " at " + NetUtility.ToHumanReadable((long)bps) + " per second");
-
-                                s_writeStream.Flush();
-                                s_writeStream.Close();
-                                s_writeStream.Dispose();
-                                s_writeStream = null;
-
-                                s_length = 0;
-                                s_received = 0;
-                                lastV = 0;
-
-                                ExtractZipFile(extension, zipDir, fileName, filePath);
-
-                                if (currentFile == totalFiles - 1)
+                        switch (incMSG.MessageType)
+                        {
+                            case NetIncomingMessageType.Data:
+                                int chunkLen = incMSG.LengthBytes;
+                                if (s_length == 0)
                                 {
-                                    isRunning = false;
+                                    s_length = incMSG.ReadUInt64();
+                                    string filename = incMSG.ReadString();
+                                    currentFile = incMSG.ReadInt32();
+                                    totalFiles = incMSG.ReadInt32();
+                                    Logging.WriteMessageLog("Downloading " + filename + "...Please Wait...");
+                                    s_writeStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+                                    s_timeStarted = Environment.TickCount;
+                                    break;
                                 }
-                            }
-                        break;
+
+                                byte[] all = incMSG.ReadBytes(incMSG.LengthBytes);
+                                s_received += (ulong)all.Length;
+                                s_writeStream.Write(all, 0, all.Length);
+
+                                int v = (int)((float)s_received / s_length * 100.0f);
+                                if (lastV < v)
+                                {
+                                    Logging.WriteMessageLog("Percent Complete: " + v + "%");
+                                    lastV = v;
+                                    int passed = Environment.TickCount - s_timeStarted;
+                                    double psec = (double)passed / 1000.0;
+                                    double bps = (double)s_received / psec;
+                                    //Logging.WriteMessageLog(NetUtility.ToHumanReadable((long)bps) + " per second");
+                                    Console.Title = "Sabertooth Update Client - Progress: " + v + "% - Download Speed: " + NetUtility.ToHumanReadable((long)bps) + " per second";
+                                }
+
+                                if (s_received >= s_length)
+                                {
+                                    int passed = Environment.TickCount - s_timeStarted;
+                                    double psec = (double)passed / 1000.0;
+                                    double bps = (double)s_received / psec;
+                                    string extension = Path.GetExtension(s_writeStream.Name);
+                                    string fileName = Path.GetFileName(s_writeStream.Name);
+                                    string filePath = Path.GetDirectoryName(s_writeStream.Name);
+                                    string zipDir = Path.GetFileNameWithoutExtension(s_writeStream.Name);
+
+                                    Logging.WriteMessageLog("Downloaded " + Path.GetFileName(s_writeStream.Name) + " at " + NetUtility.ToHumanReadable((long)bps) + " per second");
+
+                                    s_writeStream.Flush();
+                                    s_writeStream.Close();
+                                    s_writeStream.Dispose();
+                                    s_writeStream = null;
+
+                                    s_length = 0;
+                                    s_received = 0;
+                                    lastV = 0;
+
+                                    ExtractZipFile(extension, zipDir, fileName, filePath);
+
+                                    if (currentFile == totalFiles - 1)
+                                    {
+                                        isRunning = false;
+                                    }
+                                }
+                                break;
+                        }
+                        updateClient.Recycle(incMSG);
                     }
-                    updateClient.Recycle(incMSG);
                 }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteMessageLog(e.Message);
             }
         }
 

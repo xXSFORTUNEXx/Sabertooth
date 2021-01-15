@@ -263,9 +263,7 @@ namespace SabertoothServer
                 Health = MaxHealth;
                 spawnTick = TickCount;
                 s_Player.Experience += Exp;
-                s_Player.Money += Money;
-                s_Player.Points += 100;
-                s_Player.Kills += 1;
+                s_Player.Wallet += Money;
                 s_Player.CheckPlayerLevelUp();
                 //s_Player.SavePlayerToDatabase();
                 if (SpawnX > 0 && SpawnY > 0)
@@ -286,21 +284,6 @@ namespace SabertoothServer
                 s_Player[index].Health = s_Player[index].MaxHealth;
                 s_Player[index].X = 0;
                 s_Player[index].Y = 0;
-                int day = s_Player[index].LifeDay;
-                int hour = s_Player[index].LifeHour;
-                int minute = s_Player[index].LifeMinute;
-                int second = s_Player[index].LifeSecond;
-                if (NewLongestLife(s_Player[index]))
-                {
-                    s_Player[index].LongestLifeDay = day;
-                    s_Player[index].LongestLifeHour = hour;
-                    s_Player[index].LongestLifeMinute = minute;
-                    s_Player[index].LongestLifeSecond = second;
-                }
-                s_Player[index].LifeDay = 0;
-                s_Player[index].LifeHour = 0;
-                s_Player[index].LifeMinute = 0;
-                s_Player[index].LifeSecond = 0;
                 HandleData.SendPlayers();
                 string deathMsg = s_Player[index].Name + " has been killed by " + Name + ".";
                 HandleData.SendServerMessageToAll(deathMsg);
@@ -309,25 +292,6 @@ namespace SabertoothServer
             {
                 HandleData.SendUpdatePlayerStats(index);
             }
-        }
-
-        bool NewLongestLife(Player s_Player)
-        {
-            if (s_Player.LifeDay > s_Player.LongestLifeDay)
-            {
-                return true;
-            }
-
-            if (s_Player.LifeHour > s_Player.LongestLifeHour)
-            {
-                return true;
-            }
-
-            if (s_Player.LifeMinute > s_Player.LongestLifeMinute)
-            {
-                return true;
-            }
-            return false;
         }
 
         public void NpcAI(int s_CanMove, int s_Direction, Map s_Map, Player[] s_Player, NetServer s_Server)

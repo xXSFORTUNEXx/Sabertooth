@@ -107,17 +107,11 @@ namespace SabertoothClient
         Label shopDamage;
         Label shopArmor;
         Label shopHeRestore;
-        Label shopHuRestore;
-        Label shopHyRestore;
         Label shopStr;
         Label shopAgi;
         Label shopEdu;
         Label shopSta;
-        Label shopClip;
-        Label shopMClip;
         Label shopASpeed;
-        Label shopRSpeed;
-        Label shopAmmo;
         Label shopType;
         Label shopValue;
         Label shopPrice;
@@ -134,17 +128,11 @@ namespace SabertoothClient
         Label bankDamage;
         Label bankArmor;
         Label bankHeRestore;
-        Label bankHuRestore;
-        Label bankHyRestore;
         Label bankStr;
         Label bankAgi;
         Label bankEdu;
         Label bankSta;
-        Label bankClip;
-        Label bankMClip;
         Label bankASpeed;
-        Label bankRSpeed;
-        Label bankAmmo;
         Label bankType;
         Label bankValue;
         Label bankPrice;
@@ -173,17 +161,11 @@ namespace SabertoothClient
         Label chestDamage;
         Label chestArmor;
         Label chestHeRestore;
-        Label chestHuRestore;
-        Label chestHyRestore;
         Label chestStr;
         Label chestAgi;
         Label chestEdu;
         Label chestSta;
-        Label chestClip;
-        Label chestMClip;
         Label chestASpeed;
-        Label chestRSpeed;
-        Label chestAmmo;
         Label chestType;
         Label chestValue;
         Label chestPrice;
@@ -194,20 +176,16 @@ namespace SabertoothClient
         Label charName;
         Label charLevel;
         Label charExp;
-        Label charMoney;
-        Label charPoints;
+        Label charWallet;
         Label charHealth;
-        Label charHunger;
-        Label charHydration;
+        Label charMana;
         Label charArmor;
         Label charStr;
         Label charAgi;
-        Label charEnd;
+        Label charInt;
         Label charSta;
+        Label charEng;
         Label playTime;
-        Label lifeTime;
-        Label longestLife;
-        Label charKills;
         #endregion
 
         #region PackTab
@@ -220,17 +198,11 @@ namespace SabertoothClient
         Label packDamage;
         Label packArmor;
         Label packHeRestore;
-        Label packHuRestore;
-        Label packHyRestore;
         Label packStr;
         Label packAgi;
         Label packEdu;
         Label packSta;
-        Label packClip;
-        Label packMClip;
         Label packASpeed;
-        Label packRSpeed;
-        Label packAmmo;
         Label packType;
         Label packValue;
         Label packPrice;
@@ -243,11 +215,6 @@ namespace SabertoothClient
         ImagePanel equipChest;
         ImagePanel equipLegs;
         ImagePanel equipFeet;
-        GroupBox equipAmmo;
-        Label pistolAmmo;
-        Label assaultAmmo;
-        Label rocketAmmo;
-        Label grenadeAmmo;
 
         GroupBox equipBonus;
         Label equipArmor;
@@ -255,8 +222,9 @@ namespace SabertoothClient
         Label equipODamage;
         Label equipStr;
         Label equipAgi;
-        Label equipEnd;
+        Label equipInt;
         Label equipSta;
+        Label equipEng;
         #endregion
 
         #region SkillsTab
@@ -389,28 +357,20 @@ namespace SabertoothClient
                     #region Character
                     charName.Text = player.Name;
                     charLevel.Text = "Level: " + player.Level;
-                    charExp.Text = "Experience: " + player.Experience + " / " + (player.Level * 1000);
-                    charMoney.Text = "Money: " + player.Money;
-                    charPoints.Text = "Points: " + player.Points;
-                    charKills.Text = "Kills: " + player.Kills;
+                    charExp.Text = "Experience: " + player.Experience + " / " + (player.Level * 450);
+                    charWallet.Text = "Wallet: " + player.Wallet + "G";               
 
                     charHealth.Text = "Health: " + player.Health + " / " + player.MaxHealth;
-                    charHunger.Text = "Hunger: " + player.Hunger + " / 100";
-                    charHydration.Text = "Hydration: " + player.Hydration + " / 100";
+                    charMana.Text = "Mana: " + player.Mana + " / " + player.MaxMana;
 
                     charArmor.Text = "Armor: " + player.Armor;
                     charStr.Text = "Strength: " + player.Strength;
                     charAgi.Text = "Agility: " + player.Agility;
-                    charEnd.Text = "Endurance: " + player.Endurance;
+                    charInt.Text = "Intelligence: " + player.Intelligence;
                     charSta.Text = "Stamina: " + player.Stamina;
+                    charEng.Text = "Energy: " + player.Energy;
 
-                    lifeTime.Text = "Life Time: " + player.LifeDay + "D " + player.LifeHour + "H " + player.LifeMinute + "M " + player.LifeSecond + "S";
-                    playTime.Text = "Play Time: " + player.PlayDays + "D " + player.PlayHours + "H " + player.PlayMinutes + "M " + player.PlaySeconds + "S";
-                   
-                    if (player.LongestLifeDay > 0 || player.LongestLifeHour > 0 || player.LongestLifeMinute > 0 || player.LongestLifeSecond > 0)
-                    {
-                        longestLife.Text = "Longest Life: " + player.LongestLifeDay + "D " + player.LongestLifeHour + "H " + player.LongestLifeMinute + "M " + player.LongestLifeSecond + "S"; ;
-                    }
+                    playTime.Text = "Play Time: " + player.PlayDays + "D " + player.PlayHours + "H " + player.PlayMinutes + "M " + player.PlaySeconds + "S";                  
                     #endregion
                 }
                 //if (packTab.HasFocus)
@@ -445,9 +405,9 @@ namespace SabertoothClient
                 //if (equipTab.HasFocus)
                 {
                     #region Equipment
-                    if (player.mainWeapon.Name != "None")
+                    if (player.MainHand.Name != "None")
                     {
-                        equipMain.ImageName = "Resources/Items/" + player.mainWeapon.Sprite + ".png";
+                        equipMain.ImageName = "Resources/Items/" + player.MainHand.Sprite + ".png";
                         equipMain.Show();
                     }
                     else
@@ -455,9 +415,9 @@ namespace SabertoothClient
                         equipMain.Hide();
                     }
 
-                    if (player.offWeapon.Name != "None")
+                    if (player.OffHand.Name != "None")
                     {
-                        equipOff.ImageName = "Resources/Items/" + player.offWeapon.Sprite + ".png";
+                        equipOff.ImageName = "Resources/Items/" + player.OffHand.Sprite + ".png";
                         equipOff.Show();
                     }
                     else
@@ -497,11 +457,11 @@ namespace SabertoothClient
 
                     if (equipMain.IsHovered)
                     {
-                        SetStatWindow(equipMain.X, equipMain.Y, player.mainWeapon);
+                        SetStatWindow(equipMain.X, equipMain.Y, player.MainHand);
                     }
                     else if (equipOff.IsHovered)
                     {
-                        SetStatWindow(equipMain.X, equipMain.Y, player.offWeapon);
+                        SetStatWindow(equipMain.X, equipMain.Y, player.OffHand);
                     }
                     else if (equipChest.IsHovered)
                     {
@@ -519,19 +479,15 @@ namespace SabertoothClient
                     {
                         //RemoveStatWindow();
                     }
-                    
-                    pistolAmmo.Text = "Pistol Ammo: " + player.PistolAmmo;
-                    assaultAmmo.Text = "Assault Ammo: " + player.AssaultAmmo;
-                    rocketAmmo.Text = "Rocket Ammo: " + player.RocketAmmo;
-                    grenadeAmmo.Text = "Grenade Ammo: " + player.GrenadeAmmo;
 
-                    equipMDamage.Text = "Main Damage: " + player.mainWeapon.Damage;
-                    equipODamage.Text = "Off Damage: " + player.offWeapon.Damage;
+                    equipMDamage.Text = "Main Damage: " + player.MainHand.Damage;
+                    equipODamage.Text = "Off Damage: " + player.OffHand.Damage;
                     equipArmor.Text = "Armor: " + player.ArmorBonus(true);
                     equipStr.Text = "Strength: " + player.StrengthBonus(true);
                     equipAgi.Text = "Agility: " + player.AgilityBonus(true);
-                    equipEnd.Text = "Endurance: " + player.EnduranceBonus(true);
+                    equipInt.Text = "Intelligence: " + player.IntelligenceBonus(true);
                     equipSta.Text = "Stamina: " + player.StaminaBonus(true);
+                    equipEng.Text = "Energy: " + player.EnergyBonus(true);
                     #endregion
                 }
             }
@@ -602,18 +558,12 @@ namespace SabertoothClient
             packDamage.Hide();
             packArmor.Hide();
             packHeRestore.Hide();
-            packHuRestore.Hide();
-            packHyRestore.Hide();
             packStr.Hide();
             packAgi.Hide();
             packEdu.Hide();
             packSta.Hide();
-            packClip.Hide();
-            packMClip.Hide();
             packASpeed.Hide();
-            packRSpeed.Hide();
             packType.Hide();
-            packAmmo.Hide();
             packValue.Hide();
             packPrice.Hide();
 
@@ -699,22 +649,6 @@ namespace SabertoothClient
                 packHeRestore.Show();
             }
 
-            if (statItem.HungerRestore > 0)
-            {
-                n += 10;
-                packHuRestore.SetPosition(3, n);
-                packHuRestore.Text = "Hunger Restore: " + statItem.HungerRestore;
-                packHuRestore.Show();
-            }
-
-            if (statItem.HydrateRestore > 0)
-            {
-                n += 10;
-                packHyRestore.SetPosition(3, n);
-                packHyRestore.Text = "Hydration Restore: " + statItem.HydrateRestore;
-                packHyRestore.Show();
-            }
-
             if (statItem.Strength > 0)
             {
                 n += 10;
@@ -747,61 +681,12 @@ namespace SabertoothClient
                 packSta.Show();
             }
 
-            if (statItem.Clip > 0)
-            {
-                n += 10;
-                packClip.SetPosition(3, n);
-                packClip.Text = "Clip: " + statItem.Clip;
-                packClip.Show();
-            }
-
-            if (statItem.MaxClip > 0)
-            {
-                n += 10;
-                packMClip.SetPosition(3, n);
-                packMClip.Text = "Max Clip: " + statItem.MaxClip;
-                packMClip.Show();
-            }
-
-            if (statItem.ItemAmmoType > 0)
-            {
-                n += 10;
-                packAmmo.SetPosition(3, n);
-                switch (statItem.ItemAmmoType)
-                {
-                    case (int)AmmoType.Pistol:
-                        packAmmo.Text = "Pistol Ammo";
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        packAmmo.Text = "Assault Ammo";
-                        break;
-                    case (int)AmmoType.Rocket:
-                        packAmmo.Text = "Rocket Ammo";
-                        break;
-                    case (int)AmmoType.Grenade:
-                        packAmmo.Text = "Grenade Ammo";
-                        break;
-                    default:
-                        packAmmo.Text = "None";
-                        break;
-                }
-                packAmmo.Show();
-            }
-
             if (statItem.AttackSpeed > 0)
             {
                 n += 10;
                 packASpeed.SetPosition(3, n);
                 packASpeed.Text = "Attack Speed: " + ((float)statItem.AttackSpeed / 1000).ToString("#.##") + " s";
                 packASpeed.Show();
-            }
-
-            if (statItem.ReloadSpeed > 0)
-            {
-                n += 10;
-                packRSpeed.SetPosition(3, n);
-                packRSpeed.Text = "Reload Speed: " + ((float)statItem.ReloadSpeed / 1000).ToString("#.##") + " s";
-                packRSpeed.Show();
             }
 
             if (statItem.Value > 1)
@@ -833,18 +718,12 @@ namespace SabertoothClient
             shopDamage.Hide();
             shopArmor.Hide();
             shopHeRestore.Hide();
-            shopHuRestore.Hide();
-            shopHyRestore.Hide();
             shopStr.Hide();
             shopAgi.Hide();
             shopEdu.Hide();
             shopSta.Hide();
-            shopClip.Hide();
-            shopMClip.Hide();
             shopASpeed.Hide();
-            shopRSpeed.Hide();
             shopType.Hide();
-            shopAmmo.Hide();
             shopValue.Hide();
             shopPrice.Hide();
 
@@ -930,22 +809,6 @@ namespace SabertoothClient
                 shopHeRestore.Show();
             }
 
-            if (statItem.HungerRestore > 0)
-            {
-                n += 10;
-                shopHuRestore.SetPosition(3, n);
-                shopHuRestore.Text = "Hunger Restore: " + statItem.HungerRestore;
-                shopHuRestore.Show();
-            }
-
-            if (statItem.HydrateRestore > 0)
-            {
-                n += 10;
-                shopHyRestore.SetPosition(3, n);
-                shopHyRestore.Text = "Hydration Restore: " + statItem.HydrateRestore;
-                shopHyRestore.Show();
-            }
-
             if (statItem.Strength > 0)
             {
                 n += 10;
@@ -978,61 +841,12 @@ namespace SabertoothClient
                 shopSta.Show();
             }
 
-            if (statItem.Clip > 0)
-            {
-                n += 10;
-                shopClip.SetPosition(3, n);
-                shopClip.Text = "Clip: " + statItem.Clip;
-                shopClip.Show();
-            }
-
-            if (statItem.MaxClip > 0)
-            {
-                n += 10;
-                shopMClip.SetPosition(3, n);
-                shopMClip.Text = "Max Clip: " + statItem.MaxClip;
-                shopMClip.Show();
-            }
-
-            if (statItem.ItemAmmoType > 0)
-            {
-                n += 10;
-                shopAmmo.SetPosition(3, n);
-                switch (statItem.ItemAmmoType)
-                {
-                    case (int)AmmoType.Pistol:
-                        shopAmmo.Text = "Pistol Ammo";
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        shopAmmo.Text = "Assault Ammo";
-                        break;
-                    case (int)AmmoType.Rocket:
-                        shopAmmo.Text = "Rocket Ammo";
-                        break;
-                    case (int)AmmoType.Grenade:
-                        shopAmmo.Text = "Grenade Ammo";
-                        break;
-                    default:
-                        shopAmmo.Text = "None";
-                        break;
-                }
-                shopAmmo.Show();
-            }
-
             if (statItem.AttackSpeed > 0)
             {
                 n += 10;
                 shopASpeed.SetPosition(3, n);
                 shopASpeed.Text = "Attack Speed: " + ((float)statItem.AttackSpeed / 1000).ToString("#.##") + " s";
                 shopASpeed.Show();
-            }
-
-            if (statItem.ReloadSpeed > 0)
-            {
-                n += 10;
-                shopRSpeed.SetPosition(3, n);
-                shopRSpeed.Text = "Reload Speed: " + ((float)statItem.ReloadSpeed / 1000).ToString("#.##") + " s";
-                shopRSpeed.Show();
             }
 
             if (statItem.Value > 1)
@@ -1065,18 +879,12 @@ namespace SabertoothClient
             bankDamage.Hide();
             bankArmor.Hide();
             bankHeRestore.Hide();
-            bankHuRestore.Hide();
-            bankHyRestore.Hide();
             bankStr.Hide();
             bankAgi.Hide();
             bankEdu.Hide();
             bankSta.Hide();
-            bankClip.Hide();
-            bankMClip.Hide();
             bankASpeed.Hide();
-            bankRSpeed.Hide();
             bankType.Hide();
-            bankAmmo.Hide();
             bankValue.Hide();
             bankPrice.Hide();
 
@@ -1162,22 +970,6 @@ namespace SabertoothClient
                 bankHeRestore.Show();
             }
 
-            if (bankItem.HungerRestore > 0)
-            {
-                n += 10;
-                bankHuRestore.SetPosition(3, n);
-                bankHuRestore.Text = "Hunger Restore: " + bankItem.HungerRestore;
-                bankHuRestore.Show();
-            }
-
-            if (bankItem.HydrateRestore > 0)
-            {
-                n += 10;
-                bankHyRestore.SetPosition(3, n);
-                bankHyRestore.Text = "Hydration Restore: " + bankItem.HydrateRestore;
-                bankHyRestore.Show();
-            }
-
             if (bankItem.Strength > 0)
             {
                 n += 10;
@@ -1210,61 +1002,12 @@ namespace SabertoothClient
                 bankSta.Show();
             }
 
-            if (bankItem.Clip > 0)
-            {
-                n += 10;
-                bankClip.SetPosition(3, n);
-                bankClip.Text = "Clip: " + bankItem.Clip;
-                bankClip.Show();
-            }
-
-            if (bankItem.MaxClip > 0)
-            {
-                n += 10;
-                bankMClip.SetPosition(3, n);
-                bankMClip.Text = "Max Clip: " + bankItem.MaxClip;
-                bankMClip.Show();
-            }
-
-            if (bankItem.ItemAmmoType > 0)
-            {
-                n += 10;
-                bankAmmo.SetPosition(3, n);
-                switch (bankItem.ItemAmmoType)
-                {
-                    case (int)AmmoType.Pistol:
-                        bankAmmo.Text = "Pistol Ammo";
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        bankAmmo.Text = "Assault Ammo";
-                        break;
-                    case (int)AmmoType.Rocket:
-                        bankAmmo.Text = "Rocket Ammo";
-                        break;
-                    case (int)AmmoType.Grenade:
-                        bankAmmo.Text = "Grenade Ammo";
-                        break;
-                    default:
-                        bankAmmo.Text = "None";
-                        break;
-                }
-                bankAmmo.Show();
-            }
-
             if (bankItem.AttackSpeed > 0)
             {
                 n += 10;
                 bankASpeed.SetPosition(3, n);
                 bankASpeed.Text = "Attack Speed: " + ((float)bankItem.AttackSpeed / 1000).ToString("#.##") + " s";
                 bankASpeed.Show();
-            }
-
-            if (bankItem.ReloadSpeed > 0)
-            {
-                n += 10;
-                bankRSpeed.SetPosition(3, n);
-                bankRSpeed.Text = "Reload Speed: " + ((float)bankItem.ReloadSpeed / 1000).ToString("#.##") + " s";
-                bankRSpeed.Show();
             }
 
             if (bankItem.Value > 1)
@@ -1296,18 +1039,12 @@ namespace SabertoothClient
             chestDamage.Hide();
             chestArmor.Hide();
             chestHeRestore.Hide();
-            chestHuRestore.Hide();
-            chestHyRestore.Hide();
             chestStr.Hide();
             chestAgi.Hide();
             chestEdu.Hide();
             chestSta.Hide();
-            chestClip.Hide();
-            chestMClip.Hide();
             chestASpeed.Hide();
-            chestRSpeed.Hide();
             chestType.Hide();
-            chestAmmo.Hide();
             chestValue.Hide();
             chestPrice.Hide();
 
@@ -1393,22 +1130,6 @@ namespace SabertoothClient
                 chestHeRestore.Show();
             }
 
-            if (chestItem.HungerRestore > 0)
-            {
-                n += 10;
-                chestHuRestore.SetPosition(3, n);
-                chestHuRestore.Text = "Hunger Restore: " + chestItem.HungerRestore;
-                chestHuRestore.Show();
-            }
-
-            if (chestItem.HydrateRestore > 0)
-            {
-                n += 10;
-                chestHyRestore.SetPosition(3, n);
-                chestHyRestore.Text = "Hydration Restore: " + chestItem.HydrateRestore;
-                chestHyRestore.Show();
-            }
-
             if (chestItem.Strength > 0)
             {
                 n += 10;
@@ -1441,61 +1162,12 @@ namespace SabertoothClient
                 chestSta.Show();
             }
 
-            if (chestItem.Clip > 0)
-            {
-                n += 10;
-                chestClip.SetPosition(3, n);
-                chestClip.Text = "Clip: " + chestItem.Clip;
-                chestClip.Show();
-            }
-
-            if (chestItem.MaxClip > 0)
-            {
-                n += 10;
-                chestMClip.SetPosition(3, n);
-                chestMClip.Text = "Max Clip: " + chestItem.MaxClip;
-                chestMClip.Show();
-            }
-
-            if (chestItem.ItemAmmoType > 0)
-            {
-                n += 10;
-                chestAmmo.SetPosition(3, n);
-                switch (chestItem.ItemAmmoType)
-                {
-                    case (int)AmmoType.Pistol:
-                        chestAmmo.Text = "Pistol Ammo";
-                        break;
-                    case (int)AmmoType.AssaultRifle:
-                        chestAmmo.Text = "Assault Ammo";
-                        break;
-                    case (int)AmmoType.Rocket:
-                        chestAmmo.Text = "Rocket Ammo";
-                        break;
-                    case (int)AmmoType.Grenade:
-                        chestAmmo.Text = "Grenade Ammo";
-                        break;
-                    default:
-                        chestAmmo.Text = "None";
-                        break;
-                }
-                chestAmmo.Show();
-            }
-
             if (chestItem.AttackSpeed > 0)
             {
                 n += 10;
                 chestASpeed.SetPosition(3, n);
                 chestASpeed.Text = "Attack Speed: " + ((float)chestItem.AttackSpeed / 1000).ToString("#.##") + " s";
                 chestASpeed.Show();
-            }
-
-            if (chestItem.ReloadSpeed > 0)
-            {
-                n += 10;
-                chestRSpeed.SetPosition(3, n);
-                chestRSpeed.Text = "Reload Speed: " + ((float)chestItem.ReloadSpeed / 1000).ToString("#.##") + " s";
-                chestRSpeed.Show();
             }
 
             if (chestItem.Value > 1)
@@ -1586,9 +1258,7 @@ namespace SabertoothClient
         {
             if (SabertoothClient.netClient.ServerConnection != null)
             {
-                players[HandleData.myIndex].SendUpdateClip();
                 players[HandleData.myIndex].SendUpdatePlayerTime();
-                players[HandleData.myIndex].SendUpdateLifeTime();
             }
 
             canvas.Dispose();
@@ -1908,7 +1578,7 @@ namespace SabertoothClient
         private void EquipOff_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
             
-            if (player.offWeapon.Name != "None")
+            if (player.OffHand.Name != "None")
             {
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
@@ -1923,7 +1593,7 @@ namespace SabertoothClient
         {
             
 
-            if (player.mainWeapon.Name != "None")
+            if (player.MainHand.Name != "None")
             {
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.UnequipItem);
@@ -2253,14 +1923,6 @@ namespace SabertoothClient
             shopHeRestore.SetPosition(3, 35);
             shopHeRestore.Text = "Health Restore: ?";
 
-            shopHuRestore = new Label(shopStatWindow);
-            shopHuRestore.SetPosition(3, 45);
-            shopHuRestore.Text = "Hunger Restore: ?";
-
-            shopHyRestore = new Label(shopStatWindow);
-            shopHyRestore.SetPosition(3, 55);
-            shopHyRestore.Text = "Hydration Restore: ?";
-
             shopStr = new Label(shopStatWindow);
             shopStr.SetPosition(3, 65);
             shopStr.Text = "Strength: ?";
@@ -2276,30 +1938,13 @@ namespace SabertoothClient
             shopSta = new Label(shopStatWindow);
             shopSta.SetPosition(3, 95);
             shopSta.Text = "Stamina: ?";
-
-            shopClip = new Label(shopStatWindow);
-            shopClip.SetPosition(3, 105);
-            shopClip.Text = "Clip: ?";
-
-            shopMClip = new Label(shopStatWindow);
-            shopMClip.SetPosition(3, 115);
-            shopMClip.Text = "Max Clip: ?";
-
             shopASpeed = new Label(shopStatWindow);
             shopASpeed.SetPosition(3, 125);
             shopASpeed.Text = "Attack Speed: ?";
 
-            shopRSpeed = new Label(shopStatWindow);
-            shopRSpeed.SetPosition(3, 135);
-            shopRSpeed.Text = "Reload Speed: ?";
-
             shopType = new Label(shopStatWindow);
             shopType.SetPosition(3, 145);
             shopType.Text = "Type: ?";
-
-            shopAmmo = new Label(shopStatWindow);
-            shopAmmo.SetPosition(3, 155);
-            shopAmmo.Text = "Ammo Type: ?";
 
             shopValue = new Label(shopStatWindow);
             shopValue.SetPosition(3, 160);
@@ -2370,14 +2015,6 @@ namespace SabertoothClient
             chestHeRestore.SetPosition(3, 35);
             chestHeRestore.Text = "Health Restore: ?";
 
-            chestHuRestore = new Label(chestStatWindow);
-            chestHuRestore.SetPosition(3, 45);
-            chestHuRestore.Text = "Hunger Restore: ?";
-
-            chestHyRestore = new Label(chestStatWindow);
-            chestHyRestore.SetPosition(3, 55);
-            chestHyRestore.Text = "Hydration Restore: ?";
-
             chestStr = new Label(chestStatWindow);
             chestStr.SetPosition(3, 65);
             chestStr.Text = "Strength: ?";
@@ -2394,29 +2031,13 @@ namespace SabertoothClient
             chestSta.SetPosition(3, 95);
             chestSta.Text = "Stamina: ?";
 
-            chestClip = new Label(chestStatWindow);
-            chestClip.SetPosition(3, 105);
-            chestClip.Text = "Clip: ?";
-
-            chestMClip = new Label(chestStatWindow);
-            chestMClip.SetPosition(3, 115);
-            chestMClip.Text = "Max Clip: ?";
-
             chestASpeed = new Label(chestStatWindow);
             chestASpeed.SetPosition(3, 125);
             chestASpeed.Text = "Attack Speed: ?";
 
-            chestRSpeed = new Label(chestStatWindow);
-            chestRSpeed.SetPosition(3, 135);
-            chestRSpeed.Text = "Reload Speed: ?";
-
             chestType = new Label(chestStatWindow);
             chestType.SetPosition(3, 145);
             chestType.Text = "Type: ?";
-
-            chestAmmo = new Label(chestStatWindow);
-            chestAmmo.SetPosition(3, 155);
-            chestAmmo.Text = "Ammo Type: ?";
 
             chestValue = new Label(chestStatWindow);
             chestValue.SetPosition(3, 160);
@@ -2488,14 +2109,6 @@ namespace SabertoothClient
             bankHeRestore.SetPosition(3, 35);
             bankHeRestore.Text = "Health Restore: ?";
 
-            bankHuRestore = new Label(bankStatWindow);
-            bankHuRestore.SetPosition(3, 45);
-            bankHuRestore.Text = "Hunger Restore: ?";
-
-            bankHyRestore = new Label(bankStatWindow);
-            bankHyRestore.SetPosition(3, 55);
-            bankHyRestore.Text = "Hydration Restore: ?";
-
             bankStr = new Label(bankStatWindow);
             bankStr.SetPosition(3, 65);
             bankStr.Text = "Strength: ?";
@@ -2512,29 +2125,13 @@ namespace SabertoothClient
             bankSta.SetPosition(3, 95);
             bankSta.Text = "Stamina: ?";
 
-            bankClip = new Label(bankStatWindow);
-            bankClip.SetPosition(3, 105);
-            bankClip.Text = "Clip: ?";
-
-            bankMClip = new Label(bankStatWindow);
-            bankMClip.SetPosition(3, 115);
-            bankMClip.Text = "Max Clip: ?";
-
             bankASpeed = new Label(bankStatWindow);
             bankASpeed.SetPosition(3, 125);
             bankASpeed.Text = "Attack Speed: ?";
 
-            bankRSpeed = new Label(bankStatWindow);
-            bankRSpeed.SetPosition(3, 135);
-            bankRSpeed.Text = "Reload Speed: ?";
-
             bankType = new Label(bankStatWindow);
             bankType.SetPosition(3, 145);
             bankType.Text = "Type: ?";
-
-            bankAmmo = new Label(bankStatWindow);
-            bankAmmo.SetPosition(3, 155);
-            bankAmmo.Text = "Ammo Type: ?";
 
             bankValue = new Label(bankStatWindow);
             bankValue.SetPosition(3, 160);
@@ -2590,14 +2187,6 @@ namespace SabertoothClient
             packHeRestore.SetPosition(3, 35);
             packHeRestore.Text = "Health Restore: ?";
 
-            packHuRestore = new Label(statWindow);
-            packHuRestore.SetPosition(3, 45);
-            packHuRestore.Text = "Hunger Restore: ?";
-
-            packHyRestore = new Label(statWindow);
-            packHyRestore.SetPosition(3, 55);
-            packHyRestore.Text = "Hydration Restore: ?";
-
             packStr = new Label(statWindow);
             packStr.SetPosition(3, 65);
             packStr.Text = "Strength: ?";
@@ -2614,29 +2203,13 @@ namespace SabertoothClient
             packSta.SetPosition(3, 95);
             packSta.Text = "Stamina: ?";
 
-            packClip = new Label(statWindow);
-            packClip.SetPosition(3, 105);
-            packClip.Text = "Clip: ?";
-
-            packMClip = new Label(statWindow);
-            packMClip.SetPosition(3, 115);
-            packMClip.Text = "Max Clip: ?";
-
             packASpeed = new Label(statWindow);
             packASpeed.SetPosition(3, 125);
             packASpeed.Text = "Attack Speed: ?";
 
-            packRSpeed = new Label(statWindow);
-            packRSpeed.SetPosition(3, 135);
-            packRSpeed.Text = "Reload Speed: ?";
-
             packType = new Label(statWindow);
             packType.SetPosition(3, 145);
             packType.Text = "Type: ?";
-
-            packAmmo = new Label(statWindow);
-            packAmmo.SetPosition(3, 155);
-            packAmmo.Text = "Ammo Type: ?";
 
             packValue = new Label(statWindow);
             packValue.SetPosition(3, 160);
@@ -2662,29 +2235,17 @@ namespace SabertoothClient
             charExp.SetPosition(10, 30);
             charExp.Text = "Experience: ?";
 
-            charMoney = new Label(charTab.Page);
-            charMoney.SetPosition(10, 40);
-            charMoney.Text = "Money: ?";
-
-            charPoints = new Label(charTab.Page);
-            charPoints.SetPosition(10, 50);
-            charPoints.Text = "Points: ?";
-
-            charKills = new Label(charTab.Page);
-            charKills.SetPosition(10, 60);
-            charKills.Text = "Kills: ?";
+            charWallet = new Label(charTab.Page);
+            charWallet.SetPosition(10, 40);
+            charWallet.Text = "Money: ?";
 
             charHealth = new Label(charTab.Page);
             charHealth.SetPosition(10, 75);
             charHealth.Text = "Health: ?";
 
-            charHunger = new Label(charTab.Page);
-            charHunger.SetPosition(10, 85);
-            charHunger.Text = "Hunger: ?";
-
-            charHydration = new Label(charTab.Page);
-            charHydration.SetPosition(10, 95);
-            charHydration.Text = "Hydration: ?";
+            charMana = new Label(charTab.Page);
+            charMana.SetPosition(10, 85);
+            charMana.Text = "Health: ?";
 
             charArmor = new Label(charTab.Page);
             charArmor.SetPosition(10, 110);
@@ -2698,25 +2259,21 @@ namespace SabertoothClient
             charAgi.SetPosition(10, 130);
             charAgi.Text = "Agility: ?";
 
-            charEnd = new Label(charTab.Page);
-            charEnd.SetPosition(10, 140);
-            charEnd.Text = "Endurance: ?";
+            charInt = new Label(charTab.Page);
+            charInt.SetPosition(10, 140);
+            charInt.Text = "Endurance: ?";
 
             charSta = new Label(charTab.Page);
             charSta.SetPosition(10, 150);
             charSta.Text = "Stamina: ?";
 
-            lifeTime = new Label(charTab.Page);
-            lifeTime.SetPosition(10, 170);
-            lifeTime.Text = "Life Time: ?";
+            charEng = new Label(charTab.Page);
+            charEng.SetPosition(10, 160);
+            charEng.Text = "Life Time: ?";
 
             playTime = new Label(charTab.Page);
             playTime.SetPosition(10, 180);
             playTime.Text = "Play Time: ?";
-
-            longestLife = new Label(charTab.Page);
-            longestLife.SetPosition(10, 190);
-            longestLife.Text = "Longest Life: ?";
             #endregion
 
             packTab = menuTabs.AddPage("Backpack");
@@ -2767,27 +2324,6 @@ namespace SabertoothClient
             equipFeet.SetSize(32, 32);
             equipFeet.DoubleClicked += EquipFeet_DoubleClicked;
 
-            equipAmmo = new GroupBox(equipTab.Page);
-            equipAmmo.SetPosition(190, 10);
-            equipAmmo.SetSize(115, 75);
-            equipAmmo.Text = "Ammo Supply:";
-
-            pistolAmmo = new Label(equipAmmo);
-            pistolAmmo.SetPosition(3, 5);
-            pistolAmmo.Text = "Pistol Ammo: ?";
-
-            assaultAmmo = new Label(equipAmmo);
-            assaultAmmo.SetPosition(3, 15);
-            assaultAmmo.Text = "Assault Ammo: ?";
-
-            rocketAmmo = new Label(equipAmmo);
-            rocketAmmo.SetPosition(3, 25);
-            rocketAmmo.Text = "Rocket Ammo: ?";
-
-            grenadeAmmo = new Label(equipAmmo);
-            grenadeAmmo.SetPosition(3, 35);
-            grenadeAmmo.Text = "Grenade Ammo: ?";
-
             equipBonus = new GroupBox(equipTab.Page);
             equipBonus.SetPosition(190, 95);
             equipBonus.SetSize(115, 105);
@@ -2813,13 +2349,17 @@ namespace SabertoothClient
             equipAgi.SetPosition(3, 45);
             equipAgi.Text = "Agility: ?";
 
-            equipEnd = new Label(equipBonus);
-            equipEnd.SetPosition(3, 55);
-            equipEnd.Text = "Endurnace: ?";
+            equipInt = new Label(equipBonus);
+            equipInt.SetPosition(3, 55);
+            equipInt.Text = "Intelligence: ?";
 
             equipSta = new Label(equipBonus);
             equipSta.SetPosition(3, 65);
             equipSta.Text = "Stamina: ?";
+
+            equipEng = new Label(equipBonus);
+            equipEng.SetPosition(3, 75);
+            equipEng.Text = "Energy: ?";
             #endregion
 
             //skillsTab = menuTabs.AddPage("Skills");
@@ -3453,21 +2993,13 @@ namespace SabertoothClient
         Text h_Text = new Text();
         float h_barLength;
 
+        VertexArray m_Bar = new VertexArray();
+        Text m_Text = new Text();
+        float m_barLength;
+
         VertexArray e_Bar = new VertexArray();
         Text e_Text = new Text();
         float e_barLength;
-
-        VertexArray c_Bar = new VertexArray();
-        Text c_Text = new Text();
-        float c_barLength;
-
-        VertexArray hu_Bar = new VertexArray();
-        Text hu_Text = new Text();
-        float hu_barLength;
-
-        VertexArray hy_Bar = new VertexArray();
-        Text hy_Text = new Text();
-        float hy_barLength;
 
         const int f_Size = 175;
 
@@ -3484,6 +3016,15 @@ namespace SabertoothClient
             h_Text.Style = Text.Styles.Bold;
             h_Text.Position = new Vector2f(13, 14);
 
+            m_Bar.PrimitiveType = PrimitiveType.Quads;
+            m_Bar.Resize(4);
+
+            m_Text.Font = d_Font;
+            m_Text.CharacterSize = 16;
+            m_Text.Color = Color.Black;
+            m_Text.Style = Text.Styles.Bold;
+            m_Text.Position = new Vector2f(13, 49);
+
             e_Bar.PrimitiveType = PrimitiveType.Quads;
             e_Bar.Resize(4);
 
@@ -3491,34 +3032,7 @@ namespace SabertoothClient
             e_Text.CharacterSize = 16;
             e_Text.Color = Color.Black;
             e_Text.Style = Text.Styles.Bold;
-            e_Text.Position = new Vector2f(13, 49);
-
-            c_Bar.PrimitiveType = PrimitiveType.Quads;
-            c_Bar.Resize(4);
-
-            c_Text.Font = d_Font;
-            c_Text.CharacterSize = 16;
-            c_Text.Color = Color.Black;
-            c_Text.Style = Text.Styles.Bold;
-            c_Text.Position = new Vector2f(13, 84);
-
-            hu_Bar.PrimitiveType = PrimitiveType.Quads;
-            hu_Bar.Resize(4);
-
-            hu_Text.Font = d_Font;
-            hu_Text.CharacterSize = 16;
-            hu_Text.Color = Color.Black;
-            hu_Text.Style = Text.Styles.Bold;
-            hu_Text.Position = new Vector2f(13, 119);
-
-            hy_Bar.PrimitiveType = PrimitiveType.Quads;
-            hy_Bar.Resize(4);
-
-            hy_Text.Font = d_Font;
-            hy_Text.CharacterSize = 16;
-            hy_Text.Color = Color.Black;
-            hy_Text.Style = Text.Styles.Bold;
-            hy_Text.Position = new Vector2f(13, 154);
+            e_Text.Position = new Vector2f(13, 84);
         }
 
         public void SetPlayerIndex()
@@ -3538,98 +3052,38 @@ namespace SabertoothClient
             h_Text.DisplayedString = "Health: " + player.Health + " / " + player.MaxHealth;
         }
 
+        public void UpdateManaBar()
+        {
+            m_barLength = ((float)player.Mana / player.MaxMana) * f_Size;
+
+            m_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Blue);
+            m_Bar[1] = new Vertex(new Vector2f(m_barLength + 10, 45), Color.Blue);
+            m_Bar[2] = new Vertex(new Vector2f(m_barLength + 10, 75), Color.Blue);
+            m_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Blue);
+
+            m_Text.DisplayedString = "Mana: " + player.Mana + " / " + player.MaxMana;
+        }
+
         public void UpdateExpBar()
         {
             e_Text.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 1000);
 
             e_barLength = ((float)player.Experience / (player.Level * 1000)) * f_Size;
 
-            e_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Yellow);
-            e_Bar[1] = new Vertex(new Vector2f(e_barLength + 10, 45), Color.Yellow);
-            e_Bar[2] = new Vertex(new Vector2f(e_barLength + 10, 75), Color.Yellow);
-            e_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Yellow);
-        }
-
-        public void UpdateClipBar()
-        {
-            if (player.mainWeapon.Name != "None")
-            {
-                if (TickCount - player.reloadTick < player.mainWeapon.ReloadSpeed)
-                {
-                    c_Text.DisplayedString = "Reloading...";
-                    c_barLength = ((float)(TickCount - player.reloadTick) / player.mainWeapon.ReloadSpeed) * f_Size;
-                }
-                else
-                {
-                    switch (player.mainWeapon.ItemAmmoType)
-                    {
-                        case (int)AmmoType.Pistol:
-                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.PistolAmmo;
-                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
-                            break;
-
-                        case (int)AmmoType.AssaultRifle:
-                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.AssaultAmmo;
-                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
-                            break;
-
-                        case (int)AmmoType.Rocket:
-                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.RocketAmmo;
-                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
-                            break;
-
-                        case (int)AmmoType.Grenade:
-                            c_Text.DisplayedString = "Clip: " + player.mainWeapon.Clip + " / " + player.mainWeapon.MaxClip + " / " + player.GrenadeAmmo;
-                            c_barLength = ((float)player.mainWeapon.Clip / player.mainWeapon.MaxClip) * f_Size;
-                            break;
-                    }
-
-                }
-            }
-            else { c_Text.DisplayedString = "None"; c_barLength = f_Size; }
-
-            c_Bar[0] = new Vertex(new Vector2f(10, 80), Color.White);
-            c_Bar[1] = new Vertex(new Vector2f(c_barLength + 10, 80), Color.White);
-            c_Bar[2] = new Vertex(new Vector2f(c_barLength + 10, 110), Color.White);
-            c_Bar[3] = new Vertex(new Vector2f(10, 110), Color.White);
-        }
-
-        public void UpdateHungerBar()
-        {
-            hu_Text.DisplayedString = "Hunger: " + player.Hunger + " / 100";
-
-            hu_barLength = ((float)player.Hunger / 100) * f_Size;
-
-            hu_Bar[0] = new Vertex(new Vector2f(10, 115), Color.Green);
-            hu_Bar[1] = new Vertex(new Vector2f(hu_barLength + 10, 115), Color.Green);
-            hu_Bar[2] = new Vertex(new Vector2f(hu_barLength + 10, 145), Color.Green);
-            hu_Bar[3] = new Vertex(new Vector2f(10, 145), Color.Green);
-        }
-
-        public void UpdateHydrationBar()
-        {
-            hy_Text.DisplayedString = "Hydration: " + player.Hydration + " / 100";
-
-            hy_barLength = ((float)player.Hydration / 100) * f_Size;
-
-            hy_Bar[0] = new Vertex(new Vector2f(10, 150), Color.Blue);
-            hy_Bar[1] = new Vertex(new Vector2f(hy_barLength + 10, 150), Color.Blue);
-            hy_Bar[2] = new Vertex(new Vector2f(hy_barLength + 10, 180), Color.Blue);
-            hy_Bar[3] = new Vertex(new Vector2f(10, 180), Color.Blue);
+            e_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Yellow);
+            e_Bar[1] = new Vertex(new Vector2f(e_barLength + 10, 80), Color.Yellow);
+            e_Bar[2] = new Vertex(new Vector2f(e_barLength + 10, 110), Color.Yellow);
+            e_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Yellow);
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
             target.Draw(h_Bar, states);
+            target.Draw(m_Bar, states);
             target.Draw(e_Bar, states);
-            target.Draw(c_Bar, states);
-            target.Draw(hu_Bar, states);
-            target.Draw(hy_Bar, states);
             target.Draw(h_Text);
+            target.Draw(m_Text);
             target.Draw(e_Text);
-            target.Draw(c_Text);
-            target.Draw(hu_Text);
-            target.Draw(hy_Text);
         }
     }
 }

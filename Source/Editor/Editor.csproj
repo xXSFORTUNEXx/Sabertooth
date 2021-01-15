@@ -125,12 +125,6 @@
     <Compile Include="Forms\PlayerEditor.Designer.cs">
       <DependentUpon>PlayerEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ProjectileEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ProjectileEditor.Designer.cs">
-      <DependentUpon>ProjectileEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\QuestEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,9 +158,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PlayerEditor.resx">
       <DependentUpon>PlayerEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProjectileEditor.resx">
-      <DependentUpon>ProjectileEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\QuestEditor.resx">
       <DependentUpon>QuestEditor.cs</DependentUpon>

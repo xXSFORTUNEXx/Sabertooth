@@ -743,13 +743,6 @@ C:\Users\sfort\Desktop\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj.Core
 C:\Users\sfort\Desktop\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
 C:\Users\sfort\Desktop\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\1.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\2.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\3.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\4.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\5.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\6.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\7.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\8.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\1.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\2.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\3.png
@@ -758,8 +751,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\6.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\7.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\8.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\1.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\2.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\1.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\2.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\csfml-audio-2.dll
@@ -805,9 +796,7 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\5.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\6.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\7.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\9.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Blood.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\3.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Sounds\M4A1Shot.wav
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Sounds\M4A1Reload.wav
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\8.png
@@ -853,8 +842,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\48.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\49.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Tilesets\50.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\10.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\11.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\RedSkin.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\GreySkin.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\RainbowSkin.png

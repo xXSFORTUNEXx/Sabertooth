@@ -28,30 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dtViewGrid = new System.Windows.Forms.DataGridView();
             this.pnlEditorsViews = new System.Windows.Forms.Panel();
+            this.btnCloseWindow = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lstViews = new System.Windows.Forms.ListBox();
             this.mnuFileMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnCloseWindow = new System.Windows.Forms.Button();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showHideViewWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlEditors = new System.Windows.Forms.Panel();
-            this.btnQuestEditor = new System.Windows.Forms.Button();
-            this.btnPlayerEditor = new System.Windows.Forms.Button();
-            this.btnShopEditor = new System.Windows.Forms.Button();
-            this.btnEditor = new System.Windows.Forms.Button();
-            this.btnChestEditor = new System.Windows.Forms.Button();
-            this.btnProjectileEditor = new System.Windows.Forms.Button();
-            this.btnItemEditor = new System.Windows.Forms.Button();
-            this.btnNpcEditor = new System.Windows.Forms.Button();
-            this.btnMapEditor = new System.Windows.Forms.Button();
             this.showHideEditorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnCloseEditors = new System.Windows.Forms.Button();
+            this.editorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chestEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,8 +48,17 @@
             this.shopEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.projectileEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playerEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlEditors = new System.Windows.Forms.Panel();
+            this.btnCloseEditors = new System.Windows.Forms.Button();
+            this.btnQuestEditor = new System.Windows.Forms.Button();
+            this.btnPlayerEditor = new System.Windows.Forms.Button();
+            this.btnShopEditor = new System.Windows.Forms.Button();
+            this.btnEditor = new System.Windows.Forms.Button();
+            this.btnChestEditor = new System.Windows.Forms.Button();
+            this.btnItemEditor = new System.Windows.Forms.Button();
+            this.btnNpcEditor = new System.Windows.Forms.Button();
+            this.btnMapEditor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtViewGrid)).BeginInit();
             this.pnlEditorsViews.SuspendLayout();
             this.mnuFileMenu.SuspendLayout();
@@ -76,14 +74,14 @@
             this.dtViewGrid.Location = new System.Drawing.Point(0, 24);
             this.dtViewGrid.Name = "dtViewGrid";
             this.dtViewGrid.ReadOnly = true;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arial Narrow", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dtViewGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial Narrow", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dtViewGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dtViewGrid.Size = new System.Drawing.Size(1154, 685);
             this.dtViewGrid.TabIndex = 11;
             // 
@@ -97,6 +95,16 @@
             this.pnlEditorsViews.Name = "pnlEditorsViews";
             this.pnlEditorsViews.Size = new System.Drawing.Size(207, 354);
             this.pnlEditorsViews.TabIndex = 14;
+            // 
+            // btnCloseWindow
+            // 
+            this.btnCloseWindow.Location = new System.Drawing.Point(74, 320);
+            this.btnCloseWindow.Name = "btnCloseWindow";
+            this.btnCloseWindow.Size = new System.Drawing.Size(117, 23);
+            this.btnCloseWindow.TabIndex = 25;
+            this.btnCloseWindow.Text = "Close Window";
+            this.btnCloseWindow.UseVisualStyleBackColor = true;
+            this.btnCloseWindow.Click += new System.EventHandler(this.btnCloseWindow_Click);
             // 
             // label1
             // 
@@ -143,32 +151,6 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // editorsToolStripMenuItem
-            // 
-            this.editorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mapEditorToolStripMenuItem,
-            this.chestEditorToolStripMenuItem,
-            this.itemEditorToolStripMenuItem,
-            this.npcEditorToolStripMenuItem,
-            this.shopEditorToolStripMenuItem,
-            this.chatEditorToolStripMenuItem,
-            this.questEditorToolStripMenuItem,
-            this.projectileEditorToolStripMenuItem,
-            this.playerEditorToolStripMenuItem});
-            this.editorsToolStripMenuItem.Name = "editorsToolStripMenuItem";
-            this.editorsToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-            this.editorsToolStripMenuItem.Text = "Editors";
-            // 
-            // btnCloseWindow
-            // 
-            this.btnCloseWindow.Location = new System.Drawing.Point(74, 320);
-            this.btnCloseWindow.Name = "btnCloseWindow";
-            this.btnCloseWindow.Size = new System.Drawing.Size(117, 23);
-            this.btnCloseWindow.TabIndex = 25;
-            this.btnCloseWindow.Text = "Close Window";
-            this.btnCloseWindow.UseVisualStyleBackColor = true;
-            this.btnCloseWindow.Click += new System.EventHandler(this.btnCloseWindow_Click);
-            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -187,114 +169,6 @@
             this.showHideViewWindowToolStripMenuItem.Text = "Show/Hide Views";
             this.showHideViewWindowToolStripMenuItem.Click += new System.EventHandler(this.showHideViewWindowToolStripMenuItem_Click);
             // 
-            // pnlEditors
-            // 
-            this.pnlEditors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlEditors.Controls.Add(this.btnCloseEditors);
-            this.pnlEditors.Controls.Add(this.btnQuestEditor);
-            this.pnlEditors.Controls.Add(this.btnPlayerEditor);
-            this.pnlEditors.Controls.Add(this.btnShopEditor);
-            this.pnlEditors.Controls.Add(this.btnEditor);
-            this.pnlEditors.Controls.Add(this.btnChestEditor);
-            this.pnlEditors.Controls.Add(this.btnProjectileEditor);
-            this.pnlEditors.Controls.Add(this.btnItemEditor);
-            this.pnlEditors.Controls.Add(this.btnNpcEditor);
-            this.pnlEditors.Controls.Add(this.btnMapEditor);
-            this.pnlEditors.Location = new System.Drawing.Point(225, 343);
-            this.pnlEditors.Name = "pnlEditors";
-            this.pnlEditors.Size = new System.Drawing.Size(151, 354);
-            this.pnlEditors.TabIndex = 16;
-            // 
-            // btnQuestEditor
-            // 
-            this.btnQuestEditor.Location = new System.Drawing.Point(15, 191);
-            this.btnQuestEditor.Name = "btnQuestEditor";
-            this.btnQuestEditor.Size = new System.Drawing.Size(118, 23);
-            this.btnQuestEditor.TabIndex = 33;
-            this.btnQuestEditor.Text = "Quest Editor";
-            this.btnQuestEditor.UseVisualStyleBackColor = true;
-            this.btnQuestEditor.Click += new System.EventHandler(this.btnQuestEditor_Click);
-            // 
-            // btnPlayerEditor
-            // 
-            this.btnPlayerEditor.Location = new System.Drawing.Point(15, 249);
-            this.btnPlayerEditor.Name = "btnPlayerEditor";
-            this.btnPlayerEditor.Size = new System.Drawing.Size(118, 23);
-            this.btnPlayerEditor.TabIndex = 32;
-            this.btnPlayerEditor.Text = "Player Editor";
-            this.btnPlayerEditor.UseVisualStyleBackColor = true;
-            this.btnPlayerEditor.Click += new System.EventHandler(this.btnPlayerEditor_Click);
-            // 
-            // btnShopEditor
-            // 
-            this.btnShopEditor.Location = new System.Drawing.Point(15, 132);
-            this.btnShopEditor.Name = "btnShopEditor";
-            this.btnShopEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnShopEditor.TabIndex = 31;
-            this.btnShopEditor.Text = "Shop Editor";
-            this.btnShopEditor.UseVisualStyleBackColor = true;
-            this.btnShopEditor.Click += new System.EventHandler(this.btnShopEditor_Click);
-            // 
-            // btnEditor
-            // 
-            this.btnEditor.Location = new System.Drawing.Point(15, 162);
-            this.btnEditor.Name = "btnEditor";
-            this.btnEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnEditor.TabIndex = 30;
-            this.btnEditor.Text = "Chat Editor";
-            this.btnEditor.UseVisualStyleBackColor = true;
-            this.btnEditor.Click += new System.EventHandler(this.btnChatEditor_Click);
-            // 
-            // btnChestEditor
-            // 
-            this.btnChestEditor.Location = new System.Drawing.Point(15, 43);
-            this.btnChestEditor.Name = "btnChestEditor";
-            this.btnChestEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnChestEditor.TabIndex = 29;
-            this.btnChestEditor.Text = "Chest Editor";
-            this.btnChestEditor.UseVisualStyleBackColor = true;
-            this.btnChestEditor.Click += new System.EventHandler(this.btnChestEditor_Click);
-            // 
-            // btnProjectileEditor
-            // 
-            this.btnProjectileEditor.Location = new System.Drawing.Point(15, 220);
-            this.btnProjectileEditor.Name = "btnProjectileEditor";
-            this.btnProjectileEditor.Size = new System.Drawing.Size(118, 23);
-            this.btnProjectileEditor.TabIndex = 28;
-            this.btnProjectileEditor.Text = "Projectile Editor";
-            this.btnProjectileEditor.UseVisualStyleBackColor = true;
-            this.btnProjectileEditor.Click += new System.EventHandler(this.btnProjectileEditor_Click);
-            // 
-            // btnItemEditor
-            // 
-            this.btnItemEditor.Location = new System.Drawing.Point(15, 74);
-            this.btnItemEditor.Name = "btnItemEditor";
-            this.btnItemEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnItemEditor.TabIndex = 27;
-            this.btnItemEditor.Text = "Item Editor";
-            this.btnItemEditor.UseVisualStyleBackColor = true;
-            this.btnItemEditor.Click += new System.EventHandler(this.btnItemEditor_Click);
-            // 
-            // btnNpcEditor
-            // 
-            this.btnNpcEditor.Location = new System.Drawing.Point(15, 103);
-            this.btnNpcEditor.Name = "btnNpcEditor";
-            this.btnNpcEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnNpcEditor.TabIndex = 26;
-            this.btnNpcEditor.Text = "NPC Editor";
-            this.btnNpcEditor.UseVisualStyleBackColor = true;
-            this.btnNpcEditor.Click += new System.EventHandler(this.btnNpcEditor_Click);
-            // 
-            // btnMapEditor
-            // 
-            this.btnMapEditor.Location = new System.Drawing.Point(15, 14);
-            this.btnMapEditor.Name = "btnMapEditor";
-            this.btnMapEditor.Size = new System.Drawing.Size(119, 23);
-            this.btnMapEditor.TabIndex = 25;
-            this.btnMapEditor.Text = "Map Editor";
-            this.btnMapEditor.UseVisualStyleBackColor = true;
-            this.btnMapEditor.Click += new System.EventHandler(this.btnMapEditor_Click);
-            // 
             // showHideEditorsToolStripMenuItem
             // 
             this.showHideEditorsToolStripMenuItem.Checked = true;
@@ -304,15 +178,20 @@
             this.showHideEditorsToolStripMenuItem.Text = "Show/Hide Editors";
             this.showHideEditorsToolStripMenuItem.Click += new System.EventHandler(this.showHideEditorsToolStripMenuItem_Click);
             // 
-            // btnCloseEditors
+            // editorsToolStripMenuItem
             // 
-            this.btnCloseEditors.Location = new System.Drawing.Point(15, 320);
-            this.btnCloseEditors.Name = "btnCloseEditors";
-            this.btnCloseEditors.Size = new System.Drawing.Size(118, 23);
-            this.btnCloseEditors.TabIndex = 34;
-            this.btnCloseEditors.Text = "Close Window";
-            this.btnCloseEditors.UseVisualStyleBackColor = true;
-            this.btnCloseEditors.Click += new System.EventHandler(this.btnCloseEditors_Click);
+            this.editorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mapEditorToolStripMenuItem,
+            this.chestEditorToolStripMenuItem,
+            this.itemEditorToolStripMenuItem,
+            this.npcEditorToolStripMenuItem,
+            this.shopEditorToolStripMenuItem,
+            this.chatEditorToolStripMenuItem,
+            this.questEditorToolStripMenuItem,
+            this.playerEditorToolStripMenuItem});
+            this.editorsToolStripMenuItem.Name = "editorsToolStripMenuItem";
+            this.editorsToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
+            this.editorsToolStripMenuItem.Text = "Editors";
             // 
             // mapEditorToolStripMenuItem
             // 
@@ -363,19 +242,119 @@
             this.questEditorToolStripMenuItem.Text = "Quest Editor";
             this.questEditorToolStripMenuItem.Click += new System.EventHandler(this.btnQuestEditor_Click);
             // 
-            // projectileEditorToolStripMenuItem
-            // 
-            this.projectileEditorToolStripMenuItem.Name = "projectileEditorToolStripMenuItem";
-            this.projectileEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.projectileEditorToolStripMenuItem.Text = "Projectile Editor";
-            this.projectileEditorToolStripMenuItem.Click += new System.EventHandler(this.btnProjectileEditor_Click);
-            // 
             // playerEditorToolStripMenuItem
             // 
             this.playerEditorToolStripMenuItem.Name = "playerEditorToolStripMenuItem";
             this.playerEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.playerEditorToolStripMenuItem.Text = "Player Editor";
             this.playerEditorToolStripMenuItem.Click += new System.EventHandler(this.btnPlayerEditor_Click);
+            // 
+            // pnlEditors
+            // 
+            this.pnlEditors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlEditors.Controls.Add(this.btnCloseEditors);
+            this.pnlEditors.Controls.Add(this.btnQuestEditor);
+            this.pnlEditors.Controls.Add(this.btnPlayerEditor);
+            this.pnlEditors.Controls.Add(this.btnShopEditor);
+            this.pnlEditors.Controls.Add(this.btnEditor);
+            this.pnlEditors.Controls.Add(this.btnChestEditor);
+            this.pnlEditors.Controls.Add(this.btnItemEditor);
+            this.pnlEditors.Controls.Add(this.btnNpcEditor);
+            this.pnlEditors.Controls.Add(this.btnMapEditor);
+            this.pnlEditors.Location = new System.Drawing.Point(225, 343);
+            this.pnlEditors.Name = "pnlEditors";
+            this.pnlEditors.Size = new System.Drawing.Size(151, 354);
+            this.pnlEditors.TabIndex = 16;
+            // 
+            // btnCloseEditors
+            // 
+            this.btnCloseEditors.Location = new System.Drawing.Point(15, 320);
+            this.btnCloseEditors.Name = "btnCloseEditors";
+            this.btnCloseEditors.Size = new System.Drawing.Size(118, 23);
+            this.btnCloseEditors.TabIndex = 34;
+            this.btnCloseEditors.Text = "Close Window";
+            this.btnCloseEditors.UseVisualStyleBackColor = true;
+            this.btnCloseEditors.Click += new System.EventHandler(this.btnCloseEditors_Click);
+            // 
+            // btnQuestEditor
+            // 
+            this.btnQuestEditor.Location = new System.Drawing.Point(15, 191);
+            this.btnQuestEditor.Name = "btnQuestEditor";
+            this.btnQuestEditor.Size = new System.Drawing.Size(118, 23);
+            this.btnQuestEditor.TabIndex = 33;
+            this.btnQuestEditor.Text = "Quest Editor";
+            this.btnQuestEditor.UseVisualStyleBackColor = true;
+            this.btnQuestEditor.Click += new System.EventHandler(this.btnQuestEditor_Click);
+            // 
+            // btnPlayerEditor
+            // 
+            this.btnPlayerEditor.Location = new System.Drawing.Point(15, 220);
+            this.btnPlayerEditor.Name = "btnPlayerEditor";
+            this.btnPlayerEditor.Size = new System.Drawing.Size(118, 23);
+            this.btnPlayerEditor.TabIndex = 32;
+            this.btnPlayerEditor.Text = "Player Editor";
+            this.btnPlayerEditor.UseVisualStyleBackColor = true;
+            this.btnPlayerEditor.Click += new System.EventHandler(this.btnPlayerEditor_Click);
+            // 
+            // btnShopEditor
+            // 
+            this.btnShopEditor.Location = new System.Drawing.Point(15, 132);
+            this.btnShopEditor.Name = "btnShopEditor";
+            this.btnShopEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnShopEditor.TabIndex = 31;
+            this.btnShopEditor.Text = "Shop Editor";
+            this.btnShopEditor.UseVisualStyleBackColor = true;
+            this.btnShopEditor.Click += new System.EventHandler(this.btnShopEditor_Click);
+            // 
+            // btnEditor
+            // 
+            this.btnEditor.Location = new System.Drawing.Point(15, 162);
+            this.btnEditor.Name = "btnEditor";
+            this.btnEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnEditor.TabIndex = 30;
+            this.btnEditor.Text = "Chat Editor";
+            this.btnEditor.UseVisualStyleBackColor = true;
+            this.btnEditor.Click += new System.EventHandler(this.btnChatEditor_Click);
+            // 
+            // btnChestEditor
+            // 
+            this.btnChestEditor.Location = new System.Drawing.Point(15, 43);
+            this.btnChestEditor.Name = "btnChestEditor";
+            this.btnChestEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnChestEditor.TabIndex = 29;
+            this.btnChestEditor.Text = "Chest Editor";
+            this.btnChestEditor.UseVisualStyleBackColor = true;
+            this.btnChestEditor.Click += new System.EventHandler(this.btnChestEditor_Click);
+            // 
+            // btnItemEditor
+            // 
+            this.btnItemEditor.Location = new System.Drawing.Point(15, 74);
+            this.btnItemEditor.Name = "btnItemEditor";
+            this.btnItemEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnItemEditor.TabIndex = 27;
+            this.btnItemEditor.Text = "Item Editor";
+            this.btnItemEditor.UseVisualStyleBackColor = true;
+            this.btnItemEditor.Click += new System.EventHandler(this.btnItemEditor_Click);
+            // 
+            // btnNpcEditor
+            // 
+            this.btnNpcEditor.Location = new System.Drawing.Point(15, 103);
+            this.btnNpcEditor.Name = "btnNpcEditor";
+            this.btnNpcEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnNpcEditor.TabIndex = 26;
+            this.btnNpcEditor.Text = "NPC Editor";
+            this.btnNpcEditor.UseVisualStyleBackColor = true;
+            this.btnNpcEditor.Click += new System.EventHandler(this.btnNpcEditor_Click);
+            // 
+            // btnMapEditor
+            // 
+            this.btnMapEditor.Location = new System.Drawing.Point(15, 14);
+            this.btnMapEditor.Name = "btnMapEditor";
+            this.btnMapEditor.Size = new System.Drawing.Size(119, 23);
+            this.btnMapEditor.TabIndex = 25;
+            this.btnMapEditor.Text = "Map Editor";
+            this.btnMapEditor.UseVisualStyleBackColor = true;
+            this.btnMapEditor.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
             // Editor
             // 
@@ -420,7 +399,6 @@
         private System.Windows.Forms.Button btnShopEditor;
         private System.Windows.Forms.Button btnEditor;
         private System.Windows.Forms.Button btnChestEditor;
-        private System.Windows.Forms.Button btnProjectileEditor;
         private System.Windows.Forms.Button btnItemEditor;
         private System.Windows.Forms.Button btnNpcEditor;
         private System.Windows.Forms.Button btnMapEditor;
@@ -432,7 +410,6 @@
         private System.Windows.Forms.ToolStripMenuItem shopEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem chatEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem questEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem projectileEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playerEditorToolStripMenuItem;
     }
 }

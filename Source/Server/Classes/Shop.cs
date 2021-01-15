@@ -148,7 +148,7 @@ namespace SabertoothServer
 
         public void BuyShopItem(int itemNum, int shopSlot, int index)
         {
-            int cash = players[index].Money;
+            int cash = players[index].Wallet;
             int cost = shopItem[shopSlot].Cost;
 
             if (cost == 1) { cost = items[itemNum].Price; }
@@ -158,7 +158,7 @@ namespace SabertoothServer
                 int slot = players[index].FindOpenInvSlot(players[index].Backpack);
                 if (slot < 25)
                 {
-                    players[index].Money -= cost;
+                    players[index].Wallet -= cost;
                     players[index].Backpack[slot] = items[itemNum];
                     HandleData.SendServerMessageTo(players[index].Connection, "You purchased " + items[itemNum].Name + " for " + cost + " dollars!");
                     HandleData.SendPlayerInv(index);
@@ -179,10 +179,10 @@ namespace SabertoothServer
 
         public void SellShopItem(int index, int slot)
         {
-            int money = players[index].Money;
+            int money = players[index].Wallet;
             int price = players[index].Backpack[slot].Price;
             money += price;
-            players[index].Money = money;
+            players[index].Wallet = money;
             HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Name + " for " + price + " dollars!");
             players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);            
             HandleData.SendPlayerInv(index);

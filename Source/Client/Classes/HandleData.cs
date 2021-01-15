@@ -84,11 +84,7 @@ namespace SabertoothClient
 
                             case (byte)PacketTypes.HealthData:
                                 HandleHealthData(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.VitalLoss:
-                                HandleVitalData(incMSG);
-                                break;
+                                break;                                
 
                             case (byte)PacketTypes.ItemData:
                                 HandleItemData(incMSG);
@@ -100,27 +96,7 @@ namespace SabertoothClient
 
                             case (byte)PacketTypes.Shutdown:
                                 HandleServerShutdown();
-                                break;
-
-                            case (byte)PacketTypes.ProjData:
-                                HandleProjData(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.Projectiles:
-                                HandleProjectiles(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.UpdateAmmo:
-                                HandleUpdateAmmo(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.CreateProj:
-                                HandleCreateProjectile(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.ClearProj:
-                                HandleClearProjectile(incMSG);
-                                break;
+                                break;                                
 
                             case (byte)PacketTypes.UpdateWeapons:
                                 HandleWeaponsUpdate(incMSG);
@@ -300,7 +276,7 @@ namespace SabertoothClient
                 gui.packTab.Press(gui.menuTabs);
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
-                gui.skillsTab.Hide();
+                //gui.skillsTab.Hide();
                 gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
@@ -589,19 +565,12 @@ namespace SabertoothClient
             players[myIndex].Chest.Armor = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Type = incMSG.ReadVariableInt32();
             players[myIndex].Chest.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.ReloadSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Chest.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.HydrateRestore = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Agility = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Endurance = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.ItemAmmoType = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Value = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.ProjectileNumber = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Price= incMSG.ReadVariableInt32();
             players[myIndex].Chest.Rarity = incMSG.ReadVariableInt32();
 
@@ -611,19 +580,12 @@ namespace SabertoothClient
             players[myIndex].Legs.Armor = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Type = incMSG.ReadVariableInt32();
             players[myIndex].Legs.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.ReloadSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Legs.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.HydrateRestore = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Agility = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Endurance = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.ItemAmmoType = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Value = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.ProjectileNumber = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Price = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Rarity = incMSG.ReadVariableInt32();
 
@@ -633,19 +595,12 @@ namespace SabertoothClient
             players[myIndex].Feet.Armor = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Type = incMSG.ReadVariableInt32();
             players[myIndex].Feet.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.ReloadSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Feet.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.HydrateRestore = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Agility = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Endurance = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.ItemAmmoType = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Value = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.ProjectileNumber = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Price = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Rarity = incMSG.ReadVariableInt32();
         }
@@ -695,19 +650,12 @@ namespace SabertoothClient
                     players[myIndex].Backpack[i].Armor = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Type = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].AttackSpeed = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].ReloadSpeed = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].HungerRestore = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].HydrateRestore = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Strength = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Agility = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Endurance = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Stamina = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].Clip = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].MaxClip = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].ItemAmmoType = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Value = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Price = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Rarity = incMSG.ReadVariableInt32();
                 }
@@ -726,50 +674,16 @@ namespace SabertoothClient
                     players[myIndex].Bank[i].Armor = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Type = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].AttackSpeed = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].ReloadSpeed = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].HealthRestore = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].HungerRestore = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].HydrateRestore = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Strength = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Agility = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Endurance = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Stamina = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].Clip = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].MaxClip = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].ItemAmmoType = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Value = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Price = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Rarity = incMSG.ReadVariableInt32();
                 }
             }
-        }
-
-        static void HandleClearProjectile(NetIncomingMessage incMSG)
-        {
-            string mapName = incMSG.ReadString();
-            if (mapName != map.Name) { return; }
-
-            int slot = incMSG.ReadVariableInt32();
-            if (map.m_MapProj[slot] != null) { return; }
-            map.m_MapProj[slot] = null;
-        }
-
-        static void HandleCreateProjectile(NetIncomingMessage incMSG)
-        {
-            int slot = incMSG.ReadVariableInt32();
-            int proj = incMSG.ReadVariableInt32();
-
-            map.m_MapProj[slot] = new MapProj();
-
-            map.m_MapProj[slot].X = incMSG.ReadVariableInt32();
-            map.m_MapProj[slot].Y = incMSG.ReadVariableInt32();
-            map.m_MapProj[slot].Direction = incMSG.ReadVariableInt32();
-            map.m_MapProj[slot].Name = projectiles[proj].Name;
-            map.m_MapProj[slot].Speed = projectiles[proj].Speed;
-            map.m_MapProj[slot].Type = projectiles[proj].Type;
-            map.m_MapProj[slot].Sprite = projectiles[proj].Sprite;
-            map.m_MapProj[slot].Range = projectiles[proj].Range;
         }
 
         static void HandleCreateBlood(NetIncomingMessage incMSG)
@@ -786,45 +700,6 @@ namespace SabertoothClient
             map.m_BloodSplats[slot].TexY = RND.Next(0, 4);
         }
 
-        static void HandleUpdateAmmo(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-
-            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
-        }
-
-        static void HandleProjectiles(NetIncomingMessage incMSG)
-        {
-            for (int i = 0; i < MAX_PROJECTILES; i++)
-            {
-                if (projectiles[i] != null)
-                {
-                    projectiles[i].Name = incMSG.ReadString();
-                    projectiles[i].Damage = incMSG.ReadVariableInt32();
-                    projectiles[i].Range = incMSG.ReadVariableInt32();
-                    projectiles[i].Sprite = incMSG.ReadVariableInt32();
-                    projectiles[i].Type = incMSG.ReadVariableInt32();
-                    projectiles[i].Speed = incMSG.ReadVariableInt32();
-                }
-            }
-        }
-
-        static void HandleProjData(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-
-            projectiles[index].Name = incMSG.ReadString();
-            projectiles[index].Damage = incMSG.ReadVariableInt32();
-            projectiles[index].Range = incMSG.ReadVariableInt32();
-            projectiles[index].Sprite = incMSG.ReadVariableInt32();
-            projectiles[index].Type = incMSG.ReadVariableInt32();
-            projectiles[index].Speed = incMSG.ReadVariableInt32();
-        }
-
         static void HandleItems(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < MAX_ITEMS; i++)
@@ -837,17 +712,11 @@ namespace SabertoothClient
                     items[i].Armor = incMSG.ReadVariableInt32();
                     items[i].Type = incMSG.ReadVariableInt32();
                     items[i].HealthRestore = incMSG.ReadVariableInt32();
-                    items[i].HungerRestore = incMSG.ReadVariableInt32();
-                    items[i].HydrateRestore = incMSG.ReadVariableInt32();
                     items[i].Strength = incMSG.ReadVariableInt32();
                     items[i].Agility = incMSG.ReadVariableInt32();
                     items[i].Endurance = incMSG.ReadVariableInt32();
                     items[i].Stamina = incMSG.ReadVariableInt32();
-                    items[i].Clip = incMSG.ReadVariableInt32();
-                    items[i].MaxClip = incMSG.ReadVariableInt32();
-                    items[i].ItemAmmoType = incMSG.ReadVariableInt32();
                     items[i].Value = incMSG.ReadVariableInt32();
-                    items[i].ProjectileNumber = incMSG.ReadVariableInt32();
                     items[i].Price = incMSG.ReadVariableInt32();
                     items[i].Rarity = incMSG.ReadVariableInt32();
                 }
@@ -864,17 +733,11 @@ namespace SabertoothClient
             items[index].Armor = incMSG.ReadVariableInt32();
             items[index].Type = incMSG.ReadVariableInt32();
             items[index].HealthRestore = incMSG.ReadVariableInt32();
-            items[index].HungerRestore = incMSG.ReadVariableInt32();
-            items[index].HydrateRestore = incMSG.ReadVariableInt32();
             items[index].Strength = incMSG.ReadVariableInt32();
             items[index].Agility = incMSG.ReadVariableInt32();
             items[index].Endurance = incMSG.ReadVariableInt32();
             items[index].Stamina = incMSG.ReadVariableInt32();
-            items[index].Clip = incMSG.ReadVariableInt32();
-            items[index].MaxClip = incMSG.ReadVariableInt32();
-            items[index].ItemAmmoType = incMSG.ReadVariableInt32();
             items[index].Value = incMSG.ReadVariableInt32();
-            items[index].ProjectileNumber = incMSG.ReadVariableInt32();
             items[index].Price = incMSG.ReadVariableInt32();
             items[index].Rarity = incMSG.ReadVariableInt32();
         }
@@ -1158,16 +1021,6 @@ namespace SabertoothClient
             gui.Ready = false;
         }
 
-        static void HandleVitalData(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-            string vitalName = incMSG.ReadString();
-            int vital = incMSG.ReadVariableInt32();
-
-            if (vitalName == "food") { players[myIndex].Hunger = vital; }
-            if (vitalName == "water") { players[myIndex].Hydration = vital; }
-        }
-
         static void HandleHealthData(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -1182,21 +1035,17 @@ namespace SabertoothClient
             players[myIndex].Points = incMSG.ReadVariableInt32();
             players[myIndex].Health = incMSG.ReadVariableInt32();
             players[myIndex].MaxHealth = incMSG.ReadVariableInt32();
-            players[myIndex].Hunger = incMSG.ReadVariableInt32();
-            players[myIndex].Hydration = incMSG.ReadVariableInt32();
+            players[myIndex].Mana = incMSG.ReadVariableInt32();
+            players[myIndex].MaxMana = incMSG.ReadVariableInt32();
             players[myIndex].Experience = incMSG.ReadVariableInt32();
-            players[myIndex].Money = incMSG.ReadVariableInt32();
+            players[myIndex].Wallet = incMSG.ReadVariableInt32();
             players[myIndex].Armor = incMSG.ReadVariableInt32();
             players[myIndex].Strength = incMSG.ReadVariableInt32();
             players[myIndex].Agility = incMSG.ReadVariableInt32();
-            players[myIndex].Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Intelligence = incMSG.ReadVariableInt32();
             players[myIndex].Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].Energy = incMSG.ReadVariableInt32();
             players[myIndex].LightRadius = incMSG.ReadVariableInt32();
-            players[myIndex].Kills = incMSG.ReadVariableInt32();
         }
 
         static void HandlePlayerData(NetIncomingMessage incMSG)
@@ -1209,36 +1058,23 @@ namespace SabertoothClient
             players[myIndex].AimDirection = incMSG.ReadVariableInt32();
             players[myIndex].Sprite = incMSG.ReadVariableInt32();
             players[myIndex].Level = incMSG.ReadVariableInt32();
-            players[myIndex].Points = incMSG.ReadVariableInt32();
             players[myIndex].Health = incMSG.ReadVariableInt32();
             players[myIndex].MaxHealth = incMSG.ReadVariableInt32();
-            players[myIndex].Hunger = incMSG.ReadVariableInt32();
-            players[myIndex].Hydration = incMSG.ReadVariableInt32();
+            players[myIndex].Mana = incMSG.ReadVariableInt32();
+            players[myIndex].MaxMana = incMSG.ReadVariableInt32();
             players[myIndex].Experience = incMSG.ReadVariableInt32();
-            players[myIndex].Money = incMSG.ReadVariableInt32();
+            players[myIndex].Wallet = incMSG.ReadVariableInt32();
             players[myIndex].Armor = incMSG.ReadVariableInt32();
             players[myIndex].Strength = incMSG.ReadVariableInt32();
             players[myIndex].Agility = incMSG.ReadVariableInt32();
-            players[myIndex].Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Intelligence = incMSG.ReadVariableInt32();
             players[myIndex].Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].PistolAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].AssaultAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].RocketAmmo = incMSG.ReadVariableInt32();
-            players[myIndex].GrenadeAmmo = incMSG.ReadVariableInt32();
+            players[myIndex].Energy = incMSG.ReadVariableInt32();
             players[myIndex].LightRadius = incMSG.ReadVariableInt32();
             players[myIndex].PlayDays = incMSG.ReadVariableInt32();
             players[myIndex].PlayHours = incMSG.ReadVariableInt32();
             players[myIndex].PlayMinutes = incMSG.ReadVariableInt32();
             players[myIndex].PlaySeconds = incMSG.ReadVariableInt32();
-            players[myIndex].LifeDay = incMSG.ReadVariableInt32();
-            players[myIndex].LifeHour = incMSG.ReadVariableInt32();
-            players[myIndex].LifeMinute = incMSG.ReadVariableInt32();
-            players[myIndex].LifeSecond = incMSG.ReadVariableInt32();
-            players[myIndex].LongestLifeDay = incMSG.ReadVariableInt32();
-            players[myIndex].LongestLifeHour = incMSG.ReadVariableInt32();
-            players[myIndex].LongestLifeMinute = incMSG.ReadVariableInt32();
-            players[myIndex].LongestLifeSecond = incMSG.ReadVariableInt32();
-            players[myIndex].Kills = incMSG.ReadVariableInt32();
             if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 players[myIndex].OffsetX = 16;
@@ -1251,99 +1087,71 @@ namespace SabertoothClient
             }
 
             //Main Weapon
-            players[myIndex].mainWeapon.Name = incMSG.ReadString();
-            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Value = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Price = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Name = incMSG.ReadString();
+            players[myIndex].MainHand.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Type = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Value = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Price = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
-            players[myIndex].offWeapon.Name = incMSG.ReadString();
-            players[myIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Type = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Value = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Price = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Name = incMSG.ReadString();
+            players[myIndex].OffHand.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Type = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Value = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Price = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Rarity = incMSG.ReadVariableInt32();
         }
 
         static void HandleWeaponsUpdate(NetIncomingMessage incMSG)
         {
             //Main Weapon
-            players[myIndex].mainWeapon.Name = incMSG.ReadString();
-            players[myIndex].mainWeapon.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Sprite = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Damage = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Armor = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Type = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Strength = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Endurance = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Value = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Price = incMSG.ReadVariableInt32();
-            players[myIndex].mainWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Name = incMSG.ReadString();
+            players[myIndex].MainHand.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Type = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Value = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Price = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Rarity = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
-            players[myIndex].offWeapon.Name = incMSG.ReadString();
-            players[myIndex].offWeapon.Clip = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.MaxClip = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Sprite = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Damage = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Armor = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Type = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.AttackSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ReloadSpeed = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HealthRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HungerRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.HydrateRestore = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Strength = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Endurance = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Stamina = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ItemAmmoType = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Value = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.ProjectileNumber = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Price = incMSG.ReadVariableInt32();
-            players[myIndex].offWeapon.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Name = incMSG.ReadString();
+            players[myIndex].OffHand.Sprite = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Damage = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Armor = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Type = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AttackSpeed = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Strength = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Agility = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Stamina = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Value = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Price = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Rarity = incMSG.ReadVariableInt32();
         }
 
         static void HandlePlayers(NetIncomingMessage incMSG)
@@ -1358,36 +1166,23 @@ namespace SabertoothClient
                 players[i].AimDirection = incMSG.ReadVariableInt32();
                 players[i].Sprite = incMSG.ReadVariableInt32();
                 players[i].Level = incMSG.ReadVariableInt32();
-                players[i].Points = incMSG.ReadVariableInt32();
                 players[i].Health = incMSG.ReadVariableInt32();
                 players[i].MaxHealth = incMSG.ReadVariableInt32();
-                players[i].Hunger = incMSG.ReadVariableInt32();
-                players[i].Hydration = incMSG.ReadVariableInt32();
+                players[i].Mana = incMSG.ReadVariableInt32();
+                players[i].MaxMana = incMSG.ReadVariableInt32();
                 players[i].Experience = incMSG.ReadVariableInt32();
-                players[i].Money = incMSG.ReadVariableInt32();
+                players[i].Wallet = incMSG.ReadVariableInt32();
                 players[i].Armor = incMSG.ReadVariableInt32();
                 players[i].Strength = incMSG.ReadVariableInt32();
                 players[i].Agility = incMSG.ReadVariableInt32();
-                players[i].Endurance = incMSG.ReadVariableInt32();
+                players[i].Intelligence = incMSG.ReadVariableInt32();
                 players[i].Stamina = incMSG.ReadVariableInt32();
-                players[i].PistolAmmo = incMSG.ReadVariableInt32();
-                players[i].AssaultAmmo = incMSG.ReadVariableInt32();
-                players[i].RocketAmmo = incMSG.ReadVariableInt32();
-                players[i].GrenadeAmmo = incMSG.ReadVariableInt32();
+                players[i].Energy = incMSG.ReadVariableInt32();
                 players[i].LightRadius = incMSG.ReadVariableInt32();
                 players[i].PlayDays = incMSG.ReadVariableInt32();
                 players[i].PlayHours = incMSG.ReadVariableInt32();
                 players[i].PlayMinutes = incMSG.ReadVariableInt32();
                 players[i].PlaySeconds = incMSG.ReadVariableInt32();
-                players[i].LifeDay = incMSG.ReadVariableInt32();
-                players[i].LifeHour = incMSG.ReadVariableInt32();
-                players[i].LifeMinute = incMSG.ReadVariableInt32();
-                players[i].LifeSecond = incMSG.ReadVariableInt32();
-                players[i].LongestLifeDay = incMSG.ReadVariableInt32();
-                players[i].LongestLifeHour = incMSG.ReadVariableInt32();
-                players[i].LongestLifeMinute = incMSG.ReadVariableInt32();
-                players[i].LongestLifeSecond = incMSG.ReadVariableInt32();
-                players[i].Kills = incMSG.ReadVariableInt32();
                 if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
                 {
                     players[i].OffsetX = 16;
@@ -1538,16 +1333,7 @@ namespace SabertoothClient
         Items,
         Shutdown,
         Attack,
-        ProjData,
-        Projectiles,
-        UpdateAmmo,
-        CreateProj,
-        ClearProj,
-        UpdateProj,
         UpdateWeapons,
-        RangedAttack,
-        UpdateClip,
-        AttackNpcProj,
         UpdatePlayerStats,
         PoolNpcs,
         PoolNpcData,
@@ -1585,7 +1371,6 @@ namespace SabertoothClient
         TakeChestItem,
         DateandTime,
         PlayTime,
-        LifeTime,
         AccountKey,
         RequestActivation,
         CreateBlood,

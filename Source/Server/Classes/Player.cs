@@ -14,8 +14,8 @@ namespace SabertoothServer
     {
         #region Main Classes
         public NetConnection Connection;
-        public Item mainWeapon = new Item();
-        public Item offWeapon = new Item();
+        public Item MainHand = new Item();
+        public Item OffHand = new Item();
         public Item[] Backpack = new Item[MAX_INV_SLOTS];
         public Item[] Bank = new Item[MAX_BANK_SLOTS];
         public Item Chest = new Item();
@@ -37,56 +37,38 @@ namespace SabertoothServer
         public int Direction { get; set; }
         public int AimDirection { get; set; }
         public int Sprite { get; set; }
-        public int Level { get; set; }
-        public int Points { get; set; }
+        public int Level { get; set; }        
         public int Health { get; set; }
         public int MaxHealth { get; set; }
-        public int Hunger { get; set; }
-        public int Hydration { get; set; }
+        public int Mana { get; set; }
+        public int MaxMana { get; set; }
         public int Experience { get; set; }
-        public int Money { get; set; }
+        public int Wallet { get; set; }
         public int Armor { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Endurance { get; set; }
+        public int Intelligence { get; set; }        
         public int Stamina { get; set; }
+        public int Energy { get; set; }
         public int Step { get; set; }        
-        public int PistolAmmo { get; set; }
-        public int AssaultAmmo { get; set; }
-        public int RocketAmmo { get; set; }
-        public int GrenadeAmmo { get; set; }
         public int LightRadius { get; set; }
         public int PlayDays { get; set; }
         public int PlayHours { get; set; }
         public int PlayMinutes { get; set; }
         public int PlaySeconds { get; set; }
-        public int LifeDay { get; set; }
-        public int LifeHour { get; set; }
-        public int LifeMinute { get; set; }
-        public int LifeSecond { get; set; }
-        public int LongestLifeDay { get; set; }
-        public int LongestLifeHour { get; set; }
-        public int LongestLifeMinute { get; set; }
-        public int LongestLifeSecond { get; set; }
         public string LastLoggedIn { get; set; }
         public string AccountKey { get; set; }
         public string Active { get; set; }
-        public int Kills { get; set; }
         public int StatsId { get; set; }
         #endregion
 
         #region Local Variables
-        public int hungerTick;
-        public int hydrationTick;
         public int timeTick;
-        //Instant Variables
-        public int iPoints;
-        public int iKills;
         #endregion
 
         #region Class Constructors
-        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money, 
-                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo, NetConnection conn)
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana, int exp, int wallet,
+            int armor, int str, int agi, int inte, int sta, int eng, int sprite, NetConnection conn)
         {
             Name = name;
             Pass = pass;
@@ -97,49 +79,35 @@ namespace SabertoothServer
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
-            Points = points;
             Experience = exp;
-            Money = money;
+            Wallet = wallet;
             Armor = armor;
-            Hunger = hunger;
-            Hydration = hydration;
             Strength = str;
             Agility = agi;
-            Endurance = end;
+            Intelligence = inte;
             Stamina = sta;
+            Energy = eng;
             Connection = conn;
             MaxHealth = maxhealth;
             Health = MaxHealth;
-            hungerTick = TickCount;
-            hydrationTick = TickCount;
+            Mana = mana;
+            MaxMana = maxmana;
+            Sprite = sprite;
             timeTick = TickCount;
-            PistolAmmo = defaultAmmo;
-            AssaultAmmo = defaultAmmo;
-            RocketAmmo = 5;
-            GrenadeAmmo = 3;
             LightRadius = 100;
             PlayDays = 0;
             PlayHours = 0;
             PlayMinutes = 0;
             PlaySeconds = 0;
-            LifeDay = 0;
-            LifeHour = 0;
-            LifeMinute = 0;
-            LifeSecond = 0;
-            LongestLifeDay = 0;
-            LongestLifeHour = 0;
-            LongestLifeMinute = 0;
-            LongestLifeSecond = 0;
             LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
-            Kills = 0;
 
-            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
-            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
-            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
@@ -158,8 +126,8 @@ namespace SabertoothServer
             }
         }
 
-        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int exp, int money,
-                      int armor, int hunger, int hydration, int str, int agi, int end, int sta, int defaultAmmo)
+        public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana,
+            int exp, int money, int armor, int str, int agi, int inte, int sta, int eng, int sprite)
         {
             Name = name;
             Pass = pass;
@@ -170,48 +138,34 @@ namespace SabertoothServer
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
-            Points = points;
             Experience = exp;
-            Money = money;
+            Wallet = money;
             Armor = armor;
-            Hunger = hunger;
-            Hydration = hydration;
-            hungerTick = TickCount;
-            hydrationTick = TickCount;
+            Health = health;
+            MaxHealth = maxhealth;
+            Mana = mana;
+            MaxMana = maxmana;
             timeTick = TickCount;
             Strength = str;
             Agility = agi;
-            Endurance = end;
+            Intelligence = eng;
             Stamina = sta;
-            MaxHealth = maxhealth;
-            Health = MaxHealth;
-            PistolAmmo = defaultAmmo;
-            AssaultAmmo = defaultAmmo;
-            RocketAmmo = 5;
-            GrenadeAmmo = 3;
+            Energy = eng;                        
+            Sprite = sprite;
             LightRadius = 100;
             PlayDays = 0;
             PlayHours = 0;
             PlayMinutes = 0;
             PlaySeconds = 0;
-            LifeDay = 0;
-            LifeHour = 0;
-            LifeMinute = 0;
-            LifeSecond = 0;
-            LongestLifeDay = 0;
-            LongestLifeHour = 0;
-            LongestLifeMinute = 0;
-            LongestLifeSecond = 0;
             LastLoggedIn = "1/1/1000 00:00:00.000";
             AccountKey = KeyGen.Key(25);
             Active = "N";
-            Kills = 0;
 
-            mainWeapon = new Item("Pistol", 1, 30, 0, (int)ItemType.RangedWeapon, 700, 1500, 0, 0, 0, 0, 0, 0, 0, 8, 8, (int)AmmoType.Pistol, 1, 1, 1, 0);
-            offWeapon = new Item("Club", 3, 40, 0, (int)ItemType.MeleeWeapon, 900, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (int)ItemType.None, 1, 1, 1, 0);
-            Chest = new Item("Starter Shirt", 4, 0, 5, (int)ItemType.Shirt, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Legs = new Item("Starter Pants", 5, 0, 5, (int)ItemType.Pants, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Feet = new Item("Starter Shoes", 6, 0, 5, (int)ItemType.Shoes, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
@@ -235,8 +189,6 @@ namespace SabertoothServer
             Name = name;
             Pass = pass;
             Connection = conn;
-            hungerTick = TickCount;
-            hydrationTick = TickCount;
             timeTick = TickCount;
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
@@ -288,25 +240,7 @@ namespace SabertoothServer
         }
 
         public void RegenHealth()
-        {
-            string msg;
-
-            if (Hydration == 0)
-            {
-                Health -= 50;
-                msg = "You are dying from dehydration!";
-                HandleData.SendServerMessageTo(Connection, msg);
-                return;
-            }
-
-            if (Hunger == 0)
-            {
-                Health -= 100;
-                msg = "You are dying from starvation!";
-                HandleData.SendServerMessageTo(Connection, msg);
-                return;
-            }
-
+        {            
             if (Health < MaxHealth)
             {
                 Health += (Stamina * 10);
@@ -318,39 +252,23 @@ namespace SabertoothServer
             }
         }
 
-        public void VitalLoss(string vital)
+        public void RegainMana()
         {
-            if (vital == "food")
+            if (Mana < MaxMana)
             {
-                if (Hunger <= 0)
-                {
-                    Hunger = 0;
-                    Console.WriteLine("We start to die...");
-                }
-                else
-                {
-                    Hunger -= 10;
-                }
+                Mana += (Energy * 10);
             }
 
-            if (vital == "water")
+            if (Mana > MaxMana)
             {
-                if (Hydration <= 0)
-                {
-                    Hydration = 0;
-                    Console.WriteLine("We start to die...");
-                }
-                else
-                {
-                    Hydration -= 10;
-                }
+                Mana = MaxMana;
             }
         }
 
         public void CheckPlayerLevelUp()
         {
-            int exptoLevel = (Level * 1000);
-            if (Level == 1000) { Experience = exptoLevel; return; }
+            int exptoLevel = (Level * 450);
+            if (Level == MAX_LEVEL) { Experience = exptoLevel; return; }
             if (Experience >= exptoLevel)
             {
                 while (Experience >= exptoLevel)
@@ -358,13 +276,15 @@ namespace SabertoothServer
                     int remainingXp = (Experience - exptoLevel);
                     Level += 1;
                     Experience = remainingXp;
-                    Hunger = 100;
-                    MaxHealth += (Level * 5) + RND.Next(0, 100);
+                    MaxHealth += (Stamina * 5);
                     Health = MaxHealth;
+                    MaxMana += (Energy * 5);
+                    Mana = MaxMana;
                     Strength += RND.Next(1, 3);
                     Agility += RND.Next(1, 3);
-                    Endurance += RND.Next(1, 3);
+                    Intelligence += RND.Next(1, 3);
                     Stamina += RND.Next(1, 3);
+                    Energy += RND.Next(1, 3);
                 }
             }
         }
@@ -416,9 +336,9 @@ namespace SabertoothServer
                 switch (players[index].Backpack[slot].Type)
                 {                    
                     case (int)ItemType.RangedWeapon:
-                        if (players[index].mainWeapon.Name == "None")
+                        if (players[index].MainHand.Name == "None")
                         {
-                            players[index].mainWeapon = players[index].Backpack[slot];
+                            players[index].MainHand = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -426,16 +346,16 @@ namespace SabertoothServer
 
                             if (newSlot < 25)
                             {
-                                players[index].Backpack[newSlot] = players[index].mainWeapon;
-                                players[index].mainWeapon = players[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].MainHand;
+                                players[index].MainHand = players[index].Backpack[slot];
                             }
                         }
                         break;
 
                     case (int)ItemType.MeleeWeapon:
-                        if (players[index].offWeapon.Name == "None")
+                        if (players[index].OffHand.Name == "None")
                         {
-                            players[index].offWeapon = players[index].Backpack[slot];
+                            players[index].OffHand = players[index].Backpack[slot];
                         }
                         else
                         {
@@ -443,8 +363,8 @@ namespace SabertoothServer
 
                             if (newSlot < 25)
                             {
-                                players[index].Backpack[newSlot] = players[index].offWeapon;
-                                players[index].offWeapon = players[index].Backpack[slot];
+                                players[index].Backpack[newSlot] = players[index].OffHand;
+                                players[index].OffHand = players[index].Backpack[slot];
                             }
                         }
                         break;
@@ -503,25 +423,11 @@ namespace SabertoothServer
                     case (int)ItemType.Currency:
                         if (players[index].Backpack[slot].Value > 0)
                         {
-                            players[index].Money += players[index].Backpack[slot].Value;
+                            players[index].Wallet += players[index].Backpack[slot].Value;
                         }                        
                         break;
 
-                    case (int)ItemType.Food:
-                        if (players[index].Backpack[slot].HungerRestore > 0)
-                        {
-                            players[index].Hunger += players[index].Backpack[slot].HungerRestore;
-                            if (players[index].Hunger > 100) { players[index].Hunger = 100; }
-                        }
-                        break;
-
-                    case (int)ItemType.Drink:
-                        if (players[index].Backpack[slot].HydrateRestore > 0)
-                        {
-                            players[index].Hydration += players[index].Backpack[slot].HydrateRestore;
-                            if (players[index].Hydration > 100) { players[index].Hydration = 100; }
-                        }
-                        break;
+                    //food and drink need stuff to be done
 
                     case (int)ItemType.FirstAid:
                         if (players[index].Backpack[slot].HealthRestore > 0)
@@ -543,12 +449,12 @@ namespace SabertoothServer
         {
             switch (equip)
             {
-                case (int)EquipSlots.MainWeapon:
+                case (int)EquipSlots.MainHand:
                     int itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        players[index].Backpack[itemSlot] = players[index].mainWeapon;
-                        players[index].mainWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Backpack[itemSlot] = players[index].MainHand;
+                        players[index].MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
 
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
@@ -561,12 +467,12 @@ namespace SabertoothServer
                     }
                     break;
 
-                case (int)EquipSlots.OffWeapon:
+                case (int)EquipSlots.OffHand:
                     itemSlot = players[index].FindOpenInvSlot(players[index].Backpack);
                     if (itemSlot < 25)
                     {
-                        players[index].Backpack[itemSlot] = players[index].offWeapon;
-                        players[index].offWeapon = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Backpack[itemSlot] = players[index].OffHand;
+                        players[index].OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -646,19 +552,12 @@ namespace SabertoothServer
                     maps[mapNum].m_MapItem[mapSlot].Armor = players[index].Backpack[slot].Armor;
                     maps[mapNum].m_MapItem[mapSlot].Type = players[index].Backpack[slot].Type;
                     maps[mapNum].m_MapItem[mapSlot].AttackSpeed = players[index].Backpack[slot].AttackSpeed;
-                    maps[mapNum].m_MapItem[mapSlot].ReloadSpeed = players[index].Backpack[slot].ReloadSpeed;
                     maps[mapNum].m_MapItem[mapSlot].HealthRestore = players[index].Backpack[slot].HealthRestore;
-                    maps[mapNum].m_MapItem[mapSlot].HungerRestore = players[index].Backpack[slot].HungerRestore;
-                    maps[mapNum].m_MapItem[mapSlot].HydrateRestore = players[index].Backpack[slot].HydrateRestore;
                     maps[mapNum].m_MapItem[mapSlot].Strength = players[index].Backpack[slot].Strength;
                     maps[mapNum].m_MapItem[mapSlot].Agility = players[index].Backpack[slot].Agility;
                     maps[mapNum].m_MapItem[mapSlot].Endurance = players[index].Backpack[slot].Endurance;
                     maps[mapNum].m_MapItem[mapSlot].Stamina = players[index].Backpack[slot].Stamina;
-                    maps[mapNum].m_MapItem[mapSlot].Clip = players[index].Backpack[slot].Clip;
-                    maps[mapNum].m_MapItem[mapSlot].MaxClip = players[index].Backpack[slot].MaxClip;
-                    maps[mapNum].m_MapItem[mapSlot].ItemAmmoType = players[index].Backpack[slot].ItemAmmoType;
                     maps[mapNum].m_MapItem[mapSlot].Value = players[index].Backpack[slot].Value;
-                    maps[mapNum].m_MapItem[mapSlot].ProjectileNumber = players[index].Backpack[slot].ProjectileNumber;
                     maps[mapNum].m_MapItem[mapSlot].Price = players[index].Backpack[slot].Price;
                     maps[mapNum].m_MapItem[mapSlot].Rarity = players[index].Backpack[slot].Rarity;
                     maps[mapNum].m_MapItem[mapSlot].IsSpawned = true;
@@ -709,19 +608,12 @@ namespace SabertoothServer
                 Backpack[itemSlot].Armor = maps[map].m_MapItem[itemNum].Armor;
                 Backpack[itemSlot].Type = maps[map].m_MapItem[itemNum].Type;
                 Backpack[itemSlot].AttackSpeed = maps[map].m_MapItem[itemNum].AttackSpeed;
-                Backpack[itemSlot].ReloadSpeed = maps[map].m_MapItem[itemNum].ReloadSpeed;
                 Backpack[itemSlot].HealthRestore = maps[map].m_MapItem[itemNum].HealthRestore;
-                Backpack[itemSlot].HungerRestore = maps[map].m_MapItem[itemNum].HungerRestore;
-                Backpack[itemSlot].HydrateRestore = maps[map].m_MapItem[itemNum].HydrateRestore;
                 Backpack[itemSlot].Strength = maps[map].m_MapItem[itemNum].Strength;
                 Backpack[itemSlot].Agility = maps[map].m_MapItem[itemNum].Agility;
                 Backpack[itemSlot].Endurance = maps[map].m_MapItem[itemNum].Endurance;
                 Backpack[itemSlot].Stamina = maps[map].m_MapItem[itemNum].Stamina;
-                Backpack[itemSlot].Clip = maps[map].m_MapItem[itemNum].Clip;
-                Backpack[itemSlot].MaxClip = maps[map].m_MapItem[itemNum].MaxClip;
-                Backpack[itemSlot].ItemAmmoType = maps[map].m_MapItem[itemNum].ItemAmmoType;
                 Backpack[itemSlot].Value = maps[map].m_MapItem[itemNum].Value;
-                Backpack[itemSlot].ProjectileNumber = maps[map].m_MapItem[itemNum].ProjectileNumber;
                 Backpack[itemSlot].Price = maps[map].m_MapItem[itemNum].Price;
                 Backpack[itemSlot].Rarity = maps[map].m_MapItem[itemNum].Rarity;
 
@@ -818,19 +710,16 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;                    
                     cmd.Parameters.Add(new SqlParameter("@health", System.Data.DbType.Int32)).Value = Health;
                     cmd.Parameters.Add(new SqlParameter("@maxhealth", System.Data.DbType.Int32)).Value = MaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@mana", System.Data.DbType.Int32)).Value = Mana;
+                    cmd.Parameters.Add(new SqlParameter("@maxmana", System.Data.DbType.Int32)).Value = MaxMana;
                     cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
-                    cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("@wallet", System.Data.DbType.Int32)).Value = Wallet;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Armor;
-                    cmd.Parameters.Add(new SqlParameter("@hunger", System.Data.DbType.Int32)).Value = Hunger;
-                    cmd.Parameters.Add(new SqlParameter("@hydration", System.Data.DbType.Int32)).Value = Hydration;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Intelligence;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@pistolammo", System.Data.DbType.Int32)).Value = PistolAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@assaultammo", System.Data.DbType.Int32)).Value = AssaultAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Energy;
                     cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
                     cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.Int32)).Value = LastLoggedIn;
                     cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
@@ -842,20 +731,10 @@ namespace SabertoothServer
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@kills", System.Data.DbType.Int32)).Value = Kills;
-                    cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
                     cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
                     cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
                     cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
                     cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
-                    cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
-                    cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -890,27 +769,20 @@ namespace SabertoothServer
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = mainWeapon.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = mainWeapon.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = mainWeapon.MaxClip;
-                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = mainWeapon.Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = mainWeapon.Damage;
-                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = mainWeapon.Armor;
-                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = mainWeapon.Type;
-                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = mainWeapon.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = mainWeapon.ReloadSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = mainWeapon.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = mainWeapon.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = mainWeapon.Strength;
-                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = mainWeapon.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = mainWeapon.Endurance;
-                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = mainWeapon.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = mainWeapon.ItemAmmoType;
-                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = mainWeapon.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = mainWeapon.ProjectileNumber;
-                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = mainWeapon.Price;
-                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = mainWeapon.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = MainHand.Name;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = MainHand.Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = MainHand.Damage;
+                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = MainHand.Armor;
+                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = MainHand.Type;
+                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = MainHand.AttackSpeed;
+                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = MainHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = MainHand.Strength;
+                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = MainHand.Agility;
+                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = MainHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = MainHand.Stamina;
+                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = MainHand.Value;
+                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = MainHand.Price;
+                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = MainHand.Rarity;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -918,27 +790,20 @@ namespace SabertoothServer
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = offWeapon.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = offWeapon.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = offWeapon.MaxClip;
-                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = offWeapon.Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = offWeapon.Damage;
-                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = offWeapon.Armor;
-                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = offWeapon.Type;
-                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = offWeapon.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = offWeapon.ReloadSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = offWeapon.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = offWeapon.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = offWeapon.Strength;
-                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = offWeapon.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = offWeapon.Endurance;
-                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = offWeapon.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = offWeapon.ItemAmmoType;
-                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = offWeapon.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = offWeapon.ProjectileNumber;
-                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = offWeapon.Price;
-                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = offWeapon.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = OffHand.Name;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = OffHand.Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = OffHand.Damage;
+                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = OffHand.Armor;
+                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = OffHand.Type;
+                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = OffHand.AttackSpeed;
+                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = OffHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = OffHand.Strength;
+                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = OffHand.Agility;
+                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = OffHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = OffHand.Stamina;
+                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = OffHand.Value;
+                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = OffHand.Price;
+                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = OffHand.Rarity;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -949,24 +814,17 @@ namespace SabertoothServer
                     //cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Chest.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 0;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Chest.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Chest.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Chest.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Chest.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Chest.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Chest.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Chest.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Chest.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Chest.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Chest.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Chest.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
                     cmd.ExecuteNonQuery();
@@ -979,24 +837,17 @@ namespace SabertoothServer
                     //cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Legs.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 1;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Legs.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Legs.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Legs.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Legs.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Legs.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Legs.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Legs.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Legs.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Legs.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Legs.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Legs.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
                     cmd.ExecuteNonQuery();
@@ -1009,24 +860,17 @@ namespace SabertoothServer
                     //cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Feet.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 2;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Feet.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Feet.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Feet.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Feet.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Feet.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Feet.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Feet.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Feet.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Feet.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Feet.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Feet.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
                     cmd.ExecuteNonQuery();
@@ -1072,19 +916,16 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@level", System.Data.DbType.Int32)).Value = Level;                    
                     cmd.Parameters.Add(new SqlParameter("@health", System.Data.DbType.Int32)).Value = Health;
                     cmd.Parameters.Add(new SqlParameter("@maxhealth", System.Data.DbType.Int32)).Value = MaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@mana", System.Data.DbType.Int32)).Value = Mana;
+                    cmd.Parameters.Add(new SqlParameter("@maxmana", System.Data.DbType.Int32)).Value = MaxMana;
                     cmd.Parameters.Add(new SqlParameter("@experience", System.Data.DbType.Int32)).Value = Experience;
-                    cmd.Parameters.Add(new SqlParameter("@money", System.Data.DbType.Int32)).Value = Money;
+                    cmd.Parameters.Add(new SqlParameter("@wallet", System.Data.DbType.Int32)).Value = Wallet;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Armor;
-                    cmd.Parameters.Add(new SqlParameter("@hunger", System.Data.DbType.Int32)).Value = Hunger;
-                    cmd.Parameters.Add(new SqlParameter("@hydrate", System.Data.DbType.Int32)).Value = Hydration;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Intelligence;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@pistolammo", System.Data.DbType.Int32)).Value = PistolAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@assaultammo", System.Data.DbType.Int32)).Value = AssaultAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@rocketammo", System.Data.DbType.Int32)).Value = RocketAmmo;
-                    cmd.Parameters.Add(new SqlParameter("@grenadeammo", System.Data.DbType.Int32)).Value = GrenadeAmmo;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Energy;
                     cmd.Parameters.Add(new SqlParameter("@lightradius", System.Data.DbType.Int32)).Value = LightRadius;
                     cmd.Parameters.Add(new SqlParameter("@lastlogged", System.Data.DbType.String)).Value = LastLoggedIn;
                     cmd.Parameters.Add(new SqlParameter("@accountkey", System.Data.DbType.String)).Value = AccountKey;
@@ -1097,20 +938,10 @@ namespace SabertoothServer
                 {
                     cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = StatsId;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@kills", System.Data.DbType.Int32)).Value = Kills;
-                    cmd.Parameters.Add(new SqlParameter("@points", System.Data.DbType.Int32)).Value = Points;
                     cmd.Parameters.Add(new SqlParameter("@days", System.Data.DbType.Int32)).Value = PlayDays;
                     cmd.Parameters.Add(new SqlParameter("@hours", System.Data.DbType.Int32)).Value = PlayHours;
                     cmd.Parameters.Add(new SqlParameter("@minutes", System.Data.DbType.Int32)).Value = PlayMinutes;
                     cmd.Parameters.Add(new SqlParameter("@seconds", System.Data.DbType.Int32)).Value = PlaySeconds;
-                    cmd.Parameters.Add(new SqlParameter("@ldays", System.Data.DbType.Int32)).Value = LifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@lhours", System.Data.DbType.Int32)).Value = LifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@lminutes", System.Data.DbType.Int32)).Value = LifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@lseconds", System.Data.DbType.Int32)).Value = LifeSecond;
-                    cmd.Parameters.Add(new SqlParameter("@lldays", System.Data.DbType.Int32)).Value = LongestLifeDay;
-                    cmd.Parameters.Add(new SqlParameter("@llhours", System.Data.DbType.Int32)).Value = LongestLifeHour;
-                    cmd.Parameters.Add(new SqlParameter("@llminutes", System.Data.DbType.Int32)).Value = LongestLifeMinute;
-                    cmd.Parameters.Add(new SqlParameter("@llseconds", System.Data.DbType.Int32)).Value = LongestLifeSecond;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1145,27 +976,20 @@ namespace SabertoothServer
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = mainWeapon.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = mainWeapon.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = mainWeapon.MaxClip;
-                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = mainWeapon.Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = mainWeapon.Damage;
-                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = mainWeapon.Armor;
-                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = mainWeapon.Type;
-                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = mainWeapon.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = mainWeapon.ReloadSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = mainWeapon.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = mainWeapon.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = mainWeapon.Strength;
-                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = mainWeapon.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = mainWeapon.Endurance;
-                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = mainWeapon.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = mainWeapon.ItemAmmoType;
-                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = mainWeapon.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = mainWeapon.ProjectileNumber;
-                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = mainWeapon.Price;
-                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = mainWeapon.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = MainHand.Name;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = MainHand.Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = MainHand.Damage;
+                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = MainHand.Armor;
+                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = MainHand.Type;
+                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = MainHand.AttackSpeed;
+                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = MainHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = MainHand.Strength;
+                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = MainHand.Agility;
+                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = MainHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = MainHand.Stamina;
+                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = MainHand.Value;
+                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = MainHand.Price;
+                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = MainHand.Rarity;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1173,27 +997,20 @@ namespace SabertoothServer
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = offWeapon.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = offWeapon.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = offWeapon.MaxClip;
-                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = offWeapon.Sprite;
-                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = offWeapon.Damage;
-                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = offWeapon.Armor;
-                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = offWeapon.Type;
-                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = offWeapon.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = offWeapon.ReloadSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = offWeapon.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = offWeapon.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = mainWeapon.HydrateRestore;
-                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = offWeapon.Strength;
-                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = offWeapon.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = offWeapon.Endurance;
-                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = offWeapon.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = offWeapon.ItemAmmoType;
-                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = offWeapon.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = offWeapon.ProjectileNumber;
-                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = offWeapon.Price;
-                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = offWeapon.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = OffHand.Name;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = OffHand.Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = OffHand.Damage;
+                    cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = OffHand.Armor;
+                    cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = OffHand.Type;
+                    cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = OffHand.AttackSpeed;
+                    cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = OffHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = OffHand.Strength;
+                    cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = OffHand.Agility;
+                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = OffHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = OffHand.Stamina;
+                    cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = OffHand.Value;
+                    cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = OffHand.Price;
+                    cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = OffHand.Rarity;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1204,24 +1021,17 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Chest.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 0;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Chest.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Chest.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Chest.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Chest.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Chest.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Chest.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Chest.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Chest.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Chest.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Chest.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Chest.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
                     cmd.ExecuteNonQuery();
@@ -1234,24 +1044,17 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Legs.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 1;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Legs.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Legs.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Legs.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Legs.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Legs.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Legs.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Legs.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Legs.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Legs.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Legs.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Legs.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
                     cmd.ExecuteNonQuery();
@@ -1264,24 +1067,17 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@id", System.Data.DbType.Int32)).Value = Feet.Id;
                     cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = 2;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Feet.Name;
-                    cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Feet.Clip;
-                    cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Feet.MaxClip;
                     cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Feet.Sprite;
                     cmd.Parameters.Add(new SqlParameter("@damage", System.Data.DbType.Int32)).Value = Feet.Damage;
                     cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Feet.Armor;
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
-                    cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Feet.ReloadSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Feet.HungerRestore;
-                    cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Feet.HydrateRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
                     cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
-                    cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Feet.ItemAmmoType;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
-                    cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Feet.ProjectileNumber;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
                     cmd.ExecuteNonQuery();
@@ -1310,19 +1106,12 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Backpack[i].Armor;
                             cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Backpack[i].Type;
                             cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Backpack[i].AttackSpeed;
-                            cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Backpack[i].ReloadSpeed;
                             cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Backpack[i].HealthRestore;
-                            cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Backpack[i].HungerRestore;
-                            cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Backpack[i].HydrateRestore;
                             cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Backpack[i].Strength;
                             cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Backpack[i].Agility;
                             cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Backpack[i].Endurance;
                             cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Backpack[i].Stamina;
-                            cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Backpack[i].Clip;
-                            cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Backpack[i].MaxClip;
-                            cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Backpack[i].ItemAmmoType;
                             cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Backpack[i].Value;
-                            cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Backpack[i].ProjectileNumber;
                             cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Backpack[i].Price;
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Backpack[i].Rarity;
                             cmd.ExecuteNonQuery();
@@ -1354,19 +1143,12 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@armor", System.Data.DbType.Int32)).Value = Bank[i].Armor;
                             cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Bank[i].Type;
                             cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Bank[i].AttackSpeed;
-                            cmd.Parameters.Add(new SqlParameter("@reloadspeed", System.Data.DbType.Int32)).Value = Bank[i].ReloadSpeed;
                             cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Bank[i].HealthRestore;
-                            cmd.Parameters.Add(new SqlParameter("@hungerrestore", System.Data.DbType.Int32)).Value = Bank[i].HungerRestore;
-                            cmd.Parameters.Add(new SqlParameter("@hydraterestore", System.Data.DbType.Int32)).Value = Bank[i].HydrateRestore;
                             cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Bank[i].Strength;
                             cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Bank[i].Agility;
                             cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Bank[i].Endurance;
                             cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Bank[i].Stamina;
-                            cmd.Parameters.Add(new SqlParameter("@clip", System.Data.DbType.Int32)).Value = Bank[i].Clip;
-                            cmd.Parameters.Add(new SqlParameter("@maxclip", System.Data.DbType.Int32)).Value = Bank[i].MaxClip;
-                            cmd.Parameters.Add(new SqlParameter("@ammotype", System.Data.DbType.Int32)).Value = Bank[i].ItemAmmoType;
                             cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Bank[i].Value;
-                            cmd.Parameters.Add(new SqlParameter("@proj", System.Data.DbType.Int32)).Value = Bank[i].ProjectileNumber;
                             cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Bank[i].Price;
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Bank[i].Rarity;
                             cmd.ExecuteNonQuery();
@@ -1408,19 +1190,16 @@ namespace SabertoothServer
                             Level = ToInt32(reader[i]); i += 1;
                             Health = ToInt32(reader[i]); i += 1;
                             MaxHealth = ToInt32(reader[i]); i += 1;
+                            Mana = ToInt32(reader[i]); i += 1;
+                            MaxMana = ToInt32(reader[i]); i += 1;
                             Experience = ToInt32(reader[i]); i += 1;
-                            Money = ToInt32(reader[i]); i += 1;
+                            Wallet = ToInt32(reader[i]); i += 1;
                             Armor = ToInt32(reader[i]); i += 1;
-                            Hunger = ToInt32(reader[i]); i += 1;
-                            Hydration = ToInt32(reader[i]); i += 1;
                             Strength = ToInt32(reader[i]); i += 1;
                             Agility = ToInt32(reader[i]); i += 1;
-                            Endurance = ToInt32(reader[i]); i += 1;
+                            Intelligence = ToInt32(reader[i]); i += 1;
                             Stamina = ToInt32(reader[i]); i += 1;
-                            PistolAmmo = ToInt32(reader[i]); i += 1;
-                            AssaultAmmo = ToInt32(reader[i]); i += 1;
-                            RocketAmmo = ToInt32(reader[i]); i += 1;
-                            GrenadeAmmo = ToInt32(reader[i]); i += 1;
+                            Energy = ToInt32(reader[i]); i += 1;
                             LightRadius = ToInt32(reader[i]); i += 1;
                             LastLoggedIn = reader[i].ToString(); i += 1;
                             AccountKey = reader[i].ToString(); i += 1;
@@ -1439,20 +1218,10 @@ namespace SabertoothServer
                         {
                             i = 0;
                             StatsId = ToInt32(reader[i]); i = 2;
-                            Kills = ToInt32(reader[i]); i += 1;
-                            Points = ToInt32(reader[i]); i += 1;
                             PlayDays = ToInt32(reader[i]); i += 1;
                             PlayHours = ToInt32(reader[i]); i += 1;
                             PlayMinutes = ToInt32(reader[i]); i += 1;
                             PlaySeconds = ToInt32(reader[i]); i += 1;
-                            LifeDay = ToInt32(reader[i]); i += 1;
-                            LifeHour = ToInt32(reader[i]); i += 1;
-                            LifeMinute = ToInt32(reader[i]); i += 1;
-                            LifeSecond = ToInt32(reader[i]); i += 1;
-                            LongestLifeDay = ToInt32(reader[i]); i += 1;
-                            LongestLifeHour = ToInt32(reader[i]); i += 1;
-                            LongestLifeMinute = ToInt32(reader[i]); i += 1;
-                            LongestLifeSecond = ToInt32(reader[i]); i += 1;
                         }
                     }
                 }
@@ -1498,28 +1267,21 @@ namespace SabertoothServer
                         while (reader.Read())
                         {
                             i = 0;
-                            mainWeapon.Id = ToInt32(reader[i]); i = 2;
-                            mainWeapon.Name = reader[i].ToString(); i += 1;
-                            mainWeapon.Clip = ToInt32(reader[i]); i += 1;
-                            mainWeapon.MaxClip = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Sprite = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Damage = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Armor = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Type = ToInt32(reader[i]); i += 1;
-                            mainWeapon.AttackSpeed = ToInt32(reader[i]); i += 1;
-                            mainWeapon.ReloadSpeed = ToInt32(reader[i]); i += 1;
-                            mainWeapon.HealthRestore = ToInt32(reader[i]); i += 1;
-                            mainWeapon.HungerRestore = ToInt32(reader[i]); i += 1;
-                            mainWeapon.HydrateRestore = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Strength = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Agility = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Endurance = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Stamina = ToInt32(reader[i]); i += 1;
-                            mainWeapon.ItemAmmoType = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Value = ToInt32(reader[i]); i += 1;
-                            mainWeapon.ProjectileNumber = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Price = ToInt32(reader[i]); i += 1;
-                            mainWeapon.Rarity = ToInt32(reader[i]);
+                            MainHand.Id = ToInt32(reader[i]); i = 2;
+                            MainHand.Name = reader[i].ToString(); i += 1;
+                            MainHand.Sprite = ToInt32(reader[i]); i += 1;
+                            MainHand.Damage = ToInt32(reader[i]); i += 1;
+                            MainHand.Armor = ToInt32(reader[i]); i += 1;
+                            MainHand.Type = ToInt32(reader[i]); i += 1;
+                            MainHand.AttackSpeed = ToInt32(reader[i]); i += 1;
+                            MainHand.HealthRestore = ToInt32(reader[i]); i += 1;
+                            MainHand.Strength = ToInt32(reader[i]); i += 1;
+                            MainHand.Agility = ToInt32(reader[i]); i += 1;
+                            MainHand.Endurance = ToInt32(reader[i]); i += 1;
+                            MainHand.Stamina = ToInt32(reader[i]); i += 1;
+                            MainHand.Value = ToInt32(reader[i]); i += 1;
+                            MainHand.Price = ToInt32(reader[i]); i += 1;
+                            MainHand.Rarity = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1533,28 +1295,21 @@ namespace SabertoothServer
                         while (reader.Read())
                         {
                             i = 0;
-                            offWeapon.Id = ToInt32(reader[i]); i = 2;
-                            offWeapon.Name = reader[i].ToString(); i += 1;
-                            offWeapon.Clip = ToInt32(reader[i]); i += 1;
-                            offWeapon.MaxClip = ToInt32(reader[i]); i += 1;
-                            offWeapon.Sprite = ToInt32(reader[i]); i += 1;
-                            offWeapon.Damage = ToInt32(reader[i]); i += 1;
-                            offWeapon.Armor = ToInt32(reader[i]); i += 1;
-                            offWeapon.Type = ToInt32(reader[i]); i += 1;
-                            offWeapon.AttackSpeed = ToInt32(reader[i]); i += 1;
-                            offWeapon.ReloadSpeed = ToInt32(reader[i]); i += 1;
-                            offWeapon.HealthRestore = ToInt32(reader[i]); i += 1;
-                            offWeapon.HungerRestore = ToInt32(reader[i]); i += 1;
-                            offWeapon.HydrateRestore = ToInt32(reader[i]); i += 1;
-                            offWeapon.Strength = ToInt32(reader[i]); i += 1;
-                            offWeapon.Agility = ToInt32(reader[i]); i += 1;
-                            offWeapon.Endurance = ToInt32(reader[i]); i += 1;
-                            offWeapon.Stamina = ToInt32(reader[i]); i += 1;
-                            offWeapon.ItemAmmoType = ToInt32(reader[i]); i += 1;
-                            offWeapon.Value = ToInt32(reader[i]); i += 1;
-                            offWeapon.ProjectileNumber = ToInt32(reader[i]); i += 1;
-                            offWeapon.Price = ToInt32(reader[i]); i += 1;
-                            offWeapon.Rarity = ToInt32(reader[i]);
+                            OffHand.Id = ToInt32(reader[i]); i = 2;
+                            OffHand.Name = reader[i].ToString(); i += 1;
+                            OffHand.Sprite = ToInt32(reader[i]); i += 1;
+                            OffHand.Damage = ToInt32(reader[i]); i += 1;
+                            OffHand.Armor = ToInt32(reader[i]); i += 1;
+                            OffHand.Type = ToInt32(reader[i]); i += 1;
+                            OffHand.AttackSpeed = ToInt32(reader[i]); i += 1;
+                            OffHand.HealthRestore = ToInt32(reader[i]); i += 1;
+                            OffHand.Strength = ToInt32(reader[i]); i += 1;
+                            OffHand.Agility = ToInt32(reader[i]); i += 1;
+                            OffHand.Endurance = ToInt32(reader[i]); i += 1;
+                            OffHand.Stamina = ToInt32(reader[i]); i += 1;
+                            OffHand.Value = ToInt32(reader[i]); i += 1;
+                            OffHand.Price = ToInt32(reader[i]); i += 1;
+                            OffHand.Rarity = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1571,24 +1326,17 @@ namespace SabertoothServer
                             i = 0;
                             Chest.Id = ToInt32(reader[i]); i = 3;
                             Chest.Name = reader[i].ToString(); i += 1;
-                            Chest.Clip = ToInt32(reader[i]); i += 1;
-                            Chest.MaxClip = ToInt32(reader[i]); i += 1;
                             Chest.Sprite = ToInt32(reader[i]); i += 1;
                             Chest.Damage = ToInt32(reader[i]); i += 1;
                             Chest.Armor = ToInt32(reader[i]); i += 1;
                             Chest.Type = ToInt32(reader[i]); i += 1;
                             Chest.AttackSpeed = ToInt32(reader[i]); i += 1;
-                            Chest.ReloadSpeed = ToInt32(reader[i]); i += 1;
                             Chest.HealthRestore = ToInt32(reader[i]); i += 1;
-                            Chest.HungerRestore = ToInt32(reader[i]); i += 1;
-                            Chest.HydrateRestore = ToInt32(reader[i]); i += 1;
                             Chest.Strength = ToInt32(reader[i]); i += 1;
                             Chest.Agility = ToInt32(reader[i]); i += 1;
                             Chest.Endurance = ToInt32(reader[i]); i += 1;
                             Chest.Stamina = ToInt32(reader[i]); i += 1;
-                            Chest.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Chest.Value = ToInt32(reader[i]); i += 1;
-                            Chest.ProjectileNumber = ToInt32(reader[i]); i += 1;
                             Chest.Price = ToInt32(reader[i]); i += 1;
                             Chest.Rarity = ToInt32(reader[i]);
                         }
@@ -1607,24 +1355,17 @@ namespace SabertoothServer
                             i = 0;
                             Legs.Id = ToInt32(reader[i]); i = 3;
                             Legs.Name = reader[i].ToString(); i += 1;
-                            Legs.Clip = ToInt32(reader[i]); i += 1;
-                            Legs.MaxClip = ToInt32(reader[i]); i += 1;
                             Legs.Sprite = ToInt32(reader[i]); i += 1;
                             Legs.Damage = ToInt32(reader[i]); i += 1;
                             Legs.Armor = ToInt32(reader[i]); i += 1;
                             Legs.Type = ToInt32(reader[i]); i += 1;
                             Legs.AttackSpeed = ToInt32(reader[i]); i += 1;
-                            Legs.ReloadSpeed = ToInt32(reader[i]); i += 1;
                             Legs.HealthRestore = ToInt32(reader[i]); i += 1;
-                            Legs.HungerRestore = ToInt32(reader[i]); i += 1;
-                            Legs.HydrateRestore = ToInt32(reader[i]); i += 1;
                             Legs.Strength = ToInt32(reader[i]); i += 1;
                             Legs.Agility = ToInt32(reader[i]); i += 1;
                             Legs.Endurance = ToInt32(reader[i]); i += 1;
                             Legs.Stamina = ToInt32(reader[i]); i += 1;
-                            Legs.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Legs.Value = ToInt32(reader[i]); i += 1;
-                            Legs.ProjectileNumber = ToInt32(reader[i]); i += 1;
                             Legs.Price = ToInt32(reader[i]); i += 1;
                             Legs.Rarity = ToInt32(reader[i]);
                         }
@@ -1643,24 +1384,17 @@ namespace SabertoothServer
                             i = 0;
                             Feet.Id = ToInt32(reader[i]); i = 3;
                             Feet.Name = reader[i].ToString(); i += 1;
-                            Feet.Clip = ToInt32(reader[i]); i += 1;
-                            Feet.MaxClip = ToInt32(reader[i]); i += 1;
                             Feet.Sprite = ToInt32(reader[i]); i += 1;
                             Feet.Damage = ToInt32(reader[i]); i += 1;
                             Feet.Armor = ToInt32(reader[i]); i += 1;
                             Feet.Type = ToInt32(reader[i]); i += 1;
                             Feet.AttackSpeed = ToInt32(reader[i]); i += 1;
-                            Feet.ReloadSpeed = ToInt32(reader[i]); i += 1;
                             Feet.HealthRestore = ToInt32(reader[i]); i += 1;
-                            Feet.HungerRestore = ToInt32(reader[i]); i += 1;
-                            Feet.HydrateRestore = ToInt32(reader[i]); i += 1;
                             Feet.Strength = ToInt32(reader[i]); i += 1;
                             Feet.Agility = ToInt32(reader[i]); i += 1;
                             Feet.Endurance = ToInt32(reader[i]); i += 1;
                             Feet.Stamina = ToInt32(reader[i]); i += 1;
-                            Feet.ItemAmmoType = ToInt32(reader[i]); i += 1;
                             Feet.Value = ToInt32(reader[i]); i += 1;
-                            Feet.ProjectileNumber = ToInt32(reader[i]); i += 1;
                             Feet.Price = ToInt32(reader[i]); i += 1;
                             Feet.Rarity = ToInt32(reader[i]);
                         }
@@ -1692,24 +1426,17 @@ namespace SabertoothServer
                                     n = 0;
                                     Backpack[i].Id = ToInt32(reader[n]); n = 3;
                                     Backpack[i].Name = reader[n].ToString(); n += 1;
-                                    Backpack[i].Clip = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Sprite = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Damage = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Armor = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Type = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].AttackSpeed = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].ReloadSpeed = ToInt32(reader[n]); n += 1;
+                                    Backpack[i].AttackSpeed = ToInt32(reader[n]); n += 1;                                    
                                     Backpack[i].HealthRestore = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].HungerRestore = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].HydrateRestore = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Strength = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Agility = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Endurance = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].ItemAmmoType = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Value = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].ProjectileNumber = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Price = ToInt32(reader[n]); n += 1;
                                     Backpack[i].Rarity = ToInt32(reader[n]);
                                 }
@@ -1743,24 +1470,17 @@ namespace SabertoothServer
                                     n = 0;
                                     Bank[i].Id = ToInt32(reader[n]); n = 3;
                                     Bank[i].Name = reader[n].ToString(); n += 1;
-                                    Bank[i].Clip = ToInt32(reader[n]); n += 1;
-                                    Bank[i].MaxClip = ToInt32(reader[n]); n += 1;
                                     Bank[i].Sprite = ToInt32(reader[n]); n += 1;
                                     Bank[i].Damage = ToInt32(reader[n]); n += 1;
                                     Bank[i].Armor = ToInt32(reader[n]); n += 1;
                                     Bank[i].Type = ToInt32(reader[n]); n += 1;
                                     Bank[i].AttackSpeed = ToInt32(reader[n]); n += 1;
-                                    Bank[i].ReloadSpeed = ToInt32(reader[n]); n += 1;
                                     Bank[i].HealthRestore = ToInt32(reader[n]); n += 1;
-                                    Bank[i].HungerRestore = ToInt32(reader[n]); n += 1;
-                                    Bank[i].HydrateRestore = ToInt32(reader[n]); n += 1;
                                     Bank[i].Strength = ToInt32(reader[n]); n += 1;
                                     Bank[i].Agility = ToInt32(reader[n]); n += 1;
                                     Bank[i].Endurance = ToInt32(reader[n]); n += 1;
                                     Bank[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Bank[i].ItemAmmoType = ToInt32(reader[n]); n += 1;
                                     Bank[i].Value = ToInt32(reader[n]); n += 1;
-                                    Bank[i].ProjectileNumber = ToInt32(reader[n]); n += 1;
                                     Bank[i].Price = ToInt32(reader[n]); n += 1;
                                     Bank[i].Rarity = ToInt32(reader[n]);
                                 }
@@ -1839,8 +1559,8 @@ namespace SabertoothServer
 
     public enum EquipSlots : int
     {
-        MainWeapon,
-        OffWeapon,
+        MainHand,
+        OffHand,
         Chest,
         Legs,
         Feet
