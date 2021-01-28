@@ -17,4 +17,3 @@ SELECT ID,
 	Rarity
 FROM Inventory
 WHERE Owner = @owner
-	AND Slot = @slot

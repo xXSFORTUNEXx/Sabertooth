@@ -17,4 +17,3 @@ SELECT ID,
 	Rarity
 FROM Bank
 WHERE Owner = @owner
-	AND Slot = @slot

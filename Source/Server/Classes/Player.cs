@@ -7,6 +7,9 @@ using static SabertoothServer.Server;
 using AccountKeyGenClass;
 using static SabertoothServer.Globals;
 using static System.IO.File;
+using SFML.Window;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace SabertoothServer
 {
@@ -23,6 +26,7 @@ namespace SabertoothServer
         public Item Feet = new Item();
         public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
         public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
+        public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
         Random RND = new Random();
         #endregion
 
@@ -124,6 +128,18 @@ namespace SabertoothServer
                 QuestList[i] = 0;
                 QuestStatus[i] = 0;
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
         }
 
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana,
@@ -182,6 +198,18 @@ namespace SabertoothServer
                 QuestList[i] = 0;
                 QuestStatus[i] = 0;
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -206,6 +234,18 @@ namespace SabertoothServer
                 QuestList[i] = 0;
                 QuestStatus[i] = 0;
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
         }
 
         public Player(NetConnection conn)
@@ -230,6 +270,18 @@ namespace SabertoothServer
                 QuestList[i] = 0;
                 QuestStatus[i] = 0;
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
         }
         #endregion
 
@@ -689,6 +741,28 @@ namespace SabertoothServer
         #endregion
 
         #region Database
+        private byte[] ToByteArray(object source)
+        {
+            var formatter = new BinaryFormatter();
+            using (var stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, source);
+                return stream.ToArray();
+            }
+        }
+
+        private static object ByteArrayToObject(byte[] arrBytes)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                var binForm = new BinaryFormatter();
+                memStream.Write(arrBytes, 0, arrBytes.Length);
+                memStream.Seek(0, SeekOrigin.Begin);
+                var obj = binForm.Deserialize(memStream);
+                return obj;
+            }
+        }
+
         public void CreatePlayerInDatabase()
         {
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
@@ -726,6 +800,8 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@active", System.Data.DbType.String)).Value = Active;
                     cmd.ExecuteNonQuery();
                 }
+
+                LoadPlayerIDFromDatabase(Name);
 
                 script = ReadAllText("SQL Data Scripts/Insert_Stats.sql");
                 using (var cmd = new SqlCommand(script, sql))
@@ -875,6 +951,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
                     cmd.ExecuteNonQuery();
                 }
+
+                script = ReadAllText("SQL Data Scripts/Insert_Hotbar.sql");
+                for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                {
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        byte[] hotKey = ToByteArray(hotBar[i].HotKey);
+                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;
+                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.SqlDbType.Int)).Value = i;
+                        cmd.Parameters.Add(new SqlParameter("@hotkey", System.Data.SqlDbType.VarBinary)).Value = hotKey;
+                        cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = hotBar[i].SpellNumber;
+                        cmd.Parameters.Add(new SqlParameter("@invnum", System.Data.DbType.Int32)).Value = hotBar[i].InvNumber;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
@@ -903,7 +994,7 @@ namespace SabertoothServer
                 sql.Open();
                 using (var cmd = new SqlCommand(script, sql))
                 {
-                    cmd.Parameters.Add(new SqlParameter("id", System.Data.SqlDbType.Int)).Value = Id;
+                    cmd.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.Int)).Value = Id;
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
                     cmd.Parameters.Add(new SqlParameter("@password", System.Data.DbType.String)).Value = Pass;
                     cmd.Parameters.Add(new SqlParameter("@email", System.Data.DbType.String)).Value = EmailAddress;
@@ -1115,9 +1206,9 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Backpack[i].Price;
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Backpack[i].Rarity;
                             cmd.ExecuteNonQuery();
-                        }
-                        n = n + 1;
+                        }                        
                     }
+                    n = n + 1;
                 }
 
                 script = "DELETE FROM Bank WHERE Owner=@owner";
@@ -1153,9 +1244,24 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Bank[i].Rarity;
                             cmd.ExecuteNonQuery();
                         }
-                        m = m + 1;
                     }
-                }                    
+                    m = m + 1;
+                }
+
+                for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                {
+                    script = ReadAllText("SQL Data Scripts/Save_Hotbar.sql");
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        byte[] hotKey = ToByteArray(hotBar[i].HotKey);
+                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;
+                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.SqlDbType.Int)).Value = i;
+                        cmd.Parameters.Add(new SqlParameter("@hotkey", System.Data.SqlDbType.VarBinary)).Value = hotKey;
+                        cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = hotBar[i].SpellNumber;
+                        cmd.Parameters.Add(new SqlParameter("@invnum", System.Data.DbType.Int32)).Value = hotBar[i].InvNumber;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
@@ -1169,6 +1275,8 @@ namespace SabertoothServer
                 int result;
                 int i;
                 int n;
+                int slot;
+                int bankslot;
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -1417,28 +1525,29 @@ namespace SabertoothServer
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                            cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
+                            //cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
                                     n = 0;
-                                    Backpack[i].Id = ToInt32(reader[n]); n = 3;
-                                    Backpack[i].Name = reader[n].ToString(); n += 1;
-                                    Backpack[i].Sprite = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Damage = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Armor = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Type = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].AttackSpeed = ToInt32(reader[n]); n += 1;                                    
-                                    Backpack[i].HealthRestore = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Strength = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Agility = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Endurance = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Value = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Price = ToInt32(reader[n]); n += 1;
-                                    Backpack[i].Rarity = ToInt32(reader[n]);
+                                    slot = ToInt32(reader[2]);
+                                    Backpack[slot].Id = ToInt32(reader[n]); n = 3;
+                                    Backpack[slot].Name = reader[n].ToString(); n += 1;
+                                    Backpack[slot].Sprite = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Damage = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Armor = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Type = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].AttackSpeed = ToInt32(reader[n]); n += 1;                                    
+                                    Backpack[slot].HealthRestore = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Strength = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Agility = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Endurance = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Stamina = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Value = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Price = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Rarity = ToInt32(reader[n]);
                                 }
                             }
                         }
@@ -1461,29 +1570,56 @@ namespace SabertoothServer
                         using (var cmd = new SqlCommand(script, sql))
                         {
                             cmd.Parameters.Add(new SqlParameter("@owner", System.Data.DbType.String)).Value = Name;
-                            cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
+                            //cmd.Parameters.Add(new SqlParameter("@slot", System.Data.DbType.Int32)).Value = i;
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 while (reader.Read())
                                 {
                                     n = 0;
-                                    Bank[i].Id = ToInt32(reader[n]); n = 3;
-                                    Bank[i].Name = reader[n].ToString(); n += 1;
-                                    Bank[i].Sprite = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Damage = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Armor = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Type = ToInt32(reader[n]); n += 1;
-                                    Bank[i].AttackSpeed = ToInt32(reader[n]); n += 1;
-                                    Bank[i].HealthRestore = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Strength = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Agility = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Endurance = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Stamina = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Value = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Price = ToInt32(reader[n]); n += 1;
-                                    Bank[i].Rarity = ToInt32(reader[n]);
+                                    bankslot = ToInt32(reader[2]);
+                                    Bank[bankslot].Id = ToInt32(reader[n]); n = 3;
+                                    Bank[bankslot].Name = reader[n].ToString(); n += 1;
+                                    Bank[bankslot].Sprite = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Damage = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Armor = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Type = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].AttackSpeed = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].HealthRestore = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Strength = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Agility = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Endurance = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Stamina = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Value = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Price = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Rarity = ToInt32(reader[n]);
                                 }
+                            }
+                        }
+                    }
+                }
+
+                for (i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                {
+                    script = ReadAllText("SQL Data Scripts/Load_Hotbar.sql");
+                    using (var cmd = new SqlCommand(script, sql))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.DbType.String)).Value = Id;
+                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.DbType.Int32)).Value = i;
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                byte[] buffer;
+                                object load;
+
+                                n = 0;
+                                buffer = (byte[])reader[n];
+                                load = ByteArrayToObject(buffer);
+                                hotBar[i].HotKey = (Keyboard.Key)load; n += 1;
+                                hotBar[i].SpellNumber = ToInt32(reader[n]); n += 1;
+                                hotBar[i].InvNumber = ToInt32(reader[n]);
                             }
                         }
                     }
@@ -1555,6 +1691,21 @@ namespace SabertoothServer
             else { return false; }
         }
         #endregion
+    }
+
+    [Serializable()]
+    public class HotBar
+    {
+        public Keyboard.Key HotKey;
+        public int SpellNumber { get; set; }
+        public int InvNumber { get; set; }
+
+        public HotBar(Keyboard.Key key, int spellnum, int invnum)
+        {
+            HotKey = key;
+            SpellNumber = spellnum;
+            InvNumber = invnum;
+        }
     }
 
     public enum EquipSlots : int

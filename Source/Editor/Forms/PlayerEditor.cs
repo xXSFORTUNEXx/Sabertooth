@@ -68,8 +68,7 @@ namespace Editor.Forms
             scrlDirection.Value = e_Player.Direction;
             scrlAimDirection.Value = e_Player.AimDirection;
             //Stats Scroll Bars
-            scrlLevel.Value = (e_Player.Level);
-            scrlPoints.Value = (e_Player.Points);
+            scrlLevel.Value = (e_Player.Level);            
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
             txtExp.Text = (e_Player.Experience.ToString());
@@ -119,8 +118,7 @@ namespace Editor.Forms
             txtLastLogged.Text = e_Player.LastLoggedIn;
             picSprite.Image = Image.FromFile("Resources/Characters/" + (e_Player.Sprite + 1) + ".png");
             //Stats Labels
-            lblLevel.Text = "Level: " + (e_Player.Level);
-            lblPoints.Text = "Points: " + (e_Player.Points);
+            lblLevel.Text = "Level: " + (e_Player.Level);            
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
             lblMoney.Text = "Money: " + (e_Player.Wallet);
@@ -209,8 +207,7 @@ namespace Editor.Forms
             scrlDirection.Value = e_Player.Direction;
             scrlAimDirection.Value = e_Player.AimDirection;
             //Stats Scroll Bars
-            scrlLevel.Value = (e_Player.Level);
-            scrlPoints.Value = (e_Player.Points);
+            scrlLevel.Value = (e_Player.Level);            
             scrlHealth.Value = (e_Player.Health);
             scrlMaxHealth.Value = (e_Player.MaxHealth);
             txtExp.Text = (e_Player.Experience.ToString());
@@ -257,8 +254,7 @@ namespace Editor.Forms
             }
             picSprite.Image = Image.FromFile("Resources/Characters/" + (e_Player.Sprite + 1) + ".png");
             //Stats Labels
-            lblLevel.Text = "Level: " + (e_Player.Level);
-            lblPoints.Text = "Points: " + (e_Player.Points);
+            lblLevel.Text = "Level: " + (e_Player.Level);            
             lblHealth.Text = "Health: " + (e_Player.Health);
             lblMaxHealth.Text = "Max Health: " + (e_Player.MaxHealth);
             lblMoney.Text = "Money: " + (e_Player.Wallet);
@@ -332,12 +328,6 @@ namespace Editor.Forms
         {
             lblLevel.Text = "Level: " + (scrlLevel.Value);
             e_Player.Level = (scrlLevel.Value);
-        }
-
-        private void scrlPoints_Scroll(object sender, ScrollEventArgs e)
-        {
-            lblPoints.Text = "Points: " + (scrlPoints.Value);
-            e_Player.Points = (scrlPoints.Value);
         }
 
         private void scrlHealth_Scroll(object sender, ScrollEventArgs e)

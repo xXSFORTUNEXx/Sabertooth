@@ -964,3 +964,7 @@ C:\Users\sfortune\Documents\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.
 C:\Users\sfortune\Documents\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csproj.CopyComplete
 C:\Users\sfortune\Documents\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.exe
 C:\Users\sfortune\Documents\Repos\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\HotBarIcon.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\HotbarBkg.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\EmptyBkg.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Skins\EmptyBkg_Test.png

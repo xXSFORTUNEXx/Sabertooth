@@ -473,6 +473,7 @@ namespace SabertoothClient
                     if (gui.menuWindow.IsVisible)
                     {
                         gui.menuWindow.Hide();
+                        gui.RemoveStatWindow();
                     }
                     else
                     {
@@ -897,6 +898,7 @@ namespace SabertoothClient
             fps = CalculateFrameRate();
 
             if (gui.menuWindow != null && gui.menuWindow.IsVisible) { gui.UpdateMenuWindow(); }
+            if (gui.hotBarWindow != null && gui.hotBarWindow.IsVisible) { gui.UpdateHotBar(); }
             if (players[HandleData.myIndex].inShop) { gui.UpdateShopWindow(); }
             if (gui.d_Window != null && gui.d_Window.IsVisible) { gui.UpdateDebugWindow(fps); }
             if (gui.bankWindow != null && gui.bankWindow.IsVisible) { gui.UpdateBankWindow(); }

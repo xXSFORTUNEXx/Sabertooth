@@ -315,7 +315,6 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/Bank.sql");
                         script += ReadAllText("SQL Scripts/Items.sql");
                         script += ReadAllText("SQL Scripts/Npcs.sql");
-                        script += ReadAllText("SQL Scripts/Projectiles.sql");
                         script += ReadAllText("SQL Scripts/Shops.sql");
                         script += ReadAllText("SQL Scripts/Chat.sql");
                         script += ReadAllText("SQL Scripts/Quests.sql");
@@ -325,6 +324,7 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/Quest_List.sql");
                         script += ReadAllText("SQL Scripts/Version.sql");
                         script += ReadAllText("SQL Scripts/Configuration.sql");
+                        script += ReadAllText("SQL Scripts/Hotbar.sql");
                         cmd.CommandText = script;
                         cmd.ExecuteNonQuery();
                     }

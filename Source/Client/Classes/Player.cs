@@ -26,6 +26,7 @@ namespace SabertoothClient
         public Item Feet = new Item();
         public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
         public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
+        public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
         RenderText rText = new RenderText();
         static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
@@ -105,6 +106,7 @@ namespace SabertoothClient
             X = x;
             Y = y;
             Map = map;
+
             if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 OffsetX = 16;
@@ -115,6 +117,7 @@ namespace SabertoothClient
                 OffsetX = 12;
                 OffsetY = 9;
             }
+
             Direction = direction;
             AimDirection = aimdirection;
             Level = level;
@@ -141,10 +144,33 @@ namespace SabertoothClient
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+            }
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
@@ -156,6 +182,7 @@ namespace SabertoothClient
             Name = name;
             Pass = pass;
             Connection = conn;
+
             if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
             {
                 OffsetX = 16;
@@ -166,10 +193,35 @@ namespace SabertoothClient
                 OffsetX = 12;
                 OffsetY = 9;
             }
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+            }
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
@@ -179,10 +231,34 @@ namespace SabertoothClient
         public Player(string name)
         {
             Name = name;
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+            }
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
@@ -192,10 +268,34 @@ namespace SabertoothClient
         public Player(NetConnection conn)
         {
             Connection = conn;
+
+            for (int i = 0; i < 25; i++)
+            {
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+            }
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
@@ -208,14 +308,29 @@ namespace SabertoothClient
             {
                 Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
             }
+
             for (int i = 0; i < 50; i++)
             {
                 Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
             }
+
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
             }
+
+            int h = 0;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
@@ -1307,6 +1422,36 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public void SendSwapInvSlots(int oldslot, int newslot)
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SendInvSwap);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(oldslot);
+            outMSG.WriteVariableInt32(newslot);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendSwapBankSlots(int oldslot, int newslot)
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SendBankSwap);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(oldslot);
+            outMSG.WriteVariableInt32(newslot);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdateHotbar(int slot, int hotbarslot)
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UpdateHotBar);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(slot);
+            outMSG.WriteVariableInt32(hotbarslot);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         void SendInteraction(int interactionValue, int interactionType)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
@@ -1491,6 +1636,20 @@ namespace SabertoothClient
             return MAX_PLAYER_QUEST_LIST;
         }
         #endregion
+    }
+
+    public class HotBar
+    {
+        public Keyboard.Key HotKey;
+        public int SpellNumber { get; set; }
+        public int InvNumber { get; set; }
+
+        public HotBar(Keyboard.Key key, int spellnum, int invnum)
+        {
+            HotKey = key;
+            SpellNumber = spellnum;
+            InvNumber = invnum;
+        }
     }
 
     public enum EquipSlots

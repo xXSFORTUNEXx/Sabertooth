@@ -117,10 +117,20 @@ namespace SabertoothClient
         Label shopPrice;
         #endregion
 
+        #region Hotbar
+        public ImagePanel hotBarWindow;
+        ImagePanel[] hotbarPic = new ImagePanel[10];
+        Label[] hotBarLabel = new Label[10];
+        bool isMoveHotBar;
+        int hotBarSlot;
+        #endregion
+
         #region Bank
         public WindowControl bankWindow;
         ImagePanel[] bankPic = new ImagePanel[50];
         Button bankClose;
+        bool isMoveBank;
+        int oldBankSlot;
 
         public WindowControl bankStatWindow;
         ImagePanel bankStatPic;
@@ -191,6 +201,8 @@ namespace SabertoothClient
         #region PackTab
         public TabButton packTab;
         ImagePanel[] invPic = new ImagePanel[25];
+        bool isMoveInv;
+        int oldInvSlot;
 
         public WindowControl statWindow;
         ImagePanel statPic;
@@ -257,26 +269,41 @@ namespace SabertoothClient
                 bankWindow.Title = player.Name + "'s Bank";
                 for (int i = 0; i < 50; i++)
                 {
-                    if (player.Bank[i].Name != "None")
+                    if (player.Bank[i].Name != "None" && player.Bank[i].Sprite > 0)
                     {
-                        bankPic[i].ImageName = "Resources/Items/" + player.Bank[i].Sprite+ ".png";
-                        bankPic[i].Show();
+                        bankPic[i].ImageName = "Resources/Items/" + player.Bank[i].Sprite + ".png";
+                        Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                        package = bankPic[i].DragAndDrop_GetPackage(bankPic[i].X, bankPic[i].Y);
+                        package.IsDraggable = true;
                     }
                     else
                     {
-                        bankPic[i].Hide();
+                        bankPic[i].ImageName = "Resources/Skins/EmptyBkg.png";
+                        //bankPic[i].ImageName = "Resources/Skins/EmptyBkg_Test.png";
+                        Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                        package = bankPic[i].DragAndDrop_GetPackage(bankPic[i].X, bankPic[i].Y);
+                        package.IsDraggable = false;
                     }
+
+                    if (bankPic[i].IsHovered && isMoveBank)
+                    {
+                        if (Gwen.DragDrop.DragAndDrop.SourceControl == null)
+                        {
+                            if (!Gwen.Input.InputHandler.IsLeftMouseDown)
+                            {
+                                player.SendSwapBankSlots(oldBankSlot, i);
+                                oldBankSlot = -1;
+                                isMoveBank = false;
+                            }
+                        }
+                    }
+
                     if (bankPic[i].IsHovered)
                     {
                         if (player.Bank[i].Name != "None")
                         {
-                            SetBankStatWindow(bankPic[i].X, bankPic[i].Y, player.Bank[i]);
-                            break;
+                            SetStatWindow(bankPic[i].X, bankPic[i].Y, player.Bank[i]);
                         }
-                    }
-                    else
-                    {
-                        RemoveBankStatWindow();
                     }
                 }
             }
@@ -348,11 +375,46 @@ namespace SabertoothClient
             }
         }
 
+        public void UpdateHotBar()
+        {
+            if (hotBarWindow != null && hotBarWindow.IsVisible)
+            {
+                for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                {
+                    if (player.hotBar[i].InvNumber > 0)
+                    {
+                        hotbarPic[i].ImageName = "Resources/Items/" + player.Backpack[player.hotBar[i].InvNumber].Sprite + ".png";
+                    }
+                    else if (player.hotBar[i].SpellNumber > 0)
+                    {
+                        //spell stuff
+                    }
+                    else
+                    {
+                        hotbarPic[i].ImageName = "Resources/Skins/HotBarIcon.png";
+                    }
+
+                    if (hotbarPic[i].IsHovered && isMoveHotBar)
+                    {
+                        if (Gwen.DragDrop.DragAndDrop.SourceControl == null)
+                        {
+                            if (!Gwen.Input.InputHandler.IsLeftMouseDown)
+                            {
+                                player.SendUpdateHotbar(hotBarSlot, i);
+                                hotBarSlot = -1;
+                                isMoveHotBar = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void UpdateMenuWindow()
         {
             if (menuWindow != null && player != null && menuWindow.IsVisible)
             {
-                //if (charTab.HasFocus)
+                if (charTab.IsActive)
                 {
                     #region Character
                     charName.Text = player.Name;
@@ -373,36 +435,51 @@ namespace SabertoothClient
                     playTime.Text = "Play Time: " + player.PlayDays + "D " + player.PlayHours + "H " + player.PlayMinutes + "M " + player.PlaySeconds + "S";                  
                     #endregion
                 }
-                //if (packTab.HasFocus)
+                if (packTab.IsActive)
                 {
-                    #region BackPack
-                    for (int i = 0; i < 25; i++)
+                    #region BackPack                    
+                    for (int i = 0; i < MAX_INV_SLOTS; i++)
                     {
                         if (player.Backpack[i].Name != "None" && player.Backpack[i].Sprite > 0)
                         {
                             invPic[i].ImageName = "Resources/Items/" + player.Backpack[i].Sprite + ".png";
-                            invPic[i].Show();                    
-                        } 
+                            Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                            package = invPic[i].DragAndDrop_GetPackage(invPic[i].X, invPic[i].Y);
+                            package.IsDraggable = true;
+                        }
                         else
                         {
-                            invPic[i].Hide();
+                            invPic[i].ImageName = "Resources/Skins/EmptyBkg.png";
+                            //invPic[i].ImageName = "Resources/Skins/EmptyBkg_Test.png";
+                            Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                            package = invPic[i].DragAndDrop_GetPackage(invPic[i].X, invPic[i].Y);
+                            package.IsDraggable = false;
                         }
+
+                        if (invPic[i].IsHovered && isMoveInv)
+                        {
+                            if (Gwen.DragDrop.DragAndDrop.SourceControl == null)
+                            {
+                                if (!Gwen.Input.InputHandler.IsLeftMouseDown)
+                                {
+                                    player.SendSwapInvSlots(oldInvSlot, i);
+                                    oldInvSlot = -1;                                    
+                                    isMoveInv = false;
+                                }
+                            }
+                        }
+
                         if (invPic[i].IsHovered)
                         {
                             if (player.Backpack[i].Name != "None")
                             {
                                 SetStatWindow(invPic[i].X, invPic[i].Y, player.Backpack[i]);
-                                break;
                             }
-                        }
-                        else
-                        {
-                            RemoveStatWindow();
                         }
                     }
                     #endregion
                 }
-                //if (equipTab.HasFocus)
+                if (equipTab.IsActive)
                 {
                     #region Equipment
                     if (player.MainHand.Name != "None")
@@ -1189,7 +1266,7 @@ namespace SabertoothClient
             chestStatWindow.Show();
         }
 
-        void RemoveStatWindow()
+        public void RemoveStatWindow()
         {
             statWindow.SetPosition(200, 10);
             statWindow.Hide();
@@ -1708,6 +1785,31 @@ namespace SabertoothClient
             packTab.Focus(); 
         }
 
+        private void InvPic_HoverEnter(Base sender, EventArgs arguments)
+        {
+            ImagePanel invPicE = (ImagePanel)sender;
+
+            if (Gwen.DragDrop.DragAndDrop.SourceControl != null)
+            {
+                Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                package = Gwen.DragDrop.DragAndDrop.SourceControl.DragAndDrop_GetPackage(Gwen.DragDrop.DragAndDrop.SourceControl.X, Gwen.DragDrop.DragAndDrop.SourceControl.Y);
+
+                if (package.Name == "Inv")
+                {
+                    if (Gwen.Input.InputHandler.IsLeftMouseDown)
+                    {
+                        oldInvSlot = ToInt32(Gwen.DragDrop.DragAndDrop.SourceControl.Name);
+                        isMoveInv = true;
+                    }
+                }
+            }
+        }
+
+        private void InvPic_HoverLeave(Base sender, EventArgs arguments)
+        {
+            RemoveStatWindow();
+        }
+
         private void ShopPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
             ImagePanel shopPicE = (ImagePanel)sender;
@@ -1755,7 +1857,7 @@ namespace SabertoothClient
             optionsTab.Show();
         }
 
-        private void BankPick_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        private void BankPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
             ImagePanel bankPicE = (ImagePanel)sender;
             int bankSlot = ToInt32(bankPicE.Name);
@@ -1768,6 +1870,49 @@ namespace SabertoothClient
                 outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(bankSlot);
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        private void BankPic_HoverEnter(Base sender, EventArgs arguments)
+        {
+            if (Gwen.DragDrop.DragAndDrop.SourceControl != null)
+            {
+                Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                package = Gwen.DragDrop.DragAndDrop.SourceControl.DragAndDrop_GetPackage(Gwen.DragDrop.DragAndDrop.SourceControl.X, Gwen.DragDrop.DragAndDrop.SourceControl.Y);
+
+                if (package.Name == "Bank")
+                {
+                    if (Gwen.Input.InputHandler.IsLeftMouseDown)
+                    {
+                        oldBankSlot = ToInt32(Gwen.DragDrop.DragAndDrop.SourceControl.Name);
+                        isMoveBank = true;
+                    }
+                }
+            }
+        }
+
+        private void BankPic_HoverLeave(Base sender, EventArgs arguments)
+        {
+            RemoveStatWindow();
+        }
+
+        private void HotBar_HoverEnter(Base sender, EventArgs arguments)
+        {
+            ImagePanel hotBarPicE = (ImagePanel)sender;
+
+            if (Gwen.DragDrop.DragAndDrop.SourceControl != null)
+            {
+                Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
+                package = Gwen.DragDrop.DragAndDrop.SourceControl.DragAndDrop_GetPackage(Gwen.DragDrop.DragAndDrop.SourceControl.X, Gwen.DragDrop.DragAndDrop.SourceControl.Y);
+
+                if (package.Name == "Inv")
+                {
+                    if (Gwen.Input.InputHandler.IsLeftMouseDown)
+                    {
+                        hotBarSlot = ToInt32(Gwen.DragDrop.DragAndDrop.SourceControl.Name);
+                        isMoveHotBar = true;
+                    }
+                }
             }
         }
 
@@ -2049,6 +2194,33 @@ namespace SabertoothClient
             #endregion
         }
 
+        public void CreateHotBarWindow(Base parent)
+        {
+            hotBarWindow = new ImagePanel(parent.GetCanvas());
+            hotBarWindow.SetSize(331, 34);
+            //hotBarWindow.SetPosition(450, 730);
+            hotBarWindow.Position(Gwen.Pos.Bottom);
+            hotBarWindow.Position(Gwen.Pos.CenterH);
+            hotBarWindow.ImageName = "Resources/Skins/HotbarBkg.png";
+
+            for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+            {
+                hotbarPic[i] = new ImagePanel(hotBarWindow);
+                hotbarPic[i].SetSize(32, 32);
+                hotbarPic[i].SetPosition(1 + ((i * 32) + (i * 1)), 1);
+                hotbarPic[i].Name = i.ToString();
+                hotbarPic[i].ImageName = "Resources/Skins/HotBarIcon.png";
+                hotbarPic[i].DragAndDrop_SetPackage(true, "Hotbar");
+                hotbarPic[i].HoverEnter += HotBar_HoverEnter;
+
+                hotBarLabel[i] = new Label(hotbarPic[i]);
+                hotBarLabel[i].SetPosition(3, 1);
+                hotBarLabel[i].Text = (i + 1).ToString();
+                if (i == 9) { hotBarLabel[i].Text = "0"; }
+                hotBarLabel[i].TextColor = System.Drawing.Color.Yellow;
+            }            
+        }
+
         public void CreateBankWindow(Base parent)
         {
             bankWindow = new WindowControl(parent.GetCanvas());
@@ -2056,7 +2228,7 @@ namespace SabertoothClient
             bankWindow.Position(Gwen.Pos.Top);
             bankWindow.Position(Gwen.Pos.Left);
             bankWindow.DisableResizing();
-            bankWindow.IsClosable = false;            
+            bankWindow.IsClosable = false;
 
             int n = 0;
             int c = 0;
@@ -2066,7 +2238,10 @@ namespace SabertoothClient
                 bankPic[i].SetSize(32, 32);
                 bankPic[i].SetPosition(1 + (c * 40), 5 + (n * 40));
                 bankPic[i].Name = i.ToString();
-                bankPic[i].DoubleClicked += BankPick_DoubleClicked;
+                bankPic[i].DragAndDrop_SetPackage(true, "Bank");
+                bankPic[i].DoubleClicked += BankPic_DoubleClicked;
+                bankPic[i].HoverEnter += BankPic_HoverEnter;
+                bankPic[i].HoverLeave += BankPic_HoverLeave;
 
                 c += 1;
                 if (c > 9) { c = 0; }
@@ -2281,14 +2456,17 @@ namespace SabertoothClient
             #region Backpack
             int n = 0;
             int c = 0;
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
                 invPic[i] = new ImagePanel(packTab.Page);
                 invPic[i].SetSize(32, 32);
                 invPic[i].SetPosition(3 + (c * 40), 5 + (n * 40));
                 invPic[i].Name = i.ToString();
+                invPic[i].DragAndDrop_SetPackage(true, "Inv");
                 invPic[i].DoubleClicked += InvPic_DoubleClicked;
                 invPic[i].RightClicked += InvPic_RightClicked;
+                invPic[i].HoverEnter += InvPic_HoverEnter;            
+                invPic[i].HoverLeave += InvPic_HoverLeave;            
 
                 c += 1;
                 if (c > 4) { c = 0; }

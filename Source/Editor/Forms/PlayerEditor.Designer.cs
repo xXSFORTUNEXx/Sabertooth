@@ -72,8 +72,6 @@
             this.lblMaxHealth = new System.Windows.Forms.Label();
             this.scrlHealth = new System.Windows.Forms.HScrollBar();
             this.lblHealth = new System.Windows.Forms.Label();
-            this.scrlPoints = new System.Windows.Forms.HScrollBar();
-            this.lblPoints = new System.Windows.Forms.Label();
             this.scrlLevel = new System.Windows.Forms.HScrollBar();
             this.lblLevel = new System.Windows.Forms.Label();
             this.pnlActivation = new System.Windows.Forms.GroupBox();
@@ -376,8 +374,6 @@
             this.pnlStats.Controls.Add(this.lblMaxHealth);
             this.pnlStats.Controls.Add(this.scrlHealth);
             this.pnlStats.Controls.Add(this.lblHealth);
-            this.pnlStats.Controls.Add(this.scrlPoints);
-            this.pnlStats.Controls.Add(this.lblPoints);
             this.pnlStats.Controls.Add(this.scrlLevel);
             this.pnlStats.Controls.Add(this.lblLevel);
             this.pnlStats.Location = new System.Drawing.Point(358, 12);
@@ -558,25 +554,6 @@
             this.lblHealth.TabIndex = 4;
             this.lblHealth.Text = "Health: 0";
             // 
-            // scrlPoints
-            // 
-            this.scrlPoints.LargeChange = 100;
-            this.scrlPoints.Location = new System.Drawing.Point(22, 89);
-            this.scrlPoints.Maximum = 500000;
-            this.scrlPoints.Name = "scrlPoints";
-            this.scrlPoints.Size = new System.Drawing.Size(156, 17);
-            this.scrlPoints.TabIndex = 3;
-            this.scrlPoints.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlPoints_Scroll);
-            // 
-            // lblPoints
-            // 
-            this.lblPoints.AutoSize = true;
-            this.lblPoints.Location = new System.Drawing.Point(19, 71);
-            this.lblPoints.Name = "lblPoints";
-            this.lblPoints.Size = new System.Drawing.Size(48, 13);
-            this.lblPoints.TabIndex = 2;
-            this.lblPoints.Text = "Points: 0";
-            // 
             // scrlLevel
             // 
             this.scrlLevel.Location = new System.Drawing.Point(22, 43);
@@ -733,8 +710,6 @@
         private System.Windows.Forms.Label lblMaxHealth;
         private System.Windows.Forms.HScrollBar scrlHealth;
         private System.Windows.Forms.Label lblHealth;
-        private System.Windows.Forms.HScrollBar scrlPoints;
-        private System.Windows.Forms.Label lblPoints;
         private System.Windows.Forms.HScrollBar scrlLevel;
         private System.Windows.Forms.Label lblLevel;
         private System.Windows.Forms.GroupBox pnlActivation;

@@ -37,6 +37,7 @@ namespace SabertoothClient
         public const int MAX_QUEST_ITEMS_REQ = 5;
         public const int MAX_QUEST_NPCS_REQ = 3;
         public const int MAX_PLAYER_QUEST_LIST = 10;
+        public const int MAX_PLAYER_HOTBAR = 10;
         #endregion
 
         #region Config Globals
@@ -107,7 +108,7 @@ namespace SabertoothClient
         public const int SHOP_STAT_WINDOW_X = 520;
         public const int SHOP_STAT_WINDOW_Y = 65;
         public const int INV_STAT_WINDOW_X = 530;
-        public const int INV_STAT_WINDOW_Y = 390;
+        public const int INV_STAT_WINDOW_Y = 340;
         #endregion
     }
 }

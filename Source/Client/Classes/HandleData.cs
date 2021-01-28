@@ -6,6 +6,7 @@ using static System.Environment;
 using static SabertoothClient.Client;
 using static SabertoothClient.Globals;
 using System.Threading;
+using SFML.Window;
 
 namespace SabertoothClient
 {
@@ -224,6 +225,10 @@ namespace SabertoothClient
 
                             case (byte)PacketTypes.SendQuestList:
                                 HandlePlayerQuestList(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.SendHotBar:
+                                HandlePlayerHotBar(incMSG);
                                 break;
                         }
                         break;
@@ -686,6 +691,20 @@ namespace SabertoothClient
             }
         }
 
+        static void HandlePlayerHotBar(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+            {
+                string key = incMSG.ReadString();
+                int spell = incMSG.ReadVariableInt32();
+                int inv = incMSG.ReadVariableInt32();
+
+                players[myIndex].hotBar[i].HotKey = (Keyboard.Key)Enum.Parse(typeof(Keyboard.Key), key, true);
+                players[myIndex].hotBar[i].SpellNumber = spell;
+                players[myIndex].hotBar[i].InvNumber = inv;
+            }
+        }
+
         static void HandleCreateBlood(NetIncomingMessage incMSG)
         {
             int slot = incMSG.ReadVariableInt32();
@@ -1031,8 +1050,7 @@ namespace SabertoothClient
 
         static void HandleUpdatePlayerStats(NetIncomingMessage incMSG)
         {
-            players[myIndex].Level = incMSG.ReadVariableInt32();
-            players[myIndex].Points = incMSG.ReadVariableInt32();
+            players[myIndex].Level = incMSG.ReadVariableInt32();            
             players[myIndex].Health = incMSG.ReadVariableInt32();
             players[myIndex].MaxHealth = incMSG.ReadVariableInt32();
             players[myIndex].Mana = incMSG.ReadVariableInt32();
@@ -1305,6 +1323,7 @@ namespace SabertoothClient
             gui.menuWindow.Hide();
             gui.CreateChatWindow(canvas);
             gui.chatWindow.Hide();
+            gui.CreateHotBarWindow(canvas);
             gui.AddText("Welcome to Sabertooth!");
 
         }
@@ -1379,6 +1398,10 @@ namespace SabertoothClient
         MeleeAttack,
         SendQuests,
         SendQuestData,
-        SendQuestList
+        SendQuestList,
+        SendHotBar,
+        SendInvSwap,
+        SendBankSwap,
+        UpdateHotBar
     }
 }

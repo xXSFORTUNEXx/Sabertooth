@@ -109,6 +109,18 @@ namespace SabertoothServer
                                 HandleMeleeAttack(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.SendInvSwap:
+                                HandleInvSwap(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.SendBankSwap:
+                                HandleBankSwap(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.UpdateHotBar:
+                                HandleUpdateHotBar(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -127,6 +139,42 @@ namespace SabertoothServer
         }
 
         #region Handle Incoming Data
+        static void HandleUpdateHotBar(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int slot = incMSG.ReadVariableInt32();
+            int hotbarslot = incMSG.ReadVariableInt32();
+
+            players[index].hotBar[hotbarslot].InvNumber = slot;
+            SendPlayerHotBar(index);
+        }
+
+        static void HandleBankSwap(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int oldSlot = incMSG.ReadVariableInt32();
+            int newslot = incMSG.ReadVariableInt32();
+            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+
+            temp = players[index].Bank[newslot];
+            players[index].Bank[newslot] = players[index].Bank[oldSlot];
+            players[index].Bank[oldSlot] = temp;
+            SendPlayerBank(index);
+        }
+
+        static void HandleInvSwap(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int oldSlot = incMSG.ReadVariableInt32();
+            int newslot = incMSG.ReadVariableInt32();
+            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+
+            temp = players[index].Backpack[newslot];
+            players[index].Backpack[newslot] = players[index].Backpack[oldSlot];
+            players[index].Backpack[oldSlot] = temp;
+            SendPlayerInv(index);
+        }
+
         static void HandleMeleeAttack(NetIncomingMessage incMSG)
         {
             int npcNum = incMSG.ReadVariableInt32();
@@ -253,6 +301,7 @@ namespace SabertoothServer
                 SendPlayers();
                 SendPlayerInv(index);
                 SendPlayerBank(index);
+                SendPlayerHotBar(index);
                 SendPlayerEquipment(index);
                 SendPlayerQuestList(index);
                 SendNpcs(incMSG);
@@ -619,6 +668,7 @@ namespace SabertoothServer
                         SendPlayers();
                         SendPlayerInv(i);
                         SendPlayerBank(i);
+                        SendPlayerHotBar(i);
                         SendPlayerEquipment(i);
                         SendPlayerQuestList(i);
                         SendNpcs(incMSG);
@@ -997,6 +1047,19 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(players[index].Bank[i].Value);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Price);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Rarity);
+            }
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendPlayerHotBar(int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SendHotBar);
+            for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+            {
+                outMSG.Write(players[index].hotBar[i].HotKey.ToString());
+                outMSG.WriteVariableInt32(players[index].hotBar[i].SpellNumber);
+                outMSG.WriteVariableInt32(players[index].hotBar[i].InvNumber);
             }
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -2012,6 +2075,10 @@ namespace SabertoothServer
         MeleeAttack,
         SendQuests,
         SendQuestData,
-        SendQuestList
+        SendQuestList,
+        SendHotBar,
+        SendInvSwap,
+        SendBankSwap,
+        UpdateHotBar
     }
 }
