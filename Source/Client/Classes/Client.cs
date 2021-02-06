@@ -210,6 +210,7 @@ namespace SabertoothClient
         static int attackTick;
         static int pickupTick;
         static int saveTime;
+        static int menuTick;
         #endregion
 
         public static void GameLoop()  
@@ -773,6 +774,8 @@ namespace SabertoothClient
                     players[HandleData.myIndex].CheckPlayerInteraction();
                     players[HandleData.myIndex].CheckControllerPlayerInteraction();
                     players[HandleData.myIndex].CheckControllerButtonPress();
+                    players[HandleData.myIndex].CheckHotBarKeyPress();
+                    players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
                     ProcessMovement();
                     walkTick = TickCount;
                 }
@@ -897,13 +900,17 @@ namespace SabertoothClient
 
             fps = CalculateFrameRate();
 
-            if (gui.menuWindow != null && gui.menuWindow.IsVisible) { gui.UpdateMenuWindow(); }
-            if (gui.hotBarWindow != null && gui.hotBarWindow.IsVisible) { gui.UpdateHotBar(); }
-            if (players[HandleData.myIndex].inShop) { gui.UpdateShopWindow(); }
-            if (gui.d_Window != null && gui.d_Window.IsVisible) { gui.UpdateDebugWindow(fps); }
-            if (gui.bankWindow != null && gui.bankWindow.IsVisible) { gui.UpdateBankWindow(); }
-            if (gui.chestWindow != null && gui.chestWindow.IsVisible) { gui.UpdateChestWindow(); }
-            if (worldTime.updateTime == true) { worldTime.UpdateTime(); }
+            if (TickCount - menuTick > UPDATE_MENU_TIMER)
+            {
+                if (gui.menuWindow != null && gui.menuWindow.IsVisible) { gui.UpdateMenuWindow(); }
+                if (gui.hotBarWindow != null && gui.hotBarWindow.IsVisible) { gui.UpdateHotBar(); }
+                if (players[HandleData.myIndex].inShop) { gui.UpdateShopWindow(); }
+                if (gui.d_Window != null && gui.d_Window.IsVisible) { gui.UpdateDebugWindow(fps); }
+                if (gui.bankWindow != null && gui.bankWindow.IsVisible) { gui.UpdateBankWindow(); }
+                if (gui.chestWindow != null && gui.chestWindow.IsVisible) { gui.UpdateChestWindow(); }
+                if (worldTime.updateTime == true) { worldTime.UpdateTime(); }
+                menuTick = TickCount;
+            }
 
             UpdateTitle(fps);
 

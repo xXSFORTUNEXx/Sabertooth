@@ -475,13 +475,21 @@ namespace SabertoothServer
                                                 maps[i].m_MapItem[slot].Type = items[itemNum].Type;
                                                 maps[i].m_MapItem[slot].AttackSpeed = items[itemNum].AttackSpeed;
                                                 maps[i].m_MapItem[slot].HealthRestore = items[itemNum].HealthRestore;
+                                                maps[i].m_MapItem[slot].ManaRestore = items[itemNum].ManaRestore;
                                                 maps[i].m_MapItem[slot].Strength = items[itemNum].Strength;
                                                 maps[i].m_MapItem[slot].Agility = items[itemNum].Agility;
-                                                maps[i].m_MapItem[slot].Endurance = items[itemNum].Endurance;
+                                                maps[i].m_MapItem[slot].Intelligence = items[itemNum].Intelligence;
+                                                maps[i].m_MapItem[slot].Energy = items[itemNum].Energy;
                                                 maps[i].m_MapItem[slot].Stamina = items[itemNum].Stamina;
                                                 maps[i].m_MapItem[slot].Price = items[itemNum].Price;
                                                 maps[i].m_MapItem[slot].Value = maps[i].Ground[x, y].SpawnAmount;
                                                 maps[i].m_MapItem[slot].Rarity = items[itemNum].Rarity;
+                                                maps[i].m_MapItem[slot].CoolDown = items[itemNum].CoolDown;
+                                                maps[i].m_MapItem[slot].AddMaxHealth = items[itemNum].AddMaxHealth;
+                                                maps[i].m_MapItem[slot].AddMaxMana = items[itemNum].AddMaxMana;
+                                                maps[i].m_MapItem[slot].BonusXP = items[itemNum].BonusXP;
+                                                maps[i].m_MapItem[slot].SpellNum = items[itemNum].SpellNum;
+                                                maps[i].m_MapItem[slot].Stackable = items[itemNum].Stackable;
                                                 maps[i].m_MapItem[slot].IsSpawned = true;
                                                 maps[i].Ground[x, y].NeedsSpawned = true;
 

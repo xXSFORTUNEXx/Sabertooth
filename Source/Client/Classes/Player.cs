@@ -146,12 +146,12 @@ namespace SabertoothClient
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < 50; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, false);
             }
 
             for (int i = 0; i < spriteTextures; i++)
@@ -196,12 +196,12 @@ namespace SabertoothClient
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < 50; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, false);
             }
 
             for (int i = 0; i < spriteTextures; i++)
@@ -234,12 +234,12 @@ namespace SabertoothClient
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < 50; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < spriteTextures; i++)
@@ -271,12 +271,12 @@ namespace SabertoothClient
 
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < 50; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < spriteTextures; i++)
@@ -306,12 +306,12 @@ namespace SabertoothClient
         {
             for (int i = 0; i < 25; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < 50; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);
             }
 
             for (int i = 0; i < spriteTextures; i++)
@@ -337,26 +337,6 @@ namespace SabertoothClient
             p_Name.Style = Text.Styles.Bold;
         }
         #endregion
-
-        #region Voids
-        public virtual void Draw(RenderTarget target, RenderStates states)
-        {
-            int x = (X * 32) + (OffsetX * 32);
-            int y = (Y * 32) + (OffsetY * 32) - 16;
-            int step = (Step * 32);
-            int dir = (AimDirection * 48);
-            int name_x = (X * 32) + (OffsetX * 32) - (Name.Length / 2);
-            int name_y = (Y * 32) + (OffsetY * 32) - 32;
-            p_Name.Position = new Vector2f(name_x, name_y);
-            p_Name.DisplayedString = Name;
-            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
-            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
-            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
-            spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
-            states.Texture = c_Sprite[Sprite];
-            target.Draw(spritePic, states);
-            target.Draw(p_Name);
-        }
 
         #region Controller
         public void CheckControllerMovement()
@@ -1359,6 +1339,54 @@ namespace SabertoothClient
             }
         }
 
+        public void CheckHotBarKeyPress()
+        {
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
+            if (inShop || inChat || inBank) { return; }
+
+            if (Keyboard.IsKeyPressed(hotBar[0].HotKey))
+            {
+                SendUseHotbar(0);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[1].HotKey))
+            {
+                SendUseHotbar(1);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[2].HotKey))
+            {
+                SendUseHotbar(2);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[3].HotKey))
+            {
+                SendUseHotbar(3);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[4].HotKey))
+            {
+                SendUseHotbar(4);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[5].HotKey))
+            {
+                SendUseHotbar(5);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[6].HotKey))
+            {
+                SendUseHotbar(6);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[7].HotKey))
+            {
+                SendUseHotbar(7);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[8].HotKey))
+            {
+                SendUseHotbar(8);
+            }
+            if (Keyboard.IsKeyPressed(hotBar[9].HotKey))
+            {
+                SendUseHotbar(9);
+            }
+        }
+
         public void CheckPlayerCurrentTypes()
         {
             if (gui.inputChat.HasFocus == true) { return; }
@@ -1369,6 +1397,167 @@ namespace SabertoothClient
 
         }
         #endregion
+
+        #region Voids
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            int x = (X * 32) + (OffsetX * 32);
+            int y = (Y * 32) + (OffsetY * 32) - 16;
+            int step = (Step * 32);
+            int dir = (AimDirection * 48);
+            int name_x = (X * 32) + (OffsetX * 32) - (Name.Length / 2);
+            int name_y = (Y * 32) + (OffsetY * 32) - 32;
+            p_Name.Position = new Vector2f(name_x, name_y);
+            p_Name.DisplayedString = Name;
+            spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
+            spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
+            spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
+            spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
+            states.Texture = c_Sprite[Sprite];
+            target.Draw(spritePic, states);
+            target.Draw(p_Name);
+        }
+
+        public void CheckDirection(int curx, int cury)
+        {
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
+            if (inShop || inChat || inBank) { return; }
+
+            int currentY = (cury / PIC_Y);
+            int currentX = (curx / PIC_X);
+            int region = 0;
+
+            int x1 = 256 / PIC_Y;
+            int x2 = 512 / PIC_Y;
+            int x3 = 768 / PIC_Y;            
+            int y1 = 192 / PIC_X;
+            int y2 = 384 / PIC_X;
+            int y3 = 576 / PIC_X;            
+
+            if (currentX < x1 && currentY < y1)
+            {
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection();
+                region = 1;
+            }
+
+            if (currentX < x2 && currentX > x1 && currentY < y1)
+            {
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection();
+                region = 2;
+            }
+
+            if (currentX > x2 && currentX < x3 && currentY < y1)
+            {
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection();
+                region = 3;
+            }
+
+            if (currentX > x3 && currentY < y1)
+            {
+                AimDirection = (int)Directions.Up;
+                SendUpdateDirection();
+                region = 4;
+            }
+
+            if (currentX < x1 && currentY > y1 && currentY < y2)
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection();
+                region = 5;
+            }
+
+            if (currentX > x1 && currentX < x2 && currentY > y1 && currentY < y2)
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection();
+                region = 6;
+            }
+
+            if (currentX > x2 && currentX < x3 && currentY > y1 && currentY < y2)
+            {
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection();
+                region = 7;
+            }
+
+            if (currentX > x3 && currentY > y1 && currentY < y2)
+            {
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection();
+                region = 8;
+            }
+
+            if (currentX < x1 && currentY > y2 && currentY < y3)
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection();
+                region = 9;
+            }
+
+            if (currentX > x1 && currentX < x2 && currentY > y2 && currentY < y3)
+            {
+                AimDirection = (int)Directions.Left;
+                SendUpdateDirection();
+                region = 10;
+            }
+
+            if (currentX > x2 && currentX < x3 && currentY > y2 && currentY < y3)
+            {
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection();
+                region = 11;
+            }
+
+            if (currentX > x3 && currentY > y2 && currentY < y3)
+            {
+                AimDirection = (int)Directions.Right;
+                SendUpdateDirection();
+                region = 12;
+            }
+
+            if (currentX < x1 && currentY > y3)
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection();
+                region = 13;
+            }
+
+            if (currentX > x1 && currentX < x2 && currentY > y3)
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection();
+                region = 14;
+            }
+
+            if  (currentX > x2 && currentX < x3 && currentY > y3)
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection();
+                region = 15;
+            }
+
+            if (currentX > x3 && currentY > y3)
+            {
+                AimDirection = (int)Directions.Down;
+                SendUpdateDirection();
+                region = 16;
+            }
+
+            gui.d_Region.Text = "Mouse Region: " + region;
+        }
+
+        void SendUseHotbar(int hotbarslot)
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.UseHotBar);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(hotbarslot);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
 
         public void SendMeleeAttack(int npcNum, int type)
         {
@@ -1567,11 +1756,11 @@ namespace SabertoothClient
                 bonus = Intelligence;
             }
 
-            bonus += MainHand.Endurance;
-            bonus += OffHand.Endurance;
-            bonus += Chest.Endurance;
-            bonus += Legs.Endurance;
-            bonus += Feet.Endurance;
+            bonus += MainHand.Intelligence;
+            bonus += OffHand.Intelligence;
+            bonus += Chest.Intelligence;
+            bonus += Legs.Intelligence;
+            bonus += Feet.Intelligence;
 
             return bonus;
         }
@@ -1603,11 +1792,11 @@ namespace SabertoothClient
                 bonus = Energy;
             }
 
-            //bonus += MainHand.Energy;
-            //bonus += OffHand.Energy;
-            //bonus += Chest.Energy;
-            //bonus += Legs.Energy;
-            //bonus += Feet.Energy;
+            bonus += MainHand.Energy;
+            bonus += OffHand.Energy;
+            bonus += Chest.Energy;
+            bonus += Legs.Energy;
+            bonus += Feet.Energy;
 
             return bonus;
         }

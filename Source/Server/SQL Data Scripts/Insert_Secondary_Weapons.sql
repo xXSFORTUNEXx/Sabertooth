@@ -7,13 +7,21 @@ INSERT INTO Secondary_Weapons (
 	Type,
 	Attack_Speed,
 	Health_Restore,
+	Mana_Restore,
 	Strength,
 	Agility,
-	Endurance,
+	Intelligence,
+	Energy,
 	Stamina,
 	Value,
 	Price,
-	Rarity
+	Rarity,
+	CoolDown,
+	AddMax_Health,
+	AddMax_Mana,
+	Bonus_XP,
+	Spell_Number,
+	Stackable
 	)
 VALUES (
 	@owner,
@@ -24,11 +32,19 @@ VALUES (
 	@type,
 	@attackspeed,
 	@healthrestore,
+	@manarestore,
 	@strength,
 	@agility,
-	@endurance,
+	@intelligence,
+	@energy,
 	@stamina,
 	@value,
 	@price,
-	@rarity
+	@rarity,
+	@cooldown,
+	@addmaxhp,
+	@addmaxmp,
+	@bonusxp,
+	@spellnum,
+	@stack
 	)

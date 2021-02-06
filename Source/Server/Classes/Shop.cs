@@ -184,7 +184,7 @@ namespace SabertoothServer
             money += price;
             players[index].Wallet = money;
             HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Name + " for " + price + " dollars!");
-            players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0);            
+            players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);            
             HandleData.SendPlayerInv(index);
             HandleData.SendUpdatePlayerStats(index);
         }

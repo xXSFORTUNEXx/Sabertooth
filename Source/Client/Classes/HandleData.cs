@@ -571,13 +571,21 @@ namespace SabertoothClient
             players[myIndex].Chest.Type = incMSG.ReadVariableInt32();
             players[myIndex].Chest.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Chest.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].Chest.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Energy = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Value = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Price= incMSG.ReadVariableInt32();
             players[myIndex].Chest.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].Chest.Stackable = incMSG.ReadBoolean();
 
             players[myIndex].Legs.Name = incMSG.ReadString();
             players[myIndex].Legs.Sprite = incMSG.ReadVariableInt32();
@@ -586,13 +594,21 @@ namespace SabertoothClient
             players[myIndex].Legs.Type = incMSG.ReadVariableInt32();
             players[myIndex].Legs.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Legs.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].Legs.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Energy = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Value = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Price = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].Legs.Stackable = incMSG.ReadBoolean();
 
             players[myIndex].Feet.Name = incMSG.ReadString();
             players[myIndex].Feet.Sprite = incMSG.ReadVariableInt32();
@@ -601,13 +617,21 @@ namespace SabertoothClient
             players[myIndex].Feet.Type = incMSG.ReadVariableInt32();
             players[myIndex].Feet.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].Feet.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Strength = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].Feet.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Energy = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Value = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Price = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].Feet.Stackable = incMSG.ReadBoolean();
         }
 
         static void HandlePlayerQuestList(NetIncomingMessage incMSG)
@@ -656,13 +680,21 @@ namespace SabertoothClient
                     players[myIndex].Backpack[i].Type = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].AttackSpeed = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].HealthRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].ManaRestore = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Strength = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Agility = incMSG.ReadVariableInt32();
-                    players[myIndex].Backpack[i].Endurance = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Intelligence = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Energy = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Stamina = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Value = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Price = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Rarity = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].CoolDown = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].AddMaxHealth = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].AddMaxMana = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].BonusXP = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].SpellNum = incMSG.ReadVariableInt32();
+                    players[myIndex].Backpack[i].Stackable = incMSG.ReadBoolean();
                 }
             }
         }
@@ -680,13 +712,21 @@ namespace SabertoothClient
                     players[myIndex].Bank[i].Type = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].AttackSpeed = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].HealthRestore = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].ManaRestore = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Strength = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Agility = incMSG.ReadVariableInt32();
-                    players[myIndex].Bank[i].Endurance = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Intelligence = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Energy = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Stamina = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Value = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Price = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Rarity = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].CoolDown = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].AddMaxHealth = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].AddMaxMana = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].BonusXP = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].SpellNum = incMSG.ReadVariableInt32();
+                    players[myIndex].Bank[i].Stackable = incMSG.ReadBoolean();
                 }
             }
         }
@@ -731,13 +771,21 @@ namespace SabertoothClient
                     items[i].Armor = incMSG.ReadVariableInt32();
                     items[i].Type = incMSG.ReadVariableInt32();
                     items[i].HealthRestore = incMSG.ReadVariableInt32();
+                    items[i].ManaRestore = incMSG.ReadVariableInt32();
                     items[i].Strength = incMSG.ReadVariableInt32();
                     items[i].Agility = incMSG.ReadVariableInt32();
-                    items[i].Endurance = incMSG.ReadVariableInt32();
+                    items[i].Intelligence = incMSG.ReadVariableInt32();
+                    items[i].Energy = incMSG.ReadVariableInt32();
                     items[i].Stamina = incMSG.ReadVariableInt32();
                     items[i].Value = incMSG.ReadVariableInt32();
                     items[i].Price = incMSG.ReadVariableInt32();
                     items[i].Rarity = incMSG.ReadVariableInt32();
+                    items[i].CoolDown = incMSG.ReadVariableInt32();
+                    items[i].AddMaxHealth = incMSG.ReadVariableInt32();
+                    items[i].AddMaxMana = incMSG.ReadVariableInt32();
+                    items[i].BonusXP = incMSG.ReadVariableInt32();
+                    items[i].SpellNum = incMSG.ReadVariableInt32();
+                    items[i].Stackable = incMSG.ReadBoolean();
                 }
             }
         }
@@ -752,13 +800,21 @@ namespace SabertoothClient
             items[index].Armor = incMSG.ReadVariableInt32();
             items[index].Type = incMSG.ReadVariableInt32();
             items[index].HealthRestore = incMSG.ReadVariableInt32();
+            items[index].ManaRestore = incMSG.ReadVariableInt32();
             items[index].Strength = incMSG.ReadVariableInt32();
             items[index].Agility = incMSG.ReadVariableInt32();
-            items[index].Endurance = incMSG.ReadVariableInt32();
+            items[index].Intelligence = incMSG.ReadVariableInt32();
+            items[index].Energy = incMSG.ReadVariableInt32();
             items[index].Stamina = incMSG.ReadVariableInt32();
             items[index].Value = incMSG.ReadVariableInt32();
             items[index].Price = incMSG.ReadVariableInt32();
             items[index].Rarity = incMSG.ReadVariableInt32();
+            items[index].CoolDown = incMSG.ReadVariableInt32();
+            items[index].AddMaxHealth = incMSG.ReadVariableInt32();
+            items[index].AddMaxMana = incMSG.ReadVariableInt32();
+            items[index].BonusXP = incMSG.ReadVariableInt32();
+            items[index].SpellNum = incMSG.ReadVariableInt32();
+            items[index].Stackable = incMSG.ReadBoolean();
         }
 
         static void HandleNpcs(NetIncomingMessage incMSG)
@@ -819,19 +875,21 @@ namespace SabertoothClient
                 map.m_MapItem[i].Armor = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Type = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].HealthRestore = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].HungerRestore = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].HydrateRestore = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].ManaRestore = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Strength = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Agility = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Endurance = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Intelligence = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Energy = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Stamina = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Clip = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].MaxClip = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].ItemAmmoType = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].ProjectileNumber = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Rarity = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].CoolDown = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].AddMaxHealth = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].AddMaxMana = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].BonusXP = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].SpellNum = incMSG.ReadVariableInt32();
+                map.m_MapItem[i].Stackable = incMSG.ReadBoolean();
                 map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
             LoadMainGUI();
@@ -850,19 +908,21 @@ namespace SabertoothClient
             map.m_MapItem[itemNum].Armor = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].Type = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].HungerRestore = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].HydrateRestore = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].ManaRestore = incMSG.ReadVariableInt32();            
             map.m_MapItem[itemNum].Strength = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].Agility = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Endurance = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Intelligence = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Energy = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Clip = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].MaxClip = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].ItemAmmoType = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].ProjectileNumber = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();            
             map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].Rarity = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].CoolDown = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].AddMaxHealth = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].AddMaxMana = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].BonusXP = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].SpellNum = incMSG.ReadVariableInt32();
+            map.m_MapItem[itemNum].Stackable = incMSG.ReadBoolean();
             map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
@@ -1027,7 +1087,7 @@ namespace SabertoothClient
             {
                 gui.outputChat.AddRow(msg);
             }
-            if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
+            //if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); } *chatvis
             gui.outputChat.ScrollToBottom();
             gui.outputChat.UnselectAll();
         }
@@ -1112,13 +1172,21 @@ namespace SabertoothClient
             players[myIndex].MainHand.Type = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Strength = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].MainHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Energy = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Value = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Price = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Stackable = incMSG.ReadBoolean();
 
             //Secondary Weapon
             players[myIndex].OffHand.Name = incMSG.ReadString();
@@ -1128,13 +1196,21 @@ namespace SabertoothClient
             players[myIndex].OffHand.Type = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Strength = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].OffHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Energy = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Value = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Price = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Stackable = incMSG.ReadBoolean();
         }
 
         static void HandleWeaponsUpdate(NetIncomingMessage incMSG)
@@ -1147,13 +1223,21 @@ namespace SabertoothClient
             players[myIndex].MainHand.Type = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Strength = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].MainHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Energy = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Value = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Price = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].MainHand.Stackable = incMSG.ReadBoolean();
 
             //Secondary Weapon
             players[myIndex].OffHand.Name = incMSG.ReadString();
@@ -1163,13 +1247,21 @@ namespace SabertoothClient
             players[myIndex].OffHand.Type = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.AttackSpeed = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.HealthRestore = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.ManaRestore = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Strength = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Agility = incMSG.ReadVariableInt32();
-            players[myIndex].OffHand.Endurance = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Intelligence = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Energy = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Stamina = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Value = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Price = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Rarity = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.CoolDown = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AddMaxHealth = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.AddMaxMana = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.BonusXP = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.SpellNum = incMSG.ReadVariableInt32();
+            players[myIndex].OffHand.Stackable = incMSG.ReadBoolean();
         }
 
         static void HandlePlayers(NetIncomingMessage incMSG)
@@ -1318,14 +1410,13 @@ namespace SabertoothClient
         {
             canvas.DeleteAllChildren();
             gui.CreateDebugWindow(canvas);
-            gui.d_Window.Hide();
+            //gui.d_Window.Hide();
             gui.CreateMenuWindow(canvas);
             gui.menuWindow.Hide();
             gui.CreateChatWindow(canvas);
             gui.chatWindow.Hide();
             gui.CreateHotBarWindow(canvas);
             gui.AddText("Welcome to Sabertooth!");
-
         }
     } 
 
@@ -1402,6 +1493,7 @@ namespace SabertoothClient
         SendHotBar,
         SendInvSwap,
         SendBankSwap,
-        UpdateHotBar
+        UpdateHotBar,
+        UseHotBar
     }
 }

@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlSpellNum = new System.Windows.Forms.HScrollBar();
+            this.lblSpellNum = new System.Windows.Forms.Label();
+            this.chkStackable = new System.Windows.Forms.CheckBox();
             this.scrlRarity = new System.Windows.Forms.HScrollBar();
             this.lblRarity = new System.Windows.Forms.Label();
             this.scrlPrice = new System.Windows.Forms.HScrollBar();
@@ -53,13 +56,25 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
             this.pnlConsume = new System.Windows.Forms.GroupBox();
+            this.scrlBonusXP = new System.Windows.Forms.HScrollBar();
+            this.lblBonusXP = new System.Windows.Forms.Label();
+            this.scrlAddMaxMP = new System.Windows.Forms.HScrollBar();
+            this.lblAddMaxMP = new System.Windows.Forms.Label();
+            this.scrlAddMaxHP = new System.Windows.Forms.HScrollBar();
+            this.lblAddMaxHP = new System.Windows.Forms.Label();
+            this.scrlCooldown = new System.Windows.Forms.HScrollBar();
+            this.lblCoolDown = new System.Windows.Forms.Label();
+            this.scrlManaRestore = new System.Windows.Forms.HScrollBar();
+            this.lblManaRestore = new System.Windows.Forms.Label();
             this.scrlHealthRestore = new System.Windows.Forms.HScrollBar();
             this.lblHealthRestore = new System.Windows.Forms.Label();
             this.pnlStats = new System.Windows.Forms.GroupBox();
+            this.scrlEnergy = new System.Windows.Forms.HScrollBar();
+            this.lblEnergy = new System.Windows.Forms.Label();
             this.scrlStamina = new System.Windows.Forms.HScrollBar();
             this.lblStamina = new System.Windows.Forms.Label();
-            this.scrlEndurance = new System.Windows.Forms.HScrollBar();
-            this.lblEndurance = new System.Windows.Forms.Label();
+            this.scrlInt = new System.Windows.Forms.HScrollBar();
+            this.lblInt = new System.Windows.Forms.Label();
             this.scrlAgility = new System.Windows.Forms.HScrollBar();
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
@@ -73,6 +88,9 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlSpellNum);
+            this.pnlMain.Controls.Add(this.lblSpellNum);
+            this.pnlMain.Controls.Add(this.chkStackable);
             this.pnlMain.Controls.Add(this.scrlRarity);
             this.pnlMain.Controls.Add(this.lblRarity);
             this.pnlMain.Controls.Add(this.scrlPrice);
@@ -92,11 +110,39 @@
             this.pnlMain.Controls.Add(this.lblName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(197, 380);
+            this.pnlMain.Size = new System.Drawing.Size(197, 409);
             this.pnlMain.TabIndex = 5;
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlSpellNum
+            // 
+            this.scrlSpellNum.Location = new System.Drawing.Point(21, 365);
+            this.scrlSpellNum.Name = "scrlSpellNum";
+            this.scrlSpellNum.Size = new System.Drawing.Size(150, 17);
+            this.scrlSpellNum.TabIndex = 26;
+            this.scrlSpellNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSpellNum_Scroll);
+            // 
+            // lblSpellNum
+            // 
+            this.lblSpellNum.AutoSize = true;
+            this.lblSpellNum.Location = new System.Drawing.Point(17, 350);
+            this.lblSpellNum.Name = "lblSpellNum";
+            this.lblSpellNum.Size = new System.Drawing.Size(82, 13);
+            this.lblSpellNum.TabIndex = 25;
+            this.lblSpellNum.Text = "Spell Number: 0";
+            // 
+            // chkStackable
+            // 
+            this.chkStackable.AutoSize = true;
+            this.chkStackable.Location = new System.Drawing.Point(20, 321);
+            this.chkStackable.Name = "chkStackable";
+            this.chkStackable.Size = new System.Drawing.Size(74, 17);
+            this.chkStackable.TabIndex = 24;
+            this.chkStackable.Text = "Stackable";
+            this.chkStackable.UseVisualStyleBackColor = true;
+            this.chkStackable.CheckedChanged += new System.EventHandler(this.chkStackable_CheckedChanged);
             // 
             // scrlRarity
             // 
@@ -169,10 +215,11 @@
             "Currency",
             "Food",
             "Drink",
-            "FirstAid",
+            "Potion",
             "Shirt",
             "Pants",
             "Shoes",
+            "Book",
             "Other"});
             this.cmbType.Location = new System.Drawing.Point(20, 290);
             this.cmbType.Name = "cmbType";
@@ -338,19 +385,119 @@
             // 
             // pnlConsume
             // 
+            this.pnlConsume.Controls.Add(this.scrlBonusXP);
+            this.pnlConsume.Controls.Add(this.lblBonusXP);
+            this.pnlConsume.Controls.Add(this.scrlAddMaxMP);
+            this.pnlConsume.Controls.Add(this.lblAddMaxMP);
+            this.pnlConsume.Controls.Add(this.scrlAddMaxHP);
+            this.pnlConsume.Controls.Add(this.lblAddMaxHP);
+            this.pnlConsume.Controls.Add(this.scrlCooldown);
+            this.pnlConsume.Controls.Add(this.lblCoolDown);
+            this.pnlConsume.Controls.Add(this.scrlManaRestore);
+            this.pnlConsume.Controls.Add(this.lblManaRestore);
             this.pnlConsume.Controls.Add(this.scrlHealthRestore);
             this.pnlConsume.Controls.Add(this.lblHealthRestore);
-            this.pnlConsume.Location = new System.Drawing.Point(362, 188);
+            this.pnlConsume.Location = new System.Drawing.Point(362, 200);
             this.pnlConsume.Name = "pnlConsume";
-            this.pnlConsume.Size = new System.Drawing.Size(200, 204);
+            this.pnlConsume.Size = new System.Drawing.Size(200, 238);
             this.pnlConsume.TabIndex = 9;
             this.pnlConsume.TabStop = false;
             this.pnlConsume.Text = "Consumable";
             this.pnlConsume.Visible = false;
             // 
+            // scrlBonusXP
+            // 
+            this.scrlBonusXP.Location = new System.Drawing.Point(24, 204);
+            this.scrlBonusXP.Maximum = 10000;
+            this.scrlBonusXP.Name = "scrlBonusXP";
+            this.scrlBonusXP.Size = new System.Drawing.Size(150, 17);
+            this.scrlBonusXP.TabIndex = 39;
+            this.scrlBonusXP.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlBonusXP_Scroll);
+            // 
+            // lblBonusXP
+            // 
+            this.lblBonusXP.AutoSize = true;
+            this.lblBonusXP.Location = new System.Drawing.Point(24, 187);
+            this.lblBonusXP.Name = "lblBonusXP";
+            this.lblBonusXP.Size = new System.Drawing.Size(66, 13);
+            this.lblBonusXP.TabIndex = 38;
+            this.lblBonusXP.Text = "Bonus XP: 0";
+            // 
+            // scrlAddMaxMP
+            // 
+            this.scrlAddMaxMP.Location = new System.Drawing.Point(24, 170);
+            this.scrlAddMaxMP.Maximum = 1000;
+            this.scrlAddMaxMP.Name = "scrlAddMaxMP";
+            this.scrlAddMaxMP.Size = new System.Drawing.Size(150, 17);
+            this.scrlAddMaxMP.TabIndex = 37;
+            this.scrlAddMaxMP.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAddMaxMP_Scroll);
+            // 
+            // lblAddMaxMP
+            // 
+            this.lblAddMaxMP.AutoSize = true;
+            this.lblAddMaxMP.Location = new System.Drawing.Point(24, 153);
+            this.lblAddMaxMP.Name = "lblAddMaxMP";
+            this.lblAddMaxMP.Size = new System.Drawing.Size(80, 13);
+            this.lblAddMaxMP.TabIndex = 36;
+            this.lblAddMaxMP.Text = "Add Max MP: 0";
+            // 
+            // scrlAddMaxHP
+            // 
+            this.scrlAddMaxHP.Location = new System.Drawing.Point(24, 136);
+            this.scrlAddMaxHP.Maximum = 1000;
+            this.scrlAddMaxHP.Name = "scrlAddMaxHP";
+            this.scrlAddMaxHP.Size = new System.Drawing.Size(150, 17);
+            this.scrlAddMaxHP.TabIndex = 35;
+            this.scrlAddMaxHP.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAddMaxHP_Scroll);
+            // 
+            // lblAddMaxHP
+            // 
+            this.lblAddMaxHP.AutoSize = true;
+            this.lblAddMaxHP.Location = new System.Drawing.Point(24, 119);
+            this.lblAddMaxHP.Name = "lblAddMaxHP";
+            this.lblAddMaxHP.Size = new System.Drawing.Size(79, 13);
+            this.lblAddMaxHP.TabIndex = 34;
+            this.lblAddMaxHP.Text = "Add Max HP: 0";
+            // 
+            // scrlCooldown
+            // 
+            this.scrlCooldown.Location = new System.Drawing.Point(24, 98);
+            this.scrlCooldown.Maximum = 1000;
+            this.scrlCooldown.Name = "scrlCooldown";
+            this.scrlCooldown.Size = new System.Drawing.Size(150, 17);
+            this.scrlCooldown.TabIndex = 33;
+            this.scrlCooldown.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlCooldown_Scroll);
+            // 
+            // lblCoolDown
+            // 
+            this.lblCoolDown.AutoSize = true;
+            this.lblCoolDown.Location = new System.Drawing.Point(21, 85);
+            this.lblCoolDown.Name = "lblCoolDown";
+            this.lblCoolDown.Size = new System.Drawing.Size(71, 13);
+            this.lblCoolDown.TabIndex = 32;
+            this.lblCoolDown.Text = "Cooldown: 0s";
+            // 
+            // scrlManaRestore
+            // 
+            this.scrlManaRestore.Location = new System.Drawing.Point(21, 65);
+            this.scrlManaRestore.Maximum = 1000;
+            this.scrlManaRestore.Name = "scrlManaRestore";
+            this.scrlManaRestore.Size = new System.Drawing.Size(153, 17);
+            this.scrlManaRestore.TabIndex = 31;
+            this.scrlManaRestore.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlManaRestore_Scroll);
+            // 
+            // lblManaRestore
+            // 
+            this.lblManaRestore.AutoSize = true;
+            this.lblManaRestore.Location = new System.Drawing.Point(21, 52);
+            this.lblManaRestore.Name = "lblManaRestore";
+            this.lblManaRestore.Size = new System.Drawing.Size(86, 13);
+            this.lblManaRestore.TabIndex = 30;
+            this.lblManaRestore.Text = "Mana Restore: 0";
+            // 
             // scrlHealthRestore
             // 
-            this.scrlHealthRestore.Location = new System.Drawing.Point(23, 36);
+            this.scrlHealthRestore.Location = new System.Drawing.Point(21, 35);
             this.scrlHealthRestore.Maximum = 1000;
             this.scrlHealthRestore.Name = "scrlHealthRestore";
             this.scrlHealthRestore.Size = new System.Drawing.Size(156, 17);
@@ -360,7 +507,7 @@
             // lblHealthRestore
             // 
             this.lblHealthRestore.AutoSize = true;
-            this.lblHealthRestore.Location = new System.Drawing.Point(23, 23);
+            this.lblHealthRestore.Location = new System.Drawing.Point(21, 22);
             this.lblHealthRestore.Name = "lblHealthRestore";
             this.lblHealthRestore.Size = new System.Drawing.Size(90, 13);
             this.lblHealthRestore.TabIndex = 28;
@@ -368,25 +515,45 @@
             // 
             // pnlStats
             // 
+            this.pnlStats.Controls.Add(this.scrlEnergy);
+            this.pnlStats.Controls.Add(this.lblEnergy);
             this.pnlStats.Controls.Add(this.scrlStamina);
             this.pnlStats.Controls.Add(this.lblStamina);
-            this.pnlStats.Controls.Add(this.scrlEndurance);
-            this.pnlStats.Controls.Add(this.lblEndurance);
+            this.pnlStats.Controls.Add(this.scrlInt);
+            this.pnlStats.Controls.Add(this.lblInt);
             this.pnlStats.Controls.Add(this.scrlAgility);
             this.pnlStats.Controls.Add(this.lblAgility);
             this.pnlStats.Controls.Add(this.scrlStrength);
             this.pnlStats.Controls.Add(this.lblStrength);
             this.pnlStats.Location = new System.Drawing.Point(362, 12);
             this.pnlStats.Name = "pnlStats";
-            this.pnlStats.Size = new System.Drawing.Size(200, 162);
+            this.pnlStats.Size = new System.Drawing.Size(200, 182);
             this.pnlStats.TabIndex = 10;
             this.pnlStats.TabStop = false;
             this.pnlStats.Text = "Stats";
             this.pnlStats.Visible = false;
             // 
+            // scrlEnergy
+            // 
+            this.scrlEnergy.Location = new System.Drawing.Point(24, 128);
+            this.scrlEnergy.Maximum = 1000;
+            this.scrlEnergy.Name = "scrlEnergy";
+            this.scrlEnergy.Size = new System.Drawing.Size(156, 17);
+            this.scrlEnergy.TabIndex = 45;
+            this.scrlEnergy.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlEnergy_Scroll);
+            // 
+            // lblEnergy
+            // 
+            this.lblEnergy.AutoSize = true;
+            this.lblEnergy.Location = new System.Drawing.Point(21, 111);
+            this.lblEnergy.Name = "lblEnergy";
+            this.lblEnergy.Size = new System.Drawing.Size(52, 13);
+            this.lblEnergy.TabIndex = 44;
+            this.lblEnergy.Text = "Energy: 0";
+            // 
             // scrlStamina
             // 
-            this.scrlStamina.Location = new System.Drawing.Point(24, 124);
+            this.scrlStamina.Location = new System.Drawing.Point(24, 158);
             this.scrlStamina.Maximum = 1000;
             this.scrlStamina.Name = "scrlStamina";
             this.scrlStamina.Size = new System.Drawing.Size(156, 17);
@@ -396,29 +563,29 @@
             // lblStamina
             // 
             this.lblStamina.AutoSize = true;
-            this.lblStamina.Location = new System.Drawing.Point(21, 111);
+            this.lblStamina.Location = new System.Drawing.Point(21, 145);
             this.lblStamina.Name = "lblStamina";
             this.lblStamina.Size = new System.Drawing.Size(57, 13);
             this.lblStamina.TabIndex = 42;
             this.lblStamina.Text = "Stamina: 0";
             // 
-            // scrlEndurance
+            // scrlInt
             // 
-            this.scrlEndurance.Location = new System.Drawing.Point(24, 94);
-            this.scrlEndurance.Maximum = 1000;
-            this.scrlEndurance.Name = "scrlEndurance";
-            this.scrlEndurance.Size = new System.Drawing.Size(156, 17);
-            this.scrlEndurance.TabIndex = 41;
-            this.scrlEndurance.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlEndurance_Scroll);
+            this.scrlInt.Location = new System.Drawing.Point(24, 94);
+            this.scrlInt.Maximum = 1000;
+            this.scrlInt.Name = "scrlInt";
+            this.scrlInt.Size = new System.Drawing.Size(156, 17);
+            this.scrlInt.TabIndex = 41;
+            this.scrlInt.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlInt_Scroll);
             // 
-            // lblEndurance
+            // lblInt
             // 
-            this.lblEndurance.AutoSize = true;
-            this.lblEndurance.Location = new System.Drawing.Point(21, 81);
-            this.lblEndurance.Name = "lblEndurance";
-            this.lblEndurance.Size = new System.Drawing.Size(71, 13);
-            this.lblEndurance.TabIndex = 40;
-            this.lblEndurance.Text = "Endurance: 0";
+            this.lblInt.AutoSize = true;
+            this.lblInt.Location = new System.Drawing.Point(21, 81);
+            this.lblInt.Name = "lblInt";
+            this.lblInt.Size = new System.Drawing.Size(73, 13);
+            this.lblInt.TabIndex = 40;
+            this.lblInt.Text = "Intelligence: 0";
             // 
             // scrlAgility
             // 
@@ -460,7 +627,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 401);
+            this.ClientSize = new System.Drawing.Size(575, 453);
             this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlConsume);
             this.Controls.Add(this.groupBox1);
@@ -509,8 +676,8 @@
         private System.Windows.Forms.GroupBox pnlStats;
         private System.Windows.Forms.HScrollBar scrlStamina;
         private System.Windows.Forms.Label lblStamina;
-        private System.Windows.Forms.HScrollBar scrlEndurance;
-        private System.Windows.Forms.Label lblEndurance;
+        private System.Windows.Forms.HScrollBar scrlInt;
+        private System.Windows.Forms.Label lblInt;
         private System.Windows.Forms.HScrollBar scrlAgility;
         private System.Windows.Forms.Label lblAgility;
         private System.Windows.Forms.HScrollBar scrlStrength;
@@ -519,5 +686,20 @@
         private System.Windows.Forms.Label lblPrice;
         private System.Windows.Forms.HScrollBar scrlRarity;
         private System.Windows.Forms.Label lblRarity;
+        private System.Windows.Forms.HScrollBar scrlEnergy;
+        private System.Windows.Forms.Label lblEnergy;
+        private System.Windows.Forms.HScrollBar scrlManaRestore;
+        private System.Windows.Forms.Label lblManaRestore;
+        private System.Windows.Forms.HScrollBar scrlCooldown;
+        private System.Windows.Forms.Label lblCoolDown;
+        private System.Windows.Forms.CheckBox chkStackable;
+        private System.Windows.Forms.HScrollBar scrlSpellNum;
+        private System.Windows.Forms.Label lblSpellNum;
+        private System.Windows.Forms.HScrollBar scrlBonusXP;
+        private System.Windows.Forms.Label lblBonusXP;
+        private System.Windows.Forms.HScrollBar scrlAddMaxMP;
+        private System.Windows.Forms.Label lblAddMaxMP;
+        private System.Windows.Forms.HScrollBar scrlAddMaxHP;
+        private System.Windows.Forms.Label lblAddMaxHP;
     }
 }

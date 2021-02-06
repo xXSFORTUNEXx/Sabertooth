@@ -16,11 +16,19 @@ CREATE TABLE Equipment (
 	Type INTEGER,
 	Attack_Speed INTEGER,
 	Health_Restore INTEGER,
+	Mana_Restore INTEGER,
 	Strength INTEGER,
 	Agility INTEGER,
-	Endurance INTEGER,
+	Intelligence INTEGER,
+	Energy INTEGER,
 	Stamina INTEGER,
 	Value INTEGER,
 	Price INTEGER,
-	Rarity INTEGER
+	Rarity INTEGER,
+	CoolDown INTEGER,
+	AddMax_Health INTEGER,
+	AddMax_Mana INTEGER,
+	Bonus_XP INTEGER,
+	Spell_Number INTEGER,
+	Stackable BIT
 	)

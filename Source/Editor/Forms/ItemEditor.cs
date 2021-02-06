@@ -99,7 +99,14 @@ namespace Editor.Forms
             lblHealthRestore.Text = "Health Restore: " + (scrlHealthRestore.Value);
             e_Item.HealthRestore = scrlHealthRestore.Value;
             UnModSave = true;
-        }        
+        }
+
+        private void scrlManaRestore_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblManaRestore.Text = "Mana Restore: " + (scrlManaRestore.Value);
+            e_Item.ManaRestore = scrlManaRestore.Value;
+            UnModSave = true;
+        }
 
         private void scrlStrength_Scroll(object sender, ScrollEventArgs e)
         {
@@ -115,10 +122,17 @@ namespace Editor.Forms
             UnModSave = true;
         }
 
-        private void scrlEndurance_Scroll(object sender, ScrollEventArgs e)
+        private void scrlInt_Scroll(object sender, ScrollEventArgs e)
         {
-            lblEndurance.Text = "Endurance: " + (scrlEndurance.Value);
-            e_Item.Endurance = scrlEndurance.Value;
+            lblInt.Text = "Intelligence: " + (scrlInt.Value);
+            e_Item.Intelligence = scrlInt.Value;
+            UnModSave = true;
+        }
+
+        private void scrlEnergy_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblEnergy.Text = "Energy: " + (scrlEnergy.Value);
+            e_Item.Energy = scrlEnergy.Value;
             UnModSave = true;
         }
 
@@ -133,6 +147,41 @@ namespace Editor.Forms
         {
             lblPrice.Text = "Price: " + scrlPrice.Value;
             e_Item.Price = scrlPrice.Value;
+            UnModSave = true;
+        }
+
+        private void scrlCooldown_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblCoolDown.Text = "Cooldown: " + (scrlCooldown.Value) + "s";
+            e_Item.CoolDown = scrlCooldown.Value;
+            UnModSave = true;
+        }
+
+        private void scrlSpellNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblSpellNum.Text = "Spell Number: " + (scrlSpellNum.Value);
+            e_Item.SpellNum = scrlSpellNum.Value;
+            UnModSave = true;
+        }
+
+        private void scrlAddMaxHP_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblAddMaxHP.Text = "Add Max HP: " + (scrlAddMaxHP.Value);
+            e_Item.AddMaxHealth = scrlAddMaxHP.Value;
+            UnModSave = true;
+        }
+
+        private void scrlAddMaxMP_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblAddMaxMP.Text = "Add Max MP: " + (scrlAddMaxMP.Value);
+            e_Item.AddMaxMana = scrlAddMaxMP.Value;
+            UnModSave = true;
+        }
+
+        private void scrlBonusXP_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblBonusXP.Text = "Bonus XP: " + (scrlBonusXP.Value);
+            e_Item.BonusXP = scrlBonusXP.Value;
             UnModSave = true;
         }
 
@@ -167,13 +216,20 @@ namespace Editor.Forms
         {
             e_Item.Type = (cmbType.SelectedIndex);
             UnModSave = true;
-            if (cmbType.SelectedIndex == (int)ItemType.Food || cmbType.SelectedIndex == (int)ItemType.Drink || cmbType.SelectedIndex == (int)ItemType.FirstAid) { pnlConsume.Visible = true; }
+            if (cmbType.SelectedIndex == (int)ItemType.Food || cmbType.SelectedIndex == (int)ItemType.Drink || cmbType.SelectedIndex == (int)ItemType.Potion) { pnlConsume.Visible = true; }
             else { pnlConsume.Visible = false; }
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             e_Item.Name = txtName.Text;
+            UnModSave = true;
+        }
+
+
+        private void chkStackable_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Item.Stackable = chkStackable.Checked;
             UnModSave = true;
         }
 
@@ -222,24 +278,38 @@ namespace Editor.Forms
             scrlArmor.Value = e_Item.Armor;
             scrlAttackSpeed.Value = e_Item.AttackSpeed;
             scrlHealthRestore.Value = e_Item.HealthRestore;
+            scrlManaRestore.Value = e_Item.ManaRestore;
             scrlStrength.Value = e_Item.Strength;
             scrlAgility.Value = e_Item.Agility;
-            scrlEndurance.Value = e_Item.Endurance;
+            scrlInt.Value = e_Item.Intelligence;
+            scrlEnergy.Value = e_Item.Energy;
             scrlStamina.Value = e_Item.Stamina;
             cmbType.SelectedIndex = e_Item.Type;
             scrlPrice.Value = e_Item.Price;
             scrlRarity.Value = e_Item.Rarity;
+            scrlCooldown.Value = e_Item.CoolDown;
+            scrlAddMaxHP.Value = e_Item.AddMaxHealth;
+            scrlAddMaxMP.Value = e_Item.AddMaxMana;
+            scrlBonusXP.Value = e_Item.BonusXP;
+            scrlSpellNum.Value = e_Item.SpellNum;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");                       
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);
             lblHealthRestore.Text = "Health Restore: " + (scrlHealthRestore.Value);
+            lblManaRestore.Text = "Mana Restore: " + (scrlManaRestore.Value);
             lblStrength.Text = "Strength: " + (scrlStrength.Value);
             lblAgility.Text = "Agility: " + (scrlAgility.Value);
-            lblEndurance.Text = "Endurance: " + (scrlEndurance.Value);
+            lblInt.Text = "Intelligence: " + (scrlInt.Value);
+            lblEnergy.Text = "Energy: " + (scrlEnergy.Value);
             lblStamina.Text = "Stamina: " + (scrlStamina.Value);
             lblPrice.Text = "Price: " + scrlPrice.Value;
+            lblCoolDown.Text = "Cooldown: " + scrlCooldown.Value;
+            lblAddMaxHP.Text = "Add Max HP: " + scrlAddMaxHP.Value;
+            lblAddMaxMP.Text = "Add Max MP: " + scrlAddMaxMP.Value;
+            lblBonusXP.Text = "Bonus XP: " + scrlBonusXP.Value;
+            lblSpellNum.Text = "Spell Number: " + scrlSpellNum.Value;
             switch (scrlRarity.Value)
             {
                 case (int)Rarity.Normal:

@@ -12,6 +12,7 @@ namespace SabertoothClient
 {
     public class Item
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Sprite { get; set; }
         public int Damage { get; set; }
@@ -19,13 +20,21 @@ namespace SabertoothClient
         public int Type { get; set; }
         public int AttackSpeed { get; set; }
         public int HealthRestore { get; set; }
+        public int ManaRestore { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Endurance { get; set; }
+        public int Intelligence { get; set; }
         public int Stamina { get; set; }
+        public int Energy { get; set; }
         public int Value { get; set; }
         public int Price { get; set; }
         public int Rarity { get; set; }
+        public int CoolDown { get; set; }
+        public int AddMaxHealth { get; set; }
+        public int AddMaxMana { get; set; }
+        public int BonusXP { get; set; }
+        public int SpellNum { get; set; }
+        public bool Stackable { get; set; }
 
         public Item() { }
 
@@ -34,9 +43,8 @@ namespace SabertoothClient
             Type = (int)type;
         }
 
-        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype,
-                    int value, int projNum, int price, int rarity)
+        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int hpRestore, int mprestore,
+            int str, int agi, int intel, int ene, int sta, int value, int price, int rarity, int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stack)
         {
             Name = name;
             Sprite = sprite;
@@ -44,14 +52,22 @@ namespace SabertoothClient
             Armor = armor;
             Type = type;
             AttackSpeed = attackspeed;
-            HealthRestore = healthRestore;
+            HealthRestore = hpRestore;
+            ManaRestore = mprestore;
             Strength = str;
             Agility = agi;
-            Endurance = end;
+            Intelligence = intel;
+            Energy = ene;
             Stamina = sta;
             Value = value;
             Price = price;
             Rarity = rarity;
+            CoolDown = cooldown;
+            AddMaxHealth = addmaxhp;
+            AddMaxMana = addmaxmp;
+            BonusXP = bonusxp;
+            SpellNum = spellnum;
+            Stackable = stack;
         }
     }
 
@@ -63,10 +79,11 @@ namespace SabertoothClient
         Currency,
         Food,
         Drink,
-        FirstAid,
+        Potion,
         Shirt,
         Pants,
         Shoes,
+        Book,
         Other
     }
 

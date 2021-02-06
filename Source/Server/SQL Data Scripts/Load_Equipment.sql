@@ -8,13 +8,21 @@
 	Type,
 	Attack_Speed,
 	Health_Restore,
+	Mana_Restore,
 	Strength,
 	Agility,
-	Endurance,
+	Intelligence,
+	Energy,
 	Stamina,
 	Value,
 	Price,
-	Rarity
+	Rarity,
+	CoolDown,
+	AddMax_Health,
+	AddMax_Mana,
+	Bonus_XP,
+	Spell_Number,
+	Stackable
 FROM Equipment
 WHERE Owner = @owner
 	AND Slot = @slot

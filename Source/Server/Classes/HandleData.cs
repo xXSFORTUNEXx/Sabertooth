@@ -121,6 +121,10 @@ namespace SabertoothServer
                                 HandleUpdateHotBar(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.UseHotBar:
+                                HandleHotbarUse(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -139,6 +143,17 @@ namespace SabertoothServer
         }
 
         #region Handle Incoming Data
+        static void HandleHotbarUse(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int hotbarslot = incMSG.ReadVariableInt32();
+
+            if (players[index].hotBar[hotbarslot].InvNumber > -1)
+            {
+                players[index].UseItem(index, players[index].hotBar[hotbarslot].InvNumber, hotbarslot);
+            }
+        }
+
         static void HandleUpdateHotBar(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -154,7 +169,7 @@ namespace SabertoothServer
             int index = incMSG.ReadVariableInt32();
             int oldSlot = incMSG.ReadVariableInt32();
             int newslot = incMSG.ReadVariableInt32();
-            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
 
             temp = players[index].Bank[newslot];
             players[index].Bank[newslot] = players[index].Bank[oldSlot];
@@ -167,7 +182,7 @@ namespace SabertoothServer
             int index = incMSG.ReadVariableInt32();
             int oldSlot = incMSG.ReadVariableInt32();
             int newslot = incMSG.ReadVariableInt32();
-            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            Item temp = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
 
             temp = players[index].Backpack[newslot];
             players[index].Backpack[newslot] = players[index].Backpack[oldSlot];
@@ -941,13 +956,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].MainHand.Type);
             outMSG.WriteVariableInt32(players[index].MainHand.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].MainHand.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].MainHand.ManaRestore);
             outMSG.WriteVariableInt32(players[index].MainHand.Strength);
             outMSG.WriteVariableInt32(players[index].MainHand.Agility);
-            outMSG.WriteVariableInt32(players[index].MainHand.Endurance);
+            outMSG.WriteVariableInt32(players[index].MainHand.Intelligence);
+            outMSG.WriteVariableInt32(players[index].MainHand.Energy);
             outMSG.WriteVariableInt32(players[index].MainHand.Stamina);
             outMSG.WriteVariableInt32(players[index].MainHand.Value);
             outMSG.WriteVariableInt32(players[index].MainHand.Price);
             outMSG.WriteVariableInt32(players[index].MainHand.Rarity);
+            outMSG.WriteVariableInt32(players[index].MainHand.CoolDown);
+            outMSG.WriteVariableInt32(players[index].MainHand.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].MainHand.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].MainHand.BonusXP);
+            outMSG.WriteVariableInt32(players[index].MainHand.SpellNum);
+            outMSG.Write(players[index].MainHand.Stackable);
 
             //Secondary weapon
             outMSG.Write(players[index].OffHand.Name);
@@ -957,13 +980,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].OffHand.Type);
             outMSG.WriteVariableInt32(players[index].OffHand.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].OffHand.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].OffHand.ManaRestore);
             outMSG.WriteVariableInt32(players[index].OffHand.Strength);
             outMSG.WriteVariableInt32(players[index].OffHand.Agility);
-            outMSG.WriteVariableInt32(players[index].OffHand.Endurance);
+            outMSG.WriteVariableInt32(players[index].OffHand.Intelligence);
+            outMSG.WriteVariableInt32(players[index].OffHand.Energy);
             outMSG.WriteVariableInt32(players[index].OffHand.Stamina);            
             outMSG.WriteVariableInt32(players[index].OffHand.Value);           
             outMSG.WriteVariableInt32(players[index].OffHand.Price);
             outMSG.WriteVariableInt32(players[index].OffHand.Rarity);
+            outMSG.WriteVariableInt32(players[index].OffHand.CoolDown);
+            outMSG.WriteVariableInt32(players[index].OffHand.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].OffHand.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].OffHand.BonusXP);
+            outMSG.WriteVariableInt32(players[index].OffHand.SpellNum);
+            outMSG.Write(players[index].OffHand.Stackable);
 
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1016,13 +1047,21 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Type);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].AttackSpeed);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].HealthRestore);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].ManaRestore);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Strength);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Agility);
-                outMSG.WriteVariableInt32(players[index].Backpack[i].Endurance);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].Intelligence);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].Energy);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Stamina);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Value);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Price);
                 outMSG.WriteVariableInt32(players[index].Backpack[i].Rarity);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].CoolDown);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].AddMaxHealth);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].AddMaxMana);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].BonusXP);
+                outMSG.WriteVariableInt32(players[index].Backpack[i].SpellNum);
+                outMSG.Write(players[index].Backpack[i].Stackable);
             }
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1040,13 +1079,21 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(players[index].Bank[i].Type);
                 outMSG.WriteVariableInt32(players[index].Bank[i].AttackSpeed);
                 outMSG.WriteVariableInt32(players[index].Bank[i].HealthRestore);
+                outMSG.WriteVariableInt32(players[index].Bank[i].ManaRestore);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Strength);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Agility);
-                outMSG.WriteVariableInt32(players[index].Bank[i].Endurance);
+                outMSG.WriteVariableInt32(players[index].Bank[i].Intelligence);
+                outMSG.WriteVariableInt32(players[index].Bank[i].Energy);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Stamina);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Value);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Price);
                 outMSG.WriteVariableInt32(players[index].Bank[i].Rarity);
+                outMSG.WriteVariableInt32(players[index].Bank[i].CoolDown);
+                outMSG.WriteVariableInt32(players[index].Bank[i].AddMaxHealth);
+                outMSG.WriteVariableInt32(players[index].Bank[i].AddMaxMana);
+                outMSG.WriteVariableInt32(players[index].Bank[i].BonusXP);
+                outMSG.WriteVariableInt32(players[index].Bank[i].SpellNum);
+                outMSG.Write(players[index].Bank[i].Stackable);
             }
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1076,13 +1123,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].Chest.Type);
             outMSG.WriteVariableInt32(players[index].Chest.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].Chest.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].Chest.ManaRestore);
             outMSG.WriteVariableInt32(players[index].Chest.Strength);
             outMSG.WriteVariableInt32(players[index].Chest.Agility);
-            outMSG.WriteVariableInt32(players[index].Chest.Endurance);
+            outMSG.WriteVariableInt32(players[index].Chest.Intelligence);
+            outMSG.WriteVariableInt32(players[index].Chest.Energy);
             outMSG.WriteVariableInt32(players[index].Chest.Stamina);
             outMSG.WriteVariableInt32(players[index].Chest.Value);
             outMSG.WriteVariableInt32(players[index].Chest.Price);
             outMSG.WriteVariableInt32(players[index].Chest.Rarity);
+            outMSG.WriteVariableInt32(players[index].Chest.CoolDown);
+            outMSG.WriteVariableInt32(players[index].Chest.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].Chest.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].Chest.BonusXP);
+            outMSG.WriteVariableInt32(players[index].Chest.SpellNum);
+            outMSG.Write(players[index].Chest.Stackable);
 
             outMSG.Write(players[index].Legs.Name);
             outMSG.WriteVariableInt32(players[index].Legs.Sprite);
@@ -1091,13 +1146,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].Legs.Type);
             outMSG.WriteVariableInt32(players[index].Legs.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].Legs.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].Legs.ManaRestore);
             outMSG.WriteVariableInt32(players[index].Legs.Strength);
             outMSG.WriteVariableInt32(players[index].Legs.Agility);
-            outMSG.WriteVariableInt32(players[index].Legs.Endurance);
+            outMSG.WriteVariableInt32(players[index].Legs.Intelligence);
+            outMSG.WriteVariableInt32(players[index].Legs.Energy);
             outMSG.WriteVariableInt32(players[index].Legs.Stamina);
             outMSG.WriteVariableInt32(players[index].Legs.Value);
             outMSG.WriteVariableInt32(players[index].Legs.Price);
             outMSG.WriteVariableInt32(players[index].Legs.Rarity);
+            outMSG.WriteVariableInt32(players[index].Legs.CoolDown);
+            outMSG.WriteVariableInt32(players[index].Legs.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].Legs.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].Legs.BonusXP);
+            outMSG.WriteVariableInt32(players[index].Legs.SpellNum);
+            outMSG.Write(players[index].Legs.Stackable);
 
             outMSG.Write(players[index].Feet.Name);
             outMSG.WriteVariableInt32(players[index].Feet.Sprite);
@@ -1106,13 +1169,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].Feet.Type);
             outMSG.WriteVariableInt32(players[index].Feet.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].Feet.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].Feet.ManaRestore);
             outMSG.WriteVariableInt32(players[index].Feet.Strength);
             outMSG.WriteVariableInt32(players[index].Feet.Agility);
-            outMSG.WriteVariableInt32(players[index].Feet.Endurance);
+            outMSG.WriteVariableInt32(players[index].Feet.Intelligence);
+            outMSG.WriteVariableInt32(players[index].Feet.Energy);
             outMSG.WriteVariableInt32(players[index].Feet.Stamina);
             outMSG.WriteVariableInt32(players[index].Feet.Value);
             outMSG.WriteVariableInt32(players[index].Feet.Price);
             outMSG.WriteVariableInt32(players[index].Feet.Rarity);
+            outMSG.WriteVariableInt32(players[index].Feet.CoolDown);
+            outMSG.WriteVariableInt32(players[index].Feet.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].Feet.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].Feet.BonusXP);
+            outMSG.WriteVariableInt32(players[index].Feet.SpellNum);
+            outMSG.Write(players[index].Feet.Stackable);
 
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1129,13 +1200,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].MainHand.Type);
             outMSG.WriteVariableInt32(players[index].MainHand.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].MainHand.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].MainHand.ManaRestore);
             outMSG.WriteVariableInt32(players[index].MainHand.Strength);
             outMSG.WriteVariableInt32(players[index].MainHand.Agility);
-            outMSG.WriteVariableInt32(players[index].MainHand.Endurance);
+            outMSG.WriteVariableInt32(players[index].MainHand.Intelligence);
+            outMSG.WriteVariableInt32(players[index].MainHand.Energy);
             outMSG.WriteVariableInt32(players[index].MainHand.Stamina);
             outMSG.WriteVariableInt32(players[index].MainHand.Value);
             outMSG.WriteVariableInt32(players[index].MainHand.Price);
             outMSG.WriteVariableInt32(players[index].MainHand.Rarity);
+            outMSG.WriteVariableInt32(players[index].MainHand.CoolDown);
+            outMSG.WriteVariableInt32(players[index].MainHand.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].MainHand.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].MainHand.BonusXP);
+            outMSG.WriteVariableInt32(players[index].MainHand.SpellNum);
+            outMSG.Write(players[index].MainHand.Stackable);
 
             //Secondary weapon
             outMSG.Write(players[index].OffHand.Name);
@@ -1145,13 +1224,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(players[index].OffHand.Type);
             outMSG.WriteVariableInt32(players[index].OffHand.AttackSpeed);
             outMSG.WriteVariableInt32(players[index].OffHand.HealthRestore);
+            outMSG.WriteVariableInt32(players[index].OffHand.ManaRestore);
             outMSG.WriteVariableInt32(players[index].OffHand.Strength);
             outMSG.WriteVariableInt32(players[index].OffHand.Agility);
-            outMSG.WriteVariableInt32(players[index].OffHand.Endurance);
+            outMSG.WriteVariableInt32(players[index].OffHand.Intelligence);
+            outMSG.WriteVariableInt32(players[index].OffHand.Energy);
             outMSG.WriteVariableInt32(players[index].OffHand.Stamina);
             outMSG.WriteVariableInt32(players[index].OffHand.Value);
             outMSG.WriteVariableInt32(players[index].OffHand.Price);
             outMSG.WriteVariableInt32(players[index].OffHand.Rarity);
+            outMSG.WriteVariableInt32(players[index].OffHand.CoolDown);
+            outMSG.WriteVariableInt32(players[index].OffHand.AddMaxHealth);
+            outMSG.WriteVariableInt32(players[index].OffHand.AddMaxMana);
+            outMSG.WriteVariableInt32(players[index].OffHand.BonusXP);
+            outMSG.WriteVariableInt32(players[index].OffHand.SpellNum);
+            outMSG.Write(players[index].OffHand.Stackable);
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1430,13 +1517,21 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(items[index].Armor);
             outMSG.WriteVariableInt32(items[index].Type);
             outMSG.WriteVariableInt32(items[index].HealthRestore);
+            outMSG.WriteVariableInt32(items[index].ManaRestore);
             outMSG.WriteVariableInt32(items[index].Strength);
             outMSG.WriteVariableInt32(items[index].Agility);
-            outMSG.WriteVariableInt32(items[index].Endurance);
+            outMSG.WriteVariableInt32(items[index].Intelligence);
+            outMSG.WriteVariableInt32(items[index].Energy);
             outMSG.WriteVariableInt32(items[index].Stamina);
             outMSG.WriteVariableInt32(items[index].Value);
             outMSG.WriteVariableInt32(items[index].Price);
             outMSG.WriteVariableInt32(items[index].Rarity);
+            outMSG.WriteVariableInt32(items[index].CoolDown);
+            outMSG.WriteVariableInt32(items[index].AddMaxHealth);
+            outMSG.WriteVariableInt32(items[index].AddMaxMana);
+            outMSG.WriteVariableInt32(items[index].BonusXP);
+            outMSG.WriteVariableInt32(items[index].SpellNum);
+            outMSG.Write(items[index].Stackable);
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1452,13 +1547,21 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(items[i].Armor);
                 outMSG.WriteVariableInt32(items[i].Type);
                 outMSG.WriteVariableInt32(items[i].HealthRestore);
+                outMSG.WriteVariableInt32(items[i].ManaRestore);
                 outMSG.WriteVariableInt32(items[i].Strength);
                 outMSG.WriteVariableInt32(items[i].Agility);
-                outMSG.WriteVariableInt32(items[i].Endurance);
+                outMSG.WriteVariableInt32(items[i].Intelligence);
+                outMSG.WriteVariableInt32(items[i].Energy);
                 outMSG.WriteVariableInt32(items[i].Stamina);
                 outMSG.WriteVariableInt32(items[i].Value);
                 outMSG.WriteVariableInt32(items[i].Price);
                 outMSG.WriteVariableInt32(items[i].Rarity);
+                outMSG.WriteVariableInt32(items[i].CoolDown);
+                outMSG.WriteVariableInt32(items[i].AddMaxHealth);
+                outMSG.WriteVariableInt32(items[i].AddMaxMana);
+                outMSG.WriteVariableInt32(items[i].BonusXP);
+                outMSG.WriteVariableInt32(items[i].SpellNum);
+                outMSG.Write(items[i].Stackable);
             }
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1641,19 +1744,21 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Armor);
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Type);
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].HealthRestore);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].HungerRestore);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].HydrateRestore);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].ManaRestore);                
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Strength);
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Agility);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Endurance);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Intelligence);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Energy);
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Stamina);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Clip);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].MaxClip);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].ItemAmmoType);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Value);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].ProjectileNumber);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Value);                
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Price);
                 outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Rarity);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].CoolDown);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].AddMaxHealth);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].AddMaxMana);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].BonusXP);
+                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].SpellNum);
+                outMSG.Write(maps[map].m_MapItem[i].Stackable);
                 outMSG.Write(maps[map].m_MapItem[i].IsSpawned);
             }            
 
@@ -1673,20 +1778,22 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Armor);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Type);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].HealthRestore);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].HungerRestore);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].HydrateRestore);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].ManaRestore);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Strength);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Agility);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Endurance);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Intelligence);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Energy);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Stamina);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Clip);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].MaxClip);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].ItemAmmoType);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Value);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].ProjectileNumber);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Price);
             outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Rarity);
-            outMSG.Write(maps[map].m_MapItem[mapSlot].IsSpawned);            
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].CoolDown);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].AddMaxHealth);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].AddMaxMana);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].BonusXP);
+            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].SpellNum);
+            outMSG.Write(maps[map].m_MapItem[mapSlot].Stackable);
+            outMSG.Write(maps[map].m_MapItem[mapSlot].IsSpawned);     
 
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -2079,6 +2186,7 @@ namespace SabertoothServer
         SendHotBar,
         SendInvSwap,
         SendBankSwap,
-        UpdateHotBar
+        UpdateHotBar,
+        UseHotBar
     }
 }

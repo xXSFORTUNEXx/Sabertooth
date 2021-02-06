@@ -16,13 +16,22 @@ namespace SabertoothServer
         public int Type { get; set; }
         public int AttackSpeed { get; set; }        
         public int HealthRestore { get; set; }
+        public int ManaRestore { get; set; }
         public int Strength { get; set; }
         public int Agility { get; set; }
-        public int Endurance { get; set; }
+        public int Intelligence { get; set; }        
         public int Stamina { get; set; }
+        public int Energy { get; set; }
         public int Value { get; set; }        
         public int Price { get; set; }
         public int Rarity { get; set; }
+        public int CoolDown { get; set; }
+        public int AddMaxHealth { get; set; }
+        public int AddMaxMana { get; set; }
+        public int BonusXP { get; set; }
+        public int SpellNum { get; set; }
+        public bool Stackable { get; set; }
+
         public Item() { }
 
         public Item(ItemType type)
@@ -30,9 +39,8 @@ namespace SabertoothServer
             Type = (int)type;
         }
 
-        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int reloadspeed,
-                    int healthRestore, int foodRestore, int drinkRestore, int str, int agi, int end, int sta, int clip, int maxclip, int ammotype, 
-                    int value, int projNum, int price, int rarity)
+        public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int hpRestore, int mprestore, int str, int agi, int intel, int ene, int sta, int value, int price, int rarity, 
+            int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stacked)
         {
             Name = name;
             Sprite = sprite;
@@ -40,14 +48,22 @@ namespace SabertoothServer
             Armor = armor;
             Type = type;
             AttackSpeed = attackspeed;
-            HealthRestore = healthRestore;
+            HealthRestore = hpRestore;
+            ManaRestore = mprestore;
             Strength = str;
             Agility = agi;
-            Endurance = end;
+            Intelligence = intel;
+            Energy = ene;
             Stamina = sta;
             Value = value;            
             Price = price;
             Rarity = rarity;
+            CoolDown = cooldown;
+            AddMaxHealth = addmaxhp;
+            AddMaxMana = addmaxmp;
+            BonusXP = bonusxp;
+            SpellNum = spellnum;
+            Stackable = stacked;
         }
 
         public void CreateItemInDatabase()
@@ -59,13 +75,21 @@ namespace SabertoothServer
             Type = (int)ItemType.None;
             AttackSpeed = 0;            
             HealthRestore = 0;
+            ManaRestore = 0;
             Strength = 0;
             Agility = 0;
-            Endurance = 0;
+            Intelligence = 0;
+            Energy = 0;
             Stamina = 0;
             Value = 0;
             Price = 1;
             Rarity = 0;
+            CoolDown = 0;
+            AddMaxHealth = 0;
+            AddMaxMana = 0;
+            BonusXP = 0;
+            SpellNum = 0;
+            Stackable = false;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             string script = ReadAllText("SQL Data Scripts/Insert_Item.sql");
@@ -81,13 +105,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Stackable;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -110,13 +142,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Stackable;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -145,13 +185,21 @@ namespace SabertoothServer
                             Type = ToInt32(reader[i]); i += 1;
                             AttackSpeed = ToInt32(reader[i]); i += 1;
                             HealthRestore = ToInt32(reader[i]); i += 1;
+                            ManaRestore = ToInt32(reader[i]); i += 1;
                             Strength = ToInt32(reader[i]); i += 1;
                             Agility = ToInt32(reader[i]); i += 1;
-                            Endurance = ToInt32(reader[i]); i += 1;
+                            Intelligence = ToInt32(reader[i]); i += 1;
+                            Energy = ToInt32(reader[i]); i += 1;
                             Stamina = ToInt32(reader[i]); i += 1;
                             Value = ToInt32(reader[i]); i += 1;
                             Price = ToInt32(reader[i]); i += 1;
-                            Rarity = ToInt32(reader[i]);
+                            Rarity = ToInt32(reader[i]); i += 1;
+                            CoolDown = ToInt32(reader[i]); i += 1;
+                            AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            AddMaxMana = ToInt32(reader[i]); i += 1;
+                            BonusXP = ToInt32(reader[i]); i += 1;
+                            SpellNum = ToInt32(reader[i]); i += 1;
+                            Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -189,10 +237,11 @@ namespace SabertoothServer
         Currency,
         Food,
         Drink,
-        FirstAid,
+        Potion,
         Shirt,
         Pants,
         Shoes,
+        Book,
         Other
     }
 

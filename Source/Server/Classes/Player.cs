@@ -107,20 +107,20 @@ namespace SabertoothServer
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
-            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -130,16 +130,16 @@ namespace SabertoothServer
             }
 
             int h = 0;
-            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
         }
 
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana,
@@ -177,20 +177,20 @@ namespace SabertoothServer
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
-            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
-            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -200,16 +200,16 @@ namespace SabertoothServer
             }
 
             int h = 0;
-            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -221,12 +221,12 @@ namespace SabertoothServer
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -236,16 +236,16 @@ namespace SabertoothServer
             }
 
             int h = 0;
-            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
         }
 
         public Player(NetConnection conn)
@@ -257,12 +257,12 @@ namespace SabertoothServer
         {
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -272,16 +272,16 @@ namespace SabertoothServer
             }
 
             int h = 0;
-            hotBar[h] = new HotBar(Keyboard.Key.Num1, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num2, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num3, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num4, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num5, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num6, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num7, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num8, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num9, 0, 0); h += 1;
-            hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
+            hotBar[h] = new HotBar(Keyboard.Key.Num1, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num2, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num3, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num4, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num5, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num6, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num7, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
+            hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
         }
         #endregion
 
@@ -346,10 +346,10 @@ namespace SabertoothServer
             if (players[index].Backpack[slot].Name != "None")
             {
                 int newSlot = FindOpenBankSlot(players[index].Bank);
-                if (newSlot < 50)
+                if (newSlot < MAX_BANK_SLOTS)
                 {
                     players[index].Bank[newSlot] = players[index].Backpack[slot];
-                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
                     HandleData.SendPlayerBank(index);
                     HandleData.SendPlayerInv(index);
                 }
@@ -366,10 +366,10 @@ namespace SabertoothServer
             if (players[index].Bank[slot].Name != "None")
             {
                 int newSlot = FindOpenInvSlot(players[index].Backpack);
-                if (newSlot < 25)
+                if (newSlot < MAX_INV_SLOTS)
                 {
                     players[index].Backpack[newSlot] = players[index].Bank[slot];
-                    players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1);
+                    players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
                     HandleData.SendPlayerBank(index);
                     HandleData.SendPlayerInv(index);
                 }
@@ -381,8 +381,58 @@ namespace SabertoothServer
             }
         }
 
+        public void UseItem(int index, int slot, int hotbarslot)
+        {
+            if (players[index].Backpack[slot].Name != "None")
+            {
+                bool removeItem = false;
+
+                switch (players[index].Backpack[slot].Type)
+                {
+                    case (int)ItemType.Food:
+                    case (int)ItemType.Drink:
+                    case (int)ItemType.Potion:
+                        if (players[index].Backpack[slot].HealthRestore > 0)
+                        {
+                            players[index].Health += players[index].Backpack[slot].HealthRestore;
+                            if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; }
+                        }
+
+                        if (players[index].Backpack[slot].Stackable)
+                        {
+                            if (players[index].Backpack[slot].Value > 1)
+                            {
+                                players[index].Backpack[slot].Value -= 1;
+                            }
+                            else
+                            {
+                                removeItem = true;
+                            }
+                        }
+                        break;
+
+                    default:
+                        HandleData.SendServerMessageTo(players[index].Connection, "Item cannot be used on hotbar!");
+                        players[index].hotBar[hotbarslot].InvNumber = -1;
+                        HandleData.SendPlayerHotBar(index);
+                        return;
+                }
+
+                if (removeItem)
+                {
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                    players[index].hotBar[hotbarslot].InvNumber = -1;
+                }
+                HandleData.SendPlayerHotBar(index);
+                HandleData.SendPlayerInv(index);
+                HandleData.SendUpdatePlayerStats(index);
+            }
+        }
+
         public void EquipItem(int index, int slot)
         {
+            bool removeItem = false;
+
             if (players[index].Backpack[slot].Name != "None")
             {              
                 switch (players[index].Backpack[slot].Type)
@@ -396,12 +446,13 @@ namespace SabertoothServer
                         {
                             int newSlot = FindOpenInvSlot(Backpack);
 
-                            if (newSlot < 25)
+                            if (newSlot < MAX_INV_SLOTS)
                             {
                                 players[index].Backpack[newSlot] = players[index].MainHand;
                                 players[index].MainHand = players[index].Backpack[slot];
                             }
                         }
+                        removeItem = true;
                         break;
 
                     case (int)ItemType.MeleeWeapon:
@@ -413,12 +464,13 @@ namespace SabertoothServer
                         {
                             int newSlot = FindOpenInvSlot(Backpack);
 
-                            if (newSlot < 25)
+                            if (newSlot < MAX_INV_SLOTS)
                             {
                                 players[index].Backpack[newSlot] = players[index].OffHand;
                                 players[index].OffHand = players[index].Backpack[slot];
                             }
                         }
+                        removeItem = true;
                         break;
 
                     case (int)ItemType.Shirt:
@@ -430,12 +482,13 @@ namespace SabertoothServer
                         {
                             int newSlot = FindOpenInvSlot(Backpack);
 
-                            if (newSlot < 25)
+                            if (newSlot < MAX_INV_SLOTS)
                             {
                                 players[index].Backpack[newSlot] = players[index].Chest;
                                 players[index].Chest = players[index].Backpack[slot];
                             }
                         }
+                        removeItem = true;
                         break;
 
                     case (int)ItemType.Pants:
@@ -447,12 +500,13 @@ namespace SabertoothServer
                         {
                             int newSlot = FindOpenInvSlot(Backpack);
 
-                            if (newSlot < 25)
+                            if (newSlot < MAX_INV_SLOTS)
                             {
                                 players[index].Backpack[newSlot] = players[index].Legs;
                                 players[index].Legs = players[index].Backpack[slot];
                             }
                         }
+                        removeItem = true;
                         break;
 
                     case (int)ItemType.Shoes:
@@ -464,32 +518,53 @@ namespace SabertoothServer
                         {
                             int newSlot = FindOpenInvSlot(Backpack);
 
-                            if (newSlot < 25)
+                            if (newSlot < MAX_INV_SLOTS)
                             {
                                 players[index].Backpack[newSlot] = players[index].Feet;
                                 players[index].Feet = players[index].Backpack[slot];
                             }
                         }
+                        removeItem = true;
                         break;
 
+                    //take care of on use stuff too
                     case (int)ItemType.Currency:
                         if (players[index].Backpack[slot].Value > 0)
                         {
                             players[index].Wallet += players[index].Backpack[slot].Value;
-                        }                        
+                            removeItem = true;
+                        }
                         break;
 
-                    //food and drink need stuff to be done
-
-                    case (int)ItemType.FirstAid:
+                    case (int)ItemType.Food:
+                    case (int)ItemType.Drink:
+                    case (int)ItemType.Potion:
                         if (players[index].Backpack[slot].HealthRestore > 0)
                         {
                             players[index].Health += players[index].Backpack[slot].HealthRestore;
                             if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; }
                         }
+
+                        if (players[index].Backpack[slot].Stackable)
+                        {
+                            if (players[index].Backpack[slot].Value > 1)
+                            {
+                                players[index].Backpack[slot].Value -= 1;
+                            }
+                            else
+                            {
+                                removeItem = true;
+                            }
+                        }
                         break;
+
                 }
-                players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+
+                if (removeItem)
+                {
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                }
+
                 HandleData.SendWeaponsUpdate(index);
                 HandleData.SendPlayerInv(index);
                 HandleData.SendUpdatePlayerStats(index);
@@ -506,7 +581,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].MainHand;
-                        players[index].MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
 
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
@@ -524,7 +599,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].OffHand;
-                        players[index].OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -541,7 +616,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Chest;
-                        players[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -558,7 +633,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Legs;
-                        players[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -575,7 +650,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Feet;
-                        players[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                        players[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -605,17 +680,25 @@ namespace SabertoothServer
                     maps[mapNum].m_MapItem[mapSlot].Type = players[index].Backpack[slot].Type;
                     maps[mapNum].m_MapItem[mapSlot].AttackSpeed = players[index].Backpack[slot].AttackSpeed;
                     maps[mapNum].m_MapItem[mapSlot].HealthRestore = players[index].Backpack[slot].HealthRestore;
+                    maps[mapNum].m_MapItem[mapSlot].ManaRestore = players[index].Backpack[slot].ManaRestore;
                     maps[mapNum].m_MapItem[mapSlot].Strength = players[index].Backpack[slot].Strength;
                     maps[mapNum].m_MapItem[mapSlot].Agility = players[index].Backpack[slot].Agility;
-                    maps[mapNum].m_MapItem[mapSlot].Endurance = players[index].Backpack[slot].Endurance;
+                    maps[mapNum].m_MapItem[mapSlot].Intelligence = players[index].Backpack[slot].Intelligence;
+                    maps[mapNum].m_MapItem[mapSlot].Energy = players[index].Backpack[slot].Energy;
                     maps[mapNum].m_MapItem[mapSlot].Stamina = players[index].Backpack[slot].Stamina;
                     maps[mapNum].m_MapItem[mapSlot].Value = players[index].Backpack[slot].Value;
                     maps[mapNum].m_MapItem[mapSlot].Price = players[index].Backpack[slot].Price;
                     maps[mapNum].m_MapItem[mapSlot].Rarity = players[index].Backpack[slot].Rarity;
+                    maps[mapNum].m_MapItem[mapSlot].CoolDown = players[index].Backpack[slot].CoolDown;
+                    maps[mapNum].m_MapItem[mapSlot].AddMaxHealth = players[index].Backpack[slot].AddMaxHealth;
+                    maps[mapNum].m_MapItem[mapSlot].AddMaxMana = players[index].Backpack[slot].AddMaxMana;
+                    maps[mapNum].m_MapItem[mapSlot].BonusXP = players[index].Backpack[slot].BonusXP;
+                    maps[mapNum].m_MapItem[mapSlot].SpellNum = players[index].Backpack[slot].SpellNum;
+                    maps[mapNum].m_MapItem[mapSlot].Stackable = players[index].Backpack[slot].Stackable;
                     maps[mapNum].m_MapItem[mapSlot].IsSpawned = true;
                     maps[mapNum].m_MapItem[mapSlot].ExpireTick = TickCount;
 
-                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
                     HandleData.SendPlayerInv(index);
 
                     for (int p = 0; p < MAX_PLAYERS; p++)
@@ -650,10 +733,34 @@ namespace SabertoothServer
 
         void PickUpItem(int map, int index, int itemNum)
         {
+            int stackSlot = FindStackableInvSlot(Backpack, map, itemNum);
+
+            if (stackSlot < MAX_INV_SLOTS)
+            {
+                Backpack[stackSlot].Value += maps[map].m_MapItem[itemNum].Value;
+
+                int TileX = maps[map].m_MapItem[itemNum].X;
+                int TileY = maps[map].m_MapItem[itemNum].Y;
+                maps[map].Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
+                maps[map].m_MapItem[itemNum].Name = "None";
+                maps[map].m_MapItem[itemNum].IsSpawned = false;
+
+                for (int p = 0; p < MAX_PLAYERS; p++)
+                {
+                    if (players[p].Connection != null && Map == players[p].Map)
+                    {
+                        HandleData.SendMapItemData(players[p].Connection, map, itemNum);
+                    }
+                }
+                HandleData.SendPlayerInv(index);
+                return;
+            }
+
             int itemSlot = FindOpenInvSlot(Backpack);
 
             if (itemSlot < MAX_INV_SLOTS)
             {
+
                 Backpack[itemSlot].Name = maps[map].m_MapItem[itemNum].Name;
                 Backpack[itemSlot].Sprite = maps[map].m_MapItem[itemNum].Sprite;
                 Backpack[itemSlot].Damage = maps[map].m_MapItem[itemNum].Damage;
@@ -663,11 +770,18 @@ namespace SabertoothServer
                 Backpack[itemSlot].HealthRestore = maps[map].m_MapItem[itemNum].HealthRestore;
                 Backpack[itemSlot].Strength = maps[map].m_MapItem[itemNum].Strength;
                 Backpack[itemSlot].Agility = maps[map].m_MapItem[itemNum].Agility;
-                Backpack[itemSlot].Endurance = maps[map].m_MapItem[itemNum].Endurance;
+                Backpack[itemSlot].Intelligence = maps[map].m_MapItem[itemNum].Intelligence;
+                Backpack[itemSlot].Energy = maps[map].m_MapItem[itemNum].Energy;
                 Backpack[itemSlot].Stamina = maps[map].m_MapItem[itemNum].Stamina;
                 Backpack[itemSlot].Value = maps[map].m_MapItem[itemNum].Value;
                 Backpack[itemSlot].Price = maps[map].m_MapItem[itemNum].Price;
                 Backpack[itemSlot].Rarity = maps[map].m_MapItem[itemNum].Rarity;
+                Backpack[itemSlot].CoolDown = maps[map].m_MapItem[itemNum].CoolDown;
+                Backpack[itemSlot].AddMaxHealth = maps[map].m_MapItem[itemNum].AddMaxHealth;
+                Backpack[itemSlot].AddMaxMana = maps[map].m_MapItem[itemNum].AddMaxMana;
+                Backpack[itemSlot].BonusXP = maps[map].m_MapItem[itemNum].BonusXP;
+                Backpack[itemSlot].SpellNum = maps[map].m_MapItem[itemNum].SpellNum;
+                Backpack[itemSlot].Stackable = maps[map].m_MapItem[itemNum].Stackable;
 
                 int TileX = maps[map].m_MapItem[itemNum].X;
                 int TileY = maps[map].m_MapItem[itemNum].Y;
@@ -689,6 +803,18 @@ namespace SabertoothServer
                 HandleData.SendServerMessageTo(Connection,"Inventory is full!");
                 return;
             }
+        }
+
+        int FindStackableInvSlot(Item[] s_Backpack, int map, int itemnum)
+        {
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
+            {
+                if (s_Backpack[i].Name == maps[map].m_MapItem[itemnum].Name && s_Backpack[i].Stackable)
+                {
+                    return i;
+                }
+            }
+            return MAX_INV_SLOTS;
         }
 
         public int FindOpenInvSlot(Item[] s_Backpack)
@@ -852,13 +978,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = MainHand.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = MainHand.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = MainHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = MainHand.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = MainHand.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = MainHand.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = MainHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = MainHand.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = MainHand.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = MainHand.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = MainHand.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = MainHand.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = MainHand.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = MainHand.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = MainHand.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = MainHand.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = MainHand.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = MainHand.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = MainHand.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -873,13 +1007,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = OffHand.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = OffHand.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = OffHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = OffHand.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = OffHand.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = OffHand.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = OffHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = OffHand.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = OffHand.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = OffHand.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = OffHand.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = OffHand.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = OffHand.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = OffHand.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = OffHand.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = OffHand.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = OffHand.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = OffHand.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = OffHand.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -896,13 +1038,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Chest.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Chest.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Chest.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Chest.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Chest.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Chest.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Chest.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Chest.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Chest.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -919,13 +1069,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Legs.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Legs.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Legs.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Legs.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Legs.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Legs.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Legs.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Legs.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Legs.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -942,13 +1100,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Feet.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Feet.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Feet.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Feet.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Feet.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Feet.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Feet.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Feet.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Feet.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1074,13 +1240,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = MainHand.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = MainHand.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = MainHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = MainHand.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = MainHand.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = MainHand.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = MainHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = MainHand.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = MainHand.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = MainHand.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = MainHand.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = MainHand.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = MainHand.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = MainHand.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = MainHand.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = MainHand.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = MainHand.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = MainHand.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = MainHand.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1095,13 +1269,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = OffHand.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = OffHand.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = OffHand.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = OffHand.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = OffHand.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = OffHand.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = OffHand.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = OffHand.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = OffHand.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = OffHand.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = OffHand.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = OffHand.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = OffHand.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = OffHand.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = OffHand.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = OffHand.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = OffHand.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = OffHand.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = OffHand.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1118,13 +1300,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Chest.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Chest.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Chest.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Chest.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Chest.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Chest.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Chest.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Chest.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Chest.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Chest.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Chest.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Chest.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Chest.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Chest.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Chest.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Chest.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Chest.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Chest.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Chest.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1141,13 +1331,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Legs.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Legs.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Legs.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Legs.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Legs.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Legs.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Legs.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Legs.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Legs.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Legs.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Legs.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Legs.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Legs.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Legs.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Legs.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Legs.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Legs.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Legs.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Legs.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1164,13 +1362,21 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Feet.Type;
                     cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Feet.AttackSpeed;
                     cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Feet.HealthRestore;
+                    cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Feet.ManaRestore;
                     cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Feet.Strength;
                     cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Feet.Agility;
-                    cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Feet.Endurance;
+                    cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Feet.Intelligence;
+                    cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Feet.Energy;
                     cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Feet.Stamina;
                     cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Feet.Value;
                     cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Feet.Price;
                     cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Feet.Rarity;
+                    cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Feet.CoolDown;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Feet.AddMaxHealth;
+                    cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Feet.AddMaxMana;
+                    cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Feet.BonusXP;
+                    cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Feet.SpellNum;
+                    cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Feet.Stackable;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1198,13 +1404,21 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Backpack[i].Type;
                             cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Backpack[i].AttackSpeed;
                             cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Backpack[i].HealthRestore;
+                            cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Backpack[i].ManaRestore;
                             cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Backpack[i].Strength;
                             cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Backpack[i].Agility;
-                            cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Backpack[i].Endurance;
+                            cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Backpack[i].Intelligence;
+                            cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Backpack[i].Energy;
                             cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Backpack[i].Stamina;
                             cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Backpack[i].Value;
                             cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Backpack[i].Price;
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Backpack[i].Rarity;
+                            cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Backpack[i].CoolDown;
+                            cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Backpack[i].AddMaxHealth;
+                            cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Backpack[i].AddMaxMana;
+                            cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Backpack[i].BonusXP;
+                            cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Backpack[i].SpellNum;
+                            cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Backpack[i].Stackable;
                             cmd.ExecuteNonQuery();
                         }                        
                     }
@@ -1235,13 +1449,21 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@type", System.Data.DbType.Int32)).Value = Bank[i].Type;
                             cmd.Parameters.Add(new SqlParameter("@attackspeed", System.Data.DbType.Int32)).Value = Bank[i].AttackSpeed;
                             cmd.Parameters.Add(new SqlParameter("@healthrestore", System.Data.DbType.Int32)).Value = Bank[i].HealthRestore;
+                            cmd.Parameters.Add(new SqlParameter("@manarestore", System.Data.DbType.Int32)).Value = Bank[i].ManaRestore;
                             cmd.Parameters.Add(new SqlParameter("@strength", System.Data.DbType.Int32)).Value = Bank[i].Strength;
                             cmd.Parameters.Add(new SqlParameter("@agility", System.Data.DbType.Int32)).Value = Bank[i].Agility;
-                            cmd.Parameters.Add(new SqlParameter("@endurance", System.Data.DbType.Int32)).Value = Bank[i].Endurance;
+                            cmd.Parameters.Add(new SqlParameter("@intelligence", System.Data.DbType.Int32)).Value = Bank[i].Intelligence;
+                            cmd.Parameters.Add(new SqlParameter("@energy", System.Data.DbType.Int32)).Value = Bank[i].Energy;
                             cmd.Parameters.Add(new SqlParameter("@stamina", System.Data.DbType.Int32)).Value = Bank[i].Stamina;
                             cmd.Parameters.Add(new SqlParameter("@value", System.Data.DbType.Int32)).Value = Bank[i].Value;
                             cmd.Parameters.Add(new SqlParameter("@price", System.Data.DbType.Int32)).Value = Bank[i].Price;
                             cmd.Parameters.Add(new SqlParameter("@rarity", System.Data.DbType.Int32)).Value = Bank[i].Rarity;
+                            cmd.Parameters.Add(new SqlParameter("@cooldown", System.Data.DbType.Int32)).Value = Bank[i].CoolDown;
+                            cmd.Parameters.Add(new SqlParameter("@addmaxhp", System.Data.DbType.Int32)).Value = Bank[i].AddMaxHealth;
+                            cmd.Parameters.Add(new SqlParameter("@addmaxmp", System.Data.DbType.Int32)).Value = Bank[i].AddMaxMana;
+                            cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Bank[i].BonusXP;
+                            cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Bank[i].SpellNum;
+                            cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Bank[i].Stackable;
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -1383,13 +1605,21 @@ namespace SabertoothServer
                             MainHand.Type = ToInt32(reader[i]); i += 1;
                             MainHand.AttackSpeed = ToInt32(reader[i]); i += 1;
                             MainHand.HealthRestore = ToInt32(reader[i]); i += 1;
+                            MainHand.ManaRestore = ToInt32(reader[i]); i += 1;
                             MainHand.Strength = ToInt32(reader[i]); i += 1;
                             MainHand.Agility = ToInt32(reader[i]); i += 1;
-                            MainHand.Endurance = ToInt32(reader[i]); i += 1;
+                            MainHand.Intelligence = ToInt32(reader[i]); i += 1;
+                            MainHand.Energy = ToInt32(reader[i]); i += 1;
                             MainHand.Stamina = ToInt32(reader[i]); i += 1;
                             MainHand.Value = ToInt32(reader[i]); i += 1;
                             MainHand.Price = ToInt32(reader[i]); i += 1;
-                            MainHand.Rarity = ToInt32(reader[i]);
+                            MainHand.Rarity = ToInt32(reader[i]); i += 1;
+                            MainHand.CoolDown = ToInt32(reader[i]); i += 1;
+                            MainHand.AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            MainHand.AddMaxMana = ToInt32(reader[i]); i += 1;
+                            MainHand.BonusXP = ToInt32(reader[i]); i += 1;
+                            MainHand.SpellNum = ToInt32(reader[i]); i += 1;
+                            MainHand.Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -1411,13 +1641,21 @@ namespace SabertoothServer
                             OffHand.Type = ToInt32(reader[i]); i += 1;
                             OffHand.AttackSpeed = ToInt32(reader[i]); i += 1;
                             OffHand.HealthRestore = ToInt32(reader[i]); i += 1;
+                            OffHand.ManaRestore = ToInt32(reader[i]); i += 1;
                             OffHand.Strength = ToInt32(reader[i]); i += 1;
                             OffHand.Agility = ToInt32(reader[i]); i += 1;
-                            OffHand.Endurance = ToInt32(reader[i]); i += 1;
+                            OffHand.Intelligence = ToInt32(reader[i]); i += 1;
+                            OffHand.Energy = ToInt32(reader[i]); i += 1;
                             OffHand.Stamina = ToInt32(reader[i]); i += 1;
                             OffHand.Value = ToInt32(reader[i]); i += 1;
                             OffHand.Price = ToInt32(reader[i]); i += 1;
-                            OffHand.Rarity = ToInt32(reader[i]);
+                            OffHand.Rarity = ToInt32(reader[i]); i += 1;
+                            OffHand.CoolDown = ToInt32(reader[i]); i += 1;
+                            OffHand.AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            OffHand.AddMaxMana = ToInt32(reader[i]); i += 1;
+                            OffHand.BonusXP = ToInt32(reader[i]); i += 1;
+                            OffHand.SpellNum = ToInt32(reader[i]); i += 1;
+                            OffHand.Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -1440,13 +1678,21 @@ namespace SabertoothServer
                             Chest.Type = ToInt32(reader[i]); i += 1;
                             Chest.AttackSpeed = ToInt32(reader[i]); i += 1;
                             Chest.HealthRestore = ToInt32(reader[i]); i += 1;
+                            Chest.ManaRestore = ToInt32(reader[i]); i += 1;
                             Chest.Strength = ToInt32(reader[i]); i += 1;
                             Chest.Agility = ToInt32(reader[i]); i += 1;
-                            Chest.Endurance = ToInt32(reader[i]); i += 1;
+                            Chest.Intelligence = ToInt32(reader[i]); i += 1;
+                            Chest.Energy = ToInt32(reader[i]); i += 1;
                             Chest.Stamina = ToInt32(reader[i]); i += 1;
                             Chest.Value = ToInt32(reader[i]); i += 1;
                             Chest.Price = ToInt32(reader[i]); i += 1;
-                            Chest.Rarity = ToInt32(reader[i]);
+                            Chest.Rarity = ToInt32(reader[i]); i += 1;
+                            Chest.CoolDown = ToInt32(reader[i]); i += 1;
+                            Chest.AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            Chest.AddMaxMana = ToInt32(reader[i]); i += 1;
+                            Chest.BonusXP = ToInt32(reader[i]); i += 1;
+                            Chest.SpellNum = ToInt32(reader[i]); i += 1;
+                            Chest.Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -1469,13 +1715,21 @@ namespace SabertoothServer
                             Legs.Type = ToInt32(reader[i]); i += 1;
                             Legs.AttackSpeed = ToInt32(reader[i]); i += 1;
                             Legs.HealthRestore = ToInt32(reader[i]); i += 1;
+                            Legs.ManaRestore = ToInt32(reader[i]); i += 1;
                             Legs.Strength = ToInt32(reader[i]); i += 1;
                             Legs.Agility = ToInt32(reader[i]); i += 1;
-                            Legs.Endurance = ToInt32(reader[i]); i += 1;
+                            Legs.Intelligence = ToInt32(reader[i]); i += 1;
+                            Legs.Energy = ToInt32(reader[i]); i += 1;
                             Legs.Stamina = ToInt32(reader[i]); i += 1;
                             Legs.Value = ToInt32(reader[i]); i += 1;
                             Legs.Price = ToInt32(reader[i]); i += 1;
-                            Legs.Rarity = ToInt32(reader[i]);
+                            Legs.Rarity = ToInt32(reader[i]); i += 1;
+                            Legs.CoolDown = ToInt32(reader[i]); i += 1;
+                            Legs.AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            Legs.AddMaxMana = ToInt32(reader[i]); i += 1;
+                            Legs.BonusXP = ToInt32(reader[i]); i += 1;
+                            Legs.SpellNum = ToInt32(reader[i]); i += 1;
+                            Legs.Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -1498,13 +1752,21 @@ namespace SabertoothServer
                             Feet.Type = ToInt32(reader[i]); i += 1;
                             Feet.AttackSpeed = ToInt32(reader[i]); i += 1;
                             Feet.HealthRestore = ToInt32(reader[i]); i += 1;
+                            Feet.ManaRestore = ToInt32(reader[i]); i += 1;
                             Feet.Strength = ToInt32(reader[i]); i += 1;
                             Feet.Agility = ToInt32(reader[i]); i += 1;
-                            Feet.Endurance = ToInt32(reader[i]); i += 1;
+                            Feet.Intelligence = ToInt32(reader[i]); i += 1;
+                            Feet.Energy = ToInt32(reader[i]); i += 1;
                             Feet.Stamina = ToInt32(reader[i]); i += 1;
                             Feet.Value = ToInt32(reader[i]); i += 1;
                             Feet.Price = ToInt32(reader[i]); i += 1;
-                            Feet.Rarity = ToInt32(reader[i]);
+                            Feet.Rarity = ToInt32(reader[i]); i += 1;
+                            Feet.CoolDown = ToInt32(reader[i]); i += 1;
+                            Feet.AddMaxHealth = ToInt32(reader[i]); i += 1;
+                            Feet.AddMaxMana = ToInt32(reader[i]); i += 1;
+                            Feet.BonusXP = ToInt32(reader[i]); i += 1;
+                            Feet.SpellNum = ToInt32(reader[i]); i += 1;
+                            Feet.Stackable = ToBoolean(reader[i]);
                         }
                     }
                 }
@@ -1541,13 +1803,21 @@ namespace SabertoothServer
                                     Backpack[slot].Type = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].AttackSpeed = ToInt32(reader[n]); n += 1;                                    
                                     Backpack[slot].HealthRestore = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].ManaRestore = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].Strength = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].Agility = ToInt32(reader[n]); n += 1;
-                                    Backpack[slot].Endurance = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Intelligence = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Energy = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].Stamina = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].Value = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].Price = ToInt32(reader[n]); n += 1;
-                                    Backpack[slot].Rarity = ToInt32(reader[n]);
+                                    Backpack[slot].Rarity = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].CoolDown = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].AddMaxHealth = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].AddMaxMana = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].BonusXP = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].SpellNum = ToInt32(reader[n]); n += 1;
+                                    Backpack[slot].Stackable = ToBoolean(reader[n]);
                                 }
                             }
                         }
@@ -1586,13 +1856,21 @@ namespace SabertoothServer
                                     Bank[bankslot].Type = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].AttackSpeed = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].HealthRestore = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].ManaRestore = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].Strength = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].Agility = ToInt32(reader[n]); n += 1;
-                                    Bank[bankslot].Endurance = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Intelligence = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Energy = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].Stamina = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].Value = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].Price = ToInt32(reader[n]); n += 1;
-                                    Bank[bankslot].Rarity = ToInt32(reader[n]);
+                                    Bank[bankslot].Rarity = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].CoolDown = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].AddMaxHealth = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].AddMaxMana = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].BonusXP = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].SpellNum = ToInt32(reader[n]); n += 1;
+                                    Bank[bankslot].Stackable = ToBoolean(reader[n]);
                                 }
                             }
                         }

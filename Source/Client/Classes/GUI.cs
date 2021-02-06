@@ -26,14 +26,20 @@ namespace SabertoothClient
         public WindowControl d_Window;
         public Label d_Controller;
         public Label d_ConDir;
-        public Label d_ConButton;
-        public Label d_Axis;
+        Label d_ConButton;
+        Label d_Axis;
+        Label d_mouseX;
+        Label d_mouseY;
+        Label d_tMouseX;
+        Label d_tMouseY;
+        public Label d_Region;
         Label d_FPS;
         Label d_Name;
         Label d_X;
         Label d_Y;
         Label d_Map;
         Label d_Dir;
+        Label d_aDir;
         Label d_Sprite;
         Label d_IP;
         Label d_Port;
@@ -107,9 +113,11 @@ namespace SabertoothClient
         Label shopDamage;
         Label shopArmor;
         Label shopHeRestore;
+        Label shopMaRestore;
         Label shopStr;
         Label shopAgi;
-        Label shopEdu;
+        Label shopInt;
+        Label shopEng;
         Label shopSta;
         Label shopASpeed;
         Label shopType;
@@ -123,11 +131,13 @@ namespace SabertoothClient
         Label[] hotBarLabel = new Label[10];
         bool isMoveHotBar;
         int hotBarSlot;
+        int currentSlot;
         #endregion
 
         #region Bank
         public WindowControl bankWindow;
         ImagePanel[] bankPic = new ImagePanel[50];
+        Label[] bankPicValue = new Label[50];
         Button bankClose;
         bool isMoveBank;
         int oldBankSlot;
@@ -138,9 +148,11 @@ namespace SabertoothClient
         Label bankDamage;
         Label bankArmor;
         Label bankHeRestore;
+        Label bankMaRestore;
         Label bankStr;
         Label bankAgi;
-        Label bankEdu;
+        Label bankInt;
+        Label bankEng;
         Label bankSta;
         Label bankASpeed;
         Label bankType;
@@ -171,9 +183,11 @@ namespace SabertoothClient
         Label chestDamage;
         Label chestArmor;
         Label chestHeRestore;
+        Label chestMaRestore;
         Label chestStr;
         Label chestAgi;
-        Label chestEdu;
+        Label chestInt;
+        Label chestEng;
         Label chestSta;
         Label chestASpeed;
         Label chestType;
@@ -201,6 +215,7 @@ namespace SabertoothClient
         #region PackTab
         public TabButton packTab;
         ImagePanel[] invPic = new ImagePanel[25];
+        Label[] invValue = new Label[25];
         bool isMoveInv;
         int oldInvSlot;
 
@@ -210,9 +225,11 @@ namespace SabertoothClient
         Label packDamage;
         Label packArmor;
         Label packHeRestore;
+        Label packMaRestore;
         Label packStr;
         Label packAgi;
-        Label packEdu;
+        Label packInt;
+        Label packEng;
         Label packSta;
         Label packASpeed;
         Label packType;
@@ -283,6 +300,16 @@ namespace SabertoothClient
                         Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
                         package = bankPic[i].DragAndDrop_GetPackage(bankPic[i].X, bankPic[i].Y);
                         package.IsDraggable = false;
+                    }
+
+                    if (player.Bank[i].Stackable)
+                    {
+                        bankPicValue[i].Text = "x" + player.Bank[i].Value.ToString();
+                        bankPicValue[i].TextColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        bankPicValue[i].Text = "";
                     }
 
                     if (bankPic[i].IsHovered && isMoveBank)
@@ -381,11 +408,11 @@ namespace SabertoothClient
             {
                 for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
                 {
-                    if (player.hotBar[i].InvNumber > 0)
+                    if (player.hotBar[i].InvNumber > -1)
                     {
                         hotbarPic[i].ImageName = "Resources/Items/" + player.Backpack[player.hotBar[i].InvNumber].Sprite + ".png";
                     }
-                    else if (player.hotBar[i].SpellNumber > 0)
+                    else if (player.hotBar[i].SpellNumber > -1)
                     {
                         //spell stuff
                     }
@@ -402,7 +429,9 @@ namespace SabertoothClient
                             {
                                 player.SendUpdateHotbar(hotBarSlot, i);
                                 hotBarSlot = -1;
+                                oldInvSlot = -1;
                                 isMoveHotBar = false;
+                                isMoveInv = false;
                             }
                         }
                     }
@@ -456,6 +485,16 @@ namespace SabertoothClient
                             package.IsDraggable = false;
                         }
 
+                        if (player.Backpack[i].Stackable)
+                        {
+                            invValue[i].Text = "x" + player.Backpack[i].Value.ToString();
+                            invValue[i].TextColor = System.Drawing.Color.Red;
+                        }
+                        else
+                        {
+                            invValue[i].Text = "";
+                        }
+
                         if (invPic[i].IsHovered && isMoveInv)
                         {
                             if (Gwen.DragDrop.DragAndDrop.SourceControl == null)
@@ -463,6 +502,7 @@ namespace SabertoothClient
                                 if (!Gwen.Input.InputHandler.IsLeftMouseDown)
                                 {
                                     player.SendSwapInvSlots(oldInvSlot, i);
+                                    if (IsItemOnHotBar(oldInvSlot)) { player.SendUpdateHotbar(i, currentSlot); }
                                     oldInvSlot = -1;                                    
                                     isMoveInv = false;
                                 }
@@ -485,76 +525,67 @@ namespace SabertoothClient
                     if (player.MainHand.Name != "None")
                     {
                         equipMain.ImageName = "Resources/Items/" + player.MainHand.Sprite + ".png";
-                        equipMain.Show();
                     }
                     else
                     {
-                        equipMain.Hide();
+                        equipMain.ImageName = "Resources/Skins/EmptyBkg.png";
                     }
 
                     if (player.OffHand.Name != "None")
                     {
                         equipOff.ImageName = "Resources/Items/" + player.OffHand.Sprite + ".png";
-                        equipOff.Show();
                     }
                     else
                     {
-                        equipOff.Hide();
+                        equipOff.ImageName = "Resources/Skins/EmptyBkg.png";
                     }
 
                     if (player.Chest.Name != "None")
                     {
                         equipChest.ImageName = "Resources/Items/" + player.Chest.Sprite + ".png";
-                        equipChest.Show();
                     }
                     else
                     {
-                        equipChest.Hide();
+                        equipChest.ImageName = "Resources/Skins/EmptyBkg.png";
                     }
 
                     if (player.Legs.Name != "None")
                     {
                         equipLegs.ImageName = "Resources/Items/" + player.Legs.Sprite + ".png";
-                        equipLegs.Show();
                     }
                     else
                     {
-                        equipLegs.Hide();
+                        equipLegs.ImageName = "Resources/Skins/EmptyBkg.png";
                     }
 
                     if (player.Feet.Name != "None")
                     {
-                        equipFeet.ImageName = "Resources/Items/" + player.Feet.Sprite + ".png";
-                        equipFeet.Show();
+                        equipFeet.ImageName = "Resources/Items/" + player.Feet.Sprite + ".png";                        
                     }
                     else
                     {
-                        equipFeet.Hide();
+                        equipFeet.ImageName = "Resources/Skins/EmptyBkg.png";
                     }
 
-                    if (equipMain.IsHovered)
+                    if (equipMain.IsHovered && player.MainHand.Name != "None")
                     {
                         SetStatWindow(equipMain.X, equipMain.Y, player.MainHand);
                     }
-                    else if (equipOff.IsHovered)
+                    else if (equipOff.IsHovered && player.OffHand.Name != "None")
                     {
                         SetStatWindow(equipMain.X, equipMain.Y, player.OffHand);
                     }
-                    else if (equipChest.IsHovered)
+                    else if (equipChest.IsHovered && player.Chest.Name != "None")
                     {
                         SetStatWindow(equipChest.X, equipChest.Y, player.Chest);
                     }
-                    else if (equipLegs.IsHovered)
+                    else if (equipLegs.IsHovered && player.Legs.Name != "None")
                     {
                         SetStatWindow(equipLegs.X, equipLegs.Y, player.Legs);
                     }
-                    else if (equipFeet.IsHovered)
+                    else if (equipFeet.IsHovered && player.Feet.Name != "None")
                     {
                         SetStatWindow(equipFeet.X, equipFeet.Y, player.Feet);
-                    }
-                    else
-                    {
-                        //RemoveStatWindow();
                     }
 
                     equipMDamage.Text = "Main Damage: " + player.MainHand.Damage;
@@ -570,9 +601,23 @@ namespace SabertoothClient
             }
         }
 
+        bool IsItemOnHotBar(int slot)
+        {
+            for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+            {
+                if (player.hotBar[i].InvNumber == slot)
+                {
+                    currentSlot = i;
+                    return true;
+                }
+            }
+            currentSlot = -1;
+            return false;            
+        }
+
         public void UpdateDebugWindow(int fps)
         {
-            if (d_Window != null && player != null)
+            if (d_Window != null && player != null && d_Window.IsVisible)
             {
                 d_Window.Title = "Debug Window - Admin";
                 d_FPS.Text = "FPS: " + fps;
@@ -581,7 +626,9 @@ namespace SabertoothClient
                 d_Y.Text = "Y: " + (player.Y + player.OffsetY);
                 d_Map.Text = "Map: " + player.Map;
                 d_Dir.Text = "Direction: " + player.Direction;
+                d_aDir.Text = "Aim Direction: " + player.AimDirection;
                 d_Sprite.Text = "Sprite: " + player.Sprite;
+
                 if (SabertoothClient.netClient.ServerConnection != null)
                 {
                     d_IP.Text = "IP Address: " + SabertoothClient.netClient.ServerConnection.RemoteEndPoint.Address.ToString();
@@ -590,6 +637,7 @@ namespace SabertoothClient
                     d_packetsIn.Text = "Packets Received: " + SabertoothClient.netClient.Statistics.ReceivedPackets.ToString();
                     d_packetsOut.Text = "Packets Sent: " + SabertoothClient.netClient.Statistics.SentPackets.ToString();
                 }
+
                 if (Joystick.IsConnected(0))
                 {
                     uint bcount = Joystick.GetButtonCount(0);
@@ -622,6 +670,10 @@ namespace SabertoothClient
                     }
                 }
 
+                d_mouseX.Text = "Mouse X: " + Gwen.Input.InputHandler.MousePosition.X;
+                d_mouseY.Text = "Mouse Y: " + Gwen.Input.InputHandler.MousePosition.Y;
+                d_tMouseX.Text = "Tile Mouse X: " + (Gwen.Input.InputHandler.MousePosition.X / PIC_X);
+                d_tMouseY.Text = "Tile Mouse Y: " + (Gwen.Input.InputHandler.MousePosition.Y / PIC_Y);
             }
         }
 
@@ -635,9 +687,11 @@ namespace SabertoothClient
             packDamage.Hide();
             packArmor.Hide();
             packHeRestore.Hide();
+            packMaRestore.Hide();
             packStr.Hide();
             packAgi.Hide();
-            packEdu.Hide();
+            packInt.Hide();
+            packEng.Hide();
             packSta.Hide();
             packASpeed.Hide();
             packType.Hide();
@@ -685,8 +739,8 @@ namespace SabertoothClient
                 case (int)ItemType.Drink:
                     packType.Text = "Drink";
                     break;
-                case (int)ItemType.FirstAid:
-                    packType.Text = "First Aid";
+                case (int)ItemType.Potion:
+                    packType.Text = "Potion";
                     break;
                 case (int)ItemType.Shirt:
                     packType.Text = "Chest";
@@ -696,7 +750,10 @@ namespace SabertoothClient
                     break;
                 case (int)ItemType.Shoes:
                     packType.Text = "Feet";
-                    break;                
+                    break;
+                case (int)ItemType.Book:
+                    packType.Text = "Book";
+                    break;
                 default:
                     packType.Text = "Other";
                     break;
@@ -726,6 +783,14 @@ namespace SabertoothClient
                 packHeRestore.Show();
             }
 
+            if (statItem.ManaRestore> 0)
+            {
+                n += 10;
+                packMaRestore.SetPosition(3, n);
+                packMaRestore.Text = "Mana Restore: " + statItem.ManaRestore;
+                packMaRestore.Show();
+            }
+
             if (statItem.Strength > 0)
             {
                 n += 10;
@@ -742,12 +807,20 @@ namespace SabertoothClient
                 packAgi.Show();
             }
 
-            if (statItem.Endurance > 0)
+            if (statItem.Intelligence > 0)
             {
                 n += 10;
-                packEdu.SetPosition(3, n);
-                packEdu.Text = "Endurance: " + statItem.Endurance;
-                packEdu.Show();
+                packInt.SetPosition(3, n);
+                packInt.Text = "Intelligence: " + statItem.Intelligence;
+                packInt.Show();
+            }
+
+            if (statItem.Energy > 0)
+            {
+                n += 10;
+                packEng.SetPosition(3, n);
+                packEng.Text = "Energy: " + statItem.Energy;
+                packEng.Show();
             }
 
             if (statItem.Stamina > 0)
@@ -795,9 +868,11 @@ namespace SabertoothClient
             shopDamage.Hide();
             shopArmor.Hide();
             shopHeRestore.Hide();
+            shopMaRestore.Hide();
             shopStr.Hide();
             shopAgi.Hide();
-            shopEdu.Hide();
+            shopInt.Hide();
+            shopEng.Hide();
             shopSta.Hide();
             shopASpeed.Hide();
             shopType.Hide();
@@ -845,8 +920,8 @@ namespace SabertoothClient
                 case (int)ItemType.Drink:
                     shopType.Text = "Drink";
                     break;
-                case (int)ItemType.FirstAid:
-                    shopType.Text = "First Aid";
+                case (int)ItemType.Potion:
+                    shopType.Text = "Potion";
                     break;
                 case (int)ItemType.Shirt:
                     shopType.Text = "Chest";
@@ -856,6 +931,9 @@ namespace SabertoothClient
                     break;
                 case (int)ItemType.Shoes:
                     shopType.Text = "Feet";
+                    break;
+                case (int)ItemType.Book:
+                    shopType.Text = "Book";
                     break;
                 default:
                     shopType.Text = "Other";
@@ -886,6 +964,14 @@ namespace SabertoothClient
                 shopHeRestore.Show();
             }
 
+            if (statItem.ManaRestore > 0)
+            {
+                n += 10;
+                shopMaRestore.SetPosition(3, n);
+                shopMaRestore.Text = "Mana Restore: " + statItem.ManaRestore;
+                shopMaRestore.Show();
+            }
+
             if (statItem.Strength > 0)
             {
                 n += 10;
@@ -902,12 +988,20 @@ namespace SabertoothClient
                 shopAgi.Show();
             }
 
-            if (statItem.Endurance > 0)
+            if (statItem.Intelligence > 0)
             {
                 n += 10;
-                shopEdu.SetPosition(3, n);
-                shopEdu.Text = "Endurance: " + statItem.Endurance;
-                shopEdu.Show();
+                shopInt.SetPosition(3, n);
+                shopInt.Text = "Intelligence: " + statItem.Intelligence;
+                shopInt.Show();
+            }
+
+            if (statItem.Energy > 0)
+            {
+                n += 10;
+                shopEng.SetPosition(3, n);
+                shopEng.Text = "Energy: " + statItem.Energy;
+                shopEng.Show();
             }
 
             if (statItem.Stamina > 0)
@@ -956,9 +1050,11 @@ namespace SabertoothClient
             bankDamage.Hide();
             bankArmor.Hide();
             bankHeRestore.Hide();
+            bankMaRestore.Hide();
             bankStr.Hide();
             bankAgi.Hide();
-            bankEdu.Hide();
+            bankInt.Hide();
+            bankEng.Hide();
             bankSta.Hide();
             bankASpeed.Hide();
             bankType.Hide();
@@ -1006,8 +1102,8 @@ namespace SabertoothClient
                 case (int)ItemType.Drink:
                     bankType.Text = "Drink";
                     break;
-                case (int)ItemType.FirstAid:
-                    bankType.Text = "First Aid";
+                case (int)ItemType.Potion:
+                    bankType.Text = "Potion";
                     break;
                 case (int)ItemType.Shirt:
                     bankType.Text = "Chest";
@@ -1017,6 +1113,9 @@ namespace SabertoothClient
                     break;
                 case (int)ItemType.Shoes:
                     bankType.Text = "Feet";
+                    break;
+                case (int)ItemType.Book:
+                    bankType.Text = "Book";
                     break;
                 default:
                     bankType.Text = "Other";
@@ -1047,6 +1146,14 @@ namespace SabertoothClient
                 bankHeRestore.Show();
             }
 
+            if (bankItem.ManaRestore> 0)
+            {
+                n += 10;
+                bankMaRestore.SetPosition(3, n);
+                bankMaRestore.Text = "Mana Restore: " + bankItem.ManaRestore;
+                bankMaRestore.Show();
+            }
+
             if (bankItem.Strength > 0)
             {
                 n += 10;
@@ -1063,12 +1170,20 @@ namespace SabertoothClient
                 bankAgi.Show();
             }
 
-            if (bankItem.Endurance > 0)
+            if (bankItem.Intelligence > 0)
             {
                 n += 10;
-                bankEdu.SetPosition(3, n);
-                bankEdu.Text = "Endurance: " + bankItem.Endurance;
-                bankEdu.Show();
+                bankInt.SetPosition(3, n);
+                bankInt.Text = "Intelligence: " + bankItem.Intelligence;
+                bankInt.Show();
+            }
+
+            if (bankItem.Energy > 0)
+            {
+                n += 10;
+                bankEng.SetPosition(3, n);
+                bankEng.Text = "Energy: " + bankItem.Energy;
+                bankEng.Show();
             }
 
             if (bankItem.Stamina > 0)
@@ -1116,9 +1231,11 @@ namespace SabertoothClient
             chestDamage.Hide();
             chestArmor.Hide();
             chestHeRestore.Hide();
+            chestMaRestore.Hide();
             chestStr.Hide();
             chestAgi.Hide();
-            chestEdu.Hide();
+            chestInt.Hide();
+            chestEng.Hide();
             chestSta.Hide();
             chestASpeed.Hide();
             chestType.Hide();
@@ -1166,8 +1283,8 @@ namespace SabertoothClient
                 case (int)ItemType.Drink:
                     chestType.Text = "Drink";
                     break;
-                case (int)ItemType.FirstAid:
-                    chestType.Text = "First Aid";
+                case (int)ItemType.Potion:
+                    chestType.Text = "Potion";
                     break;
                 case (int)ItemType.Shirt:
                     chestType.Text = "Chest";
@@ -1177,6 +1294,9 @@ namespace SabertoothClient
                     break;
                 case (int)ItemType.Shoes:
                     chestType.Text = "Feet";
+                    break;
+                case (int)ItemType.Book:
+                    chestType.Text = "Book";
                     break;
                 default:
                     chestType.Text = "Other";
@@ -1207,6 +1327,14 @@ namespace SabertoothClient
                 chestHeRestore.Show();
             }
 
+            if (chestItem.ManaRestore > 0)
+            {
+                n += 10;
+                chestMaRestore.SetPosition(3, n);
+                chestMaRestore.Text = "Mana Restore: " + chestItem.ManaRestore;
+                chestMaRestore.Show();
+            }
+
             if (chestItem.Strength > 0)
             {
                 n += 10;
@@ -1223,12 +1351,20 @@ namespace SabertoothClient
                 chestAgi.Show();
             }
 
-            if (chestItem.Endurance > 0)
+            if (chestItem.Intelligence > 0)
             {
                 n += 10;
-                chestEdu.SetPosition(3, n);
-                chestEdu.Text = "Endurance: " + chestItem.Endurance;
-                chestEdu.Show();
+                chestInt.SetPosition(3, n);
+                chestInt.Text = "Intelligence: " + chestItem.Intelligence;
+                chestInt.Show();
+            }
+
+            if (chestItem.Energy > 0)
+            {
+                n += 10;
+                chestEng.SetPosition(3, n);
+                chestEng.Text = "Energy: " + chestItem.Energy;
+                chestEng.Show();
             }
 
             if (chestItem.Stamina > 0)
@@ -1769,6 +1905,14 @@ namespace SabertoothClient
             packTab.Focus();
         }
 
+        private void HotBar_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel hotBarPicE = (ImagePanel)sender;
+            int hotBarSlot = ToInt32(hotBarPicE.Name);
+
+            player.SendUpdateHotbar(-1, hotBarSlot);
+        }
+
         private void InvPic_RightClicked(Base sender, ClickedEventArgs arguments)
         {
             ImagePanel invPicE = (ImagePanel)sender;
@@ -1914,6 +2058,11 @@ namespace SabertoothClient
                     }
                 }
             }
+        }
+
+        private void Equip_HoverLeave(Base sender, EventArgs arguments)
+        {
+            RemoveStatWindow();
         }
 
         private void CloseBank_Clicked(Base sender, ClickedEventArgs arguments)
@@ -2068,6 +2217,10 @@ namespace SabertoothClient
             shopHeRestore.SetPosition(3, 35);
             shopHeRestore.Text = "Health Restore: ?";
 
+            shopMaRestore = new Label(shopStatWindow);
+            shopMaRestore.SetPosition(3, 45);
+            shopMaRestore.Text = "Mana Restore: ?";
+
             shopStr = new Label(shopStatWindow);
             shopStr.SetPosition(3, 65);
             shopStr.Text = "Strength: ?";
@@ -2076,13 +2229,18 @@ namespace SabertoothClient
             shopAgi.SetPosition(3, 75);
             shopAgi.Text = "Agility: ?";
 
-            shopEdu = new Label(shopStatWindow);
-            shopEdu.SetPosition(3, 85);
-            shopEdu.Text = "Endurance: ?";
+            shopInt = new Label(shopStatWindow);
+            shopInt.SetPosition(3, 85);
+            shopInt.Text = "Intelligence: ?";
+
+            shopEng = new Label(shopStatWindow);
+            shopEng.SetPosition(3, 95);
+            shopEng.Text = "Energy: ?";
 
             shopSta = new Label(shopStatWindow);
-            shopSta.SetPosition(3, 95);
+            shopSta.SetPosition(3, 105);
             shopSta.Text = "Stamina: ?";
+
             shopASpeed = new Label(shopStatWindow);
             shopASpeed.SetPosition(3, 125);
             shopASpeed.Text = "Attack Speed: ?";
@@ -2160,6 +2318,10 @@ namespace SabertoothClient
             chestHeRestore.SetPosition(3, 35);
             chestHeRestore.Text = "Health Restore: ?";
 
+            chestMaRestore = new Label(chestStatWindow);
+            chestMaRestore.SetPosition(3, 45);
+            chestMaRestore.Text = "Mana Restore: ?";
+
             chestStr = new Label(chestStatWindow);
             chestStr.SetPosition(3, 65);
             chestStr.Text = "Strength: ?";
@@ -2168,12 +2330,16 @@ namespace SabertoothClient
             chestAgi.SetPosition(3, 75);
             chestAgi.Text = "Agility: ?";
 
-            chestEdu = new Label(chestStatWindow);
-            chestEdu.SetPosition(3, 85);
-            chestEdu.Text = "Endurance: ?";
+            chestInt = new Label(chestStatWindow);
+            chestInt.SetPosition(3, 85);
+            chestInt.Text = "Intelligence: ?";
+
+            chestEng = new Label(chestStatWindow);
+            chestEng.SetPosition(3, 95);
+            chestEng.Text = "Energy: ?";
 
             chestSta = new Label(chestStatWindow);
-            chestSta.SetPosition(3, 95);
+            chestSta.SetPosition(3, 105);
             chestSta.Text = "Stamina: ?";
 
             chestASpeed = new Label(chestStatWindow);
@@ -2212,6 +2378,7 @@ namespace SabertoothClient
                 hotbarPic[i].ImageName = "Resources/Skins/HotBarIcon.png";
                 hotbarPic[i].DragAndDrop_SetPackage(true, "Hotbar");
                 hotbarPic[i].HoverEnter += HotBar_HoverEnter;
+                hotbarPic[i].DoubleClicked += HotBar_DoubleClicked;                
 
                 hotBarLabel[i] = new Label(hotbarPic[i]);
                 hotBarLabel[i].SetPosition(3, 1);
@@ -2242,6 +2409,12 @@ namespace SabertoothClient
                 bankPic[i].DoubleClicked += BankPic_DoubleClicked;
                 bankPic[i].HoverEnter += BankPic_HoverEnter;
                 bankPic[i].HoverLeave += BankPic_HoverLeave;
+
+                bankPicValue[i] = new Label(bankWindow);
+                bankPicValue[i].SetSize(16, 10);
+                bankPicValue[i].SetPosition(24 + (c * 40), 22 + (n * 40));
+                bankPicValue[i].Text = "x1";
+                bankPicValue[i].TextColor = System.Drawing.Color.Red;
 
                 c += 1;
                 if (c > 9) { c = 0; }
@@ -2284,6 +2457,10 @@ namespace SabertoothClient
             bankHeRestore.SetPosition(3, 35);
             bankHeRestore.Text = "Health Restore: ?";
 
+            bankMaRestore = new Label(bankStatWindow);
+            bankMaRestore.SetPosition(3, 35);
+            bankMaRestore.Text = "Mana Restore: ?";
+
             bankStr = new Label(bankStatWindow);
             bankStr.SetPosition(3, 65);
             bankStr.Text = "Strength: ?";
@@ -2292,12 +2469,16 @@ namespace SabertoothClient
             bankAgi.SetPosition(3, 75);
             bankAgi.Text = "Agility: ?";
 
-            bankEdu = new Label(bankStatWindow);
-            bankEdu.SetPosition(3, 85);
-            bankEdu.Text = "Endurance: ?";
+            bankInt = new Label(bankStatWindow);
+            bankInt.SetPosition(3, 85);
+            bankInt.Text = "Intelligence: ?";
+
+            bankEng = new Label(bankStatWindow);
+            bankEng.SetPosition(3, 95);
+            bankEng.Text = "Energy: ?";
 
             bankSta = new Label(bankStatWindow);
-            bankSta.SetPosition(3, 95);
+            bankSta.SetPosition(3, 105);
             bankSta.Text = "Stamina: ?";
 
             bankASpeed = new Label(bankStatWindow);
@@ -2362,6 +2543,10 @@ namespace SabertoothClient
             packHeRestore.SetPosition(3, 35);
             packHeRestore.Text = "Health Restore: ?";
 
+            packMaRestore = new Label(statWindow);
+            packMaRestore.SetPosition(3, 45);
+            packMaRestore.Text = "Mana Restore: ?";
+
             packStr = new Label(statWindow);
             packStr.SetPosition(3, 65);
             packStr.Text = "Strength: ?";
@@ -2370,12 +2555,16 @@ namespace SabertoothClient
             packAgi.SetPosition(3, 75);
             packAgi.Text = "Agility: ?";
 
-            packEdu = new Label(statWindow);
-            packEdu.SetPosition(3, 85);
-            packEdu.Text = "Endurance: ?";
+            packInt = new Label(statWindow);
+            packInt.SetPosition(3, 85);
+            packInt.Text = "Intelligence: ?";
+
+            packEng = new Label(statWindow);
+            packEng.SetPosition(3, 95);
+            packEng.Text = "Energy: ?";
 
             packSta = new Label(statWindow);
-            packSta.SetPosition(3, 95);
+            packSta.SetPosition(3, 105);
             packSta.Text = "Stamina: ?";
 
             packASpeed = new Label(statWindow);
@@ -2466,7 +2655,13 @@ namespace SabertoothClient
                 invPic[i].DoubleClicked += InvPic_DoubleClicked;
                 invPic[i].RightClicked += InvPic_RightClicked;
                 invPic[i].HoverEnter += InvPic_HoverEnter;            
-                invPic[i].HoverLeave += InvPic_HoverLeave;            
+                invPic[i].HoverLeave += InvPic_HoverLeave;
+
+                invValue[i] = new Label(packTab.Page);
+                invValue[i].SetSize(16, 10);
+                invValue[i].SetPosition(24 + (c * 40), 22 + (n * 40));
+                invValue[i].Text = "x1";
+                invValue[i].TextColor = System.Drawing.Color.Red;
 
                 c += 1;
                 if (c > 4) { c = 0; }
@@ -2481,26 +2676,31 @@ namespace SabertoothClient
             equipMain.SetPosition(20, 5);
             equipMain.SetSize(32, 32);
             equipMain.DoubleClicked += EquipMain_DoubleClicked;
+            equipMain.HoverLeave += Equip_HoverLeave;
 
             equipOff = new ImagePanel(equipTab.Page);
             equipOff.SetPosition(65, 5);
             equipOff.SetSize(32, 32);
             equipOff.DoubleClicked += EquipOff_DoubleClicked;
+            equipOff.HoverLeave += Equip_HoverLeave;
 
             equipChest = new ImagePanel(equipTab.Page);
             equipChest.SetPosition(45, 50);
             equipChest.SetSize(32, 32);
             equipChest.DoubleClicked += EquipChest_DoubleClicked;
+            equipChest.HoverLeave += Equip_HoverLeave;
 
             equipLegs = new ImagePanel(equipTab.Page);
             equipLegs.SetPosition(45, 95);
             equipLegs.SetSize(32, 32);
             equipLegs.DoubleClicked += EquipLegs_DoubleClicked;
+            equipLegs.HoverLeave += Equip_HoverLeave;
 
             equipFeet = new ImagePanel(equipTab.Page);
             equipFeet.SetPosition(45, 140);
             equipFeet.SetSize(32, 32);
             equipFeet.DoubleClicked += EquipFeet_DoubleClicked;
+            equipFeet.HoverLeave += Equip_HoverLeave;
 
             equipBonus = new GroupBox(equipTab.Page);
             equipBonus.SetPosition(190, 95);
@@ -2839,74 +3039,121 @@ namespace SabertoothClient
         {
             d_Window = new WindowControl(parent.GetCanvas());
             d_Window.Title = "Debug";
-            d_Window.SetSize(200, 200);
+            d_Window.SetSize(200, 300);
             d_Window.Position(Gwen.Pos.Top);
             d_Window.Position(Gwen.Pos.Right);
             d_Window.DisableResizing();
 
+            int spacing = 5;
+
             d_FPS = new Label(d_Window);
-            d_FPS.SetPosition(10, 5);
+            d_FPS.SetPosition(10, spacing);
             d_FPS.Text = "FPS: ";
+            spacing += 10;
 
             d_Name = new Label(d_Window);
-            d_Name.SetPosition(10, 15);
+            d_Name.SetPosition(10, spacing);
             d_Name.Text = "Name: Player";
+            spacing += 10;
 
             d_X = new Label(d_Window);
-            d_X.SetPosition(10, 25);
+            d_X.SetPosition(10, spacing);
             d_X.Text = "X: ?";
+            spacing += 10;
 
             d_Y = new Label(d_Window);
-            d_Y.SetPosition(10, 35);
+            d_Y.SetPosition(10, spacing);
             d_Y.Text = "Y: ?";
+            spacing += 10;
 
             d_Map = new Label(d_Window);
-            d_Map.SetPosition(10, 45);
+            d_Map.SetPosition(10, spacing);
             d_Map.Text = "Map: ?";
+            spacing += 10;
 
             d_Dir = new Label(d_Window);
-            d_Dir.SetPosition(10, 55);
+            d_Dir.SetPosition(10, spacing);
             d_Dir.Text = "Direction : ?";
+            spacing += 10;
+
+            d_aDir = new Label(d_Window);
+            d_aDir.SetPosition(10, spacing);
+            d_aDir.Text = "Aim Direction : ?";
+            spacing += 10;
 
             d_Sprite = new Label(d_Window);
-            d_Sprite.SetPosition(10, 65);
+            d_Sprite.SetPosition(10, spacing);
             d_Sprite.Text = "Sprite: ?";
+            spacing += 10;
 
             d_IP = new Label(d_Window);
-            d_IP.SetPosition(10, 75);
+            d_IP.SetPosition(10, spacing);
             d_IP.Text = "IP Address: ?";
+            spacing += 10;
 
             d_Port = new Label(d_Window);
-            d_Port.SetPosition(10, 85);
+            d_Port.SetPosition(10, spacing);
             d_Port.Text = "Port: ?";
+            spacing += 10;
 
             d_Latency = new Label(d_Window);
-            d_Latency.SetPosition(10, 95);
+            d_Latency.SetPosition(10, spacing);
             d_Latency.Text = "Latency: ?";
+            spacing += 10;
 
             d_packetsIn = new Label(d_Window);
-            d_packetsIn.SetPosition(10, 105);
+            d_packetsIn.SetPosition(10, spacing);
             d_packetsIn.Text = "Packets In: ?";
+            spacing += 10;
 
             d_packetsOut = new Label(d_Window);
-            d_packetsOut.SetPosition(10, 115);
+            d_packetsOut.SetPosition(10, spacing);
             d_packetsOut.Text = "Packets Out: ?";
+            spacing += 10;
 
             d_Controller = new Label(d_Window);
-            d_Controller.SetPosition(10, 125);
+            d_Controller.SetPosition(10, spacing);
             d_Controller.Text = "Controller: ?";
+            spacing += 10;
 
             d_ConDir = new Label(d_Window);
-            d_ConDir.SetPosition(10, 135);
+            d_ConDir.SetPosition(10, spacing);
             d_ConDir.Text = "Dir: ?";
+            spacing += 10;
 
             d_ConButton = new Label(d_Window);
-            d_ConButton.SetPosition(10, 145);
+            d_ConButton.SetPosition(10, spacing);
             d_ConButton.Text = "Button: ?";
+            spacing += 10;
 
             d_Axis = new Label(d_Window);
-            d_Axis.SetPosition(10, 155);
+            d_Axis.SetPosition(10, spacing);
             d_Axis.Text = "Axis: ?";
+            spacing += 10;
+
+            d_mouseX = new Label(d_Window);
+            d_mouseX.SetPosition(10, spacing);
+            d_mouseX.Text = "Mouse X: ?";
+            spacing += 10;
+
+            d_mouseY = new Label(d_Window);
+            d_mouseY.SetPosition(10, spacing);
+            d_mouseY.Text = "Mouse Y: ?";
+            spacing += 10;
+
+            d_tMouseX = new Label(d_Window);
+            d_tMouseX.SetPosition(10, spacing);
+            d_tMouseX.Text = "Tile Mouse X: ?";
+            spacing += 10;
+
+            d_tMouseY = new Label(d_Window);
+            d_tMouseY.SetPosition(10, spacing);
+            d_tMouseY.Text = "Tile Mouse Y: ?";
+            spacing += 10;
+
+            d_Region = new Label(d_Window);
+            d_Region.SetPosition(10, spacing);
+            d_Region.Text = "Mouse Region: ?";
         }
 
         public void CreateNpcChatWindow(Base parent, int chatNum)

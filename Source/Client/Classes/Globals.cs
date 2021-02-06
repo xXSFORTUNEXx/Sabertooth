@@ -101,6 +101,9 @@ namespace SabertoothClient
         public const int PIC_H = 32;
         public const int SW_HIDE = 0;
         public const int SW_SHOW = 5;
+        public const int UPDATE_MENU_TIMER = 15;
+        public const int MAX_SCREEN_X = 32;
+        public const int MAX_SCREEN_Y = 24;
         #endregion
 
         #region Screen Globals
