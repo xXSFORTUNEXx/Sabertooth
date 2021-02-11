@@ -345,7 +345,19 @@ namespace SabertoothServer
         {
             if (players[index].Backpack[slot].Name != "None")
             {
+                int bankSlot = FindSameStackBankItem(players[index].Bank, players[index].Backpack[slot]);
+
+                if (bankSlot < MAX_BANK_SLOTS)
+                {
+                    players[index].Bank[bankSlot].Value += players[index].Backpack[slot].Value;
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                    HandleData.SendPlayerBank(index);
+                    HandleData.SendPlayerInv(index);
+                    return;
+                }
+
                 int newSlot = FindOpenBankSlot(players[index].Bank);
+
                 if (newSlot < MAX_BANK_SLOTS)
                 {
                     players[index].Bank[newSlot] = players[index].Backpack[slot];
@@ -365,7 +377,19 @@ namespace SabertoothServer
         {
             if (players[index].Bank[slot].Name != "None")
             {
+                int invSlot = FindSameStackInvItem(players[index].Backpack, players[index].Bank[slot]);
+
+                if (invSlot < MAX_INV_SLOTS)
+                {
+                    players[index].Backpack[invSlot].Value += players[index].Bank[slot].Value;
+                    players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                    HandleData.SendPlayerBank(index);
+                    HandleData.SendPlayerInv(index);
+                    return;
+                }
+
                 int newSlot = FindOpenInvSlot(players[index].Backpack);
+
                 if (newSlot < MAX_INV_SLOTS)
                 {
                     players[index].Backpack[newSlot] = players[index].Bank[slot];
@@ -733,7 +757,7 @@ namespace SabertoothServer
 
         void PickUpItem(int map, int index, int itemNum)
         {
-            int stackSlot = FindStackableInvSlot(Backpack, map, itemNum);
+            int stackSlot = FindStackInvSlot(Backpack, map, itemNum);
 
             if (stackSlot < MAX_INV_SLOTS)
             {
@@ -805,7 +829,7 @@ namespace SabertoothServer
             }
         }
 
-        int FindStackableInvSlot(Item[] s_Backpack, int map, int itemnum)
+        int FindStackInvSlot(Item[] s_Backpack, int map, int itemnum)
         {
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
@@ -815,6 +839,30 @@ namespace SabertoothServer
                 }
             }
             return MAX_INV_SLOTS;
+        }
+
+        public int FindSameStackInvItem(Item[] s_Backpack, Item s_Item)
+        {
+            for (int i = 0; i < MAX_INV_SLOTS; i++)
+            {
+                if (s_Backpack[i].Name == s_Item.Name)
+                {
+                    return i;
+                }
+            }
+            return MAX_INV_SLOTS;
+        }
+
+        int FindSameStackBankItem(Item[] s_Bank, Item s_Item)
+        {
+            for (int i = 0; i < MAX_BANK_SLOTS; i++)
+            {
+                if (s_Bank[i].Name == s_Item.Name)
+                {
+                    return i;
+                }
+            }
+            return MAX_BANK_SLOTS;
         }
 
         public int FindOpenInvSlot(Item[] s_Backpack)

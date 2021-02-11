@@ -94,6 +94,7 @@ namespace SabertoothClient
         public int chestNum;
         public bool inChest;
         public bool isChangingMaps;
+        int oldDirection = -1;
         #endregion
 
         #region Class Constructors
@@ -1424,126 +1425,142 @@ namespace SabertoothClient
             if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
 
-            int currentY = (cury / PIC_Y);
-            int currentX = (curx / PIC_X);
+            int currentY = (cury);
+            int currentX = (curx);
             int region = 0;
 
-            int x1 = 256 / PIC_Y;
-            int x2 = 512 / PIC_Y;
-            int x3 = 768 / PIC_Y;            
-            int y1 = 192 / PIC_X;
-            int y2 = 384 / PIC_X;
-            int y3 = 576 / PIC_X;            
+            int x1 = 256;
+            int x2 = 512;
+            int x3 = 768;            
+            int y1 = 192;
+            int y2 = 384;
+            int y3 = 576;            
 
             if (currentX < x1 && currentY < y1)
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 1;
             }
 
             if (currentX < x2 && currentX > x1 && currentY < y1)
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 2;
             }
 
             if (currentX > x2 && currentX < x3 && currentY < y1)
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 3;
             }
 
             if (currentX > x3 && currentY < y1)
             {
                 AimDirection = (int)Directions.Up;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 4;
             }
 
             if (currentX < x1 && currentY > y1 && currentY < y2)
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 5;
             }
 
             if (currentX > x1 && currentX < x2 && currentY > y1 && currentY < y2)
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 6;
             }
 
             if (currentX > x2 && currentX < x3 && currentY > y1 && currentY < y2)
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 7;
             }
 
             if (currentX > x3 && currentY > y1 && currentY < y2)
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 8;
             }
 
             if (currentX < x1 && currentY > y2 && currentY < y3)
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 9;
             }
 
             if (currentX > x1 && currentX < x2 && currentY > y2 && currentY < y3)
             {
                 AimDirection = (int)Directions.Left;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 10;
             }
 
             if (currentX > x2 && currentX < x3 && currentY > y2 && currentY < y3)
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 11;
             }
 
             if (currentX > x3 && currentY > y2 && currentY < y3)
             {
                 AimDirection = (int)Directions.Right;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 12;
             }
 
             if (currentX < x1 && currentY > y3)
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 13;
             }
 
             if (currentX > x1 && currentX < x2 && currentY > y3)
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 14;
             }
 
             if  (currentX > x2 && currentX < x3 && currentY > y3)
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 15;
             }
 
             if (currentX > x3 && currentY > y3)
             {
                 AimDirection = (int)Directions.Down;
-                SendUpdateDirection();
+                if (AimDirection != oldDirection) { SendUpdateDirection(); }
+                oldDirection = AimDirection;
                 region = 16;
             }
 

@@ -155,12 +155,26 @@ namespace SabertoothServer
 
             if (cash >= cost)
             {
+                int stack = players[index].FindSameStackInvItem(players[index].Backpack, items[itemNum]);
+
+                if (items[itemNum].Stackable && stack < MAX_INV_SLOTS)
+                {
+                    players[index].Wallet -= cost;
+                    players[index].Backpack[stack].Value += 1;
+                    HandleData.SendServerMessageTo(players[index].Connection, "You purchased " + items[itemNum].Name + " for " + cost + " gold!");
+                    HandleData.SendPlayerInv(index);
+                    HandleData.SendUpdatePlayerStats(index);
+                    return;
+                }
+                
                 int slot = players[index].FindOpenInvSlot(players[index].Backpack);
-                if (slot < 25)
+
+                if (slot < MAX_INV_SLOTS)
                 {
                     players[index].Wallet -= cost;
                     players[index].Backpack[slot] = items[itemNum];
-                    HandleData.SendServerMessageTo(players[index].Connection, "You purchased " + items[itemNum].Name + " for " + cost + " dollars!");
+                    players[index].Backpack[slot].Value = 1;
+                    HandleData.SendServerMessageTo(players[index].Connection, "You purchased " + items[itemNum].Name + " for " + cost + " gold!");
                     HandleData.SendPlayerInv(index);
                     HandleData.SendUpdatePlayerStats(index);
                 }
@@ -172,7 +186,7 @@ namespace SabertoothServer
             }
             else
             {
-                HandleData.SendServerMessageTo(players[index].Connection, "You don't have enough money!");
+                HandleData.SendServerMessageTo(players[index].Connection, "You don't have enough gold!");
                 return;
             }
         }
@@ -180,10 +194,20 @@ namespace SabertoothServer
         public void SellShopItem(int index, int slot)
         {
             int money = players[index].Wallet;
-            int price = players[index].Backpack[slot].Price;
+            int price = (players[index].Backpack[slot].Price * players[index].Backpack[slot].Value);
+
             money += price;
             players[index].Wallet = money;
-            HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Name + " for " + price + " dollars!");
+
+            if (players[index].Backpack[slot].Value > 1)
+            {
+                HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Value + "x " + players[index].Backpack[slot].Name + " for " + price + " gold!");
+            }
+            else
+            {
+                HandleData.SendServerMessageTo(players[index].Connection, "You sold " + players[index].Backpack[slot].Name + " for " + price + " gold!");
+            }            
+
             players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, false);            
             HandleData.SendPlayerInv(index);
             HandleData.SendUpdatePlayerStats(index);

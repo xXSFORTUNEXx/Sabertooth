@@ -768,12 +768,12 @@ namespace SabertoothClient
                 if (TickCount - walkTick > 100)
                 {
                     players[HandleData.myIndex].CheckMovement();
-                    players[HandleData.myIndex].CheckControllerMovement();
-                    players[HandleData.myIndex].CheckChangeDirection();
-                    players[HandleData.myIndex].CheckControllerChangeDirection();
+                    //players[HandleData.myIndex].CheckControllerMovement();
+                    //players[HandleData.myIndex].CheckChangeDirection();
+                    //players[HandleData.myIndex].CheckControllerChangeDirection();
                     players[HandleData.myIndex].CheckPlayerInteraction();
-                    players[HandleData.myIndex].CheckControllerPlayerInteraction();
-                    players[HandleData.myIndex].CheckControllerButtonPress();
+                    //players[HandleData.myIndex].CheckControllerPlayerInteraction();
+                    //players[HandleData.myIndex].CheckControllerButtonPress();
                     players[HandleData.myIndex].CheckHotBarKeyPress();
                     players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
                     ProcessMovement();

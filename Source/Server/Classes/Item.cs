@@ -81,7 +81,7 @@ namespace SabertoothServer
             Intelligence = 0;
             Energy = 0;
             Stamina = 0;
-            Value = 0;
+            Value = 1;
             Price = 1;
             Rarity = 0;
             CoolDown = 0;

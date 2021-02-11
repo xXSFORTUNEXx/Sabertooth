@@ -1087,7 +1087,7 @@ namespace SabertoothClient
             {
                 gui.outputChat.AddRow(msg);
             }
-            //if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); } *chatvis
+            if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
             gui.outputChat.ScrollToBottom();
             gui.outputChat.UnselectAll();
         }
@@ -1410,7 +1410,7 @@ namespace SabertoothClient
         {
             canvas.DeleteAllChildren();
             gui.CreateDebugWindow(canvas);
-            //gui.d_Window.Hide();
+            gui.d_Window.Hide();
             gui.CreateMenuWindow(canvas);
             gui.menuWindow.Hide();
             gui.CreateChatWindow(canvas);
