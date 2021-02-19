@@ -95,6 +95,7 @@ namespace SabertoothServer
         public static WorldTime worldTime = new WorldTime();
         public static Instance instance = new Instance();
         public static Random RND = new Random();
+        public static Thread commandThread;
         #endregion
 
         #region Variables
@@ -127,7 +128,7 @@ namespace SabertoothServer
         {
             InitArrays();
 
-            Thread commandThread = new Thread(() => CommandWindow());
+            commandThread = new Thread(() => CommandWindow());
             commandThread.Start();
            
             isRunning = true;
@@ -684,9 +685,9 @@ namespace SabertoothServer
 
         static void CommandWindow()
         {
-            string input;
+            string input = "";
             while (true)
-            {
+            {                
                 Console.Write(">");
                 input = Console.ReadLine().ToLower();
                 bool isDynamic = false;

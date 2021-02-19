@@ -256,6 +256,16 @@ namespace SabertoothClient
         Label equipEng;
         #endregion
 
+        #region StackWindow
+        WindowControl stackWindow;
+        Label stackItemName;
+        Label stackItemValue;
+        HorizontalSlider stackSlider;
+        int tranAmount;
+        Button stackOk;
+        Button stackCncl;
+        #endregion
+
         #region SkillsTab
         public TabButton skillsTab;
         #endregion
@@ -1884,10 +1894,21 @@ namespace SabertoothClient
             {
                 if (player.Backpack[itemSlot].Name != "None")
                 {
+                    if (player.Backpack[itemSlot].Stackable && player.Backpack[itemSlot].Value > 1)
+                    {
+                        //CreateValueMoveWindow(sender, player.Bank[bankSlot].Name, player.Bank[bankSlot].Value);
+                        tranAmount = player.Backpack[itemSlot].Value / 2;
+                    }
+                    else
+                    {
+                        tranAmount = 1;
+                    }
+
                     NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.DepositItem);
                     outMSG.WriteVariableInt32(HandleData.myIndex);
                     outMSG.WriteVariableInt32(itemSlot);
+                    outMSG.WriteVariableInt32(tranAmount);
                     SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
@@ -2006,13 +2027,23 @@ namespace SabertoothClient
             ImagePanel bankPicE = (ImagePanel)sender;
             int bankSlot = ToInt32(bankPicE.Name);
             
-
             if (player.Bank[bankSlot].Name != "None")
             {
+                if (player.Bank[bankSlot].Stackable && player.Bank[bankSlot].Value > 1)
+                {
+                    //CreateValueMoveWindow(sender, player.Bank[bankSlot].Name, player.Bank[bankSlot].Value);
+                    tranAmount = player.Bank[bankSlot].Value / 2;
+                }
+                else
+                {
+                    tranAmount = 1;
+                }
+
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.WithdrawItem);
                 outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(bankSlot);
+                outMSG.WriteVariableInt32(tranAmount);
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
             }
         }
@@ -2152,6 +2183,24 @@ namespace SabertoothClient
             {
                 questDetails.AddRow(msg);
             }
+        }
+
+        private void StackSlider_ValueChanged(Base sender, EventArgs arguments)
+        {
+            HorizontalSlider horizontalSlider = (HorizontalSlider)sender;
+
+            tranAmount = ToInt32(horizontalSlider.Value);
+            stackItemValue.Text = "x" + tranAmount + " / " + stackItemValue.Name;
+        }
+
+        private void StackOk_Pressed(Base sender, EventArgs arguments)
+        {            
+            stackWindow.Close();
+        }
+
+        private void StackCncl_Pressed(Base sender, EventArgs arguments)
+        {
+            stackWindow.Close();
         }
         #endregion
 
@@ -3224,6 +3273,47 @@ namespace SabertoothClient
                     npcChatOption[i].Show();
                 }                                
             }
+        }
+
+        void CreateValueMoveWindow(Base parent, string itemName, float maxAmount)
+        {
+            stackWindow = new WindowControl(parent.GetCanvas());
+            stackWindow.Title = "Transfer Stack";
+            stackWindow.SetSize(175, 175);
+            stackWindow.SetPosition(150, 150);
+            stackWindow.DisableResizing();
+            stackWindow.IsClosable = false;
+
+            stackItemName = new Label(stackWindow);
+            stackItemName.Name = itemName;
+            stackItemName.Text = itemName;
+            stackItemName.SetPosition(35, 10);
+
+            stackItemValue = new Label(stackWindow);
+            stackItemValue.Name = maxAmount.ToString();
+            stackItemValue.Text = "x" + ToInt32(maxAmount / 2) + " / " + maxAmount;          
+
+            stackSlider = new HorizontalSlider(stackWindow);            
+            stackSlider.SetSize(76, 15);
+            stackSlider.ValueChanged += StackSlider_ValueChanged;
+            stackSlider.SetRange(1, maxAmount);
+            stackSlider.SnapToNotches = true;
+            stackSlider.NotchCount = ToInt32(maxAmount) - 1;
+            stackSlider.Value = (maxAmount / 2);       
+            tranAmount = ToInt32(stackSlider.Value);            
+
+            stackOk = new Button(stackWindow);
+            stackOk.Pressed += StackOk_Pressed;
+            stackOk.Text = "Ok";
+
+            stackCncl = new Button(stackWindow);
+            stackCncl.Pressed += StackCncl_Pressed;
+            stackCncl.Text = "Cancel";
+            
+            Gwen.Align.PlaceDownLeft(stackItemValue, stackItemName, 10);
+            Gwen.Align.PlaceDownLeft(stackSlider, stackItemValue, 10);
+            Gwen.Align.PlaceDownLeft(stackOk, stackSlider, 10);
+            Gwen.Align.PlaceDownLeft(stackCncl, stackOk, 10);
         }
         #endregion
 

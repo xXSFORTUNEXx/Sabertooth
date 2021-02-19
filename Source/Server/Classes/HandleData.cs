@@ -454,16 +454,18 @@ namespace SabertoothServer
         {
             int index = incMSG.ReadVariableInt32();
             int slot = incMSG.ReadVariableInt32();
+            int value = incMSG.ReadVariableInt32();
 
-            players[index].DepositItem(index, slot);
+            players[index].DepositItem(index, slot, value);
         }
 
         public static void HandleWithdrawItem(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
             int slot = incMSG.ReadVariableInt32();
+            int amount = incMSG.ReadVariableInt32();
 
-            players[index].WithdrawItem(index, slot);
+            players[index].WithdrawItem(index, slot, amount);
         }
 
         static void HandleInteraction(NetIncomingMessage incMSG)

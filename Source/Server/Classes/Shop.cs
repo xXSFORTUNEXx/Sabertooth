@@ -155,7 +155,7 @@ namespace SabertoothServer
 
             if (cash >= cost)
             {
-                int stack = players[index].FindSameStackInvItem(players[index].Backpack, items[itemNum]);
+                int stack = players[index].FindSameInvItem(players[index].Backpack, items[itemNum]);
 
                 if (items[itemNum].Stackable && stack < MAX_INV_SLOTS)
                 {
