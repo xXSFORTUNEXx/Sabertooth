@@ -235,6 +235,7 @@ namespace SabertoothClient
         Label packType;
         Label packValue;
         Label packPrice;
+        Label packStack;
         #endregion
 
         #region EquipTab
@@ -294,7 +295,7 @@ namespace SabertoothClient
             if (bankWindow != null && bankWindow.IsVisible)
             {
                 bankWindow.Title = player.Name + "'s Bank";
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < MAX_BANK_SLOTS; i++)
                 {
                     if (player.Bank[i].Name != "None" && player.Bank[i].Sprite > 0)
                     {
@@ -707,6 +708,7 @@ namespace SabertoothClient
             packType.Hide();
             packValue.Hide();
             packPrice.Hide();
+            packStack.Hide();
 
             packName.Text = statItem.Name;
             switch (statItem.Rarity)
@@ -863,6 +865,14 @@ namespace SabertoothClient
                 packPrice.SetPosition(3, n);
                 packPrice.Text = "Price: " + statItem.Price;
                 packPrice.Show();
+            }
+
+            if (statItem.MaxStack > 1)
+            {
+                n += 10;
+                packStack.SetPosition(3, n);
+                packStack.Text = "Max Stack: " + statItem.MaxStack;
+                packStack.Show();
             }
 
             statWindow.Show();
@@ -1896,13 +1906,11 @@ namespace SabertoothClient
                 {
                     if (player.Backpack[itemSlot].Stackable && player.Backpack[itemSlot].Value > 1)
                     {
-                        //CreateValueMoveWindow(sender, player.Bank[bankSlot].Name, player.Bank[bankSlot].Value);
-                        tranAmount = player.Backpack[itemSlot].Value / 2;
+                        CreateValueMoveWindow(sender, player.Backpack[itemSlot].Name, player.Backpack[itemSlot].Value, itemSlot, 2);
+                        return;
                     }
-                    else
-                    {
-                        tranAmount = 1;
-                    }
+
+                    tranAmount = 1;
 
                     NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                     outMSG.Write((byte)PacketTypes.DepositItem);
@@ -1910,6 +1918,7 @@ namespace SabertoothClient
                     outMSG.WriteVariableInt32(itemSlot);
                     outMSG.WriteVariableInt32(tranAmount);
                     SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                    Logging.WriteMessageLog("Deposit Item Sent");
                 }
             }
             else
@@ -2031,20 +2040,18 @@ namespace SabertoothClient
             {
                 if (player.Bank[bankSlot].Stackable && player.Bank[bankSlot].Value > 1)
                 {
-                    //CreateValueMoveWindow(sender, player.Bank[bankSlot].Name, player.Bank[bankSlot].Value);
-                    tranAmount = player.Bank[bankSlot].Value / 2;
-                }
-                else
-                {
-                    tranAmount = 1;
+                    CreateValueMoveWindow(sender, player.Bank[bankSlot].Name, player.Bank[bankSlot].Value, bankSlot, 1);
+                    return;
                 }
 
+                tranAmount = 1;
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.WithdrawItem);
                 outMSG.WriteVariableInt32(HandleData.myIndex);
                 outMSG.WriteVariableInt32(bankSlot);
                 outMSG.WriteVariableInt32(tranAmount);
                 SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                Logging.WriteMessageLog("Withdraw Item Sent");
             }
         }
 
@@ -2190,16 +2197,39 @@ namespace SabertoothClient
             HorizontalSlider horizontalSlider = (HorizontalSlider)sender;
 
             tranAmount = ToInt32(horizontalSlider.Value);
-            stackItemValue.Text = "x" + tranAmount + " / " + stackItemValue.Name;
+            stackItemValue.Text = "x" + tranAmount + " / " + stackSlider.Name;
         }
 
         private void StackOk_Pressed(Base sender, EventArgs arguments)
-        {            
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            int moveType = ToInt32(stackItemValue.Name);
+            if (moveType == 1)
+            {
+                outMSG.Write((byte)PacketTypes.WithdrawItem);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
+                int slot = ToInt32(stackItemName.Name);
+                outMSG.WriteVariableInt32(slot);
+                outMSG.WriteVariableInt32(tranAmount);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                Logging.WriteMessageLog("Withdraw Item Sent");
+            }
+            else if (moveType == 2)
+            {
+                outMSG.Write((byte)PacketTypes.DepositItem);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
+                int slot = ToInt32(stackItemName.Name);
+                outMSG.WriteVariableInt32(slot);
+                outMSG.WriteVariableInt32(tranAmount);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+                Logging.WriteMessageLog("Deposit Item Sent");
+            }
             stackWindow.Close();
         }
 
         private void StackCncl_Pressed(Base sender, EventArgs arguments)
         {
+            tranAmount = 1;
             stackWindow.Close();
         }
         #endregion
@@ -2625,12 +2655,16 @@ namespace SabertoothClient
             packType.Text = "Type: ?";
 
             packValue = new Label(statWindow);
-            packValue.SetPosition(3, 160);
+            packValue.SetPosition(3, 165);
             packValue.Text = "Value: ?";
 
             packPrice = new Label(statWindow);
-            packPrice.SetPosition(3, 160);
+            packPrice.SetPosition(3, 185);
             packPrice.Text = "Price: ?";
+
+            packStack = new Label(statWindow);
+            packStack.SetPosition(3, 205);
+            packStack.Text = "Max Stack: ?";
             #endregion
 
             charTab = menuTabs.AddPage("Character");
@@ -3275,7 +3309,7 @@ namespace SabertoothClient
             }
         }
 
-        void CreateValueMoveWindow(Base parent, string itemName, float maxAmount)
+        void CreateValueMoveWindow(Base parent, string itemName, float maxAmount, int slot, int moveType)
         {
             stackWindow = new WindowControl(parent.GetCanvas());
             stackWindow.Title = "Transfer Stack";
@@ -3285,16 +3319,17 @@ namespace SabertoothClient
             stackWindow.IsClosable = false;
 
             stackItemName = new Label(stackWindow);
-            stackItemName.Name = itemName;
+            stackItemName.Name = slot.ToString();
             stackItemName.Text = itemName;
             stackItemName.SetPosition(35, 10);
 
             stackItemValue = new Label(stackWindow);
-            stackItemValue.Name = maxAmount.ToString();
+            stackItemValue.Name = moveType.ToString();
             stackItemValue.Text = "x" + ToInt32(maxAmount / 2) + " / " + maxAmount;          
 
             stackSlider = new HorizontalSlider(stackWindow);            
             stackSlider.SetSize(76, 15);
+            stackSlider.Name = maxAmount.ToString();
             stackSlider.ValueChanged += StackSlider_ValueChanged;
             stackSlider.SetRange(1, maxAmount);
             stackSlider.SnapToNotches = true;

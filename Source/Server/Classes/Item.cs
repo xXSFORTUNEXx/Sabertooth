@@ -31,6 +31,7 @@ namespace SabertoothServer
         public int BonusXP { get; set; }
         public int SpellNum { get; set; }
         public bool Stackable { get; set; }
+        public int MaxStack { get; set; }
 
         public Item() { }
 
@@ -40,7 +41,7 @@ namespace SabertoothServer
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int hpRestore, int mprestore, int str, int agi, int intel, int ene, int sta, int value, int price, int rarity, 
-            int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stacked)
+            int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stacked, int maxStack)
         {
             Name = name;
             Sprite = sprite;
@@ -64,6 +65,7 @@ namespace SabertoothServer
             BonusXP = bonusxp;
             SpellNum = spellnum;
             Stackable = stacked;
+            MaxStack = maxStack;
         }
 
         public void CreateItemInDatabase()
@@ -90,6 +92,7 @@ namespace SabertoothServer
             BonusXP = 0;
             SpellNum = 0;
             Stackable = false;
+            MaxStack = MAX_STACK_SIZE;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             string script = ReadAllText("SQL Data Scripts/Insert_Item.sql");
@@ -120,6 +123,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = MaxStack;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -157,6 +161,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = MaxStack;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -199,7 +204,8 @@ namespace SabertoothServer
                             AddMaxMana = ToInt32(reader[i]); i += 1;
                             BonusXP = ToInt32(reader[i]); i += 1;
                             SpellNum = ToInt32(reader[i]); i += 1;
-                            Stackable = ToBoolean(reader[i]);
+                            Stackable = ToBoolean(reader[i]); i += 1;
+                            MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }

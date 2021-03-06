@@ -26,7 +26,8 @@ INSERT INTO ITEMS (
 	AddMax_Mana,
 	Bonus_XP,
 	Spell_Number,
-	Stackable
+	Stackable,
+	MaxStack
 	)
 VALUES (
 	@name,
@@ -50,5 +51,6 @@ VALUES (
 	@addmaxmp,
 	@bonusxp,
 	@spellnum,
-	@stack
+	@stack,
+	@maxstack
 	)

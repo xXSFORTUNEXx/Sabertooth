@@ -35,6 +35,7 @@ namespace SabertoothClient
         public int BonusXP { get; set; }
         public int SpellNum { get; set; }
         public bool Stackable { get; set; }
+        public int MaxStack { get; set; }
 
         public Item() { }
 
@@ -44,7 +45,7 @@ namespace SabertoothClient
         }
 
         public Item(string name, int sprite, int damage, int armor, int type, int attackspeed, int hpRestore, int mprestore,
-            int str, int agi, int intel, int ene, int sta, int value, int price, int rarity, int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stack)
+            int str, int agi, int intel, int ene, int sta, int value, int price, int rarity, int cooldown, int addmaxhp, int addmaxmp, int bonusxp, int spellnum, bool stack, int maxstack)
         {
             Name = name;
             Sprite = sprite;
@@ -68,6 +69,7 @@ namespace SabertoothClient
             BonusXP = bonusxp;
             SpellNum = spellnum;
             Stackable = stack;
+            MaxStack = maxstack;
         }
     }
 

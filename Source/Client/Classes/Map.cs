@@ -589,6 +589,7 @@ namespace SabertoothClient
         public int BonusXP { get; set; }
         public int SpellNum { get; set; }
         public bool Stackable { get; set; }
+        public int MaxStack { get; set; }
 
         public int ItemNum { get; set; }
         public int X { get; set; }
@@ -628,8 +629,11 @@ namespace SabertoothClient
             itemPic[2] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32) + 32), new Vector2f(32, 32));
             itemPic[3] = new Vertex(new Vector2f((X * 32), (Y * 32) + 32), new Vector2f(0, 32));
 
-            states.Texture = c_ItemSprite[Sprite - 1];
-            target.Draw(itemPic, states);
+            if (Sprite > 0)
+            {
+                states.Texture = c_ItemSprite[Sprite - 1];
+                target.Draw(itemPic, states);
+            }
         }
     }
 

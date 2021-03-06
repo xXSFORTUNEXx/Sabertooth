@@ -586,6 +586,7 @@ namespace SabertoothClient
             players[myIndex].Chest.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].Chest.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].Chest.Stackable = incMSG.ReadBoolean();
+            players[myIndex].Chest.MaxStack = incMSG.ReadVariableInt32();
 
             players[myIndex].Legs.Name = incMSG.ReadString();
             players[myIndex].Legs.Sprite = incMSG.ReadVariableInt32();
@@ -609,6 +610,7 @@ namespace SabertoothClient
             players[myIndex].Legs.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].Legs.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].Legs.Stackable = incMSG.ReadBoolean();
+            players[myIndex].Legs.MaxStack = incMSG.ReadVariableInt32();
 
             players[myIndex].Feet.Name = incMSG.ReadString();
             players[myIndex].Feet.Sprite = incMSG.ReadVariableInt32();
@@ -632,6 +634,7 @@ namespace SabertoothClient
             players[myIndex].Feet.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].Feet.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].Feet.Stackable = incMSG.ReadBoolean();
+            players[myIndex].Feet.MaxStack = incMSG.ReadVariableInt32();
         }
 
         static void HandlePlayerQuestList(NetIncomingMessage incMSG)
@@ -695,6 +698,7 @@ namespace SabertoothClient
                     players[myIndex].Backpack[i].BonusXP = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].SpellNum = incMSG.ReadVariableInt32();
                     players[myIndex].Backpack[i].Stackable = incMSG.ReadBoolean();
+                    players[myIndex].Backpack[i].MaxStack = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -727,6 +731,7 @@ namespace SabertoothClient
                     players[myIndex].Bank[i].BonusXP = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].SpellNum = incMSG.ReadVariableInt32();
                     players[myIndex].Bank[i].Stackable = incMSG.ReadBoolean();
+                    players[myIndex].Bank[i].MaxStack = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -786,6 +791,7 @@ namespace SabertoothClient
                     items[i].BonusXP = incMSG.ReadVariableInt32();
                     items[i].SpellNum = incMSG.ReadVariableInt32();
                     items[i].Stackable = incMSG.ReadBoolean();
+                    items[i].MaxStack = incMSG.ReadVariableInt32();
                 }
             }
         }
@@ -815,6 +821,7 @@ namespace SabertoothClient
             items[index].BonusXP = incMSG.ReadVariableInt32();
             items[index].SpellNum = incMSG.ReadVariableInt32();
             items[index].Stackable = incMSG.ReadBoolean();
+            items[index].MaxStack = incMSG.ReadVariableInt32();
         }
 
         static void HandleNpcs(NetIncomingMessage incMSG)
@@ -890,6 +897,7 @@ namespace SabertoothClient
                 map.m_MapItem[i].BonusXP = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].SpellNum = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].Stackable = incMSG.ReadBoolean();
+                map.m_MapItem[i].MaxStack = incMSG.ReadVariableInt32();
                 map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
             }
             LoadMainGUI();
@@ -923,6 +931,7 @@ namespace SabertoothClient
             map.m_MapItem[itemNum].BonusXP = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].SpellNum = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].Stackable = incMSG.ReadBoolean();
+            map.m_MapItem[itemNum].MaxStack = incMSG.ReadVariableInt32();
             map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
         }
 
@@ -1187,6 +1196,7 @@ namespace SabertoothClient
             players[myIndex].MainHand.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Stackable = incMSG.ReadBoolean();
+            players[myIndex].MainHand.MaxStack = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
             players[myIndex].OffHand.Name = incMSG.ReadString();
@@ -1211,6 +1221,7 @@ namespace SabertoothClient
             players[myIndex].OffHand.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Stackable = incMSG.ReadBoolean();
+            players[myIndex].OffHand.MaxStack = incMSG.ReadVariableInt32();
         }
 
         static void HandleWeaponsUpdate(NetIncomingMessage incMSG)
@@ -1238,6 +1249,7 @@ namespace SabertoothClient
             players[myIndex].MainHand.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].MainHand.Stackable = incMSG.ReadBoolean();
+            players[myIndex].MainHand.MaxStack = incMSG.ReadVariableInt32();
 
             //Secondary Weapon
             players[myIndex].OffHand.Name = incMSG.ReadString();
@@ -1262,6 +1274,7 @@ namespace SabertoothClient
             players[myIndex].OffHand.BonusXP = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.SpellNum = incMSG.ReadVariableInt32();
             players[myIndex].OffHand.Stackable = incMSG.ReadBoolean();
+            players[myIndex].OffHand.MaxStack = incMSG.ReadVariableInt32();
         }
 
         static void HandlePlayers(NetIncomingMessage incMSG)

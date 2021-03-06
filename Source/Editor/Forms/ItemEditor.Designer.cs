@@ -79,6 +79,8 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
+            this.lblStackSize = new System.Windows.Forms.Label();
+            this.scrlMaxStack = new System.Windows.Forms.HScrollBar();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -88,6 +90,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.scrlMaxStack);
+            this.pnlMain.Controls.Add(this.lblStackSize);
             this.pnlMain.Controls.Add(this.scrlSpellNum);
             this.pnlMain.Controls.Add(this.lblSpellNum);
             this.pnlMain.Controls.Add(this.chkStackable);
@@ -110,7 +114,7 @@
             this.pnlMain.Controls.Add(this.lblName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(197, 409);
+            this.pnlMain.Size = new System.Drawing.Size(197, 446);
             this.pnlMain.TabIndex = 5;
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
@@ -118,7 +122,7 @@
             // 
             // scrlSpellNum
             // 
-            this.scrlSpellNum.Location = new System.Drawing.Point(21, 365);
+            this.scrlSpellNum.Location = new System.Drawing.Point(21, 409);
             this.scrlSpellNum.Name = "scrlSpellNum";
             this.scrlSpellNum.Size = new System.Drawing.Size(150, 17);
             this.scrlSpellNum.TabIndex = 26;
@@ -127,7 +131,7 @@
             // lblSpellNum
             // 
             this.lblSpellNum.AutoSize = true;
-            this.lblSpellNum.Location = new System.Drawing.Point(17, 350);
+            this.lblSpellNum.Location = new System.Drawing.Point(22, 394);
             this.lblSpellNum.Name = "lblSpellNum";
             this.lblSpellNum.Size = new System.Drawing.Size(82, 13);
             this.lblSpellNum.TabIndex = 25;
@@ -623,11 +627,31 @@
             this.lblStrength.TabIndex = 36;
             this.lblStrength.Text = "Strength: 0";
             // 
+            // lblStackSize
+            // 
+            this.lblStackSize.AutoSize = true;
+            this.lblStackSize.Location = new System.Drawing.Point(20, 350);
+            this.lblStackSize.Name = "lblStackSize";
+            this.lblStackSize.Size = new System.Drawing.Size(70, 13);
+            this.lblStackSize.TabIndex = 27;
+            this.lblStackSize.Text = "Max Stack: 1";
+            // 
+            // scrlMaxStack
+            // 
+            this.scrlMaxStack.Location = new System.Drawing.Point(20, 367);
+            this.scrlMaxStack.Maximum = 255;
+            this.scrlMaxStack.Minimum = 1;
+            this.scrlMaxStack.Name = "scrlMaxStack";
+            this.scrlMaxStack.Size = new System.Drawing.Size(153, 17);
+            this.scrlMaxStack.TabIndex = 28;
+            this.scrlMaxStack.Value = 1;
+            this.scrlMaxStack.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMaxStack_Scroll);
+            // 
             // ItemEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(575, 453);
+            this.ClientSize = new System.Drawing.Size(584, 470);
             this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlConsume);
             this.Controls.Add(this.groupBox1);
@@ -701,5 +725,7 @@
         private System.Windows.Forms.Label lblAddMaxMP;
         private System.Windows.Forms.HScrollBar scrlAddMaxHP;
         private System.Windows.Forms.Label lblAddMaxHP;
+        private System.Windows.Forms.HScrollBar scrlMaxStack;
+        private System.Windows.Forms.Label lblStackSize;
     }
 }

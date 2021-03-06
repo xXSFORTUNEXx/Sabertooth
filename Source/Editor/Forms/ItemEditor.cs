@@ -292,6 +292,7 @@ namespace Editor.Forms
             scrlAddMaxMP.Value = e_Item.AddMaxMana;
             scrlBonusXP.Value = e_Item.BonusXP;
             scrlSpellNum.Value = e_Item.SpellNum;
+            scrlMaxStack.Value = e_Item.MaxStack;
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");                       
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
@@ -310,6 +311,8 @@ namespace Editor.Forms
             lblAddMaxMP.Text = "Add Max MP: " + scrlAddMaxMP.Value;
             lblBonusXP.Text = "Bonus XP: " + scrlBonusXP.Value;
             lblSpellNum.Text = "Spell Number: " + scrlSpellNum.Value;
+            lblStackSize.Text = "Max Stack: " + scrlMaxStack.Value;
+            chkStackable.Checked = e_Item.Stackable;
             switch (scrlRarity.Value)
             {
                 case (int)Rarity.Normal:
@@ -334,6 +337,13 @@ namespace Editor.Forms
             UnModSave = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }
+        }
+
+        private void scrlMaxStack_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblStackSize.Text = "Max Stack: " + (scrlMaxStack.Value);
+            e_Item.MaxStack = scrlMaxStack.Value;
+            UnModSave = true;
         }
     }
 }

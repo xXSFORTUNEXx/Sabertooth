@@ -28,5 +28,6 @@ CREATE TABLE Items (
 	AddMax_Mana INTEGER,
 	Bonus_XP INTEGER,
 	Spell_Number INTEGER,
-	Stackable BIT
+	Stackable BIT,
+	MaxStack INTEGER
 	)

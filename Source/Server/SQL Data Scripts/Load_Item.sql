@@ -26,6 +26,7 @@ SELECT ID,
 	AddMax_Mana,
 	Bonus_XP,
 	Spell_Number,
-	Stackable
+	Stackable,
+	MaxStack
 FROM Items
 WHERE ID = @id

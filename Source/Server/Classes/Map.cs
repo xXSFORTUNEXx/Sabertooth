@@ -1149,6 +1149,7 @@ namespace SabertoothServer
         public int BonusXP { get; set; }
         public int SpellNum { get; set; }
         public bool Stackable { get; set; }
+        public int MaxStack { get; set; }
 
         public int ItemNum { get; set; }
         public int X { get; set; }

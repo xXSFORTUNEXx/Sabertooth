@@ -769,7 +769,7 @@ namespace SabertoothClient
                 {
                     players[HandleData.myIndex].CheckMovement();
                     //players[HandleData.myIndex].CheckControllerMovement();
-                    //players[HandleData.myIndex].CheckChangeDirection();
+                    players[HandleData.myIndex].CheckChangeDirection();
                     //players[HandleData.myIndex].CheckControllerChangeDirection();
                     players[HandleData.myIndex].CheckPlayerInteraction();
                     //players[HandleData.myIndex].CheckControllerPlayerInteraction();

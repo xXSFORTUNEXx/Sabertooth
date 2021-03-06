@@ -107,20 +107,20 @@ namespace SabertoothServer
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
-            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -177,20 +177,20 @@ namespace SabertoothServer
             AccountKey = KeyGen.Key(25);
             Active = "N";
 
-            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
-            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+            MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
+            Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -221,12 +221,12 @@ namespace SabertoothServer
 
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -257,12 +257,12 @@ namespace SabertoothServer
         {
             for (int i = 0; i < MAX_INV_SLOTS; i++)
             {
-                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Backpack[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_BANK_SLOTS; i++)
             {
-                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                Bank[i] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
             }
 
             for (int i = 0; i < MAX_PLAYER_QUEST_LIST; i++)
@@ -347,71 +347,90 @@ namespace SabertoothServer
             {
                 if (players[index].Backpack[slot].Stackable)
                 {
-                    int bankSlot = FindSameBankItem(players[index].Bank, players[index].Backpack[slot]);
+                    int existSlot = FindSameBankItem(players[index].Bank, players[index].Backpack[slot]);
 
-                    if (bankSlot < MAX_BANK_SLOTS)
+                    if (existSlot < MAX_BANK_SLOTS)
                     {
-                        if (players[index].Backpack[slot].Value == value)
+                        if (players[index].Backpack[slot].Value > value)
                         {
-                            players[index].Bank[bankSlot].Value += value;
-                            players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                            players[index].Backpack[slot].Value -= value;
+                            players[index].Bank[existSlot].Value += value;
+                            HandleData.SendPlayerBank(index);
+                            HandleData.SendPlayerInv(index);
                         }
                         else
                         {
-                            Logging.WriteMessageLog("Before Values:DSlot1=" + slot + ",Value=" + value +
-                                                                                    ", Bank=" + players[index].Bank[bankSlot].Value +
-                                                                                    ", Backpack=" + players[index].Backpack[slot].Value +
-                                                                                    ", Index=" + index +
-                                                                                    ", ExtSlot=" + bankSlot, "MoveItem");
-
-                            players[index].Backpack[slot].Value -= value;
-                            players[index].Bank[bankSlot].Value += value;
-
-                            Logging.WriteMessageLog("After Values:DSlot1=" + slot + ",Value=" + value + 
-                                                                                    ", Bank=" + players[index].Bank[bankSlot].Value + 
-                                                                                    ", Backpack=" + players[index].Backpack[slot].Value +
-                                                                                    ", Index=" + index +
-                                                                                    ", ExtSlot=" + bankSlot, "MoveItem");
+                            players[index].Bank[existSlot].Value += value;
+                            players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                            HandleData.SendPlayerBank(index);
+                            HandleData.SendPlayerInv(index);
                         }
-                        HandleData.SendPlayerBank(index);
-                        HandleData.SendPlayerInv(index);
-                        return;
-                    }
-                }
-
-                int newSlot = FindOpenBankSlot(players[index].Bank);
-
-                if (newSlot < MAX_BANK_SLOTS)
-                {
-                    if (players[index].Backpack[slot].Value > value)
-                    {
-                        Logging.WriteMessageLog("Before Values:DSlot2=" + slot + ",Value=" + value +
-                                                                                 ", Bank=" + players[index].Bank[newSlot].Value +
-                                                                                 ", Backpack=" + players[index].Backpack[slot].Value +
-                                                                                 ", Index=" + index +
-                                                                                 ", NewSlot=" + newSlot, "MoveItem");
-
-                        players[index].Backpack[slot].Value -= value;
-                        players[index].Bank[newSlot] = players[index].Backpack[slot];
-                        players[index].Bank[newSlot].Value = value;
-
-                        Logging.WriteMessageLog("After Values:DSlot2=" + slot + ",Value=" + value +
-                                                                                ", Bank=" + players[index].Bank[newSlot].Value +
-                                                                                ", Backpack=" + players[index].Backpack[slot].Value +
-                                                                                ", Index=" + index +
-                                                                                ", NewSlot=" + newSlot, "MoveItem");
                     }
                     else
                     {
-                        players[index].Bank[newSlot] = players[index].Backpack[slot];
-                        players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                        int newSlot = FindOpenBankSlot(players[index].Bank);
+
+                        if (newSlot < MAX_BANK_SLOTS)
+                        {
+                            if (players[index].Backpack[slot].Value > value)
+                            {
+                                players[index].Bank[newSlot].Name = players[index].Backpack[slot].Name;
+                                players[index].Bank[newSlot].Sprite = players[index].Backpack[slot].Sprite;
+                                players[index].Bank[newSlot].Damage = players[index].Backpack[slot].Damage;
+                                players[index].Bank[newSlot].Armor = players[index].Backpack[slot].Armor;
+                                players[index].Bank[newSlot].Type = players[index].Backpack[slot].Type;
+                                players[index].Bank[newSlot].AttackSpeed = players[index].Backpack[slot].AttackSpeed;
+                                players[index].Bank[newSlot].HealthRestore = players[index].Backpack[slot].HealthRestore;
+                                players[index].Bank[newSlot].ManaRestore = players[index].Backpack[slot].ManaRestore;
+                                players[index].Bank[newSlot].Strength = players[index].Backpack[slot].Strength;
+                                players[index].Bank[newSlot].Agility = players[index].Backpack[slot].Agility;
+                                players[index].Bank[newSlot].Intelligence = players[index].Backpack[slot].Intelligence;
+                                players[index].Bank[newSlot].Energy = players[index].Backpack[slot].Energy;
+                                players[index].Bank[newSlot].Stamina = players[index].Backpack[slot].Stamina;
+                                players[index].Bank[newSlot].Value = value;
+                                players[index].Bank[newSlot].Price = players[index].Backpack[slot].Price;
+                                players[index].Bank[newSlot].Rarity = players[index].Backpack[slot].Rarity;
+                                players[index].Bank[newSlot].CoolDown = players[index].Backpack[slot].CoolDown;
+                                players[index].Bank[newSlot].AddMaxHealth = players[index].Backpack[slot].AddMaxHealth;
+                                players[index].Bank[newSlot].AddMaxMana = players[index].Backpack[slot].AddMaxMana;
+                                players[index].Bank[newSlot].BonusXP = players[index].Backpack[slot].BonusXP;
+                                players[index].Bank[newSlot].SpellNum = players[index].Backpack[slot].SpellNum;
+                                players[index].Bank[newSlot].Stackable = players[index].Backpack[slot].Stackable;
+                                players[index].Bank[newSlot].MaxStack = players[index].Backpack[slot].MaxStack;
+
+                                players[index].Backpack[slot].Value -= value;
+                                HandleData.SendPlayerBank(index);
+                                HandleData.SendPlayerInv(index);
+                            }
+                            else
+                            {
+                                players[index].Bank[newSlot] = players[index].Backpack[slot];
+                                players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                                HandleData.SendPlayerBank(index);
+                                HandleData.SendPlayerInv(index);
+                            }
+                        }
+                        else
+                        {
+                            HandleData.SendServerMessageTo(Connection, "You bank is full!");
+                        }
                     }
-                    HandleData.SendPlayerBank(index);
-                    HandleData.SendPlayerInv(index);
                 }
                 else
                 {
-                    HandleData.SendServerMessageTo(Connection, "You bank is full!");
+                    int newSlot = FindOpenBankSlot(players[index].Bank);
+
+                    if (newSlot < MAX_BANK_SLOTS)
+                    {
+                        players[index].Bank[newSlot] = players[index].Backpack[slot];
+                        players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                        HandleData.SendPlayerBank(index);
+                        HandleData.SendPlayerInv(index);
+                    }
+                    else
+                    {
+                        HandleData.SendServerMessageTo(Connection, "You bank is full!");
+                    }
                 }
             }
         }
@@ -422,70 +441,90 @@ namespace SabertoothServer
             {
                 if (players[index].Bank[slot].Stackable)
                 {
-                    int extSlot = FindSameInvItem(players[index].Backpack, players[index].Bank[slot]);
+                    int existSlot = FindSameInvItem(players[index].Backpack, players[index].Bank[slot]);
 
-                    if (extSlot < MAX_INV_SLOTS)
+                    if (existSlot < MAX_INV_SLOTS)
                     {
-                        if (players[index].Bank[slot].Value == value)
+                        if (players[index].Bank[slot].Value > value)
                         {
-                            players[index].Backpack[extSlot].Value += value;
-                            players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                            players[index].Bank[slot].Value -= value;
+                            players[index].Backpack[existSlot].Value += value;
+                            HandleData.SendPlayerBank(index);
+                            HandleData.SendPlayerInv(index);
                         }
                         else
                         {
-                            Logging.WriteMessageLog("Before Values:WSlot1=" + slot + ",Value=" + value +
-                                                                                    ", Bank=" + players[index].Bank[slot].Value +
-                                                                                    ", Backpack=" + players[index].Backpack[extSlot].Value +
-                                                                                    ", Index=" + index +
-                                                                                    ", ExtSlot=" + extSlot, "MoveItem");
-                            players[index].Bank[slot].Value -= value;
-                            players[index].Backpack[extSlot].Value += value;
-
-                            Logging.WriteMessageLog("After Values:WSlot1=" + slot + ",Value=" + value +
-                                                                                   ", Bank=" + players[index].Bank[slot].Value +
-                                                                                   ", Backpack=" + players[index].Backpack[extSlot].Value +
-                                                                                   ", Index=" + index +
-                                                                                   ", ExtSlot=" + extSlot, "MoveItem");
+                            players[index].Backpack[existSlot].Value += value;
+                            players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                            HandleData.SendPlayerBank(index);
+                            HandleData.SendPlayerInv(index);
                         }
-                        HandleData.SendPlayerBank(index);
-                        HandleData.SendPlayerInv(index);
-                        return;
-                    }
-                }
-
-                int newSlot = FindOpenInvSlot(players[index].Backpack);
-
-                if (newSlot < MAX_INV_SLOTS)
-                {
-                    if (players[index].Bank[slot].Value > value)
-                    {
-                        Logging.WriteMessageLog("Before Values:WSlot2=" + slot + ",Value=" + value +
-                                                                                 ", Bank=" + players[index].Bank[slot].Value +
-                                                                                 ", Backpack=" + players[index].Backpack[newSlot].Value +
-                                                                                 ", Index=" + index +
-                                                                                 ", NewSlot=" + newSlot, "MoveItem");
-
-                        players[index].Bank[slot].Value -= value;
-                        players[index].Backpack[newSlot] = players[index].Bank[slot];
-                        players[index].Backpack[newSlot].Value = value;
-
-                        Logging.WriteMessageLog("After Values:WSlot2=" + slot + ",Value=" + value +
-                                                                                ", Bank=" + players[index].Bank[slot].Value +
-                                                                                ", Backpack=" + players[index].Backpack[newSlot].Value +
-                                                                                ", Index=" + index +
-                                                                                ", NewSlot=" + newSlot, "MoveItem");
                     }
                     else
                     {
-                        players[index].Backpack[newSlot] = players[index].Bank[slot];
-                        players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, false);
+                        int newSlot = FindOpenInvSlot(players[index].Backpack);
+
+                        if (newSlot < MAX_INV_SLOTS)
+                        {
+                            if (players[index].Bank[slot].Value > value)
+                            {
+                                players[index].Backpack[newSlot].Name = players[index].Bank[slot].Name;
+                                players[index].Backpack[newSlot].Sprite = players[index].Bank[slot].Sprite;
+                                players[index].Backpack[newSlot].Damage = players[index].Bank[slot].Damage;
+                                players[index].Backpack[newSlot].Armor = players[index].Bank[slot].Armor;
+                                players[index].Backpack[newSlot].Type = players[index].Bank[slot].Type;
+                                players[index].Backpack[newSlot].AttackSpeed = players[index].Bank[slot].AttackSpeed;
+                                players[index].Backpack[newSlot].HealthRestore = players[index].Bank[slot].HealthRestore;
+                                players[index].Backpack[newSlot].ManaRestore = players[index].Bank[slot].ManaRestore;
+                                players[index].Backpack[newSlot].Strength = players[index].Bank[slot].Strength;
+                                players[index].Backpack[newSlot].Agility = players[index].Bank[slot].Agility;
+                                players[index].Backpack[newSlot].Intelligence = players[index].Bank[slot].Intelligence;
+                                players[index].Backpack[newSlot].Energy = players[index].Bank[slot].Energy;
+                                players[index].Backpack[newSlot].Stamina = players[index].Bank[slot].Stamina;
+                                players[index].Backpack[newSlot].Value = value;
+                                players[index].Backpack[newSlot].Price = players[index].Bank[slot].Price;
+                                players[index].Backpack[newSlot].Rarity = players[index].Bank[slot].Rarity;
+                                players[index].Backpack[newSlot].CoolDown = players[index].Bank[slot].CoolDown;
+                                players[index].Backpack[newSlot].AddMaxHealth = players[index].Bank[slot].AddMaxHealth;
+                                players[index].Backpack[newSlot].AddMaxMana = players[index].Bank[slot].AddMaxMana;
+                                players[index].Backpack[newSlot].BonusXP = players[index].Bank[slot].BonusXP;
+                                players[index].Backpack[newSlot].SpellNum = players[index].Bank[slot].SpellNum;
+                                players[index].Backpack[newSlot].Stackable = players[index].Bank[slot].Stackable;
+                                players[index].Backpack[newSlot].MaxStack = players[index].Bank[slot].MaxStack;
+
+                                players[index].Bank[slot].Value -= value;
+                                HandleData.SendPlayerBank(index);
+                                HandleData.SendPlayerInv(index);
+                            }
+                            else
+                            {
+                                players[index].Backpack[newSlot] = players[index].Bank[slot];
+                                players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                                HandleData.SendPlayerBank(index);
+                                HandleData.SendPlayerInv(index);
+                            }
+                        }
+                        else
+                        {
+                            HandleData.SendServerMessageTo(Connection, "You inventory is full!");
+                        }
                     }
-                    HandleData.SendPlayerBank(index);
-                    HandleData.SendPlayerInv(index);
                 }
                 else
                 {
-                    HandleData.SendServerMessageTo(Connection, "You inventory is full!");
+                    int newSlot = FindOpenInvSlot(players[index].Backpack);
+
+                    if (newSlot < MAX_INV_SLOTS)
+                    {
+                        players[index].Backpack[newSlot] = players[index].Bank[slot];
+                        players[index].Bank[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, false, 1);
+                        HandleData.SendPlayerBank(index);
+                        HandleData.SendPlayerInv(index);
+                    }
+                    else
+                    {
+                        HandleData.SendServerMessageTo(Connection, "You inventory is full!");
+                    }
                 }
             }
         }
@@ -529,7 +568,7 @@ namespace SabertoothServer
 
                 if (removeItem)
                 {
-                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                     players[index].hotBar[hotbarslot].InvNumber = -1;
                 }
                 HandleData.SendPlayerHotBar(index);
@@ -671,7 +710,7 @@ namespace SabertoothServer
 
                 if (removeItem)
                 {
-                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                 }
 
                 HandleData.SendWeaponsUpdate(index);
@@ -690,7 +729,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].MainHand;
-                        players[index].MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                        players[index].MainHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
 
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
@@ -708,7 +747,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].OffHand;
-                        players[index].OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                        players[index].OffHand = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -725,7 +764,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Chest;
-                        players[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                        players[index].Chest = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -742,7 +781,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Legs;
-                        players[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                        players[index].Legs = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -759,7 +798,7 @@ namespace SabertoothServer
                     if (itemSlot < 25)
                     {
                         players[index].Backpack[itemSlot] = players[index].Feet;
-                        players[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                        players[index].Feet = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                         HandleData.SendWeaponsUpdate(index);
                         HandleData.SendPlayerInv(index);
                         HandleData.SendPlayerEquipment(index);
@@ -804,10 +843,11 @@ namespace SabertoothServer
                     maps[mapNum].m_MapItem[mapSlot].BonusXP = players[index].Backpack[slot].BonusXP;
                     maps[mapNum].m_MapItem[mapSlot].SpellNum = players[index].Backpack[slot].SpellNum;
                     maps[mapNum].m_MapItem[mapSlot].Stackable = players[index].Backpack[slot].Stackable;
+                    maps[mapNum].m_MapItem[mapSlot].MaxStack = players[index].Backpack[slot].MaxStack;
                     maps[mapNum].m_MapItem[mapSlot].IsSpawned = true;
                     maps[mapNum].m_MapItem[mapSlot].ExpireTick = TickCount;
 
-                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false);
+                    players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                     HandleData.SendPlayerInv(index);
 
                     for (int p = 0; p < MAX_PLAYERS; p++)
@@ -891,6 +931,7 @@ namespace SabertoothServer
                 Backpack[itemSlot].BonusXP = maps[map].m_MapItem[itemNum].BonusXP;
                 Backpack[itemSlot].SpellNum = maps[map].m_MapItem[itemNum].SpellNum;
                 Backpack[itemSlot].Stackable = maps[map].m_MapItem[itemNum].Stackable;
+                Backpack[itemSlot].MaxStack = maps[map].m_MapItem[itemNum].MaxStack;
 
                 int TileX = maps[map].m_MapItem[itemNum].X;
                 int TileY = maps[map].m_MapItem[itemNum].Y;
@@ -1126,6 +1167,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = MainHand.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = MainHand.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = MainHand.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = MainHand.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1155,6 +1197,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = OffHand.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = OffHand.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = OffHand.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = OffHand.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1186,6 +1229,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Chest.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Chest.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Chest.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Chest.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1217,6 +1261,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Legs.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Legs.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Legs.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Legs.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1248,6 +1293,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Feet.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Feet.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Feet.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Feet.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1388,6 +1434,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = MainHand.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = MainHand.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = MainHand.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = MainHand.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1417,6 +1464,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = OffHand.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = OffHand.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = OffHand.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = OffHand.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1448,6 +1496,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Chest.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Chest.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Chest.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Chest.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1479,6 +1528,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Legs.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Legs.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Legs.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Legs.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1510,6 +1560,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Feet.BonusXP;
                     cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Feet.SpellNum;
                     cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Feet.Stackable;
+                    cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Feet.MaxStack;
                     cmd.ExecuteNonQuery();
                 }
 
@@ -1552,6 +1603,7 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Backpack[i].BonusXP;
                             cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Backpack[i].SpellNum;
                             cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Backpack[i].Stackable;
+                            cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Backpack[i].MaxStack;
                             cmd.ExecuteNonQuery();
                         }                        
                     }
@@ -1597,6 +1649,7 @@ namespace SabertoothServer
                             cmd.Parameters.Add(new SqlParameter("@bonusxp", System.Data.DbType.Int32)).Value = Bank[i].BonusXP;
                             cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = Bank[i].SpellNum;
                             cmd.Parameters.Add(new SqlParameter("@stack", System.Data.DbType.Boolean)).Value = Bank[i].Stackable;
+                            cmd.Parameters.Add(new SqlParameter("@maxstack", System.Data.DbType.Int32)).Value = Bank[i].MaxStack;
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -1752,7 +1805,8 @@ namespace SabertoothServer
                             MainHand.AddMaxMana = ToInt32(reader[i]); i += 1;
                             MainHand.BonusXP = ToInt32(reader[i]); i += 1;
                             MainHand.SpellNum = ToInt32(reader[i]); i += 1;
-                            MainHand.Stackable = ToBoolean(reader[i]);
+                            MainHand.Stackable = ToBoolean(reader[i]); i += 1;
+                            MainHand.MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1788,7 +1842,8 @@ namespace SabertoothServer
                             OffHand.AddMaxMana = ToInt32(reader[i]); i += 1;
                             OffHand.BonusXP = ToInt32(reader[i]); i += 1;
                             OffHand.SpellNum = ToInt32(reader[i]); i += 1;
-                            OffHand.Stackable = ToBoolean(reader[i]);
+                            OffHand.Stackable = ToBoolean(reader[i]); i += 1;
+                            OffHand.MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1825,7 +1880,8 @@ namespace SabertoothServer
                             Chest.AddMaxMana = ToInt32(reader[i]); i += 1;
                             Chest.BonusXP = ToInt32(reader[i]); i += 1;
                             Chest.SpellNum = ToInt32(reader[i]); i += 1;
-                            Chest.Stackable = ToBoolean(reader[i]);
+                            Chest.Stackable = ToBoolean(reader[i]); i += 1;
+                            Chest.MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1862,7 +1918,8 @@ namespace SabertoothServer
                             Legs.AddMaxMana = ToInt32(reader[i]); i += 1;
                             Legs.BonusXP = ToInt32(reader[i]); i += 1;
                             Legs.SpellNum = ToInt32(reader[i]); i += 1;
-                            Legs.Stackable = ToBoolean(reader[i]);
+                            Legs.Stackable = ToBoolean(reader[i]); i += 1;
+                            Legs.MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1899,7 +1956,8 @@ namespace SabertoothServer
                             Feet.AddMaxMana = ToInt32(reader[i]); i += 1;
                             Feet.BonusXP = ToInt32(reader[i]); i += 1;
                             Feet.SpellNum = ToInt32(reader[i]); i += 1;
-                            Feet.Stackable = ToBoolean(reader[i]);
+                            Feet.Stackable = ToBoolean(reader[i]); i += 1;
+                            Feet.MaxStack = ToInt32(reader[i]);
                         }
                     }
                 }
@@ -1950,7 +2008,8 @@ namespace SabertoothServer
                                     Backpack[slot].AddMaxMana = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].BonusXP = ToInt32(reader[n]); n += 1;
                                     Backpack[slot].SpellNum = ToInt32(reader[n]); n += 1;
-                                    Backpack[slot].Stackable = ToBoolean(reader[n]);
+                                    Backpack[slot].Stackable = ToBoolean(reader[n]); n += 1;
+                                    Backpack[slot].MaxStack = ToInt32(reader[n]); 
                                 }
                             }
                         }
@@ -2003,7 +2062,8 @@ namespace SabertoothServer
                                     Bank[bankslot].AddMaxMana = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].BonusXP = ToInt32(reader[n]); n += 1;
                                     Bank[bankslot].SpellNum = ToInt32(reader[n]); n += 1;
-                                    Bank[bankslot].Stackable = ToBoolean(reader[n]);
+                                    Bank[bankslot].Stackable = ToBoolean(reader[n]); n += 1;
+                                    Bank[bankslot].MaxStack = ToInt32(reader[n]);
                                 }
                             }
                         }

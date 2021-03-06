@@ -22,7 +22,8 @@
 	AddMax_Mana,
 	Bonus_XP,
 	Spell_Number,
-	Stackable
+	Stackable,
+	MaxStack
 FROM Equipment
 WHERE Owner = @owner
 	AND Slot = @slot

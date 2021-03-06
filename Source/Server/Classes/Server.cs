@@ -491,6 +491,7 @@ namespace SabertoothServer
                                                 maps[i].m_MapItem[slot].BonusXP = items[itemNum].BonusXP;
                                                 maps[i].m_MapItem[slot].SpellNum = items[itemNum].SpellNum;
                                                 maps[i].m_MapItem[slot].Stackable = items[itemNum].Stackable;
+                                                maps[i].m_MapItem[slot].MaxStack = items[itemNum].MaxStack;
                                                 maps[i].m_MapItem[slot].IsSpawned = true;
                                                 maps[i].Ground[x, y].NeedsSpawned = true;
 

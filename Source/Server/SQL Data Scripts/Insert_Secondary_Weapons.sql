@@ -21,7 +21,8 @@ INSERT INTO Secondary_Weapons (
 	AddMax_Mana,
 	Bonus_XP,
 	Spell_Number,
-	Stackable
+	Stackable,
+	MaxStack
 	)
 VALUES (
 	@owner,
@@ -46,5 +47,6 @@ VALUES (
 	@addmaxmp,
 	@bonusxp,
 	@spellnum,
-	@stack
+	@stack,
+	@maxstack
 	)

@@ -29,5 +29,6 @@ CREATE TABLE Main_Weapons (
 	AddMax_Mana INTEGER,
 	Bonus_XP INTEGER,
 	Spell_Number INTEGER,
-	Stackable BIT
+	Stackable BIT,
+	MaxStack INTEGER
 	)

@@ -20,5 +20,6 @@ SET Name = @name,
 	AddMax_Mana = @addmaxmp,
 	Bonus_XP = @bonusxp,
 	Spell_Number = @spellnum,
-	Stackable = @stack
+	Stackable = @stack,
+	MaxStack = @maxstack
 WHERE Owner = @owner

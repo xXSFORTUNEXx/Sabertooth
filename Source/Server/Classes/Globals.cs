@@ -36,6 +36,7 @@
         public const int MAX_QUEST_NPCS_REQ = 3;
         public const int MAX_PLAYER_QUEST_LIST = 10;
         public const int MAX_PLAYER_HOTBAR = 10;
+        public const int MAX_STACK_SIZE = 255;
         #endregion
 
         #region Config Globals
