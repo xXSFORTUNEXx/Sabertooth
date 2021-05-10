@@ -883,26 +883,58 @@ namespace SabertoothServer
         void PickUpItem(int map, int index, int itemNum)
         {
             int stackSlot = FindStackInvSlot(Backpack, map, itemNum);
+            int disValue = maps[map].m_MapItem[itemNum].Value;
 
             if (stackSlot < MAX_INV_SLOTS)
             {
-                Backpack[stackSlot].Value += maps[map].m_MapItem[itemNum].Value;
-
-                int TileX = maps[map].m_MapItem[itemNum].X;
-                int TileY = maps[map].m_MapItem[itemNum].Y;
-                maps[map].Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
-                maps[map].m_MapItem[itemNum].Name = "None";
-                maps[map].m_MapItem[itemNum].IsSpawned = false;
-
-                for (int p = 0; p < MAX_PLAYERS; p++)
+                if ((Backpack[stackSlot].Value + disValue) < Backpack[stackSlot].MaxStack)
                 {
-                    if (players[p].Connection != null && Map == players[p].Map)
+                    Backpack[stackSlot].Value += maps[map].m_MapItem[itemNum].Value;
+
+                    int TileX = maps[map].m_MapItem[itemNum].X;
+                    int TileY = maps[map].m_MapItem[itemNum].Y;
+                    maps[map].Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
+                    maps[map].m_MapItem[itemNum].Name = "None";
+                    maps[map].m_MapItem[itemNum].IsSpawned = false;
+
+                    for (int p = 0; p < MAX_PLAYERS; p++)
                     {
-                        HandleData.SendMapItemData(players[p].Connection, map, itemNum);
+                        if (players[p].Connection != null && Map == players[p].Map)
+                        {
+                            HandleData.SendMapItemData(players[p].Connection, map, itemNum);
+                        }
+                    }
+                    HandleData.SendPlayerInv(index);
+                    return;
+                }
+                else
+                {
+                    if ((Backpack[stackSlot].Value + disValue) == Backpack[stackSlot].MaxStack)
+                    {
+                        Backpack[stackSlot].Value = Backpack[stackSlot].MaxStack;
+
+                        int TileX = maps[map].m_MapItem[itemNum].X;
+                        int TileY = maps[map].m_MapItem[itemNum].Y;
+                        maps[map].Ground[TileX, TileY].NeedsSpawnedTick = TickCount;
+                        maps[map].m_MapItem[itemNum].Name = "None";
+                        maps[map].m_MapItem[itemNum].IsSpawned = false;
+
+                        for (int p = 0; p < MAX_PLAYERS; p++)
+                        {
+                            if (players[p].Connection != null && Map == players[p].Map)
+                            {
+                                HandleData.SendMapItemData(players[p].Connection, map, itemNum);
+                            }
+                        }
+                        HandleData.SendPlayerInv(index);
+                        return;
+                    }
+                    else if ((Backpack[stackSlot].Value + disValue) > Backpack[stackSlot].MaxStack)
+                    {
+                        disValue = (Backpack[stackSlot].Value + disValue) - Backpack[stackSlot].MaxStack;
+                        Backpack[stackSlot].Value = Backpack[stackSlot].MaxStack;
                     }
                 }
-                HandleData.SendPlayerInv(index);
-                return;
             }
 
             int itemSlot = FindOpenInvSlot(Backpack);
@@ -922,7 +954,7 @@ namespace SabertoothServer
                 Backpack[itemSlot].Intelligence = maps[map].m_MapItem[itemNum].Intelligence;
                 Backpack[itemSlot].Energy = maps[map].m_MapItem[itemNum].Energy;
                 Backpack[itemSlot].Stamina = maps[map].m_MapItem[itemNum].Stamina;
-                Backpack[itemSlot].Value = maps[map].m_MapItem[itemNum].Value;
+                Backpack[itemSlot].Value = disValue;
                 Backpack[itemSlot].Price = maps[map].m_MapItem[itemNum].Price;
                 Backpack[itemSlot].Rarity = maps[map].m_MapItem[itemNum].Rarity;
                 Backpack[itemSlot].CoolDown = maps[map].m_MapItem[itemNum].CoolDown;
