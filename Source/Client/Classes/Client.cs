@@ -765,32 +765,21 @@ namespace SabertoothClient
                 DrawPlayers();
                 DrawIndexPlayer();
                 map.DrawFringe(renderWindow);
-                if (TickCount - walkTick > 100)
-                {
-                    players[HandleData.myIndex].CheckMovement();
-                    //players[HandleData.myIndex].CheckControllerMovement();
-                    players[HandleData.myIndex].CheckChangeDirection();
-                    //players[HandleData.myIndex].CheckControllerChangeDirection();
-                    players[HandleData.myIndex].CheckPlayerInteraction();
-                    //players[HandleData.myIndex].CheckControllerPlayerInteraction();
-                    //players[HandleData.myIndex].CheckControllerButtonPress();
-                    players[HandleData.myIndex].CheckHotBarKeyPress();
-                    players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
-                    ProcessMovement();
-                    walkTick = TickCount;
-                }
-                if (TickCount - attackTick > 25)
-                {
-                    players[HandleData.myIndex].CheckAttack();
-                    players[HandleData.myIndex].CheckControllerAttack();
-                    attackTick = TickCount;
-                }
-                if (TickCount - pickupTick > 100)
-                {
-                    players[HandleData.myIndex].CheckItemPickUp();
-                    players[HandleData.myIndex].CheckControllerItemPickUp();
-                    pickupTick = TickCount;
-                }
+
+                players[HandleData.myIndex].CheckMovement();                                                                                                                                                      
+                ProcessMovement();
+                players[HandleData.myIndex].CheckChangeDirection();
+                players[HandleData.myIndex].CheckHotBarKeyPress();
+                players[HandleData.myIndex].CheckPlayerInteraction();
+                players[HandleData.myIndex].CheckAttack();
+                players[HandleData.myIndex].CheckItemPickUp();
+                //players[HandleData.myIndex].CheckControllerMovement();
+                //players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
+                //players[HandleData.myIndex].CheckControllerItemPickUp();
+                //players[HandleData.myIndex].CheckControllerAttack();
+                //players[HandleData.myIndex].CheckControllerButtonPress();
+                //players[HandleData.myIndex].CheckControllerPlayerInteraction();
+                //players[HandleData.myIndex].CheckControllerChangeDirection();
             }
             renderWindow.SetView(renderWindow.DefaultView);
             if (map.Name != null && gui.Ready)
@@ -823,6 +812,8 @@ namespace SabertoothClient
 
         static void ProcessMovement()
         {
+            if (TickCount - walkTick < 100) { return; }
+
             for (int i = 0; i < 5; i++)
             {
                 if (players[i].tempStep != 5 && i != HandleData.myIndex)
@@ -836,6 +827,7 @@ namespace SabertoothClient
                     players[i].tempStep = 5;
                 }
             }
+            walkTick = TickCount;
         }
 
         static void UpdateTitle(int fps)

@@ -2823,7 +2823,11 @@ namespace SabertoothClient
             equipEng.Text = "Energy: ?";
             #endregion
 
-            //skillsTab = menuTabs.AddPage("Skills");
+            skillsTab = menuTabs.AddPage("Spells");
+
+            #region Spells
+
+            #endregion
 
             questTab = menuTabs.AddPage("Quests");
 

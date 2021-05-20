@@ -79,7 +79,9 @@ namespace SabertoothClient
         int pickupTick;
         int equipTick;
         int interactionTick;
-        public int reloadTick;
+        int hotbarTick;
+        int directionTick;
+        int walkTick;
         public int tempX;
         public int tempY;
         public int tempDir;
@@ -890,6 +892,7 @@ namespace SabertoothClient
         #region Keyboard
         public void CheckMovement()
         {
+            if (TickCount - walkTick < 100) { return; }
             if (Moved == true) { Moved = false; return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
@@ -970,6 +973,7 @@ namespace SabertoothClient
                 if (Step == 4) { Step = 0; }
                 Moved = false;
                 SendMovementData();
+                walkTick = TickCount;
             }
 
             if (map.Ground[(X + OffsetX), (Y + OffsetY)].Type == (int)TileType.Warp)
@@ -980,6 +984,7 @@ namespace SabertoothClient
         
         public void CheckChangeDirection()
         {
+            if (TickCount - directionTick < 500) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
@@ -988,30 +993,35 @@ namespace SabertoothClient
             {
                 AimDirection = (int)Directions.Up;
                 SendUpdateDirection();
+                directionTick = TickCount;
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.K))
             {
                 AimDirection = (int)Directions.Down;
                 SendUpdateDirection();
+                directionTick = TickCount;
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.J))
             {
                 AimDirection = (int)Directions.Left;
                 SendUpdateDirection();
+                directionTick = TickCount;
             }
             else if (Keyboard.IsKeyPressed(Keyboard.Key.L))
             {
                 AimDirection = (int)Directions.Right;
                 SendUpdateDirection();
+                directionTick = TickCount;
             }
         }
 
         public void CheckAttack()
         {
+            if (TickCount - equipTick < 5000) { return; }
+            if (TickCount - attackTick < 25) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }            
-            if (TickCount - equipTick < 5000) { return; }
+            if (Attacking == true) { return; }                        
             if (inShop || inChat || inBank) { return; }            
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
@@ -1216,10 +1226,11 @@ namespace SabertoothClient
 
         public void CheckItemPickUp()
         {
+            if (TickCount - pickupTick < 1000) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
             if (Attacking == true) { return; }
-            if (inShop || inChat || inBank) { return; }
+            if (inShop || inChat || inBank) { return; }            
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.O))
             {
@@ -1230,10 +1241,10 @@ namespace SabertoothClient
 
         public void CheckPlayerInteraction()
         {
+            if (TickCount - interactionTick < 1000) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (TickCount - interactionTick < 1000) { return; }
+            if (Attacking == true) { return; }            
             if (inShop || inChat || inBank) { return; }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.E))
@@ -1342,6 +1353,7 @@ namespace SabertoothClient
 
         public void CheckHotBarKeyPress()
         {
+            if (TickCount - hotbarTick < 500) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
             if (inShop || inChat || inBank) { return; }
@@ -1349,42 +1361,52 @@ namespace SabertoothClient
             if (Keyboard.IsKeyPressed(hotBar[0].HotKey))
             {
                 SendUseHotbar(0);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[1].HotKey))
             {
                 SendUseHotbar(1);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[2].HotKey))
             {
                 SendUseHotbar(2);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[3].HotKey))
             {
                 SendUseHotbar(3);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[4].HotKey))
             {
                 SendUseHotbar(4);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[5].HotKey))
             {
                 SendUseHotbar(5);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[6].HotKey))
             {
                 SendUseHotbar(6);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[7].HotKey))
             {
                 SendUseHotbar(7);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[8].HotKey))
             {
                 SendUseHotbar(8);
+                hotbarTick = TickCount;
             }
             if (Keyboard.IsKeyPressed(hotBar[9].HotKey))
             {
                 SendUseHotbar(9);
+                hotbarTick = TickCount;
             }
         }
 
