@@ -1330,18 +1330,21 @@ namespace SabertoothServer
                 }
 
                 script = ReadAllText("SQL Data Scripts/Insert_Hotbar.sql");
-                for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    using (var cmd = new SqlCommand(script, sql))
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;    //set the players id, we want to set this before the LooP ;)
+                    for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
                     {
-                        byte[] hotKey = ToByteArray(hotBar[i].HotKey);
-                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;
-                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.SqlDbType.Int)).Value = i;
-                        cmd.Parameters.Add(new SqlParameter("@hotkey", System.Data.SqlDbType.VarBinary)).Value = hotKey;
-                        cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = hotBar[i].SpellNumber;
-                        cmd.Parameters.Add(new SqlParameter("@invnum", System.Data.DbType.Int32)).Value = hotBar[i].InvNumber;
-                        cmd.ExecuteNonQuery();
+                        {
+                            //create each hotkey for the query
+                            byte[] hotKey = ToByteArray(hotBar[i].HotKey);
+                            cmd.Parameters.Add(new SqlParameter("@hotkey_" + (i + 1), System.Data.SqlDbType.VarBinary)).Value = hotKey;
+                            cmd.Parameters.Add(new SqlParameter("@spellnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].SpellNumber;
+                            cmd.Parameters.Add(new SqlParameter("@invnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].InvNumber;                            
+                        }
                     }
+                    //execute after its made
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -1688,27 +1691,29 @@ namespace SabertoothServer
                     m = m + 1;
                 }
 
-                for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                
+                script = ReadAllText("SQL Data Scripts/Save_Hotbar.sql");
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    script = ReadAllText("SQL Data Scripts/Save_Hotbar.sql");
-                    using (var cmd = new SqlCommand(script, sql))
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;    //set the id before the LOOP
+                    for (int i = 0; i < MAX_PLAYER_HOTBAR; i++)
                     {
-                        byte[] hotKey = ToByteArray(hotBar[i].HotKey);
-                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;
-                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.SqlDbType.Int)).Value = i;
-                        cmd.Parameters.Add(new SqlParameter("@hotkey", System.Data.SqlDbType.VarBinary)).Value = hotKey;
-                        cmd.Parameters.Add(new SqlParameter("@spellnum", System.Data.DbType.Int32)).Value = hotBar[i].SpellNumber;
-                        cmd.Parameters.Add(new SqlParameter("@invnum", System.Data.DbType.Int32)).Value = hotBar[i].InvNumber;
-                        cmd.ExecuteNonQuery();
+                        byte[] hotKey = ToByteArray(hotBar[i].HotKey);                                                
+                        cmd.Parameters.Add(new SqlParameter("@hotkey_" + (i + 1), System.Data.SqlDbType.VarBinary)).Value = hotKey;
+                        cmd.Parameters.Add(new SqlParameter("@spellnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].SpellNumber;
+                        cmd.Parameters.Add(new SqlParameter("@invnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].InvNumber;                        
                     }
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         public void LoadPlayerFromDatabase()
         {
+            //Setup the connection string
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
-            string script = ReadAllText("SQL Data Scripts/Load_Player.sql");
+
+            //Open a connection and start loading data BBY
             using (var sql = new SqlConnection(connection))
             {
                 sql.Open();
@@ -1717,6 +1722,9 @@ namespace SabertoothServer
                 int n;
                 int slot;
                 int bankslot;
+
+                //Load the basic information on the player
+                string script = ReadAllText("SQL Data Scripts/Load_Player.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
                     cmd.Parameters.Add(new SqlParameter("@name", System.Data.DbType.String)).Value = Name;
@@ -1756,6 +1764,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Stats
                 script = ReadAllText("SQL Data Scripts/Load_Stats.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1774,6 +1783,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Quest List
                 script = ReadAllText("SQL Data Scripts/Load_Quest_List.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1806,6 +1816,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Main Weapon
                 script = ReadAllText("SQL Data Scripts/Load_Main_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1843,6 +1854,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Secondary Weapon
                 script = ReadAllText("SQL Data Scripts/Load_Secondary_Weapons.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1880,6 +1892,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Chest Equipment
                 script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1918,6 +1931,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Load Legs Equipment
                 script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1955,7 +1969,8 @@ namespace SabertoothServer
                         }
                     }
                 }
-
+                
+                //Load Feet Equipment
                 script = ReadAllText("SQL Data Scripts/Load_Equipment.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -1994,6 +2009,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Check how many inventory slots they have an item in
                 script = ReadAllText("SQL Data Scripts/Inventory_Count.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -2002,6 +2018,7 @@ namespace SabertoothServer
                     result = ToInt32(queue);
                 }
 
+                //Use the result from above to load their inventory
                 if (result > 0)
                 {
                     for (i = 0; i < result; i++)
@@ -2048,6 +2065,7 @@ namespace SabertoothServer
                     }
                 }
 
+                //Cheeck how many bank slots they have an item in
                 script = ReadAllText("SQL Data Scripts/Bank_Count.sql");
                 using (var cmd = new SqlCommand(script, sql))
                 {
@@ -2056,6 +2074,7 @@ namespace SabertoothServer
                     result = ToInt32(queue);
                 }
 
+                //Use the result from above to load their bank
                 if (result > 0)
                 {
                     for (i = 0; i < result; i++)
@@ -2102,27 +2121,27 @@ namespace SabertoothServer
                     }
                 }
 
-                for (i = 0; i < MAX_PLAYER_HOTBAR; i++)
+                //Load the hotbar
+                script = ReadAllText("SQL Data Scripts/Load_Hotbar.sql");
+                using (var cmd = new SqlCommand(script, sql))
                 {
-                    script = ReadAllText("SQL Data Scripts/Load_Hotbar.sql");
-                    using (var cmd = new SqlCommand(script, sql))
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.DbType.String)).Value = Id;
+                    n = 0;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.DbType.String)).Value = Id;
-                        cmd.Parameters.Add(new SqlParameter("@hotbarnum", System.Data.DbType.Int32)).Value = i;
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
+                        while (reader.Read())
+                        {                            
+                            for (i = 0; i < MAX_PLAYER_HOTBAR; i++)
                             {
                                 byte[] buffer;
                                 object load;
 
-                                n = 0;
                                 buffer = (byte[])reader[n];
                                 load = ByteArrayToObject(buffer);
                                 hotBar[i].HotKey = (Keyboard.Key)load; n += 1;
+
                                 hotBar[i].SpellNumber = ToInt32(reader[n]); n += 1;
-                                hotBar[i].InvNumber = ToInt32(reader[n]);
+                                hotBar[i].InvNumber = ToInt32(reader[n]); n += 1;
                             }
                         }
                     }

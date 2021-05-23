@@ -281,7 +281,7 @@ namespace SabertoothClient
                 gui.packTab.Press(gui.menuTabs);
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
-                //gui.skillsTab.Hide();
+                gui.spellsTab.Hide();
                 gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
@@ -504,7 +504,7 @@ namespace SabertoothClient
                 gui.packTab.Press(gui.menuTabs);
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
-                //gui.skillsTab.Hide();
+                gui.spellsTab.Hide();
                 gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }
@@ -520,7 +520,7 @@ namespace SabertoothClient
                 gui.packTab.Press(gui.menuTabs);
                 gui.charTab.Hide();
                 gui.equipTab.Hide();
-                //gui.skillsTab.Hide();
+                gui.spellsTab.Hide();
                 gui.questTab.Hide();
                 gui.optionsTab.Hide();
             }

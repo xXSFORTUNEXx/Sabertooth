@@ -127,6 +127,7 @@
     <Compile Include="Classes\Globals.cs" />
     <Compile Include="Classes\LogWriter.cs" />
     <Compile Include="Classes\Quests.cs" />
+    <Compile Include="Classes\Spell.cs" />
     <Compile Include="Classes\WorldTime.cs" />
     <Compile Include="Classes\GUI.cs" />
     <Compile Include="Classes\HandleData.cs" />

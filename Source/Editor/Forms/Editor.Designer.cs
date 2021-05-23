@@ -67,13 +67,11 @@
             // 
             // dtViewGrid
             // 
-            this.dtViewGrid.AllowUserToAddRows = false;
             this.dtViewGrid.AllowUserToDeleteRows = false;
             this.dtViewGrid.AllowUserToOrderColumns = true;
             this.dtViewGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtViewGrid.Location = new System.Drawing.Point(0, 24);
             this.dtViewGrid.Name = "dtViewGrid";
-            this.dtViewGrid.ReadOnly = true;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Arial Narrow", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -147,7 +145,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -165,7 +163,7 @@
             this.showHideViewWindowToolStripMenuItem.Checked = true;
             this.showHideViewWindowToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showHideViewWindowToolStripMenuItem.Name = "showHideViewWindowToolStripMenuItem";
-            this.showHideViewWindowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showHideViewWindowToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.showHideViewWindowToolStripMenuItem.Text = "Show/Hide Views";
             this.showHideViewWindowToolStripMenuItem.Click += new System.EventHandler(this.showHideViewWindowToolStripMenuItem_Click);
             // 
@@ -174,7 +172,7 @@
             this.showHideEditorsToolStripMenuItem.Checked = true;
             this.showHideEditorsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showHideEditorsToolStripMenuItem.Name = "showHideEditorsToolStripMenuItem";
-            this.showHideEditorsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showHideEditorsToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.showHideEditorsToolStripMenuItem.Text = "Show/Hide Editors";
             this.showHideEditorsToolStripMenuItem.Click += new System.EventHandler(this.showHideEditorsToolStripMenuItem_Click);
             // 
@@ -196,56 +194,56 @@
             // mapEditorToolStripMenuItem
             // 
             this.mapEditorToolStripMenuItem.Name = "mapEditorToolStripMenuItem";
-            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.mapEditorToolStripMenuItem.Text = "Map Editor";
             this.mapEditorToolStripMenuItem.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
             // chestEditorToolStripMenuItem
             // 
             this.chestEditorToolStripMenuItem.Name = "chestEditorToolStripMenuItem";
-            this.chestEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chestEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.chestEditorToolStripMenuItem.Text = "Chest Editor";
             this.chestEditorToolStripMenuItem.Click += new System.EventHandler(this.btnChestEditor_Click);
             // 
             // itemEditorToolStripMenuItem
             // 
             this.itemEditorToolStripMenuItem.Name = "itemEditorToolStripMenuItem";
-            this.itemEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.itemEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.itemEditorToolStripMenuItem.Text = "Item Editor";
             this.itemEditorToolStripMenuItem.Click += new System.EventHandler(this.btnItemEditor_Click);
             // 
             // npcEditorToolStripMenuItem
             // 
             this.npcEditorToolStripMenuItem.Name = "npcEditorToolStripMenuItem";
-            this.npcEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.npcEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.npcEditorToolStripMenuItem.Text = "Npc Editor";
             this.npcEditorToolStripMenuItem.Click += new System.EventHandler(this.btnNpcEditor_Click);
             // 
             // shopEditorToolStripMenuItem
             // 
             this.shopEditorToolStripMenuItem.Name = "shopEditorToolStripMenuItem";
-            this.shopEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.shopEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.shopEditorToolStripMenuItem.Text = "Shop Editor";
             this.shopEditorToolStripMenuItem.Click += new System.EventHandler(this.btnShopEditor_Click);
             // 
             // chatEditorToolStripMenuItem
             // 
             this.chatEditorToolStripMenuItem.Name = "chatEditorToolStripMenuItem";
-            this.chatEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chatEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.chatEditorToolStripMenuItem.Text = "Chat Editor";
             this.chatEditorToolStripMenuItem.Click += new System.EventHandler(this.btnChatEditor_Click);
             // 
             // questEditorToolStripMenuItem
             // 
             this.questEditorToolStripMenuItem.Name = "questEditorToolStripMenuItem";
-            this.questEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.questEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.questEditorToolStripMenuItem.Text = "Quest Editor";
             this.questEditorToolStripMenuItem.Click += new System.EventHandler(this.btnQuestEditor_Click);
             // 
             // playerEditorToolStripMenuItem
             // 
             this.playerEditorToolStripMenuItem.Name = "playerEditorToolStripMenuItem";
-            this.playerEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.playerEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.playerEditorToolStripMenuItem.Text = "Player Editor";
             this.playerEditorToolStripMenuItem.Click += new System.EventHandler(this.btnPlayerEditor_Click);
             // 

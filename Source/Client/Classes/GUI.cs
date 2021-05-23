@@ -267,8 +267,8 @@ namespace SabertoothClient
         Button stackCncl;
         #endregion
 
-        #region SkillsTab
-        public TabButton skillsTab;
+        #region SpellsTab
+        public TabButton spellsTab;
         #endregion
 
         #region QuestTab
@@ -2026,7 +2026,7 @@ namespace SabertoothClient
             shopWindow.Close();
             charTab.Show();
             equipTab.Show();
-            // skillsTab.Show();
+            spellsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
@@ -2111,7 +2111,7 @@ namespace SabertoothClient
             bankWindow.Close();
             charTab.Show();
             equipTab.Show();
-            //skillsTab.Show();
+            spellsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
@@ -2142,7 +2142,7 @@ namespace SabertoothClient
             chestWindow.Close();
             charTab.Show();
             equipTab.Show();
-            //skillsTab.Show();
+            spellsTab.Show();
             questTab.Show();
             optionsTab.Show();
         }
@@ -2823,7 +2823,7 @@ namespace SabertoothClient
             equipEng.Text = "Energy: ?";
             #endregion
 
-            skillsTab = menuTabs.AddPage("Spells");
+            spellsTab = menuTabs.AddPage("Spells");
 
             #region Spells
 
