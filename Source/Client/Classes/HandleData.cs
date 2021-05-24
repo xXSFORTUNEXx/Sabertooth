@@ -234,6 +234,10 @@ namespace SabertoothClient
                             case (byte)PacketTypes.SendHotBar:
                                 HandlePlayerHotBar(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.ItemCoolDown:
+                                HandleItemCoolDownUpdate(incMSG);
+                                break;
                         }
                         break;
 
@@ -247,6 +251,18 @@ namespace SabertoothClient
         }
 
         #region Handle Incoming Data
+        static void HandleItemCoolDownUpdate(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int invNum = incMSG.ReadVariableInt32();
+            bool status = incMSG.ReadBoolean();
+
+            if (index != myIndex) { return; }
+            players[index].Backpack[invNum].OnCoolDown = status;
+            if (status == true) { players[index].Backpack[invNum].cooldownTick = TickCount; }
+            else { players[index].Backpack[invNum].cooldownTick = 0; }
+        }
+
         static void HandleActivationRequest(NetIncomingMessage incMSG)
         {
             tempIndex = incMSG.ReadVariableInt32();
@@ -1520,6 +1536,7 @@ namespace SabertoothClient
         SendInvSwap,
         SendBankSwap,
         UpdateHotBar,
-        UseHotBar
+        UseHotBar,
+        ItemCoolDown
     }
 }

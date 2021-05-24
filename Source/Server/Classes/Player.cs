@@ -549,6 +549,9 @@ namespace SabertoothServer
                         //Check to see if the potion restores HP
                         if (players[index].Backpack[slot].HealthRestore > 0)
                         {
+                            //check if the item is on cooldown
+                            if (TickCount - players[index].Backpack[slot].cooldownTick < (players[index].Backpack[slot].CoolDown * A_MILLISECOND)) { return; }
+
                             //If we already have max hp let not let the player waste it
                             if (players[index].Health == players[index].MaxHealth)
                             {
@@ -561,12 +564,18 @@ namespace SabertoothServer
                             {
                                 players[index].Health += players[index].Backpack[slot].HealthRestore;
                                 if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; } //just incase we over heal
+                                players[index].Backpack[slot].cooldownTick = TickCount;
+                                players[index].Backpack[slot].OnCoolDown = true;
+                                HandleData.SendItemCoolDownUpdate(players[index].Connection, index, slot, true);
                             }
                         }
 
                         //Check to see if the potion restores MP
                         if (players[index].Backpack[slot].ManaRestore > 0)
                         {
+                            //check if the item is on cooldown
+                            if (TickCount - players[index].Backpack[slot].cooldownTick < (players[index].Backpack[slot].CoolDown * A_MILLISECOND)) { return; }
+
                             //If we already have max mp let not let the player waste it
                             if (players[index].Mana == players[index].MaxMana)
                             {
@@ -579,6 +588,9 @@ namespace SabertoothServer
                             {
                                 players[index].Mana += players[index].Backpack[slot].ManaRestore;
                                 if (players[index].Mana > players[index].MaxMana) { players[index].Mana = players[index].MaxMana; } //just incase we over gen
+                                players[index].Backpack[slot].cooldownTick = TickCount;
+                                players[index].Backpack[slot].OnCoolDown = true;
+                                HandleData.SendItemCoolDownUpdate(players[index].Connection, index, slot, true);
                             }
                         }
 
@@ -732,6 +744,9 @@ namespace SabertoothServer
                         //Check to see if the potion restores HP
                         if (players[index].Backpack[slot].HealthRestore > 0)
                         {
+                            //check if the item is on cooldown
+                            if (TickCount - players[index].Backpack[slot].cooldownTick < (players[index].Backpack[slot].CoolDown * 1000)) { return; }
+
                             //If we already have max hp let not let the player waste it
                             if (players[index].Health == players[index].MaxHealth)
                             {
@@ -744,12 +759,18 @@ namespace SabertoothServer
                             {
                                 players[index].Health += players[index].Backpack[slot].HealthRestore;
                                 if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; } //just incase we over heal
+                                players[index].Backpack[slot].cooldownTick = TickCount;
+                                players[index].Backpack[slot].OnCoolDown = true;
+                                HandleData.SendItemCoolDownUpdate(players[index].Connection, index, slot, true);
                             }                                                        
                         }
 
                         //Check to see if the potion restores MP
                         if (players[index].Backpack[slot].ManaRestore > 0)
                         {
+                            //check if the item is on cooldown
+                            if (TickCount - players[index].Backpack[slot].cooldownTick < (players[index].Backpack[slot].CoolDown * 1000)) { return; }
+
                             //If we already have max mp let not let the player waste it
                             if (players[index].Mana == players[index].MaxMana)
                             {
@@ -762,6 +783,9 @@ namespace SabertoothServer
                             {
                                 players[index].Mana += players[index].Backpack[slot].ManaRestore;
                                 if (players[index].Mana > players[index].MaxMana) { players[index].Mana = players[index].MaxMana; } //just incase we over gen
+                                players[index].Backpack[slot].cooldownTick = TickCount;
+                                players[index].Backpack[slot].OnCoolDown = true;
+                                HandleData.SendItemCoolDownUpdate(players[index].Connection, index, slot, true);
                             }
                         }
 
@@ -1025,6 +1049,7 @@ namespace SabertoothServer
                 Backpack[itemSlot].Type = maps[map].m_MapItem[itemNum].Type;
                 Backpack[itemSlot].AttackSpeed = maps[map].m_MapItem[itemNum].AttackSpeed;
                 Backpack[itemSlot].HealthRestore = maps[map].m_MapItem[itemNum].HealthRestore;
+                Backpack[itemSlot].ManaRestore = maps[map].m_MapItem[itemNum].ManaRestore;
                 Backpack[itemSlot].Strength = maps[map].m_MapItem[itemNum].Strength;
                 Backpack[itemSlot].Agility = maps[map].m_MapItem[itemNum].Agility;
                 Backpack[itemSlot].Intelligence = maps[map].m_MapItem[itemNum].Intelligence;

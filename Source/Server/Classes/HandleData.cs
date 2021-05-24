@@ -142,7 +142,7 @@ namespace SabertoothServer
             SabertoothServer.netServer.Recycle(incMSG);
         }
 
-        #region Handle Incoming Data
+        #region Handle Incoming Data        
         static void HandleHotbarUse(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -743,6 +743,16 @@ namespace SabertoothServer
         #endregion
 
         #region Send Outgoing Data
+        public static void SendItemCoolDownUpdate(NetConnection netConn, int index, int invNum, bool status)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ItemCoolDown);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(invNum);
+            outMSG.Write(status);
+            SabertoothServer.netServer.SendMessage(outMSG, netConn, NetDeliveryMethod.ReliableOrdered);
+        }
+
         static void SendDateAndTime(NetIncomingMessage incMSG, int index)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -2181,6 +2191,7 @@ namespace SabertoothServer
         SendInvSwap,
         SendBankSwap,
         UpdateHotBar,
-        UseHotBar
+        UseHotBar,
+        ItemCoolDown
     }
 }

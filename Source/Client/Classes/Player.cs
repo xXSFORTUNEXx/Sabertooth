@@ -1246,7 +1246,7 @@ namespace SabertoothClient
             if (Attacking == true) { return; }
             if (inShop || inChat || inBank) { return; }            
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.O))
+            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
             {
                 SendPickupItem();
                 pickupTick = TickCount;

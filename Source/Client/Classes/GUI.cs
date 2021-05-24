@@ -128,7 +128,9 @@ namespace SabertoothClient
         #region Hotbar
         public ImagePanel hotBarWindow;
         ImagePanel[] hotbarPic = new ImagePanel[10];
+        ImagePanel[] hotbarCDPic = new ImagePanel[10];
         Label[] hotBarLabel = new Label[10];
+        Label[] hotBarCD = new Label[10];
         bool isMoveHotBar;
         int hotBarSlot;
         int currentSlot;
@@ -236,6 +238,8 @@ namespace SabertoothClient
         Label packValue;
         Label packPrice;
         Label packStack;
+        Label packCDown;
+        Label packCoolD;
         #endregion
 
         #region EquipTab
@@ -422,6 +426,15 @@ namespace SabertoothClient
                     if (player.hotBar[i].InvNumber > -1)
                     {
                         hotbarPic[i].ImageName = "Resources/Items/" + player.Backpack[player.hotBar[i].InvNumber].Sprite + ".png";
+
+                        if (player.Backpack[player.hotBar[i].InvNumber].OnCoolDown)
+                        {
+                            hotbarCDPic[i].Show();
+                            hotBarCD[i].Text = (player.Backpack[player.hotBar[i].InvNumber].CoolDown - ((TickCount - player.Backpack[player.hotBar[i].InvNumber].cooldownTick) / A_MILLISECOND)).ToString();
+                            hotBarCD[i].TextColor = System.Drawing.Color.Red;
+                            hotBarCD[i].Show();                           
+                        }
+                        else { hotBarCD[i].Hide(); hotbarCDPic[i].Hide(); }
                     }
                     else if (player.hotBar[i].SpellNumber > -1)
                     {
@@ -709,6 +722,8 @@ namespace SabertoothClient
             packValue.Hide();
             packPrice.Hide();
             packStack.Hide();
+            packCDown.Hide();
+            packCoolD.Hide();
 
             packName.Text = statItem.Name;
             switch (statItem.Rarity)
@@ -795,7 +810,7 @@ namespace SabertoothClient
                 packHeRestore.Show();
             }
 
-            if (statItem.ManaRestore> 0)
+            if (statItem.ManaRestore > 0)
             {
                 n += 10;
                 packMaRestore.SetPosition(3, n);
@@ -873,6 +888,22 @@ namespace SabertoothClient
                 packStack.SetPosition(3, n);
                 packStack.Text = "Max Stack: " + statItem.MaxStack;
                 packStack.Show();
+            }
+
+            if (statItem.CoolDown > 0)
+            {
+                n += 10;
+                packCDown.SetPosition(3, n);
+                packCDown.Text = "Cool Down: " + statItem.CoolDown + " Seconds";
+                packCDown.Show();
+            }
+
+            if (statItem.cooldownTick > 0)
+            {
+                n += 10;
+                packCoolD.SetPosition(3, n);
+                packCoolD.Text = "Remaining: " + (statItem.CoolDown - ((TickCount - statItem.cooldownTick) / A_MILLISECOND)) + " Seconds";
+                packCoolD.Show();
             }
 
             statWindow.Show();
@@ -1950,6 +1981,8 @@ namespace SabertoothClient
             
             if (player.Backpack[itemSlot].Name != "None")
             {
+                if (player.Backpack[itemSlot].OnCoolDown) { return; }   //Check if its on cooldown, if so then we aint dropping that shit
+
                 NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
                 outMSG.Write((byte)PacketTypes.DropItem);
                 outMSG.WriteVariableInt32(HandleData.myIndex);
@@ -2457,13 +2490,24 @@ namespace SabertoothClient
                 hotbarPic[i].ImageName = "Resources/Skins/HotBarIcon.png";
                 hotbarPic[i].DragAndDrop_SetPackage(true, "Hotbar");
                 hotbarPic[i].HoverEnter += HotBar_HoverEnter;
-                hotbarPic[i].DoubleClicked += HotBar_DoubleClicked;                
+                hotbarPic[i].DoubleClicked += HotBar_DoubleClicked;
+
+                hotbarCDPic[i] = new ImagePanel(hotBarWindow);
+                hotbarCDPic[i].SetSize(32, 32);
+                hotbarCDPic[i].SetPosition(1 + ((i * 32) + (i * 1)), 1);
+                hotbarCDPic[i].ImageName = "Resources/CDOverlay.png";
+                hotbarCDPic[i].Hide();
 
                 hotBarLabel[i] = new Label(hotbarPic[i]);
                 hotBarLabel[i].SetPosition(3, 1);
                 hotBarLabel[i].Text = (i + 1).ToString();
                 if (i == 9) { hotBarLabel[i].Text = "0"; }
-                hotBarLabel[i].TextColor = System.Drawing.Color.Yellow;
+                hotBarLabel[i].TextColor = System.Drawing.Color.Yellow;             
+
+                hotBarCD[i] = new Label(hotbarCDPic[i]);
+                hotBarCD[i].SetPosition(10, 10);
+                hotBarCD[i].Text = "000";                
+                hotBarCD[i].Hide();
             }            
         }
 
@@ -2665,6 +2709,14 @@ namespace SabertoothClient
             packStack = new Label(statWindow);
             packStack.SetPosition(3, 205);
             packStack.Text = "Max Stack: ?";
+
+            packCDown = new Label(statWindow);
+            packCDown.SetPosition(3, 225);
+            packCDown.Text = "Cool Down: ?";
+
+            packCoolD = new Label(statWindow);
+            packCoolD.SetPosition(3, 225);
+            packCoolD.Text = "Remaining: ?";
             #endregion
 
             charTab = menuTabs.AddPage("Character");

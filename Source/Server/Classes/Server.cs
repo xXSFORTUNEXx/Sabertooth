@@ -119,6 +119,7 @@ namespace SabertoothServer
         public static string sVersion;
         public static string sqlServer;
         public static string sqlDatabase;
+        static int checkitemcdTick;
         static int lastTick;
         static int lastFrameRate;
         static int frameRate;
@@ -143,8 +144,10 @@ namespace SabertoothServer
                 CheckNpcSpawn();
                 CheckItemSpawn();
                 CheckClearMapItem();
-                CheckHealthRegen();                
+                CheckHealthRegen();
+                CheckManaRegen();
                 CheckNpcAi();
+                CheckItemCoolDowns();
                 UpTime();
                 fps = CalculateFrameRate();
                 Thread.Sleep(1);
@@ -708,6 +711,39 @@ namespace SabertoothServer
                 }
                 aiTick = TickCount;
             }
+        }
+
+        //Check what is off cooldown for items
+        static void CheckItemCoolDowns()
+        {
+            if (TickCount - checkitemcdTick < A_MILLISECOND) { return; }
+            
+            for (int p = 0; p < MAX_PLAYERS; p++)
+            {
+                if (players[p].Connection != null & players[p].Name != "")
+                {
+                    for (int i = 0; i < MAX_INV_SLOTS; i++)
+                    {
+                        if (players[p].Backpack[i] != null && players[p].Backpack[i].Name != "None")
+                        {
+                            if (players[p].Backpack[i].OnCoolDown)
+                            {
+                                if (players[p].Backpack[i].cooldownTick != 0)
+                                {
+                                    if (TickCount - players[p].Backpack[i].cooldownTick > (players[p].Backpack[i].CoolDown * A_MILLISECOND))
+                                    {
+                                        players[p].Backpack[i].OnCoolDown = false;
+                                        HandleData.SendItemCoolDownUpdate(players[p].Connection, p, i, false);
+                                        players[p].Backpack[i].cooldownTick = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            checkitemcdTick = TickCount;
         }
 
         static void CommandWindow()

@@ -12,6 +12,7 @@ namespace SabertoothClient
 {
     public class Item
     {
+        // Stored Variables
         public int Id { get; set; }
         public string Name { get; set; }
         public int Sprite { get; set; }
@@ -29,13 +30,17 @@ namespace SabertoothClient
         public int Value { get; set; }
         public int Price { get; set; }
         public int Rarity { get; set; }
-        public int CoolDown { get; set; }
+        public int CoolDown { get; set; }        
         public int AddMaxHealth { get; set; }
         public int AddMaxMana { get; set; }
         public int BonusXP { get; set; }
         public int SpellNum { get; set; }
         public bool Stackable { get; set; }
         public int MaxStack { get; set; }
+
+        //volatile variables
+        public bool OnCoolDown { get; set; }    //So we can track for showing/clearing from the client
+        public int cooldownTick; //track the cooldown 
 
         public Item() { }
 
