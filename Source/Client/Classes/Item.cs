@@ -76,8 +76,8 @@ namespace SabertoothClient
     public enum ItemType
     {
         None,
-        MeleeWeapon,
-        RangedWeapon,
+        OffHand,
+        MainHand,
         Currency,
         Food,
         Drink,

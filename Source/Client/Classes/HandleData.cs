@@ -85,7 +85,11 @@ namespace SabertoothClient
 
                             case (byte)PacketTypes.HealthData:
                                 HandleHealthData(incMSG);
-                                break;                                
+                                break;
+
+                            case (byte)PacketTypes.ManaData:
+                                HandleManaData(incMSG);
+                                break;
 
                             case (byte)PacketTypes.ItemData:
                                 HandleItemData(incMSG);
@@ -1117,6 +1121,14 @@ namespace SabertoothClient
             players[index].Health = health;
         }
 
+        static void HandleManaData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int mana = incMSG.ReadVariableInt32();
+
+            players[index].Mana = mana;
+        }
+
         static void HandleUpdatePlayerStats(NetIncomingMessage incMSG)
         {
             players[myIndex].Level = incMSG.ReadVariableInt32();            
@@ -1451,6 +1463,7 @@ namespace SabertoothClient
         Npcs,
         MapNpc,
         HealthData,
+        ManaData,
         VitalLoss,
         ItemData,
         Items,

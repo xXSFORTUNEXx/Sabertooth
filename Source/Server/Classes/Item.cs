@@ -238,8 +238,8 @@ namespace SabertoothServer
     public enum ItemType
     {
         None,
-        MeleeWeapon,
-        RangedWeapon,
+        OffHand,
+        MainHand,
         Currency,
         Food,
         Drink,

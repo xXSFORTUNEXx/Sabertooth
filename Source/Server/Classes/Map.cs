@@ -554,8 +554,10 @@ namespace SabertoothServer
             npcnum = NpcNum;
         }
 
-        public bool DamageNpc(Player s_Player, Map s_Map, int damage)
+        public bool DamageNpc(Player s_Player, Map s_Map)
         {
+            int damage = s_Player.MainHand.Damage;  //get the mainweapon damage for calculation
+
             Health -= damage;
 
             if (Health <= 0)
@@ -594,13 +596,14 @@ namespace SabertoothServer
             }
         }
 
-        public void NpcAI(int s_CanMove, int s_Direction, int mapNum)
+        public void NpcAI(int s_CanMove, int s_Direction, int mapNum)   //THIS IS ACTUALLY USED, not the NPC CLASS
         {
             DidMove = false;
 
             switch (Behavior)
             {
                 case (int)BehaviorType.Friendly:
+                case (int)BehaviorType.Passive:
 
                     if (s_CanMove > 80)
                     {
@@ -818,16 +821,16 @@ namespace SabertoothServer
                     }
                     break;
 
-                case (int)BehaviorType.Passive:
-                    //Not really sure we have to do anything here
-                    break;
-
                 case (int)BehaviorType.Aggressive:
 
+                    //lets check for players to persue
                     for (int p = 0; p < MAX_PLAYERS; p++)
                     {
+                        //check for players online and on the same map
                         if (players[p].Connection != null && players[p].Name != null && mapNum == players[p].Map)
                         {
+                            //This checks the distance between two points and really used when we have multiple targets
+                            //it checks to see who is closer, this will get changed but I was proud that I could make it work
                             int s_PlayerX = players[p].X + OFFSET_X;
                             int s_PlayerY = players[p].Y + OFFSET_Y;
                             double s_DisX = X - s_PlayerX;
@@ -835,225 +838,126 @@ namespace SabertoothServer
                             double s_Final = s_DisX * s_DisX + s_DisY * s_DisY;
                             double s_DisPoint = Math.Sqrt(s_Final);
 
+                            //Checks to see if the new point is closer than the last
                             if (s_DisPoint < s_LastPoint)
                             {
-                                Target = p;
+                                Target = p; //if so its our new target BBY
                             }
 
-                            s_LastPoint = s_DisPoint;
+                            s_LastPoint = s_DisPoint;   //mark the new target as our last target so we can check if someone is closer than they are
                         }
                     }
 
-                    if ((X + Range) < (players[Target].X + OFFSET_X) || (X - Range) > (players[Target].X + OFFSET_X)) { goto case (int)BehaviorType.Friendly; }
-                    if ((Y + Range) < (players[Target].Y + OFFSET_Y) || (Y - Range) > (players[Target].Y + OFFSET_Y)) { goto case (int)BehaviorType.Friendly; }
+                    //Check to see if the target we had is in range, if not then we just wander like a gud passive should
+                    if ((X + Range) < (players[Target].X + OFFSET_X) || (X - Range) > (players[Target].X + OFFSET_X)) { goto case (int)BehaviorType.Passive; }
+                    if ((Y + Range) < (players[Target].Y + OFFSET_Y) || (Y - Range) > (players[Target].Y + OFFSET_Y)) { goto case (int)BehaviorType.Passive; }
 
-                    if (X != players[Target].X)
+                    if (X != players[Target].X + OFFSET_X)
                     {
                         if (X > players[Target].X + OFFSET_X && X > 0)
                         {
-                            if (maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
+                            //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                            if (maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.Blocked || 
+                                maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
                             {
                                 Direction = (int)Directions.Left;
                                 DidMove = true;
                                 return;
                             }
-                            /*for (int i = 0; i < 10; i++)
+
+                            //Check if the player is infront of us, if so then we can attack then because fuck them    
+                            if (((X - 1) == (players[Target].X + OFFSET_X) && Y == (players[Target].Y + OFFSET_Y)))
                             {
-                                if (s_Map[mapNum].m_MapNpc[i].IsSpawned)
-                                {
-                                    if ((X - 1) == s_Map[mapNum].m_MapNpc[i].X && Y == s_Map[mapNum].m_MapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Left;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
+                                AttackPlayer(Target);
+                                Direction = (int)Directions.Left;
+                                DidMove = true;
+                                return;
                             }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                if (s_Map[mapNum].r_MapNpc[i].IsSpawned)
-                                {
-                                    if ((X - 1) == s_Map[mapNum].r_MapNpc[i].X && Y == s_Map[mapNum].r_MapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Left;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((X - 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
-                                    {
-                                        Direction = (int)Directions.Left;
-                                        DidMove = true;
-                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }                             
-                                        return;
-                                    }
-                                }
-                            }*/
+
+                            //If all else fails then we move closer to our target
                             Direction = (int)Directions.Left;
                             X -= 1;
                             DidMove = true;
                         }
                         else if (X < players[Target].X + OFFSET_X && X < maps[mapNum].MaxX)
                         {
-                            if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
+                            //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                            if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || 
+                                maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
                             {
                                 Direction = (int)Directions.Right;
                                 DidMove = true;
                                 return;
                             }
-                            /*for (int i = 0; i < 10; i++)
+
+                            //Check if the player is infront of us, if so then we can attack then because fuck them    
+                            if (((X + 1) == (players[Target].X + OFFSET_X) && Y == (players[Target].Y + OFFSET_Y)))
                             {
-                                if (s_Map[mapNum].m_MapNpc[i].IsSpawned)
-                                {
-                                    if ((X + 1) == s_Map[mapNum].m_MapNpc[i].X && Y == s_Map[mapNum].m_MapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Right;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
+                                AttackPlayer(Target);
+                                Direction = (int)Directions.Right;
+                                DidMove = true;
+                                return;
                             }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                if (s_Map[mapNum].r_MapNpc[i].IsSpawned)
-                                {
-                                    if ((X + 1) == s_Map[mapNum].r_MapNpc[i].X && Y == s_Map[mapNum].r_MapNpc[i].Y)
-                                    {
-                                        Direction = (int)Directions.Right;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((X + 1) == (s_Player[p].X + 12) && Y == (s_Player[p].Y + 9))
-                                    {
-                                        Direction = (int)Directions.Right;
-                                        DidMove = true;
-                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
-                                        return;
-                                    }
-                                }
-                            }*/
+
+                            //If all else fails then we move closer to our target
                             Direction = (int)Directions.Right;
                             X += 1;
                             DidMove = true;
                         }
                     }
 
-                    if (Y != players[Target].Y)
+                    if (Y != players[Target].Y + OFFSET_Y)
                     {
                         if (Y > players[Target].Y + OFFSET_Y && Y > 0)
                         {
-                            if (maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
+                            //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                            if (maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.Blocked || 
+                                maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
                             {
                                 Direction = (int)Directions.Up;
                                 DidMove = true;
                                 return;
                             }
-                            /*for (int i = 0; i < 10; i++)
+
+                            //Check if the player is infront of us, if so then we can attack then because fuck them                            
+                            if (((Y - 1) == (players[Target].Y + OFFSET_Y) && X == (players[Target].X + OFFSET_X)))
                             {
-                                if (s_Map[mapNum].m_MapNpc[i].IsSpawned)
-                                {
-                                    if ((Y - 1) == s_Map[mapNum].m_MapNpc[i].Y && X == s_Map[mapNum].m_MapNpc[i].X)
-                                    {
-                                        Direction = (int)Directions.Up;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
+                                AttackPlayer(Target);
+                                Direction = (int)Directions.Up;
+                                DidMove = true;
+                                return;
                             }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                if (s_Map[mapNum].r_MapNpc[i].IsSpawned)
-                                {
-                                    if ((Y - 1) == s_Map[mapNum].r_MapNpc[i].Y && X == s_Map[mapNum].r_MapNpc[i].X)
-                                    {
-                                        Direction = (int)Directions.Up;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((Y - 1) == (s_Player[p].Y + 9) && X == (s_Player[p].X + 12))
-                                    {
-                                        Direction = (int)Directions.Up;
-                                        DidMove = true;
-                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
-                                        return;
-                                    }
-                                }
-                            }*/
+
+                            //If all else fails then we move closer to our target
                             Direction = (int)Directions.Up;
                             Y -= 1;
                             DidMove = true;
                         }
                         else if (Y < players[Target].Y + OFFSET_Y && Y < maps[mapNum].MaxY - 1)
                         {
-                            if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
+                            //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                            if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || 
+                                maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
                             {
                                 Direction = (int)Directions.Down;
                                 DidMove = true;
                                 return;
                             }
-                            /*for (int i = 0; i < 10; i++)
+
+                            //Check if the player is infront of us, if so then we can attack then because fuck them      
+                            if (((Y + 1) == (players[Target].Y + OFFSET_Y) && X == (players[Target].X + OFFSET_X)))
                             {
-                                if (s_Map[mapNum].m_MapNpc[i].IsSpawned)
-                                {
-                                    if ((Y + 1) == s_Map[mapNum].m_MapNpc[i].Y && X == s_Map[mapNum].m_MapNpc[i].X)
-                                    {
-                                        Direction = (int)Directions.Down;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
+                                AttackPlayer(Target);
+                                Direction = (int)Directions.Down;
+                                DidMove = true;
+                                return;
                             }
-                            for (int i = 0; i < 20; i++)
-                            {
-                                if (s_Map[mapNum].r_MapNpc[i].IsSpawned)
-                                {
-                                    if ((Y + 1) == s_Map[mapNum].r_MapNpc[i].Y && X == s_Map[mapNum].r_MapNpc[i].X)
-                                    {
-                                        Direction = (int)Directions.Down;
-                                        DidMove = true;
-                                        return;
-                                    }
-                                }
-                            }
-                            for (int p = 0; p < 5; p++)
-                            {
-                                if (s_Player[p].Connection != null)
-                                {
-                                    if ((Y + 1) == (s_Player[p].Y + 9) && X == (s_Player[p].X + 12))
-                                    {
-                                        Direction = (int)Directions.Down;
-                                        DidMove = true;
-                                        if (p == Target) { AttackPlayer(s_Server, s_Player, p); }
-                                        return;
-                                    }
-                                }
-                            }*/
+
+                            //If all else fails then we move closer to our target
                             Direction = (int)Directions.Down;
                             Y += 1;
                             DidMove = true;
                         }
-                    }
-
-                    if (X == players[Target].X + OFFSET_X && Y == players[Target].Y + OFFSET_Y)
-                    {
-                        AttackPlayer(Target);
                     }
 
                     if (DidMove == true)

@@ -755,44 +755,51 @@ namespace SabertoothClient
 
         static void DrawGraphics()
         {
-            if (map.Name != null && gui.Ready)
+            if (map.Name != null && gui.Ready) //empty map but also check for the GUI to make sure its ready
             {
-                renderWindow.Draw(map);
-                DrawChests();
-                DrawMapItems();
-                DrawBlood();
-                DrawNpcs();
-                DrawPlayers();
-                DrawIndexPlayer();
-                map.DrawFringe(renderWindow);
+                renderWindow.Draw(map); //draw the maps ground and mask layers
+                DrawChests();   //draw chests ontop of those
+                DrawMapItems(); //now we draw the items which can be picked up
+                DrawBlood();    //draw blood from combat (maybe switch with item?)
+                DrawNpcs(); //draw the npcs
+                DrawPlayers();  //now the other players in the world
+                DrawIndexPlayer();  //our main player of the current client instance
+                map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 
+                //Process actual movement in any direction
                 players[HandleData.myIndex].CheckMovement();                                                                                                                                                      
                 ProcessMovement();
-                players[HandleData.myIndex].CheckChangeDirection();
+
+                //Check and see if the player is changing directions (have quite a few ways to accomplish this, which is best?)
+                //players[HandleData.myIndex].CheckChangeDirection();
+                players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
+
+                //Lets check for specific input (maybe put hotkey before all events related to input?)
                 players[HandleData.myIndex].CheckHotBarKeyPress();
                 players[HandleData.myIndex].CheckPlayerInteraction();
                 players[HandleData.myIndex].CheckAttack();
                 players[HandleData.myIndex].CheckItemPickUp();
-                //players[HandleData.myIndex].CheckControllerMovement();
-                //players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
+                
+                //Removed controller stufff, may add back at some point but without a mouse menus will need work as well...
+                //players[HandleData.myIndex].CheckControllerMovement();                
                 //players[HandleData.myIndex].CheckControllerItemPickUp();
                 //players[HandleData.myIndex].CheckControllerAttack();
                 //players[HandleData.myIndex].CheckControllerButtonPress();
                 //players[HandleData.myIndex].CheckControllerPlayerInteraction();
                 //players[HandleData.myIndex].CheckControllerChangeDirection();
             }
-            renderWindow.SetView(renderWindow.DefaultView);
-            if (map.Name != null && gui.Ready)
+            renderWindow.SetView(renderWindow.DefaultView); //set the view for the window to default (this is so the UI doesnt move when the characters view does)
+            if (map.Name != null && gui.Ready)  //empty map but also check for the GUI to make sure its ready
             {
-                map.DrawBrightness();
-                hud.UpdateHealthBar();
-                hud.UpdateManaBar();
-                hud.UpdateExpBar();
-                renderWindow.Draw(hud);
-                miniMap.UpdateMiniMap();
-                renderWindow.Draw(miniMap);
+                map.DrawBrightness();   //draw the brightness from the enviro and the players
+                hud.UpdateHealthBar();  //update the on screen health bar
+                hud.UpdateManaBar();    //update the on screen mana bar
+                hud.UpdateExpBar(); //update the on screen xp bar
+                renderWindow.Draw(hud); //draw all the hud from above with its updates
+                miniMap.UpdateMiniMap();    //update the minimap
+                renderWindow.Draw(miniMap); //draw the mini map WAAAAY up there
             }
-            canvas.RenderCanvas();
+            canvas.RenderCanvas();  //render the canvas for the GUI WAAAAY WAAAAY up there
         }
         #endregion
 

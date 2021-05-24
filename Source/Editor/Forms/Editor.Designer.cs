@@ -59,6 +59,7 @@
             this.btnItemEditor = new System.Windows.Forms.Button();
             this.btnNpcEditor = new System.Windows.Forms.Button();
             this.btnMapEditor = new System.Windows.Forms.Button();
+            this.btnIMGSplit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtViewGrid)).BeginInit();
             this.pnlEditorsViews.SuspendLayout();
             this.mnuFileMenu.SuspendLayout();
@@ -250,6 +251,7 @@
             // pnlEditors
             // 
             this.pnlEditors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlEditors.Controls.Add(this.btnIMGSplit);
             this.pnlEditors.Controls.Add(this.btnCloseEditors);
             this.pnlEditors.Controls.Add(this.btnQuestEditor);
             this.pnlEditors.Controls.Add(this.btnPlayerEditor);
@@ -354,6 +356,16 @@
             this.btnMapEditor.UseVisualStyleBackColor = true;
             this.btnMapEditor.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
+            // btnIMGSplit
+            // 
+            this.btnIMGSplit.Location = new System.Drawing.Point(15, 250);
+            this.btnIMGSplit.Name = "btnIMGSplit";
+            this.btnIMGSplit.Size = new System.Drawing.Size(118, 23);
+            this.btnIMGSplit.TabIndex = 35;
+            this.btnIMGSplit.Text = "Image Splitter";
+            this.btnIMGSplit.UseVisualStyleBackColor = true;
+            this.btnIMGSplit.Click += new System.EventHandler(this.btnIMGSplit_Click);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -409,6 +421,7 @@
         private System.Windows.Forms.ToolStripMenuItem chatEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem questEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playerEditorToolStripMenuItem;
+        private System.Windows.Forms.Button btnIMGSplit;
     }
 }
 

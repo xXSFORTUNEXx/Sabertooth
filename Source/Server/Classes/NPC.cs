@@ -253,8 +253,10 @@ namespace SabertoothServer
         #endregion
 
         #region Voids
-        public bool DamageNpc(Player s_Player, Map s_Map, int damage)
+        public bool DamageNpc(Player s_Player, Map s_Map)
         {
+            int damage = s_Player.MainHand.Damage;
+
             Health -= damage;
 
             if (Health <= 0)
@@ -301,6 +303,7 @@ namespace SabertoothServer
             switch (Behavior)
             {
                 case (int)BehaviorType.Friendly:
+                case (int)BehaviorType.Passive:
 
                     if (s_CanMove > 80)
                     {
@@ -516,11 +519,7 @@ namespace SabertoothServer
                             if (Step == 3) { Step = 0; } else { Step += 1; }
                         }
                     }
-                break;
-
-                case (int)BehaviorType.Passive:
-                        //Not really sure we have to do anything here
-                    break;
+                break;                   
 
                 case (int)BehaviorType.Aggressive:
 

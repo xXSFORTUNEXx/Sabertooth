@@ -1,5 +1,6 @@
 /*
 declare @regentime integer = 60000
+declare @mregentime integer = 120000
 declare @hungertime integer = 600000
 declare @hydrationtime integer = 30000
 declare @savetime integer = 300000
@@ -9,6 +10,7 @@ declare @id integer = 1
 */
 UPDATE Configuration
 SET Regen_Time = @regentime,
+	M_Regen_Time = @mregentime,
 	Save_Time = @savetime,
 	Spawn_Time = @spawntime,
 	AiTime = @aitime

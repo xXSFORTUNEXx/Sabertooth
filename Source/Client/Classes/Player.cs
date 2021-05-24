@@ -1024,11 +1024,11 @@ namespace SabertoothClient
             if (Attacking == true) { return; }                        
             if (inShop || inChat || inBank) { return; }            
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Space))
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
                 if (MainHand.Name != "None")
                 {
-                    Attacking = true;                    
+                    Attacking = true;
                 }
                 else
                 {
@@ -1038,23 +1038,11 @@ namespace SabertoothClient
                 }
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
-            {
-                if (OffHand.Name != "None")
-                {
-                    Attacking = true;                    
-                }
-                else
-                {
-                    gui.AddText("You need a melee weapon equiped to attack!");
-                    equipTick = TickCount;
-                }
-            }
-
             if (Attacking == true)
             {
                 {
-                    if (TickCount - attackTick < OffHand.AttackSpeed) { Attacking = false; return; }
+                    if (TickCount - attackTick < MainHand.AttackSpeed) { Attacking = false; return; }
+
                     switch (AimDirection)
                     {
                         case (int)Directions.Up:
@@ -1071,11 +1059,15 @@ namespace SabertoothClient
                                                 if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
+                                                    Attacking = false;
+                                                    attackTick = TickCount;
+                                                    return;
                                                 }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
-                                                }
+                                                    return;
+                                                }*/
                                             }
                                         }
                                     }
@@ -1086,11 +1078,15 @@ namespace SabertoothClient
                                             if (map.r_MapNpc[i].Y + 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
+                                                Attacking = false;
+                                                attackTick = TickCount;
+                                                return;
                                             }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
+                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
-                                            }
+                                                return;
+                                            }*/
                                         }
                                     }
                                 }
@@ -1111,11 +1107,14 @@ namespace SabertoothClient
                                                 if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
+                                                    Attacking = false;
+                                                    attackTick = TickCount;
+                                                    return;
                                                 }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
-                                                }
+                                                }*/
                                             }
                                         }
                                     }
@@ -1126,11 +1125,14 @@ namespace SabertoothClient
                                             if (map.r_MapNpc[i].Y - 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
+                                                Attacking = false;
+                                                attackTick = TickCount;
+                                                return;
                                             }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
+                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -1151,11 +1153,14 @@ namespace SabertoothClient
                                                 if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                                 {
                                                     SendMeleeAttack(i, 0);
+                                                    Attacking = false;
+                                                    attackTick = TickCount;
+                                                    return;
                                                 }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
-                                                }
+                                                }*/
                                             }
                                         }
                                     }
@@ -1166,11 +1171,14 @@ namespace SabertoothClient
                                             if (map.r_MapNpc[i].X + 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
                                             {
                                                 SendMeleeAttack(i, 1);
+                                                Attacking = false;
+                                                attackTick = TickCount;
+                                                return;
                                             }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
+                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -1191,11 +1199,14 @@ namespace SabertoothClient
                                                 if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
                                                 {
                                                     SendMeleeAttack(i, 0);
+                                                    Attacking = false;
+                                                    attackTick = TickCount;
+                                                    return;
                                                 }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
+                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
                                                 {
                                                     SendMeleeAttack(i, 0);
-                                                }
+                                                }*/
                                             }
                                         }
                                     }
@@ -1206,11 +1217,14 @@ namespace SabertoothClient
                                             if (map.r_MapNpc[i].X - 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
                                             {
                                                 SendMeleeAttack(i, 1);
+                                                Attacking = false;
+                                                attackTick = TickCount;
+                                                return;
                                             }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
+                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
                                             {
                                                 SendMeleeAttack(i, 1);
-                                            }
+                                            }*/
                                         }
                                     }
                                 }

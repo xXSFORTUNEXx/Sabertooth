@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.scrlMaxStack = new System.Windows.Forms.HScrollBar();
+            this.lblStackSize = new System.Windows.Forms.Label();
             this.scrlSpellNum = new System.Windows.Forms.HScrollBar();
             this.lblSpellNum = new System.Windows.Forms.Label();
             this.chkStackable = new System.Windows.Forms.CheckBox();
@@ -79,8 +81,6 @@
             this.lblAgility = new System.Windows.Forms.Label();
             this.scrlStrength = new System.Windows.Forms.HScrollBar();
             this.lblStrength = new System.Windows.Forms.Label();
-            this.lblStackSize = new System.Windows.Forms.Label();
-            this.scrlMaxStack = new System.Windows.Forms.HScrollBar();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -119,6 +119,26 @@
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
+            // 
+            // scrlMaxStack
+            // 
+            this.scrlMaxStack.Location = new System.Drawing.Point(20, 367);
+            this.scrlMaxStack.Maximum = 255;
+            this.scrlMaxStack.Minimum = 1;
+            this.scrlMaxStack.Name = "scrlMaxStack";
+            this.scrlMaxStack.Size = new System.Drawing.Size(153, 17);
+            this.scrlMaxStack.TabIndex = 28;
+            this.scrlMaxStack.Value = 1;
+            this.scrlMaxStack.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMaxStack_Scroll);
+            // 
+            // lblStackSize
+            // 
+            this.lblStackSize.AutoSize = true;
+            this.lblStackSize.Location = new System.Drawing.Point(20, 350);
+            this.lblStackSize.Name = "lblStackSize";
+            this.lblStackSize.Size = new System.Drawing.Size(70, 13);
+            this.lblStackSize.TabIndex = 27;
+            this.lblStackSize.Text = "Max Stack: 1";
             // 
             // scrlSpellNum
             // 
@@ -214,8 +234,8 @@
             this.cmbType.FormattingEnabled = true;
             this.cmbType.Items.AddRange(new object[] {
             "None",
-            "MeleeWeapon",
-            "RangedWeapon",
+            "OffHand",
+            "MainHand",
             "Currency",
             "Food",
             "Drink",
@@ -626,26 +646,6 @@
             this.lblStrength.Size = new System.Drawing.Size(59, 13);
             this.lblStrength.TabIndex = 36;
             this.lblStrength.Text = "Strength: 0";
-            // 
-            // lblStackSize
-            // 
-            this.lblStackSize.AutoSize = true;
-            this.lblStackSize.Location = new System.Drawing.Point(20, 350);
-            this.lblStackSize.Name = "lblStackSize";
-            this.lblStackSize.Size = new System.Drawing.Size(70, 13);
-            this.lblStackSize.TabIndex = 27;
-            this.lblStackSize.Text = "Max Stack: 1";
-            // 
-            // scrlMaxStack
-            // 
-            this.scrlMaxStack.Location = new System.Drawing.Point(20, 367);
-            this.scrlMaxStack.Maximum = 255;
-            this.scrlMaxStack.Minimum = 1;
-            this.scrlMaxStack.Name = "scrlMaxStack";
-            this.scrlMaxStack.Size = new System.Drawing.Size(153, 17);
-            this.scrlMaxStack.TabIndex = 28;
-            this.scrlMaxStack.Value = 1;
-            this.scrlMaxStack.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlMaxStack_Scroll);
             // 
             // ItemEditor
             // 

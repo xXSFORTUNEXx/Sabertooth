@@ -195,37 +195,18 @@ namespace SabertoothServer
             int npcNum = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
             int type = incMSG.ReadVariableInt32();
-            int map = players[index].Map;
-            int direction = players[index].Direction;
-            int damage = players[index].OffHand.Damage;
-
-            if (type == 0)
+            int map = players[index].Map;            
+            
+            if (type == 0)  //For regular map npcs  (NORM)
             {
-                if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }
+                if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }  //if we no spawn then we no care
 
+                //Create blood splat
                 maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
-                bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
+                //do damage to the npc and mark the player for update
+                bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
 
-
-                switch (direction)
-                {
-                    case (int)Directions.Up:
-                        maps[map].m_MapNpc[npcNum].Y -= 1;
-                        break;
-
-                    case (int)Directions.Down:
-                        maps[map].m_MapNpc[npcNum].Y += 1;
-                        break;
-
-                    case (int)Directions.Left:
-                        maps[map].m_MapNpc[npcNum].X -= 1;
-                        break;
-
-                    case (int)Directions.Right:
-                        maps[map].m_MapNpc[npcNum].X += -1;
-                        break;
-                }
-
+                //send updated npc vitals to players connected and on the same map
                 for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && map == players[p].Map)
@@ -233,35 +214,20 @@ namespace SabertoothServer
                         SendNpcVitalData(players[p].Connection, map, npcNum);
                     }
                 }
+
+                //update the player of their stats for some reason?
                 if (updatePlayer) { SendUpdatePlayerStats(index); }
             }
-            else
+            else //For the npc spawn pools (POOL)             
             {
-                if (!maps[map].r_MapNpc[npcNum].IsSpawned) { return; }
+                if (!maps[map].r_MapNpc[npcNum].IsSpawned) { return; }  //if we no spawn then we no care
 
+                //Create blood splat
                 maps[map].CreateBloodSplat(map, maps[map].r_MapNpc[npcNum].X, maps[map].r_MapNpc[npcNum].Y);
-                bool updatePlayer = maps[map].r_MapNpc[npcNum].DamageNpc(players[index], maps[map], damage);
+                //do damage to the npc and mark the player for update
+                bool updatePlayer = maps[map].r_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
 
-
-                switch (direction)
-                {
-                    case (int)Directions.Up:
-                        maps[map].r_MapNpc[npcNum].Y -= 1;
-                        break;
-
-                    case (int)Directions.Down:
-                        maps[map].r_MapNpc[npcNum].Y += 1;
-                        break;
-
-                    case (int)Directions.Left:
-                        maps[map].r_MapNpc[npcNum].X -= 1;
-                        break;
-
-                    case (int)Directions.Right:
-                        maps[map].r_MapNpc[npcNum].X += -1;
-                        break;
-                }
-
+                //send updated npc vitals to players connected and on the same map
                 for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && map == players[p].Map)
@@ -269,6 +235,8 @@ namespace SabertoothServer
                         SendPoolNpcVitalData(players[p].Connection, map, npcNum);
                     }
                 }
+
+                //update the player of their stats for some reason?
                 if (updatePlayer) { SendUpdatePlayerStats(index); }
             }
         }
@@ -897,6 +865,16 @@ namespace SabertoothServer
             outMSG.Write((byte)PacketTypes.HealthData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(health);
+
+            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendUpdateManaData(int index, int mana)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ManaData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(mana);
 
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -2146,6 +2124,7 @@ namespace SabertoothServer
         Npcs,
         MapNpc,
         HealthData,
+        ManaData,
         VitalLoss,
         ItemData,
         Items,

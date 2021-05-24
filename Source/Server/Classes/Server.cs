@@ -104,6 +104,8 @@ namespace SabertoothServer
         private static int aiTick;
         private static int regenTick;
         private static int regenTime;
+        private static int mregenTick;
+        private static int mregenTime;
         private static int saveTime;
         private static int spawnTime;
         private static int aiTime;
@@ -369,6 +371,7 @@ namespace SabertoothServer
             }
         }
 
+        //Check if hp needs some regen
         static bool CheckHealthRegen()
         {
             if (TickCount - regenTick < regenTime) { return false; }
@@ -386,8 +389,27 @@ namespace SabertoothServer
             regenTick = TickCount;
             return true;
         }
-        
 
+        //Check if mp needs some regen
+        static bool CheckManaRegen()
+        {
+            if (TickCount - mregenTick < mregenTime) { return false; }
+
+            for (int i = 0; i < MAX_PLAYERS; i++)
+            {
+                if (players[i].Name != null)
+                {
+                    Logging.WriteMessageLog("Checking for mana regin...");
+
+                    players[i].RegainMana();
+                    HandleData.SendUpdateManaData(i, players[i].Mana);
+                }
+            }
+            mregenTick = TickCount;
+            return true;
+        }
+        
+        //Check if a map has players
         static bool CheckIfMapHasPlayers(int mapNum)
         {
             for (int i = 0; i < MAX_PLAYERS; i++)
@@ -400,6 +422,7 @@ namespace SabertoothServer
             return false;
         }
 
+        //Used to clear out items that have been on the ground to long
         static bool CheckClearMapItem()
         {
             if (TickCount - removeTime < 1000) { return false; }
@@ -435,6 +458,7 @@ namespace SabertoothServer
             return true;
         }
 
+        //Check if items need to be spawned on maps
         static void CheckItemSpawn()
         {
             for (int i = 0; i < MAX_MAPS; i++)
@@ -513,6 +537,7 @@ namespace SabertoothServer
             }
         }
 
+        //Check if npcs need to be spawned
         static void CheckNpcSpawn()
         {
             for (int i = 0; i < MAX_MAPS; i++)
@@ -616,6 +641,7 @@ namespace SabertoothServer
             }
         }
 
+        //Run the AI for players who need it
         static void CheckNpcAi()
         {
             if (TickCount - aiTick > aiTime)
@@ -1061,6 +1087,7 @@ namespace SabertoothServer
                         {
                             i = 1;
                             regenTime = ToInt32(reader[i]); i += 1;
+                            mregenTime = ToInt32(reader[i]); i += 1;
                             saveTime = ToInt32(reader[i]); i += 1;
                             spawnTime = ToInt32(reader[i]); i += 1;
                             aiTime = ToInt32(reader[i]);

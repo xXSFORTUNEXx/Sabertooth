@@ -736,11 +736,11 @@ namespace SabertoothClient
             packType.SetPosition(3, n);
             switch (statItem.Type)
             {
-                case (int)ItemType.RangedWeapon:
-                    packType.Text = "Ranged Weapon";
+                case (int)ItemType.MainHand:
+                    packType.Text = "Main Hand";
                     break;
-                case (int)ItemType.MeleeWeapon:
-                    packType.Text = "Melee Weapon";
+                case (int)ItemType.OffHand:
+                    packType.Text = "Off Hand";
                     break;
                 case (int)ItemType.Currency:
                     packType.Text = "Currency";
@@ -925,11 +925,11 @@ namespace SabertoothClient
             shopType.SetPosition(3, n);
             switch (statItem.Type)
             {
-                case (int)ItemType.RangedWeapon:
-                    shopType.Text = "Ranged Weapon";
+                case (int)ItemType.MainHand:
+                    shopType.Text = "Main Hand";
                     break;
-                case (int)ItemType.MeleeWeapon:
-                    shopType.Text = "Melee Weapon";
+                case (int)ItemType.OffHand:
+                    shopType.Text = "Off Hand";
                     break;
                 case (int)ItemType.Currency:
                     shopType.Text = "Currency";
@@ -1107,11 +1107,11 @@ namespace SabertoothClient
             bankType.SetPosition(3, n);
             switch (bankItem.Type)
             {
-                case (int)ItemType.RangedWeapon:
-                    bankType.Text = "Ranged Weapon";
+                case (int)ItemType.MainHand:
+                    bankType.Text = "Main Hand";
                     break;
-                case (int)ItemType.MeleeWeapon:
-                    bankType.Text = "Melee Weapon";
+                case (int)ItemType.OffHand:
+                    bankType.Text = "Off Hand";
                     break;
                 case (int)ItemType.Currency:
                     bankType.Text = "Currency";
@@ -1288,11 +1288,11 @@ namespace SabertoothClient
             chestType.SetPosition(3, n);
             switch (chestItem.Type)
             {
-                case (int)ItemType.RangedWeapon:
-                    chestType.Text = "Ranged Weapon";
+                case (int)ItemType.MainHand:
+                    chestType.Text = "Main Hand";
                     break;
-                case (int)ItemType.MeleeWeapon:
-                    chestType.Text = "Melee Weapon";
+                case (int)ItemType.OffHand:
+                    chestType.Text = "Off Hand";
                     break;
                 case (int)ItemType.Currency:
                     chestType.Text = "Currency";

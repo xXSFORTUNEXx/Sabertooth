@@ -61,8 +61,7 @@ namespace SabertoothClient
         public const string SQL_SERVER_NAME = @"FDESKTOP-01\SFORTUNESQL";
         public const string SQL_SERVER_DATABASE = "Sabertooth";
         public const string HEALTH_REGEN_TIME = "60000"; //60000 / 1000 = 1 MIN
-        public const string HUNGER_DEGEN_TIME = "600000"; //600000 / 1000 = 10 MIN
-        public const string HYDRATION_DEGEN_TIME = "300000"; //300000 / 1000 = 5 MIN
+        public const string MANA_REGEN_TIME = "120000"; //120000 / 1000 = 2 MIN
         public const string AUTOSAVE_TIME = "300000"; //300000 / 1000 = 5 MIN
         public const string SPAWN_TIME = "1000"; //1000 / 1000 = 1 SECOND
         public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND

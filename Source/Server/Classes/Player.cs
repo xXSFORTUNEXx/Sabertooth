@@ -286,11 +286,13 @@ namespace SabertoothServer
         #endregion
 
         #region Methods
+        //updating the last logged in so we can keep track of the last time they logged in for some reason (perhaps create a table of login timestamps for tracking??)
         public void UpdateLastLogged()
         {
             LastLoggedIn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.fff");
         }
 
+        //Regain health if weeeee need it
         public void RegenHealth()
         {            
             if (Health < MaxHealth)
@@ -304,6 +306,7 @@ namespace SabertoothServer
             }
         }
 
+        //Regain mana if we need it
         public void RegainMana()
         {
             if (Mana < MaxMana)
@@ -317,13 +320,14 @@ namespace SabertoothServer
             }
         }
 
+        //Check to see if the plater leveled up
         public void CheckPlayerLevelUp()
         {
-            int exptoLevel = (Level * 450);
-            if (Level == MAX_LEVEL) { Experience = exptoLevel; return; }
-            if (Experience >= exptoLevel)
+            int exptoLevel = (Level * 450); //set the bar to 450 times whatever level you are
+            if (Level == MAX_LEVEL) { Experience = exptoLevel; return; }    //if you are max level then we just set xp bar to max and go to bed
+            if (Experience >= exptoLevel)   //if you are over the xp to level
             {
-                while (Experience >= exptoLevel)
+                while (Experience >= exptoLevel)    //as long as we are over a few levels it will loop instead of just 1 instance
                 {
                     int remainingXp = (Experience - exptoLevel);
                     Level += 1;
@@ -531,6 +535,7 @@ namespace SabertoothServer
 
         public void UseItem(int index, int slot, int hotbarslot)
         {
+            //really just seems like this is hotbar stuff
             if (players[index].Backpack[slot].Name != "None")
             {
                 bool removeItem = false;
@@ -540,21 +545,54 @@ namespace SabertoothServer
                     case (int)ItemType.Food:
                     case (int)ItemType.Drink:
                     case (int)ItemType.Potion:
+
+                        //Check to see if the potion restores HP
                         if (players[index].Backpack[slot].HealthRestore > 0)
                         {
-                            players[index].Health += players[index].Backpack[slot].HealthRestore;
-                            if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; }
+                            //If we already have max hp let not let the player waste it
+                            if (players[index].Health == players[index].MaxHealth)
+                            {
+                                HandleData.SendServerMessageTo(players[index].Connection, "You already have max health!");
+                                return;
+                            }
+
+                            //if we have less that max hp then we will use the pot and heal
+                            if (players[index].Health < players[index].MaxHealth)
+                            {
+                                players[index].Health += players[index].Backpack[slot].HealthRestore;
+                                if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; } //just incase we over heal
+                            }
                         }
 
+                        //Check to see if the potion restores MP
+                        if (players[index].Backpack[slot].ManaRestore > 0)
+                        {
+                            //If we already have max mp let not let the player waste it
+                            if (players[index].Mana == players[index].MaxMana)
+                            {
+                                HandleData.SendServerMessageTo(players[index].Connection, "You already have max mana!");
+                                return;
+                            }
+
+                            //if we have less that max mp then we will use the pot and gen
+                            if (players[index].Mana < players[index].MaxMana)
+                            {
+                                players[index].Mana += players[index].Backpack[slot].ManaRestore;
+                                if (players[index].Mana > players[index].MaxMana) { players[index].Mana = players[index].MaxMana; } //just incase we over gen
+                            }
+                        }
+
+                        //Check to see if it stacks
                         if (players[index].Backpack[slot].Stackable)
                         {
+                            //is it greater than 1 and if so then we...
                             if (players[index].Backpack[slot].Value > 1)
                             {
-                                players[index].Backpack[slot].Value -= 1;
+                                players[index].Backpack[slot].Value -= 1;   //...remove it
                             }
                             else
                             {
-                                removeItem = true;
+                                removeItem = true;  //if there isnt any remaining we will remove it for gud
                             }
                         }
                         break;
@@ -566,11 +604,14 @@ namespace SabertoothServer
                         return;
                 }
 
+                //removes any used up items
                 if (removeItem)
                 {
                     players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                     players[index].hotBar[hotbarslot].InvNumber = -1;
                 }
+
+                //update players with new information
                 HandleData.SendPlayerHotBar(index);
                 HandleData.SendPlayerInv(index);
                 HandleData.SendUpdatePlayerStats(index);
@@ -585,7 +626,7 @@ namespace SabertoothServer
             {              
                 switch (players[index].Backpack[slot].Type)
                 {                    
-                    case (int)ItemType.RangedWeapon:
+                    case (int)ItemType.MainHand:
                         if (players[index].MainHand.Name == "None")
                         {
                             players[index].MainHand = players[index].Backpack[slot];
@@ -603,7 +644,7 @@ namespace SabertoothServer
                         removeItem = true;
                         break;
 
-                    case (int)ItemType.MeleeWeapon:
+                    case (int)ItemType.OffHand:
                         if (players[index].OffHand.Name == "None")
                         {
                             players[index].OffHand = players[index].Backpack[slot];
@@ -687,32 +728,67 @@ namespace SabertoothServer
                     case (int)ItemType.Food:
                     case (int)ItemType.Drink:
                     case (int)ItemType.Potion:
+
+                        //Check to see if the potion restores HP
                         if (players[index].Backpack[slot].HealthRestore > 0)
                         {
-                            players[index].Health += players[index].Backpack[slot].HealthRestore;
-                            if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; }
+                            //If we already have max hp let not let the player waste it
+                            if (players[index].Health == players[index].MaxHealth)
+                            {
+                                HandleData.SendServerMessageTo(players[index].Connection, "You already have max health!");
+                                return;
+                            }
+
+                            //if we have less that max hp then we will use the pot and heal
+                            if (players[index].Health < players[index].MaxHealth)
+                            {
+                                players[index].Health += players[index].Backpack[slot].HealthRestore;
+                                if (players[index].Health > players[index].MaxHealth) { players[index].Health = players[index].MaxHealth; } //just incase we over heal
+                            }                                                        
                         }
 
+                        //Check to see if the potion restores MP
+                        if (players[index].Backpack[slot].ManaRestore > 0)
+                        {
+                            //If we already have max mp let not let the player waste it
+                            if (players[index].Mana == players[index].MaxMana)
+                            {
+                                HandleData.SendServerMessageTo(players[index].Connection, "You already have max mana!");
+                                return;
+                            }
+
+                            //if we have less that max mp then we will use the pot and gen
+                            if (players[index].Mana < players[index].MaxMana)
+                            {
+                                players[index].Mana += players[index].Backpack[slot].ManaRestore;
+                                if (players[index].Mana > players[index].MaxMana) { players[index].Mana = players[index].MaxMana; } //just incase we over gen
+                            }
+                        }
+
+                        //Check to see if it stacks
                         if (players[index].Backpack[slot].Stackable)
                         {
+                            //is it greater than 1 and if so then we...
                             if (players[index].Backpack[slot].Value > 1)
                             {
-                                players[index].Backpack[slot].Value -= 1;
+                                players[index].Backpack[slot].Value -= 1;   //...remove it
                             }
                             else
                             {
-                                removeItem = true;
+                                removeItem = true;  //if there isnt any remaining we will remove it for gud
                             }
                         }
                         break;
 
                 }
 
+                //removes any used up items
                 if (removeItem)
                 {
                     players[index].Backpack[slot] = new Item("None", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, false, 1);
                 }
 
+                //lets update the player with results
                 HandleData.SendWeaponsUpdate(index);
                 HandleData.SendPlayerInv(index);
                 HandleData.SendUpdatePlayerStats(index);

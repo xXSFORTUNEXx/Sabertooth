@@ -68,6 +68,12 @@ namespace Editor
             e_QuestEditor.Show();
         }
 
+        private void btnIMGSplit_Click(object sender, EventArgs e)
+        {
+            ImageSplitter imgSplit = new ImageSplitter();
+            imgSplit.Show();
+        }
+
         private void lstViews_SelectedIndexChanged(object sender, EventArgs e)
         {
             dtViewGrid.DataSource = null;
