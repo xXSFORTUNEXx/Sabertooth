@@ -194,6 +194,7 @@ namespace SabertoothClient
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Quests[] quests = new Quests[MAX_QUESTS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
+        public static Animation[] animations = new Animation[MAX_ANIMATIONS];
         public static Map map = new Map();
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
@@ -207,8 +208,8 @@ namespace SabertoothClient
         static int discoverTick;
         //static int timeTick;
         static int walkTick;
-        static int attackTick;
-        static int pickupTick;
+        //static int attackTick;
+        //static int pickupTick;
         static int saveTime;
         static int menuTick;
         #endregion

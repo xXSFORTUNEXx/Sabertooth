@@ -74,6 +74,12 @@ namespace Editor
             imgSplit.Show();
         }
 
+        private void btnAnimEditor_Click(object sender, EventArgs e)
+        {
+            AnimationEditor animEditor = new AnimationEditor();
+            animEditor.Show();
+        }
+
         private void lstViews_SelectedIndexChanged(object sender, EventArgs e)
         {
             dtViewGrid.DataSource = null;

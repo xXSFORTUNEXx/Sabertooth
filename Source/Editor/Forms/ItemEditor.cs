@@ -19,7 +19,7 @@ namespace Editor.Forms
     {
         Item e_Item = new Item();        
         int SelectedIndex;
-        bool UnModSave;
+        bool Modified;
 
         public ItemEditor()
         {
@@ -50,139 +50,124 @@ namespace Editor.Forms
             }
         }
 
-        private int LoadProjectileCount()
-        {
-            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
-            using (var sql = new SqlConnection(connection))
-            {
-                sql.Open();
-                string command = "SELECT COUNT(*) FROM Projectiles";
-                using (SqlCommand cmd = new SqlCommand(command, sql))
-                {
-                    object count = cmd.ExecuteScalar();
-                    return ToInt32(count);
-                }
-            }
-        }
-
         private void scrlSprite_Scroll(object sender, ScrollEventArgs e)
         {
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");
             e_Item.Sprite = scrlSprite.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlDamage_Scroll_1(object sender, ScrollEventArgs e)
         {
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
             e_Item.Damage = scrlDamage.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlArmor_Scroll(object sender, ScrollEventArgs e)
         {
             lblArmor.Text = "Armor: " + (scrlArmor.Value);
             e_Item.Armor = scrlArmor.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlAttackSpeed_Scroll(object sender, ScrollEventArgs e)
         {
             lblAttackSpeed.Text = "Attack Speed: " + (scrlAttackSpeed.Value);
             e_Item.AttackSpeed = scrlAttackSpeed.Value;
-            UnModSave = true;
+            Modified = true;
         }
         
         private void scrlHealthRestore_Scroll(object sender, ScrollEventArgs e)
         {
             lblHealthRestore.Text = "Health Restore: " + (scrlHealthRestore.Value);
             e_Item.HealthRestore = scrlHealthRestore.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlManaRestore_Scroll(object sender, ScrollEventArgs e)
         {
             lblManaRestore.Text = "Mana Restore: " + (scrlManaRestore.Value);
             e_Item.ManaRestore = scrlManaRestore.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlStrength_Scroll(object sender, ScrollEventArgs e)
         {
             lblStrength.Text = "Strength: " + (scrlStrength.Value);
             e_Item.Strength = scrlStrength.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlAgility_Scroll(object sender, ScrollEventArgs e)
         {
             lblAgility.Text = "Agility: " + (scrlAgility.Value);
             e_Item.Agility = scrlAgility.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlInt_Scroll(object sender, ScrollEventArgs e)
         {
             lblInt.Text = "Intelligence: " + (scrlInt.Value);
             e_Item.Intelligence = scrlInt.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlEnergy_Scroll(object sender, ScrollEventArgs e)
         {
             lblEnergy.Text = "Energy: " + (scrlEnergy.Value);
             e_Item.Energy = scrlEnergy.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlStamina_Scroll(object sender, ScrollEventArgs e)
         {
             lblStamina.Text = "Stamina: " + (scrlStamina.Value);
             e_Item.Stamina = scrlStamina.Value;
-            UnModSave = true;
+            Modified = true;
         }
         
         private void scrlPrice_Scroll(object sender, ScrollEventArgs e)
         {
             lblPrice.Text = "Price: " + scrlPrice.Value;
             e_Item.Price = scrlPrice.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlCooldown_Scroll(object sender, ScrollEventArgs e)
         {
             lblCoolDown.Text = "Cooldown: " + (scrlCooldown.Value) + "s";
             e_Item.CoolDown = scrlCooldown.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlSpellNum_Scroll(object sender, ScrollEventArgs e)
         {
             lblSpellNum.Text = "Spell Number: " + (scrlSpellNum.Value);
             e_Item.SpellNum = scrlSpellNum.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlAddMaxHP_Scroll(object sender, ScrollEventArgs e)
         {
             lblAddMaxHP.Text = "Add Max HP: " + (scrlAddMaxHP.Value);
             e_Item.AddMaxHealth = scrlAddMaxHP.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlAddMaxMP_Scroll(object sender, ScrollEventArgs e)
         {
             lblAddMaxMP.Text = "Add Max MP: " + (scrlAddMaxMP.Value);
             e_Item.AddMaxMana = scrlAddMaxMP.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlBonusXP_Scroll(object sender, ScrollEventArgs e)
         {
             lblBonusXP.Text = "Bonus XP: " + (scrlBonusXP.Value);
             e_Item.BonusXP = scrlBonusXP.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void scrlRarity_Scroll(object sender, ScrollEventArgs e)
@@ -209,13 +194,13 @@ namespace Editor.Forms
                     break;
             }
             e_Item.Rarity = scrlRarity.Value;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
         {
             e_Item.Type = (cmbType.SelectedIndex);
-            UnModSave = true;
+            Modified = true;
             if (cmbType.SelectedIndex == (int)ItemType.Food || cmbType.SelectedIndex == (int)ItemType.Drink || cmbType.SelectedIndex == (int)ItemType.Potion) { pnlConsume.Visible = true; }
             else { pnlConsume.Visible = false; }
         }
@@ -223,14 +208,14 @@ namespace Editor.Forms
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             e_Item.Name = txtName.Text;
-            UnModSave = true;
+            Modified = true;
         }
 
 
         private void chkStackable_CheckedChanged(object sender, EventArgs e)
         {
             e_Item.Stackable = chkStackable.Checked;
-            UnModSave = true;
+            Modified = true;
         }
 
         private void btnNewItem_Click(object sender, EventArgs e)
@@ -249,7 +234,7 @@ namespace Editor.Forms
         {
             e_Item.SaveItemToDatabase(SelectedIndex);
             LoadItemList();
-            UnModSave = false;
+            Modified = false;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -259,7 +244,7 @@ namespace Editor.Forms
 
         private void lstIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (UnModSave == true)
+            if (Modified == true)
             {
                 string w_Message = "Are you sure you want to load a different item? All unsaved progress will be lost.";
                 string w_Caption = "Unsaved data";
@@ -271,7 +256,8 @@ namespace Editor.Forms
 
             SelectedIndex = (lstIndex.SelectedIndex + 1);
             if (SelectedIndex == 0) { return; }
-            e_Item.LoadItemFromDatabase(SelectedIndex);            
+            e_Item.LoadItemFromDatabase(SelectedIndex);    
+            
             txtName.Text = e_Item.Name;
             scrlSprite.Value = e_Item.Sprite;
             scrlDamage.Value = e_Item.Damage;
@@ -293,6 +279,8 @@ namespace Editor.Forms
             scrlBonusXP.Value = e_Item.BonusXP;
             scrlSpellNum.Value = e_Item.SpellNum;
             scrlMaxStack.Value = e_Item.MaxStack;
+            chkStackable.Checked = e_Item.Stackable;
+
             lblSprite.Text = "Sprite: " + (scrlSprite.Value);
             picSprite.Image = Image.FromFile("Resources/Items/" + scrlSprite.Value + ".png");                       
             lblDamage.Text = "Damage: " + (scrlDamage.Value);
@@ -312,7 +300,7 @@ namespace Editor.Forms
             lblBonusXP.Text = "Bonus XP: " + scrlBonusXP.Value;
             lblSpellNum.Text = "Spell Number: " + scrlSpellNum.Value;
             lblStackSize.Text = "Max Stack: " + scrlMaxStack.Value;
-            chkStackable.Checked = e_Item.Stackable;
+            
             switch (scrlRarity.Value)
             {
                 case (int)Rarity.Normal:
@@ -334,7 +322,8 @@ namespace Editor.Forms
                     lblRarity.Text = "Rarity: 5 - Admin";
                     break;
             }
-            UnModSave = false;
+
+            Modified = false;
             if (pnlMain.Visible == false) { pnlMain.Visible = true; }
             if (pnlStats.Visible == false) { pnlStats.Visible = true; }
         }
@@ -343,7 +332,7 @@ namespace Editor.Forms
         {
             lblStackSize.Text = "Max Stack: " + (scrlMaxStack.Value);
             e_Item.MaxStack = scrlMaxStack.Value;
-            UnModSave = true;
+            Modified = true;
         }
     }
 }

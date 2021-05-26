@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Animation.cs" />
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\Chest.cs" />
     <Compile Include="Classes\Globals.cs" />
@@ -81,6 +82,9 @@
   <ItemGroup>
     <Content Include="Server.ico" />
     <Content Include="SQL Data Scripts\Bank_Count.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\Insert_Animation.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Insert_Chat.sql">
@@ -132,6 +136,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Inventory_Count.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Data Scripts\Load_Animation.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Load_Hotbar.sql">
@@ -188,6 +195,9 @@
     <Content Include="SQL Data Scripts\Load_Version.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL Data Scripts\Save_Animation.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL Data Scripts\Save_Bank.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -240,6 +250,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Data Scripts\Save_Version.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQL Scripts\Animation.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQL Scripts\Bank.sql">

@@ -11,8 +11,9 @@ namespace SabertoothClient
         public const char CHAR_YES = 'Y';
         public const int MAX_PLAYERS = 5;
         public const int MAX_LEVEL = 30;
+        public const int MAX_ANIMATIONS = 20;
         public const int MAX_NPCS = 10;
-        public const int MAX_ITEMS = 50;        
+        public const int MAX_ITEMS = 50;       
         public const int MAX_MAPS = 10;
         public const int MAX_MAP_NPCS = 10;
         public const int MAX_MAP_POOL_NPCS = 20;
@@ -27,7 +28,7 @@ namespace SabertoothClient
         public const int PLAYER_START_Y = 17;
         public const int OFFSET_X = 16;
         public const int OFFSET_Y = 11;
-        public const int MAX_PARTY = 4;
+        public const int MAX_PARTY = 5;
         public const int MAX_INSTANCE_NPC = 20;
         public const int MAX_INV_SLOTS = 25;
         public const int MAX_BANK_SLOTS = 50;
@@ -104,6 +105,8 @@ namespace SabertoothClient
         public const int UPDATE_MENU_TIMER = 15;
         public const int MAX_SCREEN_X = 32;
         public const int MAX_SCREEN_Y = 24;
+        public const int SPRITE_SIZE_X = 32;
+        public const int SPRITE_SIZE_Y = 48;
         #endregion
 
         #region Screen Globals

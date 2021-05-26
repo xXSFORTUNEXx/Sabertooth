@@ -238,6 +238,14 @@ namespace SabertoothClient
                             case (byte)PacketTypes.ItemCoolDown:
                                 HandleItemCoolDownUpdate(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.AnimationData:
+                                HandleAnimationData(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.AnimationsData:
+                                HandleAnimationsData(incMSG);
+                                break;
                         }
                         break;
 
@@ -782,7 +790,7 @@ namespace SabertoothClient
             map.m_BloodSplats[slot].Y = y;
             map.m_BloodSplats[slot].TexX = RND.Next(0, 5);
             map.m_BloodSplats[slot].TexY = RND.Next(0, 4);
-        }
+        }        
 
         static void HandleItems(NetIncomingMessage incMSG)
         {
@@ -791,6 +799,7 @@ namespace SabertoothClient
                 if (items[i] != null)
                 {
                     items[i].Name = incMSG.ReadString();
+
                     items[i].Sprite = incMSG.ReadVariableInt32();
                     items[i].Damage = incMSG.ReadVariableInt32();
                     items[i].Armor = incMSG.ReadVariableInt32();
@@ -810,7 +819,9 @@ namespace SabertoothClient
                     items[i].AddMaxMana = incMSG.ReadVariableInt32();
                     items[i].BonusXP = incMSG.ReadVariableInt32();
                     items[i].SpellNum = incMSG.ReadVariableInt32();
+
                     items[i].Stackable = incMSG.ReadBoolean();
+
                     items[i].MaxStack = incMSG.ReadVariableInt32();
                 }
             }
@@ -842,6 +853,40 @@ namespace SabertoothClient
             items[index].SpellNum = incMSG.ReadVariableInt32();
             items[index].Stackable = incMSG.ReadBoolean();
             items[index].MaxStack = incMSG.ReadVariableInt32();
+        }
+
+        static void HandleAnimationsData(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_ANIMATIONS; i++)
+            {
+                if (animations[i] != null)
+                {
+                    animations[i].Name = incMSG.ReadString();
+
+                    animations[i].SpriteNumber = incMSG.ReadVariableInt32();
+                    animations[i].FrameCountH = incMSG.ReadVariableInt32();
+                    animations[i].FrameCountV = incMSG.ReadVariableInt32();
+                    animations[i].FrameCount = incMSG.ReadVariableInt32();
+                    animations[i].FrameDuration = incMSG.ReadVariableInt32();
+                    animations[i].LoopCount = incMSG.ReadVariableInt32();
+                    animations[i].RenderBelowTarget = incMSG.ReadBoolean();
+                }
+            }
+        }
+
+        static void HandleAnimationData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            animations[index].Name = incMSG.ReadString();
+
+            animations[index].SpriteNumber = incMSG.ReadVariableInt32();
+            animations[index].FrameCountH = incMSG.ReadVariableInt32();
+            animations[index].FrameCountV = incMSG.ReadVariableInt32();
+            animations[index].FrameCount = incMSG.ReadVariableInt32();
+            animations[index].FrameDuration = incMSG.ReadVariableInt32();
+            animations[index].LoopCount = incMSG.ReadVariableInt32();
+            animations[index].RenderBelowTarget = incMSG.ReadBoolean();
         }
 
         static void HandleNpcs(NetIncomingMessage incMSG)
@@ -1537,6 +1582,8 @@ namespace SabertoothClient
         SendBankSwap,
         UpdateHotBar,
         UseHotBar,
-        ItemCoolDown
+        ItemCoolDown,
+        AnimationData,
+        AnimationsData
     }
 }

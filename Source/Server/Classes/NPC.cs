@@ -252,7 +252,7 @@ namespace SabertoothServer
         }
         #endregion
 
-        #region Voids
+        #region DamageNPC, AI, Attack Player
         public bool DamageNpc(Player s_Player, Map s_Map)
         {
             int damage = s_Player.MainHand.Damage;

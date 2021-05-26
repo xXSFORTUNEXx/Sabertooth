@@ -92,6 +92,7 @@ namespace SabertoothServer
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
         public static Quests[] quests = new Quests[MAX_QUESTS];
+        public static Animation[] animations = new Animation[MAX_ANIMATIONS];
         public static WorldTime worldTime = new WorldTime();
         public static Instance instance = new Instance();
         public static Random RND = new Random();
@@ -268,6 +269,16 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Chests loaded successfully");
             #endregion
 
+            #region Animations
+            Logging.WriteMessageLog("Loading animations...");
+            for (int i = 0; i < MAX_ANIMATIONS; i++)
+            {
+                animations[i] = new Animation();
+                animations[i].LoadAnimationFromDatabase(i + 1);
+            }
+            Logging.WriteMessageLog("Animations loaded successfully");
+            #endregion
+
             //final
             Logging.WriteMessageLog("Server is listening for connections...");
         }
@@ -331,6 +342,7 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/Version.sql");
                         script += ReadAllText("SQL Scripts/Configuration.sql");
                         script += ReadAllText("SQL Scripts/Hotbar.sql");
+                        script += ReadAllText("SQL Scripts/Animation.sql");
                         cmd.CommandText = script;
                         cmd.ExecuteNonQuery();
                     }

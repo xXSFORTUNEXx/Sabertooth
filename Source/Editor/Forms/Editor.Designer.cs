@@ -49,7 +49,11 @@
             this.chatEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.questEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playerEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageSplitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.animationEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlEditors = new System.Windows.Forms.Panel();
+            this.btnAnimEditor = new System.Windows.Forms.Button();
+            this.btnIMGSplit = new System.Windows.Forms.Button();
             this.btnCloseEditors = new System.Windows.Forms.Button();
             this.btnQuestEditor = new System.Windows.Forms.Button();
             this.btnPlayerEditor = new System.Windows.Forms.Button();
@@ -59,7 +63,6 @@
             this.btnItemEditor = new System.Windows.Forms.Button();
             this.btnNpcEditor = new System.Windows.Forms.Button();
             this.btnMapEditor = new System.Windows.Forms.Button();
-            this.btnIMGSplit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtViewGrid)).BeginInit();
             this.pnlEditorsViews.SuspendLayout();
             this.mnuFileMenu.SuspendLayout();
@@ -187,7 +190,9 @@
             this.shopEditorToolStripMenuItem,
             this.chatEditorToolStripMenuItem,
             this.questEditorToolStripMenuItem,
-            this.playerEditorToolStripMenuItem});
+            this.playerEditorToolStripMenuItem,
+            this.imageSplitterToolStripMenuItem,
+            this.animationEditorToolStripMenuItem});
             this.editorsToolStripMenuItem.Name = "editorsToolStripMenuItem";
             this.editorsToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.editorsToolStripMenuItem.Text = "Editors";
@@ -195,62 +200,77 @@
             // mapEditorToolStripMenuItem
             // 
             this.mapEditorToolStripMenuItem.Name = "mapEditorToolStripMenuItem";
-            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mapEditorToolStripMenuItem.Text = "Map Editor";
             this.mapEditorToolStripMenuItem.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
             // chestEditorToolStripMenuItem
             // 
             this.chestEditorToolStripMenuItem.Name = "chestEditorToolStripMenuItem";
-            this.chestEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.chestEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chestEditorToolStripMenuItem.Text = "Chest Editor";
             this.chestEditorToolStripMenuItem.Click += new System.EventHandler(this.btnChestEditor_Click);
             // 
             // itemEditorToolStripMenuItem
             // 
             this.itemEditorToolStripMenuItem.Name = "itemEditorToolStripMenuItem";
-            this.itemEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.itemEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.itemEditorToolStripMenuItem.Text = "Item Editor";
             this.itemEditorToolStripMenuItem.Click += new System.EventHandler(this.btnItemEditor_Click);
             // 
             // npcEditorToolStripMenuItem
             // 
             this.npcEditorToolStripMenuItem.Name = "npcEditorToolStripMenuItem";
-            this.npcEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.npcEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.npcEditorToolStripMenuItem.Text = "Npc Editor";
             this.npcEditorToolStripMenuItem.Click += new System.EventHandler(this.btnNpcEditor_Click);
             // 
             // shopEditorToolStripMenuItem
             // 
             this.shopEditorToolStripMenuItem.Name = "shopEditorToolStripMenuItem";
-            this.shopEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.shopEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.shopEditorToolStripMenuItem.Text = "Shop Editor";
             this.shopEditorToolStripMenuItem.Click += new System.EventHandler(this.btnShopEditor_Click);
             // 
             // chatEditorToolStripMenuItem
             // 
             this.chatEditorToolStripMenuItem.Name = "chatEditorToolStripMenuItem";
-            this.chatEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.chatEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chatEditorToolStripMenuItem.Text = "Chat Editor";
             this.chatEditorToolStripMenuItem.Click += new System.EventHandler(this.btnChatEditor_Click);
             // 
             // questEditorToolStripMenuItem
             // 
             this.questEditorToolStripMenuItem.Name = "questEditorToolStripMenuItem";
-            this.questEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.questEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.questEditorToolStripMenuItem.Text = "Quest Editor";
             this.questEditorToolStripMenuItem.Click += new System.EventHandler(this.btnQuestEditor_Click);
             // 
             // playerEditorToolStripMenuItem
             // 
             this.playerEditorToolStripMenuItem.Name = "playerEditorToolStripMenuItem";
-            this.playerEditorToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.playerEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.playerEditorToolStripMenuItem.Text = "Player Editor";
             this.playerEditorToolStripMenuItem.Click += new System.EventHandler(this.btnPlayerEditor_Click);
+            // 
+            // imageSplitterToolStripMenuItem
+            // 
+            this.imageSplitterToolStripMenuItem.Name = "imageSplitterToolStripMenuItem";
+            this.imageSplitterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageSplitterToolStripMenuItem.Text = "Image Splitter";
+            this.imageSplitterToolStripMenuItem.Click += new System.EventHandler(this.btnIMGSplit_Click);
+            // 
+            // animationEditorToolStripMenuItem
+            // 
+            this.animationEditorToolStripMenuItem.Name = "animationEditorToolStripMenuItem";
+            this.animationEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.animationEditorToolStripMenuItem.Text = "Animation Editor";
+            this.animationEditorToolStripMenuItem.Click += new System.EventHandler(this.btnAnimEditor_Click);
             // 
             // pnlEditors
             // 
             this.pnlEditors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlEditors.Controls.Add(this.btnAnimEditor);
             this.pnlEditors.Controls.Add(this.btnIMGSplit);
             this.pnlEditors.Controls.Add(this.btnCloseEditors);
             this.pnlEditors.Controls.Add(this.btnQuestEditor);
@@ -265,6 +285,26 @@
             this.pnlEditors.Name = "pnlEditors";
             this.pnlEditors.Size = new System.Drawing.Size(151, 354);
             this.pnlEditors.TabIndex = 16;
+            // 
+            // btnAnimEditor
+            // 
+            this.btnAnimEditor.Location = new System.Drawing.Point(15, 280);
+            this.btnAnimEditor.Name = "btnAnimEditor";
+            this.btnAnimEditor.Size = new System.Drawing.Size(118, 23);
+            this.btnAnimEditor.TabIndex = 36;
+            this.btnAnimEditor.Text = "Animation Editor";
+            this.btnAnimEditor.UseVisualStyleBackColor = true;
+            this.btnAnimEditor.Click += new System.EventHandler(this.btnAnimEditor_Click);
+            // 
+            // btnIMGSplit
+            // 
+            this.btnIMGSplit.Location = new System.Drawing.Point(15, 250);
+            this.btnIMGSplit.Name = "btnIMGSplit";
+            this.btnIMGSplit.Size = new System.Drawing.Size(118, 23);
+            this.btnIMGSplit.TabIndex = 35;
+            this.btnIMGSplit.Text = "Image Splitter";
+            this.btnIMGSplit.UseVisualStyleBackColor = true;
+            this.btnIMGSplit.Click += new System.EventHandler(this.btnIMGSplit_Click);
             // 
             // btnCloseEditors
             // 
@@ -356,16 +396,6 @@
             this.btnMapEditor.UseVisualStyleBackColor = true;
             this.btnMapEditor.Click += new System.EventHandler(this.btnMapEditor_Click);
             // 
-            // btnIMGSplit
-            // 
-            this.btnIMGSplit.Location = new System.Drawing.Point(15, 250);
-            this.btnIMGSplit.Name = "btnIMGSplit";
-            this.btnIMGSplit.Size = new System.Drawing.Size(118, 23);
-            this.btnIMGSplit.TabIndex = 35;
-            this.btnIMGSplit.Text = "Image Splitter";
-            this.btnIMGSplit.UseVisualStyleBackColor = true;
-            this.btnIMGSplit.Click += new System.EventHandler(this.btnIMGSplit_Click);
-            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,6 +452,9 @@
         private System.Windows.Forms.ToolStripMenuItem questEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playerEditorToolStripMenuItem;
         private System.Windows.Forms.Button btnIMGSplit;
+        private System.Windows.Forms.Button btnAnimEditor;
+        private System.Windows.Forms.ToolStripMenuItem imageSplitterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem animationEditorToolStripMenuItem;
     }
 }
 

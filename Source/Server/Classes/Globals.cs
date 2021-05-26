@@ -9,6 +9,7 @@
         public const char CHAR_YES = 'Y';
         public const int MAX_PLAYERS = 5;
         public const int MAX_LEVEL = 30;
+        public const int MAX_ANIMATIONS = 20;
         public const int MAX_NPCS = 10;
         public const int MAX_ITEMS = 50;        
         public const int MAX_MAPS = 10;
@@ -99,7 +100,9 @@
         public const int PIC_W = 32;
         public const int PIC_H = 32;
         public const int SW_HIDE = 0;
-        public const int SW_SHOW = 5;
+        public const int SW_SHOW = 5;    
+        public const int SPRITE_SIZE_X = 32;
+        public const int SPRITE_SIZE_Y = 48;
         #endregion
 
         #region Screen Globals

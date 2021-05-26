@@ -8,6 +8,7 @@ namespace SabertoothClient
 {
     public class Npc : Drawable
     {
+        #region Properties
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -29,6 +30,8 @@ namespace SabertoothClient
         public int ChatNum { get; set; }
         public int Speed { get; set; }
         public bool IsSpawned { get; set; }
+        #endregion
+
         static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
@@ -100,10 +103,10 @@ namespace SabertoothClient
 
         public virtual void Draw(RenderTarget target, RenderStates state)
         {
-            int x = (X * 32);
-            int y = (Y * 32) - 16;
-            int step = (Step * 32);
-            int dir = (Direction * 48);
+            int x = (X * PIC_X);
+            int y = (Y * PIC_Y) - 16;
+            int step = (Step * SPRITE_SIZE_X);
+            int dir = (Direction * SPRITE_SIZE_Y);
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));

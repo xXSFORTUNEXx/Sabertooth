@@ -666,6 +666,7 @@ namespace SabertoothServer
                         SendPoolMapNpcs(incMSG, currentMap);
                         SendMapItems(incMSG, currentMap);
                         SendChests(incMSG);
+                        SendAnimationsData(incMSG);
                         SendDateAndTime(incMSG, i);
                         players[i].UpdateLastLogged();
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
@@ -1505,6 +1506,41 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        static void SendAnimationData(NetIncomingMessage incMSG, int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.AnimationData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.Write(animations[index].Name);
+            outMSG.WriteVariableInt32(animations[index].SpriteNumber);
+            outMSG.WriteVariableInt32(animations[index].FrameCountH);
+            outMSG.WriteVariableInt32(animations[index].FrameCountV);
+            outMSG.WriteVariableInt32(animations[index].FrameCount);
+            outMSG.WriteVariableInt32(animations[index].FrameDuration);
+            outMSG.WriteVariableInt32(animations[index].LoopCount);
+            outMSG.Write(animations[index].RenderBelowTarget);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        static void SendAnimationsData(NetIncomingMessage incMSG)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.AnimationsData);
+            for (int i = 0; i < MAX_ANIMATIONS; i++)
+            {
+                outMSG.WriteVariableInt32(i);
+                outMSG.Write(animations[i].Name);
+                outMSG.WriteVariableInt32(animations[i].SpriteNumber);
+                outMSG.WriteVariableInt32(animations[i].FrameCountH);
+                outMSG.WriteVariableInt32(animations[i].FrameCountV);
+                outMSG.WriteVariableInt32(animations[i].FrameCount);
+                outMSG.WriteVariableInt32(animations[i].FrameDuration);
+                outMSG.WriteVariableInt32(animations[i].LoopCount);
+                outMSG.Write(animations[i].RenderBelowTarget);
+            }
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         static void SendItemData(NetIncomingMessage incMSG, int index)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -1539,7 +1575,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Items);
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < MAX_ITEMS; i++)
             {
                 outMSG.Write(items[i].Name);
                 outMSG.WriteVariableInt32(items[i].Sprite);
@@ -2192,6 +2228,8 @@ namespace SabertoothServer
         SendBankSwap,
         UpdateHotBar,
         UseHotBar,
-        ItemCoolDown
+        ItemCoolDown,
+        AnimationData,
+        AnimationsData
     }
 }
