@@ -7,10 +7,11 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using static SabertoothClient.Globals;
+using System.IO;
 
 namespace SabertoothClient
 {
-    public class Item
+    public class Item : Drawable
     {
         // Stored Variables
         public int Id { get; set; }
@@ -76,6 +77,8 @@ namespace SabertoothClient
             Stackable = stack;
             MaxStack = maxstack;
         }
+
+        public virtual void Draw(RenderTarget target, RenderStates states) { }
     }
 
     public enum ItemType

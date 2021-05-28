@@ -3,9 +3,11 @@ using static SabertoothServer.Server;
 using System.Data.SqlClient;
 using static SabertoothServer.Globals;
 using static System.IO.File;
+using System;
 
 namespace SabertoothServer
 {
+    [Serializable()]
     public class Item
     {
         //stored variables

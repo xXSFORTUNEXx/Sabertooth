@@ -1279,5 +1279,8 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\98.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Items\99.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\CDOverlay.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animations\1.png
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animations\2.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\1.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\2.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\3.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\4.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\5.png

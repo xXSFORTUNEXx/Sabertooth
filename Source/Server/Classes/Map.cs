@@ -509,39 +509,9 @@ namespace SabertoothServer
     }
 
     [Serializable()]
-    public class MapNpc
+    public class MapNpc : Npc
     {
-        #region Properties
-        public string Name { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
         public int NpcNum { get; set; }
-        public int Range { get; set; }
-        public int Direction { get; set; }
-        public int Sprite { get; set; }
-        public int Step { get; set; }
-        public int Owner { get; set; }
-        public int Behavior { get; set; }
-        public int SpawnTime { get; set; }
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
-        public int Damage { get; set; }
-        public int DesX { get; set; }
-        public int DesY { get; set; }
-        public int Exp { get; set; }
-        public int Money { get; set; }
-        public int ShopNum { get; set; }
-        public int ChatNum { get; set; }
-        public int Speed { get; set; }
-        #endregion
-
-        public bool IsSpawned;
-        public bool DidMove;
-        public int Target;
-        public double s_LastPoint;
-        public int spawnTick;
-        public int SpawnX;
-        public int SpawnY;
         public int aiTick;
 
         public MapNpc() { }
@@ -554,7 +524,7 @@ namespace SabertoothServer
             npcnum = NpcNum;
         }
 
-        public bool DamageNpc(Player s_Player, Map s_Map)
+        public override bool DamageNpc(Player s_Player, Map s_Map)
         {
             int damage = s_Player.MainHand.Damage;  //get the mainweapon damage for calculation
 
@@ -578,7 +548,7 @@ namespace SabertoothServer
             return false;
         }
 
-        public void AttackPlayer(int index)
+        public override void AttackPlayer(int index)
         {
             players[index].Health -= Damage;
             if (players[index].Health <= 0)
@@ -596,7 +566,7 @@ namespace SabertoothServer
             }
         }
 
-        public void NpcAI(int s_CanMove, int s_Direction, int mapNum)   //THIS IS ACTUALLY USED, not the NPC CLASS
+        public override void NpcAI(int s_CanMove, int s_Direction, int mapNum)
         {
             DidMove = false;
 
@@ -1009,6 +979,26 @@ namespace SabertoothServer
         }
     }    
 
+    [Serializable()]
+    public class MapItem : Item
+    {
+        public int ItemNum { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int ExpireTick;
+        public bool IsSpawned;
+
+        public MapItem() { }
+
+        public MapItem(string name, int x, int y, int itemnum)
+        {
+            Name = name;
+            X = x;
+            Y = y;
+            ItemNum = itemnum;
+        }
+    }
+
     public class BloodSplat
     {
         public int X { get; set; }
@@ -1024,54 +1014,6 @@ namespace SabertoothServer
             X = x;
             Y = y;
             Active = true;
-        }
-    }
-
-    [Serializable()]
-    public class MapItem
-    {
-        #region Properties
-        public string Name { get; set; }
-        public int Sprite { get; set; }
-        public int Damage { get; set; }
-        public int Armor { get; set; }
-        public int Type { get; set; }
-        public int AttackSpeed { get; set; }
-        public int HealthRestore { get; set; }
-        public int ManaRestore { get; set; }
-        public int Strength { get; set; }
-        public int Agility { get; set; }
-        public int Intelligence { get; set; }
-        public int Stamina { get; set; }
-        public int Energy { get; set; }
-        public int Value { get; set; }
-        public int Price { get; set; }
-        public int Rarity { get; set; }
-        public int CoolDown { get; set; }
-        public int AddMaxHealth { get; set; }
-        public int AddMaxMana { get; set; }
-        public int BonusXP { get; set; }
-        public int SpellNum { get; set; }
-        public bool Stackable { get; set; }
-        public int MaxStack { get; set; }
-
-        public int ItemNum { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        #endregion
-
-        public int ExpireTick;
-
-        public bool IsSpawned;
-
-        public MapItem() { }
-
-        public MapItem(string name, int x, int y, int itemnum)
-        {
-            Name = name;
-            X = x;
-            Y = y;
-            ItemNum = itemnum;
         }
     }
 
@@ -1129,7 +1071,8 @@ namespace SabertoothServer
         NpcAvoid,
         MapItem,
         Chest,
-        Warp
+        Warp,
+        Animation
     }
 
     public enum TileLayers

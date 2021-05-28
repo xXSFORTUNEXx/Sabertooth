@@ -666,7 +666,7 @@ namespace SabertoothServer
                         SendPoolMapNpcs(incMSG, currentMap);
                         SendMapItems(incMSG, currentMap);
                         SendChests(incMSG);
-                        SendAnimationsData(incMSG);
+                        SendAnimations(incMSG);
                         SendDateAndTime(incMSG, i);
                         players[i].UpdateLastLogged();
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
@@ -1522,13 +1522,12 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        static void SendAnimationsData(NetIncomingMessage incMSG)
+        static void SendAnimations(NetIncomingMessage incMSG)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.AnimationsData);
             for (int i = 0; i < MAX_ANIMATIONS; i++)
-            {
-                outMSG.WriteVariableInt32(i);
+            {                
                 outMSG.Write(animations[i].Name);
                 outMSG.WriteVariableInt32(animations[i].SpriteNumber);
                 outMSG.WriteVariableInt32(animations[i].FrameCountH);

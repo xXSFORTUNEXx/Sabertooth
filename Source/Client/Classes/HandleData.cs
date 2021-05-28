@@ -1482,7 +1482,7 @@ namespace SabertoothClient
                     map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
-            map.MapDatabaseCache(map.Id);
+            //map.MapDatabaseCache(map.Id);
             players[myIndex].isChangingMaps = false;
         }
 

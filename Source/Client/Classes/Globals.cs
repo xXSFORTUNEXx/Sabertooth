@@ -40,6 +40,7 @@ namespace SabertoothClient
         public const int MAX_PLAYER_QUEST_LIST = 10;
         public const int MAX_PLAYER_HOTBAR = 10;
         public const int MAX_STACK_SIZE = 255;
+        public const int MAX_MAP_ANIMATIONS = 15;
         #endregion
 
         #region Config Globals

@@ -8,6 +8,7 @@ using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
 using System.IO;
+using static System.Environment;
 
 namespace SabertoothClient
 {
@@ -24,21 +25,10 @@ namespace SabertoothClient
 
         public bool RenderBelowTarget { get; set; } //set the render below, right now they will default to above the target below the first fringe layer     
 
-        static int animTextures = Directory.GetFiles("Resources/Animations/", "*", SearchOption.TopDirectoryOnly).Length;   //count the textures
-
-        VertexArray animPic = new VertexArray(PrimitiveType.Quads, 4);  //setup the vertex array for later
-        Texture[] animSprite = new Texture[animTextures];   //create textures for all the sprites loaded
-
-        //Client side stuff
-        public int X { get; set; }  //Animations X location
-        public int Y { get; set; }  //animations Y location
 
         public Animation()
         {
-            for (int i = 0; i < animTextures; i++)
-            {
-                animSprite[i] = new Texture("Resources/Animation/" + (i + 1) + ".png");
-            }
+
         }
 
         public Animation(string name,
@@ -55,16 +45,8 @@ namespace SabertoothClient
             LoopCount = loopcount;
 
             RenderBelowTarget = rbelowtarget;
-
-            for (int i = 0; i < animTextures; i++)
-            {
-                animSprite[i] = new Texture("Resources/Animations/" + (i + 1) + ".png");
-            }
         }
 
-        public virtual void Draw(RenderTarget target, RenderStates state)
-        {
-
-        }
+        public virtual void Draw(RenderTarget target, RenderStates states) { }
     }
 }

@@ -80,7 +80,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_HIDE);
+            ShowWindow(handle, SW_SHOW);
             Logging.WriteMessageLog("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -349,6 +349,11 @@ namespace SabertoothClient
             for (int i = 0; i < MAX_CHESTS; i++)
             {
                 chests[i] = new Chest();
+            }
+
+            for (int i = 0; i < MAX_ANIMATIONS; i++)
+            {
+                animations[i] = new Animation();
             }
             Logging.WriteMessageLog("All array successfully created!");
         }
@@ -749,6 +754,48 @@ namespace SabertoothClient
             }
         }
 
+        static void DrawAnimations()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int x = minX; x < maxX; x++)
+            {
+                for (int y = minY; y < maxY; y++)
+                {
+                    if (x > 0 && y > 0 && x < map.MaxX && y < map.MaxY)
+                    {
+                        if (map.Ground[x, y].Type == (int)TileType.Animation)
+                        {
+                            int index = map.Ground[x, y].SpawnNum - 1;
+
+                            //animations[index].X = x;
+                            //animations[index].Y = y;
+
+                            //renderWindow.Draw(animations[index]);
+                        }
+                    }
+                }
+            }
+        }
+
         static void DrawIndexPlayer()
         {
             renderWindow.Draw(players[HandleData.myIndex]);
@@ -761,10 +808,11 @@ namespace SabertoothClient
                 renderWindow.Draw(map); //draw the maps ground and mask layers
                 DrawChests();   //draw chests ontop of those
                 DrawMapItems(); //now we draw the items which can be picked up
-                DrawBlood();    //draw blood from combat (maybe switch with item?)
+                DrawBlood();    //draw blood from combat (maybe switch with item?)                
                 DrawNpcs(); //draw the npcs
                 DrawPlayers();  //now the other players in the world
                 DrawIndexPlayer();  //our main player of the current client instance
+                DrawAnimations();   //draw the animations
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 
                 //Process actual movement in any direction

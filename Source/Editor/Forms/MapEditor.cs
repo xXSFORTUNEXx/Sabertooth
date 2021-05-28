@@ -25,6 +25,7 @@ namespace Editor.Forms
         Npc e_Npc = new Npc();
         Item e_Item = new Item();
         Chest e_Chest = new Chest();
+        Animation e_Animation = new Animation();
         public int SelectedIndex = 1;
         public int e_ViewX { get; set; }
         public int e_ViewY { get; set; }
@@ -45,6 +46,7 @@ namespace Editor.Forms
         int e_WarpMap;
         int e_WarpX;
         int e_WarpY;
+        int e_AnimNum;
         float e_Zoom = 1.0f;
         bool hScroll;
         int e_WheelOption = WHEEL_OPTION_SCROLL;
@@ -407,7 +409,7 @@ namespace Editor.Forms
                                     e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnNum + " - " + e_Map.Ground[x, y].SpawnAmount, new Vector2f((x * 32), (y * 32) + 20), 14, SFML.Graphics.Color.Cyan);
                                     break;
                                 case (int)TileType.NpcAvoid:
-                                    e_Text.DrawText(e_Window, "A", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.White);
+                                    e_Text.DrawText(e_Window, "V", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.White);
                                     break;
                                 case (int)TileType.MapItem:
                                     e_Text.DrawText(e_Window, "I", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Cyan);
@@ -419,6 +421,10 @@ namespace Editor.Forms
                                 case (int)TileType.Warp:
                                     e_Text.DrawText(e_Window, "W", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Magenta);
                                     break;
+                                case (int)TileType.Animation:
+                                    e_Text.DrawText(e_Window, "A", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Black);
+                                    e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnNum.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Green);
+                                    break;
                                 default:
                                     break;
                             }
@@ -426,6 +432,7 @@ namespace Editor.Forms
                     }
                 }
             }
+
             if (tabTools.SelectedTab == tabLight)
             {
                 for (int x = 0; x < e_Map.MaxX; x++)
@@ -781,11 +788,24 @@ namespace Editor.Forms
                 if (e.Button == MouseButtons.Left)
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].Type = e_Type;
-                    if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
-                    if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
-                    if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
-                    if (e_Type == (int)TileType.Chest) { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_SpawnChest; }
-                    if (e_Type == (int)TileType.Warp) { e_Map.Ground[e_CursorX, e_CursorY].Map = e_WarpMap; e_Map.Ground[e_CursorX, e_CursorY].MapX = e_WarpX; e_Map.Ground[e_CursorX, e_CursorY].MapY = e_WarpY; }
+
+                    if (e_Type == (int)TileType.NpcSpawn)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
+
+                    if (e_Type == (int)TileType.SpawnPool)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+
+                    if (e_Type == (int)TileType.MapItem)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+
+                    if (e_Type == (int)TileType.Chest)
+                    { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_SpawnChest; }
+
+                    if (e_Type == (int)TileType.Warp)
+                    { e_Map.Ground[e_CursorX, e_CursorY].Map = e_WarpMap; e_Map.Ground[e_CursorX, e_CursorY].MapX = e_WarpX; e_Map.Ground[e_CursorX, e_CursorY].MapY = e_WarpY; }
+
+                    if (e_Type == (int)TileType.Animation)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_AnimNum; }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -1186,6 +1206,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void radBlocked_CheckedChanged(object sender, EventArgs e)
@@ -1195,6 +1216,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void mnuExit_Click(object sender, EventArgs e)
@@ -1220,6 +1242,7 @@ namespace Editor.Forms
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void radNpcAvoid_CheckedChanged(object sender, EventArgs e)
@@ -1229,6 +1252,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
@@ -1249,6 +1273,7 @@ namespace Editor.Forms
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void radMapItem_CheckedChanged(object sender, EventArgs e)
@@ -1265,6 +1290,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)
@@ -1674,6 +1700,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
             pnlWarp.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private void scrlIntensity_Scroll(object sender, ScrollEventArgs e)
@@ -1716,6 +1743,7 @@ namespace Editor.Forms
             pnlChest.Visible = false;
             pnlNpcSpawn.Visible = false;
             pnlMapItem.Visible = false;
+            pnlAnimation.Visible = false;
         }
 
         private int LoadMapCount()
@@ -1767,6 +1795,43 @@ namespace Editor.Forms
 
             e_Map.RestructureMap(x, y, e_Map.MaxX, e_Map.MaxY);
             UpdateViewScrollBars();
+        }
+
+        private int LoadAnimationCount()
+        {
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
+            {
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM Animation";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
+                {
+                    object count = cmd.ExecuteScalar();
+                    return ToInt32(count);
+                }
+            }
+        }
+
+        private void radAnimation_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Type = (int)TileType.Animation;
+            lblType.Text = "Type: Animation";
+            e_AnimNum = 1;
+            scrlAnimNum.Maximum = LoadAnimationCount();
+            e_Animation.LoadAnimationNameFromDatabase(scrlAnimNum.Value);
+            lblAnimNum.Text = "Animation: " + scrlAnimNum.Value + " - " + e_Animation.Name;
+            pnlAnimation.Visible = true;
+            pnlMapItem.Visible = false;
+            pnlNpcSpawn.Visible = false;
+            pnlChest.Visible = false;
+            pnlWarp.Visible = false;
+        }
+
+        private void scrlAnimNum_Scroll(object sender, ScrollEventArgs e)
+        {
+            e_AnimNum = scrlAnimNum.Value;
+            e_Animation.LoadAnimationFromDatabase(scrlAnimNum.Value);
+            lblAnimNum.Text = "Animation: " + scrlAnimNum.Value + " - " + e_Animation.Name;
         }
     }
 

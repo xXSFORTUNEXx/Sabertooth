@@ -19,6 +19,7 @@ namespace Editor.Forms
         Animation e_Animation = new Animation();
         Image[] finalAnimation;
         int tmrFrameCount = 0;
+        int tmrLoopCounter = 0;
         int SelectedIndex;
         bool Modified;
 
@@ -88,7 +89,7 @@ namespace Editor.Forms
 
         private void scrlFD_Scroll(object sender, ScrollEventArgs e)
         {
-            lblFD.Text = "Frame Duration: " + (scrlFD.Value);
+            lblFD.Text = "Frame Duration: " + (scrlFD.Value) + "ms";
             e_Animation.FrameDuration = scrlFD.Value;
             Modified = true;
         }
@@ -205,7 +206,7 @@ namespace Editor.Forms
                 int ypic = anim.Height / scrlFCH.Value;
                 picPreview.Width = xpic;
                 picPreview.Height = ypic;
-                lblAnimSize.Text = "Animation Size: " + xpic + "x" + ypic;
+                lblAnimSize.Text = "Animation Size: " + xpic + "x" + ypic + "\nOriginal Size: " + anim.Width + "x" + anim.Height;
 
                 for (int i = 0; i < scrlFCH.Value; i++)
                 {
@@ -236,10 +237,22 @@ namespace Editor.Forms
 
         private void tmrAnimation_Tick(object sender, EventArgs e)
         {
-            if (tmrFrameCount >= scrlFC.Value) { tmrFrameCount = 0; }
-
             picPreview.Image = finalAnimation[tmrFrameCount];
             tmrFrameCount += 1;
+
+            if (tmrFrameCount >= scrlFC.Value)
+            {
+                tmrFrameCount = 0;
+                tmrLoopCounter += 1;
+
+                if (tmrLoopCounter >= scrlLPC.Value && !chkLoop.Checked)
+                {
+                    tmrAnimation.Enabled = false;
+                    tmrFrameCount = 0;
+                    tmrLoopCounter = 0;
+                    return;
+                }
+            }                      
         }
     }
 }

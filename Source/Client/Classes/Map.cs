@@ -41,6 +41,7 @@ namespace SabertoothClient
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
         public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
         public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
+        public MapAnimation[] m_Animation = new MapAnimation[MAX_MAP_ANIMATIONS];
         public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         public RenderStates ustates;
         public static int Max_Tilesets = Directory.GetFiles("Resources/Tilesets/", "*", SearchOption.TopDirectoryOnly).Length;
@@ -452,32 +453,8 @@ namespace SabertoothClient
         #endregion
     }
 
-    public class MapNpc : Drawable
+    public class MapNpc : Npc
     {
-        #region Properties
-        public string Name { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int NpcNum { get; set; }
-        public int Range { get; set; }
-        public int Direction { get; set; }
-        public int Sprite { get; set; }
-        public int Step { get; set; }
-        public int Owner { get; set; }
-        public int Behavior { get; set; }
-        public int SpawnTime { get; set; }
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
-        public int Damage { get; set; }
-        public int DesX { get; set; }
-        public int DesY { get; set; }
-        public int Exp { get; set; }
-        public int Money { get; set; }
-        public int ShopNum { get; set; }
-        public int ChatNum { get; set; }
-        #endregion
-
-        public bool IsSpawned;
         static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
@@ -504,7 +481,7 @@ namespace SabertoothClient
             }
         }
 
-        public virtual void Draw(RenderTarget target, RenderStates state)
+        public override void Draw(RenderTarget target, RenderStates state)
         {
             int x = (X * 32);
             int y = (Y * 32) - 16;
@@ -527,6 +504,84 @@ namespace SabertoothClient
             state.Texture = c_Sprite[Sprite - 1];
             target.Draw(spritePic, state);
             target.Draw(healthBar);
+        }
+    }
+
+    public class MapItem : Item
+    {        
+        static int spritePics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
+        VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
+        Texture[] c_ItemSprite = new Texture[spritePics];
+
+        public int ItemNum { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool IsSpawned;
+
+        public MapItem()
+        {
+            for (int i = 0; i < spritePics; i++)
+            {
+                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
+            }
+        }
+
+        public override void Draw(RenderTarget target, RenderStates states)
+        {
+            itemPic[0] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y)), new Vector2f(0, 0));
+            itemPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(32, 0));
+            itemPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
+            itemPic[3] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
+
+            if (Sprite > 0)
+            {
+                states.Texture = c_ItemSprite[Sprite - 1];
+                target.Draw(itemPic, states);
+            }
+        }
+    }
+
+    public class MapAnimation : Animation
+    {
+        static int animTextures = Directory.GetFiles("Resources/Animation/", "*", SearchOption.TopDirectoryOnly).Length;   //count the textures
+
+        VertexArray animPic = new VertexArray(PrimitiveType.Quads, 4);  //setup the vertex array for later
+        Texture[] animSprite = new Texture[animTextures];   //create textures for all the sprites loaded
+
+        //Client side stuff
+        public int X { get; set; }  //Animations X location
+        public int Y { get; set; }  //animations Y location
+
+        public MapAnimation()
+        {
+            for (int i = 0; i < animTextures; i++)
+            {
+                animSprite[i] = new Texture("Resources/Animation/" + (i + 1) + ".png");
+            }
+        }
+
+        public override void Draw(RenderTarget target, RenderStates states)
+        {
+            if (SpriteNumber > 0)
+            {
+                Texture anim = animSprite[SpriteNumber - 1];
+                int x = (X * PIC_X) - 16;   //16
+                int y = (Y * PIC_Y) - 96;   //96
+
+                int xpic = (int)anim.Size.X / FrameCountV;
+                int ypic = (int)anim.Size.Y / FrameCountH;
+
+                int finalH = (0);
+                int finalW = (0);
+
+                animPic[0] = new Vertex(new Vector2f(x, y), new Vector2f(finalW, finalH));
+                animPic[1] = new Vertex(new Vector2f(x + xpic, y), new Vector2f(finalW + xpic, finalH));
+                animPic[2] = new Vertex(new Vector2f(x + xpic, y + ypic), new Vector2f(finalW + xpic, finalH + ypic));
+                animPic[3] = new Vertex(new Vector2f(x, y + ypic), new Vector2f(finalW, finalH + ypic));
+
+                states.Texture = anim;
+                target.Draw(animPic, states);
+            }
         }
     }
 
@@ -556,84 +611,11 @@ namespace SabertoothClient
             int ty = (TexY * PIC_Y);
             bloodPic[0] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y)), new Vector2f(tx, ty));
             bloodPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(tx + PIC_X, ty));
-            bloodPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(tx + PIC_X,  ty + PIC_Y));
+            bloodPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(tx + PIC_X, ty + PIC_Y));
             bloodPic[3] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y) + PIC_Y), new Vector2f(tx, ty + PIC_Y));
 
             states.Texture = c_bloodSprite;
             target.Draw(bloodPic, states);
-        }
-    }
-
-    public class MapItem : Drawable
-    {
-        #region Properties
-        public string Name { get; set; }
-        public int Sprite { get; set; }
-        public int Damage { get; set; }
-        public int Armor { get; set; }
-        public int Type { get; set; }
-        public int AttackSpeed { get; set; }
-        public int HealthRestore { get; set; }
-        public int ManaRestore { get; set; }
-        public int Strength { get; set; }
-        public int Agility { get; set; }
-        public int Intelligence { get; set; }
-        public int Stamina { get; set; }
-        public int Energy { get; set; }
-        public int Value { get; set; }
-        public int Price { get; set; }
-        public int Rarity { get; set; }
-        public int CoolDown { get; set; }
-        public int AddMaxHealth { get; set; }
-        public int AddMaxMana { get; set; }
-        public int BonusXP { get; set; }
-        public int SpellNum { get; set; }
-        public bool Stackable { get; set; }
-        public int MaxStack { get; set; }
-
-        public int ItemNum { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        #endregion
-
-        public bool IsSpawned;
-        static int spritePics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
-        VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
-        Texture[] c_ItemSprite = new Texture[spritePics];
-
-        public MapItem()
-        {
-            for (int i = 0; i < spritePics; i++)
-            {
-                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
-            }
-        }
-
-        public MapItem(string name, int x, int y, int itemnum)
-        {
-            Name = name;
-            X = x;
-            Y = y;
-            ItemNum = itemnum;
-
-            for (int i = 0; i < spritePics; i++)
-            {
-                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
-            }
-        }
-
-        public virtual void Draw(RenderTarget target, RenderStates states)
-        {
-            itemPic[0] = new Vertex(new Vector2f((X * 32), (Y * 32)), new Vector2f(0, 0));
-            itemPic[1] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32)), new Vector2f(32, 0));
-            itemPic[2] = new Vertex(new Vector2f((X * 32) + 32, (Y * 32) + 32), new Vector2f(32, 32));
-            itemPic[3] = new Vertex(new Vector2f((X * 32), (Y * 32) + 32), new Vector2f(0, 32));
-
-            if (Sprite > 0)
-            {
-                states.Texture = c_ItemSprite[Sprite - 1];
-                target.Draw(itemPic, states);
-            }
         }
     }
 
@@ -683,7 +665,8 @@ namespace SabertoothClient
         NpcAvoid,
         MapItem,
         Chest,
-        Warp
+        Warp,
+        Animation
     }
 
     public enum TileLayers

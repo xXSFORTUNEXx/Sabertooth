@@ -52,11 +52,12 @@
             this.lblLPC = new System.Windows.Forms.Label();
             this.scrlLPC = new System.Windows.Forms.HScrollBar();
             this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.chkLoop = new System.Windows.Forms.CheckBox();
+            this.lblAnimSize = new System.Windows.Forms.Label();
             this.btnPreview = new System.Windows.Forms.Button();
             this.picPreview = new System.Windows.Forms.PictureBox();
             this.chkRBT = new System.Windows.Forms.CheckBox();
             this.tmrAnimation = new System.Windows.Forms.Timer(this.components);
-            this.lblAnimSize = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -146,7 +147,7 @@
             // scrlSprite
             // 
             this.scrlSprite.LargeChange = 1;
-            this.scrlSprite.Location = new System.Drawing.Point(193, 176);
+            this.scrlSprite.Location = new System.Drawing.Point(193, 179);
             this.scrlSprite.Maximum = 4;
             this.scrlSprite.Minimum = 1;
             this.scrlSprite.Name = "scrlSprite";
@@ -158,7 +159,7 @@
             // lblSprite
             // 
             this.lblSprite.AutoSize = true;
-            this.lblSprite.Location = new System.Drawing.Point(235, 163);
+            this.lblSprite.Location = new System.Drawing.Point(190, 162);
             this.lblSprite.Name = "lblSprite";
             this.lblSprite.Size = new System.Drawing.Size(86, 13);
             this.lblSprite.TabIndex = 13;
@@ -170,13 +171,13 @@
             this.picSprite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picSprite.Location = new System.Drawing.Point(193, 32);
             this.picSprite.Name = "picSprite";
-            this.picSprite.Size = new System.Drawing.Size(128, 128);
+            this.picSprite.Size = new System.Drawing.Size(567, 128);
             this.picSprite.TabIndex = 14;
             this.picSprite.TabStop = false;
             // 
             // btnViewFull
             // 
-            this.btnViewFull.Location = new System.Drawing.Point(246, 193);
+            this.btnViewFull.Location = new System.Drawing.Point(193, 203);
             this.btnViewFull.Name = "btnViewFull";
             this.btnViewFull.Size = new System.Drawing.Size(75, 23);
             this.btnViewFull.TabIndex = 15;
@@ -195,8 +196,9 @@
             // 
             // scrlFCH
             // 
+            this.scrlFCH.LargeChange = 1;
             this.scrlFCH.Location = new System.Drawing.Point(21, 92);
-            this.scrlFCH.Maximum = 25;
+            this.scrlFCH.Maximum = 30;
             this.scrlFCH.Minimum = 1;
             this.scrlFCH.Name = "scrlFCH";
             this.scrlFCH.Size = new System.Drawing.Size(153, 17);
@@ -215,8 +217,9 @@
             // 
             // scrlFCV
             // 
+            this.scrlFCV.LargeChange = 1;
             this.scrlFCV.Location = new System.Drawing.Point(21, 136);
-            this.scrlFCV.Maximum = 25;
+            this.scrlFCV.Maximum = 30;
             this.scrlFCV.Minimum = 1;
             this.scrlFCV.Name = "scrlFCV";
             this.scrlFCV.Size = new System.Drawing.Size(153, 17);
@@ -284,6 +287,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.chkLoop);
             this.pnlMain.Controls.Add(this.lblAnimSize);
             this.pnlMain.Controls.Add(this.btnPreview);
             this.pnlMain.Controls.Add(this.picPreview);
@@ -306,15 +310,36 @@
             this.pnlMain.Controls.Add(this.lblName);
             this.pnlMain.Location = new System.Drawing.Point(159, 12);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(341, 398);
+            this.pnlMain.Size = new System.Drawing.Size(780, 637);
             this.pnlMain.TabIndex = 9;
             this.pnlMain.TabStop = false;
             this.pnlMain.Text = "Properties";
             this.pnlMain.Visible = false;
             // 
+            // chkLoop
+            // 
+            this.chkLoop.AutoSize = true;
+            this.chkLoop.Checked = true;
+            this.chkLoop.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkLoop.Location = new System.Drawing.Point(21, 315);
+            this.chkLoop.Name = "chkLoop";
+            this.chkLoop.Size = new System.Drawing.Size(91, 17);
+            this.chkLoop.TabIndex = 30;
+            this.chkLoop.Text = "Loop Preview";
+            this.chkLoop.UseVisualStyleBackColor = true;
+            // 
+            // lblAnimSize
+            // 
+            this.lblAnimSize.AutoSize = true;
+            this.lblAnimSize.Location = new System.Drawing.Point(21, 357);
+            this.lblAnimSize.Name = "lblAnimSize";
+            this.lblAnimSize.Size = new System.Drawing.Size(99, 26);
+            this.lblAnimSize.TabIndex = 29;
+            this.lblAnimSize.Text = "Animation Size: 0x0\r\nOriginal Size: 0x0";
+            // 
             // btnPreview
             // 
-            this.btnPreview.Location = new System.Drawing.Point(245, 357);
+            this.btnPreview.Location = new System.Drawing.Point(193, 292);
             this.btnPreview.Name = "btnPreview";
             this.btnPreview.Size = new System.Drawing.Size(75, 23);
             this.btnPreview.TabIndex = 28;
@@ -326,9 +351,9 @@
             // 
             this.picPreview.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picPreview.Location = new System.Drawing.Point(193, 222);
+            this.picPreview.Location = new System.Drawing.Point(193, 321);
             this.picPreview.Name = "picPreview";
-            this.picPreview.Size = new System.Drawing.Size(128, 128);
+            this.picPreview.Size = new System.Drawing.Size(567, 298);
             this.picPreview.TabIndex = 27;
             this.picPreview.TabStop = false;
             // 
@@ -347,20 +372,11 @@
             // 
             this.tmrAnimation.Tick += new System.EventHandler(this.tmrAnimation_Tick);
             // 
-            // lblAnimSize
-            // 
-            this.lblAnimSize.AutoSize = true;
-            this.lblAnimSize.Location = new System.Drawing.Point(21, 357);
-            this.lblAnimSize.Name = "lblAnimSize";
-            this.lblAnimSize.Size = new System.Drawing.Size(99, 13);
-            this.lblAnimSize.TabIndex = 29;
-            this.lblAnimSize.Text = "Animation Size: 0x0";
-            // 
             // AnimationEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 426);
+            this.ClientSize = new System.Drawing.Size(951, 661);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.groupBox1);
             this.Name = "AnimationEditor";
@@ -404,5 +420,6 @@
         private System.Windows.Forms.CheckBox chkRBT;
         private System.Windows.Forms.Timer tmrAnimation;
         private System.Windows.Forms.Label lblAnimSize;
+        private System.Windows.Forms.CheckBox chkLoop;
     }
 }
