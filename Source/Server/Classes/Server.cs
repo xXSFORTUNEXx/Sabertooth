@@ -195,7 +195,7 @@ namespace SabertoothServer
             }
             for (int i = 0; i < MAX_MAPS; i++)
             {
-                for (int n = 0; n < MAX_MAPS; n++)
+                for (int n = 0; n < MAX_MAP_NPCS; n++)
                 {
                     int num = (maps[i].m_MapNpc[n].NpcNum - 1);
 

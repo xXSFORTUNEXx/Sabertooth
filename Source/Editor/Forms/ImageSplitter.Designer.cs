@@ -196,9 +196,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(570, 644);
+            this.Controls.Add(this.picPreview);
             this.Controls.Add(this.scrlPreview);
             this.Controls.Add(this.lblPreview);
-            this.Controls.Add(this.picPreview);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.pnlDim);
             this.Controls.Add(this.btnExport);

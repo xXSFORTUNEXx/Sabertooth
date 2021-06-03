@@ -86,12 +86,12 @@ namespace SabertoothServer
             MaxX = MAX_MAP_X;
             MaxY = MAX_MAP_Y;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 m_MapNpc[i] = new MapNpc("None", 0, 0, 0);
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < MAX_MAP_ITEMS; i++)
             {
                 m_MapItem[i] = new MapItem("None", 0, 0, 0);
             }
@@ -224,16 +224,17 @@ namespace SabertoothServer
 
         public void LoadMapFromDatabase(int mapNum)
         {
-            for (int i = 0; i < 20; i++)
+            for (int n = 0; n < 20; n++)
             {
-                if (i < 10)
+                if (n < 10)
                 {
-                    m_MapNpc[i] = new MapNpc();
+                    m_MapNpc[n] = new MapNpc();
                 }
-                r_MapNpc[i] = new MapNpc();
-                m_MapItem[i] = new MapItem();
+                r_MapNpc[n] = new MapNpc();
+                m_MapItem[n] = new MapItem();
             }
 
+            int i = 0;
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             string script = ReadAllText("SQL Data Scripts/Load_Map.sql");
             using (var sql = new SqlConnection(connection))
@@ -246,16 +247,16 @@ namespace SabertoothServer
                     {
                         while (reader.Read())
                         {
-                            Id = ToInt32(reader[0]);
-                            Name = reader[1].ToString();
-                            Revision = ToInt32(reader[2]);
-                            TopMap = ToInt32(reader[3]);
-                            BottomMap = ToInt32(reader[4]);
-                            LeftMap = ToInt32(reader[5]);
-                            RightMap = ToInt32(reader[6]);
-                            Brightness = ToInt32(reader[7]);
-                            MaxX = ToInt32(reader[8]);
-                            MaxY = ToInt32(reader[9]);
+                            Id = ToInt32(reader[i]); i += 1;
+                            Name = reader[i].ToString(); i += 1;
+                            Revision = ToInt32(reader[i]); i += 1;
+                            TopMap = ToInt32(reader[i]); i += 1;
+                            BottomMap = ToInt32(reader[i]); i += 1;
+                            LeftMap = ToInt32(reader[i]); i += 1;
+                            RightMap = ToInt32(reader[i]); i += 1;
+                            Brightness = ToInt32(reader[i]); i += 1;
+                            MaxX = ToInt32(reader[i]); i += 1;
+                            MaxY = ToInt32(reader[i]); i += 1;
 
                             Ground = new Tile[MaxX, MaxY];
                             Mask = new Tile[MaxX, MaxY];
@@ -266,31 +267,31 @@ namespace SabertoothServer
                             byte[] buffer;
                             object load;
 
-                            buffer = (byte[])reader[10];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             m_MapNpc = (MapNpc[])load;
 
-                            buffer = (byte[])reader[11];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             m_MapItem = (MapItem[])load;
 
-                            buffer = (byte[])reader[12];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             Ground = (Tile[,])load;
 
-                            buffer = (byte[])reader[13];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             Mask = (Tile[,])load;
 
-                            buffer = (byte[])reader[14];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             MaskA = (Tile[,])load;
 
-                            buffer = (byte[])reader[15];
+                            buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             Fringe = (Tile[,])load;
 
-                            buffer = (byte[])reader[16];
+                            buffer = (byte[])reader[i];
                             load = ByteArrayToObject(buffer);
                             FringeA = (Tile[,])load;
                         }

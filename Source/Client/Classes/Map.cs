@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using static System.Environment;
 using static System.Convert;
 using static SabertoothClient.Client;
 using static SabertoothClient.Globals;
@@ -412,8 +413,8 @@ namespace SabertoothClient
                 {
                     if (Ground[x, y].LightRadius > 0)
                     {
-                        int centerX = ((x * 32) - players[HandleData.myIndex].X * 32) + 16;
-                        int centerY = 768 - (((y * 32) - players[HandleData.myIndex].Y * 32) + 16);
+                        int centerX = ((x * PIC_X) - players[HandleData.myIndex].X * PIC_Y) + 16;
+                        int centerY = 768 - (((y * PIC_Y) - players[HandleData.myIndex].Y * PIC_X) + 16);
                         Vector2f center = new Vector2f(centerX, centerY);
                         double radius = Ground[x, y].LightRadius;
 
@@ -547,8 +548,9 @@ namespace SabertoothClient
 
         VertexArray animPic = new VertexArray(PrimitiveType.Quads, 4);  //setup the vertex array for later
         Texture[] animSprite = new Texture[animTextures];   //create textures for all the sprites loaded
-
-        //Client side stuff
+        Texture[] finalTexture;
+        int currentFrame;
+        int animTick;
         public int X { get; set; }  //Animations X location
         public int Y { get; set; }  //animations Y location
 
@@ -558,18 +560,61 @@ namespace SabertoothClient
             {
                 animSprite[i] = new Texture("Resources/Animation/" + (i + 1) + ".png");
             }
+            currentFrame = 0;
+        }
+
+        public void ConfigAnimation()
+        {
+            try
+            {
+                Texture anim = animSprite[SpriteNumber - 1];
+                finalTexture = new Texture[FrameCount];
+                int currentCount = 0;
+                int xpic = (int)anim.Size.X / FrameCountV;
+                int ypic = (int)anim.Size.Y / FrameCountH;
+
+                for (int i = 0; i < FrameCountH; i++)
+                {
+                    for (int j = 0; j < FrameCountV; j++)
+                    {
+                        Image animImg = anim.CopyToImage();
+                        finalTexture[currentCount] = new Texture(animImg, new IntRect((j * xpic), (i * ypic), xpic, ypic));
+                        currentCount += 1;
+                    }
+                }
+            }
+            catch
+            {
+                Logging.WriteMessageLog("Error loading texture");
+            }
+        }
+
+        void CheckCurrentFrame()
+        {
+            if (TickCount - animTick > FrameDuration)
+            {
+                currentFrame += 1;
+
+                if (currentFrame >= FrameCount)
+                {
+                    currentFrame = 0;
+                }
+
+                animTick = TickCount;
+            }
         }
 
         public override void Draw(RenderTarget target, RenderStates states)
         {
             if (SpriteNumber > 0)
             {
-                Texture anim = animSprite[SpriteNumber - 1];
                 int x = (X * PIC_X) - 16;   //16
                 int y = (Y * PIC_Y) - 96;   //96
 
-                int xpic = (int)anim.Size.X / FrameCountV;
-                int ypic = (int)anim.Size.Y / FrameCountH;
+                CheckCurrentFrame();
+
+                int xpic = (int)finalTexture[currentFrame].Size.X;
+                int ypic = (int)finalTexture[currentFrame].Size.Y;
 
                 int finalH = (0);
                 int finalW = (0);
@@ -579,7 +624,7 @@ namespace SabertoothClient
                 animPic[2] = new Vertex(new Vector2f(x + xpic, y + ypic), new Vector2f(finalW + xpic, finalH + ypic));
                 animPic[3] = new Vertex(new Vector2f(x, y + ypic), new Vector2f(finalW, finalH + ypic));
 
-                states.Texture = anim;
+                states.Texture = finalTexture[currentFrame];
                 target.Draw(animPic, states);
             }
         }
@@ -656,7 +701,7 @@ namespace SabertoothClient
         }
     }
 
-    public enum TileType
+    public enum TileType : int
     {
         None,
         Blocked,
@@ -669,7 +714,7 @@ namespace SabertoothClient
         Animation
     }
 
-    public enum TileLayers
+    public enum TileLayers : int
     {
         Ground,
         Mask,

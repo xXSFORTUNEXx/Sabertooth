@@ -1431,6 +1431,11 @@ namespace SabertoothClient
                 map.m_MapItem[i] = new MapItem();
             }
 
+            for (int i = 0; i < MAX_MAP_ANIMATIONS; i++)
+            {
+                map.m_Animation[i] = new MapAnimation();
+            }            
+
             map.Ground = new Tile[maxx, maxy];
             map.Mask = new Tile[maxx, maxy];
             map.MaskA = new Tile[maxx, maxy];
@@ -1482,6 +1487,9 @@ namespace SabertoothClient
                     map.FringeA[x, y].Tileset = incMSG.ReadVariableInt32();
                 }
             }
+
+            SetupMapAnimations();   //setup the map animations
+
             //map.MapDatabaseCache(map.Id);
             players[myIndex].isChangingMaps = false;
         }
@@ -1492,6 +1500,7 @@ namespace SabertoothClient
         }
         #endregion
 
+        #region Other Voids
         static void LoadMainGUI()
         {
             canvas.DeleteAllChildren();
@@ -1504,7 +1513,46 @@ namespace SabertoothClient
             gui.CreateHotBarWindow(canvas);
             gui.AddText("Welcome to Sabertooth!");
         }
-    } 
+
+        static void SetupMapAnimations()
+        {
+            for (int x = 0; x < map.MaxX; x++)
+            {
+                for (int y = 0; y < map.MaxY; y++)
+                {
+                    if (map.Ground[x, y].Type == (int)TileType.Animation)
+                    {
+                        int animNum = map.Ground[x, y].SpawnNum - 1;
+                        int index = FindOpenMapAnimationSlot();
+
+                        map.m_Animation[index].Name = animations[animNum].Name;
+                        map.m_Animation[index].X = x;
+                        map.m_Animation[index].Y = y;
+                        map.m_Animation[index].SpriteNumber = animations[animNum].SpriteNumber;
+                        map.m_Animation[index].FrameCount = animations[animNum].FrameCount;
+                        map.m_Animation[index].FrameCountH = animations[animNum].FrameCountH;
+                        map.m_Animation[index].FrameCountV = animations[animNum].FrameCountV;
+                        map.m_Animation[index].FrameDuration = animations[animNum].FrameDuration;                        
+                        map.m_Animation[index].LoopCount = animations[animNum].LoopCount;
+                        map.m_Animation[index].ConfigAnimation();
+                    }
+                }
+            }
+        }
+
+        static int FindOpenMapAnimationSlot()
+        {
+            for (int i = 0; i < MAX_MAP_ANIMATIONS; i++)
+            {
+                if (map.m_Animation[i].Name == null)
+                {
+                    return i;
+                }
+            }
+            return MAX_MAP_ANIMATIONS;
+        }
+        #endregion
+    }
 
     public enum PacketTypes : byte
     {

@@ -661,12 +661,12 @@ namespace SabertoothServer
                         SendShops(incMSG);
                         SendChats(incMSG);
                         SendQuests(incMSG);
+                        SendAnimations(incMSG);
                         SendMapData(incMSG, currentMap);
                         SendMapNpcs(incMSG, currentMap);
                         SendPoolMapNpcs(incMSG, currentMap);
                         SendMapItems(incMSG, currentMap);
-                        SendChests(incMSG);
-                        SendAnimations(incMSG);
+                        SendChests(incMSG);                        
                         SendDateAndTime(incMSG, i);
                         players[i].UpdateLastLogged();
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
@@ -2073,14 +2073,14 @@ namespace SabertoothServer
 
         static int OpenSlot()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Name == null)
                 {
                     return i;
                 }
             }
-            return 5;
+            return MAX_PLAYERS;
         }
 
         static int GetPlayerConnection(NetIncomingMessage incMSG)

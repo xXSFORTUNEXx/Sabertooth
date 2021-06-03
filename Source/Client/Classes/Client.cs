@@ -80,7 +80,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_SHOW);
+            ShowWindow(handle, SW_HIDE);
             Logging.WriteMessageLog("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -776,20 +776,15 @@ namespace SabertoothClient
                 maxY = (players[HandleData.myIndex].Y + 9) + 11;
             }
 
-            for (int x = minX; x < maxX; x++)
+            for (int i = 0; i < MAX_MAP_ANIMATIONS; i++)
             {
-                for (int y = minY; y < maxY; y++)
+                if (map.m_Animation[i] != null)
                 {
-                    if (x > 0 && y > 0 && x < map.MaxX && y < map.MaxY)
+                    if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
                     {
-                        if (map.Ground[x, y].Type == (int)TileType.Animation)
+                        if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
                         {
-                            int index = map.Ground[x, y].SpawnNum - 1;
-
-                            //animations[index].X = x;
-                            //animations[index].Y = y;
-
-                            //renderWindow.Draw(animations[index]);
+                            renderWindow.Draw(map.m_Animation[i]);
                         }
                     }
                 }

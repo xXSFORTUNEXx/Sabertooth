@@ -117,7 +117,7 @@ namespace Editor.Forms
             {
                 for (int i = 0; i < total; i++)
                 {
-                    splitImage[i].Save("Exported/" + (i) + ".png");
+                    splitImage[i].Save("Exported/" + (i + 1) + ".png");
                 }
             }
             catch (Exception h)
