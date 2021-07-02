@@ -1161,7 +1161,7 @@ namespace SabertoothClient
             {
                 gui.outputChat.AddRow(msg);
             }
-            if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
+            //if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
             gui.outputChat.ScrollToBottom();
             gui.outputChat.UnselectAll();
         }
@@ -1534,6 +1534,7 @@ namespace SabertoothClient
                         map.m_Animation[index].FrameCountV = animations[animNum].FrameCountV;
                         map.m_Animation[index].FrameDuration = animations[animNum].FrameDuration;                        
                         map.m_Animation[index].LoopCount = animations[animNum].LoopCount;
+                        map.m_Animation[index].RenderBelowTarget = animations[animNum].RenderBelowTarget;
                         map.m_Animation[index].ConfigAnimation();
                     }
                 }
@@ -1549,7 +1550,7 @@ namespace SabertoothClient
                     return i;
                 }
             }
-            return MAX_MAP_ANIMATIONS;
+            return MAX_MAP_ANIMATIONS - 1;
         }
         #endregion
     }
@@ -1632,6 +1633,7 @@ namespace SabertoothClient
         UseHotBar,
         ItemCoolDown,
         AnimationData,
-        AnimationsData
+        AnimationsData,
+        PlayerTarget
     }
 }

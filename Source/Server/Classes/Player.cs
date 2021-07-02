@@ -66,9 +66,9 @@ namespace SabertoothServer
         public int StatsId { get; set; }
         #endregion
 
-        #region Local Variables
+        //Volatile Variables
         public int timeTick;
-        #endregion
+        public int Target;        
 
         #region Class Constructors
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana, int exp, int wallet,

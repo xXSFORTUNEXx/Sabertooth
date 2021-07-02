@@ -530,7 +530,7 @@ namespace SabertoothClient
         public override void Draw(RenderTarget target, RenderStates states)
         {
             itemPic[0] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y)), new Vector2f(0, 0));
-            itemPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(32, 0));
+            itemPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(PIC_X, 0));
             itemPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
             itemPic[3] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
 
@@ -616,13 +616,10 @@ namespace SabertoothClient
                 int xpic = (int)finalTexture[currentFrame].Size.X;
                 int ypic = (int)finalTexture[currentFrame].Size.Y;
 
-                int finalH = (0);
-                int finalW = (0);
-
-                animPic[0] = new Vertex(new Vector2f(x, y), new Vector2f(finalW, finalH));
-                animPic[1] = new Vertex(new Vector2f(x + xpic, y), new Vector2f(finalW + xpic, finalH));
-                animPic[2] = new Vertex(new Vector2f(x + xpic, y + ypic), new Vector2f(finalW + xpic, finalH + ypic));
-                animPic[3] = new Vertex(new Vector2f(x, y + ypic), new Vector2f(finalW, finalH + ypic));
+                animPic[0] = new Vertex(new Vector2f(x, y), new Vector2f(0, 0));
+                animPic[1] = new Vertex(new Vector2f(x + xpic, y), new Vector2f(xpic, 0));
+                animPic[2] = new Vertex(new Vector2f(x + xpic, y + ypic), new Vector2f(xpic, ypic));
+                animPic[3] = new Vertex(new Vector2f(x, y + ypic), new Vector2f(0, ypic));
 
                 states.Texture = finalTexture[currentFrame];
                 target.Draw(animPic, states);
@@ -662,7 +659,7 @@ namespace SabertoothClient
             states.Texture = c_bloodSprite;
             target.Draw(bloodPic, states);
         }
-    }
+    }    
 
     [Serializable()]
     public class Tile

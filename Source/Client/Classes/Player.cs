@@ -15,7 +15,6 @@ namespace SabertoothClient
 {
     public class Player : Drawable
     {
-        #region Main Classes
         public NetConnection Connection;
         public Item MainHand = new Item();
         public Item OffHand = new Item();
@@ -24,21 +23,27 @@ namespace SabertoothClient
         public Item Chest = new Item();
         public Item Legs = new Item();
         public Item Feet = new Item();
-        public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
-        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
         public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
-        RenderText rText = new RenderText();
-        static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
+
+        RenderText rText = new RenderText();        
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
+        static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
         Font font = new Font("Resources/Fonts/Arial.ttf");
-        Text p_Name = new Text();        
-        #endregion
+        Text p_Name = new Text();
+        Texture targetTexture = new Texture("Resources/Target.png");
+        VertexArray targetPic = new VertexArray(PrimitiveType.Quads, 4);
 
-        #region Stats
+        public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
+        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];        
+
         public string Name { get; set; }
         public string Pass { get; set; }
         public string EmailAddress { get; set; }
+        public string LastLoggedIn { get; set; }
+        public string AccountKey { get; set; }
+        public string Active { get; set; }
+
         public int X { get; set; }
         public int Y { get; set; }
         public int Map { get; set; }
@@ -64,40 +69,38 @@ namespace SabertoothClient
         public int PlayHours { get; set; }
         public int PlayMinutes { get; set; }
         public int PlaySeconds { get; set; }
-        public string LastLoggedIn { get; set; }
-        public string AccountKey { get; set; }
-        public string Active { get; set; }
         public int OffsetX { get; set; }
         public int OffsetY { get; set; }
-        #endregion
 
-        #region Local Variables
+        //Volatile Variables
         bool Moved;
         bool Attacking;
+        public bool inChat;
+        public bool inChest;
+        public bool isChangingMaps;
+        public bool inShop;
+        public bool inBank;
+        int Target;
+        int TargetType;
         int attackTick;
         int timeTick;
         int pickupTick;
         int equipTick;
         int interactionTick;
         int hotbarTick;
+        int targetTick;
         int directionTick;
         int walkTick;
+        int oldDirection = -1;
         public int tempX;
         public int tempY;
         public int tempDir;
         public int tempaimDir;
         public int tempStep;
-        public int Step;
-        public bool inShop;
-        public int shopNum;
-        public bool inChat;
-        public int chatNum;
-        public bool inBank;
-        public int chestNum;
-        public bool inChest;
-        public bool isChangingMaps;
-        int oldDirection = -1;
-        #endregion
+        public int Step;        
+        public int shopNum;        
+        public int chatNum;        
+        public int chestNum;        
 
         #region Class Constructors
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int mana, int maxmana,
@@ -1433,26 +1436,148 @@ namespace SabertoothClient
 
 
         }
+
+        public void CheckForTabTarget()
+        {
+            if (TickCount - targetTick < 500) { return; }
+            if (gui.inputChat.HasFocus == true) { return; }
+            if (!renderWindow.HasFocus()) { return; }
+            if (inShop || inChat || inBank) { return; }
+            if (isChangingMaps) { return; }
+
+            int m_target = 0;
+            int r_target = 0;
+            double lastTarget = -1;
+            double finalM = 0;
+            double finalR = 0;
+            int pX = 0;
+            int pY = 0;
+            double dX = 0;
+            double dY = 0;
+            double dFinal = 0;
+            double dPoint = 0;
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.Tab))
+            {
+                Logging.WriteMessageLog("TABBING - START -----");
+
+                //check for closest target normal
+                for (int n = 0; n < MAX_MAP_NPCS; n++)
+                {
+                    //find out if this property is populated :D
+                    if (map.m_MapNpc[n].IsSpawned)
+                    {
+                        pX = X + OFFSET_X;
+                        pY = Y + OFFSET_Y;
+                        dX = pX - map.m_MapNpc[n].X;
+                        dY = pY - map.m_MapNpc[n].Y;
+                        dFinal = dX * dX + dY * dY;
+                        dPoint = Math.Sqrt(dFinal);
+
+                        Logging.WriteMessageLog("n: " + n);
+                        Logging.WriteMessageLog("dPoint: " + dPoint);
+
+                        if (dPoint < lastTarget)
+                        {
+                            m_target = n;
+                            finalM = dPoint;                                                        
+                            Logging.WriteMessageLog("finalM: " + finalM);                            
+                        }
+
+                        lastTarget = dPoint;
+                    }
+                }
+
+                lastTarget = -1;
+
+                //check for closest target pool
+                for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
+                {
+                    if (map.r_MapNpc[n].IsSpawned)
+                    {
+                        pX = X + OFFSET_X;
+                        pY = Y + OFFSET_Y;
+                        dX = pX - map.r_MapNpc[n].X;
+                        dY = pY - map.r_MapNpc[n].Y;
+                        dFinal = dX * dX + dY * dY;
+                        dPoint = Math.Sqrt(dFinal);
+
+                        Logging.WriteMessageLog("n: " + n);
+                        Logging.WriteMessageLog("dPoint: " + dPoint);
+
+                        if (dPoint < lastTarget)
+                        {
+                            r_target = n;
+                            finalR = dPoint;                            
+                            Logging.WriteMessageLog("finalR: " + finalR);
+                        }
+
+                        lastTarget = dPoint;
+                    }
+                }
+
+                if (finalR < finalM)
+                {
+                    Target = r_target;
+                    TargetType = (int)TargetTypes.Pool;
+                    Logging.WriteMessageLog("Target: " + Target);
+                    Logging.WriteMessageLog("Pool");                    
+                }
+
+                if (finalM < finalR)
+                {
+                    Target = m_target;
+                    TargetType = (int)TargetTypes.Normal;
+                    Logging.WriteMessageLog("Target: " + Target);
+                    Logging.WriteMessageLog("Normal");
+                }
+                targetTick = TickCount;
+                Logging.WriteMessageLog("TABBING - END -----");
+            }
+        }
         #endregion
 
         #region Voids
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            int x = (X * 32) + (OffsetX * 32);
-            int y = (Y * 32) + (OffsetY * 32) - 16;
-            int step = (Step * 32);
-            int dir = (AimDirection * 48);
-            int name_x = (X * 32) + (OffsetX * 32) - (Name.Length / 2);
-            int name_y = (Y * 32) + (OffsetY * 32) - 32;
+            int x = (X * PIC_X) + (OffsetX * PIC_X);
+            int y = (Y * PIC_Y) + (OffsetY * PIC_Y) - 16;
+            int step = (Step * SPRITE_SIZE_X);
+            int dir = (AimDirection * SPRITE_SIZE_Y);
+            int name_x = (X * PIC_X) + (OffsetX * PIC_X) - (Name.Length / 2);
+            int name_y = (Y * PIC_Y) + (OffsetY * PIC_Y) - PIC_Y;
+
             p_Name.Position = new Vector2f(name_x, name_y);
             p_Name.DisplayedString = Name;
+
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
             spritePic[3] = new Vertex(new Vector2f(x, y + 48), new Vector2f(step, dir + 48));
+
             states.Texture = c_Sprite[Sprite];
             target.Draw(spritePic, states);
             target.Draw(p_Name);
+
+            
+            if (TargetType == (int)TargetTypes.Normal)
+            {
+                x = map.m_MapNpc[Target].X;
+                y = map.m_MapNpc[Target].Y;
+            }
+            else if (TargetType == (int)TargetTypes.Pool)
+            {
+                x = map.r_MapNpc[Target].X;
+                y = map.r_MapNpc[Target].Y;
+            }
+
+            targetPic[0] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_Y)), new Vector2f(0, 0));
+            targetPic[1] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y)), new Vector2f(PIC_X, 0));
+            targetPic[2] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
+            targetPic[3] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
+
+            states.Texture = targetTexture;
+            target.Draw(targetPic, states);
         }
 
         public void CheckDirection(int curx, int cury)
@@ -1894,7 +2019,7 @@ namespace SabertoothClient
         }
     }
 
-    public enum EquipSlots
+    public enum EquipSlots : int
     {
         MainWeapon,
         OffWeapon,
@@ -1903,7 +2028,7 @@ namespace SabertoothClient
         Feet
     }
 
-    public enum Directions
+    public enum Directions : int
     {
         Down,
         Left,
@@ -1913,5 +2038,11 @@ namespace SabertoothClient
         DownRight,
         UpLeft,
         UpRight
+    }
+
+    public enum TargetTypes : int
+    {
+        Normal,
+        Pool
     }
 }

@@ -23,6 +23,7 @@ namespace SabertoothServer
         public int TickInterval { get; set; }   //how often the dot/hot should tick damage/heal
         public int SpellType { get; set; }
         public int Range { get; set; }
+        public int Animation { get; set; }
 
         public bool HOT { get; set; }   //heal over time
         public bool DOT { get; set; }   //damage over time

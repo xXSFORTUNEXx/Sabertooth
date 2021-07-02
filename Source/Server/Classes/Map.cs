@@ -978,7 +978,7 @@ namespace SabertoothServer
                     break;
             }
         }
-    }    
+    }
 
     [Serializable()]
     public class MapItem : Item

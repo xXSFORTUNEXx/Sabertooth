@@ -3325,6 +3325,8 @@ namespace SabertoothClient
             {
                 msg = chats[chatNum].MainMessage;
             }
+
+            //setup the message from the quest stuff above
             int msgLength = msg.Length;
             int maxLength = 50;
 
@@ -3346,6 +3348,7 @@ namespace SabertoothClient
                 npcChatMessage.AddRow(msg);
             }
 
+            //chat button options
             int n = 0;
             for (int i = 0; i < 4; i++)
             {

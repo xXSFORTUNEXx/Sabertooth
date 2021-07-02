@@ -330,12 +330,14 @@ namespace SabertoothServer
             int nextChat = chats[index].NextChat[optionSlot];
             int shop = chats[index].ShopNum;
 
+            //exit chat
             if (chats[index].Option[optionSlot] == "Exit")
             {
                 SendCloseChat(incMSG);
                 return;
             }
 
+            //open bank
             if (chats[index].Option[optionSlot] == "Bank")
             {
                 SendOpenBank(incMSG);
@@ -343,11 +345,12 @@ namespace SabertoothServer
                 return;
             }
 
+            //accept quest the npc offers
             if (chats[index].Option[optionSlot] == "Accept Quest")
             {
-                if (players[playerIndex].CheckPlayerHasQuest(chats[index].QuestNum)) { SendCloseChat(incMSG); return; }
+                if (players[playerIndex].CheckPlayerHasQuest(chats[index].QuestNum)) { SendCloseChat(incMSG); return; } //if they have it already return
 
-                int slot = players[playerIndex].FindOpenQuestListSlot();
+                int slot = players[playerIndex].FindOpenQuestListSlot();    //find an open slot
 
                 if (slot < MAX_PLAYER_QUEST_LIST)
                 {
@@ -359,20 +362,22 @@ namespace SabertoothServer
                 return;
             }
 
+            //Next chat
             if (nextChat > 0)
             {
                 SendOpenNextChat(incMSG, nextChat);
             }
-            else if (shop > 0)
+            else if (shop > 0)  //open shop
             {
                 SendOpenShop(incMSG, shop - 1);
                 SendCloseChat(incMSG);
             }
             else
             {
-                SendCloseChat(incMSG);
+                SendCloseChat(incMSG);  //just close it
             }
 
+            //if the chat gives items youll get them below
             for (int i = 0; i < 3; i++)
             {
                 if (chats[index].ItemNum[i] > 0)
@@ -392,6 +397,7 @@ namespace SabertoothServer
                 }
             }
 
+            //money reward for talking to this npc
             if (chats[index].Money > 0)
             {
                 players[playerIndex].Wallet += chats[index].Money;
@@ -2229,6 +2235,7 @@ namespace SabertoothServer
         UseHotBar,
         ItemCoolDown,
         AnimationData,
-        AnimationsData
+        AnimationsData,
+        PlayerTarget
     }
 }

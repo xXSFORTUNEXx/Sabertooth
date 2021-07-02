@@ -104,6 +104,7 @@
         public const int SW_SHOW = 5;    
         public const int SPRITE_SIZE_X = 32;
         public const int SPRITE_SIZE_Y = 48;
+        public const int MAX_TAB_TARGETS = 5;
         #endregion
 
         #region Screen Globals

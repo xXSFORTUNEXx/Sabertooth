@@ -26,10 +26,7 @@ namespace SabertoothClient
         public bool RenderBelowTarget { get; set; } //set the render below, right now they will default to above the target below the first fringe layer     
 
 
-        public Animation()
-        {
-
-        }
+        public Animation() { }
 
         public Animation(string name,
                 int spritenumber, int fcounth, int fcountv, int fcount, int fduration, int loopcount,

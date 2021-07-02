@@ -80,7 +80,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_HIDE);
+            ShowWindow(handle, SW_SHOW);
             Logging.WriteMessageLog("Enabling message types...");
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -428,49 +428,6 @@ namespace SabertoothClient
                 }
             }
 
-            if (e.Code == Keyboard.Key.Tab)
-            {
-                if (gui.chatWindow != null)
-                {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.chatWindow.IsVisible)
-                    {
-                        gui.chatWindow.Hide();
-                    }
-                    else
-                    {
-                        gui.chatWindow.Show();
-                    }
-                }
-                if (gui.d_Window != null)
-                {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.d_Window.IsVisible)
-                    {
-                        gui.d_Window.Hide();
-                    }
-                    else
-                    {
-                        gui.d_Window.Show();
-                    }
-                }
-                if (gui.menuWindow != null)
-                {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.menuWindow.IsVisible)
-                    {
-                        gui.menuWindow.Hide();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                    }
-                }
-            }
-
             if (e.Code == Keyboard.Key.M)
             {
                 if (gui.menuWindow != null)
@@ -522,6 +479,11 @@ namespace SabertoothClient
                         gui.d_Window.Show();
                     }
                 }
+            }
+
+            if (e.Code == Keyboard.Key.W || e.Code == Keyboard.Key.A || e.Code == Keyboard.Key.S || e.Code == Keyboard.Key.D)
+            {
+                
             }
         }
 
@@ -754,7 +716,7 @@ namespace SabertoothClient
             }
         }
 
-        static void DrawAnimations()
+        static void DrawLowerAnimations()
         {
             int minX;
             int minY;
@@ -780,11 +742,54 @@ namespace SabertoothClient
             {
                 if (map.m_Animation[i] != null)
                 {
-                    if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                    if (map.m_Animation[i].RenderBelowTarget.Equals(true))
                     {
                         if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
                         {
-                            renderWindow.Draw(map.m_Animation[i]);
+                            if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                            {
+                                renderWindow.Draw(map.m_Animation[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static void DrawUpperAnimations()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int i = 0; i < MAX_MAP_ANIMATIONS; i++)
+            {
+                if (map.m_Animation[i] != null)
+                {
+                    if (map.m_Animation[i].RenderBelowTarget.Equals(false))
+                    {
+                        if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                        {
+                            if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                            {
+                                renderWindow.Draw(map.m_Animation[i]);
+                            }
                         }
                     }
                 }
@@ -803,11 +808,12 @@ namespace SabertoothClient
                 renderWindow.Draw(map); //draw the maps ground and mask layers
                 DrawChests();   //draw chests ontop of those
                 DrawMapItems(); //now we draw the items which can be picked up
-                DrawBlood();    //draw blood from combat (maybe switch with item?)                
+                DrawBlood();    //draw blood from combat (maybe switch with item?)    
+                DrawLowerAnimations();   //draw the animations lower layer so its set to 1
                 DrawNpcs(); //draw the npcs
                 DrawPlayers();  //now the other players in the world
-                DrawIndexPlayer();  //our main player of the current client instance
-                DrawAnimations();   //draw the animations
+                DrawIndexPlayer();  //our main player of the current client instance      
+                DrawUpperAnimations();
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 
                 //Process actual movement in any direction
@@ -823,6 +829,7 @@ namespace SabertoothClient
                 players[HandleData.myIndex].CheckPlayerInteraction();
                 players[HandleData.myIndex].CheckAttack();
                 players[HandleData.myIndex].CheckItemPickUp();
+                players[HandleData.myIndex].CheckForTabTarget();
                 
                 //Removed controller stufff, may add back at some point but without a mouse menus will need work as well...
                 //players[HandleData.myIndex].CheckControllerMovement();                
