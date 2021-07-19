@@ -1284,3 +1284,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\3.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Animation\4.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Target.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Cursor.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\attack.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\talk.png

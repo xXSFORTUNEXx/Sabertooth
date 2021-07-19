@@ -80,8 +80,10 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             netConfig.DisableMessageType(NetIncomingMessageType.VerboseDebugMessage);
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
-            ShowWindow(handle, SW_SHOW);
             Logging.WriteMessageLog("Enabling message types...");
+
+            ShowWindow(handle, SW_SHOW);    //Show/Hide console window SW_HIDE = hide, SW_SHOW = show
+            
             netClient = new NetClient(netConfig);
             netClient.Start();
             Logging.WriteMessageLog("Network configuration complete...");
@@ -183,7 +185,7 @@ namespace SabertoothClient
         static Gwen.Renderer.SFML gwenRenderer = new Gwen.Renderer.SFML(renderWindow);
         static Gwen.Skin.TexturedBase skin = new Gwen.Skin.TexturedBase(gwenRenderer, "Resources/Skins/DefaultSkin.png");
         static Gwen.Font defaultFont = new Gwen.Font(gwenRenderer, "Resources/Fonts/Tahoma.ttf");
-        public static Canvas canvas = new Canvas(skin);    
+        public static Canvas canvas = new Canvas(skin);
         public static Gwen.Input.SFML sFML = new Gwen.Input.SFML();  
         public static HUD hud = new HUD();
         public static GUI gui = new GUI();
@@ -199,17 +201,16 @@ namespace SabertoothClient
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
         public static WorldTime worldTime = new WorldTime();
+        public static Texture curTexture;
+        public static Sprite curSprite = new Sprite();
 
         #region Local Variables
         static int lastTick;
         static int lastFrameRate;  
         static int frameRate; 
         static int fps; 
-        static int discoverTick;
-        //static int timeTick;
+        static int discoverTick;        
         static int walkTick;
-        //static int attackTick;
-        //static int pickupTick;
         static int saveTime;
         static int menuTick;
         #endregion
@@ -222,7 +223,7 @@ namespace SabertoothClient
             renderWindow.MouseButtonPressed += window_MouseButtonPressed;
             renderWindow.MouseButtonReleased += window_MouseButtonReleased;
             renderWindow.MouseMoved += window_MouseMoved;
-            renderWindow.TextEntered += window_TextEntered;            
+            renderWindow.TextEntered += window_TextEntered;
             gwenRenderer.LoadFont(defaultFont);
             skin.SetDefaultFont(defaultFont.FaceName);
             defaultFont.Dispose();
@@ -582,26 +583,9 @@ namespace SabertoothClient
                     }     
                 }
             }
-
-            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-            {
-                if (map.r_MapNpc[i].IsSpawned)
-                {
-                    if (map.r_MapNpc[i].X > minX && map.r_MapNpc[i].X < maxX)
-                    {
-                        if (map.r_MapNpc[i].Y > minY && map.r_MapNpc[i].Y < maxY)
-                        {
-                            if (map.r_MapNpc[i].Sprite > 0)
-                            {
-                                renderWindow.Draw(map.r_MapNpc[i]);
-                            }
-                        }
-                    }
-                }
-            }
         }
 
-        static void DrawMapItems()
+        static void DrawDisplayText()
         {
             int minX;
             int minY;
@@ -623,17 +607,17 @@ namespace SabertoothClient
                 maxY = (players[HandleData.myIndex].Y + 9) + 11;
             }
 
-            for (int i = 0; i < MAX_MAP_ITEMS; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
-                if (map.m_MapItem[i].IsSpawned)
+                if (map.m_MapNpc[i].X > minX && map.m_MapNpc[i].X < maxX)
                 {
-                    if (map.m_MapItem[i].X > minX && map.m_MapItem[i].X < maxX)
+                    if (map.m_MapNpc[i].Y > minY && map.m_MapNpc[i].Y < maxY)
                     {
-                        if (map.m_MapItem[i].Y > minY && map.m_MapItem[i].Y < maxY)
+                        for (int n = 0; n < MAX_DISPLAY_TEXT; n++)
                         {
-                            if (map.m_MapItem[i].Sprite > 0)
+                            if (map.m_MapNpc[i].dText[n].displayText.DisplayedString != "EMPTY")
                             {
-                                renderWindow.Draw(map.m_MapItem[i]);
+                                renderWindow.Draw(map.m_MapNpc[i].dText[n]);
                             }
                         }
                     }
@@ -801,16 +785,104 @@ namespace SabertoothClient
             renderWindow.Draw(players[HandleData.myIndex]);
         }
 
+        static void DrawCursor()
+        {            
+            int curX = Gwen.Input.InputHandler.MousePosition.X;
+            int curY = Gwen.Input.InputHandler.MousePosition.Y;
+            curSprite.Position = new Vector2f(curX, curY);
+            Player player = players[HandleData.myIndex];
+
+            int mX = (curX / PIC_X) + (player.X);
+            int mY = (curY / PIC_Y) + (player.Y);
+            int target = -1;
+            bool isNPC = false;
+
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
+            {
+                if (map.m_MapNpc[i].IsSpawned)
+                {
+                    if (map.m_MapNpc[i].X == mX && map.m_MapNpc[i].Y == mY)
+                    {
+                        switch (map.m_MapNpc[i].Behavior)
+                        {
+                            case (int)BehaviorType.Aggressive:
+                                curTexture = new Texture("Resources/attack.png");
+                                break;
+
+                            case (int)BehaviorType.Passive:
+                                curTexture = new Texture("Resources/talk.png");
+                                break;
+                        }
+                        target = i;
+                        isNPC = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isNPC)
+            {
+                curTexture = new Texture("Resources/cursor.png");
+            }
+
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                if (target > -1)
+                {
+                    player.Target = target;
+                }
+            }
+
+            if (Mouse.IsButtonPressed(Mouse.Button.Right))
+            {
+                if (target > -1)
+                {
+                    int pX = 0;
+                    int pY = 0;
+                    double dX = 0;
+                    double dY = 0;
+                    double dFinal = 0;
+                    double dPoint = 0;
+
+                    switch (map.m_MapNpc[target].Behavior)
+                    {
+                        case (int)BehaviorType.Passive:
+                            pX = player.X + OFFSET_X;
+                            pY = player.Y + OFFSET_Y;
+                            dX = pX - map.m_MapNpc[target].X;
+                            dY = pY - map.m_MapNpc[target].Y;
+                            dFinal = dX * dX + dY * dY;
+                            dPoint = Math.Sqrt(dFinal);
+
+                            if (dPoint < 6)
+                            {
+                                player.SendInteraction(target, 0);
+                                player.Target = target;
+                            }
+                            break;
+
+                        case (int)BehaviorType.Aggressive:
+                            player.Target = target;
+                            player.Attacking = true;
+                            break;
+                    }
+                }
+            }
+            
+            curSprite.Texture = curTexture;
+            renderWindow.Draw(curSprite);
+        }
+
         static void DrawGraphics()
         {
             if (map.Name != null && gui.Ready) //empty map but also check for the GUI to make sure its ready
             {
                 renderWindow.Draw(map); //draw the maps ground and mask layers
-                DrawChests();   //draw chests ontop of those
-                DrawMapItems(); //now we draw the items which can be picked up
+                DrawChests();   //draw chests ontop of those                
                 DrawBlood();    //draw blood from combat (maybe switch with item?)    
                 DrawLowerAnimations();   //draw the animations lower layer so its set to 1
                 DrawNpcs(); //draw the npcs
+                DrawDisplayText();
                 DrawPlayers();  //now the other players in the world
                 DrawIndexPlayer();  //our main player of the current client instance      
                 DrawUpperAnimations();
@@ -826,11 +898,14 @@ namespace SabertoothClient
 
                 //Lets check for specific input (maybe put hotkey before all events related to input?)
                 players[HandleData.myIndex].CheckHotBarKeyPress();
-                players[HandleData.myIndex].CheckPlayerInteraction();
-                players[HandleData.myIndex].CheckAttack();
-                players[HandleData.myIndex].CheckItemPickUp();
+                //players[HandleData.myIndex].CheckPlayerInteraction();
+                if (players[HandleData.myIndex].Target > 0)
+                {
+                    players[HandleData.myIndex].CombatLoop(map.m_MapNpc[players[HandleData.myIndex].Target]);
+                }                
+                //players[HandleData.myIndex].CheckAttack();                
                 players[HandleData.myIndex].CheckForTabTarget();
-                
+
                 //Removed controller stufff, may add back at some point but without a mouse menus will need work as well...
                 //players[HandleData.myIndex].CheckControllerMovement();                
                 //players[HandleData.myIndex].CheckControllerItemPickUp();
@@ -839,7 +914,9 @@ namespace SabertoothClient
                 //players[HandleData.myIndex].CheckControllerPlayerInteraction();
                 //players[HandleData.myIndex].CheckControllerChangeDirection();
             }
+
             renderWindow.SetView(renderWindow.DefaultView); //set the view for the window to default (this is so the UI doesnt move when the characters view does)
+
             if (map.Name != null && gui.Ready)  //empty map but also check for the GUI to make sure its ready
             {
                 map.DrawBrightness();   //draw the brightness from the enviro and the players
@@ -848,9 +925,11 @@ namespace SabertoothClient
                 hud.UpdateExpBar(); //update the on screen xp bar
                 renderWindow.Draw(hud); //draw all the hud from above with its updates
                 miniMap.UpdateMiniMap();    //update the minimap
-                renderWindow.Draw(miniMap); //draw the mini map WAAAAY up there
+                renderWindow.Draw(miniMap); //draw the mini map WAAAAY up there           
+                DrawCursor();
             }
-            canvas.RenderCanvas();  //render the canvas for the GUI WAAAAY WAAAAY up there
+
+            canvas.RenderCanvas();  //render the canvas for the GUI WAAAAY WAAAAY up there            
         }
         #endregion
 
@@ -946,7 +1025,7 @@ namespace SabertoothClient
             renderWindow.Clear();
             //Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
 
-            renderWindow.SetView(view);
+            renderWindow.SetView(view);                     
 
             fps = CalculateFrameRate();
 

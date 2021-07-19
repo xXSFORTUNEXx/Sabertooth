@@ -74,17 +74,16 @@ namespace SabertoothClient
 
         //Volatile Variables
         bool Moved;
-        bool Attacking;
+        public bool Attacking;
         public bool inChat;
         public bool inChest;
         public bool isChangingMaps;
         public bool inShop;
-        public bool inBank;
-        int Target;
-        int TargetType;
+        public bool inBank;  
+        public int Target = -1;
+        double lastTarget;
         int attackTick;
         int timeTick;
-        int pickupTick;
         int equipTick;
         int interactionTick;
         int hotbarTick;
@@ -544,7 +543,7 @@ namespace SabertoothClient
                         case (int)Directions.Up:
                             if (Y > 2 - OffsetY)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -563,20 +562,6 @@ namespace SabertoothClient
                                             }
                                         }
                                     }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].Y + 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                        }
-                                    }
                                 }
                             }
                             break;
@@ -584,7 +569,7 @@ namespace SabertoothClient
                         case (int)Directions.Down:
                             if (Y < (map.MaxY - 2) - OffsetY)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -603,20 +588,6 @@ namespace SabertoothClient
                                             }
                                         }
                                     }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].Y - 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                        }
-                                    }
                                 }
                             }
                             break;
@@ -624,7 +595,7 @@ namespace SabertoothClient
                         case (int)Directions.Left:
                             if (X > 2 - OffsetX)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -643,20 +614,6 @@ namespace SabertoothClient
                                             }
                                         }
                                     }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].X + 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                        }
-                                    }
                                 }
                             }
                             break;
@@ -664,7 +621,7 @@ namespace SabertoothClient
                         case (int)Directions.Right:
                             if (X < (map.MaxX - 2) - OffsetX)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -683,20 +640,6 @@ namespace SabertoothClient
                                             }
                                         }
                                     }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].X - 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                            else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }
-                                        }
-                                    }
                                 }
 
                             }
@@ -707,23 +650,6 @@ namespace SabertoothClient
                 }
             }
         }        
-
-        public void CheckControllerItemPickUp()
-        {
-            if (inShop || inChat || inBank) { return; }
-
-            if (!Joystick.IsConnected(0)) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (inShop || inChat) { return; }
-
-            if (Joystick.IsButtonPressed(0, 0))
-            {
-                SendPickupItem();
-                pickupTick = TickCount;
-            }
-        }
 
         public void CheckControllerButtonPress()
         {
@@ -1018,9 +944,42 @@ namespace SabertoothClient
             }
         }
 
+        public void CombatLoop(MapNpc mapNpc)
+        {
+            if (mapNpc == null) { return; }
+            if (MainHand.Name == "None") { Attacking = false; return; }    //no weapon
+
+            if (Attacking)
+            {
+                if (TickCount - attackTick > MainHand.AttackSpeed)
+                {
+                    int pX = 0;
+                    int pY = 0;
+                    double dX = 0;
+                    double dY = 0;
+                    double dFinal = 0;
+                    double dPoint = 0;
+
+                    pX = X + OFFSET_X;
+                    pY = Y + OFFSET_Y;
+                    dX = pX - mapNpc.X;
+                    dY = pY - mapNpc.Y;
+                    dFinal = dX * dX + dY * dY;
+                    dPoint = Math.Sqrt(dFinal);
+
+                    if (dPoint < 3)
+                    {
+                        if (CheckFacingTarget(mapNpc)) { Logging.WriteMessageLog("SUCCESS"); } else { Logging.WriteMessageLog("FAIL"); }                        
+                        SendMeleeAttack(Target, 0);
+                        attackTick = TickCount;
+                    }
+                }
+            }
+        }
+
         public void CheckAttack()
         {
-            if (TickCount - equipTick < 5000) { return; }
+            if (TickCount - equipTick < equipTick) { return; }
             if (TickCount - attackTick < 25) { return; }
             if (gui.inputChat.HasFocus == true) { return; }
             if (!renderWindow.HasFocus()) { return; }
@@ -1051,7 +1010,7 @@ namespace SabertoothClient
                         case (int)Directions.Up:
                             if (Y > 2 - OffsetY)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -1066,30 +1025,7 @@ namespace SabertoothClient
                                                     attackTick = TickCount;
                                                     return;
                                                 }
-                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                    return;
-                                                }*/
                                             }
-                                        }
-                                    }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].Y + 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                                Attacking = false;
-                                                attackTick = TickCount;
-                                                return;
-                                            }
-                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                                return;
-                                            }*/
                                         }
                                     }
                                 }
@@ -1099,7 +1035,7 @@ namespace SabertoothClient
                         case (int)Directions.Down:
                             if (Y < (map.MaxY - 2) - OffsetY)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -1114,28 +1050,7 @@ namespace SabertoothClient
                                                     attackTick = TickCount;
                                                     return;
                                                 }
-                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }*/
                                             }
-                                        }
-                                    }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].Y - 1 == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                                Attacking = false;
-                                                attackTick = TickCount;
-                                                return;
-                                            }
-                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }*/
                                         }
                                     }
                                 }
@@ -1145,7 +1060,7 @@ namespace SabertoothClient
                         case (int)Directions.Left:
                             if (X > 2 - OffsetX)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -1160,28 +1075,7 @@ namespace SabertoothClient
                                                     attackTick = TickCount;
                                                     return;
                                                 }
-                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }*/
                                             }
-                                        }
-                                    }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].X + 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                                Attacking = false;
-                                                attackTick = TickCount;
-                                                return;
-                                            }
-                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }*/
                                         }
                                     }
                                 }
@@ -1191,7 +1085,7 @@ namespace SabertoothClient
                         case (int)Directions.Right:
                             if (X < (map.MaxX - 2) - OffsetX)
                             {
-                                for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
+                                for (int i = 0; i < MAX_MAP_NPCS; i++)
                                 {
                                     if (i < MAX_MAP_NPCS)
                                     {
@@ -1206,28 +1100,7 @@ namespace SabertoothClient
                                                     attackTick = TickCount;
                                                     return;
                                                 }
-                                                /*else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }*/
                                             }
-                                        }
-                                    }
-                                    if (map.r_MapNpc[i].IsSpawned)
-                                    {
-                                        if (map.r_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                        {
-                                            if (map.r_MapNpc[i].X - 1 == (X + OffsetX) && map.r_MapNpc[i].Y == (Y + OffsetY))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                                Attacking = false;
-                                                attackTick = TickCount;
-                                                return;
-                                            }
-                                            /*else if (map.r_MapNpc[i].Y == (Y + OffsetY) && map.r_MapNpc[i].X == (X + OffsetX))
-                                            {
-                                                SendMeleeAttack(i, 1);
-                                            }*/
                                         }
                                     }
                                 }
@@ -1238,21 +1111,6 @@ namespace SabertoothClient
                     Attacking = false;
                     attackTick = TickCount;
                 }
-            }
-        }
-
-        public void CheckItemPickUp()
-        {
-            if (TickCount - pickupTick < 1000) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (inShop || inChat || inBank) { return; }            
-
-            if (Keyboard.IsKeyPressed(Keyboard.Key.F))
-            {
-                SendPickupItem();
-                pickupTick = TickCount;
             }
         }
 
@@ -1445,11 +1303,6 @@ namespace SabertoothClient
             if (inShop || inChat || inBank) { return; }
             if (isChangingMaps) { return; }
 
-            int m_target = 0;
-            int r_target = 0;
-            double lastTarget = -1;
-            double finalM = 0;
-            double finalR = 0;
             int pX = 0;
             int pY = 0;
             double dX = 0;
@@ -1474,62 +1327,13 @@ namespace SabertoothClient
                         dFinal = dX * dX + dY * dY;
                         dPoint = Math.Sqrt(dFinal);
 
-                        Logging.WriteMessageLog("n: " + n);
-                        Logging.WriteMessageLog("dPoint: " + dPoint);
-
                         if (dPoint < lastTarget)
                         {
-                            m_target = n;
-                            finalM = dPoint;                                                        
-                            Logging.WriteMessageLog("finalM: " + finalM);                            
+                            Target = n;             
                         }
 
                         lastTarget = dPoint;
                     }
-                }
-
-                lastTarget = -1;
-
-                //check for closest target pool
-                for (int n = 0; n < MAX_MAP_POOL_NPCS; n++)
-                {
-                    if (map.r_MapNpc[n].IsSpawned)
-                    {
-                        pX = X + OFFSET_X;
-                        pY = Y + OFFSET_Y;
-                        dX = pX - map.r_MapNpc[n].X;
-                        dY = pY - map.r_MapNpc[n].Y;
-                        dFinal = dX * dX + dY * dY;
-                        dPoint = Math.Sqrt(dFinal);
-
-                        Logging.WriteMessageLog("n: " + n);
-                        Logging.WriteMessageLog("dPoint: " + dPoint);
-
-                        if (dPoint < lastTarget)
-                        {
-                            r_target = n;
-                            finalR = dPoint;                            
-                            Logging.WriteMessageLog("finalR: " + finalR);
-                        }
-
-                        lastTarget = dPoint;
-                    }
-                }
-
-                if (finalR < finalM)
-                {
-                    Target = r_target;
-                    TargetType = (int)TargetTypes.Pool;
-                    Logging.WriteMessageLog("Target: " + Target);
-                    Logging.WriteMessageLog("Pool");                    
-                }
-
-                if (finalM < finalR)
-                {
-                    Target = m_target;
-                    TargetType = (int)TargetTypes.Normal;
-                    Logging.WriteMessageLog("Target: " + Target);
-                    Logging.WriteMessageLog("Normal");
                 }
                 targetTick = TickCount;
                 Logging.WriteMessageLog("TABBING - END -----");
@@ -1559,25 +1363,18 @@ namespace SabertoothClient
             target.Draw(spritePic, states);
             target.Draw(p_Name);
 
-            
-            if (TargetType == (int)TargetTypes.Normal)
+            if (Target > -1)
             {
                 x = map.m_MapNpc[Target].X;
                 y = map.m_MapNpc[Target].Y;
-            }
-            else if (TargetType == (int)TargetTypes.Pool)
-            {
-                x = map.r_MapNpc[Target].X;
-                y = map.r_MapNpc[Target].Y;
-            }
+                targetPic[0] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_Y)), new Vector2f(0, 0));
+                targetPic[1] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y)), new Vector2f(PIC_X, 0));
+                targetPic[2] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
+                targetPic[3] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
 
-            targetPic[0] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_Y)), new Vector2f(0, 0));
-            targetPic[1] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y)), new Vector2f(PIC_X, 0));
-            targetPic[2] = new Vertex(new Vector2f((x * PIC_X) + PIC_X, (y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
-            targetPic[3] = new Vertex(new Vector2f((x * PIC_X), (y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
-
-            states.Texture = targetTexture;
-            target.Draw(targetPic, states);
+                states.Texture = targetTexture;
+                target.Draw(targetPic, states);
+            }
         }
 
         public void CheckDirection(int curx, int cury)
@@ -1781,14 +1578,6 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendPickupItem()
-        {
-            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.ItemPickup);
-            outMSG.WriteVariableInt32(HandleData.myIndex);
-            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
         public void SendSwapInvSlots(int oldslot, int newslot)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
@@ -1819,7 +1608,7 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        void SendInteraction(int interactionValue, int interactionType)
+        public void SendInteraction(int interactionValue, int interactionType)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.Interaction);
@@ -2002,6 +1791,47 @@ namespace SabertoothClient
             }
             return MAX_PLAYER_QUEST_LIST;
         }
+
+        public bool CheckFacingTarget(MapNpc mapNpc)
+        {
+            int pX = X + OFFSET_X;  //players x location
+            int pY = Y + OFFSET_Y;  //players y location
+            int nX = mapNpc.X;  //npcs x location
+            int nY = mapNpc.Y;  //npcs y location
+
+            switch (AimDirection)   //we are checking the players direction which is aim direction
+            {
+                case (int)Directions.Up:
+                    if (pY < nY)
+                    {
+                        return true;
+                    }
+                    break;
+
+                case (int)Directions.Down:
+                    if (pY > nX)
+                    {
+                        return true;
+                    }
+                    break;
+
+                case (int)Directions.Left:
+                    if (pX < nX)
+                    {
+                        return true;
+                    }
+                    break;
+
+                case (int)Directions.Right:
+                    if (pX > nX)
+                    {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
         #endregion
     }
 

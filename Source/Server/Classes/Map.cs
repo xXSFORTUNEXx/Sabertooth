@@ -46,8 +46,6 @@ namespace SabertoothServer
         public Tile[,] MaskA;
         public Tile[,] FringeA;
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
-        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];        
-        public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
         public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         #endregion
 
@@ -89,11 +87,6 @@ namespace SabertoothServer
             for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 m_MapNpc[i] = new MapNpc("None", 0, 0, 0);
-            }
-
-            for (int i = 0; i < MAX_MAP_ITEMS; i++)
-            {
-                m_MapItem[i] = new MapItem("None", 0, 0, 0);
             }
 
             Ground = new Tile[MaxX, MaxY];
@@ -154,8 +147,7 @@ namespace SabertoothServer
                 sql.Open();
                 using (var cmd = new SqlCommand(script, sql))
                 {
-                    byte[] m_Npc = ToByteArray(m_MapNpc);
-                    byte[] m_Item = ToByteArray(m_MapItem);
+                    byte[] m_Npc = ToByteArray(m_MapNpc);                    
                     byte[] m_Ground = ToByteArray(Ground);
                     byte[] m_Mask = ToByteArray(Mask);
                     byte[] m_MaskA = ToByteArray(MaskA);
@@ -171,8 +163,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
                     cmd.Parameters.Add(new SqlParameter("@maxx", System.Data.SqlDbType.Int)).Value = MaxX;
                     cmd.Parameters.Add(new SqlParameter("@maxy", System.Data.SqlDbType.Int)).Value = MaxY;
-                    cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
-                    cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
+                    cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;                    
                     cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
                     cmd.Parameters.Add(new SqlParameter("@mask", System.Data.SqlDbType.VarBinary)).Value = m_Mask;
                     cmd.Parameters.Add(new SqlParameter("@maska", System.Data.SqlDbType.VarBinary)).Value = m_MaskA;
@@ -192,8 +183,7 @@ namespace SabertoothServer
                 sql.Open();
                 using (var cmd = new SqlCommand(script, sql))
                 {
-                    byte[] m_Npc = ToByteArray(m_MapNpc);
-                    byte[] m_Item = ToByteArray(m_MapItem);
+                    byte[] m_Npc = ToByteArray(m_MapNpc);                    
                     byte[] m_Ground = ToByteArray(Ground);
                     byte[] m_Mask = ToByteArray(Mask);
                     byte[] m_MaskA = ToByteArray(MaskA);
@@ -210,8 +200,7 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@brightness", System.Data.SqlDbType.Int)).Value = Brightness;
                     cmd.Parameters.Add(new SqlParameter("@maxx", System.Data.SqlDbType.Int)).Value = MaxX;
                     cmd.Parameters.Add(new SqlParameter("@maxy", System.Data.SqlDbType.Int)).Value = MaxY;
-                    cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;
-                    cmd.Parameters.Add(new SqlParameter("@item", System.Data.SqlDbType.VarBinary)).Value = m_Item;
+                    cmd.Parameters.Add(new SqlParameter("@npc", System.Data.SqlDbType.VarBinary)).Value = m_Npc;                    
                     cmd.Parameters.Add(new SqlParameter("@ground", System.Data.SqlDbType.VarBinary)).Value = m_Ground;
                     cmd.Parameters.Add(new SqlParameter("@mask", System.Data.SqlDbType.VarBinary)).Value = m_Mask;
                     cmd.Parameters.Add(new SqlParameter("@maska", System.Data.SqlDbType.VarBinary)).Value = m_MaskA;
@@ -224,14 +213,10 @@ namespace SabertoothServer
 
         public void LoadMapFromDatabase(int mapNum)
         {
-            for (int n = 0; n < 20; n++)
+
+            for (int m = 0; m < MAX_MAP_NPCS; m++)
             {
-                if (n < 10)
-                {
-                    m_MapNpc[n] = new MapNpc();
-                }
-                r_MapNpc[n] = new MapNpc();
-                m_MapItem[n] = new MapItem();
+                m_MapNpc[m] = new MapNpc();
             }
 
             int i = 0;
@@ -270,10 +255,6 @@ namespace SabertoothServer
                             buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
                             m_MapNpc = (MapNpc[])load;
-
-                            buffer = (byte[])reader[i]; i += 1;
-                            load = ByteArrayToObject(buffer);
-                            m_MapItem = (MapItem[])load;
 
                             buffer = (byte[])reader[i]; i += 1;
                             load = ByteArrayToObject(buffer);
@@ -525,7 +506,7 @@ namespace SabertoothServer
             npcnum = NpcNum;
         }
 
-        public override bool DamageNpc(Player s_Player, Map s_Map)
+        public override int DamageNpc(Player s_Player, Map s_Map)
         {
             int damage = s_Player.MainHand.Damage;  //get the mainweapon damage for calculation
 
@@ -539,14 +520,10 @@ namespace SabertoothServer
                 s_Player.Experience += Exp;
                 s_Player.Wallet += Money;
                 s_Player.CheckPlayerLevelUp();
-                //s_Player.SavePlayerToDatabase();
-                if (SpawnX > 0 && SpawnY > 0)
-                {
-                    s_Map.Ground[SpawnX, SpawnY].CurrentSpawn -= 1;
-                }
-                return true;
+                //s_Player.SavePlayerToDatabase();                
             }
-            return false;
+
+            return damage;
         }
 
         public override void AttackPlayer(int index)
@@ -601,18 +578,6 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-                                    {
-                                        if (maps[mapNum].r_MapNpc[i].IsSpawned)
-                                        {
-                                            if ((Y + 1) == maps[mapNum].r_MapNpc[i].Y && X == maps[mapNum].r_MapNpc[i].X)
-                                            {
-                                                Direction = (int)Directions.Down;
-                                                DidMove = true;
-                                                return;
-                                            }
-                                        }
-                                    }
                                     for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
@@ -645,18 +610,6 @@ namespace SabertoothServer
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
                                             if ((X - 1) == maps[mapNum].m_MapNpc[i].X && Y == maps[mapNum].m_MapNpc[i].Y)
-                                            {
-                                                Direction = (int)Directions.Left;
-                                                DidMove = true;
-                                                return;
-                                            }
-                                        }
-                                    }
-                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-                                    {
-                                        if (maps[mapNum].r_MapNpc[i].IsSpawned)
-                                        {
-                                            if ((X - 1) == maps[mapNum].r_MapNpc[i].X && Y == maps[mapNum].r_MapNpc[i].Y)
                                             {
                                                 Direction = (int)Directions.Left;
                                                 DidMove = true;
@@ -703,18 +656,6 @@ namespace SabertoothServer
                                             }
                                         }
                                     }
-                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-                                    {
-                                        if (maps[mapNum].r_MapNpc[i].IsSpawned)
-                                        {
-                                            if ((X + 1) == maps[mapNum].r_MapNpc[i].X && Y == maps[mapNum].r_MapNpc[i].Y)
-                                            {
-                                                Direction = (int)Directions.Right;
-                                                DidMove = true;
-                                                return;
-                                            }
-                                        }
-                                    }
                                     for (int p = 0; p < MAX_PLAYERS; p++)
                                     {
                                         if (players[p].Connection != null)
@@ -747,18 +688,6 @@ namespace SabertoothServer
                                         if (maps[mapNum].m_MapNpc[i].IsSpawned)
                                         {
                                             if ((Y - 1) == maps[mapNum].m_MapNpc[i].Y && X == maps[mapNum].m_MapNpc[i].X)
-                                            {
-                                                Direction = (int)Directions.Up;
-                                                DidMove = true;
-                                                return;
-                                            }
-                                        }
-                                    }
-                                    for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-                                    {
-                                        if (maps[mapNum].r_MapNpc[i].IsSpawned)
-                                        {
-                                            if ((Y - 1) == maps[mapNum].r_MapNpc[i].Y && X == maps[mapNum].r_MapNpc[i].X)
                                             {
                                                 Direction = (int)Directions.Up;
                                                 DidMove = true;
@@ -980,26 +909,6 @@ namespace SabertoothServer
         }
     }
 
-    [Serializable()]
-    public class MapItem : Item
-    {
-        public int ItemNum { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int ExpireTick;
-        public bool IsSpawned;
-
-        public MapItem() { }
-
-        public MapItem(string name, int x, int y, int itemnum)
-        {
-            Name = name;
-            X = x;
-            Y = y;
-            ItemNum = itemnum;
-        }
-    }
-
     public class BloodSplat
     {
         public int X { get; set; }
@@ -1068,9 +977,7 @@ namespace SabertoothServer
         None,
         Blocked,
         NpcSpawn,
-        SpawnPool,
         NpcAvoid,
-        MapItem,
         Chest,
         Warp,
         Animation

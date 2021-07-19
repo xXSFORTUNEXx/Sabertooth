@@ -171,7 +171,7 @@ namespace Editor.Forms
                 e_Window.Clear();
                 DrawTiles(e_Window);
                 DrawNpcs();
-                DrawItems();
+                //DrawItems();
                 BrightnessOverlay();
                 DrawTypes();
                 DrawGrid();
@@ -404,17 +404,17 @@ namespace Editor.Forms
                                     e_Text.DrawText(e_Window, "N", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Yellow);
                                     e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnNum.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Cyan);
                                     break;
-                                case (int)TileType.SpawnPool:
+                                /*case (int)TileType.SpawnPool:
                                     e_Text.DrawText(e_Window, "S", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Green);
                                     e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnNum + " - " + e_Map.Ground[x, y].SpawnAmount, new Vector2f((x * 32), (y * 32) + 20), 14, SFML.Graphics.Color.Cyan);
-                                    break;
+                                    break;*/
                                 case (int)TileType.NpcAvoid:
                                     e_Text.DrawText(e_Window, "V", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.White);
                                     break;
-                                case (int)TileType.MapItem:
+                                /*case (int)TileType.MapItem:
                                     e_Text.DrawText(e_Window, "I", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Cyan);
                                     e_Text.DrawText(e_Window, e_Map.Ground[x, y].SpawnAmount.ToString(), new Vector2f((x * 32) + 20, (y * 32) + 20), 14, SFML.Graphics.Color.Green);
-                                    break;
+                                    break;*/
                                 case (int)TileType.Chest:
                                     e_Text.DrawText(e_Window, "C", new Vector2f((x * 32) + 12, (y * 32) + 7), 14, SFML.Graphics.Color.Blue);
                                     break;
@@ -483,7 +483,7 @@ namespace Editor.Forms
                                 DrawNpc(e_Window, SpritePic[e_Npc.Sprite - 1], x, y);
                             }
                         }
-                        else if (e_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
+                        /*else if (e_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
                         {
                             if (e_Map.Ground[x, y].SpawnNum > 0)
                             {
@@ -491,13 +491,13 @@ namespace Editor.Forms
                                 e_Npc.LoadNpcFromDatabase(npcNum);
                                 DrawNpc(e_Window, SpritePic[e_Npc.Sprite - 1], x, y);
                             }
-                        }
+                        }*/
                     }
                 }
             }
         }
 
-        void DrawItems()
+        /*void DrawItems()
         {
             for (int x = 0; x < e_Map.MaxX; x++)
             {
@@ -514,7 +514,7 @@ namespace Editor.Forms
                     }
                 }
             }
-        }
+        }*/
 
         void DrawItem(RenderWindow e_Window, int itemPic, int x, int y)
         {
@@ -792,11 +792,11 @@ namespace Editor.Forms
                     if (e_Type == (int)TileType.NpcSpawn)
                     { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
 
-                    if (e_Type == (int)TileType.SpawnPool)
-                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    /*if (e_Type == (int)TileType.SpawnPool)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }*/
 
-                    if (e_Type == (int)TileType.MapItem)
-                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    /*if (e_Type == (int)TileType.MapItem)
+                    { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }*/
 
                     if (e_Type == (int)TileType.Chest)
                     { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_SpawnChest; }
@@ -1033,8 +1033,8 @@ namespace Editor.Forms
                 {
                     e_Map.Ground[e_CursorX, e_CursorY].Type = e_Type;
                     if (e_Type == (int)TileType.NpcSpawn) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; }
-                    if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
-                    if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    //if (e_Type == (int)TileType.SpawnPool) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
+                    //if (e_Type == (int)TileType.MapItem) { e_Map.Ground[e_CursorX, e_CursorY].SpawnNum = e_SpawnNumber; e_Map.Ground[e_CursorX, e_CursorY].SpawnAmount = e_SpawnAmount; }
                     if (e_Type == (int)TileType.Chest) { e_Map.Ground[e_CursorX, e_CursorY].ChestNum = e_SpawnChest; }
                     if (e_Type == (int)TileType.Warp) { e_Map.Ground[e_CursorX, e_CursorY].Map = e_WarpMap; e_Map.Ground[e_CursorX, e_CursorY].MapX = e_WarpX; e_Map.Ground[e_CursorX, e_CursorY].MapY = e_WarpY; }
                 }
@@ -1232,7 +1232,7 @@ namespace Editor.Forms
             scrlSpawnAmount.Value = 1;
             e_SpawnNumber = 1;
             e_SpawnAmount = 1;
-            scrlNpcNum.Maximum = MAX_MAP_NPCS;
+            scrlNpcNum.Maximum = FindTotalMapNpcs();
             int num = e_Map.m_MapNpc[scrlNpcNum.Value - 1].NpcNum;
             e_Npc.LoadNpcFromDatabase(num);
             lblNpcSpawn.Text = "Npc: " + scrlNpcNum.Value + " - " + e_Npc.Name;
@@ -1243,6 +1243,19 @@ namespace Editor.Forms
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
             pnlAnimation.Visible = false;
+        }
+
+        int FindTotalMapNpcs()
+        {
+            int n = 0;
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
+            {
+                if (e_Map.m_MapNpc[i].NpcNum > 0)
+                {
+                    n += 1;
+                }
+            }
+            return n;
         }
 
         private void radNpcAvoid_CheckedChanged(object sender, EventArgs e)
@@ -1257,7 +1270,7 @@ namespace Editor.Forms
 
         private void radSpawnPool_CheckedChanged(object sender, EventArgs e)
         {
-            e_Type = (int)TileType.SpawnPool;
+            /*e_Type = (int)TileType.SpawnPool;
             lblType.Text = "Type: Spawn Pool";
             scrlNpcNum.Value = 1;
             scrlSpawnAmount.Value = 1;
@@ -1273,12 +1286,12 @@ namespace Editor.Forms
             pnlMapItem.Visible = false;
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
-            pnlAnimation.Visible = false;
+            pnlAnimation.Visible = false;*/
         }
 
         private void radMapItem_CheckedChanged(object sender, EventArgs e)
         {
-            e_Type = (int)TileType.MapItem;
+            /*e_Type = (int)TileType.MapItem;
             lblType.Text = "Type: Map Item";
             e_SpawnNumber = 1;
             e_SpawnAmount = 1;
@@ -1290,7 +1303,7 @@ namespace Editor.Forms
             pnlNpcSpawn.Visible = false;
             pnlChest.Visible = false;
             pnlWarp.Visible = false;
-            pnlAnimation.Visible = false;
+            pnlAnimation.Visible = false;*/
         }
 
         private void scrlItemNum_Scroll(object sender, ScrollEventArgs e)

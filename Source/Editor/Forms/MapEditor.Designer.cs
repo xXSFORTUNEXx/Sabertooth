@@ -74,9 +74,7 @@
             this.scrlItemNum = new System.Windows.Forms.HScrollBar();
             this.lblItemNum = new System.Windows.Forms.Label();
             this.radChest = new System.Windows.Forms.RadioButton();
-            this.radMapItem = new System.Windows.Forms.RadioButton();
             this.radNpcAvoid = new System.Windows.Forms.RadioButton();
-            this.radSpawnPool = new System.Windows.Forms.RadioButton();
             this.radSpawnNpc = new System.Windows.Forms.RadioButton();
             this.radBlocked = new System.Windows.Forms.RadioButton();
             this.radNone = new System.Windows.Forms.RadioButton();
@@ -128,6 +126,8 @@
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
             this.treeMaps = new System.Windows.Forms.TreeView();
             this.mapProperties = new System.Windows.Forms.PropertyGrid();
+            this.radMapItem = new System.Windows.Forms.RadioButton();
+            this.radSpawnPool = new System.Windows.Forms.RadioButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlTile.SuspendLayout();
@@ -396,9 +396,7 @@
             this.tabTypes.Controls.Add(this.pnlChest);
             this.tabTypes.Controls.Add(this.pnlMapItem);
             this.tabTypes.Controls.Add(this.radChest);
-            this.tabTypes.Controls.Add(this.radMapItem);
             this.tabTypes.Controls.Add(this.radNpcAvoid);
-            this.tabTypes.Controls.Add(this.radSpawnPool);
             this.tabTypes.Controls.Add(this.radSpawnNpc);
             this.tabTypes.Controls.Add(this.radBlocked);
             this.tabTypes.Controls.Add(this.radNone);
@@ -416,7 +414,7 @@
             this.pnlAnimation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlAnimation.Controls.Add(this.scrlAnimNum);
             this.pnlAnimation.Controls.Add(this.lblAnimNum);
-            this.pnlAnimation.Location = new System.Drawing.Point(158, 529);
+            this.pnlAnimation.Location = new System.Drawing.Point(158, 393);
             this.pnlAnimation.Name = "pnlAnimation";
             this.pnlAnimation.Size = new System.Drawing.Size(150, 75);
             this.pnlAnimation.TabIndex = 13;
@@ -445,7 +443,7 @@
             // radAnimation
             // 
             this.radAnimation.AutoSize = true;
-            this.radAnimation.Location = new System.Drawing.Point(20, 206);
+            this.radAnimation.Location = new System.Drawing.Point(19, 161);
             this.radAnimation.Name = "radAnimation";
             this.radAnimation.Size = new System.Drawing.Size(71, 17);
             this.radAnimation.TabIndex = 12;
@@ -463,7 +461,7 @@
             this.pnlWarp.Controls.Add(this.lblMapY);
             this.pnlWarp.Controls.Add(this.lblMapX);
             this.pnlWarp.Controls.Add(this.lblMapNum);
-            this.pnlWarp.Location = new System.Drawing.Point(158, 368);
+            this.pnlWarp.Location = new System.Drawing.Point(158, 233);
             this.pnlWarp.Name = "pnlWarp";
             this.pnlWarp.Size = new System.Drawing.Size(150, 154);
             this.pnlWarp.TabIndex = 11;
@@ -528,7 +526,7 @@
             // radWarp
             // 
             this.radWarp.AutoSize = true;
-            this.radWarp.Location = new System.Drawing.Point(20, 182);
+            this.radWarp.Location = new System.Drawing.Point(19, 137);
             this.radWarp.Name = "radWarp";
             this.radWarp.Size = new System.Drawing.Size(51, 17);
             this.radWarp.TabIndex = 10;
@@ -542,7 +540,7 @@
             this.pnlChest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlChest.Controls.Add(this.scrlChest);
             this.pnlChest.Controls.Add(this.lblChest);
-            this.pnlChest.Location = new System.Drawing.Point(158, 304);
+            this.pnlChest.Location = new System.Drawing.Point(158, 169);
             this.pnlChest.Name = "pnlChest";
             this.pnlChest.Size = new System.Drawing.Size(150, 58);
             this.pnlChest.TabIndex = 9;
@@ -572,12 +570,15 @@
             // pnlMapItem
             // 
             this.pnlMapItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMapItem.Controls.Add(this.radMapItem);
+            this.pnlMapItem.Controls.Add(this.radSpawnPool);
             this.pnlMapItem.Controls.Add(this.picItem);
             this.pnlMapItem.Controls.Add(this.scrlItemAmount);
             this.pnlMapItem.Controls.Add(this.lblItemAmount);
             this.pnlMapItem.Controls.Add(this.scrlItemNum);
             this.pnlMapItem.Controls.Add(this.lblItemNum);
-            this.pnlMapItem.Location = new System.Drawing.Point(158, 169);
+            this.pnlMapItem.Enabled = false;
+            this.pnlMapItem.Location = new System.Drawing.Point(6, 565);
             this.pnlMapItem.Name = "pnlMapItem";
             this.pnlMapItem.Size = new System.Drawing.Size(150, 129);
             this.pnlMapItem.TabIndex = 6;
@@ -636,7 +637,7 @@
             // radChest
             // 
             this.radChest.AutoSize = true;
-            this.radChest.Location = new System.Drawing.Point(20, 159);
+            this.radChest.Location = new System.Drawing.Point(19, 114);
             this.radChest.Name = "radChest";
             this.radChest.Size = new System.Drawing.Size(52, 17);
             this.radChest.TabIndex = 8;
@@ -645,22 +646,10 @@
             this.radChest.UseVisualStyleBackColor = true;
             this.radChest.CheckedChanged += new System.EventHandler(this.radChest_CheckedChanged);
             // 
-            // radMapItem
-            // 
-            this.radMapItem.AutoSize = true;
-            this.radMapItem.Location = new System.Drawing.Point(19, 136);
-            this.radMapItem.Name = "radMapItem";
-            this.radMapItem.Size = new System.Drawing.Size(45, 17);
-            this.radMapItem.TabIndex = 7;
-            this.radMapItem.TabStop = true;
-            this.radMapItem.Text = "Item";
-            this.radMapItem.UseVisualStyleBackColor = true;
-            this.radMapItem.CheckedChanged += new System.EventHandler(this.radMapItem_CheckedChanged);
-            // 
             // radNpcAvoid
             // 
             this.radNpcAvoid.AutoSize = true;
-            this.radNpcAvoid.Location = new System.Drawing.Point(20, 68);
+            this.radNpcAvoid.Location = new System.Drawing.Point(19, 68);
             this.radNpcAvoid.Name = "radNpcAvoid";
             this.radNpcAvoid.Size = new System.Drawing.Size(75, 17);
             this.radNpcAvoid.TabIndex = 5;
@@ -668,18 +657,6 @@
             this.radNpcAvoid.Text = "Npc Avoid";
             this.radNpcAvoid.UseVisualStyleBackColor = true;
             this.radNpcAvoid.CheckedChanged += new System.EventHandler(this.radNpcAvoid_CheckedChanged);
-            // 
-            // radSpawnPool
-            // 
-            this.radSpawnPool.AutoSize = true;
-            this.radSpawnPool.Location = new System.Drawing.Point(19, 113);
-            this.radSpawnPool.Name = "radSpawnPool";
-            this.radSpawnPool.Size = new System.Drawing.Size(82, 17);
-            this.radSpawnPool.TabIndex = 4;
-            this.radSpawnPool.TabStop = true;
-            this.radSpawnPool.Text = "Spawn Pool";
-            this.radSpawnPool.UseVisualStyleBackColor = true;
-            this.radSpawnPool.CheckedChanged += new System.EventHandler(this.radSpawnPool_CheckedChanged);
             // 
             // radSpawnNpc
             // 
@@ -696,7 +673,7 @@
             // radBlocked
             // 
             this.radBlocked.AutoSize = true;
-            this.radBlocked.Location = new System.Drawing.Point(20, 46);
+            this.radBlocked.Location = new System.Drawing.Point(19, 46);
             this.radBlocked.Name = "radBlocked";
             this.radBlocked.Size = new System.Drawing.Size(64, 17);
             this.radBlocked.TabIndex = 1;
@@ -708,7 +685,7 @@
             // 
             this.radNone.AutoSize = true;
             this.radNone.Checked = true;
-            this.radNone.Location = new System.Drawing.Point(20, 23);
+            this.radNone.Location = new System.Drawing.Point(19, 23);
             this.radNone.Name = "radNone";
             this.radNone.Size = new System.Drawing.Size(51, 17);
             this.radNone.TabIndex = 0;
@@ -756,6 +733,7 @@
             // lblSpawnAmount
             // 
             this.lblSpawnAmount.AutoSize = true;
+            this.lblSpawnAmount.Enabled = false;
             this.lblSpawnAmount.Location = new System.Drawing.Point(6, 111);
             this.lblSpawnAmount.Name = "lblSpawnAmount";
             this.lblSpawnAmount.Size = new System.Drawing.Size(55, 13);
@@ -1215,6 +1193,30 @@
             this.mapProperties.Size = new System.Drawing.Size(183, 459);
             this.mapProperties.TabIndex = 24;
             // 
+            // radMapItem
+            // 
+            this.radMapItem.AutoSize = true;
+            this.radMapItem.Enabled = false;
+            this.radMapItem.Location = new System.Drawing.Point(52, 31);
+            this.radMapItem.Name = "radMapItem";
+            this.radMapItem.Size = new System.Drawing.Size(45, 17);
+            this.radMapItem.TabIndex = 9;
+            this.radMapItem.TabStop = true;
+            this.radMapItem.Text = "Item";
+            this.radMapItem.UseVisualStyleBackColor = true;
+            // 
+            // radSpawnPool
+            // 
+            this.radSpawnPool.AutoSize = true;
+            this.radSpawnPool.Enabled = false;
+            this.radSpawnPool.Location = new System.Drawing.Point(52, 8);
+            this.radSpawnPool.Name = "radSpawnPool";
+            this.radSpawnPool.Size = new System.Drawing.Size(82, 17);
+            this.radSpawnPool.TabIndex = 8;
+            this.radSpawnPool.TabStop = true;
+            this.radSpawnPool.Text = "Spawn Pool";
+            this.radSpawnPool.UseVisualStyleBackColor = true;
+            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1290,7 +1292,6 @@
         private System.Windows.Forms.HScrollBar scrlViewX;
         private System.Windows.Forms.VScrollBar scrlViewY;
         private System.Windows.Forms.CheckBox chkNpc;
-        private System.Windows.Forms.RadioButton radSpawnPool;
         private System.Windows.Forms.HScrollBar scrlSpawnAmount;
         private System.Windows.Forms.Label lblSpawnAmount;
         private System.Windows.Forms.RadioButton radNpcAvoid;
@@ -1299,7 +1300,6 @@
         private System.Windows.Forms.Label lblItemAmount;
         private System.Windows.Forms.HScrollBar scrlItemNum;
         private System.Windows.Forms.Label lblItemNum;
-        private System.Windows.Forms.RadioButton radMapItem;
         private System.Windows.Forms.ToolStrip tosMenu;
         private System.Windows.Forms.ToolStripButton btnNewMap;
         private System.Windows.Forms.ToolStripButton btnSaveMap;
@@ -1370,5 +1370,7 @@
         private System.Windows.Forms.Panel pnlAnimation;
         private System.Windows.Forms.HScrollBar scrlAnimNum;
         private System.Windows.Forms.Label lblAnimNum;
+        private System.Windows.Forms.RadioButton radMapItem;
+        private System.Windows.Forms.RadioButton radSpawnPool;
     }
 }

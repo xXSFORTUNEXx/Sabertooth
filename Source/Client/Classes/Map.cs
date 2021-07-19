@@ -40,8 +40,6 @@ namespace SabertoothClient
         public VertexArray f2_Tile = new VertexArray(PrimitiveType.Quads, 4);
         public VertexArray chestPic = new VertexArray(PrimitiveType.Quads, 4);
         public MapNpc[] m_MapNpc = new MapNpc[MAX_MAP_NPCS];
-        public MapNpc[] r_MapNpc = new MapNpc[MAX_MAP_POOL_NPCS];
-        public MapItem[] m_MapItem = new MapItem[MAX_MAP_ITEMS];
         public MapAnimation[] m_Animation = new MapAnimation[MAX_MAP_ANIMATIONS];
         public BloodSplat[] m_BloodSplats = new BloodSplat[MAX_BLOOD_SPLATS];
         public RenderStates ustates;
@@ -174,59 +172,54 @@ namespace SabertoothClient
 
         public void LoadMapFromCache(int index)
         {
-            for (int i = 0; i < 20; i++)
+            for (int m = 0; m < MAX_MAP_NPCS; m++)
             {
-                if (i < 10)
-                {
-                    m_MapNpc[i] = new MapNpc();
-                }
-                r_MapNpc[i] = new MapNpc();
-                m_MapItem[i] = new MapItem();
+                m_MapNpc[m] = new MapNpc();
+            }
 
-                using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+            using (var conn = new SQLiteConnection("Data Source=Cache/MapCache.db;Version=3;"))
+            {
+                using (var cmd = new SQLiteCommand(conn))
                 {
-                    using (var cmd = new SQLiteCommand(conn))
+                    conn.Open();
+                    cmd.CommandText = "SELECT * FROM MAPS WHERE ID = " + index;
+                    using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
                     {
-                        conn.Open();
-                        cmd.CommandText = "SELECT * FROM MAPS WHERE ID = " + index;
-                        using (SQLiteDataReader read = cmd.ExecuteReader(System.Data.CommandBehavior.SequentialAccess))
+                        while (read.Read())
                         {
-                            while (read.Read())
-                            {
-                                Id = ToInt32(read["ID"].ToString());
-                                Name = read["NAME"].ToString();
-                                Revision = ToInt32(read["REVISION"].ToString());
-                                TopMap = ToInt32(read["TOP"].ToString());
-                                BottomMap = ToInt32(read["BOTTOM"].ToString());
-                                LeftMap = ToInt32(read["LEFT"].ToString());
-                                RightMap = ToInt32(read["RIGHT"].ToString());
-                                Brightness = ToInt32(read["BRIGHTNESS"].ToString());
-                                MaxX = ToInt32(read["MAXX"].ToString());
-                                MaxY = ToInt32(read["MAXY"].ToString());
+                            Id = ToInt32(read["ID"].ToString());
+                            Name = read["NAME"].ToString();
+                            Revision = ToInt32(read["REVISION"].ToString());
+                            TopMap = ToInt32(read["TOP"].ToString());
+                            BottomMap = ToInt32(read["BOTTOM"].ToString());
+                            LeftMap = ToInt32(read["LEFT"].ToString());
+                            RightMap = ToInt32(read["RIGHT"].ToString());
+                            Brightness = ToInt32(read["BRIGHTNESS"].ToString());
+                            MaxX = ToInt32(read["MAXX"].ToString());
+                            MaxY = ToInt32(read["MAXY"].ToString());
 
-                                byte[] buffer;
-                                object load;
+                            byte[] buffer;
+                            object load;
 
-                                buffer = (byte[])read["GROUND"];
-                                load = ByteArrayToObject(buffer);
-                                Ground = (Tile[,])load;
+                            buffer = (byte[])read["GROUND"];
+                            load = ByteArrayToObject(buffer);
+                            Ground = (Tile[,])load;
 
-                                buffer = (byte[])read["MASK"];
-                                load = ByteArrayToObject(buffer);
-                                Mask = (Tile[,])load;
+                            buffer = (byte[])read["MASK"];
+                            load = ByteArrayToObject(buffer);
+                            Mask = (Tile[,])load;
 
-                                buffer = (byte[])read["MASKA"];
-                                load = ByteArrayToObject(buffer);
-                                MaskA = (Tile[,])load;
+                            buffer = (byte[])read["MASKA"];
+                            load = ByteArrayToObject(buffer);
+                            MaskA = (Tile[,])load;
 
-                                buffer = (byte[])read["FRINGE"];
-                                load = ByteArrayToObject(buffer);
-                                Fringe = (Tile[,])load;
+                            buffer = (byte[])read["FRINGE"];
+                            load = ByteArrayToObject(buffer);
+                            Fringe = (Tile[,])load;
 
-                                buffer = (byte[])read["FRINGEA"];
-                                load = ByteArrayToObject(buffer);
-                                FringeA = (Tile[,])load;
-                            }
+                            buffer = (byte[])read["FRINGEA"];
+                            load = ByteArrayToObject(buffer);
+                            FringeA = (Tile[,])load;
                         }
                     }
                 }
@@ -460,13 +453,26 @@ namespace SabertoothClient
         Texture[] c_Sprite = new Texture[spriteTextures];
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
+        Text npcName = new Text();
+        Font font = new Font("Resources/Fonts/Arial.ttf");
         float barLength;
+        public DisplayText[] dText = new DisplayText[MAX_DISPLAY_TEXT];
 
         public MapNpc()
         {
             for (int i = 0; i < spriteTextures; i++)
             {
                 c_Sprite[i] = new Texture("Resources/Characters/" + (i + 1) + ".png");
+            }
+
+            npcName.Font = font;
+            npcName.CharacterSize = 12;
+            npcName.Color = Color.White;
+            npcName.Style = Text.Styles.Regular;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                dText[i] = new DisplayText();
             }
         }
 
@@ -484,10 +490,39 @@ namespace SabertoothClient
 
         public override void Draw(RenderTarget target, RenderStates state)
         {
-            int x = (X * 32);
-            int y = (Y * 32) - 16;
-            int step = (Step * 32);
-            int dir = (Direction * 48);
+            int x = (X * PIC_X);
+            int y = (Y * PIC_Y) - 16;
+            int step = (Step * SPRITE_SIZE_X);
+            int dir = (Direction * SPRITE_SIZE_Y);
+
+            int nameX = (X * PIC_X) - (Name.Length / 2);
+            int nameY = (Y * PIC_Y) - PIC_Y;
+            int pX = 0;
+            int pY = 0;
+            double dX = 0;
+            double dY = 0;
+            double dFinal = 0;
+            double dPoint = 0;
+
+            pX = players[HandleData.myIndex].X + OFFSET_X;
+            pY = players[HandleData.myIndex].Y + OFFSET_Y;
+            dX = pX - X;
+            dY = pY - Y;
+            dFinal = dX * dX + dY * dY;
+            dPoint = Math.Sqrt(dFinal);
+
+            npcName.Position = new Vector2f(nameX, nameY - 12);
+
+            if (gui.d_Window.IsVisible)
+            {
+                //npcName.DisplayedString = "(" + X + ", " + Y + ")";
+                npcName.DisplayedString = dPoint.ToString(string.Format("#.#"));
+            }
+            else
+            {
+                npcName.DisplayedString = Name;
+            }
+            
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
             spritePic[2] = new Vertex(new Vector2f(x + 32, y + 48), new Vector2f(step + 32, dir + 48));
@@ -495,8 +530,8 @@ namespace SabertoothClient
 
             barLength = ((float)Health / MaxHealth) * 35;
 
-            x = (X * 32);
-            y = (Y * 32) - 20;
+            x = (X * PIC_X);
+            y = (Y * PIC_Y) - 20;
             healthBar[0] = new Vertex(new Vector2f(x, y), Color.Red);
             healthBar[1] = new Vertex(new Vector2f(barLength + x, y), Color.Red);
             healthBar[2] = new Vertex(new Vector2f(barLength + x, y + 5), Color.Red);
@@ -505,6 +540,61 @@ namespace SabertoothClient
             state.Texture = c_Sprite[Sprite - 1];
             target.Draw(spritePic, state);
             target.Draw(healthBar);
+            target.Draw(npcName);
+        }
+    }
+
+    public class DisplayText : Drawable
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Text displayText = new Text();
+        Font font = new Font("Resources/Fonts/Arial.ttf");
+        int currentLoop = -1;
+        int loopTick = 0;
+
+        public DisplayText()
+        {
+            displayText.Font = font;
+            displayText.CharacterSize = 12;
+            displayText.Style = Text.Styles.Regular;
+            displayText.DisplayedString = "EMPTY";
+        }
+
+        public void CreateDisplayText(int vital, int x, int y)
+        {
+            X = x;
+            Y = y;
+            currentLoop = 0;
+            loopTick = TickCount;
+            displayText.Font = font;
+            displayText.CharacterSize = 12;
+            displayText.Style = Text.Styles.Regular;
+            displayText.DisplayedString = vital.ToString();
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            if (TickCount - loopTick > 500)
+            {
+                if (currentLoop > -1)
+                {
+                    currentLoop += 1;
+                    loopTick = TickCount;
+                }
+            }
+
+            int locX = (X * PIC_X);
+            int locY = ((Y * PIC_Y) - 12) - (10 * currentLoop);
+            displayText.Position = new Vector2f(locX, locY);
+            target.Draw(displayText);
+
+            if (currentLoop == 3)
+            {
+                displayText.DisplayedString = "EMPTY";
+                currentLoop = -1;
+                loopTick = 0;
+            }
         }
     }
 
@@ -703,9 +793,7 @@ namespace SabertoothClient
         None,
         Blocked,
         NpcSpawn,
-        SpawnPool,
         NpcAvoid,
-        MapItem,
         Chest,
         Warp,
         Animation

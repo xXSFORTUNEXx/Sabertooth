@@ -111,24 +111,8 @@ namespace SabertoothClient
                                 HandleUpdatePlayerStats(incMSG);
                                 break;
 
-                            case (byte)PacketTypes.PoolNpcs:
-                                HandlePoolNpcs(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.PoolNpcData:
-                                HandlePoolNpcData(incMSG);
-                                break;
-
                             case (byte)PacketTypes.PlayerInv:
                                 HandlePlayerInv(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.MapItems:
-                                HandleMapItems(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.MapItemData:
-                                HandleMapItemData(incMSG);
                                 break;
 
                             case (byte)PacketTypes.PlayerEquip:
@@ -139,16 +123,8 @@ namespace SabertoothClient
                                 HandleNpcDirection(incMSG);
                                 break;
 
-                            case (byte)PacketTypes.PoolNpcDirecion:
-                                HandleNpcPoolDirection(incMSG);
-                                break;
-
                             case (byte)PacketTypes.NpcVitals:
                                 HandleNpcVitals(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.PoolNpcVitals:
-                                HandlePoolNpcVitals(incMSG);
                                 break;
 
                             case (byte)PacketTypes.ShopData:
@@ -912,94 +888,6 @@ namespace SabertoothClient
             }
         }
 
-        static void HandlePoolNpcs(NetIncomingMessage incMSG)
-        {
-            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-            {
-                if (map.r_MapNpc[i] != null)
-                {
-                    map.r_MapNpc[i].Name = incMSG.ReadString();
-                    map.r_MapNpc[i].X = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Y = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Direction = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Sprite = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Step = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Owner = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Behavior = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].SpawnTime = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Health = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].MaxHealth = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].Damage = incMSG.ReadVariableInt32();
-                    map.r_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
-                }
-            }
-        }
-
-        static void HandleMapItems(NetIncomingMessage incMSG)
-        {
-            for (int i = 0; i < MAX_MAP_ITEMS; i++)
-            {
-                map.m_MapItem[i].Name = incMSG.ReadString();
-                map.m_MapItem[i].X = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Y = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Sprite = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Damage = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Armor = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Type = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].HealthRestore = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].ManaRestore = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Strength = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Agility = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Intelligence = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Energy = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Stamina = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Value = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Price = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Rarity = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].CoolDown = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].AddMaxHealth = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].AddMaxMana = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].BonusXP = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].SpellNum = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].Stackable = incMSG.ReadBoolean();
-                map.m_MapItem[i].MaxStack = incMSG.ReadVariableInt32();
-                map.m_MapItem[i].IsSpawned = incMSG.ReadBoolean();
-            }
-            LoadMainGUI();
-            gui.Ready = true;
-        }
-
-        static void HandleMapItemData(NetIncomingMessage incMSG)
-        {
-            int itemNum = incMSG.ReadVariableInt32();
-
-            map.m_MapItem[itemNum].Name = incMSG.ReadString();
-            map.m_MapItem[itemNum].X = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Y = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Sprite = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Damage = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Armor = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Type = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].HealthRestore = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].ManaRestore = incMSG.ReadVariableInt32();            
-            map.m_MapItem[itemNum].Strength = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Agility = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Intelligence = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Energy = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Stamina = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Value = incMSG.ReadVariableInt32();            
-            map.m_MapItem[itemNum].Price = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Rarity = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].CoolDown = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].AddMaxHealth = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].AddMaxMana = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].BonusXP = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].SpellNum = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].Stackable = incMSG.ReadBoolean();
-            map.m_MapItem[itemNum].MaxStack = incMSG.ReadVariableInt32();
-            map.m_MapItem[itemNum].IsSpawned = incMSG.ReadBoolean();
-        }
-
         static void HandleMapNpcs(NetIncomingMessage incMSG)
         {
             for (int i = 0; i < MAX_MAP_NPCS; i++)
@@ -1021,25 +909,9 @@ namespace SabertoothClient
                     map.m_MapNpc[i].IsSpawned = incMSG.ReadBoolean();
                 }
             }
-        }
 
-        static void HandlePoolNpcData(NetIncomingMessage incMSG)
-        {
-            int npcNum = incMSG.ReadVariableInt32();
-
-            map.r_MapNpc[npcNum].Name = incMSG.ReadString();
-            map.r_MapNpc[npcNum].X = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Y = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Direction = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Sprite = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Step = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Owner = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Behavior = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].SpawnTime = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Health = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].MaxHealth = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].Damage = incMSG.ReadVariableInt32();
-            map.r_MapNpc[npcNum].IsSpawned = incMSG.ReadBoolean();
+            LoadMainGUI();
+            gui.Ready = true;
         }
 
         static void HandleNpcDirection(NetIncomingMessage incMSG)
@@ -1052,34 +924,45 @@ namespace SabertoothClient
             map.m_MapNpc[index].Step = incMSG.ReadVariableInt32();
         }
 
-        static void HandleNpcPoolDirection(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-
-            map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
-            map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
-            map.r_MapNpc[index].Direction = incMSG.ReadVariableInt32();
-            map.r_MapNpc[index].Step = incMSG.ReadVariableInt32();
-        }
-
         static void HandleNpcVitals(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
+            int health = incMSG.ReadVariableInt32();
+            bool isSpanwed = incMSG.ReadBoolean();
+            int x = incMSG.ReadVariableInt32();
+            int y = incMSG.ReadVariableInt32();
+            int damage = incMSG.ReadVariableInt32();
+            int target = players[myIndex].Target;
+            int openDT = FindOpenDisplayText(index);
 
-            map.m_MapNpc[index].Health = incMSG.ReadVariableInt32();
-            map.m_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
-            map.m_MapNpc[index].X = incMSG.ReadVariableInt32();
-            map.m_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            map.m_MapNpc[index].dText[openDT].CreateDisplayText(damage, x, y);
+
+            map.m_MapNpc[index].Health = health;
+            map.m_MapNpc[index].IsSpawned = isSpanwed;
+            map.m_MapNpc[index].X = x;
+            map.m_MapNpc[index].Y = y;
+            
+            if (!isSpanwed)
+            {
+                if (index == target)
+                {
+                    players[myIndex].Target = -1;
+                    players[myIndex].Attacking = false;
+                }
+            }            
         }
 
-        static void HandlePoolNpcVitals(NetIncomingMessage incMSG)
+        static int FindOpenDisplayText(int index)
         {
-            int index = incMSG.ReadVariableInt32();
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                if (map.m_MapNpc[index].dText[i].displayText.DisplayedString == "EMPTY")
+                {
+                    return i;
+                }
+            }
 
-            map.r_MapNpc[index].Health = incMSG.ReadVariableInt32();
-            map.r_MapNpc[index].IsSpawned = incMSG.ReadBoolean();
-            map.r_MapNpc[index].X = incMSG.ReadVariableInt32();
-            map.r_MapNpc[index].Y = incMSG.ReadVariableInt32();
+            return MAX_DISPLAY_TEXT;
         }
 
         static void HandleNpcData(NetIncomingMessage incMSG)
@@ -1425,16 +1308,10 @@ namespace SabertoothClient
                 map.m_MapNpc[i] = new MapNpc();
             }
 
-            for (int i = 0; i < MAX_MAP_POOL_NPCS; i++)
-            {
-                map.r_MapNpc[i] = new MapNpc();
-                map.m_MapItem[i] = new MapItem();
-            }
-
             for (int i = 0; i < MAX_MAP_ANIMATIONS; i++)
             {
                 map.m_Animation[i] = new MapAnimation();
-            }            
+            }
 
             map.Ground = new Tile[maxx, maxy];
             map.Mask = new Tile[maxx, maxy];
@@ -1511,6 +1388,7 @@ namespace SabertoothClient
             gui.CreateChatWindow(canvas);
             gui.chatWindow.Hide();
             gui.CreateHotBarWindow(canvas);
+            renderWindow.SetMouseCursorVisible(false);
             gui.AddText("Welcome to Sabertooth!");
         }
 
@@ -1581,20 +1459,13 @@ namespace SabertoothClient
         Attack,
         UpdateWeapons,
         UpdatePlayerStats,
-        PoolNpcs,
-        PoolNpcData,
         PlayerInv,
-        MapItems,
-        MapItemData,
-        ItemPickup,
         UnequipItem,
         EquipItem,
         DropItem,
         PlayerEquip,
         NpcDirection,
-        PoolNpcDirecion,
         NpcVitals,
-        PoolNpcVitals,
         ShopData,
         ShopItemData,
         ShopItemsData,

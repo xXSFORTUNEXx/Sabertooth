@@ -16,8 +16,6 @@ namespace SabertoothClient
         public const int MAX_ITEMS = 50;       
         public const int MAX_MAPS = 10;
         public const int MAX_MAP_NPCS = 10;
-        public const int MAX_MAP_POOL_NPCS = 20;
-        public const int MAX_MAP_ITEMS = 20;
         public const int MAX_MAP_X = 50;
         public const int MAX_MAP_Y = 50;
         public const int MAX_SHOPS = 10;
@@ -41,6 +39,8 @@ namespace SabertoothClient
         public const int MAX_PLAYER_HOTBAR = 10;
         public const int MAX_STACK_SIZE = 255;
         public const int MAX_MAP_ANIMATIONS = 15;
+        public const string EQUIP_COOLDOWN = "5000";
+        public const int MAX_DISPLAY_TEXT = 10;
         #endregion
 
         #region Config Globals
@@ -66,8 +66,7 @@ namespace SabertoothClient
         public const string MANA_REGEN_TIME = "120000"; //120000 / 1000 = 2 MIN
         public const string AUTOSAVE_TIME = "300000"; //300000 / 1000 = 5 MIN
         public const string SPAWN_TIME = "1000"; //1000 / 1000 = 1 SECOND
-        public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND
-        public const string NEXT_WAVE_COUNTDOWN = "60000"; //60000 / 1000 = 1 MIN
+        public const string AI_TIME = "1000"; //1000 / 1000 = 1 SECOND        
         public const int SQL_DATABASE_REMOTE = 0;
         public const int SQL_DATABASE_LOCAL = 1;
         public const int A_MILLISECOND = 1000;
@@ -94,8 +93,7 @@ namespace SabertoothClient
         public const int CANVAS_WIDTH = 1024;
         public const int CANVAS_HEIGHT = 768;
         public const int MAX_FPS = 60;
-        public const Styles SCREEN_STYLE = Styles.Titlebar;
-        public const int MAX_DRAWN_PROJECTILES = 200;
+        public const Styles SCREEN_STYLE = Styles.Titlebar;        
         public const int DISCOVERY_TIMER = 6500;    //6500 / 1000 = 6.5 seconds
         public const int PIC_X = 32;
         public const int PIC_Y = 32;

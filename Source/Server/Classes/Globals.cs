@@ -14,8 +14,6 @@
         public const int MAX_ITEMS = 50;        
         public const int MAX_MAPS = 10;
         public const int MAX_MAP_NPCS = 10;
-        public const int MAX_MAP_POOL_NPCS = 20;
-        public const int MAX_MAP_ITEMS = 20;
         public const int MAX_MAP_ANIMATIONS = 15;
         public const int MAX_MAP_X = 50;
         public const int MAX_MAP_Y = 50;

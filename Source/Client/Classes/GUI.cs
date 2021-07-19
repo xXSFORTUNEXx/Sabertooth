@@ -696,8 +696,10 @@ namespace SabertoothClient
 
                 d_mouseX.Text = "Mouse X: " + Gwen.Input.InputHandler.MousePosition.X;
                 d_mouseY.Text = "Mouse Y: " + Gwen.Input.InputHandler.MousePosition.Y;
-                d_tMouseX.Text = "Tile Mouse X: " + (Gwen.Input.InputHandler.MousePosition.X / PIC_X);
-                d_tMouseY.Text = "Tile Mouse Y: " + (Gwen.Input.InputHandler.MousePosition.Y / PIC_Y);
+                int mX = (Gwen.Input.InputHandler.MousePosition.X / PIC_X) + (player.X);
+                int mY = (Gwen.Input.InputHandler.MousePosition.Y / PIC_Y) + (player.Y);
+                d_tMouseX.Text = "Tile Mouse X: " + mX;
+                d_tMouseY.Text = "Tile Mouse Y: " + mY;
             }
         }
 
@@ -3503,16 +3505,6 @@ namespace SabertoothClient
                             m_NpcSpawn[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                             target.Draw(m_NpcSpawn, states);
                         }
-                        if (m_Map.Ground[x, y].Type == (int)TileType.SpawnPool)
-                        {
-                            w = 12;
-                            h = 12;
-                            m_NpcSpawn[0] = new Vertex(new Vector2f(fx, fy), Color.Magenta);
-                            m_NpcSpawn[1] = new Vertex(new Vector2f(fx + w, fy), Color.Transparent);
-                            m_NpcSpawn[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta);
-                            m_NpcSpawn[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
-                            target.Draw(m_NpcSpawn, states);
-                        }
                         if (m_Map.Ground[x, y].Type == (int)TileType.NpcAvoid)
                         {
                             w = 12;
@@ -3523,9 +3515,9 @@ namespace SabertoothClient
                             m_NpcAvoid[3] = new Vertex(new Vector2f(fx, fy + h), Color.Transparent);
                             target.Draw(m_NpcAvoid, states);
                         }
-                        for (int i = 0; i < 20; i++)
+                        for (int i = 0; i < MAX_MAP_NPCS; i++)
                         {
-                            if (i < 10)
+                            if (i < MAX_MAP_NPCS)   //change this
                             {
                                 if (m_Map.m_MapNpc[i].IsSpawned)
                                 {
@@ -3542,37 +3534,6 @@ namespace SabertoothClient
                                         m_Npc[3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
                                         target.Draw(m_Npc, states);
                                     }
-                                }
-                            }
-                            if (m_Map.r_MapNpc[i].IsSpawned)
-                            {
-                                if (m_Map.r_MapNpc[i].X == x && m_Map.r_MapNpc[i].Y == y)
-                                {
-                                    tx = 12;
-                                    ty = 0;
-                                    w = 12;
-                                    h = 12;
-                                    if (m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Friendly || m_Map.r_MapNpc[i].Behavior == (int)BehaviorType.Passive) { tx = 24; }
-                                    m_Npc[0] = new Vertex(new Vector2f(fx, fy), Color.Yellow, new Vector2f(tx, ty));
-                                    m_Npc[1] = new Vertex(new Vector2f(fx + w, fy), Color.Yellow, new Vector2f(tx + w, ty));
-                                    m_Npc[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Yellow, new Vector2f(tx + w, ty + h));
-                                    m_Npc[3] = new Vertex(new Vector2f(fx, fy + h), Color.Yellow, new Vector2f(tx, ty + h));
-                                    target.Draw(m_Npc, states);
-                                }
-                            }
-                            if (m_Map.m_MapItem[i].IsSpawned)
-                            {
-                                if (m_Map.m_MapItem[i].X == x && m_Map.m_MapItem[i].Y == y)
-                                {
-                                    tx = 48;
-                                    ty = 0;
-                                    w = 12;
-                                    h = 12;
-                                    m_Item[0] = new Vertex(new Vector2f(fx, fy), Color.Magenta, new Vector2f(tx, ty));
-                                    m_Item[1] = new Vertex(new Vector2f(fx + w, fy), Color.Magenta, new Vector2f(tx + w, ty));
-                                    m_Item[2] = new Vertex(new Vector2f(fx + w, fy + h), Color.Magenta, new Vector2f(tx + w, ty + h));
-                                    m_Item[3] = new Vertex(new Vector2f(fx, fy + h), Color.Magenta, new Vector2f(tx, ty + h));
-                                    target.Draw(m_Item, states);
                                 }
                             }
                         }
@@ -3596,52 +3557,52 @@ namespace SabertoothClient
 
     public class HUD : Drawable
     {
-        Font d_Font = new Font("Resources/Fonts/Arial.ttf");
+        Font hudFont = new Font("Resources/Fonts/Arial.ttf");
 
-        VertexArray h_Bar = new VertexArray();
-        Text h_Text = new Text();
-        float h_barLength;
+        VertexArray hudHPBar = new VertexArray();
+        Text hudHPText = new Text();
+        float hudHPbarLength;
 
-        VertexArray m_Bar = new VertexArray();
-        Text m_Text = new Text();
-        float m_barLength;
+        VertexArray hudMPBar = new VertexArray();
+        Text hudMPText = new Text();
+        float hudMPbarLength;
 
-        VertexArray e_Bar = new VertexArray();
-        Text e_Text = new Text();
-        float e_barLength;
+        VertexArray hudXPBar = new VertexArray();
+        Text hudXPText = new Text();
+        float hudXPbarLength;
 
-        const int f_Size = 175;
+        const int hudFSize = 175;
 
         Player player;
 
         public HUD()
         {
-            h_Bar.PrimitiveType = PrimitiveType.Quads;
-            h_Bar.Resize(4);
+            hudHPBar.PrimitiveType = PrimitiveType.Quads;
+            hudHPBar.Resize(4);
 
-            h_Text.Font = d_Font;
-            h_Text.CharacterSize = 16;
-            h_Text.Color = Color.Black;
-            h_Text.Style = Text.Styles.Bold;
-            h_Text.Position = new Vector2f(13, 14);
+            hudHPText.Font = hudFont;
+            hudHPText.CharacterSize = 16;
+            hudHPText.Color = Color.Black;
+            hudHPText.Style = Text.Styles.Bold;
+            hudHPText.Position = new Vector2f(13, 14);
 
-            m_Bar.PrimitiveType = PrimitiveType.Quads;
-            m_Bar.Resize(4);
+            hudMPBar.PrimitiveType = PrimitiveType.Quads;
+            hudMPBar.Resize(4);
 
-            m_Text.Font = d_Font;
-            m_Text.CharacterSize = 16;
-            m_Text.Color = Color.Black;
-            m_Text.Style = Text.Styles.Bold;
-            m_Text.Position = new Vector2f(13, 49);
+            hudMPText.Font = hudFont;
+            hudMPText.CharacterSize = 16;
+            hudMPText.Color = Color.Black;
+            hudMPText.Style = Text.Styles.Bold;
+            hudMPText.Position = new Vector2f(13, 49);
 
-            e_Bar.PrimitiveType = PrimitiveType.Quads;
-            e_Bar.Resize(4);
+            hudXPBar.PrimitiveType = PrimitiveType.Quads;
+            hudXPBar.Resize(4);
 
-            e_Text.Font = d_Font;
-            e_Text.CharacterSize = 16;
-            e_Text.Color = Color.Black;
-            e_Text.Style = Text.Styles.Bold;
-            e_Text.Position = new Vector2f(13, 84);
+            hudXPText.Font = hudFont;
+            hudXPText.CharacterSize = 16;
+            hudXPText.Color = Color.Black;
+            hudXPText.Style = Text.Styles.Bold;
+            hudXPText.Position = new Vector2f(13, 84);
         }
 
         public void SetPlayerIndex()
@@ -3651,48 +3612,48 @@ namespace SabertoothClient
 
         public void UpdateHealthBar()
         {
-            h_barLength = ((float)player.Health / player.MaxHealth) * f_Size;
+            hudHPbarLength = ((float)player.Health / player.MaxHealth) * hudFSize;
 
-            h_Bar[0] = new Vertex(new Vector2f(10, 10), Color.Red);
-            h_Bar[1] = new Vertex(new Vector2f(h_barLength + 10, 10), Color.Red);
-            h_Bar[2] = new Vertex(new Vector2f(h_barLength + 10, 40), Color.Red);
-            h_Bar[3] = new Vertex(new Vector2f(10, 40), Color.Red);
+            hudHPBar[0] = new Vertex(new Vector2f(10, 10), Color.Red);
+            hudHPBar[1] = new Vertex(new Vector2f(hudHPbarLength + 10, 10), Color.Red);
+            hudHPBar[2] = new Vertex(new Vector2f(hudHPbarLength + 10, 40), Color.Red);
+            hudHPBar[3] = new Vertex(new Vector2f(10, 40), Color.Red);
 
-            h_Text.DisplayedString = "Health: " + player.Health + " / " + player.MaxHealth;
+            hudHPText.DisplayedString = "Health: " + player.Health + " / " + player.MaxHealth;
         }
 
         public void UpdateManaBar()
         {
-            m_barLength = ((float)player.Mana / player.MaxMana) * f_Size;
+            hudMPbarLength = ((float)player.Mana / player.MaxMana) * hudFSize;
 
-            m_Bar[0] = new Vertex(new Vector2f(10, 45), Color.Blue);
-            m_Bar[1] = new Vertex(new Vector2f(m_barLength + 10, 45), Color.Blue);
-            m_Bar[2] = new Vertex(new Vector2f(m_barLength + 10, 75), Color.Blue);
-            m_Bar[3] = new Vertex(new Vector2f(10, 75), Color.Blue);
+            hudMPBar[0] = new Vertex(new Vector2f(10, 45), Color.Blue);
+            hudMPBar[1] = new Vertex(new Vector2f(hudMPbarLength + 10, 45), Color.Blue);
+            hudMPBar[2] = new Vertex(new Vector2f(hudMPbarLength + 10, 75), Color.Blue);
+            hudMPBar[3] = new Vertex(new Vector2f(10, 75), Color.Blue);
 
-            m_Text.DisplayedString = "Mana: " + player.Mana + " / " + player.MaxMana;
+            hudMPText.DisplayedString = "Mana: " + player.Mana + " / " + player.MaxMana;
         }
 
         public void UpdateExpBar()
         {
-            e_Text.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 1000);
+            hudXPText.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 1000);
 
-            e_barLength = ((float)player.Experience / (player.Level * 1000)) * f_Size;
+            hudXPbarLength = ((float)player.Experience / (player.Level * 1000)) * hudFSize;
 
-            e_Bar[0] = new Vertex(new Vector2f(10, 80), Color.Yellow);
-            e_Bar[1] = new Vertex(new Vector2f(e_barLength + 10, 80), Color.Yellow);
-            e_Bar[2] = new Vertex(new Vector2f(e_barLength + 10, 110), Color.Yellow);
-            e_Bar[3] = new Vertex(new Vector2f(10, 110), Color.Yellow);
+            hudXPBar[0] = new Vertex(new Vector2f(10, 80), Color.Yellow);
+            hudXPBar[1] = new Vertex(new Vector2f(hudXPbarLength + 10, 80), Color.Yellow);
+            hudXPBar[2] = new Vertex(new Vector2f(hudXPbarLength + 10, 110), Color.Yellow);
+            hudXPBar[3] = new Vertex(new Vector2f(10, 110), Color.Yellow);
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
-            target.Draw(h_Bar, states);
-            target.Draw(m_Bar, states);
-            target.Draw(e_Bar, states);
-            target.Draw(h_Text);
-            target.Draw(m_Text);
-            target.Draw(e_Text);
+            target.Draw(hudHPBar, states);
+            target.Draw(hudMPBar, states);
+            target.Draw(hudXPBar, states);
+            target.Draw(hudHPText);
+            target.Draw(hudMPText);
+            target.Draw(hudXPText);
         }
     }
 }

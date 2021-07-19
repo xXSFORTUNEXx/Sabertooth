@@ -143,8 +143,6 @@ namespace SabertoothServer
                 HandleData.HandleDataMessage();
                 SavePlayers();
                 CheckNpcSpawn();
-                CheckItemSpawn();
-                CheckClearMapItem();
                 CheckHealthRegen();
                 CheckManaRegen();
                 CheckNpcAi();
@@ -437,121 +435,6 @@ namespace SabertoothServer
             return false;
         }
 
-        //Used to clear out items that have been on the ground to long
-        static bool CheckClearMapItem()
-        {
-            if (TickCount - removeTime < 1000) { return false; }
-
-            for (int i = 0; i < MAX_MAPS; i++)
-            {
-                if (maps[i] != null && maps[i].Name != null)
-                {
-                    if (CheckIfMapHasPlayers(i))
-                    {
-                        for (int n = 0; n < MAX_MAP_ITEMS; n++)
-                        {
-                            if (maps[i].m_MapItem[n].ExpireTick > 0 && maps[i].m_MapItem[n].IsSpawned)
-                            {
-                                if (TickCount - maps[i].m_MapItem[n].ExpireTick > 300000)
-                                {
-                                    maps[i].m_MapItem[n] = new MapItem("None", 0, 0, 0);
-
-                                    for (int p = 0; p < MAX_PLAYERS; p++)
-                                    {
-                                        if (players[p].Connection != null && i == players[p].Map)
-                                        {
-                                            HandleData.SendMapItemData(players[p].Connection, i, n);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            removeTime = TickCount;
-            return true;
-        }
-
-        //Check if items need to be spawned on maps
-        static void CheckItemSpawn()
-        {
-            for (int i = 0; i < MAX_MAPS; i++)
-            {
-                if (maps[i] != null && maps[i].Name != null)
-                {
-                    if (CheckIfMapHasPlayers(i))
-                    {
-                        for (int x = 0; x < maps[i].MaxX; x++)
-                        {
-                            for (int y = 0; y < maps[i].MaxY; y++)
-                            {
-                                if (maps[i].Ground[x, y].Type == (int)TileType.MapItem)
-                                {
-                                    if (maps[i].Ground[x, y].SpawnNum > 0)
-                                    {
-                                        if (maps[i].Ground[x, y].NeedsSpawnedTick > 0)
-                                        {
-                                            if (TickCount - maps[i].Ground[x, y].NeedsSpawnedTick > 300000 && maps[i].Ground[x, y].NeedsSpawned)
-                                            {
-                                                maps[i].Ground[x, y].NeedsSpawned = false;
-                                                maps[i].Ground[x, y].NeedsSpawnedTick = 0;
-                                            }
-                                        }
-
-                                        if (!maps[i].Ground[x, y].NeedsSpawned)
-                                        {
-                                            int slot = FindOpenMapItemSlot(maps[i]);
-                                            if (slot < 20)
-                                            {
-                                                int itemNum = maps[i].Ground[x, y].SpawnNum - 1;
-                                                maps[i].m_MapItem[slot].ItemNum = itemNum + 1;
-                                                maps[i].m_MapItem[slot].Name = items[itemNum].Name;
-                                                maps[i].m_MapItem[slot].X = x;
-                                                maps[i].m_MapItem[slot].Y = y;
-                                                maps[i].m_MapItem[slot].Sprite = items[itemNum].Sprite;
-                                                maps[i].m_MapItem[slot].Damage = items[itemNum].Damage;
-                                                maps[i].m_MapItem[slot].Armor = items[itemNum].Armor;
-                                                maps[i].m_MapItem[slot].Type = items[itemNum].Type;
-                                                maps[i].m_MapItem[slot].AttackSpeed = items[itemNum].AttackSpeed;
-                                                maps[i].m_MapItem[slot].HealthRestore = items[itemNum].HealthRestore;
-                                                maps[i].m_MapItem[slot].ManaRestore = items[itemNum].ManaRestore;
-                                                maps[i].m_MapItem[slot].Strength = items[itemNum].Strength;
-                                                maps[i].m_MapItem[slot].Agility = items[itemNum].Agility;
-                                                maps[i].m_MapItem[slot].Intelligence = items[itemNum].Intelligence;
-                                                maps[i].m_MapItem[slot].Energy = items[itemNum].Energy;
-                                                maps[i].m_MapItem[slot].Stamina = items[itemNum].Stamina;
-                                                maps[i].m_MapItem[slot].Price = items[itemNum].Price;
-                                                maps[i].m_MapItem[slot].Value = maps[i].Ground[x, y].SpawnAmount;
-                                                maps[i].m_MapItem[slot].Rarity = items[itemNum].Rarity;
-                                                maps[i].m_MapItem[slot].CoolDown = items[itemNum].CoolDown;
-                                                maps[i].m_MapItem[slot].AddMaxHealth = items[itemNum].AddMaxHealth;
-                                                maps[i].m_MapItem[slot].AddMaxMana = items[itemNum].AddMaxMana;
-                                                maps[i].m_MapItem[slot].BonusXP = items[itemNum].BonusXP;
-                                                maps[i].m_MapItem[slot].SpellNum = items[itemNum].SpellNum;
-                                                maps[i].m_MapItem[slot].Stackable = items[itemNum].Stackable;
-                                                maps[i].m_MapItem[slot].MaxStack = items[itemNum].MaxStack;
-                                                maps[i].m_MapItem[slot].IsSpawned = true;
-                                                maps[i].Ground[x, y].NeedsSpawned = true;
-
-                                                for (int p = 0; p < MAX_PLAYERS; p++)
-                                                {
-                                                    if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
-                                                    {
-                                                        HandleData.SendMapItemData(players[p].Connection, i, slot);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         //Check if npcs need to be spawned
         static void CheckNpcSpawn()
         {
@@ -591,63 +474,7 @@ namespace SabertoothServer
                                                 }
                                             }
                                         }
-                                        break;
-
-                                    case (int)TileType.SpawnPool:
-                                        if (maps[i].Ground[x, y].SpawnNum > 0)  //Usually greater than one otherwise we should use npcspawn
-                                        {
-                                            for (int n = 0; n < maps[i].Ground[x, y].SpawnAmount; n++)
-                                            {
-                                                if (maps[i].Ground[x, y].CurrentSpawn < maps[i].Ground[x, y].SpawnAmount)
-                                                {
-                                                    if (!maps[i].r_MapNpc[n].IsSpawned)
-                                                    {
-                                                        if (TickCount - maps[i].r_MapNpc[n].spawnTick > (maps[i].r_MapNpc[n].SpawnTime * 1000))
-                                                        {
-                                                            int npcNum = maps[i].m_MapNpc[maps[i].Ground[x, y].SpawnNum - 1].NpcNum - 1;
-
-                                                            //if (npcNum > 0)
-                                                            {
-                                                                maps[i].r_MapNpc[n].NpcNum = npcNum;
-                                                                int genX = (x + RND.Next(1, 3));
-                                                                int genY = (y + RND.Next(1, 3));
-                                                                maps[i].r_MapNpc[n].Name = npcs[npcNum].Name;
-                                                                maps[i].r_MapNpc[n].X = genX;
-                                                                maps[i].r_MapNpc[n].Y = genY;
-                                                                maps[i].r_MapNpc[n].Health = npcs[npcNum].Health;
-                                                                maps[i].r_MapNpc[n].MaxHealth = npcs[npcNum].MaxHealth;
-                                                                maps[i].r_MapNpc[n].SpawnX = x;
-                                                                maps[i].r_MapNpc[n].SpawnY = y;
-                                                                maps[i].r_MapNpc[n].Direction = npcs[npcNum].Direction;
-                                                                maps[i].r_MapNpc[n].Step = npcs[npcNum].Step;
-                                                                maps[i].r_MapNpc[n].Sprite = npcs[npcNum].Sprite;
-                                                                maps[i].r_MapNpc[n].Behavior = npcs[npcNum].Behavior;
-                                                                maps[i].r_MapNpc[n].Owner = npcs[npcNum].Owner;
-                                                                maps[i].r_MapNpc[n].Damage = npcs[npcNum].Damage;
-                                                                maps[i].r_MapNpc[n].DesX = npcs[npcNum].DesX;
-                                                                maps[i].r_MapNpc[n].DesY = npcs[npcNum].DesY;
-                                                                maps[i].r_MapNpc[n].Exp = npcs[npcNum].Exp;
-                                                                maps[i].r_MapNpc[n].Money = npcs[npcNum].Money;
-                                                                maps[i].r_MapNpc[n].SpawnTime = npcs[npcNum].SpawnTime;
-                                                                maps[i].r_MapNpc[n].IsSpawned = true;
-                                                                maps[i].r_MapNpc[n].Range = npcs[npcNum].Range;
-                                                                maps[i].r_MapNpc[n].Speed = npcs[npcNum].Speed;
-                                                                maps[i].Ground[x, y].CurrentSpawn += 1;
-
-                                                                for (int p = 0; p < MAX_PLAYERS; p++)
-                                                                {
-                                                                    if (players[p].Connection != null && players[p].Active == "Y" && i == players[p].Map)
-                                                                    {
-                                                                        HandleData.SendPoolNpcData(players[p].Connection, i, n);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        break;
+                                        break;                                    
                                 }
                             }
                         }
@@ -689,33 +516,6 @@ namespace SabertoothServer
                                         }
                                     }
                                     maps[i].m_MapNpc[n].aiTick = TickCount;
-                                }
-                            }
-                        }
-                        for (int c = 0; c < MAX_MAP_POOL_NPCS; c++)
-                        {
-                            if (maps[i].r_MapNpc[c].IsSpawned)
-                            {
-                                if (TickCount - maps[i].r_MapNpc[c].aiTick > (maps[i].r_MapNpc[c].Speed))
-                                {
-                                    int canMove = RND.Next(0, 100);
-                                    int dir = RND.Next(0, 3);
-
-                                    maps[i].r_MapNpc[c].NpcAI(canMove, dir, i);
-
-                                    if (maps[i].r_MapNpc[c].DidMove)
-                                    {
-                                        maps[i].r_MapNpc[c].DidMove = false;
-
-                                        for (int p = 0; p < 5; p++)
-                                        {
-                                            if (players[p].Connection != null && players[p].Active == "Y" && players[p].Map == i)
-                                            {
-                                                HandleData.SendUpdatePoolNpcLoc(players[p].Connection, i, c);
-                                            }
-                                        }
-                                    }
-                                    maps[i].r_MapNpc[c].aiTick = TickCount;
                                 }
                             }
                         }
@@ -1064,18 +864,6 @@ namespace SabertoothServer
                     }
                 }
             }
-        }
-
-        public static int FindOpenMapItemSlot(Map s_Map)
-        {
-            for (int i = 0; i < MAX_MAP_ITEMS; i++)
-            {
-                if (s_Map.m_MapItem[i].Name == "None" && !s_Map.m_MapItem[i].IsSpawned || s_Map.m_MapItem[i].Name == null && !s_Map.m_MapItem[i].IsSpawned)
-                {
-                    return i;
-                }
-            }
-            return MAX_MAP_ITEMS;
         }
 
         public static void DisconnectClients()

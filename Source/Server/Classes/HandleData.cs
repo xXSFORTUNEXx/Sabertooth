@@ -49,20 +49,12 @@ namespace SabertoothServer
                                 HandleDirectionData(incMSG);
                                 break;                                
 
-                            case (byte)PacketTypes.ItemPickup:
-                                HandleItemPickup(incMSG);
-                                break;
-
                             case (byte)PacketTypes.UnequipItem:
                                 HandleUnequipItem(incMSG);
                                 break;
 
                             case (byte)PacketTypes.EquipItem:
                                 HandleEquipItem(incMSG);
-                                break;
-
-                            case (byte)PacketTypes.DropItem:
-                                HandleDropItem(incMSG);
                                 break;
 
                             case (byte)PacketTypes.Interaction:
@@ -204,40 +196,19 @@ namespace SabertoothServer
                 //Create blood splat
                 maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
                 //do damage to the npc and mark the player for update
-                bool updatePlayer = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
+                int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
 
                 //send updated npc vitals to players connected and on the same map
                 for (int p = 0; p < MAX_PLAYERS; p++)
                 {
                     if (players[p].Connection != null && map == players[p].Map)
                     {
-                        SendNpcVitalData(players[p].Connection, map, npcNum);
+                        SendNpcVitalData(players[p].Connection, map, npcNum, damage);
                     }
                 }
 
                 //update the player of their stats for some reason?
-                if (updatePlayer) { SendUpdatePlayerStats(index); }
-            }
-            else //For the npc spawn pools (POOL)             
-            {
-                if (!maps[map].r_MapNpc[npcNum].IsSpawned) { return; }  //if we no spawn then we no care
-
-                //Create blood splat
-                maps[map].CreateBloodSplat(map, maps[map].r_MapNpc[npcNum].X, maps[map].r_MapNpc[npcNum].Y);
-                //do damage to the npc and mark the player for update
-                bool updatePlayer = maps[map].r_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
-
-                //send updated npc vitals to players connected and on the same map
-                for (int p = 0; p < MAX_PLAYERS; p++)
-                {
-                    if (players[p].Connection != null && map == players[p].Map)
-                    {
-                        SendPoolNpcVitalData(players[p].Connection, map, npcNum);
-                    }
-                }
-
-                //update the player of their stats for some reason?
-                if (updatePlayer) { SendUpdatePlayerStats(index); }
+                //if (updatePlayer) { SendUpdatePlayerStats(index); }
             }
         }
 
@@ -263,8 +234,6 @@ namespace SabertoothServer
             SendPlayers();
             SendMapData(incMSG, warpMap);
             SendMapNpcs(incMSG, warpMap);
-            SendPoolMapNpcs(incMSG, warpMap);
-            SendMapItems(incMSG, warpMap);
         }
 
         static void HandleActivationKey(NetIncomingMessage incMSG)
@@ -292,11 +261,9 @@ namespace SabertoothServer
                 SendShops(incMSG);
                 SendChats(incMSG);
                 SendQuests(incMSG);
-                SendMapData(incMSG, currentMap);
-                SendMapNpcs(incMSG, currentMap);
-                SendPoolMapNpcs(incMSG, currentMap);
-                SendMapItems(incMSG, currentMap);
                 SendChests(incMSG);
+                SendMapData(incMSG, currentMap);
+                SendMapNpcs(incMSG, currentMap);                
                 SendDateAndTime(incMSG, index);
                 players[index].UpdateLastLogged();
                 Console.WriteLine("Data sent to " + players[index].Name + ", IP: " + incMSG.SenderConnection);
@@ -478,15 +445,6 @@ namespace SabertoothServer
             }
         }
 
-        static void HandleDropItem(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-            int slot = incMSG.ReadVariableInt32();
-            int mapNum = players[index].Map;
-
-            players[index].DropItem(index, slot, mapNum);
-        }
-
         static void HandleEquipItem(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -509,14 +467,6 @@ namespace SabertoothServer
 
             SendPlayerInv(index);
         }
-
-        static void HandleItemPickup(NetIncomingMessage incMSG)
-        {
-            int index = incMSG.ReadVariableInt32();
-            int pMap = players[index].Map;
-
-            players[index].CheckPickup(index, pMap);
-        }        
 
         static void HandleMoveData(NetIncomingMessage incMSG)
         {
@@ -668,11 +618,9 @@ namespace SabertoothServer
                         SendChats(incMSG);
                         SendQuests(incMSG);
                         SendAnimations(incMSG);
+                        SendChests(incMSG);
                         SendMapData(incMSG, currentMap);
-                        SendMapNpcs(incMSG, currentMap);
-                        SendPoolMapNpcs(incMSG, currentMap);
-                        SendMapItems(incMSG, currentMap);
-                        SendChests(incMSG);                        
+                        SendMapNpcs(incMSG, currentMap);                                            
                         SendDateAndTime(incMSG, i);
                         players[i].UpdateLastLogged();
                         Console.WriteLine("Data sent to " + username + ", IP: " + incMSG.SenderConnection);
@@ -1631,29 +1579,6 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        static void SendPoolMapNpcs(NetIncomingMessage incMSG, int map)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.PoolNpcs);
-            for (int i = 0; i < 20; i++)
-            {
-                outMSG.Write(maps[map].r_MapNpc[i].Name);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].X);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Y);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Direction);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Sprite);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Step);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Owner);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Behavior);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].SpawnTime);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Health);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].MaxHealth);
-                outMSG.WriteVariableInt32(maps[map].r_MapNpc[i].Damage);
-                outMSG.Write(maps[map].r_MapNpc[i].IsSpawned);
-            }
-            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
         static void SendMapNpcs(NetIncomingMessage incMSG, int map)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -1675,40 +1600,6 @@ namespace SabertoothServer
                 outMSG.Write(maps[map].m_MapNpc[i].IsSpawned);
             }
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        public static void SendPoolNpcData(NetConnection p_Conn, int map, int npcNum)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.PoolNpcData);
-            outMSG.WriteVariableInt32(npcNum);
-            outMSG.Write(maps[map].r_MapNpc[npcNum].Name);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].X);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Y);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Direction);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Sprite);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Step);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Owner);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Behavior);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].SpawnTime);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Health);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].MaxHealth);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Damage);
-            outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);
-
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        public static void SendUpdatePoolNpcLoc(NetConnection p_Conn, int map, int npcNum)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.PoolNpcDirecion);
-            outMSG.WriteVariableInt32(npcNum);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].X);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Y);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Direction);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Step);
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendMapNpcData(NetConnection p_Conn, int map, int npcNum)
@@ -1746,7 +1637,7 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public static void SendNpcVitalData(NetConnection p_Conn, int map, int npcNum)
+        public static void SendNpcVitalData(NetConnection p_Conn, int map, int npcNum, int damage)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.NpcVitals);
@@ -1755,89 +1646,7 @@ namespace SabertoothServer
             outMSG.Write(maps[map].m_MapNpc[npcNum].IsSpawned);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].X);
             outMSG.WriteVariableInt32(maps[map].m_MapNpc[npcNum].Y);
-
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        public static void SendPoolNpcVitalData(NetConnection p_Conn, int map, int npcNum)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.PoolNpcVitals);
-            outMSG.WriteVariableInt32(npcNum);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Health);
-            outMSG.Write(maps[map].r_MapNpc[npcNum].IsSpawned);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].X);
-            outMSG.WriteVariableInt32(maps[map].r_MapNpc[npcNum].Y);
-
-            SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        static void SendMapItems(NetIncomingMessage incMSG, int map)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.MapItems);
-            for (int i = 0; i < 20; i++)
-            {
-                outMSG.Write(maps[map].m_MapItem[i].Name);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].X);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Y);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Sprite);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Damage);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Armor);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Type);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].HealthRestore);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].ManaRestore);                
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Strength);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Agility);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Intelligence);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Energy);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Stamina);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Value);                
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Price);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].Rarity);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].CoolDown);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].AddMaxHealth);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].AddMaxMana);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].BonusXP);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].SpellNum);
-                outMSG.Write(maps[map].m_MapItem[i].Stackable);
-                outMSG.WriteVariableInt32(maps[map].m_MapItem[i].MaxStack);
-                outMSG.Write(maps[map].m_MapItem[i].IsSpawned);
-            }            
-
-            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        public static void SendMapItemData(NetConnection p_Conn, int map, int mapSlot)
-        {
-            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
-            outMSG.Write((byte)PacketTypes.MapItemData);
-            outMSG.WriteVariableInt32(mapSlot);
-            outMSG.Write(maps[map].m_MapItem[mapSlot].Name);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].X);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Y);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Sprite);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Damage);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Armor);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Type);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].HealthRestore);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].ManaRestore);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Strength);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Agility);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Intelligence);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Energy);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Stamina);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Value);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Price);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].Rarity);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].CoolDown);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].AddMaxHealth);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].AddMaxMana);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].BonusXP);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].SpellNum);
-            outMSG.Write(maps[map].m_MapItem[mapSlot].Stackable);
-            outMSG.WriteVariableInt32(maps[map].m_MapItem[mapSlot].MaxStack);
-            outMSG.Write(maps[map].m_MapItem[mapSlot].IsSpawned);     
+            outMSG.WriteVariableInt32(damage);
 
             SabertoothServer.netServer.SendMessage(outMSG, p_Conn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -2026,7 +1835,7 @@ namespace SabertoothServer
                         SendPlayerData(incMSG, index);
                         SendMapData(incMSG, mapNum);
                         SendMapNpcs(incMSG, mapNum);
-                        SendPoolMapNpcs(incMSG, mapNum);
+                        //SendPoolMapNpcs(incMSG, mapNum);
                         Console.WriteLine("Command: " + msg + " Mapnum: " + mapNum);
                         return;
                     }
@@ -2183,20 +1992,13 @@ namespace SabertoothServer
         Attack,
         UpdateWeapons,                
         UpdatePlayerStats,
-        PoolNpcs,
-        PoolNpcData,
         PlayerInv,
-        MapItems,
-        MapItemData,
-        ItemPickup,
         UnequipItem,
         EquipItem,
         DropItem,
         PlayerEquip,
         NpcDirection,
-        PoolNpcDirecion,
         NpcVitals,
-        PoolNpcVitals,
         ShopData,
         ShopItemData,
         ShopItemsData,

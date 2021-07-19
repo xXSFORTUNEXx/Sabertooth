@@ -36,19 +36,9 @@ namespace SabertoothServer
             iMap.MaxY = MAX_MAP_Y;
             iMap.IsInstance = true;
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 iMap.m_MapNpc[i] = new MapNpc("None", 0, 0, 0);
-            }
-
-            for (int i = 0; i < 20; i++)
-            {
-                iMap.r_MapNpc[i] = new MapNpc("None", 0, 0, 0);
-            }
-
-            for (int i = 0; i < 20; i++)
-            {
-                iMap.m_MapItem[i] = new MapItem("None", 0, 0, 0);
             }
 
             iMap.Ground = new Tile[iMap.MaxX, iMap.MaxY];
