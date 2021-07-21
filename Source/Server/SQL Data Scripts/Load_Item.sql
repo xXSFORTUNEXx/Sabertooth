@@ -1,3 +1,4 @@
+  
 /*
 Created 9/7/2018 2:02PM
 Inserts chat data into database

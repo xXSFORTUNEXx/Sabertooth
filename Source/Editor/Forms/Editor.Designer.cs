@@ -51,7 +51,9 @@
             this.playerEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageSplitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spellEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlEditors = new System.Windows.Forms.Panel();
+            this.btnSpellEditor = new System.Windows.Forms.Button();
             this.btnAnimEditor = new System.Windows.Forms.Button();
             this.btnIMGSplit = new System.Windows.Forms.Button();
             this.btnCloseEditors = new System.Windows.Forms.Button();
@@ -192,7 +194,8 @@
             this.questEditorToolStripMenuItem,
             this.playerEditorToolStripMenuItem,
             this.imageSplitterToolStripMenuItem,
-            this.animationEditorToolStripMenuItem});
+            this.animationEditorToolStripMenuItem,
+            this.spellEditorToolStripMenuItem});
             this.editorsToolStripMenuItem.Name = "editorsToolStripMenuItem";
             this.editorsToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.editorsToolStripMenuItem.Text = "Editors";
@@ -267,9 +270,17 @@
             this.animationEditorToolStripMenuItem.Text = "Animation Editor";
             this.animationEditorToolStripMenuItem.Click += new System.EventHandler(this.btnAnimEditor_Click);
             // 
+            // spellEditorToolStripMenuItem
+            // 
+            this.spellEditorToolStripMenuItem.Name = "spellEditorToolStripMenuItem";
+            this.spellEditorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.spellEditorToolStripMenuItem.Text = "Spell Editor";
+            this.spellEditorToolStripMenuItem.Click += new System.EventHandler(this.spellEditorToolStripMenuItem_Click);
+            // 
             // pnlEditors
             // 
             this.pnlEditors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlEditors.Controls.Add(this.btnSpellEditor);
             this.pnlEditors.Controls.Add(this.btnAnimEditor);
             this.pnlEditors.Controls.Add(this.btnIMGSplit);
             this.pnlEditors.Controls.Add(this.btnCloseEditors);
@@ -281,10 +292,20 @@
             this.pnlEditors.Controls.Add(this.btnItemEditor);
             this.pnlEditors.Controls.Add(this.btnNpcEditor);
             this.pnlEditors.Controls.Add(this.btnMapEditor);
-            this.pnlEditors.Location = new System.Drawing.Point(225, 343);
+            this.pnlEditors.Location = new System.Drawing.Point(225, 303);
             this.pnlEditors.Name = "pnlEditors";
-            this.pnlEditors.Size = new System.Drawing.Size(151, 354);
+            this.pnlEditors.Size = new System.Drawing.Size(151, 394);
             this.pnlEditors.TabIndex = 16;
+            // 
+            // btnSpellEditor
+            // 
+            this.btnSpellEditor.Location = new System.Drawing.Point(15, 310);
+            this.btnSpellEditor.Name = "btnSpellEditor";
+            this.btnSpellEditor.Size = new System.Drawing.Size(118, 23);
+            this.btnSpellEditor.TabIndex = 37;
+            this.btnSpellEditor.Text = "Spell Editor";
+            this.btnSpellEditor.UseVisualStyleBackColor = true;
+            this.btnSpellEditor.Click += new System.EventHandler(this.btnSpellEditor_Click);
             // 
             // btnAnimEditor
             // 
@@ -308,7 +329,7 @@
             // 
             // btnCloseEditors
             // 
-            this.btnCloseEditors.Location = new System.Drawing.Point(15, 320);
+            this.btnCloseEditors.Location = new System.Drawing.Point(15, 360);
             this.btnCloseEditors.Name = "btnCloseEditors";
             this.btnCloseEditors.Size = new System.Drawing.Size(118, 23);
             this.btnCloseEditors.TabIndex = 34;
@@ -455,6 +476,8 @@
         private System.Windows.Forms.Button btnAnimEditor;
         private System.Windows.Forms.ToolStripMenuItem imageSplitterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem animationEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spellEditorToolStripMenuItem;
+        private System.Windows.Forms.Button btnSpellEditor;
     }
 }
 

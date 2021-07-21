@@ -24,6 +24,7 @@ namespace SabertoothClient
         public Item Legs = new Item();
         public Item Feet = new Item();
         public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
+        public SpellBook[] SpellBook = new SpellBook[MAX_PLAYER_SPELLBOOK];
 
         RenderText rText = new RenderText();        
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
@@ -33,6 +34,7 @@ namespace SabertoothClient
         Text p_Name = new Text();
         Texture targetTexture = new Texture("Resources/Target.png");
         VertexArray targetPic = new VertexArray(PrimitiveType.Quads, 4);
+        public DisplayText[] displayText = new DisplayText[MAX_DISPLAY_TEXT];
 
         public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
         public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];        
@@ -176,10 +178,20 @@ namespace SabertoothClient
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
 
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
             p_Name.Style = Text.Styles.Bold;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                displayText[i] = new DisplayText();
+            }
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -226,11 +238,20 @@ namespace SabertoothClient
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
 
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
 
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
             p_Name.Style = Text.Styles.Bold;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                displayText[i] = new DisplayText();
+            }
         }
 
         public Player(string name)
@@ -264,10 +285,20 @@ namespace SabertoothClient
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
 
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
             p_Name.Style = Text.Styles.Bold;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                displayText[i] = new DisplayText();
+            }
         }
 
         public Player(NetConnection conn)
@@ -301,10 +332,20 @@ namespace SabertoothClient
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
 
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
             p_Name.Style = Text.Styles.Bold;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                displayText[i] = new DisplayText();
+            }
         }
 
         public Player()
@@ -336,10 +377,20 @@ namespace SabertoothClient
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, 0, 0);
 
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
+
             p_Name.Font = font;
             p_Name.CharacterSize = 12;
             p_Name.Color = Color.White;
             p_Name.Style = Text.Styles.Bold;
+
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                displayText[i] = new DisplayText();
+            }
         }
         #endregion
 
@@ -955,6 +1006,8 @@ namespace SabertoothClient
                 {
                     int pX = 0;
                     int pY = 0;
+                    int nX = 0;
+                    int nY = 0;
                     double dX = 0;
                     double dY = 0;
                     double dFinal = 0;
@@ -962,15 +1015,29 @@ namespace SabertoothClient
 
                     pX = X + OFFSET_X;
                     pY = Y + OFFSET_Y;
-                    dX = pX - mapNpc.X;
-                    dY = pY - mapNpc.Y;
+                    nX = mapNpc.X;
+                    nY = mapNpc.Y;
+                    dX = pX - nX;
+                    dY = pY - nY;
                     dFinal = dX * dX + dY * dY;
                     dPoint = Math.Sqrt(dFinal);
 
                     if (dPoint < 3)
                     {
-                        if (CheckFacingTarget(mapNpc)) { Logging.WriteMessageLog("SUCCESS"); } else { Logging.WriteMessageLog("FAIL"); }                        
+                        if (!CheckFacingTarget(mapNpc))
+                        {
+                            int openDT = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                            displayText[openDT].CreateDisplayText(0, nX, nY, (int)DisplayTextMsg.Warning, "FRD");
+                            attackTick = TickCount;
+                            return;
+                        }                        
                         SendMeleeAttack(Target, 0);
+                        attackTick = TickCount;
+                    }
+                    else
+                    {
+                        int openDT = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                        displayText[openDT].CreateDisplayText(0, nX, nY, (int)DisplayTextMsg.Warning, "OOR");
                         attackTick = TickCount;
                     }
                 }
@@ -1598,13 +1665,14 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendUpdateHotbar(int slot, int hotbarslot)
+        public void SendUpdateHotbar(int slot, int hotbarslot, string barType = "")
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateHotBar);
             outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(slot);
             outMSG.WriteVariableInt32(hotbarslot);
+            outMSG.Write(barType);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1802,28 +1870,28 @@ namespace SabertoothClient
             switch (AimDirection)   //we are checking the players direction which is aim direction
             {
                 case (int)Directions.Up:
-                    if (pY < nY)
+                    if (pY > nY)
                     {
                         return true;
                     }
                     break;
 
                 case (int)Directions.Down:
-                    if (pY > nX)
+                    if (pY < nY)
                     {
                         return true;
                     }
                     break;
 
                 case (int)Directions.Left:
-                    if (pX < nX)
+                    if (pX > nX)
                     {
                         return true;
                     }
                     break;
 
                 case (int)Directions.Right:
-                    if (pX > nX)
+                    if (pX < nX)
                     {
                         return true;
                     }
@@ -1849,6 +1917,18 @@ namespace SabertoothClient
         }
     }
 
+    public class SpellBook
+    {
+        public int SpellNumber { get; set; }
+
+        public SpellBook() { }
+
+        public SpellBook(int spellNum)
+        {
+            SpellNumber = spellNum;
+        }
+    }
+
     public enum EquipSlots : int
     {
         MainWeapon,
@@ -1868,11 +1948,5 @@ namespace SabertoothClient
         DownRight,
         UpLeft,
         UpRight
-    }
-
-    public enum TargetTypes : int
-    {
-        Normal,
-        Pool
     }
 }

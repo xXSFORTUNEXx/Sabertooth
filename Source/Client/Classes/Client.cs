@@ -82,7 +82,7 @@ namespace SabertoothClient
             netConfig.DisableMessageType(NetIncomingMessageType.WarningMessage);
             Logging.WriteMessageLog("Enabling message types...");
 
-            ShowWindow(handle, SW_SHOW);    //Show/Hide console window SW_HIDE = hide, SW_SHOW = show
+            ShowWindow(handle, SW_HIDE);    //Show/Hide console window SW_HIDE = hide, SW_SHOW = show
             
             netClient = new NetClient(netConfig);
             netClient.Start();
@@ -197,6 +197,7 @@ namespace SabertoothClient
         public static Quests[] quests = new Quests[MAX_QUESTS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
         public static Animation[] animations = new Animation[MAX_ANIMATIONS];
+        public static Spell[] spells = new Spell[MAX_SPELLS];
         public static Map map = new Map();
         public static MiniMap miniMap = new MiniMap();
         public static View view = new View();
@@ -356,6 +357,11 @@ namespace SabertoothClient
             {
                 animations[i] = new Animation();
             }
+
+            for (int i = 0; i < MAX_SPELLS; i++)
+            {
+                spells[i] = new Spell();
+            }
             Logging.WriteMessageLog("All array successfully created!");
         }
         #endregion
@@ -421,6 +427,7 @@ namespace SabertoothClient
             {
                 if (gui.inputChat != null)
                 {
+                    if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
                     if (gui.inputChat.HasFocus == false)
                     {
                         gui.chatWindow.Focus();
@@ -431,41 +438,128 @@ namespace SabertoothClient
 
             if (e.Code == Keyboard.Key.M)
             {
+
+            }
+
+            //Character Tab
+            if (e.Code == Keyboard.Key.C)
+            {
                 if (gui.menuWindow != null)
                 {
                     if (gui.inputChat.HasFocus) { return; }
 
                     if (gui.menuWindow.IsVisible)
                     {
+                        if (!gui.charTab.HasFocus)
+                        {
+                            gui.charTab.Press();
+                        }
+                        else
+                        {
+                            gui.menuWindow.Hide();
+                            gui.RemoveStatWindow();
+
+                        }
                         gui.menuWindow.Hide();
                         gui.RemoveStatWindow();
                     }
                     else
                     {
                         gui.menuWindow.Show();
-                        gui.charTab.Focus();
+                        gui.charTab.Press();
                     }
                 }
             }
-
-            if (e.Code == Keyboard.Key.C)
+            //Spell Tab
+            if (e.Code == Keyboard.Key.P)
             {
-                if (gui.chatWindow != null)
+                if (gui.menuWindow != null)
                 {
                     if (gui.inputChat.HasFocus) { return; }
 
-                    if (gui.chatWindow.IsVisible)
+                    if (gui.menuWindow.IsVisible)
                     {
-                        gui.chatWindow.Hide();
+                        if (!gui.spellsTab.HasFocus)
+                        {
+                            gui.spellsTab.Press();
+                        }
+                        else
+                        {
+                            gui.menuWindow.Hide();
+                            gui.RemoveSpellStatWindow();
+
+                        }
+                        gui.menuWindow.Hide();
+                        gui.RemoveSpellStatWindow();
                     }
                     else
                     {
-                        gui.chatWindow.Show();
+                        gui.menuWindow.Show();
+                        gui.spellsTab.Press();
+                    }
+                }
+            }
+            //Equip Tab
+            if (e.Code == Keyboard.Key.J)
+            {
+                if (gui.menuWindow != null)
+                {
+                    if (gui.inputChat.HasFocus) { return; }
+
+                    if (gui.menuWindow.IsVisible)
+                    {
+                        if (!gui.equipTab.HasFocus)
+                        {
+                            gui.equipTab.Press();
+                        }
+                        else
+                        {
+                            gui.menuWindow.Hide();
+                            gui.RemoveStatWindow();
+
+                        }
+                        gui.menuWindow.Hide();
+                        gui.RemoveStatWindow();
+                    }
+                    else
+                    {
+                        gui.menuWindow.Show();
+                        gui.equipTab.Press();
+                    }
+                }
+            }
+            //Pack Tab
+            if (e.Code == Keyboard.Key.B)
+            {
+                if (gui.menuWindow != null)
+                {
+                    if (gui.inputChat.HasFocus) { return; }
+
+                    if (gui.menuWindow.IsVisible)
+                    {
+                        if (!gui.packTab.HasFocus)
+                        {
+                            gui.packTab.Press();
+                        }
+                        else
+                        {
+                            gui.menuWindow.Hide();
+                            gui.RemoveStatWindow();
+
+                        }
+                        gui.menuWindow.Hide();
+                        gui.RemoveStatWindow();
+                    }
+                    else
+                    {
+                        gui.menuWindow.Show();
+                        gui.packTab.Press();
                     }
                 }
             }
 
-            if (e.Code == Keyboard.Key.B)
+            //Debug
+            if (e.Code == Keyboard.Key.BackSlash)
             {
                 if (gui.d_Window != null)
                 {
@@ -480,11 +574,6 @@ namespace SabertoothClient
                         gui.d_Window.Show();
                     }
                 }
-            }
-
-            if (e.Code == Keyboard.Key.W || e.Code == Keyboard.Key.A || e.Code == Keyboard.Key.S || e.Code == Keyboard.Key.D)
-            {
-                
             }
         }
 
@@ -545,6 +634,52 @@ namespace SabertoothClient
             }
         }
 
+        static void DrawPlayerDisplayText()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int i = 0; i < MAX_PLAYERS; i++)
+            {
+                if (players[i] != null && players[i].Name != "")
+                {
+                    if (players[i].Map == players[HandleData.myIndex].Map)
+                    {
+                        if (players[i].X + OFFSET_X > minX && players[i].X + OFFSET_X < maxX)
+                        {
+                            if (players[i].Y + OFFSET_Y > minY && players[i].Y + OFFSET_Y < maxY)
+                            {
+                                for (int n = 0; n < MAX_DISPLAY_TEXT; n++)
+                                {
+                                    if (players[i].displayText[n].displayText.DisplayedString != "EMPTY")
+                                    {
+                                        renderWindow.Draw(players[i].displayText[n]);
+                                    }                                        
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         static void DrawNpcs()
         {
             int minX;
@@ -585,7 +720,7 @@ namespace SabertoothClient
             }
         }
 
-        static void DrawDisplayText()
+        static void DrawNpcDisplayText()
         {
             int minX;
             int minY;
@@ -882,9 +1017,10 @@ namespace SabertoothClient
                 DrawBlood();    //draw blood from combat (maybe switch with item?)    
                 DrawLowerAnimations();   //draw the animations lower layer so its set to 1
                 DrawNpcs(); //draw the npcs
-                DrawDisplayText();
+                DrawNpcDisplayText();
                 DrawPlayers();  //now the other players in the world
-                DrawIndexPlayer();  //our main player of the current client instance      
+                DrawPlayerDisplayText();
+                DrawIndexPlayer();  //our main player of the current client instance    
                 DrawUpperAnimations();
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 
@@ -1060,5 +1196,88 @@ namespace SabertoothClient
             return true;
         }
         #endregion
+    }
+
+    public class DisplayText : Drawable
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public Text displayText = new Text();
+        Font font = new Font("Resources/Fonts/Arial.ttf");
+        int currentLoop = -1;
+        int loopTick = 0;
+        int offsetX = 0;
+
+        public DisplayText()
+        {
+            displayText.Font = font;
+            displayText.Color = Color.Red;
+            displayText.CharacterSize = 14;
+            displayText.Style = Text.Styles.Regular;
+            displayText.DisplayedString = "EMPTY";
+        }
+
+        public void CreateDisplayText(int vital, int x, int y, int color, string start = "", string end = "")
+        {
+            Random rnd = new Random();
+            X = x;
+            Y = y;
+            currentLoop = 0;
+            loopTick = TickCount;
+            if (vital == 0) { displayText.DisplayedString = start + end; }
+            else { displayText.DisplayedString = start + vital + end; }
+            offsetX = rnd.Next(-8, 16);
+
+            switch (color)
+            {
+                case (int)DisplayTextMsg.Normal:
+                    displayText.Color = Color.White;
+                    break;
+
+                case (int)DisplayTextMsg.Warning:
+                    displayText.Color = Color.Blue;
+                    break;
+
+                case (int)DisplayTextMsg.Damage:
+                    displayText.Color = Color.Red;
+                    break;
+
+                case (int)DisplayTextMsg.Healing:
+                    displayText.Color = Color.Green;
+                    break;
+            }
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            if (TickCount - loopTick > 500)
+            {
+                if (currentLoop > -1)
+                {
+                    currentLoop += 1;
+                    loopTick = TickCount;
+                }
+            }
+
+            int locX = (X * PIC_X) + offsetX;
+            int locY = ((Y * PIC_Y) - 12) - (10 * currentLoop);
+            displayText.Position = new Vector2f(locX, locY);
+            target.Draw(displayText);
+
+            if (currentLoop == 3)
+            {
+                displayText.DisplayedString = "EMPTY";
+                currentLoop = -1;
+                loopTick = 0;
+            }
+        }
+    }
+
+    public enum DisplayTextMsg : int
+    {
+        Normal,
+        Warning,
+        Damage,
+        Healing
     }
 }

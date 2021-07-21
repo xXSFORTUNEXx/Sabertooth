@@ -508,7 +508,8 @@ namespace SabertoothServer
 
         public override int DamageNpc(Player s_Player, Map s_Map)
         {
-            int damage = s_Player.MainHand.Damage;  //get the mainweapon damage for calculation
+            Random rnd = new Random();
+            int damage = rnd.Next((s_Player.MainHand.Damage / 2), (s_Player.MainHand.Damage)) + rnd.Next(0, s_Player.OffHand.Damage);
 
             Health -= damage;
 
@@ -529,6 +530,7 @@ namespace SabertoothServer
         public override void AttackPlayer(int index)
         {
             players[index].Health -= Damage;
+
             if (players[index].Health <= 0)
             {
                 players[index].Health = players[index].MaxHealth;
@@ -540,7 +542,7 @@ namespace SabertoothServer
             }
             else
             {
-                HandleData.SendUpdatePlayerStats(index);
+                HandleData.SendUpdateHealthData(index, players[index].Health, Damage);
             }
         }
 

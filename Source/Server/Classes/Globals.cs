@@ -14,12 +14,13 @@
         public const int MAX_ITEMS = 50;        
         public const int MAX_MAPS = 10;
         public const int MAX_MAP_NPCS = 10;
-        public const int MAX_MAP_ANIMATIONS = 15;
+        public const int MAX_MAP_ANIMATIONS = 15;        
         public const int MAX_MAP_X = 50;
         public const int MAX_MAP_Y = 50;
         public const int MAX_SHOPS = 10;
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
+        public const int MAX_SPELLS = 35;
         public const int MAX_CHEST_ITEMS = 10;
         public const int PLAYER_START_X = -2;
         public const int PLAYER_START_Y = -5;
@@ -37,6 +38,7 @@
         public const int MAX_PLAYER_QUEST_LIST = 10;
         public const int MAX_PLAYER_HOTBAR = 10;
         public const int MAX_STACK_SIZE = 255;
+        public const int MAX_PLAYER_SPELLBOOK = 25;
         #endregion
 
         #region Config Globals

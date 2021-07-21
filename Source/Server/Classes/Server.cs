@@ -91,6 +91,7 @@ namespace SabertoothServer
         public static Shop[] shops = new Shop[MAX_SHOPS];
         public static Chat[] chats = new Chat[MAX_CHATS];
         public static Chest[] chests = new Chest[MAX_CHESTS];
+        public static Spell[] spells = new Spell[MAX_SPELLS];
         public static Quests[] quests = new Quests[MAX_QUESTS];
         public static Animation[] animations = new Animation[MAX_ANIMATIONS];
         public static WorldTime worldTime = new WorldTime();
@@ -277,6 +278,16 @@ namespace SabertoothServer
             Logging.WriteMessageLog("Animations loaded successfully");
             #endregion
 
+            #region Spells
+            Logging.WriteMessageLog("Loading spells...");
+            for (int i = 0; i < MAX_SPELLS; i++)
+            {
+                spells[i] = new Spell();
+                spells[i].LoadSpellFromDatabase(i + 1);
+            }
+            Logging.WriteMessageLog("Spells loaded successfully");
+            #endregion
+
             //final
             Logging.WriteMessageLog("Server is listening for connections...");
         }
@@ -341,6 +352,8 @@ namespace SabertoothServer
                         script += ReadAllText("SQL Scripts/Configuration.sql");
                         script += ReadAllText("SQL Scripts/Hotbar.sql");
                         script += ReadAllText("SQL Scripts/Animation.sql");
+                        script += ReadAllText("SQL Scripts/Spells.sql");
+                        script += ReadAllText("SQL Scripts/SpellBook.sql");
                         cmd.CommandText = script;
                         cmd.ExecuteNonQuery();
                     }
@@ -396,7 +409,7 @@ namespace SabertoothServer
                     Logging.WriteMessageLog("Checking for health regin...");
 
                     players[i].RegenHealth();
-                    HandleData.SendUpdateHealthData(i, players[i].Health);
+                    HandleData.SendUpdateHealthData(i, players[i].Health, -1);
                 }
             }
             regenTick = TickCount;
@@ -602,7 +615,7 @@ namespace SabertoothServer
                         Logging.WriteMessageLog("Version: " + sVersion, "Commands");
                         Logging.WriteMessageLog(upTime, "Commands");                        
                         Logging.WriteMessageLog("CPS: " + fps, "Commands");
-                        Logging.WriteMessageLog("Public IP Address: " + GetPublicIPAddress());
+                        Logging.WriteMessageLog("Public IP Address: " + GetPublicIPAddress(), "Commands");
                         Logging.WriteMessageLog("Host Name: " + hostName, "Commands");
                         Logging.WriteMessageLog("Local IP Address: " + NetUtility.Resolve(hostName), "Commands");
                         Logging.WriteMessageLog("Port: " + SabertoothServer.netServer.Port, "Commands");

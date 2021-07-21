@@ -117,6 +117,10 @@ namespace SabertoothServer
                                 HandleHotbarUse(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.ForgetSpell:
+                                HandleForgetSpell(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -134,7 +138,20 @@ namespace SabertoothServer
             SabertoothServer.netServer.Recycle(incMSG);
         }
 
-        #region Handle Incoming Data        
+        #region Handle Incoming Data  
+        static void HandleForgetSpell(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int spellSlot = incMSG.ReadVariableInt32();
+
+            if (players[index].SpellBook[spellSlot].SpellNumber > -1)
+            {
+                SendServerMessageTo(incMSG.SenderConnection, "You forgot " + spells[players[index].SpellBook[spellSlot].SpellNumber].Name);
+                players[index].SpellBook[spellSlot].SpellNumber = -1;
+                SendPlayerSpellBook(index);                
+            }
+        }
+
         static void HandleHotbarUse(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -144,6 +161,11 @@ namespace SabertoothServer
             {
                 players[index].UseItem(index, players[index].hotBar[hotbarslot].InvNumber, hotbarslot);
             }
+
+            if (players[index].hotBar[hotbarslot].SpellNumber > -1)
+            {
+                players[index].UseSpell(index, players[index].hotBar[hotbarslot].SpellNumber, hotbarslot);
+            }
         }
 
         static void HandleUpdateHotBar(NetIncomingMessage incMSG)
@@ -151,9 +173,29 @@ namespace SabertoothServer
             int index = incMSG.ReadVariableInt32();
             int slot = incMSG.ReadVariableInt32();
             int hotbarslot = incMSG.ReadVariableInt32();
+            string barType = incMSG.ReadString();
 
-            players[index].hotBar[hotbarslot].InvNumber = slot;
-            SendPlayerHotBar(index);
+            if (barType == "")
+            {
+                players[index].hotBar[hotbarslot].InvNumber = -1;
+                players[index].hotBar[hotbarslot].SpellNumber = -1;
+                SendPlayerHotBar(index);
+                return;
+            }
+
+            if (barType == "Inv")
+            {
+                players[index].hotBar[hotbarslot].InvNumber = slot;
+                SendPlayerHotBar(index);
+                return;
+            }
+
+            if (barType == "Spell")
+            {
+                players[index].hotBar[hotbarslot].SpellNumber = slot;
+                SendPlayerHotBar(index);
+                return;
+            }
         }
 
         static void HandleBankSwap(NetIncomingMessage incMSG)
@@ -256,12 +298,15 @@ namespace SabertoothServer
                 SendPlayerHotBar(index);
                 SendPlayerEquipment(index);
                 SendPlayerQuestList(index);
+                SendPlayerSpellBook(index);
                 SendNpcs(incMSG);
                 SendItems(incMSG);                
                 SendShops(incMSG);
                 SendChats(incMSG);
                 SendQuests(incMSG);
                 SendChests(incMSG);
+                SendAnimations(incMSG);
+                SendSpells(incMSG);
                 SendMapData(incMSG, currentMap);
                 SendMapNpcs(incMSG, currentMap);                
                 SendDateAndTime(incMSG, index);
@@ -488,7 +533,7 @@ namespace SabertoothServer
             players[index].Direction = direction;
             players[index].Step = step;
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 if (players[i].Connection != null && players[i].Map == map)
                 {
@@ -612,13 +657,15 @@ namespace SabertoothServer
                         SendPlayerHotBar(i);
                         SendPlayerEquipment(i);
                         SendPlayerQuestList(i);
+                        SendPlayerSpellBook(i);
                         SendNpcs(incMSG);
                         SendItems(incMSG);                        
                         SendShops(incMSG);
                         SendChats(incMSG);
                         SendQuests(incMSG);
-                        SendAnimations(incMSG);
                         SendChests(incMSG);
+                        SendAnimations(incMSG);
+                        SendSpells(incMSG);                        
                         SendMapData(incMSG, currentMap);
                         SendMapNpcs(incMSG, currentMap);                                            
                         SendDateAndTime(incMSG, i);
@@ -810,7 +857,7 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
         }
 
-        static void SendUpdateMovementData(NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
+        public static void SendUpdateMovementData(NetConnection playerConn, int index, int x, int y, int direction, int aimdirection, int step)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.UpdateMoveData);
@@ -821,15 +868,16 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(aimdirection);
             outMSG.WriteVariableInt32(step);
 
-            SabertoothServer.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.Unreliable);
+            SabertoothServer.netServer.SendMessage(outMSG, playerConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public static void SendUpdateHealthData(int index, int health)
+        public static void SendUpdateHealthData(int index, int health, int vital)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.HealthData);
             outMSG.WriteVariableInt32(index);
             outMSG.WriteVariableInt32(health);
+            outMSG.WriteVariableInt32(vital);
 
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1056,6 +1104,17 @@ namespace SabertoothServer
                 outMSG.Write(players[index].hotBar[i].HotKey.ToString());
                 outMSG.WriteVariableInt32(players[index].hotBar[i].SpellNumber);
                 outMSG.WriteVariableInt32(players[index].hotBar[i].InvNumber);
+            }
+            SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendPlayerSpellBook(int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SendSpellBook);
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                outMSG.WriteVariableInt32(players[index].SpellBook[i].SpellNumber);
             }
             SabertoothServer.netServer.SendMessage(outMSG, players[index].Connection, NetDeliveryMethod.ReliableOrdered);
         }
@@ -1494,6 +1553,56 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
+        static void SendSpellData(NetIncomingMessage incMSG, int index)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SpellData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.Write(spells[index].Name);
+            outMSG.WriteVariableInt32(spells[index].Level);
+            outMSG.WriteVariableInt32(spells[index].Icon);
+            outMSG.WriteVariableInt32(spells[index].Vital);
+            outMSG.WriteVariableInt32(spells[index].HealthCost);
+            outMSG.WriteVariableInt32(spells[index].ManaCost);
+            outMSG.WriteVariableInt32(spells[index].CoolDown);
+            outMSG.WriteVariableInt32(spells[index].CastTime);
+            outMSG.WriteVariableInt32(spells[index].Charges);
+            outMSG.WriteVariableInt32(spells[index].TotalTick);
+            outMSG.WriteVariableInt32(spells[index].TickInterval);
+            outMSG.WriteVariableInt32(spells[index].SpellType);
+            outMSG.WriteVariableInt32(spells[index].Range);
+            outMSG.WriteVariableInt32(spells[index].Animation);
+            outMSG.Write(spells[index].AOE);
+            outMSG.WriteVariableInt32(spells[index].Distance);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        static void SendSpells(NetIncomingMessage incMSG)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.SpellsData);
+            for (int i = 0; i < MAX_SPELLS; i++)
+            {
+                outMSG.Write(spells[i].Name);
+                outMSG.WriteVariableInt32(spells[i].Level);
+                outMSG.WriteVariableInt32(spells[i].Icon);
+                outMSG.WriteVariableInt32(spells[i].Vital);
+                outMSG.WriteVariableInt32(spells[i].HealthCost);
+                outMSG.WriteVariableInt32(spells[i].ManaCost);
+                outMSG.WriteVariableInt32(spells[i].CoolDown);
+                outMSG.WriteVariableInt32(spells[i].CastTime);
+                outMSG.WriteVariableInt32(spells[i].Charges);
+                outMSG.WriteVariableInt32(spells[i].TotalTick);
+                outMSG.WriteVariableInt32(spells[i].TickInterval);
+                outMSG.WriteVariableInt32(spells[i].SpellType);
+                outMSG.WriteVariableInt32(spells[i].Range);
+                outMSG.WriteVariableInt32(spells[i].Animation);
+                outMSG.Write(spells[i].AOE);
+                outMSG.WriteVariableInt32(spells[i].Distance);
+            }
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
         static void SendItemData(NetIncomingMessage incMSG, int index)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -1553,7 +1662,7 @@ namespace SabertoothServer
                 outMSG.Write(items[i].Stackable);
                 outMSG.WriteVariableInt32(items[i].MaxStack);
             }
-            SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
+            SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static void SendNpcs(NetIncomingMessage incMSG)
@@ -2038,6 +2147,10 @@ namespace SabertoothServer
         ItemCoolDown,
         AnimationData,
         AnimationsData,
-        PlayerTarget
+        PlayerTarget,
+        SendSpellBook,
+        SpellData,
+        SpellsData,
+        ForgetSpell
     }
 }

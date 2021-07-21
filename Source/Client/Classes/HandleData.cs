@@ -222,6 +222,18 @@ namespace SabertoothClient
                             case (byte)PacketTypes.AnimationsData:
                                 HandleAnimationsData(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.SendSpellBook:
+                                HandleSpellBook(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.SpellData:
+                                HandleSpellData(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.SpellsData:
+                                HandleSpellsData(incMSG);
+                                break;
                         }
                         break;
 
@@ -754,6 +766,16 @@ namespace SabertoothClient
             }
         }
 
+        static void HandleSpellBook(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                int spell = incMSG.ReadVariableInt32();
+
+                players[myIndex].SpellBook[i].SpellNumber = spell;
+            }
+        }
+
         static void HandleCreateBlood(NetIncomingMessage incMSG)
         {
             int slot = incMSG.ReadVariableInt32();
@@ -766,7 +788,56 @@ namespace SabertoothClient
             map.m_BloodSplats[slot].Y = y;
             map.m_BloodSplats[slot].TexX = RND.Next(0, 5);
             map.m_BloodSplats[slot].TexY = RND.Next(0, 4);
-        }        
+        }
+
+        static void HandleSpellData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+
+            spells[index].Name = incMSG.ReadString();
+            spells[index].Level = incMSG.ReadVariableInt32();
+            spells[index].Icon = incMSG.ReadVariableInt32();
+            spells[index].Vital = incMSG.ReadVariableInt32();
+            spells[index].HealthCost = incMSG.ReadVariableInt32();
+            spells[index].ManaCost = incMSG.ReadVariableInt32();
+            spells[index].CoolDown = incMSG.ReadVariableInt32();
+            spells[index].CastTime = incMSG.ReadVariableInt32();
+            spells[index].Charges = incMSG.ReadVariableInt32();
+            spells[index].TotalTick = incMSG.ReadVariableInt32();
+            spells[index].TickInterval = incMSG.ReadVariableInt32();
+            spells[index].SpellType = incMSG.ReadVariableInt32();
+            spells[index].Range = incMSG.ReadVariableInt32();
+            spells[index].Animation = incMSG.ReadVariableInt32();
+            spells[index].AOE = incMSG.ReadBoolean();
+            spells[index].Distance = incMSG.ReadVariableInt32();
+        }
+
+        static void HandleSpellsData(NetIncomingMessage incMSG)
+        {
+            for (int i = 0; i < MAX_SPELLS; i++)
+            {
+                if (spells[i] != null)
+                {
+                    spells[i].Name = incMSG.ReadString();
+
+                    spells[i].Level = incMSG.ReadVariableInt32();
+                    spells[i].Icon = incMSG.ReadVariableInt32();
+                    spells[i].Vital = incMSG.ReadVariableInt32();
+                    spells[i].HealthCost = incMSG.ReadVariableInt32();
+                    spells[i].ManaCost = incMSG.ReadVariableInt32();
+                    spells[i].CoolDown = incMSG.ReadVariableInt32();
+                    spells[i].CastTime = incMSG.ReadVariableInt32();
+                    spells[i].Charges = incMSG.ReadVariableInt32();
+                    spells[i].TotalTick = incMSG.ReadVariableInt32();
+                    spells[i].TickInterval = incMSG.ReadVariableInt32();
+                    spells[i].SpellType = incMSG.ReadVariableInt32();
+                    spells[i].Range = incMSG.ReadVariableInt32();
+                    spells[i].Animation = incMSG.ReadVariableInt32();
+                    spells[i].AOE = incMSG.ReadBoolean();
+                    spells[i].Distance = incMSG.ReadVariableInt32();
+                }
+            }
+        }
 
         static void HandleItems(NetIncomingMessage incMSG)
         {
@@ -933,9 +1004,9 @@ namespace SabertoothClient
             int y = incMSG.ReadVariableInt32();
             int damage = incMSG.ReadVariableInt32();
             int target = players[myIndex].Target;
-            int openDT = FindOpenDisplayText(index);
+            int openDT = FindOpenNpcDisplayText(index);
 
-            map.m_MapNpc[index].dText[openDT].CreateDisplayText(damage, x, y);
+            map.m_MapNpc[index].dText[openDT].CreateDisplayText(damage, x, y, (int)DisplayTextMsg.Damage, "-");
 
             map.m_MapNpc[index].Health = health;
             map.m_MapNpc[index].IsSpawned = isSpanwed;
@@ -952,7 +1023,7 @@ namespace SabertoothClient
             }            
         }
 
-        static int FindOpenDisplayText(int index)
+        static int FindOpenNpcDisplayText(int index)
         {
             for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
             {
@@ -1061,8 +1132,30 @@ namespace SabertoothClient
         {
             int index = incMSG.ReadVariableInt32();
             int health = incMSG.ReadVariableInt32();
+            int vital = incMSG.ReadVariableInt32();
+            int x = players[index].X + OFFSET_X;
+            int y = players[index].Y + OFFSET_Y;
 
             players[index].Health = health;
+
+            if (vital > 0)
+            {
+                int openTD = FindOpenPlayerDisplayText(index);
+                players[index].displayText[openTD].CreateDisplayText(vital, x, y, (int)DisplayTextMsg.Damage, "-");
+            }
+        }
+
+        public static int FindOpenPlayerDisplayText(int index)
+        {
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                if (players[index].displayText[i].displayText.DisplayedString == "EMPTY")
+                {
+                    return i;
+                }
+            }
+
+            return MAX_DISPLAY_TEXT;
         }
 
         static void HandleManaData(NetIncomingMessage incMSG)
@@ -1505,6 +1598,10 @@ namespace SabertoothClient
         ItemCoolDown,
         AnimationData,
         AnimationsData,
-        PlayerTarget
+        PlayerTarget,
+        SendSpellBook,
+        SpellData,
+        SpellsData,
+        ForgetSpell
     }
 }

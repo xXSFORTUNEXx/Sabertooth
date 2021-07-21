@@ -67,12 +67,6 @@
             this.pnlChest = new System.Windows.Forms.Panel();
             this.scrlChest = new System.Windows.Forms.HScrollBar();
             this.lblChest = new System.Windows.Forms.Label();
-            this.pnlMapItem = new System.Windows.Forms.Panel();
-            this.picItem = new System.Windows.Forms.PictureBox();
-            this.scrlItemAmount = new System.Windows.Forms.HScrollBar();
-            this.lblItemAmount = new System.Windows.Forms.Label();
-            this.scrlItemNum = new System.Windows.Forms.HScrollBar();
-            this.lblItemNum = new System.Windows.Forms.Label();
             this.radChest = new System.Windows.Forms.RadioButton();
             this.radNpcAvoid = new System.Windows.Forms.RadioButton();
             this.radSpawnNpc = new System.Windows.Forms.RadioButton();
@@ -80,8 +74,6 @@
             this.radNone = new System.Windows.Forms.RadioButton();
             this.pnlNpcSpawn = new System.Windows.Forms.Panel();
             this.picSprite = new System.Windows.Forms.PictureBox();
-            this.scrlSpawnAmount = new System.Windows.Forms.HScrollBar();
-            this.lblSpawnAmount = new System.Windows.Forms.Label();
             this.scrlNpcNum = new System.Windows.Forms.HScrollBar();
             this.lblNpcSpawn = new System.Windows.Forms.Label();
             this.tabLight = new System.Windows.Forms.TabPage();
@@ -126,8 +118,6 @@
             this.btnHelp = new System.Windows.Forms.ToolStripButton();
             this.treeMaps = new System.Windows.Forms.TreeView();
             this.mapProperties = new System.Windows.Forms.PropertyGrid();
-            this.radMapItem = new System.Windows.Forms.RadioButton();
-            this.radSpawnPool = new System.Windows.Forms.RadioButton();
             this.tabTools.SuspendLayout();
             this.tabLayer.SuspendLayout();
             this.pnlTile.SuspendLayout();
@@ -138,8 +128,6 @@
             this.pnlAnimation.SuspendLayout();
             this.pnlWarp.SuspendLayout();
             this.pnlChest.SuspendLayout();
-            this.pnlMapItem.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picItem)).BeginInit();
             this.pnlNpcSpawn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).BeginInit();
             this.tabLight.SuspendLayout();
@@ -394,7 +382,6 @@
             this.tabTypes.Controls.Add(this.pnlWarp);
             this.tabTypes.Controls.Add(this.radWarp);
             this.tabTypes.Controls.Add(this.pnlChest);
-            this.tabTypes.Controls.Add(this.pnlMapItem);
             this.tabTypes.Controls.Add(this.radChest);
             this.tabTypes.Controls.Add(this.radNpcAvoid);
             this.tabTypes.Controls.Add(this.radSpawnNpc);
@@ -414,7 +401,7 @@
             this.pnlAnimation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlAnimation.Controls.Add(this.scrlAnimNum);
             this.pnlAnimation.Controls.Add(this.lblAnimNum);
-            this.pnlAnimation.Location = new System.Drawing.Point(158, 393);
+            this.pnlAnimation.Location = new System.Drawing.Point(158, 361);
             this.pnlAnimation.Name = "pnlAnimation";
             this.pnlAnimation.Size = new System.Drawing.Size(150, 75);
             this.pnlAnimation.TabIndex = 13;
@@ -461,7 +448,7 @@
             this.pnlWarp.Controls.Add(this.lblMapY);
             this.pnlWarp.Controls.Add(this.lblMapX);
             this.pnlWarp.Controls.Add(this.lblMapNum);
-            this.pnlWarp.Location = new System.Drawing.Point(158, 233);
+            this.pnlWarp.Location = new System.Drawing.Point(158, 201);
             this.pnlWarp.Name = "pnlWarp";
             this.pnlWarp.Size = new System.Drawing.Size(150, 154);
             this.pnlWarp.TabIndex = 11;
@@ -540,7 +527,7 @@
             this.pnlChest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlChest.Controls.Add(this.scrlChest);
             this.pnlChest.Controls.Add(this.lblChest);
-            this.pnlChest.Location = new System.Drawing.Point(158, 169);
+            this.pnlChest.Location = new System.Drawing.Point(158, 137);
             this.pnlChest.Name = "pnlChest";
             this.pnlChest.Size = new System.Drawing.Size(150, 58);
             this.pnlChest.TabIndex = 9;
@@ -566,73 +553,6 @@
             this.lblChest.Size = new System.Drawing.Size(81, 13);
             this.lblChest.TabIndex = 0;
             this.lblChest.Text = "Chest: 0 - None";
-            // 
-            // pnlMapItem
-            // 
-            this.pnlMapItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlMapItem.Controls.Add(this.radMapItem);
-            this.pnlMapItem.Controls.Add(this.radSpawnPool);
-            this.pnlMapItem.Controls.Add(this.picItem);
-            this.pnlMapItem.Controls.Add(this.scrlItemAmount);
-            this.pnlMapItem.Controls.Add(this.lblItemAmount);
-            this.pnlMapItem.Controls.Add(this.scrlItemNum);
-            this.pnlMapItem.Controls.Add(this.lblItemNum);
-            this.pnlMapItem.Enabled = false;
-            this.pnlMapItem.Location = new System.Drawing.Point(6, 565);
-            this.pnlMapItem.Name = "pnlMapItem";
-            this.pnlMapItem.Size = new System.Drawing.Size(150, 129);
-            this.pnlMapItem.TabIndex = 6;
-            this.pnlMapItem.Visible = false;
-            // 
-            // picItem
-            // 
-            this.picItem.BackColor = System.Drawing.Color.Black;
-            this.picItem.Location = new System.Drawing.Point(11, 8);
-            this.picItem.Name = "picItem";
-            this.picItem.Size = new System.Drawing.Size(32, 32);
-            this.picItem.TabIndex = 4;
-            this.picItem.TabStop = false;
-            // 
-            // scrlItemAmount
-            // 
-            this.scrlItemAmount.LargeChange = 100;
-            this.scrlItemAmount.Location = new System.Drawing.Point(11, 95);
-            this.scrlItemAmount.Maximum = 5000;
-            this.scrlItemAmount.Name = "scrlItemAmount";
-            this.scrlItemAmount.Size = new System.Drawing.Size(123, 17);
-            this.scrlItemAmount.TabIndex = 3;
-            this.scrlItemAmount.Value = 1;
-            this.scrlItemAmount.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlItemAmount_Scroll);
-            // 
-            // lblItemAmount
-            // 
-            this.lblItemAmount.AutoSize = true;
-            this.lblItemAmount.Location = new System.Drawing.Point(8, 82);
-            this.lblItemAmount.Name = "lblItemAmount";
-            this.lblItemAmount.Size = new System.Drawing.Size(55, 13);
-            this.lblItemAmount.TabIndex = 2;
-            this.lblItemAmount.Text = "Amount: 1";
-            // 
-            // scrlItemNum
-            // 
-            this.scrlItemNum.LargeChange = 1;
-            this.scrlItemNum.Location = new System.Drawing.Point(11, 59);
-            this.scrlItemNum.Maximum = 50;
-            this.scrlItemNum.Minimum = 1;
-            this.scrlItemNum.Name = "scrlItemNum";
-            this.scrlItemNum.Size = new System.Drawing.Size(123, 17);
-            this.scrlItemNum.TabIndex = 1;
-            this.scrlItemNum.Value = 1;
-            this.scrlItemNum.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlItemNum_Scroll);
-            // 
-            // lblItemNum
-            // 
-            this.lblItemNum.AutoSize = true;
-            this.lblItemNum.Location = new System.Drawing.Point(8, 43);
-            this.lblItemNum.Name = "lblItemNum";
-            this.lblItemNum.Size = new System.Drawing.Size(74, 13);
-            this.lblItemNum.TabIndex = 0;
-            this.lblItemNum.Text = "Item: 0 - None";
             // 
             // radChest
             // 
@@ -698,13 +618,11 @@
             // 
             this.pnlNpcSpawn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlNpcSpawn.Controls.Add(this.picSprite);
-            this.pnlNpcSpawn.Controls.Add(this.scrlSpawnAmount);
-            this.pnlNpcSpawn.Controls.Add(this.lblSpawnAmount);
             this.pnlNpcSpawn.Controls.Add(this.scrlNpcNum);
             this.pnlNpcSpawn.Controls.Add(this.lblNpcSpawn);
             this.pnlNpcSpawn.Location = new System.Drawing.Point(158, 6);
             this.pnlNpcSpawn.Name = "pnlNpcSpawn";
-            this.pnlNpcSpawn.Size = new System.Drawing.Size(150, 157);
+            this.pnlNpcSpawn.Size = new System.Drawing.Size(150, 125);
             this.pnlNpcSpawn.TabIndex = 3;
             this.pnlNpcSpawn.Visible = false;
             // 
@@ -716,29 +634,6 @@
             this.picSprite.Size = new System.Drawing.Size(32, 48);
             this.picSprite.TabIndex = 10;
             this.picSprite.TabStop = false;
-            // 
-            // scrlSpawnAmount
-            // 
-            this.scrlSpawnAmount.Enabled = false;
-            this.scrlSpawnAmount.LargeChange = 1;
-            this.scrlSpawnAmount.Location = new System.Drawing.Point(9, 124);
-            this.scrlSpawnAmount.Maximum = 20;
-            this.scrlSpawnAmount.Minimum = 1;
-            this.scrlSpawnAmount.Name = "scrlSpawnAmount";
-            this.scrlSpawnAmount.Size = new System.Drawing.Size(123, 17);
-            this.scrlSpawnAmount.TabIndex = 3;
-            this.scrlSpawnAmount.Value = 1;
-            this.scrlSpawnAmount.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlSpawnAmount_Scroll);
-            // 
-            // lblSpawnAmount
-            // 
-            this.lblSpawnAmount.AutoSize = true;
-            this.lblSpawnAmount.Enabled = false;
-            this.lblSpawnAmount.Location = new System.Drawing.Point(6, 111);
-            this.lblSpawnAmount.Name = "lblSpawnAmount";
-            this.lblSpawnAmount.Size = new System.Drawing.Size(55, 13);
-            this.lblSpawnAmount.TabIndex = 2;
-            this.lblSpawnAmount.Text = "Amount: 1";
             // 
             // scrlNpcNum
             // 
@@ -1193,30 +1088,6 @@
             this.mapProperties.Size = new System.Drawing.Size(183, 459);
             this.mapProperties.TabIndex = 24;
             // 
-            // radMapItem
-            // 
-            this.radMapItem.AutoSize = true;
-            this.radMapItem.Enabled = false;
-            this.radMapItem.Location = new System.Drawing.Point(52, 31);
-            this.radMapItem.Name = "radMapItem";
-            this.radMapItem.Size = new System.Drawing.Size(45, 17);
-            this.radMapItem.TabIndex = 9;
-            this.radMapItem.TabStop = true;
-            this.radMapItem.Text = "Item";
-            this.radMapItem.UseVisualStyleBackColor = true;
-            // 
-            // radSpawnPool
-            // 
-            this.radSpawnPool.AutoSize = true;
-            this.radSpawnPool.Enabled = false;
-            this.radSpawnPool.Location = new System.Drawing.Point(52, 8);
-            this.radSpawnPool.Name = "radSpawnPool";
-            this.radSpawnPool.Size = new System.Drawing.Size(82, 17);
-            this.radSpawnPool.TabIndex = 8;
-            this.radSpawnPool.TabStop = true;
-            this.radSpawnPool.Text = "Spawn Pool";
-            this.radSpawnPool.UseVisualStyleBackColor = true;
-            // 
             // MapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1254,9 +1125,6 @@
             this.pnlWarp.PerformLayout();
             this.pnlChest.ResumeLayout(false);
             this.pnlChest.PerformLayout();
-            this.pnlMapItem.ResumeLayout(false);
-            this.pnlMapItem.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picItem)).EndInit();
             this.pnlNpcSpawn.ResumeLayout(false);
             this.pnlNpcSpawn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picSprite)).EndInit();
@@ -1292,14 +1160,7 @@
         private System.Windows.Forms.HScrollBar scrlViewX;
         private System.Windows.Forms.VScrollBar scrlViewY;
         private System.Windows.Forms.CheckBox chkNpc;
-        private System.Windows.Forms.HScrollBar scrlSpawnAmount;
-        private System.Windows.Forms.Label lblSpawnAmount;
         private System.Windows.Forms.RadioButton radNpcAvoid;
-        private System.Windows.Forms.Panel pnlMapItem;
-        private System.Windows.Forms.HScrollBar scrlItemAmount;
-        private System.Windows.Forms.Label lblItemAmount;
-        private System.Windows.Forms.HScrollBar scrlItemNum;
-        private System.Windows.Forms.Label lblItemNum;
         private System.Windows.Forms.ToolStrip tosMenu;
         private System.Windows.Forms.ToolStripButton btnNewMap;
         private System.Windows.Forms.ToolStripButton btnSaveMap;
@@ -1323,7 +1184,6 @@
         private System.Windows.Forms.RadioButton radScroll;
         private System.Windows.Forms.RadioButton radZoom;
         private System.Windows.Forms.CheckBox chkHScroll;
-        private System.Windows.Forms.PictureBox picItem;
         private System.Windows.Forms.PictureBox picSprite;
         private System.Windows.Forms.Panel pnlWarp;
         private System.Windows.Forms.Label lblMapY;
@@ -1370,7 +1230,5 @@
         private System.Windows.Forms.Panel pnlAnimation;
         private System.Windows.Forms.HScrollBar scrlAnimNum;
         private System.Windows.Forms.Label lblAnimNum;
-        private System.Windows.Forms.RadioButton radMapItem;
-        private System.Windows.Forms.RadioButton radSpawnPool;
     }
 }

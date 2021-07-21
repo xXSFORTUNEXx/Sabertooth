@@ -27,6 +27,7 @@ namespace SabertoothServer
         public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
         public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
         public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
+        public SpellBook[] SpellBook = new SpellBook[MAX_PLAYER_SPELLBOOK];
         Random RND = new Random();
         #endregion
 
@@ -140,6 +141,11 @@ namespace SabertoothServer
             hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
+
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);                
+            }
         }
 
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int health, int maxhealth, int mana, int maxmana,
@@ -210,6 +216,11 @@ namespace SabertoothServer
             hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
+
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
         }
 
         public Player(string name, string pass, NetConnection conn)
@@ -246,6 +257,11 @@ namespace SabertoothServer
             hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
+
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
         }
 
         public Player(NetConnection conn)
@@ -282,6 +298,11 @@ namespace SabertoothServer
             hotBar[h] = new HotBar(Keyboard.Key.Num8, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num9, -1, -1); h += 1;
             hotBar[h] = new HotBar(Keyboard.Key.Num0, -1, -1);
+
+            for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+            {
+                SpellBook[s] = new SpellBook(-1);
+            }
         }
         #endregion
 
@@ -297,7 +318,7 @@ namespace SabertoothServer
         {            
             if (Health < MaxHealth)
             {
-                Health += (Stamina * 10);
+                Health += (Stamina * 5);
             }
 
             if (Health > MaxHealth)
@@ -311,7 +332,7 @@ namespace SabertoothServer
         {
             if (Mana < MaxMana)
             {
-                Mana += (Energy * 10);
+                Mana += (Energy * 5);
             }
 
             if (Mana > MaxMana)
@@ -533,6 +554,58 @@ namespace SabertoothServer
             }
         }
 
+        public void UseSpell(int index, int slot, int hotbarslot)
+        {
+            if (players[index].SpellBook[slot].SpellNumber > -1)
+            {
+                Spell spell = spells[players[index].SpellBook[slot].SpellNumber];
+
+                switch (spell.SpellType)
+                {
+                    case (int)SpellType.Dash:
+                        if (players[index].Mana >= spell.ManaCost) { HandleData.SendServerMessageTo(players[index].Connection, "You dont have enough mana to cast this spell!"); return; }
+
+                        int newX = 0;
+                        int newY = 0;
+                        switch (players[index].AimDirection)
+                        {
+                            case (int)Directions.Down:
+                                newY = players[index].Y + spell.Range;
+                                players[index].Mana -= spell.ManaCost;
+                                break;
+
+                            case (int)Directions.Up:
+                                newY = players[index].Y - spell.Range;
+                                players[index].Mana -= spell.ManaCost;
+                                break;
+
+                            case (int)Directions.Left:
+                                newX = players[index].X - spell.Range;
+                                players[index].Mana -= spell.ManaCost;
+                                break;
+
+                            case (int)Directions.Right:
+                                newX = players[index].X + spell.Range;
+                                players[index].Mana -= spell.ManaCost;
+                                break;
+                        }
+
+                        HandleData.SendServerMessageTo(players[index].Connection, "CHARGE!!!");
+                        HandleData.SendUpdatePlayerStats(index);
+
+                        int map = players[index].Map;
+                        for (int i = 0; i < MAX_PLAYERS; i++)
+                        {
+                            if (players[i].Connection != null && players[i].Map == map)
+                            {
+                                HandleData.SendUpdateMovementData(players[i].Connection, index, newX, newY, players[index].Direction, players[index].AimDirection, players[index].Step);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
         public void UseItem(int index, int slot, int hotbarslot)
         {
             //really just seems like this is hotbar stuff
@@ -630,6 +703,7 @@ namespace SabertoothServer
             }
         }
 
+        //this void is where we also use consumables and such from the inventory but also equip gear
         public void EquipItem(int index, int slot)
         {
             bool removeItem = false;
@@ -737,6 +811,32 @@ namespace SabertoothServer
                         }
                         break;
 
+                    case (int)ItemType.Book:
+                        int spellNum = players[index].Backpack[slot].SpellNum - 1;
+                        int spellSlot = FindOpenSpellSlot();
+
+                        if (spellSlot < MAX_PLAYER_SPELLBOOK)
+                        {
+                            if (!CheckIfPlayerHasSpell(spellNum))
+                            {
+                                players[index].SpellBook[spellSlot].SpellNumber = spellNum;
+                                HandleData.SendServerMessageTo(players[index].Connection, "You learned " + spells[spellNum].Name + "!");
+                                removeItem = true;
+                            }
+                            else
+                            {
+                                HandleData.SendServerMessageTo(players[index].Connection, "You already know this spell!");
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            HandleData.SendServerMessageTo(players[index].Connection, "You cannot learn anymore spells!");
+                            return;
+                        }
+
+                        break;
+
                     case (int)ItemType.Food:
                     case (int)ItemType.Drink:
                     case (int)ItemType.Potion:
@@ -817,7 +917,35 @@ namespace SabertoothServer
                 HandleData.SendPlayerInv(index);
                 HandleData.SendUpdatePlayerStats(index);
                 HandleData.SendPlayerEquipment(index);
+                HandleData.SendPlayerSpellBook(index);
             }
+        }
+
+        int FindOpenSpellSlot()
+        {
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                if (SpellBook[i].SpellNumber == -1)
+                {
+                    return i;
+                }
+            }
+            return MAX_PLAYER_SPELLBOOK;
+        }
+
+        bool CheckIfPlayerHasSpell(int spellNum)
+        {
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                if (SpellBook[i].SpellNumber > -1)
+                {
+                    if (SpellBook[i].SpellNumber == spellNum)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public void UnequipItem(int index, int equip)
@@ -1259,6 +1387,19 @@ namespace SabertoothServer
                     //execute after its made
                     cmd.ExecuteNonQuery();
                 }
+
+                script = ReadAllText("SQL Data Scripts/Insert_Player_Spell.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;
+                    for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                    {
+                        {                        
+                            cmd.Parameters.Add(new SqlParameter("@spellnumber_" + (i + 1), System.Data.SqlDbType.Int)).Value = SpellBook[i].SpellNumber;                                                       
+                        }
+                    }
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -1615,6 +1756,17 @@ namespace SabertoothServer
                         cmd.Parameters.Add(new SqlParameter("@hotkey_" + (i + 1), System.Data.SqlDbType.VarBinary)).Value = hotKey;
                         cmd.Parameters.Add(new SqlParameter("@spellnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].SpellNumber;
                         cmd.Parameters.Add(new SqlParameter("@invnum_" + (i + 1), System.Data.SqlDbType.Int)).Value = hotBar[i].InvNumber;                        
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+
+                script = ReadAllText("SQL Data Scripts/Save_Player_Spell.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.SqlDbType.Int)).Value = Id;    //set the id before the LOOP
+                    for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@spellnumber_" + (i + 1), System.Data.SqlDbType.Int)).Value = SpellBook[i].SpellNumber;
                     }
                     cmd.ExecuteNonQuery();
                 }
@@ -2052,9 +2204,24 @@ namespace SabertoothServer
                                 buffer = (byte[])reader[n];
                                 load = ByteArrayToObject(buffer);
                                 hotBar[i].HotKey = (Keyboard.Key)load; n += 1;
-
                                 hotBar[i].SpellNumber = ToInt32(reader[n]); n += 1;
                                 hotBar[i].InvNumber = ToInt32(reader[n]); n += 1;
+                            }
+                        }
+                    }
+                }
+
+                script = ReadAllText("SQL Data Scripts/Load_Player_Spell.sql");
+                using (var cmd = new SqlCommand(script, sql))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@playerid", System.Data.DbType.String)).Value = Id;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            for (i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                            {
+                                SpellBook[i].SpellNumber = ToInt32(reader[i]);
                             }
                         }
                     }
@@ -2140,6 +2307,18 @@ namespace SabertoothServer
             HotKey = key;
             SpellNumber = spellnum;
             InvNumber = invnum;
+        }
+    }
+
+    public class SpellBook
+    {
+        public int SpellNumber { get; set; }
+
+        public SpellBook() { }
+
+        public SpellBook(int spellNum)
+        {
+            SpellNumber = spellNum;
         }
     }
 

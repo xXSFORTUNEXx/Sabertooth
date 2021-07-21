@@ -454,6 +454,7 @@ namespace SabertoothClient
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         VertexArray healthBar = new VertexArray(PrimitiveType.Quads, 4);
         Text npcName = new Text();
+        Text npcCoords = new Text();
         Font font = new Font("Resources/Fonts/Arial.ttf");
         float barLength;
         public DisplayText[] dText = new DisplayText[MAX_DISPLAY_TEXT];
@@ -469,6 +470,11 @@ namespace SabertoothClient
             npcName.CharacterSize = 12;
             npcName.Color = Color.White;
             npcName.Style = Text.Styles.Regular;
+
+            npcCoords.Font = font;
+            npcCoords.CharacterSize = 12;
+            npcCoords.Color = Color.Blue;
+            npcCoords.Style = Text.Styles.Regular;
 
             for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
             {
@@ -512,16 +518,13 @@ namespace SabertoothClient
             dPoint = Math.Sqrt(dFinal);
 
             npcName.Position = new Vector2f(nameX, nameY - 12);
+            npcName.DisplayedString = Name;
 
             if (gui.d_Window.IsVisible)
             {
-                //npcName.DisplayedString = "(" + X + ", " + Y + ")";
-                npcName.DisplayedString = dPoint.ToString(string.Format("#.#"));
-            }
-            else
-            {
-                npcName.DisplayedString = Name;
-            }
+                npcCoords.DisplayedString = "(" + X + "," + Y + ")\n" + dPoint.ToString(string.Format("#.#"));
+                npcCoords.Position = new Vector2f(nameX, nameY + 66);
+            }                
             
             spritePic[0] = new Vertex(new Vector2f(x, y), new Vector2f(step, dir));
             spritePic[1] = new Vertex(new Vector2f(x + 32, y), new Vector2f(step + 32, dir));
@@ -541,94 +544,7 @@ namespace SabertoothClient
             target.Draw(spritePic, state);
             target.Draw(healthBar);
             target.Draw(npcName);
-        }
-    }
-
-    public class DisplayText : Drawable
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public Text displayText = new Text();
-        Font font = new Font("Resources/Fonts/Arial.ttf");
-        int currentLoop = -1;
-        int loopTick = 0;
-
-        public DisplayText()
-        {
-            displayText.Font = font;
-            displayText.CharacterSize = 12;
-            displayText.Style = Text.Styles.Regular;
-            displayText.DisplayedString = "EMPTY";
-        }
-
-        public void CreateDisplayText(int vital, int x, int y)
-        {
-            X = x;
-            Y = y;
-            currentLoop = 0;
-            loopTick = TickCount;
-            displayText.Font = font;
-            displayText.CharacterSize = 12;
-            displayText.Style = Text.Styles.Regular;
-            displayText.DisplayedString = vital.ToString();
-        }
-
-        public virtual void Draw(RenderTarget target, RenderStates states)
-        {
-            if (TickCount - loopTick > 500)
-            {
-                if (currentLoop > -1)
-                {
-                    currentLoop += 1;
-                    loopTick = TickCount;
-                }
-            }
-
-            int locX = (X * PIC_X);
-            int locY = ((Y * PIC_Y) - 12) - (10 * currentLoop);
-            displayText.Position = new Vector2f(locX, locY);
-            target.Draw(displayText);
-
-            if (currentLoop == 3)
-            {
-                displayText.DisplayedString = "EMPTY";
-                currentLoop = -1;
-                loopTick = 0;
-            }
-        }
-    }
-
-    public class MapItem : Item
-    {        
-        static int spritePics = Directory.GetFiles("Resources/Items/", "*", SearchOption.TopDirectoryOnly).Length;
-        VertexArray itemPic = new VertexArray(PrimitiveType.Quads, 4);
-        Texture[] c_ItemSprite = new Texture[spritePics];
-
-        public int ItemNum { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public bool IsSpawned;
-
-        public MapItem()
-        {
-            for (int i = 0; i < spritePics; i++)
-            {
-                c_ItemSprite[i] = new Texture("Resources/Items/" + (i + 1) + ".png");
-            }
-        }
-
-        public override void Draw(RenderTarget target, RenderStates states)
-        {
-            itemPic[0] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_Y)), new Vector2f(0, 0));
-            itemPic[1] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y)), new Vector2f(PIC_X, 0));
-            itemPic[2] = new Vertex(new Vector2f((X * PIC_X) + PIC_X, (Y * PIC_Y) + PIC_Y), new Vector2f(PIC_X, PIC_Y));
-            itemPic[3] = new Vertex(new Vector2f((X * PIC_X), (Y * PIC_X) + PIC_Y), new Vector2f(0, PIC_Y));
-
-            if (Sprite > 0)
-            {
-                states.Texture = c_ItemSprite[Sprite - 1];
-                target.Draw(itemPic, states);
-            }
+            if (gui.d_Window.IsVisible) { target.Draw(npcCoords); }
         }
     }
 

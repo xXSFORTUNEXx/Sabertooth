@@ -21,6 +21,7 @@ namespace SabertoothClient
         public const int MAX_SHOPS = 10;
         public const int MAX_CHATS = 15;
         public const int MAX_CHESTS = 10;
+        public const int MAX_SPELLS = 35;        
         public const int MAX_CHEST_ITEMS = 10;
         public const int PLAYER_START_X = 9;
         public const int PLAYER_START_Y = 17;
@@ -38,6 +39,7 @@ namespace SabertoothClient
         public const int MAX_PLAYER_QUEST_LIST = 10;
         public const int MAX_PLAYER_HOTBAR = 10;
         public const int MAX_STACK_SIZE = 255;
+        public const int MAX_PLAYER_SPELLBOOK = 25;
         public const int MAX_MAP_ANIMATIONS = 15;
         public const string EQUIP_COOLDOWN = "5000";
         public const int MAX_DISPLAY_TEXT = 10;
@@ -115,6 +117,8 @@ namespace SabertoothClient
         public const int SHOP_STAT_WINDOW_Y = 65;
         public const int INV_STAT_WINDOW_X = 530;
         public const int INV_STAT_WINDOW_Y = 340;
+        public const int SPELL_STAT_WINDOW_X = 530;
+        public const int SPELL_STAT_WINDOW_Y = 340;
         #endregion
     }
 }

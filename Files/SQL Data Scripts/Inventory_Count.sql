@@ -1,1 +1,0 @@
-SELECT COUNT(*) FROM Inventory WHERE Owner=@owner

@@ -134,6 +134,7 @@ namespace SabertoothClient
         bool isMoveHotBar;
         int hotBarSlot;
         int currentSlot;
+        string hotbarType;
         #endregion
 
         #region Bank
@@ -216,8 +217,8 @@ namespace SabertoothClient
 
         #region PackTab
         public TabButton packTab;
-        ImagePanel[] invPic = new ImagePanel[25];
-        Label[] invValue = new Label[25];
+        ImagePanel[] invPic = new ImagePanel[MAX_INV_SLOTS];
+        Label[] invValue = new Label[MAX_INV_SLOTS];
         bool isMoveInv;
         int oldInvSlot;
 
@@ -273,6 +274,20 @@ namespace SabertoothClient
 
         #region SpellsTab
         public TabButton spellsTab;
+        ImagePanel[] spellPic = new ImagePanel[MAX_PLAYER_SPELLBOOK];
+
+        public WindowControl spellStatWindow;
+        ImagePanel spellIcon;
+        Label spellName;
+        Label spellLevel;
+        Label spellVital;
+        Label spellHPCost;
+        Label spellMPCost;
+        Label spellCD;
+        Label spellCT;
+        Label spellCharges;
+        Label spellST;
+        Label spellRange;
         #endregion
 
         #region QuestTab
@@ -438,7 +453,7 @@ namespace SabertoothClient
                     }
                     else if (player.hotBar[i].SpellNumber > -1)
                     {
-                        //spell stuff
+                        hotbarPic[i].ImageName = "Resources/Icons/" + spells[player.hotBar[i].SpellNumber].Icon + ".png";
                     }
                     else
                     {
@@ -451,7 +466,7 @@ namespace SabertoothClient
                         {
                             if (!Gwen.Input.InputHandler.IsLeftMouseDown)
                             {
-                                player.SendUpdateHotbar(hotBarSlot, i);
+                                player.SendUpdateHotbar(hotBarSlot, i, hotbarType);
                                 hotBarSlot = -1;
                                 oldInvSlot = -1;
                                 isMoveHotBar = false;
@@ -622,6 +637,30 @@ namespace SabertoothClient
                     equipEng.Text = "Energy: " + player.EnergyBonus(true);
                     #endregion
                 }
+                if (spellsTab.IsActive)
+                {
+                    #region Spells
+                    for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                    {
+                        if (player.SpellBook[i].SpellNumber > -1)
+                        {
+                            spellPic[i].ImageName = "Resources/Icons/" + spells[player.SpellBook[i].SpellNumber].Icon + ".png";
+                        }
+                        else
+                        {
+                            spellPic[i].ImageName = "Resources/Skins/EmptyBkg.png";
+                        }
+
+                        if (spellPic[i].IsHovered)
+                        {
+                            if (player.SpellBook[i].SpellNumber > -1)
+                            {
+                                SetSpellStatWindow(spellPic[i].X, spellPic[i].Y, spells[player.SpellBook[i].SpellNumber]);
+                            }
+                        }
+                    }
+                    #endregion
+                }
             }
         }
 
@@ -637,6 +676,18 @@ namespace SabertoothClient
             }
             currentSlot = -1;
             return false;            
+        }
+
+        bool IsSpellOnHotBar(int spellId)
+        {
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                if (player.hotBar[i].SpellNumber == spellId)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void UpdateDebugWindow(int fps)
@@ -701,6 +752,119 @@ namespace SabertoothClient
                 d_tMouseX.Text = "Tile Mouse X: " + mX;
                 d_tMouseY.Text = "Tile Mouse Y: " + mY;
             }
+        }
+
+        void SetSpellStatWindow(int x, int y, Spell spell)
+        {
+            int locX = (x + SPELL_STAT_WINDOW_X);
+            int locY = (y + SPELL_STAT_WINDOW_Y);        
+            spellStatWindow.SetPosition(locX, locY);
+            spellHPCost.Hide();
+            spellMPCost.Hide();
+            spellCharges.Hide();
+            spellVital.Hide();
+            spellStatWindow.Title = spell.Name;
+            spellIcon.ImageName = "Resources/Icons/" + spell.Icon + ".png";
+            spellName.Text = spell.Name;    //5
+            spellLevel.Text = "Level: " + spell.Level;
+            int m = 15;
+
+            if (spell.Vital > 0)
+            {
+                m += 10;
+                spellVital.Text = "Vital:" + spell.Vital;
+                spellVital.SetPosition(3, m);
+                spellVital.Show();
+            }
+           
+            if (spell.HealthCost > 0)
+            {
+                m += 10;
+                spellHPCost.Text = "HP Cost: " + spell.HealthCost;
+                spellHPCost.SetPosition(3, m);
+                spellHPCost.Show();
+            }
+                
+            if (spell.ManaCost > 0)
+            {
+                m += 10;
+                spellMPCost.Text = "MP Cost: " + spell.ManaCost;
+                spellMPCost.SetPosition(3, m);
+                spellMPCost.Show();
+            }
+
+            if (spell.CoolDown > 0)
+            {
+                m += 10;
+                spellCD.Text = "Cooldown: " + (spell.CoolDown / A_MILLISECOND) + " Seconds";
+                spellCD.SetPosition(3, m);
+            }
+            else
+            {
+                m += 10;
+                spellCD.Text = "Cooldown: Instant";
+                spellCD.SetPosition(3, m);
+            }
+
+            if (spell.CastTime > 0)
+            {
+                m += 10;
+                spellCT.Text = "Cast Time: " + (spell.CastTime / A_MILLISECOND) + " Seconds";
+                spellCT.SetPosition(3, m);
+            }
+            else
+            {
+                m += 10;
+                spellCT.Text = "Cast Time: Instant";
+                spellCT.SetPosition(3, m);
+            }
+
+            if (spell.Charges > 0)
+            {
+                m += 10;
+                spellCharges.Text = "Charges: " + spell.Charges;
+                spellCharges.SetPosition(3, m);
+            }
+
+            m += 10;
+            switch(spell.SpellType)
+            {
+                case (int)SpellType.None:
+                    spellST.Text = "Type: None";
+                    break;
+
+                case (int)SpellType.Damage:
+                    spellST.Text = "Type: Damage";
+                    break;
+
+                case (int)SpellType.Heal:
+                    spellST.Text = "Type: Healing";
+                    break;
+
+                case (int)SpellType.Buff:
+                    spellST.Text = "Type: Buff";
+                    break;
+
+                case (int)SpellType.Debuff:
+                    spellST.Text = "Type: Debuff";
+                    break;
+
+                case (int)SpellType.Dash:
+                    spellST.Text = "Type: Dash";
+                    break;
+
+                case (int)SpellType.Shield:
+                    spellST.Text = "Type: Shield";
+                    break;
+            }
+
+            spellST.SetPosition(3, m);
+
+            m += 10;
+            spellRange.Text = "Range: " + spell.Range;
+            spellRange.SetPosition(3, m);
+
+            spellStatWindow.Show();
         }
 
         void SetStatWindow(int x, int y, Item statItem)
@@ -1479,6 +1643,12 @@ namespace SabertoothClient
             chestStatWindow.Hide();
         }
 
+        public void RemoveSpellStatWindow()
+        {
+            spellStatWindow.SetPosition(200, 10);
+            spellStatWindow.Hide();
+        }
+
         public void UpdateNpcChatWindow(int chatNum)
         {
             npcChatName.Text = chats[chatNum].Name;
@@ -2019,6 +2189,29 @@ namespace SabertoothClient
             RemoveStatWindow();
         }
 
+        private void SpellPic_HoverLeave(Base sender, EventArgs arguments)
+        {
+            RemoveSpellStatWindow();
+        }
+
+        private void SpellPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
+        {
+            ImagePanel spellPicE = (ImagePanel)sender;
+            int spellSlot = ToInt32(spellPicE.Name);
+
+            if (players[HandleData.myIndex].SpellBook[spellSlot].SpellNumber > -1)
+            {
+
+                if (IsSpellOnHotBar(spellSlot)) { player.SendUpdateHotbar(-1, spellSlot); }
+
+                NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+                outMSG.Write((byte)PacketTypes.ForgetSpell);
+                outMSG.WriteVariableInt32(HandleData.myIndex);
+                outMSG.WriteVariableInt32(spellSlot);
+                SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
         private void ShopPic_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
             ImagePanel shopPicE = (ImagePanel)sender;
@@ -2122,11 +2315,12 @@ namespace SabertoothClient
                 Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
                 package = Gwen.DragDrop.DragAndDrop.SourceControl.DragAndDrop_GetPackage(Gwen.DragDrop.DragAndDrop.SourceControl.X, Gwen.DragDrop.DragAndDrop.SourceControl.Y);
 
-                if (package.Name == "Inv")
+                if (package.Name == "Inv" || package.Name == "Spell")
                 {
                     if (Gwen.Input.InputHandler.IsLeftMouseDown)
                     {
                         hotBarSlot = ToInt32(Gwen.DragDrop.DragAndDrop.SourceControl.Name);
+                        hotbarType = package.Name;
                         isMoveHotBar = true;
                     }
                 }
@@ -2638,6 +2832,61 @@ namespace SabertoothClient
             menuTabs.SetSize(330, 260);
             menuTabs.SetPosition(5, 5);
 
+            #region Spell Detail Window
+            spellStatWindow = new WindowControl(parent.GetCanvas());
+            spellStatWindow.SetPosition(200, 10);
+            spellStatWindow.SetSize(155, 180);
+            spellStatWindow.IsClosable = false;
+            spellStatWindow.Title = "Spell Name";
+            spellStatWindow.DisableResizing();
+            spellStatWindow.Hide();
+
+            spellIcon = new ImagePanel(spellStatWindow);
+            spellIcon.SetPosition(105, 5);
+            spellIcon.SetSize(32, 32);
+
+            spellName = new Label(spellStatWindow);
+            spellName.SetPosition(3, 5);
+            spellName.Text = "Name: ?";
+            spellName.BringToFront();
+
+            spellLevel = new Label(spellStatWindow);
+            spellLevel.SetPosition(3, 15);
+            spellLevel.Text = "Level: ?";
+
+            spellVital = new Label(spellStatWindow);
+            spellVital.SetPosition(3, 25);
+            spellVital.Text = "Vital: ?";
+
+            spellHPCost = new Label(spellStatWindow);
+            spellHPCost.SetPosition(3, 35);
+            spellHPCost.Text = "HP Cost: ?";
+
+            spellMPCost = new Label(spellStatWindow);
+            spellMPCost.SetPosition(3, 45);
+            spellMPCost.Text = "MP Cost: ?";
+
+            spellCD = new Label(spellStatWindow);
+            spellCD.SetPosition(3, 55);
+            spellCD.Text = "Cooldown: ?";
+
+            spellCT = new Label(spellStatWindow);
+            spellCT.SetPosition(3, 65);
+            spellCT.Text = "Cast Time: ?";
+
+            spellCharges = new Label(spellStatWindow);
+            spellCharges.SetPosition(3, 75);
+            spellCharges.Text = "Charges: ?";
+
+            spellST = new Label(spellStatWindow);
+            spellST.SetPosition(3, 85);
+            spellST.Text = "Spell Type: ?";
+
+            spellRange = new Label(spellStatWindow);
+            spellRange.SetPosition(3, 95);
+            spellRange.Text = "Range: ?";
+            #endregion
+
             #region Stats Window
             statWindow = new WindowControl(parent.GetCanvas());
             statWindow.SetPosition(200, 10);
@@ -2880,7 +3129,22 @@ namespace SabertoothClient
             spellsTab = menuTabs.AddPage("Spells");
 
             #region Spells
+            int s = 0;
+            int m = 0;
+            for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+            {
+                spellPic[i] = new ImagePanel(spellsTab.Page);
+                spellPic[i].SetSize(32, 32);
+                spellPic[i].SetPosition(3 + (m * 40), 5 + (s * 40));
+                spellPic[i].Name = i.ToString();
+                spellPic[i].DragAndDrop_SetPackage(true, "Spell");
+                spellPic[i].HoverLeave += SpellPic_HoverLeave;
+                spellPic[i].DoubleClicked += SpellPic_DoubleClicked;
 
+                m += 1;
+                if (m > 4) { m = 0; }
+                if (i == 4 || i == 9 || i == 14 || i == 19) { s += 1; }
+            }
             #endregion
 
             questTab = menuTabs.AddPage("Quests");

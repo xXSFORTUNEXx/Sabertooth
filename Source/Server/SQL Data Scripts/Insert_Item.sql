@@ -1,4 +1,4 @@
-﻿/*
+/*
 Created 9/7/2018 1:52PM
 Inserts chat data into database
 Created by Steven M Fortune

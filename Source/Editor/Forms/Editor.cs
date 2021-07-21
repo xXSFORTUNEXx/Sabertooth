@@ -160,6 +160,18 @@ namespace Editor
             lstViews.DisplayMember = "Name";
             lstViews.DataSource = ds;
         }
+
+        private void btnSpellEditor_Click(object sender, EventArgs e)
+        {
+            SpellEditor spellEditor = new SpellEditor();
+            spellEditor.Show();
+        }
+
+        private void spellEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SpellEditor spellEditor = new SpellEditor();
+            spellEditor.Show();
+        }
     }
 
     static class StartUp
