@@ -214,6 +214,7 @@ namespace SabertoothClient
         static int walkTick;
         static int saveTime;
         static int menuTick;
+        static bool miniMapVis;
         #endregion
 
         public static void GameLoop()  
@@ -240,7 +241,7 @@ namespace SabertoothClient
             sFML.Initialize(canvas, renderWindow);
             gui.CreateMainWindow(canvas);
 
-            InitArrays();
+            InitArrays();            
 
             Thread commandThread = new Thread(() => CommandWindow());
             commandThread.Start();
@@ -423,155 +424,175 @@ namespace SabertoothClient
                 sFML.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
             }
 
-            if (e.Code == Keyboard.Key.Return)
+            if (gui.Ready)
             {
-                if (gui.inputChat != null)
+                if (e.Code == Keyboard.Key.Return)
                 {
-                    if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
-                    if (gui.inputChat.HasFocus == false)
+                    if (gui.inputChat != null)
                     {
-                        gui.chatWindow.Focus();
-                        gui.inputChat.Focus();
+                        if (!gui.chatWindow.IsVisible) { gui.chatWindow.Show(); }
+                        if (gui.inputChat.HasFocus == false)
+                        {
+                            gui.chatWindow.Focus();
+                            gui.inputChat.Focus();
+                        }
                     }
                 }
-            }
 
-            if (e.Code == Keyboard.Key.M)
-            {
+                if (e.Code == Keyboard.Key.T)
+                {
+                    if (gui.inputChat != null)
+                    {
+                        if (gui.inputChat.HasFocus) { return; }
 
-            }
+                        if (!gui.chatWindow.IsVisible)
+                        {
+                            gui.chatWindow.Show();
+                        }
+                        else
+                        {
+                            gui.chatWindow.Hide();
+                        }
+                    }
+                }
 
-            //Character Tab
-            if (e.Code == Keyboard.Key.C)
-            {
-                if (gui.menuWindow != null)
+                if (e.Code == Keyboard.Key.M)
                 {
                     if (gui.inputChat.HasFocus) { return; }
 
-                    if (gui.menuWindow.IsVisible)
+                    if (miniMapVis)
                     {
-                        if (!gui.charTab.HasFocus)
+                        miniMapVis = false;
+                    }
+                    else
+                    {
+                        miniMapVis = true;
+                    }
+                }
+
+                //Character Tab
+                if (e.Code == Keyboard.Key.C)
+                {
+                    if (gui.menuWindow != null)
+                    {
+                        if (gui.inputChat.HasFocus) { return; }
+
+                        if (gui.menuWindow.IsVisible)
                         {
+                            if (!gui.charTab.IsActive)
+                            {
+                                gui.charTab.Press();
+                            }
+                            else
+                            {
+                                gui.menuWindow.Hide();
+                                gui.RemoveStatWindow();
+                            }
+                        }
+                        else
+                        {
+                            gui.menuWindow.Show();
                             gui.charTab.Press();
                         }
-                        else
-                        {
-                            gui.menuWindow.Hide();
-                            gui.RemoveStatWindow();
-
-                        }
-                        gui.menuWindow.Hide();
-                        gui.RemoveStatWindow();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                        gui.charTab.Press();
                     }
                 }
-            }
-            //Spell Tab
-            if (e.Code == Keyboard.Key.P)
-            {
-                if (gui.menuWindow != null)
+                //Spell Tab
+                if (e.Code == Keyboard.Key.P)
                 {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.menuWindow.IsVisible)
+                    if (gui.menuWindow != null)
                     {
-                        if (!gui.spellsTab.HasFocus)
+                        if (gui.inputChat.HasFocus) { return; }
+
+                        if (gui.menuWindow.IsVisible)
                         {
+                            if (!gui.spellsTab.IsActive)
+                            {
+                                gui.spellsTab.Press();
+                            }
+                            else
+                            {
+                                gui.menuWindow.Hide();
+                                gui.RemoveSpellStatWindow();
+
+                            }
+                        }
+                        else
+                        {
+                            gui.menuWindow.Show();
                             gui.spellsTab.Press();
                         }
-                        else
-                        {
-                            gui.menuWindow.Hide();
-                            gui.RemoveSpellStatWindow();
-
-                        }
-                        gui.menuWindow.Hide();
-                        gui.RemoveSpellStatWindow();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                        gui.spellsTab.Press();
                     }
                 }
-            }
-            //Equip Tab
-            if (e.Code == Keyboard.Key.J)
-            {
-                if (gui.menuWindow != null)
+                //Equip Tab
+                if (e.Code == Keyboard.Key.J)
                 {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.menuWindow.IsVisible)
+                    if (gui.menuWindow != null)
                     {
-                        if (!gui.equipTab.HasFocus)
+                        if (gui.inputChat.HasFocus) { return; }
+
+                        if (gui.menuWindow.IsVisible)
                         {
+                            if (!gui.equipTab.IsActive)
+                            {
+                                gui.equipTab.Press();
+                            }
+                            else
+                            {
+                                gui.menuWindow.Hide();
+                                gui.RemoveStatWindow();
+
+                            }
+                        }
+                        else
+                        {
+                            gui.menuWindow.Show();
                             gui.equipTab.Press();
                         }
-                        else
-                        {
-                            gui.menuWindow.Hide();
-                            gui.RemoveStatWindow();
-
-                        }
-                        gui.menuWindow.Hide();
-                        gui.RemoveStatWindow();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                        gui.equipTab.Press();
                     }
                 }
-            }
-            //Pack Tab
-            if (e.Code == Keyboard.Key.B)
-            {
-                if (gui.menuWindow != null)
+                //Pack Tab
+                if (e.Code == Keyboard.Key.B)
                 {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.menuWindow.IsVisible)
+                    if (gui.menuWindow != null)
                     {
-                        if (!gui.packTab.HasFocus)
+                        if (gui.inputChat.HasFocus) { return; }
+
+                        if (gui.menuWindow.IsVisible)
                         {
+                            if (!gui.packTab.IsActive)
+                            {
+                                gui.packTab.Press();
+                            }
+                            else
+                            {
+                                gui.menuWindow.Hide();
+                                gui.RemoveStatWindow();
+
+                            }
+                        }
+                        else
+                        {
+                            gui.menuWindow.Show();
                             gui.packTab.Press();
                         }
-                        else
-                        {
-                            gui.menuWindow.Hide();
-                            gui.RemoveStatWindow();
-
-                        }
-                        gui.menuWindow.Hide();
-                        gui.RemoveStatWindow();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                        gui.packTab.Press();
                     }
                 }
-            }
 
-            //Debug
-            if (e.Code == Keyboard.Key.BackSlash)
-            {
-                if (gui.d_Window != null)
+                //Debug
+                if (e.Code == Keyboard.Key.BackSlash)
                 {
-                    if (gui.inputChat.HasFocus) { return; }
+                    if (gui.d_Window != null)
+                    {
+                        if (gui.inputChat.HasFocus) { return; }
 
-                    if (gui.d_Window.IsVisible)
-                    {
-                        gui.d_Window.Hide();
-                    }
-                    else
-                    {
-                        gui.d_Window.Show();
+                        if (gui.d_Window.IsVisible)
+                        {
+                            gui.d_Window.Hide();
+                        }
+                        else
+                        {
+                            gui.d_Window.Show();
+                        }
                     }
                 }
             }
@@ -1016,13 +1037,15 @@ namespace SabertoothClient
                 DrawChests();   //draw chests ontop of those                
                 DrawBlood();    //draw blood from combat (maybe switch with item?)    
                 DrawLowerAnimations();   //draw the animations lower layer so its set to 1
-                DrawNpcs(); //draw the npcs
-                DrawNpcDisplayText();
-                DrawPlayers();  //now the other players in the world
-                DrawPlayerDisplayText();
+                DrawNpcs(); //draw the npcs                
+                DrawPlayers();  //now the other players in the world                
                 DrawIndexPlayer();  //our main player of the current client instance    
                 DrawUpperAnimations();
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
+
+                //draw combat test
+                DrawNpcDisplayText();
+                DrawPlayerDisplayText();
 
                 //Process actual movement in any direction
                 players[HandleData.myIndex].CheckMovement();                                                                                                                                                      
@@ -1037,18 +1060,14 @@ namespace SabertoothClient
                 //players[HandleData.myIndex].CheckPlayerInteraction();
                 if (players[HandleData.myIndex].Target > 0)
                 {
-                    players[HandleData.myIndex].CombatLoop(map.m_MapNpc[players[HandleData.myIndex].Target]);
-                }                
+                    players[HandleData.myIndex].MeleeCombatLoop(map.m_MapNpc[players[HandleData.myIndex].Target]);
+                }
+                if (players[HandleData.myIndex].CurrentSpell > -1)
+                {
+                    players[HandleData.myIndex].SpellCastLoop(spells[players[HandleData.myIndex].CurrentSpell]);
+                }
                 //players[HandleData.myIndex].CheckAttack();                
                 players[HandleData.myIndex].CheckForTabTarget();
-
-                //Removed controller stufff, may add back at some point but without a mouse menus will need work as well...
-                //players[HandleData.myIndex].CheckControllerMovement();                
-                //players[HandleData.myIndex].CheckControllerItemPickUp();
-                //players[HandleData.myIndex].CheckControllerAttack();
-                //players[HandleData.myIndex].CheckControllerButtonPress();
-                //players[HandleData.myIndex].CheckControllerPlayerInteraction();
-                //players[HandleData.myIndex].CheckControllerChangeDirection();
             }
 
             renderWindow.SetView(renderWindow.DefaultView); //set the view for the window to default (this is so the UI doesnt move when the characters view does)
@@ -1060,8 +1079,7 @@ namespace SabertoothClient
                 hud.UpdateManaBar();    //update the on screen mana bar
                 hud.UpdateExpBar(); //update the on screen xp bar
                 renderWindow.Draw(hud); //draw all the hud from above with its updates
-                miniMap.UpdateMiniMap();    //update the minimap
-                renderWindow.Draw(miniMap); //draw the mini map WAAAAY up there           
+                if (miniMapVis) { miniMap.UpdateMiniMap(); renderWindow.Draw(miniMap); }    //update the minimap                
                 DrawCursor();
             }
 
@@ -1179,7 +1197,7 @@ namespace SabertoothClient
 
             UpdateTitle(fps);
 
-            Joystick.Update();
+            //Joystick.Update();
         }
         #endregion
 

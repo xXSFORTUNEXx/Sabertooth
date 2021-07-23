@@ -234,6 +234,10 @@ namespace SabertoothClient
                             case (byte)PacketTypes.SpellsData:
                                 HandleSpellsData(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.CastSpell:
+                                HandlePlayerCastSpell(incMSG);
+                                break;
                         }
                         break;
 
@@ -247,6 +251,19 @@ namespace SabertoothClient
         }
 
         #region Handle Incoming Data
+        static void HandlePlayerCastSpell(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int spellnum = incMSG.ReadVariableInt32();
+            int slot = incMSG.ReadVariableInt32();
+            
+            if (players[index].CastingSpell) { return; }
+
+            players[index].CastSpell = true;
+            players[index].CurrentSpell = spellnum;
+            players[index].SpellBookSlot = slot;
+        }
+
         static void HandleItemCoolDownUpdate(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -772,7 +789,7 @@ namespace SabertoothClient
             {
                 int spell = incMSG.ReadVariableInt32();
 
-                players[myIndex].SpellBook[i].SpellNumber = spell;
+                players[myIndex].spellBook[i].SpellNumber = spell;
             }
         }
 
@@ -1586,7 +1603,7 @@ namespace SabertoothClient
         CreateBlood,
         ClearBlood,
         PlayerWarp,
-        MeleeAttack,
+        PlayerAttack,
         SendQuests,
         SendQuestData,
         SendQuestList,
@@ -1602,6 +1619,7 @@ namespace SabertoothClient
         SendSpellBook,
         SpellData,
         SpellsData,
-        ForgetSpell
+        ForgetSpell,
+        CastSpell
     }
 }

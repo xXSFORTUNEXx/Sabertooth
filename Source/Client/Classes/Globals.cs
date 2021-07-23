@@ -43,6 +43,7 @@ namespace SabertoothClient
         public const int MAX_MAP_ANIMATIONS = 15;
         public const string EQUIP_COOLDOWN = "5000";
         public const int MAX_DISPLAY_TEXT = 10;
+        public const int GLOBAL_COOL_DOWN = 2000;
         #endregion
 
         #region Config Globals

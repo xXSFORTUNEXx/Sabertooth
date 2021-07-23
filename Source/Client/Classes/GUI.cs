@@ -452,8 +452,24 @@ namespace SabertoothClient
                         else { hotBarCD[i].Hide(); hotbarCDPic[i].Hide(); }
                     }
                     else if (player.hotBar[i].SpellNumber > -1)
-                    {
+                    {                        
                         hotbarPic[i].ImageName = "Resources/Icons/" + spells[player.hotBar[i].SpellNumber].Icon + ".png";
+
+                        if (TickCount - player.gcdTick < GLOBAL_COOL_DOWN)
+                        {
+                            hotbarCDPic[i].Show();
+                            hotBarCD[i].Text = "GCD";
+                            hotBarCD[i].TextColor = System.Drawing.Color.Red;
+                            hotBarCD[i].Show();
+                        }
+                        else if (player.spellBook[player.hotBar[i].SpellNumber].OnCoolDown)
+                        {
+                            hotbarCDPic[i].Show();
+                            hotBarCD[i].Text = ((spells[player.hotBar[i].SpellNumber].CoolDown / A_MILLISECOND) - ((TickCount - player.spellBook[player.hotBar[i].SpellNumber].cooldownTick) / A_MILLISECOND)).ToString();
+                            hotBarCD[i].TextColor = System.Drawing.Color.Red;
+                            hotBarCD[i].Show();
+                        }
+                        else { hotBarCD[i].Hide(); hotbarCDPic[i].Hide(); }
                     }
                     else
                     {
@@ -642,9 +658,9 @@ namespace SabertoothClient
                     #region Spells
                     for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
                     {
-                        if (player.SpellBook[i].SpellNumber > -1)
+                        if (player.spellBook[i].SpellNumber > -1)
                         {
-                            spellPic[i].ImageName = "Resources/Icons/" + spells[player.SpellBook[i].SpellNumber].Icon + ".png";
+                            spellPic[i].ImageName = "Resources/Icons/" + spells[player.spellBook[i].SpellNumber].Icon + ".png";
                         }
                         else
                         {
@@ -653,9 +669,9 @@ namespace SabertoothClient
 
                         if (spellPic[i].IsHovered)
                         {
-                            if (player.SpellBook[i].SpellNumber > -1)
+                            if (player.spellBook[i].SpellNumber > -1)
                             {
-                                SetSpellStatWindow(spellPic[i].X, spellPic[i].Y, spells[player.SpellBook[i].SpellNumber]);
+                                SetSpellStatWindow(spellPic[i].X, spellPic[i].Y, spells[player.spellBook[i].SpellNumber]);
                             }
                         }
                     }
@@ -2199,7 +2215,7 @@ namespace SabertoothClient
             ImagePanel spellPicE = (ImagePanel)sender;
             int spellSlot = ToInt32(spellPicE.Name);
 
-            if (players[HandleData.myIndex].SpellBook[spellSlot].SpellNumber > -1)
+            if (players[HandleData.myIndex].spellBook[spellSlot].SpellNumber > -1)
             {
 
                 if (IsSpellOnHotBar(spellSlot)) { player.SendUpdateHotbar(-1, spellSlot); }

@@ -144,7 +144,7 @@ namespace SabertoothServer
                 HandleData.HandleDataMessage();
                 SavePlayers();
                 CheckNpcSpawn();
-                CheckHealthRegen();
+                //CheckHealthRegen();
                 CheckManaRegen();
                 CheckNpcAi();
                 CheckItemCoolDowns();

@@ -24,9 +24,9 @@ namespace SabertoothClient
         public Item Legs = new Item();
         public Item Feet = new Item();
         public HotBar[] hotBar = new HotBar[MAX_PLAYER_HOTBAR];
-        public SpellBook[] SpellBook = new SpellBook[MAX_PLAYER_SPELLBOOK];
+        public SpellBook[] spellBook = new SpellBook[MAX_PLAYER_SPELLBOOK];
 
-        RenderText rText = new RenderText();        
+        RenderText rText = new RenderText();
         VertexArray spritePic = new VertexArray(PrimitiveType.Quads, 4);
         static int spriteTextures = Directory.GetFiles("Resources/Characters/", "*", SearchOption.TopDirectoryOnly).Length;
         Texture[] c_Sprite = new Texture[spriteTextures];
@@ -36,8 +36,11 @@ namespace SabertoothClient
         VertexArray targetPic = new VertexArray(PrimitiveType.Quads, 4);
         public DisplayText[] displayText = new DisplayText[MAX_DISPLAY_TEXT];
 
+        VertexArray castBar = new VertexArray(PrimitiveType.Quads, 4);
+        float castbarLength;
+
         public int[] QuestList = new int[MAX_PLAYER_QUEST_LIST];
-        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];        
+        public int[] QuestStatus = new int[MAX_PLAYER_QUEST_LIST];
 
         public string Name { get; set; }
         public string Pass { get; set; }
@@ -51,7 +54,7 @@ namespace SabertoothClient
         public int Map { get; set; }
         public int Direction { get; set; }
         public int AimDirection { get; set; }
-        public int Sprite { get; set; }     
+        public int Sprite { get; set; }
         public int Level { get; set; }
         public int Points { get; set; }
         public int Health { get; set; }
@@ -77,17 +80,21 @@ namespace SabertoothClient
         //Volatile Variables
         bool Moved;
         public bool Attacking;
+        public bool CastSpell;
+        public bool CastingSpell;
+        public int CurrentSpell = -1;
+        public int SpellBookSlot = -1;
+        public int castTick;
+        public int gcdTick;
         public bool inChat;
         public bool inChest;
         public bool isChangingMaps;
         public bool inShop;
-        public bool inBank;  
+        public bool inBank;
         public int Target = -1;
         double lastTarget;
         int attackTick;
         int timeTick;
-        int equipTick;
-        int interactionTick;
         int hotbarTick;
         int targetTick;
         int directionTick;
@@ -98,10 +105,10 @@ namespace SabertoothClient
         public int tempDir;
         public int tempaimDir;
         public int tempStep;
-        public int Step;        
-        public int shopNum;        
-        public int chatNum;        
-        public int chestNum;        
+        public int Step;
+        public int shopNum;
+        public int chatNum;
+        public int chestNum;
 
         #region Class Constructors
         public Player(string name, string pass, string email, int x, int y, int direction, int aimdirection, int map, int level, int points, int health, int maxhealth, int mana, int maxmana,
@@ -180,7 +187,7 @@ namespace SabertoothClient
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                spellBook[s] = new SpellBook(-1, false);
             }
 
             p_Name.Font = font;
@@ -240,7 +247,7 @@ namespace SabertoothClient
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                spellBook[s] = new SpellBook(-1, false);
             }
 
             p_Name.Font = font;
@@ -287,7 +294,7 @@ namespace SabertoothClient
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                spellBook[s] = new SpellBook(-1, false);
             }
 
             p_Name.Font = font;
@@ -334,7 +341,7 @@ namespace SabertoothClient
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                spellBook[s] = new SpellBook(-1, false);
             }
 
             p_Name.Font = font;
@@ -379,7 +386,7 @@ namespace SabertoothClient
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                spellBook[s] = new SpellBook(-1, false);
             }
 
             p_Name.Font = font;
@@ -391,481 +398,6 @@ namespace SabertoothClient
             {
                 displayText[i] = new DisplayText();
             }
-        }
-        #endregion
-
-        #region Controller
-        public void CheckControllerMovement()
-        {
-            /*
-            * Button ID's Xbox Controller
-            * 0 - A
-            * 1 - B
-            * 2 - X
-            * 3 - Y
-            * 4 - LB
-            * 5 - RB
-            * 6 - Back
-            * 7 - Start
-            * 8 - Left JoyStick Button
-            * 9 - Right JoyStick Button
-            * U Axis - Right Stick
-            * R Axix - Right Stick
-            * Z Axis - Right Trigger
-            * X Axis - Left Stick
-            * Y Axis - Left Stick
-            * D Pad - PovX, PovY
-            */
-            if (!Joystick.IsConnected(0)) { return; }
-            if (Moved == true) { Moved = false; return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (inShop|| inChat || inBank) { return; }
-            if (isChangingMaps) { return; }
-
-            float deadZone = 35;
-            float x = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.X), deadZone);
-            float y = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.Y), deadZone);
-
-            gui.d_Controller.Text = "X: " + x + " / Y: " + y;
-
-            if (x > deadZone)
-            {
-                if (X < (map.MaxX - 1) - OffsetX)
-                {
-                    if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                    {
-                        Direction = (int)Directions.Right;
-                        Moved = false;
-                        SendUpdateDirection();
-                        return;
-                    }
-                    X += 1;
-                    Direction = (int)Directions.Right;
-                    Moved = true;
-                }
-            }
-
-            if (x < -deadZone)
-            {
-                if (X > 0 - OffsetX)
-                {
-                    if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                    {
-                        Direction = (int)Directions.Left;
-                        Moved = false;
-                        SendUpdateDirection();
-                        return;
-                    }
-                    X -= 1;
-                    Direction = (int)Directions.Left;
-                    Moved = true;
-                }
-            }
-
-            if (y > deadZone)
-            {
-                if (Y < (map.MaxY - 1) - OffsetY)
-                {
-                    if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
-                    {
-                        Direction = (int)Directions.Down;
-                        Moved = false;
-                        SendUpdateDirection();
-                        return;
-                    }
-                    Y += 1;
-                    Direction = (int)Directions.Down;
-                    Moved = true;
-                }
-            }
-
-            if (y < -deadZone)
-            {
-                if (Y > 0 - OffsetY)
-                {
-                    if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
-                    {
-                        Direction = (int)Directions.Up;
-                        Moved = false;
-                        SendUpdateDirection();
-                        return;
-                    }
-                    Y -= 1;
-                    Direction = (int)Directions.Up;
-                    Moved = true;
-                }
-            }
-
-            if (Moved == true)
-            {
-                Step += 1;
-                if (Step == 4) { Step = 0; }
-                Moved = false;
-                SendMovementData();
-            }
-
-            if (map.Ground[(X + OffsetX), (Y + OffsetY)].Type == (int)TileType.Warp)
-            {
-                SendPlayerWarp();
-            }
-        }
-
-        public void CheckControllerChangeDirection()
-        {
-            if (!Joystick.IsConnected(0)) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (inShop || inChat || inBank) { return; }
-
-            float deadZone = 35;
-            float u = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.U), deadZone);
-            float r = SnaptoZero(Joystick.GetAxisPosition(0, Joystick.Axis.R), deadZone);
-
-            gui.d_ConDir.Text = "Direction: " + AimDirection;
-
-            if (u > deadZone)
-            {
-                AimDirection = (int)Directions.Right;
-                SendUpdateDirection();
-            }
-
-            if (u < -deadZone)
-            {
-                AimDirection = (int)Directions.Left;
-                SendUpdateDirection();
-            }
-
-            if (r > deadZone)
-            {
-                AimDirection = (int)Directions.Down;
-                SendUpdateDirection();
-            }
-
-            if (r < -deadZone)
-            {
-                AimDirection = (int)Directions.Up;
-                SendUpdateDirection();
-            }
-        }
-
-        public void CheckControllerAttack()
-        {
-            if (!Joystick.IsConnected(0)) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }            
-            if (TickCount - equipTick < 5000) { return; }
-            if (inShop || inChat || inBank) { return; }
-
-            if (Joystick.GetAxisPosition(0, Joystick.Axis.Z) < -25)
-            {
-                if (MainHand.Name != "None")
-                {
-                    Attacking = true;
-                }
-                else
-                {
-                    gui.AddText("You need a weapon equiped to attack!");
-                    equipTick = TickCount;
-                    return;
-                }
-            }
-
-            if (Joystick.IsButtonPressed(0, 1))
-            {
-                if (OffHand.Name != "None")
-                {
-                    Attacking = true;
-                }
-                else
-                {
-                    gui.AddText("You need a melee weapon equiped to attack!");
-                    equipTick = TickCount;
-                }
-            }
-
-            if (Attacking == true)
-            {             
-                {
-                    if (TickCount - attackTick < OffHand.AttackSpeed) { Attacking = false; return; }
-                    switch (AimDirection)
-                    {
-                        case (int)Directions.Up:
-                            if (Y > 2 - OffsetY)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                        case (int)Directions.Down:
-                            if (Y < (map.MaxY - 2) - OffsetY)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                        case (int)Directions.Left:
-                            if (X > 2 - OffsetX)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                        case (int)Directions.Right:
-                            if (X < (map.MaxX - 2) - OffsetX)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                                else if (map.m_MapNpc[i].Y == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                            break;
-                    }
-                    Attacking = false;
-                    attackTick = TickCount;
-                }
-            }
-        }        
-
-        public void CheckControllerButtonPress()
-        {
-            if (!Joystick.IsConnected(0)) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }            
-            if (inShop || inChat || inBank) { return; }
-
-            if (Joystick.IsButtonPressed(0, 6))
-            {
-                if (gui.chatWindow != null)
-                {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.chatWindow.IsVisible)
-                    {
-                        gui.chatWindow.Hide();
-                    }
-                    else
-                    {
-                        gui.chatWindow.Show();
-                    }
-                }
-            }
-
-            if (Joystick.IsButtonPressed(0, 7))
-            {
-                if (gui.menuWindow != null)
-                {
-                    if (gui.inputChat.HasFocus) { return; }
-
-                    if (gui.menuWindow.IsVisible)
-                    {
-                        gui.menuWindow.Hide();
-                    }
-                    else
-                    {
-                        gui.menuWindow.Show();
-                        gui.charTab.Focus();
-                    }
-                }
-            }
-        }
-
-        public void CheckControllerPlayerInteraction()
-        {
-            if (!Joystick.IsConnected(0)) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (TickCount - interactionTick < 1000) { return; }
-            if (inShop || inChat || inBank) { return; }
-
-            if (Joystick.IsButtonPressed(0, 3))
-            {
-                switch (AimDirection)
-                {
-                    case (int)Directions.Up:
-                        if (Y > 2 - OffsetY)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) - 1].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Down:
-                        if (Y < 48 - OffsetY)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) + 1].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Left:
-                        if (X > 2 - OffsetX)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Right:
-                        if (X < 48 - OffsetX)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].ChestNum, 1);
-                            }
-                        }
-                        break;
-                }
-                interactionTick = TickCount;
-            }
-        }
-
-        float SnaptoZero(float value, float threshold)
-        {
-            if (Math.Abs(value) < threshold)
-            {
-                return 0;
-            }
-            return value;
         }
         #endregion
 
@@ -891,21 +423,21 @@ namespace SabertoothClient
                         return;
                     }
                     Y -= 1;
-                    Direction = (int)Directions.Up; 
+                    Direction = (int)Directions.Up;
                     Moved = true;
                 }
             }
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.S))
             {
-                if (Y < (map.MaxY - 1) - OffsetY)  
+                if (Y < (map.MaxY - 1) - OffsetY)
                 {
                     if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Down;
-                        Moved = false; 
+                        Moved = false;
                         SendUpdateDirection();
-                        return; 
+                        return;
                     }
                     Y += 1;
                     Direction = (int)Directions.Down;
@@ -913,14 +445,14 @@ namespace SabertoothClient
                 }
             }
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) 
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
             {
                 if (X > 0 - OffsetX)
                 {
                     if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Left;
-                        Moved = false; 
+                        Moved = false;
                         SendUpdateDirection();
                         return;
                     }
@@ -932,9 +464,9 @@ namespace SabertoothClient
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.D))
             {
-                if (X < (map.MaxX - 1) - OffsetX) 
+                if (X < (map.MaxX - 1) - OffsetX)
                 {
-                    if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest) 
+                    if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Blocked || map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
                     {
                         Direction = (int)Directions.Right;
                         Moved = false;
@@ -952,6 +484,7 @@ namespace SabertoothClient
                 Step += 1;
                 if (Step == 4) { Step = 0; }
                 Moved = false;
+                //CastingSpell = false;
                 SendMovementData();
                 walkTick = TickCount;
             }
@@ -961,7 +494,7 @@ namespace SabertoothClient
                 SendPlayerWarp();
             }
         }
-        
+
         public void CheckChangeDirection()
         {
             if (TickCount - directionTick < 500) { return; }
@@ -995,9 +528,10 @@ namespace SabertoothClient
             }
         }
 
-        public void CombatLoop(MapNpc mapNpc)
+        public void MeleeCombatLoop(MapNpc mapNpc)
         {
             if (mapNpc == null) { return; }
+            if (CastSpell || CastingSpell) { return; }
             if (MainHand.Name == "None") { Attacking = false; return; }    //no weapon
 
             if (Attacking)
@@ -1031,7 +565,7 @@ namespace SabertoothClient
                             attackTick = TickCount;
                             return;
                         }                        
-                        SendMeleeAttack(Target, 0);
+                        SendAttack(Target);
                         attackTick = TickCount;
                     }
                     else
@@ -1044,252 +578,97 @@ namespace SabertoothClient
             }
         }
 
-        public void CheckAttack()
-        {
-            if (TickCount - equipTick < equipTick) { return; }
-            if (TickCount - attackTick < 25) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }                        
-            if (inShop || inChat || inBank) { return; }            
+        public void SpellCastLoop(Spell spell)
+        {           
+            if (CastSpell)
+            {                
+                if (TickCount - gcdTick < GLOBAL_COOL_DOWN) { CastSpell = false; return; }                
+                if (spellBook[SpellBookSlot].OnCoolDown) { gui.AddText("Spell on cooldown!"); CastSpell = false; return; }                
+                if (Mana < spell.ManaCost) { gui.AddText("Not enough mana!"); CastSpell = false; return; }
 
-            if (Mouse.IsButtonPressed(Mouse.Button.Left))
-            {
-                if (MainHand.Name != "None")
+                if (!CastingSpell)
                 {
-                    Attacking = true;
-                }
-                else
-                {
-                    gui.AddText("You need a weapon equiped to attack!");
-                    equipTick = TickCount;
-                    return;
-                }
-            }
-
-            if (Attacking == true)
-            {
-                {
-                    if (TickCount - attackTick < MainHand.AttackSpeed) { Attacking = false; return; }
-
-                    switch (AimDirection)
+                    switch (spell.SpellType)
                     {
-                        case (int)Directions.Up:
-                            if (Y > 2 - OffsetY)
+                        case (int)SpellType.Dash:
+                            int newX = 0;
+                            int newY = 0;
+                            switch (AimDirection)
                             {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                    Attacking = false;
-                                                    attackTick = TickCount;
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                case (int)Directions.Down:
+                                    newY = Y + spell.Range;
+                                    Y = newY;
+                                    break;
+
+                                case (int)Directions.Up:
+                                    newY = Y - spell.Range;
+                                    Y = newY;
+                                    break;
+
+                                case (int)Directions.Left:
+                                    newX = X - spell.Range;
+                                    X = newX;
+                                    break;
+
+                                case (int)Directions.Right:
+                                    newX = X + spell.Range;
+                                    X = newX;
+                                    break;
                             }
+
+                            Mana -= spell.ManaCost;
+                            SendUpdatedMana();
+                            SendMovementData();
+                            CastSpell = false;                           
+                            gcdTick = TickCount;
                             break;
 
-                        case (int)Directions.Down:
-                            if (Y < (map.MaxY - 2) - OffsetY)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                    Attacking = false;
-                                                    attackTick = TickCount;
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                        case (int)Directions.Left:
-                            if (X > 2 - OffsetX)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                    Attacking = false;
-                                                    attackTick = TickCount;
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-
-                        case (int)Directions.Right:
-                            if (X < (map.MaxX - 2) - OffsetX)
-                            {
-                                for (int i = 0; i < MAX_MAP_NPCS; i++)
-                                {
-                                    if (i < MAX_MAP_NPCS)
-                                    {
-                                        if (map.m_MapNpc[i].IsSpawned)
-                                        {
-                                            if (map.m_MapNpc[i].Behavior == (int)BehaviorType.Aggressive)
-                                            {
-                                                if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                                {
-                                                    SendMeleeAttack(i, 0);
-                                                    Attacking = false;
-                                                    attackTick = TickCount;
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
+                        case (int)SpellType.Heal:
+                            CastSpell = false;
+                            CastingSpell = true;
+                            gcdTick = TickCount;
+                            castTick = TickCount;
                             break;
                     }
-                    Attacking = false;
-                    attackTick = TickCount;
                 }
             }
-        }
 
-        public void CheckPlayerInteraction()
-        {
-            if (TickCount - interactionTick < 1000) { return; }
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }            
-            if (inShop || inChat || inBank) { return; }
-
-            if (Keyboard.IsKeyPressed(Keyboard.Key.E))
+            if (CastingSpell)
             {
-                switch (AimDirection)
+                if (TickCount - castTick > spell.CastTime)
                 {
-                    case (int)Directions.Up:
-                        if (Y > 2 - OffsetY)
-                        {
-                            for (int i = 0; i < MAX_MAP_NPCS; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].Y + 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX), (Y + OffsetY) - 1].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) - 1].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Down:
-                        if (Y < (map.MaxY - 2) - OffsetY)
-                        {
-                            for (int i = 0; i < MAX_MAP_NPCS; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].Y - 1 == (Y + OffsetY) && map.m_MapNpc[i].X == (X + OffsetX))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX), (Y + OffsetY) + 1].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX), (Y + OffsetY) + 1].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Left:
-                        if (X > 2 - OffsetX)
-                        {
-                            for (int i = 0; i < MAX_MAP_NPCS; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].X + 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX) - 1, (Y + OffsetY)].ChestNum, 1);
-                            }
-                        }
-                        break;
-
-                    case (int)Directions.Right:
-                        if (X < (map.MaxX - 2) - OffsetX)
-                        {
-                            for (int i = 0; i < MAX_MAP_NPCS; i++)
-                            {
-                                if (map.m_MapNpc[i].IsSpawned)
-                                {
-                                    if (map.m_MapNpc[i].Behavior == (int)BehaviorType.ShopOwner || map.m_MapNpc[i].Behavior == (int)BehaviorType.Friendly || map.m_MapNpc[i].Behavior == (int)BehaviorType.Passive)
-                                    {
-                                        if (map.m_MapNpc[i].X - 1 == (X + OffsetX) && map.m_MapNpc[i].Y == (Y + OffsetY))
-                                        {
-                                            SendInteraction(i, 0);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].Type == (int)TileType.Chest)
-                            {
-                                SendInteraction(map.Ground[(X + OffsetX) + 1, (Y + OffsetY)].ChestNum, 1);
-                            }
-                        }
-                        break;
+                    switch (spell.SpellType)
+                    {
+                        case (int)SpellType.Heal:
+                            int disSlot = FindOpenNpcDisplayText();
+                            Mana -= spell.ManaCost;
+                            SendUpdatedMana();
+                            if (Health + spell.Vital > MaxHealth) { Health = MaxHealth; }
+                            else { Health += spell.Vital; }
+                            SendUpdateHealth();
+                            displayText[disSlot].CreateDisplayText(spell.Vital, (X + OffsetX), (Y + OffsetY), (int)DisplayTextMsg.Healing, "+");
+                            CastingSpell = false;
+                            CastSpell = false;
+                            spellBook[SpellBookSlot].OnCoolDown = true;
+                            spellBook[SpellBookSlot].cooldownTick = TickCount;
+                            break;
+                    }
                 }
-                interactionTick = TickCount;
+            }
+
+            if (TickCount - gcdTick > GLOBAL_COOL_DOWN)
+            {
+                for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
+                {
+                    if (spellBook[s].OnCoolDown)
+                    {
+                        if (TickCount - spellBook[s].cooldownTick > spells[spellBook[s].SpellNumber].CoolDown)
+                        {
+                            spellBook[s].OnCoolDown = false;
+                            spellBook[s].cooldownTick = 0;
+                        }
+                    }
+                }
             }
         }
 
@@ -1352,16 +731,6 @@ namespace SabertoothClient
             }
         }
 
-        public void CheckPlayerCurrentTypes()
-        {
-            if (gui.inputChat.HasFocus == true) { return; }
-            if (!renderWindow.HasFocus()) { return; }
-            if (Attacking == true) { return; }
-            if (inShop || inChat || inBank) { return; }
-
-
-        }
-
         public void CheckForTabTarget()
         {
             if (TickCount - targetTick < 500) { return; }
@@ -1409,6 +778,19 @@ namespace SabertoothClient
         #endregion
 
         #region Voids
+        int FindOpenNpcDisplayText()
+        {
+            for (int i = 0; i < MAX_DISPLAY_TEXT; i++)
+            {
+                if (displayText[i].displayText.DisplayedString == "EMPTY")
+                {
+                    return i;
+                }
+            }
+
+            return MAX_DISPLAY_TEXT;
+        }
+
         public virtual void Draw(RenderTarget target, RenderStates states)
         {
             int x = (X * PIC_X) + (OffsetX * PIC_X);
@@ -1441,6 +823,20 @@ namespace SabertoothClient
 
                 states.Texture = targetTexture;
                 target.Draw(targetPic, states);
+            }
+
+            if (CastingSpell)
+            {
+                castbarLength = ((float)(TickCount - castTick) / spells[spellBook[SpellBookSlot].SpellNumber].CastTime) * 35;
+
+                x = ((X * PIC_X) + (OffsetX * PIC_X));
+                y = ((Y * PIC_Y) + (OffsetY * PIC_Y)) + 48;
+                castBar[0] = new Vertex(new Vector2f(x, y), Color.Cyan);
+                castBar[1] = new Vertex(new Vector2f(castbarLength + x, y), Color.Cyan);
+                castBar[2] = new Vertex(new Vector2f(castbarLength + x, y + 5), Color.Cyan);
+                castBar[3] = new Vertex(new Vector2f(x, y + 5), Color.Cyan);
+
+                target.Draw(castBar);
             }
         }
 
@@ -1601,13 +997,12 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendMeleeAttack(int npcNum, int type)
+        public void SendAttack(int npcNum)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
-            outMSG.Write((byte)PacketTypes.MeleeAttack);
+            outMSG.Write((byte)PacketTypes.PlayerAttack);
             outMSG.WriteVariableInt32(npcNum);
             outMSG.WriteVariableInt32(HandleData.myIndex);
-            outMSG.WriteVariableInt32(type);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }              
 
@@ -1684,6 +1079,24 @@ namespace SabertoothClient
             outMSG.WriteVariableInt32(HandleData.myIndex);
             outMSG.WriteVariableInt32(Map);
             outMSG.WriteVariableInt32(interactionValue);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdatedMana()
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ManaData);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(Mana);
+            SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendUpdateHealth()
+        {
+            NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
+            outMSG.Write((byte)PacketTypes.HealthData);
+            outMSG.WriteVariableInt32(HandleData.myIndex);
+            outMSG.WriteVariableInt32(Health);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1920,12 +1333,15 @@ namespace SabertoothClient
     public class SpellBook
     {
         public int SpellNumber { get; set; }
+        public bool OnCoolDown { get; set; }
+        public int cooldownTick;
 
         public SpellBook() { }
 
-        public SpellBook(int spellNum)
+        public SpellBook(int spellNum, bool oncd)
         {
             SpellNumber = spellNum;
+            OnCoolDown = oncd;
         }
     }
 

@@ -97,8 +97,8 @@ namespace SabertoothServer
                                 HandlePlayerWarp(incMSG);
                                 break;
 
-                            case (byte)PacketTypes.MeleeAttack:
-                                HandleMeleeAttack(incMSG);
+                            case (byte)PacketTypes.PlayerAttack:
+                                HandleAttack(incMSG);
                                 break;
 
                             case (byte)PacketTypes.SendInvSwap:
@@ -121,6 +121,14 @@ namespace SabertoothServer
                                 HandleForgetSpell(incMSG);
                                 break;
 
+                            case (byte)PacketTypes.ManaData:
+                                HandleManaData(incMSG);
+                                break;
+
+                            case (byte)PacketTypes.HealthData:
+                                HandleHealthData(incMSG);
+                                break;
+
                             default:
                                 Console.WriteLine("Unknown packet header.");
                                 break;
@@ -138,7 +146,23 @@ namespace SabertoothServer
             SabertoothServer.netServer.Recycle(incMSG);
         }
 
-        #region Handle Incoming Data  
+        #region Handle Incoming Data
+        static void HandleHealthData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int health = incMSG.ReadVariableInt32();
+
+            players[index].Health = health;
+        }
+
+        static void HandleManaData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int mana = incMSG.ReadVariableInt32();
+
+            players[index].Mana = mana;
+        }
+
         static void HandleForgetSpell(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -224,33 +248,26 @@ namespace SabertoothServer
             SendPlayerInv(index);
         }
 
-        static void HandleMeleeAttack(NetIncomingMessage incMSG)
+        static void HandleAttack(NetIncomingMessage incMSG)
         {
             int npcNum = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
-            int type = incMSG.ReadVariableInt32();
             int map = players[index].Map;            
             
-            if (type == 0)  //For regular map npcs  (NORM)
+            if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }  //if we no spawn then we no care
+
+            //Create blood splat
+            maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
+            //do damage to the npc and mark the player for update
+            int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
+
+            //send updated npc vitals to players connected and on the same map
+            for (int p = 0; p < MAX_PLAYERS; p++)
             {
-                if (!maps[map].m_MapNpc[npcNum].IsSpawned) { return; }  //if we no spawn then we no care
-
-                //Create blood splat
-                maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
-                //do damage to the npc and mark the player for update
-                int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
-
-                //send updated npc vitals to players connected and on the same map
-                for (int p = 0; p < MAX_PLAYERS; p++)
+                if (players[p].Connection != null && map == players[p].Map)
                 {
-                    if (players[p].Connection != null && map == players[p].Map)
-                    {
-                        SendNpcVitalData(players[p].Connection, map, npcNum, damage);
-                    }
+                    SendNpcVitalData(players[p].Connection, map, npcNum, damage);
                 }
-
-                //update the player of their stats for some reason?
-                //if (updatePlayer) { SendUpdatePlayerStats(index); }
             }
         }
 
@@ -745,6 +762,16 @@ namespace SabertoothServer
         #endregion
 
         #region Send Outgoing Data
+        public static void SendPlayerCastSpell(NetConnection conn, int index, int spellNum, int slot)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.CastSpell);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(spellNum);
+            outMSG.WriteVariableInt32(slot);
+            SabertoothServer.netServer.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public static void SendItemCoolDownUpdate(NetConnection netConn, int index, int invNum, bool status)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -2135,7 +2162,7 @@ namespace SabertoothServer
         CreateBlood,
         ClearBlood,
         PlayerWarp,
-        MeleeAttack,
+        PlayerAttack,
         SendQuests,
         SendQuestData,
         SendQuestList,
@@ -2151,6 +2178,7 @@ namespace SabertoothServer
         SendSpellBook,
         SpellData,
         SpellsData,
-        ForgetSpell
+        ForgetSpell,
+        CastSpell
     }
 }

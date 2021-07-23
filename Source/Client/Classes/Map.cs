@@ -543,7 +543,7 @@ namespace SabertoothClient
             state.Texture = c_Sprite[Sprite - 1];
             target.Draw(spritePic, state);
             target.Draw(healthBar);
-            target.Draw(npcName);
+            //target.Draw(npcName);
             if (gui.d_Window.IsVisible) { target.Draw(npcCoords); }
         }
     }

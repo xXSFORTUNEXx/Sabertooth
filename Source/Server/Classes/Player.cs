@@ -144,7 +144,7 @@ namespace SabertoothServer
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);                
+                SpellBook[s] = new SpellBook(-1, false);                
             }
         }
 
@@ -219,7 +219,7 @@ namespace SabertoothServer
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                SpellBook[s] = new SpellBook(-1, false);
             }
         }
 
@@ -260,7 +260,7 @@ namespace SabertoothServer
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                SpellBook[s] = new SpellBook(-1, false);
             }
         }
 
@@ -301,7 +301,7 @@ namespace SabertoothServer
 
             for (int s = 0; s < MAX_PLAYER_SPELLBOOK; s++)
             {
-                SpellBook[s] = new SpellBook(-1);
+                SpellBook[s] = new SpellBook(-1, false);
             }
         }
         #endregion
@@ -558,51 +558,8 @@ namespace SabertoothServer
         {
             if (players[index].SpellBook[slot].SpellNumber > -1)
             {
-                Spell spell = spells[players[index].SpellBook[slot].SpellNumber];
-
-                switch (spell.SpellType)
-                {
-                    case (int)SpellType.Dash:
-                        if (players[index].Mana >= spell.ManaCost) { HandleData.SendServerMessageTo(players[index].Connection, "You dont have enough mana to cast this spell!"); return; }
-
-                        int newX = 0;
-                        int newY = 0;
-                        switch (players[index].AimDirection)
-                        {
-                            case (int)Directions.Down:
-                                newY = players[index].Y + spell.Range;
-                                players[index].Mana -= spell.ManaCost;
-                                break;
-
-                            case (int)Directions.Up:
-                                newY = players[index].Y - spell.Range;
-                                players[index].Mana -= spell.ManaCost;
-                                break;
-
-                            case (int)Directions.Left:
-                                newX = players[index].X - spell.Range;
-                                players[index].Mana -= spell.ManaCost;
-                                break;
-
-                            case (int)Directions.Right:
-                                newX = players[index].X + spell.Range;
-                                players[index].Mana -= spell.ManaCost;
-                                break;
-                        }
-
-                        HandleData.SendServerMessageTo(players[index].Connection, "CHARGE!!!");
-                        HandleData.SendUpdatePlayerStats(index);
-
-                        int map = players[index].Map;
-                        for (int i = 0; i < MAX_PLAYERS; i++)
-                        {
-                            if (players[i].Connection != null && players[i].Map == map)
-                            {
-                                HandleData.SendUpdateMovementData(players[i].Connection, index, newX, newY, players[index].Direction, players[index].AimDirection, players[index].Step);
-                            }
-                        }
-                        break;
-                }
+                int spellnum = players[index].SpellBook[slot].SpellNumber;                               
+                HandleData.SendPlayerCastSpell(players[index].Connection, index, spellnum, slot);
             }
         }
 
@@ -2313,12 +2270,15 @@ namespace SabertoothServer
     public class SpellBook
     {
         public int SpellNumber { get; set; }
+        public bool OnCoolDown { get; set; }
+        public int cooldownTick;
 
         public SpellBook() { }
 
-        public SpellBook(int spellNum)
+        public SpellBook(int spellNum, bool oncd)
         {
             SpellNumber = spellNum;
+            OnCoolDown = oncd;
         }
     }
 
