@@ -809,7 +809,7 @@ namespace SabertoothClient
                 {
                     if (map.m_BloodSplats[i].X > minX && map.m_BloodSplats[i].X < maxX)
                     {
-                        if (map.m_BloodSplats[i].X > minX && map.m_BloodSplats[i].X < maxX)
+                        if (map.m_BloodSplats[i].Y > minY && map.m_BloodSplats[i].Y < maxY)
                         {
                             renderWindow.Draw(map.m_BloodSplats[i]);
                         }
@@ -886,7 +886,7 @@ namespace SabertoothClient
                     {
                         if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
                         {
-                            if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                            if (map.m_Animation[i].Y > minY && map.m_Animation[i].Y < maxY)
                             {
                                 renderWindow.Draw(map.m_Animation[i]);
                             }
@@ -926,9 +926,55 @@ namespace SabertoothClient
                     {
                         if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
                         {
-                            if (map.m_Animation[i].X > minX && map.m_Animation[i].X < maxX)
+                            if (map.m_Animation[i].Y > maxY && map.m_Animation[i].Y < maxY)
                             {
                                 renderWindow.Draw(map.m_Animation[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        static void DrawSpellAnimations()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int p = 0; p < MAX_PLAYERS; p++)
+            {
+                if (players[p] != null && players[p].Name != "")
+                {
+                    if (players[p].Map == players[HandleData.myIndex].Map)
+                    {
+                        for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                        {
+                            if (players[p].spellBook[i].spellAnim.Name != null && players[p].spellBook[i].spellAnim.Name != "NONE")
+                            {
+                                if (players[p].spellBook[i].spellAnim.X > minX && players[p].spellBook[i].spellAnim.X < maxX)
+                                {
+                                    if (players[p].spellBook[i].spellAnim.Y > minY && players[p].spellBook[i].spellAnim.Y < maxY)
+                                    {
+                                        renderWindow.Draw(players[p].spellBook[i].spellAnim);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1039,7 +1085,8 @@ namespace SabertoothClient
                 DrawLowerAnimations();   //draw the animations lower layer so its set to 1
                 DrawNpcs(); //draw the npcs                
                 DrawPlayers();  //now the other players in the world                
-                DrawIndexPlayer();  //our main player of the current client instance    
+                DrawIndexPlayer();  //our main player of the current client instance
+                DrawSpellAnimations();
                 DrawUpperAnimations();
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 

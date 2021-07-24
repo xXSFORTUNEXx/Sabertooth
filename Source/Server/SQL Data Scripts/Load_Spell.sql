@@ -20,6 +20,10 @@ SELECT ID,
 	Range,
 	Animation,
 	AOE,
-	Distance
+	Distance,
+	Projectile,
+	Sprite,
+	SelfCast,
+	RenderOnTarget
 FROM Spells
 WHERE ID = @id

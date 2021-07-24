@@ -253,7 +253,7 @@ namespace SabertoothServer
         }
         #endregion
 
-        public virtual int DamageNpc(Player s_Player, Map s_Map)
+        public virtual int DamageNpc(Player s_Player, Map s_Map, Spell spellNum, int attackType)
         {
             return 0;   //Check MapNpcs
         }

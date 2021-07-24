@@ -25,8 +25,11 @@ namespace Editor.Forms
         {
             InitializeComponent();
             picIcon.Image = Image.FromFile("Resources/Icons/1.png");
-            scrlIcon.Maximum = Directory.GetFiles("Resources/Icons/", "*", SearchOption.TopDirectoryOnly).Length;
-            LoadSpellList();
+            scrlIcon.Maximum = Directory.GetFiles("Resources/Icons/", "*", SearchOption.TopDirectoryOnly).Length;            
+            picProj.Image = Image.FromFile("Resources/Projectiles/1.png");
+            scrlProj.Maximum = Directory.GetFiles("Resources/Projectiles/", "*", SearchOption.TopDirectoryOnly).Length;
+            scrlAnimation.Maximum = LoadAnimationCount();
+            LoadSpellList();            
         }
 
         private void LoadSpellList()
@@ -107,7 +110,13 @@ namespace Editor.Forms
         private void scrlAnimation_Scroll(object sender, ScrollEventArgs e)
         {
             lblAnimation.Text = "Animation: " + scrlAnimation.Value;
-            e_Spell.Animation = scrlAnimation.Value;
+            if (scrlAnimation.Value > 0)
+            {
+                Animation e_animation = new Animation();
+                e_animation.LoadAnimationFromDatabase(scrlAnimation.Value);
+                picAnimation.Image = Image.FromFile("Resources/Animation/" + e_animation.SpriteNumber + ".png");                
+            }            
+            e_Spell.Anim = scrlAnimation.Value;
             Modified = true;
         }
 
@@ -163,6 +172,32 @@ namespace Editor.Forms
             Modified = true;
         }
 
+        private void chkProj_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Spell.Projectile = chkProj.Checked;
+            Modified = true;
+        }
+
+        private void scrlProj_Scroll(object sender, ScrollEventArgs e)
+        {
+            lblProj.Text = "Sprite: " + scrlProj.Value;
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProj.Value + ".png");
+            e_Spell.Sprite = scrlProj.Value;
+            Modified = true;
+        }
+
+        private void chkRenderOnTarget_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Spell.RenderOnTarget = chkRenderOnTarget.Checked;
+            Modified = true;
+        }
+
+        private void chkSelfCast_CheckedChanged(object sender, EventArgs e)
+        {
+            e_Spell.SelfCast = chkSelfCast.Checked;
+            Modified = true;
+        }
+
         private void lstIndex_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Modified == true)
@@ -185,9 +220,8 @@ namespace Editor.Forms
             scrlLevelReq.Value = e_Spell.Level;
             scrlCharges.Value = e_Spell.Charges;
             scrlRange.Value = e_Spell.Range;
-            chkAOE.Checked = e_Spell.AOE;
             scrlDistance.Value = e_Spell.Distance;
-            scrlAnimation.Value = e_Spell.Animation;
+            scrlAnimation.Value = e_Spell.Anim;
             scrlVital.Value = e_Spell.Vital;
             scrlHPCost.Value = e_Spell.HealthCost;
             scrlMPCost.Value = e_Spell.ManaCost;
@@ -195,6 +229,11 @@ namespace Editor.Forms
             scrlCastTime.Value = e_Spell.CastTime;
             scrlTotalTicks.Value = e_Spell.TotalTick;
             scrlTickInt.Value = e_Spell.TickInterval;
+            scrlProj.Value = e_Spell.Sprite;
+            chkSelfCast.Checked = e_Spell.SelfCast;
+            chkRenderOnTarget.Checked = e_Spell.RenderOnTarget;
+            chkProj.Checked = e_Spell.Projectile;
+            chkAOE.Checked = e_Spell.AOE;
 
             lblIcon.Text = "Icon: " + scrlIcon.Value;
             picIcon.Image = Image.FromFile("Resources/Icons/" + scrlIcon.Value + ".png");
@@ -212,6 +251,9 @@ namespace Editor.Forms
             else { lblCastTime.Text = "Cast Time: " + scrlCastTime.Value + "ms"; }
             lblTotalTicks.Text = "Total Tickets: " + scrlTotalTicks.Value;
             lblTickInt.Text = "Tick Interval " + scrlTickInt.Value + "ms";
+            lblProj.Text = "Sprite: " + scrlProj.Value;
+            picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProj.Value + ".png");
+            if (scrlAnimation.Value > 0) { picAnimation.Image = Image.FromFile("Resources/Animation/" + scrlAnimation.Value + ".png"); }
         }
 
         private void btnNewItem_Click(object sender, EventArgs e)
@@ -230,6 +272,21 @@ namespace Editor.Forms
             e_Spell.SaveSpellInDatabase(SelectedIndex);
             LoadSpellList();
             Modified = false;
+        }
+
+        private int LoadAnimationCount()
+        {
+            string connection = "Data Source=" + Server.sqlServer + ";Initial Catalog=" + Server.sqlDatabase + ";Integrated Security=True";
+            using (var sql = new SqlConnection(connection))
+            {
+                sql.Open();
+                string command = "SELECT COUNT(*) FROM Animation";
+                using (SqlCommand cmd = new SqlCommand(command, sql))
+                {
+                    object count = cmd.ExecuteScalar();
+                    return ToInt32(count);
+                }
+            }
         }
     }
 }

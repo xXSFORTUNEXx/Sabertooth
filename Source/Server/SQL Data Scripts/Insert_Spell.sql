@@ -20,7 +20,11 @@ INSERT INTO Spells (
 	Range,
 	Animation,
 	AOE,
-	Distance
+	Distance,
+	Projectile,
+	Sprite,
+	SelfCast,
+	RenderOnTarget
 	)
 VALUES (
 	@name,
@@ -38,5 +42,9 @@ VALUES (
 	@range,
 	@animation,
 	@aoe,
-	@distance
+	@distance,
+	@projectile,
+	@sprite,
+	@selfcast,
+	@renderontarget
 	)

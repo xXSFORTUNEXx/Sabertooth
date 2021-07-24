@@ -24,15 +24,19 @@ namespace SabertoothServer
         public int TickInterval { get; set; }   //how often the dot/hot should tick damage/heal
         public int SpellType { get; set; }
         public int Range { get; set; }
-        public int Animation { get; set; }
+        public int Anim { get; set; }
         public bool AOE { get; set; }   //area of effect
         public int Distance { get; set; }
+        public bool Projectile { get; set; }
+        public int Sprite { get; set; }
+        public bool SelfCast { get; set; }
+        public bool RenderOnTarget { get; set; }
 
         public Spell() { }
 
         public Spell(string name,
             int icon, int level, int vital, int hpcost, int mpcost, int cooldown, int casttime, int charges, int totaltick, int tickint, int spelltype,
-            int range, bool aoe, int distance)
+            int range, bool aoe, int distance, bool proj, int sprite, bool selfcast, bool renderontarget)
         {
             Name = name;
             Level = level;
@@ -49,6 +53,10 @@ namespace SabertoothServer
             Range = range;
             AOE = aoe;
             Distance = distance;
+            Projectile = proj;
+            Sprite = sprite;
+            SelfCast = selfcast;
+            RenderOnTarget = renderontarget;
         }
 
         public void CreateSpellInDatabase()
@@ -68,6 +76,10 @@ namespace SabertoothServer
             Range = 0;
             AOE = false;
             Distance = 0;
+            Projectile = false;
+            Sprite = 1;
+            SelfCast = false;
+            RenderOnTarget = false;
 
             string connection = "Data Source=" + sqlServer + ";Initial Catalog=" + sqlDatabase + ";Integrated Security=True";
             string script = ReadAllText("SQL Data Scripts/Insert_Spell.sql");
@@ -89,9 +101,13 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@tickinterval", System.Data.DbType.Int32)).Value = TickInterval;
                     cmd.Parameters.Add(new SqlParameter("@spelltype", System.Data.DbType.Int32)).Value = SpellType;
                     cmd.Parameters.Add(new SqlParameter("@range", System.Data.DbType.Int32)).Value = Range;
-                    cmd.Parameters.Add(new SqlParameter("@animation", System.Data.DbType.Int32)).Value = Animation;
+                    cmd.Parameters.Add(new SqlParameter("@animation", System.Data.DbType.Int32)).Value = Anim;
                     cmd.Parameters.Add(new SqlParameter("@aoe", System.Data.DbType.Int32)).Value = AOE;
                     cmd.Parameters.Add(new SqlParameter("@distance", System.Data.DbType.Int32)).Value = Distance;
+                    cmd.Parameters.Add(new SqlParameter("@projectile", System.Data.DbType.Int32)).Value = Projectile;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@selfcast", System.Data.DbType.Int32)).Value = SelfCast;
+                    cmd.Parameters.Add(new SqlParameter("@renderontarget", System.Data.DbType.Int32)).Value = RenderOnTarget;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -120,9 +136,13 @@ namespace SabertoothServer
                     cmd.Parameters.Add(new SqlParameter("@tickinterval", System.Data.DbType.Int32)).Value = TickInterval;
                     cmd.Parameters.Add(new SqlParameter("@spelltype", System.Data.DbType.Int32)).Value = SpellType;
                     cmd.Parameters.Add(new SqlParameter("@range", System.Data.DbType.Int32)).Value = Range;
-                    cmd.Parameters.Add(new SqlParameter("@animation", System.Data.DbType.Int32)).Value = Animation;
+                    cmd.Parameters.Add(new SqlParameter("@animation", System.Data.DbType.Int32)).Value = Anim;
                     cmd.Parameters.Add(new SqlParameter("@aoe", System.Data.DbType.Int32)).Value = AOE;
                     cmd.Parameters.Add(new SqlParameter("@distance", System.Data.DbType.Int32)).Value = Distance;
+                    cmd.Parameters.Add(new SqlParameter("@projectile", System.Data.DbType.Int32)).Value = Projectile;
+                    cmd.Parameters.Add(new SqlParameter("@sprite", System.Data.DbType.Int32)).Value = Sprite;
+                    cmd.Parameters.Add(new SqlParameter("@selfcast", System.Data.DbType.Int32)).Value = SelfCast;
+                    cmd.Parameters.Add(new SqlParameter("@renderontarget", System.Data.DbType.Int32)).Value = RenderOnTarget;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -157,9 +177,13 @@ namespace SabertoothServer
                             TickInterval = ToInt32(reader[i]); i += 1;
                             SpellType = ToInt32(reader[i]); i += 1;
                             Range = ToInt32(reader[i]); i += 1;
-                            Animation = ToInt32(reader[i]); i += 1;
+                            Anim = ToInt32(reader[i]); i += 1;
                             AOE = ToBoolean(reader[i]); i += 1;
-                            Distance = ToInt32(reader[i]);
+                            Distance = ToInt32(reader[i]); i += 1;
+                            Projectile = ToBoolean(reader[i]); i += 1;
+                            Sprite = ToInt32(reader[i]); i += 1;
+                            SelfCast = ToBoolean(reader[i]); i += 1;
+                            RenderOnTarget = ToBoolean(reader[i]);
                         }
                     }
                 }

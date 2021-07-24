@@ -506,10 +506,18 @@ namespace SabertoothServer
             npcnum = NpcNum;
         }
 
-        public override int DamageNpc(Player s_Player, Map s_Map)
+        public override int DamageNpc(Player s_Player, Map s_Map, Spell s_Spell, int attackType)
         {
             Random rnd = new Random();
-            int damage = rnd.Next((s_Player.MainHand.Damage / 2), (s_Player.MainHand.Damage)) + rnd.Next(0, s_Player.OffHand.Damage);
+            int damage;
+            if (attackType == 0)
+            {
+                damage = rnd.Next((s_Player.MainHand.Damage / 2), (s_Player.MainHand.Damage)) + rnd.Next(0, s_Player.OffHand.Damage);
+            }
+            else
+            {
+                damage = s_Spell.Vital; 
+            }
 
             Health -= damage;
 

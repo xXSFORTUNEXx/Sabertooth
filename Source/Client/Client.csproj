@@ -1174,6 +1174,9 @@
     <Content Include="Resources\Items\99.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Projectiles\1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Skins\DefaultSkin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

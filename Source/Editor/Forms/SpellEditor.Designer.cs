@@ -34,25 +34,6 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.lstIndex = new System.Windows.Forms.ListBox();
-            this.pnlMain = new System.Windows.Forms.GroupBox();
-            this.scrlDistance = new System.Windows.Forms.HScrollBar();
-            this.lblDistance = new System.Windows.Forms.Label();
-            this.chkAOE = new System.Windows.Forms.CheckBox();
-            this.scrlLevelReq = new System.Windows.Forms.HScrollBar();
-            this.lblLevelReq = new System.Windows.Forms.Label();
-            this.scrlAnimation = new System.Windows.Forms.HScrollBar();
-            this.lblAnimation = new System.Windows.Forms.Label();
-            this.scrlRange = new System.Windows.Forms.HScrollBar();
-            this.lblRange = new System.Windows.Forms.Label();
-            this.scrlCharges = new System.Windows.Forms.HScrollBar();
-            this.lblCharges = new System.Windows.Forms.Label();
-            this.cmbType = new System.Windows.Forms.ComboBox();
-            this.lblType = new System.Windows.Forms.Label();
-            this.picIcon = new System.Windows.Forms.PictureBox();
-            this.lblIcon = new System.Windows.Forms.Label();
-            this.scrlIcon = new System.Windows.Forms.HScrollBar();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.lblName = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.scrlMPCost = new System.Windows.Forms.HScrollBar();
             this.lblMPCost = new System.Windows.Forms.Label();
@@ -69,11 +50,43 @@
             this.lblCastTime = new System.Windows.Forms.Label();
             this.scrlCoolDown = new System.Windows.Forms.HScrollBar();
             this.lblCoolDown = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.picProj = new System.Windows.Forms.PictureBox();
+            this.lblProj = new System.Windows.Forms.Label();
+            this.scrlProj = new System.Windows.Forms.HScrollBar();
+            this.chkProj = new System.Windows.Forms.CheckBox();
+            this.lblName = new System.Windows.Forms.Label();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.scrlIcon = new System.Windows.Forms.HScrollBar();
+            this.lblIcon = new System.Windows.Forms.Label();
+            this.picIcon = new System.Windows.Forms.PictureBox();
+            this.lblType = new System.Windows.Forms.Label();
+            this.cmbType = new System.Windows.Forms.ComboBox();
+            this.lblCharges = new System.Windows.Forms.Label();
+            this.scrlCharges = new System.Windows.Forms.HScrollBar();
+            this.lblRange = new System.Windows.Forms.Label();
+            this.scrlRange = new System.Windows.Forms.HScrollBar();
+            this.lblLevelReq = new System.Windows.Forms.Label();
+            this.scrlLevelReq = new System.Windows.Forms.HScrollBar();
+            this.chkAOE = new System.Windows.Forms.CheckBox();
+            this.lblDistance = new System.Windows.Forms.Label();
+            this.scrlDistance = new System.Windows.Forms.HScrollBar();
+            this.pnlMain = new System.Windows.Forms.GroupBox();
+            this.chkSelfCast = new System.Windows.Forms.CheckBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.chkRenderOnTarget = new System.Windows.Forms.CheckBox();
+            this.picAnimation = new System.Windows.Forms.PictureBox();
+            this.scrlAnimation = new System.Windows.Forms.HScrollBar();
+            this.lblAnimation = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
-            this.pnlMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProj)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
+            this.pnlMain.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picAnimation)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -138,211 +151,6 @@
             this.lstIndex.Size = new System.Drawing.Size(129, 238);
             this.lstIndex.TabIndex = 3;
             this.lstIndex.SelectedIndexChanged += new System.EventHandler(this.lstIndex_SelectedIndexChanged);
-            // 
-            // pnlMain
-            // 
-            this.pnlMain.Controls.Add(this.scrlDistance);
-            this.pnlMain.Controls.Add(this.lblDistance);
-            this.pnlMain.Controls.Add(this.chkAOE);
-            this.pnlMain.Controls.Add(this.scrlLevelReq);
-            this.pnlMain.Controls.Add(this.lblLevelReq);
-            this.pnlMain.Controls.Add(this.scrlAnimation);
-            this.pnlMain.Controls.Add(this.lblAnimation);
-            this.pnlMain.Controls.Add(this.scrlRange);
-            this.pnlMain.Controls.Add(this.lblRange);
-            this.pnlMain.Controls.Add(this.scrlCharges);
-            this.pnlMain.Controls.Add(this.lblCharges);
-            this.pnlMain.Controls.Add(this.cmbType);
-            this.pnlMain.Controls.Add(this.lblType);
-            this.pnlMain.Controls.Add(this.picIcon);
-            this.pnlMain.Controls.Add(this.lblIcon);
-            this.pnlMain.Controls.Add(this.scrlIcon);
-            this.pnlMain.Controls.Add(this.txtName);
-            this.pnlMain.Controls.Add(this.lblName);
-            this.pnlMain.Location = new System.Drawing.Point(159, 15);
-            this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(197, 370);
-            this.pnlMain.TabIndex = 9;
-            this.pnlMain.TabStop = false;
-            this.pnlMain.Text = "Properties";
-            // 
-            // scrlDistance
-            // 
-            this.scrlDistance.LargeChange = 5;
-            this.scrlDistance.Location = new System.Drawing.Point(21, 294);
-            this.scrlDistance.Maximum = 50;
-            this.scrlDistance.Name = "scrlDistance";
-            this.scrlDistance.Size = new System.Drawing.Size(156, 17);
-            this.scrlDistance.TabIndex = 38;
-            this.scrlDistance.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlDistance_Scroll);
-            // 
-            // lblDistance
-            // 
-            this.lblDistance.AutoSize = true;
-            this.lblDistance.Location = new System.Drawing.Point(21, 280);
-            this.lblDistance.Name = "lblDistance";
-            this.lblDistance.Size = new System.Drawing.Size(61, 13);
-            this.lblDistance.TabIndex = 37;
-            this.lblDistance.Text = "Distance: 0";
-            // 
-            // chkAOE
-            // 
-            this.chkAOE.AutoSize = true;
-            this.chkAOE.Location = new System.Drawing.Point(24, 260);
-            this.chkAOE.Name = "chkAOE";
-            this.chkAOE.Size = new System.Drawing.Size(97, 17);
-            this.chkAOE.TabIndex = 36;
-            this.chkAOE.Text = "Area of Effect?";
-            this.chkAOE.UseVisualStyleBackColor = true;
-            this.chkAOE.CheckedChanged += new System.EventHandler(this.chkAOE_CheckedChanged);
-            // 
-            // scrlLevelReq
-            // 
-            this.scrlLevelReq.Location = new System.Drawing.Point(21, 168);
-            this.scrlLevelReq.Maximum = 99;
-            this.scrlLevelReq.Name = "scrlLevelReq";
-            this.scrlLevelReq.Size = new System.Drawing.Size(156, 17);
-            this.scrlLevelReq.TabIndex = 35;
-            this.scrlLevelReq.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlLevelReq_Scroll);
-            // 
-            // lblLevelReq
-            // 
-            this.lblLevelReq.AutoSize = true;
-            this.lblLevelReq.Location = new System.Drawing.Point(21, 154);
-            this.lblLevelReq.Name = "lblLevelReq";
-            this.lblLevelReq.Size = new System.Drawing.Size(45, 13);
-            this.lblLevelReq.TabIndex = 34;
-            this.lblLevelReq.Text = "Level: 0";
-            // 
-            // scrlAnimation
-            // 
-            this.scrlAnimation.LargeChange = 1;
-            this.scrlAnimation.Location = new System.Drawing.Point(21, 332);
-            this.scrlAnimation.Maximum = 50;
-            this.scrlAnimation.Name = "scrlAnimation";
-            this.scrlAnimation.Size = new System.Drawing.Size(156, 17);
-            this.scrlAnimation.TabIndex = 33;
-            this.scrlAnimation.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAnimation_Scroll);
-            // 
-            // lblAnimation
-            // 
-            this.lblAnimation.AutoSize = true;
-            this.lblAnimation.Location = new System.Drawing.Point(21, 318);
-            this.lblAnimation.Name = "lblAnimation";
-            this.lblAnimation.Size = new System.Drawing.Size(65, 13);
-            this.lblAnimation.TabIndex = 32;
-            this.lblAnimation.Text = "Animation: 0";
-            // 
-            // scrlRange
-            // 
-            this.scrlRange.LargeChange = 5;
-            this.scrlRange.Location = new System.Drawing.Point(21, 238);
-            this.scrlRange.Maximum = 50;
-            this.scrlRange.Name = "scrlRange";
-            this.scrlRange.Size = new System.Drawing.Size(156, 17);
-            this.scrlRange.TabIndex = 31;
-            this.scrlRange.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRange_Scroll);
-            // 
-            // lblRange
-            // 
-            this.lblRange.AutoSize = true;
-            this.lblRange.Location = new System.Drawing.Point(21, 224);
-            this.lblRange.Name = "lblRange";
-            this.lblRange.Size = new System.Drawing.Size(51, 13);
-            this.lblRange.TabIndex = 30;
-            this.lblRange.Text = "Range: 0";
-            // 
-            // scrlCharges
-            // 
-            this.scrlCharges.Location = new System.Drawing.Point(21, 202);
-            this.scrlCharges.Maximum = 200;
-            this.scrlCharges.Name = "scrlCharges";
-            this.scrlCharges.Size = new System.Drawing.Size(156, 17);
-            this.scrlCharges.TabIndex = 25;
-            this.scrlCharges.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlCharges_Scroll);
-            // 
-            // lblCharges
-            // 
-            this.lblCharges.AutoSize = true;
-            this.lblCharges.Location = new System.Drawing.Point(21, 188);
-            this.lblCharges.Name = "lblCharges";
-            this.lblCharges.Size = new System.Drawing.Size(58, 13);
-            this.lblCharges.TabIndex = 24;
-            this.lblCharges.Text = "Charges: 0";
-            // 
-            // cmbType
-            // 
-            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbType.FormattingEnabled = true;
-            this.cmbType.Items.AddRange(new object[] {
-            "None",
-            "Damage",
-            "Heal",
-            "Buff",
-            "Debuff",
-            "Dash",
-            "Shield"});
-            this.cmbType.Location = new System.Drawing.Point(24, 120);
-            this.cmbType.Name = "cmbType";
-            this.cmbType.Size = new System.Drawing.Size(153, 21);
-            this.cmbType.TabIndex = 15;
-            this.cmbType.SelectedIndexChanged += new System.EventHandler(this.cmbType_SelectedIndexChanged);
-            // 
-            // lblType
-            // 
-            this.lblType.AutoSize = true;
-            this.lblType.Location = new System.Drawing.Point(21, 104);
-            this.lblType.Name = "lblType";
-            this.lblType.Size = new System.Drawing.Size(34, 13);
-            this.lblType.TabIndex = 14;
-            this.lblType.Text = "Type:";
-            // 
-            // picIcon
-            // 
-            this.picIcon.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.picIcon.Location = new System.Drawing.Point(23, 69);
-            this.picIcon.Name = "picIcon";
-            this.picIcon.Size = new System.Drawing.Size(32, 32);
-            this.picIcon.TabIndex = 9;
-            this.picIcon.TabStop = false;
-            // 
-            // lblIcon
-            // 
-            this.lblIcon.AutoSize = true;
-            this.lblIcon.Location = new System.Drawing.Point(61, 69);
-            this.lblIcon.Name = "lblIcon";
-            this.lblIcon.Size = new System.Drawing.Size(40, 13);
-            this.lblIcon.TabIndex = 8;
-            this.lblIcon.Text = "Icon: 0";
-            // 
-            // scrlIcon
-            // 
-            this.scrlIcon.LargeChange = 1;
-            this.scrlIcon.Location = new System.Drawing.Point(58, 84);
-            this.scrlIcon.Maximum = 4;
-            this.scrlIcon.Minimum = 1;
-            this.scrlIcon.Name = "scrlIcon";
-            this.scrlIcon.Size = new System.Drawing.Size(118, 17);
-            this.scrlIcon.TabIndex = 7;
-            this.scrlIcon.Value = 1;
-            this.scrlIcon.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlIcon_Scroll);
-            // 
-            // txtName
-            // 
-            this.txtName.Location = new System.Drawing.Point(20, 43);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(156, 20);
-            this.txtName.TabIndex = 6;
-            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 
-            // lblName
-            // 
-            this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(17, 27);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(38, 13);
-            this.lblName.TabIndex = 5;
-            this.lblName.Text = "Name:";
             // 
             // groupBox2
             // 
@@ -514,11 +322,315 @@
             this.lblCoolDown.TabIndex = 30;
             this.lblCoolDown.Text = "Cool Down: Instant";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.picProj);
+            this.groupBox4.Controls.Add(this.lblProj);
+            this.groupBox4.Controls.Add(this.scrlProj);
+            this.groupBox4.Controls.Add(this.chkProj);
+            this.groupBox4.Location = new System.Drawing.Point(362, 322);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(200, 100);
+            this.groupBox4.TabIndex = 12;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Projectile";
+            // 
+            // picProj
+            // 
+            this.picProj.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.picProj.Location = new System.Drawing.Point(24, 45);
+            this.picProj.Name = "picProj";
+            this.picProj.Size = new System.Drawing.Size(32, 32);
+            this.picProj.TabIndex = 43;
+            this.picProj.TabStop = false;
+            // 
+            // lblProj
+            // 
+            this.lblProj.AutoSize = true;
+            this.lblProj.Location = new System.Drawing.Point(62, 45);
+            this.lblProj.Name = "lblProj";
+            this.lblProj.Size = new System.Drawing.Size(46, 13);
+            this.lblProj.TabIndex = 42;
+            this.lblProj.Text = "Sprite: 1";
+            // 
+            // scrlProj
+            // 
+            this.scrlProj.LargeChange = 1;
+            this.scrlProj.Location = new System.Drawing.Point(59, 60);
+            this.scrlProj.Maximum = 5;
+            this.scrlProj.Minimum = 1;
+            this.scrlProj.Name = "scrlProj";
+            this.scrlProj.Size = new System.Drawing.Size(118, 17);
+            this.scrlProj.TabIndex = 41;
+            this.scrlProj.Value = 1;
+            this.scrlProj.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlProj_Scroll);
+            // 
+            // chkProj
+            // 
+            this.chkProj.AutoSize = true;
+            this.chkProj.Location = new System.Drawing.Point(12, 19);
+            this.chkProj.Name = "chkProj";
+            this.chkProj.Size = new System.Drawing.Size(69, 17);
+            this.chkProj.TabIndex = 40;
+            this.chkProj.Text = "Projectile";
+            this.chkProj.UseVisualStyleBackColor = true;
+            this.chkProj.CheckedChanged += new System.EventHandler(this.chkProj_CheckedChanged);
+            // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(17, 27);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(38, 13);
+            this.lblName.TabIndex = 5;
+            this.lblName.Text = "Name:";
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(20, 43);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(156, 20);
+            this.txtName.TabIndex = 6;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
+            // 
+            // scrlIcon
+            // 
+            this.scrlIcon.LargeChange = 1;
+            this.scrlIcon.Location = new System.Drawing.Point(58, 84);
+            this.scrlIcon.Maximum = 4;
+            this.scrlIcon.Minimum = 1;
+            this.scrlIcon.Name = "scrlIcon";
+            this.scrlIcon.Size = new System.Drawing.Size(118, 17);
+            this.scrlIcon.TabIndex = 7;
+            this.scrlIcon.Value = 1;
+            this.scrlIcon.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlIcon_Scroll);
+            // 
+            // lblIcon
+            // 
+            this.lblIcon.AutoSize = true;
+            this.lblIcon.Location = new System.Drawing.Point(61, 69);
+            this.lblIcon.Name = "lblIcon";
+            this.lblIcon.Size = new System.Drawing.Size(40, 13);
+            this.lblIcon.TabIndex = 8;
+            this.lblIcon.Text = "Icon: 0";
+            // 
+            // picIcon
+            // 
+            this.picIcon.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.picIcon.Location = new System.Drawing.Point(23, 69);
+            this.picIcon.Name = "picIcon";
+            this.picIcon.Size = new System.Drawing.Size(32, 32);
+            this.picIcon.TabIndex = 9;
+            this.picIcon.TabStop = false;
+            // 
+            // lblType
+            // 
+            this.lblType.AutoSize = true;
+            this.lblType.Location = new System.Drawing.Point(21, 104);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(34, 13);
+            this.lblType.TabIndex = 14;
+            this.lblType.Text = "Type:";
+            // 
+            // cmbType
+            // 
+            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.FormattingEnabled = true;
+            this.cmbType.Items.AddRange(new object[] {
+            "None",
+            "Damage",
+            "Heal",
+            "Buff",
+            "Debuff",
+            "Dash",
+            "Shield"});
+            this.cmbType.Location = new System.Drawing.Point(24, 120);
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(153, 21);
+            this.cmbType.TabIndex = 15;
+            this.cmbType.SelectedIndexChanged += new System.EventHandler(this.cmbType_SelectedIndexChanged);
+            // 
+            // lblCharges
+            // 
+            this.lblCharges.AutoSize = true;
+            this.lblCharges.Location = new System.Drawing.Point(21, 188);
+            this.lblCharges.Name = "lblCharges";
+            this.lblCharges.Size = new System.Drawing.Size(58, 13);
+            this.lblCharges.TabIndex = 24;
+            this.lblCharges.Text = "Charges: 0";
+            // 
+            // scrlCharges
+            // 
+            this.scrlCharges.Location = new System.Drawing.Point(21, 202);
+            this.scrlCharges.Maximum = 200;
+            this.scrlCharges.Name = "scrlCharges";
+            this.scrlCharges.Size = new System.Drawing.Size(156, 17);
+            this.scrlCharges.TabIndex = 25;
+            this.scrlCharges.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlCharges_Scroll);
+            // 
+            // lblRange
+            // 
+            this.lblRange.AutoSize = true;
+            this.lblRange.Location = new System.Drawing.Point(21, 224);
+            this.lblRange.Name = "lblRange";
+            this.lblRange.Size = new System.Drawing.Size(51, 13);
+            this.lblRange.TabIndex = 30;
+            this.lblRange.Text = "Range: 0";
+            // 
+            // scrlRange
+            // 
+            this.scrlRange.LargeChange = 5;
+            this.scrlRange.Location = new System.Drawing.Point(21, 238);
+            this.scrlRange.Maximum = 50;
+            this.scrlRange.Name = "scrlRange";
+            this.scrlRange.Size = new System.Drawing.Size(156, 17);
+            this.scrlRange.TabIndex = 31;
+            this.scrlRange.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlRange_Scroll);
+            // 
+            // lblLevelReq
+            // 
+            this.lblLevelReq.AutoSize = true;
+            this.lblLevelReq.Location = new System.Drawing.Point(21, 154);
+            this.lblLevelReq.Name = "lblLevelReq";
+            this.lblLevelReq.Size = new System.Drawing.Size(45, 13);
+            this.lblLevelReq.TabIndex = 34;
+            this.lblLevelReq.Text = "Level: 0";
+            // 
+            // scrlLevelReq
+            // 
+            this.scrlLevelReq.Location = new System.Drawing.Point(21, 168);
+            this.scrlLevelReq.Maximum = 99;
+            this.scrlLevelReq.Name = "scrlLevelReq";
+            this.scrlLevelReq.Size = new System.Drawing.Size(156, 17);
+            this.scrlLevelReq.TabIndex = 35;
+            this.scrlLevelReq.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlLevelReq_Scroll);
+            // 
+            // chkAOE
+            // 
+            this.chkAOE.AutoSize = true;
+            this.chkAOE.Location = new System.Drawing.Point(24, 286);
+            this.chkAOE.Name = "chkAOE";
+            this.chkAOE.Size = new System.Drawing.Size(91, 17);
+            this.chkAOE.TabIndex = 36;
+            this.chkAOE.Text = "Area of Effect";
+            this.chkAOE.UseVisualStyleBackColor = true;
+            this.chkAOE.CheckedChanged += new System.EventHandler(this.chkAOE_CheckedChanged);
+            // 
+            // lblDistance
+            // 
+            this.lblDistance.AutoSize = true;
+            this.lblDistance.Location = new System.Drawing.Point(21, 306);
+            this.lblDistance.Name = "lblDistance";
+            this.lblDistance.Size = new System.Drawing.Size(61, 13);
+            this.lblDistance.TabIndex = 37;
+            this.lblDistance.Text = "Distance: 0";
+            // 
+            // scrlDistance
+            // 
+            this.scrlDistance.LargeChange = 5;
+            this.scrlDistance.Location = new System.Drawing.Point(21, 323);
+            this.scrlDistance.Maximum = 50;
+            this.scrlDistance.Name = "scrlDistance";
+            this.scrlDistance.Size = new System.Drawing.Size(156, 17);
+            this.scrlDistance.TabIndex = 38;
+            this.scrlDistance.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlDistance_Scroll);
+            // 
+            // pnlMain
+            // 
+            this.pnlMain.Controls.Add(this.chkSelfCast);
+            this.pnlMain.Controls.Add(this.scrlDistance);
+            this.pnlMain.Controls.Add(this.lblDistance);
+            this.pnlMain.Controls.Add(this.chkAOE);
+            this.pnlMain.Controls.Add(this.scrlLevelReq);
+            this.pnlMain.Controls.Add(this.lblLevelReq);
+            this.pnlMain.Controls.Add(this.scrlRange);
+            this.pnlMain.Controls.Add(this.lblRange);
+            this.pnlMain.Controls.Add(this.scrlCharges);
+            this.pnlMain.Controls.Add(this.lblCharges);
+            this.pnlMain.Controls.Add(this.cmbType);
+            this.pnlMain.Controls.Add(this.lblType);
+            this.pnlMain.Controls.Add(this.picIcon);
+            this.pnlMain.Controls.Add(this.lblIcon);
+            this.pnlMain.Controls.Add(this.scrlIcon);
+            this.pnlMain.Controls.Add(this.txtName);
+            this.pnlMain.Controls.Add(this.lblName);
+            this.pnlMain.Location = new System.Drawing.Point(159, 15);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(197, 407);
+            this.pnlMain.TabIndex = 9;
+            this.pnlMain.TabStop = false;
+            this.pnlMain.Text = "Properties";
+            // 
+            // chkSelfCast
+            // 
+            this.chkSelfCast.AutoSize = true;
+            this.chkSelfCast.Location = new System.Drawing.Point(24, 263);
+            this.chkSelfCast.Name = "chkSelfCast";
+            this.chkSelfCast.Size = new System.Drawing.Size(68, 17);
+            this.chkSelfCast.TabIndex = 39;
+            this.chkSelfCast.Text = "Self Cast";
+            this.chkSelfCast.UseVisualStyleBackColor = true;
+            this.chkSelfCast.CheckedChanged += new System.EventHandler(this.chkSelfCast_CheckedChanged);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.chkRenderOnTarget);
+            this.groupBox5.Controls.Add(this.picAnimation);
+            this.groupBox5.Controls.Add(this.scrlAnimation);
+            this.groupBox5.Controls.Add(this.lblAnimation);
+            this.groupBox5.Location = new System.Drawing.Point(569, 12);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(200, 273);
+            this.groupBox5.TabIndex = 13;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Animation";
+            // 
+            // chkRenderOnTarget
+            // 
+            this.chkRenderOnTarget.AutoSize = true;
+            this.chkRenderOnTarget.Location = new System.Drawing.Point(19, 58);
+            this.chkRenderOnTarget.Name = "chkRenderOnTarget";
+            this.chkRenderOnTarget.Size = new System.Drawing.Size(112, 17);
+            this.chkRenderOnTarget.TabIndex = 45;
+            this.chkRenderOnTarget.Text = "Render On Target";
+            this.chkRenderOnTarget.UseVisualStyleBackColor = true;
+            this.chkRenderOnTarget.CheckedChanged += new System.EventHandler(this.chkRenderOnTarget_CheckedChanged);
+            // 
+            // picAnimation
+            // 
+            this.picAnimation.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.picAnimation.Location = new System.Drawing.Point(6, 81);
+            this.picAnimation.Name = "picAnimation";
+            this.picAnimation.Size = new System.Drawing.Size(188, 186);
+            this.picAnimation.TabIndex = 44;
+            this.picAnimation.TabStop = false;
+            // 
+            // scrlAnimation
+            // 
+            this.scrlAnimation.LargeChange = 1;
+            this.scrlAnimation.Location = new System.Drawing.Point(16, 38);
+            this.scrlAnimation.Maximum = 50;
+            this.scrlAnimation.Name = "scrlAnimation";
+            this.scrlAnimation.Size = new System.Drawing.Size(156, 17);
+            this.scrlAnimation.TabIndex = 35;
+            this.scrlAnimation.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrlAnimation_Scroll);
+            // 
+            // lblAnimation
+            // 
+            this.lblAnimation.AutoSize = true;
+            this.lblAnimation.Location = new System.Drawing.Point(16, 22);
+            this.lblAnimation.Name = "lblAnimation";
+            this.lblAnimation.Size = new System.Drawing.Size(65, 13);
+            this.lblAnimation.TabIndex = 34;
+            this.lblAnimation.Text = "Animation: 0";
+            // 
             // SpellEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 406);
+            this.ClientSize = new System.Drawing.Size(784, 440);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.pnlMain);
@@ -527,13 +639,19 @@
             this.Name = "SpellEditor";
             this.Text = "SpellEditor";
             this.groupBox1.ResumeLayout(false);
-            this.pnlMain.ResumeLayout(false);
-            this.pnlMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProj)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picAnimation)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -546,22 +664,6 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ListBox lstIndex;
-        private System.Windows.Forms.GroupBox pnlMain;
-        private System.Windows.Forms.ComboBox cmbType;
-        private System.Windows.Forms.Label lblType;
-        private System.Windows.Forms.PictureBox picIcon;
-        private System.Windows.Forms.Label lblIcon;
-        private System.Windows.Forms.HScrollBar scrlIcon;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.HScrollBar scrlRange;
-        private System.Windows.Forms.Label lblRange;
-        private System.Windows.Forms.HScrollBar scrlCharges;
-        private System.Windows.Forms.Label lblCharges;
-        private System.Windows.Forms.HScrollBar scrlAnimation;
-        private System.Windows.Forms.Label lblAnimation;
-        private System.Windows.Forms.HScrollBar scrlLevelReq;
-        private System.Windows.Forms.Label lblLevelReq;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.HScrollBar scrlMPCost;
         private System.Windows.Forms.Label lblMPCost;
@@ -578,8 +680,33 @@
         private System.Windows.Forms.Label lblCastTime;
         private System.Windows.Forms.HScrollBar scrlCoolDown;
         private System.Windows.Forms.Label lblCoolDown;
-        private System.Windows.Forms.HScrollBar scrlDistance;
-        private System.Windows.Forms.Label lblDistance;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.PictureBox picProj;
+        private System.Windows.Forms.Label lblProj;
+        private System.Windows.Forms.HScrollBar scrlProj;
+        private System.Windows.Forms.CheckBox chkProj;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.HScrollBar scrlIcon;
+        private System.Windows.Forms.Label lblIcon;
+        private System.Windows.Forms.PictureBox picIcon;
+        private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.ComboBox cmbType;
+        private System.Windows.Forms.Label lblCharges;
+        private System.Windows.Forms.HScrollBar scrlCharges;
+        private System.Windows.Forms.Label lblRange;
+        private System.Windows.Forms.HScrollBar scrlRange;
+        private System.Windows.Forms.Label lblLevelReq;
+        private System.Windows.Forms.HScrollBar scrlLevelReq;
         private System.Windows.Forms.CheckBox chkAOE;
+        private System.Windows.Forms.Label lblDistance;
+        private System.Windows.Forms.HScrollBar scrlDistance;
+        private System.Windows.Forms.GroupBox pnlMain;
+        private System.Windows.Forms.CheckBox chkSelfCast;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.PictureBox picAnimation;
+        private System.Windows.Forms.HScrollBar scrlAnimation;
+        private System.Windows.Forms.Label lblAnimation;
+        private System.Windows.Forms.CheckBox chkRenderOnTarget;
     }
 }

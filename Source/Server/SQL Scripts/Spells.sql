@@ -16,5 +16,9 @@ CREATE TABLE Spells (
 	Range INTEGER,
 	Animation INTEGER,
 	AOE BIT,
-	Distance INTEGER
+	Distance INTEGER,
+	Projectile BIT,
+	Sprite INTEGER,
+	SelfCast BIT,
+	RenderOnTarget BIT
 	)

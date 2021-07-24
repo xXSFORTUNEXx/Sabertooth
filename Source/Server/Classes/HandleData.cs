@@ -251,6 +251,8 @@ namespace SabertoothServer
         static void HandleAttack(NetIncomingMessage incMSG)
         {
             int npcNum = incMSG.ReadVariableInt32();
+            int spellNum = incMSG.ReadVariableInt32();
+            int attackType = incMSG.ReadVariableInt32();
             int index = incMSG.ReadVariableInt32();
             int map = players[index].Map;            
             
@@ -259,7 +261,7 @@ namespace SabertoothServer
             //Create blood splat
             maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
             //do damage to the npc and mark the player for update
-            int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map]);
+            int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], spells[spellNum], attackType);
 
             //send updated npc vitals to players connected and on the same map
             for (int p = 0; p < MAX_PLAYERS; p++)
@@ -1598,9 +1600,12 @@ namespace SabertoothServer
             outMSG.WriteVariableInt32(spells[index].TickInterval);
             outMSG.WriteVariableInt32(spells[index].SpellType);
             outMSG.WriteVariableInt32(spells[index].Range);
-            outMSG.WriteVariableInt32(spells[index].Animation);
+            outMSG.WriteVariableInt32(spells[index].Anim);
             outMSG.Write(spells[index].AOE);
             outMSG.WriteVariableInt32(spells[index].Distance);
+            outMSG.Write(spells[index].Projectile);
+            outMSG.WriteVariableInt32(spells[index].Sprite);
+            outMSG.Write(spells[index].SelfCast);
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -1623,9 +1628,12 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(spells[i].TickInterval);
                 outMSG.WriteVariableInt32(spells[i].SpellType);
                 outMSG.WriteVariableInt32(spells[i].Range);
-                outMSG.WriteVariableInt32(spells[i].Animation);
+                outMSG.WriteVariableInt32(spells[i].Anim);
                 outMSG.Write(spells[i].AOE);
                 outMSG.WriteVariableInt32(spells[i].Distance);
+                outMSG.Write(spells[i].Projectile);
+                outMSG.WriteVariableInt32(spells[i].Sprite);
+                outMSG.Write(spells[i].SelfCast);
             }
             SabertoothServer.netServer.SendMessage(outMSG, incMSG.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }

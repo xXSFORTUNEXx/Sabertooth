@@ -82,6 +82,7 @@ namespace SabertoothClient
         public bool Attacking;
         public bool CastSpell;
         public bool CastingSpell;
+        public bool FailedCast;
         public int CurrentSpell = -1;
         public int SpellBookSlot = -1;
         public int castTick;
@@ -92,6 +93,7 @@ namespace SabertoothClient
         public bool inShop;
         public bool inBank;
         public int Target = -1;
+        public int TargetType;
         double lastTarget;
         int attackTick;
         int timeTick;
@@ -484,7 +486,7 @@ namespace SabertoothClient
                 Step += 1;
                 if (Step == 4) { Step = 0; }
                 Moved = false;
-                //CastingSpell = false;
+                FailedCast = true;
                 SendMovementData();
                 walkTick = TickCount;
             }
@@ -565,7 +567,7 @@ namespace SabertoothClient
                             attackTick = TickCount;
                             return;
                         }                        
-                        SendAttack(Target);
+                        SendAttack(Target, 0, 0);
                         attackTick = TickCount;
                     }
                     else
@@ -579,7 +581,17 @@ namespace SabertoothClient
         }
 
         public void SpellCastLoop(Spell spell)
-        {           
+        {
+            int disSlot;
+            int pX = 0;
+            int pY = 0;
+            int nX = 0;
+            int nY = 0;
+            double dX = 0;
+            double dY = 0;
+            double dFinal = 0;
+            double dPoint = 0;
+
             if (CastSpell)
             {                
                 if (TickCount - gcdTick < GLOBAL_COOL_DOWN) { CastSpell = false; return; }                
@@ -590,6 +602,56 @@ namespace SabertoothClient
                 {
                     switch (spell.SpellType)
                     {
+                        case (int)SpellType.Damage:
+                            if (Target > -1)
+                            {
+                                pX = X + OFFSET_X;
+                                pY = Y + OFFSET_Y;
+                                nX = map.m_MapNpc[Target].X;
+                                nY = map.m_MapNpc[Target].Y;
+                                dX = pX - nX;
+                                dY = pY - nY;
+                                dFinal = dX * dX + dY * dY;
+                                dPoint = Math.Sqrt(dFinal);
+
+                                if (dPoint < spell.Range)
+                                {
+                                    if (!CheckFacingTarget(map.m_MapNpc[Target]))
+                                    {
+                                        disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                                        displayText[disSlot].CreateDisplayText(0, pX, pY, (int)DisplayTextMsg.Warning, "FRD");
+                                        FailedCast = true;
+                                    }
+                                    else
+                                    {
+                                        CastSpell = false;
+                                        CastingSpell = true;
+                                        gcdTick = TickCount;
+                                        castTick = TickCount;
+                                    }
+                                }
+                                else
+                                {
+                                    disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                                    displayText[disSlot].CreateDisplayText(0, pX, pY, (int)DisplayTextMsg.Warning, "OOR");
+                                    FailedCast = true;
+                                }
+                            }
+                            else
+                            {
+                                disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                                displayText[disSlot].CreateDisplayText(0, pX, pY, (int)DisplayTextMsg.Warning, "NTS");
+                                FailedCast = true;
+                            }
+                            break;
+
+                        case (int)SpellType.Heal:
+                            CastSpell = false;
+                            CastingSpell = true;
+                            gcdTick = TickCount;
+                            castTick = TickCount;
+                            break;
+
                         case (int)SpellType.Dash:
                             int newX = 0;
                             int newY = 0;
@@ -619,18 +681,19 @@ namespace SabertoothClient
                             Mana -= spell.ManaCost;
                             SendUpdatedMana();
                             SendMovementData();
-                            CastSpell = false;                           
-                            gcdTick = TickCount;
-                            break;
-
-                        case (int)SpellType.Heal:
                             CastSpell = false;
-                            CastingSpell = true;
                             gcdTick = TickCount;
-                            castTick = TickCount;
                             break;
                     }
                 }
+            }
+
+            if (FailedCast)
+            {
+                CastSpell = false;
+                CastingSpell = false;
+                FailedCast = false;
+                castTick = 0;
             }
 
             if (CastingSpell)
@@ -639,18 +702,66 @@ namespace SabertoothClient
                 {
                     switch (spell.SpellType)
                     {
-                        case (int)SpellType.Heal:
-                            int disSlot = FindOpenNpcDisplayText();
+                        case (int)SpellType.Damage:
                             Mana -= spell.ManaCost;
                             SendUpdatedMana();
+
+                            CastingSpell = false;
+                            CastSpell = false;
+
+                            spellBook[SpellBookSlot].SetupSpellAnimation(map.m_MapNpc[Target].X, map.m_MapNpc[Target].Y);
+                            spellBook[SpellBookSlot].OnCoolDown = true;
+                            spellBook[SpellBookSlot].cooldownTick = TickCount;
+                            SendAttack(Target, spellBook[SpellBookSlot].SpellNumber, 1);
+                            castTick = 0;
+                            break;
+
+                        case (int)SpellType.Heal:                            
+                            Mana -= spell.ManaCost;
+                            SendUpdatedMana();                           
                             if (Health + spell.Vital > MaxHealth) { Health = MaxHealth; }
                             else { Health += spell.Vital; }
                             SendUpdateHealth();
+
+                            disSlot = FindOpenNpcDisplayText();
                             displayText[disSlot].CreateDisplayText(spell.Vital, (X + OffsetX), (Y + OffsetY), (int)DisplayTextMsg.Healing, "+");
+                            spellBook[SpellBookSlot].SetupSpellAnimation((X + OffsetX), (Y + OffsetY));
+
                             CastingSpell = false;
                             CastSpell = false;
                             spellBook[SpellBookSlot].OnCoolDown = true;
                             spellBook[SpellBookSlot].cooldownTick = TickCount;
+                            castTick = 0;                            
+                            break;
+                    }
+                }
+                else
+                {
+                    switch(spell.SpellType)
+                    {
+                        case (int)SpellType.Damage:
+                            pX = X + OFFSET_X;
+                            pY = Y + OFFSET_Y;
+                            nX = map.m_MapNpc[Target].X;
+                            nY = map.m_MapNpc[Target].Y;
+                            dX = pX - nX;
+                            dY = pY - nY;
+                            dFinal = dX * dX + dY * dY;
+                            dPoint = Math.Sqrt(dFinal);
+
+                            if (dPoint > spell.Range)
+                            {
+                                disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                                displayText[disSlot].CreateDisplayText(0, nX, nY, (int)DisplayTextMsg.Warning, "MOR");
+                                FailedCast = true;
+                            }
+
+                            if (!CheckFacingTarget(map.m_MapNpc[Target]))
+                            {
+                                disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
+                                displayText[disSlot].CreateDisplayText(0, pX, pY, (int)DisplayTextMsg.Warning, "FRD");
+                                FailedCast = true;
+                            }
                             break;
                     }
                 }
@@ -997,11 +1108,13 @@ namespace SabertoothClient
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendAttack(int npcNum)
+        public void SendAttack(int npcNum, int spellNum, int attackType)
         {
             NetOutgoingMessage outMSG = SabertoothClient.netClient.CreateMessage();
             outMSG.Write((byte)PacketTypes.PlayerAttack);
             outMSG.WriteVariableInt32(npcNum);
+            outMSG.WriteVariableInt32(spellNum);
+            outMSG.WriteVariableInt32(attackType);
             outMSG.WriteVariableInt32(HandleData.myIndex);
             SabertoothClient.netClient.SendMessage(outMSG, SabertoothClient.netClient.ServerConnection, NetDeliveryMethod.ReliableOrdered);
         }              
@@ -1335,6 +1448,7 @@ namespace SabertoothClient
         public int SpellNumber { get; set; }
         public bool OnCoolDown { get; set; }
         public int cooldownTick;
+        public SpellAnimation spellAnim = new SpellAnimation();
 
         public SpellBook() { }
 
@@ -1342,6 +1456,22 @@ namespace SabertoothClient
         {
             SpellNumber = spellNum;
             OnCoolDown = oncd;
+        }
+
+        public void SetupSpellAnimation(int x, int y)
+        {
+            int animnum = spells[SpellNumber].Anim - 1;
+            spellAnim.Name = animations[animnum].Name;
+            spellAnim.X = x;
+            spellAnim.Y = y;
+            spellAnim.SpriteNumber = animations[animnum].SpriteNumber;
+            spellAnim.FrameCount = animations[animnum].FrameCount;
+            spellAnim.FrameCountH = animations[animnum].FrameCountH;
+            spellAnim.FrameCountV = animations[animnum].FrameCountV;
+            spellAnim.FrameDuration = animations[animnum].FrameDuration;
+            spellAnim.LoopCount = animations[animnum].LoopCount;
+            spellAnim.RenderBelowTarget = animations[animnum].RenderBelowTarget;
+            spellAnim.ConfigAnimation();
         }
     }
 
@@ -1364,5 +1494,11 @@ namespace SabertoothClient
         DownRight,
         UpLeft,
         UpRight
+    }
+
+    public enum TargetType : int
+    {
+        Npc,
+        Player
     }
 }

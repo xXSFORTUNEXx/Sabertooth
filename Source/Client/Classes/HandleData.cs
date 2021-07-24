@@ -824,9 +824,12 @@ namespace SabertoothClient
             spells[index].TickInterval = incMSG.ReadVariableInt32();
             spells[index].SpellType = incMSG.ReadVariableInt32();
             spells[index].Range = incMSG.ReadVariableInt32();
-            spells[index].Animation = incMSG.ReadVariableInt32();
+            spells[index].Anim = incMSG.ReadVariableInt32();
             spells[index].AOE = incMSG.ReadBoolean();
             spells[index].Distance = incMSG.ReadVariableInt32();
+            spells[index].Projectile = incMSG.ReadBoolean();
+            spells[index].Sprite = incMSG.ReadVariableInt32();
+            spells[index].SelfCast = incMSG.ReadBoolean();
         }
 
         static void HandleSpellsData(NetIncomingMessage incMSG)
@@ -849,9 +852,12 @@ namespace SabertoothClient
                     spells[i].TickInterval = incMSG.ReadVariableInt32();
                     spells[i].SpellType = incMSG.ReadVariableInt32();
                     spells[i].Range = incMSG.ReadVariableInt32();
-                    spells[i].Animation = incMSG.ReadVariableInt32();
+                    spells[i].Anim = incMSG.ReadVariableInt32();
                     spells[i].AOE = incMSG.ReadBoolean();
                     spells[i].Distance = incMSG.ReadVariableInt32();
+                    spells[i].Projectile = incMSG.ReadBoolean();
+                    spells[i].Sprite = incMSG.ReadVariableInt32();
+                    spells[i].SelfCast = incMSG.ReadBoolean();
                 }
             }
         }
