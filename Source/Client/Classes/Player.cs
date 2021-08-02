@@ -709,6 +709,7 @@ namespace SabertoothClient
                             CastingSpell = false;
                             CastSpell = false;
 
+                            spellBook[SpellBookSlot].spellProj.SetupProjectile((X + OffsetX), (Y + OffsetY), map.m_MapNpc[Target].X, map.m_MapNpc[Target].Y, Direction, Target, spell);
                             spellBook[SpellBookSlot].SetupSpellAnimation(map.m_MapNpc[Target].X, map.m_MapNpc[Target].Y);
                             spellBook[SpellBookSlot].OnCoolDown = true;
                             spellBook[SpellBookSlot].cooldownTick = TickCount;
@@ -752,7 +753,7 @@ namespace SabertoothClient
                             if (dPoint > spell.Range)
                             {
                                 disSlot = HandleData.FindOpenPlayerDisplayText(HandleData.myIndex);
-                                displayText[disSlot].CreateDisplayText(0, nX, nY, (int)DisplayTextMsg.Warning, "MOR");
+                                displayText[disSlot].CreateDisplayText(0, pX, pY, (int)DisplayTextMsg.Warning, "MOR");
                                 FailedCast = true;
                             }
 
@@ -1449,6 +1450,7 @@ namespace SabertoothClient
         public bool OnCoolDown { get; set; }
         public int cooldownTick;
         public SpellAnimation spellAnim = new SpellAnimation();
+        public SpellProj spellProj = new SpellProj();
 
         public SpellBook() { }
 

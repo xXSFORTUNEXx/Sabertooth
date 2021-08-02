@@ -3916,9 +3916,9 @@ namespace SabertoothClient
 
         public void UpdateExpBar()
         {
-            hudXPText.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 1000);
+            hudXPText.DisplayedString = "XP: " + player.Experience + " / " + (player.Level * 450);
 
-            hudXPbarLength = ((float)player.Experience / (player.Level * 1000)) * hudFSize;
+            hudXPbarLength = ((float)player.Experience / (player.Level * 450)) * hudFSize;
 
             hudXPBar[0] = new Vertex(new Vector2f(10, 80), Color.Yellow);
             hudXPBar[1] = new Vertex(new Vector2f(hudXPbarLength + 10, 80), Color.Yellow);

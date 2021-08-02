@@ -475,6 +475,7 @@ namespace SabertoothServer
                                                         maps[i].m_MapNpc[c].X = x;
                                                         maps[i].m_MapNpc[c].Y = y;
                                                         maps[i].m_MapNpc[c].IsSpawned = true;
+                                                        maps[i].m_MapNpc[c].Target = -1;
 
                                                         for (int p = 0; p < MAX_PLAYERS; p++)
                                                         {

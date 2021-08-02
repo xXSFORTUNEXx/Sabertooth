@@ -44,6 +44,8 @@ namespace SabertoothClient
         public const string EQUIP_COOLDOWN = "5000";
         public const int MAX_DISPLAY_TEXT = 10;
         public const int GLOBAL_COOL_DOWN = 2000;
+        public const int MAX_SHOP_ITEMS = 25;
+        public const int PROJ_MOVE_TIMER = 10;
         #endregion
 
         #region Config Globals

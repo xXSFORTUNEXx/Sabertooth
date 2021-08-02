@@ -39,6 +39,7 @@
         public const int MAX_PLAYER_HOTBAR = 10;
         public const int MAX_STACK_SIZE = 255;
         public const int MAX_PLAYER_SPELLBOOK = 25;
+        public const int MAX_SHOP_ITEMS = 25;
         #endregion
 
         #region Config Globals

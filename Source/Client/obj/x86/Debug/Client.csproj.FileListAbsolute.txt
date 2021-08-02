@@ -1291,3 +1291,4 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Icons\2.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Icons\3.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\1.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\3.png

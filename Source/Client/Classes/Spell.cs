@@ -152,6 +152,115 @@ namespace SabertoothClient
         }
     }
 
+    public class SpellProj : Drawable
+    {
+        static int animTextures = Directory.GetFiles("Resources/Projectiles/", "*", SearchOption.TopDirectoryOnly).Length;   //count the textures
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int DesX { get; set; }
+        public int DesY { get; set; }
+        public int Direction { get; set; }
+        public int projTick;
+        bool DidMove;
+        public int Target { get; set; }
+        public bool Active { get; set; }
+        VertexArray projPic = new VertexArray(PrimitiveType.Quads, 4);
+        Texture[] projSprite = new Texture[animTextures];
+        Texture finalTexture;
+
+        public SpellProj()
+        {
+            for (int i = 0; i < animTextures; i++)
+            {
+                projSprite[i] = new Texture("Resources/Projectiles/" + (i + 1) + ".png");
+            }
+        }
+
+        public void SetupProjectile(int x, int y, int desx, int desy, int dir, int target, Spell sSpell)
+        {
+            X = x;
+            Y = y;
+            DesX = desx;
+            DesY = desy;
+            Direction = dir;
+            finalTexture = projSprite[sSpell.Sprite - 1];
+            Target = target;
+            Active = true;
+        }
+
+        void CheckProjMovement()
+        {
+            if (TickCount - projTick > PROJ_MOVE_TIMER)
+            {
+                DesX = map.m_MapNpc[Target].X;
+                DesY = map.m_MapNpc[Target].Y;
+                DidMove = false;
+
+                if (Y != DesY)
+                {
+                    if (Y > DesY && Y > 0)
+                    {
+                        Direction = (int)Directions.Up;
+                        Y -= 1;
+                        DidMove = true;
+                    }
+                    else if (Y < DesY && Y < 50)
+                    {
+                        Direction = (int)Directions.Down;
+                        Y += 1;
+                        DidMove = true;
+                    }
+                }
+
+                if (X != DesX)
+                {
+                    if (X > DesX && X > 0)
+                    {
+                        Direction = (int)Directions.Left;
+                        X -= 1;
+                        DidMove = true;
+                    }
+                    else if (X < DesX && X < 50)
+                    {
+                        Direction = (int)Directions.Right;
+                        X += 1;
+                        DidMove = true;
+                    }
+                }
+
+                if (DidMove.Equals(true))
+                {
+                    projTick = TickCount;
+                }
+                else
+                {
+                    if (X == DesX && Y == DesY)
+                    {
+                        Active = false;
+                    }
+                }
+            }
+        }
+
+        public virtual void Draw(RenderTarget target, RenderStates states)
+        {
+            CheckProjMovement();
+
+            int x = (X * PIC_X);
+            int y = (Y * PIC_Y);
+            int dir = (Direction * SPRITE_SIZE_X);
+
+            projPic[0] = new Vertex(new Vector2f(x, y), new Vector2f(dir, 0));
+            projPic[1] = new Vertex(new Vector2f(x + PIC_X, y), new Vector2f(dir + PIC_X, 0));
+            projPic[2] = new Vertex(new Vector2f(x + PIC_X, y + PIC_Y), new Vector2f(dir + PIC_X, PIC_Y));
+            projPic[3] = new Vertex(new Vector2f(x, y + PIC_Y), new Vector2f(dir, PIC_Y));
+
+            states.Texture = finalTexture;
+            target.Draw(projPic, states);
+        }
+    }
+
     public enum SpellType : int
     {
         None,

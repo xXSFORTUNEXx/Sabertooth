@@ -254,6 +254,7 @@ namespace Editor.Forms
             lblProj.Text = "Sprite: " + scrlProj.Value;
             picProj.Image = Image.FromFile("Resources/Projectiles/" + scrlProj.Value + ".png");
             if (scrlAnimation.Value > 0) { picAnimation.Image = Image.FromFile("Resources/Animation/" + scrlAnimation.Value + ".png"); }
+            Modified = false;
         }
 
         private void btnNewItem_Click(object sender, EventArgs e)

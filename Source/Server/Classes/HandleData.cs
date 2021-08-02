@@ -261,7 +261,7 @@ namespace SabertoothServer
             //Create blood splat
             maps[map].CreateBloodSplat(map, maps[map].m_MapNpc[npcNum].X, maps[map].m_MapNpc[npcNum].Y);
             //do damage to the npc and mark the player for update
-            int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], spells[spellNum], attackType);
+            int damage = maps[map].m_MapNpc[npcNum].DamageNpc(players[index], maps[map], spells[spellNum], attackType, index);
 
             //send updated npc vitals to players connected and on the same map
             for (int p = 0; p < MAX_PLAYERS; p++)
@@ -921,6 +921,16 @@ namespace SabertoothServer
             SabertoothServer.netServer.SendToAll(outMSG, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendUpdateExpData(NetConnection conn, int index, int exp)
+        {
+            NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
+            outMSG.Write((byte)PacketTypes.ExpData);
+            outMSG.WriteVariableInt32(index);
+            outMSG.WriteVariableInt32(exp);
+
+            SabertoothServer.netServer.SendMessage(outMSG, conn, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public static void SendUpdateVitalData(int index, string vitalName, int vital)
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
@@ -1288,7 +1298,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Players);
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 outMSG.Write(players[i].Name);
                 outMSG.WriteVariableInt32(players[i].X);
@@ -1323,7 +1333,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.SendChests);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_CHESTS; i++)
             {
                 outMSG.Write(chests[i].Name);
                 outMSG.WriteVariableInt32(chests[i].Money);
@@ -1335,7 +1345,7 @@ namespace SabertoothServer
                 outMSG.WriteVariableInt32(chests[i].NpcSpawn);
                 outMSG.WriteVariableInt32(chests[i].SpawnAmount);
 
-                for (int n = 0; n < 10; n++)
+                for (int n = 0; n < MAX_CHEST_ITEMS; n++)
                 {
                     outMSG.Write(chests[i].ChestItem[n].Name);
                     outMSG.WriteVariableInt32(chests[i].ChestItem[n].ItemNum);
@@ -1508,10 +1518,10 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ShopData);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_SHOPS; i++)
             {
                 outMSG.Write(shops[i].Name);
-                for (int n = 0; n < 25; n++)
+                for (int n = 0; n < MAX_SHOP_ITEMS; n++)
                 {
                     outMSG.Write(shops[i].shopItem[n].Name);
                     outMSG.WriteVariableInt32(shops[i].shopItem[n].ItemNum);
@@ -1526,7 +1536,7 @@ namespace SabertoothServer
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.ShopItemsData);
             outMSG.WriteVariableInt32(shopIndex);
-            for (int n = 0; n < 25; n++)
+            for (int n = 0; n < MAX_SHOP_ITEMS; n++)
             {
                 outMSG.Write(shops[shopIndex].shopItem[n].Name);
                 outMSG.WriteVariableInt32(shops[shopIndex].shopItem[n].ItemNum);
@@ -1704,7 +1714,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.Npcs);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
                 outMSG.Write(npcs[i].Name);
                 outMSG.WriteVariableInt32(npcs[i].X);
@@ -1727,7 +1737,7 @@ namespace SabertoothServer
         {
             NetOutgoingMessage outMSG = SabertoothServer.netServer.CreateMessage();
             outMSG.Write((byte)PacketTypes.MapNpc);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
                 outMSG.Write(maps[map].m_MapNpc[i].Name);
                 outMSG.WriteVariableInt32(maps[map].m_MapNpc[i].X);
@@ -2187,6 +2197,7 @@ namespace SabertoothServer
         SpellData,
         SpellsData,
         ForgetSpell,
-        CastSpell
+        CastSpell,
+        ExpData
     }
 }

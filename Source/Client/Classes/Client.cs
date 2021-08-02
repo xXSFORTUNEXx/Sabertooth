@@ -215,6 +215,7 @@ namespace SabertoothClient
         static int saveTime;
         static int menuTick;
         static bool miniMapVis;
+        static int uiTick;
         #endregion
 
         public static void GameLoop()  
@@ -982,6 +983,52 @@ namespace SabertoothClient
             }
         }
 
+        static void DrawSpellProj()
+        {
+            int minX;
+            int minY;
+            int maxX;
+            int maxY;
+
+            if (SCREEN_WIDTH == 1024 && SCREEN_HEIGHT == 768)
+            {
+                minX = (players[HandleData.myIndex].X + 16) - 16;
+                minY = (players[HandleData.myIndex].Y + 11) - 11;
+                maxX = (players[HandleData.myIndex].X + 16) + 17;
+                maxY = (players[HandleData.myIndex].Y + 11) + 16;
+            }
+            else
+            {
+                minX = (players[HandleData.myIndex].X + 12) - 12;
+                minY = (players[HandleData.myIndex].Y + 9) - 9;
+                maxX = (players[HandleData.myIndex].X + 12) + 13;
+                maxY = (players[HandleData.myIndex].Y + 9) + 11;
+            }
+
+            for (int p = 0; p < MAX_PLAYERS; p++)
+            {
+                if (players[p] != null && players[p].Name != "")
+                {
+                    if (players[p].Map == players[HandleData.myIndex].Map)
+                    {
+                        for (int i = 0; i < MAX_PLAYER_SPELLBOOK; i++)
+                        {
+                            if (players[p].spellBook[i].spellProj != null && players[p].spellBook[i].spellProj.Active.Equals(true))
+                            {
+                                if (players[p].spellBook[i].spellProj.X > minX && players[p].spellBook[i].spellProj.X < maxX)
+                                {
+                                    if (players[p].spellBook[i].spellProj.Y > minY && players[p].spellBook[i].spellProj.Y < maxY)
+                                    {
+                                        renderWindow.Draw(players[p].spellBook[i].spellProj);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         static void DrawIndexPlayer()
         {
             renderWindow.Draw(players[HandleData.myIndex]);
@@ -1007,11 +1054,12 @@ namespace SabertoothClient
                     {
                         switch (map.m_MapNpc[i].Behavior)
                         {
+                            case (int)BehaviorType.Passive:
                             case (int)BehaviorType.Aggressive:
                                 curTexture = new Texture("Resources/attack.png");
                                 break;
 
-                            case (int)BehaviorType.Passive:
+                            case (int)BehaviorType.Friendly:
                                 curTexture = new Texture("Resources/talk.png");
                                 break;
                         }
@@ -1048,7 +1096,7 @@ namespace SabertoothClient
 
                     switch (map.m_MapNpc[target].Behavior)
                     {
-                        case (int)BehaviorType.Passive:
+                        case (int)BehaviorType.Friendly:
                             pX = player.X + OFFSET_X;
                             pY = player.Y + OFFSET_Y;
                             dX = pX - map.m_MapNpc[target].X;
@@ -1063,6 +1111,11 @@ namespace SabertoothClient
                             }
                             break;
 
+                        case (int)BehaviorType.Passive:
+                            player.Target = target;
+                            player.Attacking = true;
+                            break;
+                        
                         case (int)BehaviorType.Aggressive:
                             player.Target = target;
                             player.Attacking = true;
@@ -1087,6 +1140,7 @@ namespace SabertoothClient
                 DrawPlayers();  //now the other players in the world                
                 DrawIndexPlayer();  //our main player of the current client instance
                 DrawSpellAnimations();
+                DrawSpellProj();
                 DrawUpperAnimations();
                 map.DrawFringe(renderWindow);   //draw the final layer of tiles over everything else
 
@@ -1103,8 +1157,7 @@ namespace SabertoothClient
                 players[HandleData.myIndex].CheckDirection(Gwen.Input.InputHandler.MousePosition.X, Gwen.Input.InputHandler.MousePosition.Y);
 
                 //Lets check for specific input (maybe put hotkey before all events related to input?)
-                players[HandleData.myIndex].CheckHotBarKeyPress();
-                //players[HandleData.myIndex].CheckPlayerInteraction();
+                players[HandleData.myIndex].CheckHotBarKeyPress();                
                 if (players[HandleData.myIndex].Target > 0)
                 {
                     players[HandleData.myIndex].MeleeCombatLoop(map.m_MapNpc[players[HandleData.myIndex].Target]);
@@ -1112,24 +1165,24 @@ namespace SabertoothClient
                 if (players[HandleData.myIndex].CurrentSpell > -1)
                 {
                     players[HandleData.myIndex].SpellCastLoop(spells[players[HandleData.myIndex].CurrentSpell]);
-                }
-                //players[HandleData.myIndex].CheckAttack();                
+                }                         
                 players[HandleData.myIndex].CheckForTabTarget();
-            }
 
-            renderWindow.SetView(renderWindow.DefaultView); //set the view for the window to default (this is so the UI doesnt move when the characters view does)
+                renderWindow.SetView(renderWindow.DefaultView); //set the view for the window to default (this is so the UI doesnt move when the characters view does)
 
-            if (map.Name != null && gui.Ready)  //empty map but also check for the GUI to make sure its ready
-            {
                 map.DrawBrightness();   //draw the brightness from the enviro and the players
-                hud.UpdateHealthBar();  //update the on screen health bar
-                hud.UpdateManaBar();    //update the on screen mana bar
-                hud.UpdateExpBar(); //update the on screen xp bar
+
+                if (TickCount - uiTick > 500)
+                {
+                    hud.UpdateHealthBar();  //update the on screen health bar
+                    hud.UpdateManaBar();    //update the on screen mana bar
+                    hud.UpdateExpBar(); //update the on screen xp bar
+                    uiTick = TickCount;
+                }
                 renderWindow.Draw(hud); //draw all the hud from above with its updates
-                if (miniMapVis) { miniMap.UpdateMiniMap(); renderWindow.Draw(miniMap); }    //update the minimap                
+                if (miniMapVis) { miniMap.UpdateMiniMap(); renderWindow.Draw(miniMap); }    //update the minimap           
                 DrawCursor();
             }
-
             canvas.RenderCanvas();  //render the canvas for the GUI WAAAAY WAAAAY up there            
         }
         #endregion

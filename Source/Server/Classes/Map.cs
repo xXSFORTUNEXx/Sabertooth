@@ -506,20 +506,23 @@ namespace SabertoothServer
             npcnum = NpcNum;
         }
 
-        public override int DamageNpc(Player s_Player, Map s_Map, Spell s_Spell, int attackType)
+        public override int DamageNpc(Player s_Player, Map s_Map, Spell s_Spell, int attackType, int index)
         {
             Random rnd = new Random();
             int damage;
-            if (attackType == 0)
+            if (attackType == 0)    //weapons
             {
                 damage = rnd.Next((s_Player.MainHand.Damage / 2), (s_Player.MainHand.Damage)) + rnd.Next(0, s_Player.OffHand.Damage);
+                WriteMessageLog("Player attacked npc " + s_Map.m_MapNpc[s_Player.Target].Name + "(" + s_Player.Target + ") for " + damage + " melee damage", "Npc");
             }
-            else
+            else //spells
             {
-                damage = s_Spell.Vital; 
+                damage = s_Spell.Vital;
+                WriteMessageLog("Player attacked npc " + s_Map.m_MapNpc[s_Player.Target].Name + "(" + s_Player.Target + ") for " + damage + " using " + s_Spell.Name, "Npc");
             }
 
             Health -= damage;
+            Target = index;
 
             if (Health <= 0)
             {
@@ -529,7 +532,8 @@ namespace SabertoothServer
                 s_Player.Experience += Exp;
                 s_Player.Wallet += Money;
                 s_Player.CheckPlayerLevelUp();
-                //s_Player.SavePlayerToDatabase();                
+                HandleData.SendUpdateExpData(players[index].Connection, index, s_Player.Experience);
+                Target = -1;                      
             }
 
             return damage;
@@ -538,15 +542,18 @@ namespace SabertoothServer
         public override void AttackPlayer(int index)
         {
             players[index].Health -= Damage;
+            WriteMessageLog("Npc " + Name + " attacked player " + players[index].Name + "(" + index + ") for" + Damage, "Npc");
 
             if (players[index].Health <= 0)
             {
                 players[index].Health = players[index].MaxHealth;
                 players[index].X = 0;
                 players[index].Y = 0;
+                Target = -1;
                 HandleData.SendPlayers();
                 string deathMsg = players[index].Name + " has been killed by " + Name + ".";
                 HandleData.SendServerMessageToAll(deathMsg);
+                WriteMessageLog("Npc " + Name + " killed player " + players[index].Name + "(" + index + ") for" + Damage, "Npc");
             }
             else
             {
@@ -561,8 +568,6 @@ namespace SabertoothServer
             switch (Behavior)
             {
                 case (int)BehaviorType.Friendly:
-                case (int)BehaviorType.Passive:
-
                     if (s_CanMove > 80)
                     {
                         switch (s_Direction)
@@ -727,6 +732,296 @@ namespace SabertoothServer
                         if (DidMove == true)
                         {
                             if (Step == 3) { Step = 0; } else { Step += 1; }
+                            WriteMessageLog("Npc Moved Name: " + Name + " Map: " + mapNum + " (x,y): (" + X + "," + Y + ") Target: " + Target, "Npc");
+                        }
+                    }
+                    break;
+
+                case (int)BehaviorType.Passive:
+                    if (Target > -1)
+                    {
+                        if (X != players[Target].X + OFFSET_X)
+                        {
+                            if (X > players[Target].X + OFFSET_X && X > 0)
+                            {
+                                //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                                if (maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.Blocked ||
+                                    maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
+                                {
+                                    Direction = (int)Directions.Left;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //Check if the player is infront of us, if so then we can attack then because fuck them    
+                                if (((X - 1) == (players[Target].X + OFFSET_X) && Y == (players[Target].Y + OFFSET_Y)))
+                                {
+                                    AttackPlayer(Target);
+                                    Direction = (int)Directions.Left;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //If all else fails then we move closer to our target
+                                Direction = (int)Directions.Left;
+                                X -= 1;
+                                DidMove = true;
+                            }
+                            else if (X < players[Target].X + OFFSET_X && X < maps[mapNum].MaxX)
+                            {
+                                //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                                if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked ||
+                                    maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
+                                {
+                                    Direction = (int)Directions.Right;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //Check if the player is infront of us, if so then we can attack then because fuck them    
+                                if (((X + 1) == (players[Target].X + OFFSET_X) && Y == (players[Target].Y + OFFSET_Y)))
+                                {
+                                    AttackPlayer(Target);
+                                    Direction = (int)Directions.Right;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //If all else fails then we move closer to our target
+                                Direction = (int)Directions.Right;
+                                X += 1;
+                                DidMove = true;
+                            }
+                        }
+
+                        if (Y != players[Target].Y + OFFSET_Y)
+                        {
+                            if (Y > players[Target].Y + OFFSET_Y && Y > 0)
+                            {
+                                //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                                if (maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.Blocked ||
+                                    maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
+                                {
+                                    Direction = (int)Directions.Up;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //Check if the player is infront of us, if so then we can attack then because fuck them                            
+                                if (((Y - 1) == (players[Target].Y + OFFSET_Y) && X == (players[Target].X + OFFSET_X)))
+                                {
+                                    AttackPlayer(Target);
+                                    Direction = (int)Directions.Up;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //If all else fails then we move closer to our target
+                                Direction = (int)Directions.Up;
+                                Y -= 1;
+                                DidMove = true;
+                            }
+                            else if (Y < players[Target].Y + OFFSET_Y && Y < maps[mapNum].MaxY - 1)
+                            {
+                                //Check if there is a blocked tile or one to avoid infront of our path (Needs proper pathfinder)
+                                if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked ||
+                                    maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
+                                {
+                                    Direction = (int)Directions.Down;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //Check if the player is infront of us, if so then we can attack then because fuck them      
+                                if (((Y + 1) == (players[Target].Y + OFFSET_Y) && X == (players[Target].X + OFFSET_X)))
+                                {
+                                    AttackPlayer(Target);
+                                    Direction = (int)Directions.Down;
+                                    DidMove = true;
+                                    return;
+                                }
+
+                                //If all else fails then we move closer to our target
+                                Direction = (int)Directions.Down;
+                                Y += 1;
+                                DidMove = true;
+                            }
+                        }
+
+                        if (DidMove == true)
+                        {
+                            if (Step == 3) { Step = 0; } else { Step += 1; }
+                            WriteMessageLog("Npc Moved Name: " + Name + " Map: " + mapNum + " (x,y): (" + X + "," + Y + ") Target: " + Target, "Npc");
+                        }
+                    }
+                    else
+                    {
+                        if (s_CanMove > 80)
+                        {
+                            switch (s_Direction)
+                            {
+                                case (int)Directions.Down:
+                                    if (Y < maps[mapNum].MaxY - 1)
+                                    {
+                                        if (maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y + 1].Type == (int)TileType.NpcAvoid)
+                                        {
+                                            Direction = (int)Directions.Down;
+                                            DidMove = true;
+                                            return;
+                                        }
+                                        for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                        {
+                                            if (maps[mapNum].m_MapNpc[i].IsSpawned)
+                                            {
+                                                if ((Y + 1) == maps[mapNum].m_MapNpc[i].Y && X == maps[mapNum].m_MapNpc[i].X)
+                                                {
+                                                    Direction = (int)Directions.Down;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        for (int p = 0; p < MAX_PLAYERS; p++)
+                                        {
+                                            if (players[p].Connection != null)
+                                            {
+                                                if ((Y + 1) == (players[p].Y + OFFSET_Y) && X == (players[p].X + OFFSET_X))
+                                                {
+                                                    Direction = (int)Directions.Down;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        Y += 1;
+                                        Direction = (int)Directions.Down;
+                                        DidMove = true;
+                                    }
+                                    break;
+
+                                case (int)Directions.Left:
+                                    if (X > 1)
+                                    {
+                                        if (maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X - 1, Y].Type == (int)TileType.NpcAvoid)
+                                        {
+                                            Direction = (int)Directions.Left;
+                                            DidMove = true;
+                                            return;
+                                        }
+                                        for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                        {
+                                            if (maps[mapNum].m_MapNpc[i].IsSpawned)
+                                            {
+                                                if ((X - 1) == maps[mapNum].m_MapNpc[i].X && Y == maps[mapNum].m_MapNpc[i].Y)
+                                                {
+                                                    Direction = (int)Directions.Left;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        for (int p = 0; p < MAX_PLAYERS; p++)
+                                        {
+                                            if (players[p].Connection != null)
+                                            {
+                                                if ((X - 1) == (players[p].X + OFFSET_X) && Y == (players[p].Y + OFFSET_Y))
+                                                {
+                                                    Direction = (int)Directions.Left;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        X -= 1;
+                                        Direction = (int)Directions.Left;
+                                        DidMove = true;
+                                    }
+                                    break;
+
+                                case (int)Directions.Right:
+                                    if (X < maps[mapNum].MaxX - 1)
+                                    {
+                                        if (maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.Blocked || maps[mapNum].Ground[X + 1, Y].Type == (int)TileType.NpcAvoid)
+                                        {
+                                            Direction = (int)Directions.Right;
+                                            DidMove = true;
+                                            return;
+                                        }
+                                        for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                        {
+                                            if (maps[mapNum].m_MapNpc[i].IsSpawned)
+                                            {
+                                                if ((X + 1) == maps[mapNum].m_MapNpc[i].X && Y == maps[mapNum].m_MapNpc[i].Y)
+                                                {
+                                                    Direction = (int)Directions.Right;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        for (int p = 0; p < MAX_PLAYERS; p++)
+                                        {
+                                            if (players[p].Connection != null)
+                                            {
+                                                if ((X + 1) == (players[p].X + OFFSET_X) && Y == (players[p].Y + OFFSET_Y))
+                                                {
+                                                    Direction = (int)Directions.Right;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        X += 1;
+                                        Direction = (int)Directions.Right;
+                                        DidMove = true;
+                                    }
+                                    break;
+
+                                case (int)Directions.Up:
+                                    if (Y > 1)
+                                    {
+                                        if (maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.Blocked || maps[mapNum].Ground[X, Y - 1].Type == (int)TileType.NpcAvoid)
+                                        {
+                                            Direction = (int)Directions.Up;
+                                            DidMove = true;
+                                            return;
+                                        }
+                                        for (int i = 0; i < MAX_MAP_NPCS; i++)
+                                        {
+                                            if (maps[mapNum].m_MapNpc[i].IsSpawned)
+                                            {
+                                                if ((Y - 1) == maps[mapNum].m_MapNpc[i].Y && X == maps[mapNum].m_MapNpc[i].X)
+                                                {
+                                                    Direction = (int)Directions.Up;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        for (int p = 0; p < MAX_PLAYERS; p++)
+                                        {
+                                            if (players[p].Connection != null)
+                                            {
+                                                if ((Y - 1) == (players[p].Y + OFFSET_Y) && X == (players[p].X + OFFSET_X))
+                                                {
+                                                    Direction = (int)Directions.Up;
+                                                    DidMove = true;
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        Y -= 1;
+                                        Direction = (int)Directions.Up;
+                                        DidMove = true;
+                                    }
+                                    break;
+                            }
+
+                            if (DidMove == true)
+                            {
+                                if (Step == 3) { Step = 0; } else { Step += 1; }
+                                WriteMessageLog("Npc Moved Name: " + Name + " Map: " + mapNum + " (x,y): (" + X + "," + Y + ") Target: " + Target, "Npc");
+                            }
                         }
                     }
                     break;
@@ -758,6 +1053,7 @@ namespace SabertoothServer
                         }
                     }
 
+                    if (Target < 0) { goto case (int)BehaviorType.Passive; }
                     //Check to see if the target we had is in range, if not then we just wander like a gud passive should
                     if ((X + Range) < (players[Target].X + OFFSET_X) || (X - Range) > (players[Target].X + OFFSET_X)) { goto case (int)BehaviorType.Passive; }
                     if ((Y + Range) < (players[Target].Y + OFFSET_Y) || (Y - Range) > (players[Target].Y + OFFSET_Y)) { goto case (int)BehaviorType.Passive; }
@@ -873,6 +1169,7 @@ namespace SabertoothServer
                     if (DidMove == true)
                     {
                         if (Step == 3) { Step = 0; } else { Step += 1; }
+                        WriteMessageLog("Npc Moved Name: " + Name + " Map: " + mapNum + " (x,y): (" + X + "," + Y + ") Target: " + Target, "Npc");
                     }
                     break;
 
@@ -913,6 +1210,7 @@ namespace SabertoothServer
                     if (DidMove == true)
                     {
                         if (Step == 3) { Step = 0; } else { Step += 1; }
+                        WriteMessageLog("Npc Moved Name: " + Name + " Map: " + mapNum + " (x,y): (" + X + "," + Y + ") Target: " + Target, "Npc");
                     }
                     break;
             }

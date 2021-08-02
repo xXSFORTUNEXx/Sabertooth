@@ -238,6 +238,10 @@ namespace SabertoothClient
                             case (byte)PacketTypes.CastSpell:
                                 HandlePlayerCastSpell(incMSG);
                                 break;
+
+                            case (byte)PacketTypes.ExpData:
+                                HandlePlayerExpData(incMSG);
+                                break;
                         }
                         break;
 
@@ -251,6 +255,14 @@ namespace SabertoothClient
         }
 
         #region Handle Incoming Data
+        static void HandlePlayerExpData(NetIncomingMessage incMSG)
+        {
+            int index = incMSG.ReadVariableInt32();
+            int exp = incMSG.ReadVariableInt32();
+
+            players[index].Experience = exp;
+        }
+
         static void HandlePlayerCastSpell(NetIncomingMessage incMSG)
         {
             int index = incMSG.ReadVariableInt32();
@@ -357,7 +369,7 @@ namespace SabertoothClient
 
         static void HandleChests(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_CHESTS; i++)
             {
                 chests[i].Name = incMSG.ReadString();
                 chests[i].Money = incMSG.ReadVariableInt32();
@@ -369,7 +381,7 @@ namespace SabertoothClient
                 chests[i].NpcSpawn = incMSG.ReadVariableInt32();
                 chests[i].SpawnAmount = incMSG.ReadVariableInt32();
 
-                for (int n = 0; n < 10; n++)
+                for (int n = 0; n < MAX_CHEST_ITEMS; n++)
                 {
                     chests[i].ChestItem[n].Name = incMSG.ReadString();
                     chests[i].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
@@ -392,7 +404,7 @@ namespace SabertoothClient
             chests[index].NpcSpawn = incMSG.ReadVariableInt32();
             chests[index].SpawnAmount = incMSG.ReadVariableInt32();
 
-            for (int n = 0; n < 10; n++)
+            for (int n = 0; n < MAX_CHEST_ITEMS; n++)
             {
                 chests[index].ChestItem[n].Name = incMSG.ReadString();
                 chests[index].ChestItem[n].ItemNum = incMSG.ReadVariableInt32();
@@ -561,10 +573,10 @@ namespace SabertoothClient
 
         static void HandleShops(NetIncomingMessage incMSG)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < MAX_SHOPS; i++)
             {
                 shops[i].Name = incMSG.ReadString();
-                for (int n = 0; n < 25; n++)
+                for (int n = 0; n < MAX_SHOP_ITEMS; n++)
                 {
                     shops[i].shopItem[n].Name = incMSG.ReadString();
                     shops[i].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
@@ -577,7 +589,7 @@ namespace SabertoothClient
         {
             int index = incMSG.ReadVariableInt32();
 
-            for (int n = 0; n < 25; n++)
+            for (int n = 0; n < MAX_SHOP_ITEMS; n++)
             {
                 shops[index].shopItem[n].Name = incMSG.ReadString();
                 shops[index].shopItem[n].ItemNum = incMSG.ReadVariableInt32();
@@ -1626,6 +1638,7 @@ namespace SabertoothClient
         SpellData,
         SpellsData,
         ForgetSpell,
-        CastSpell
+        CastSpell,
+        ExpData
     }
 }

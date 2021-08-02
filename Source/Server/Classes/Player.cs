@@ -362,6 +362,7 @@ namespace SabertoothServer
                     Intelligence += RND.Next(1, 3);
                     Stamina += RND.Next(1, 3);
                     Energy += RND.Next(1, 3);
+                    Logging.WriteMessageLog(Name + " leveled to " + Level, "Player");
                 }
             }
         }
