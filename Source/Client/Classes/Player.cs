@@ -1500,6 +1500,7 @@ namespace SabertoothClient
 
     public enum TargetType : int
     {
+        None,
         Npc,
         Player
     }

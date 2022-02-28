@@ -777,7 +777,6 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.pdb
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Lidgren.Network.xml
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Gwen.pdb
-C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojAssemblyReference.cache
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\AccountKeyGenClass.dll
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Chest.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Grid.png
@@ -1292,3 +1291,4 @@ C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Icons\3.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Projectiles\1.png
 C:\Users\sfortune\source\repos\Sabertooth\Source\Client\bin\x86\Debug\Resources\Characters\3.png
+C:\Users\sfortune\source\repos\Sabertooth\Source\Client\obj\x86\Debug\Client.csprojAssemblyReference.cache

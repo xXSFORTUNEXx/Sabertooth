@@ -325,6 +325,7 @@ namespace SabertoothClient
                     }
                     else
                     {
+                        //bankPic[i].Hide();
                         bankPic[i].ImageName = "Resources/Skins/EmptyBkg.png";
                         //bankPic[i].ImageName = "Resources/Skins/EmptyBkg_Test.png";
                         Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
@@ -533,6 +534,7 @@ namespace SabertoothClient
                         }
                         else
                         {
+                            //invPic[i].Hide();
                             invPic[i].ImageName = "Resources/Skins/EmptyBkg.png";
                             //invPic[i].ImageName = "Resources/Skins/EmptyBkg_Test.png";
                             Gwen.DragDrop.Package package = new Gwen.DragDrop.Package();
@@ -551,7 +553,7 @@ namespace SabertoothClient
                         }
 
                         if (invPic[i].IsHovered && isMoveInv)
-                        {
+                        {                            
                             if (Gwen.DragDrop.DragAndDrop.SourceControl == null)
                             {
                                 if (!Gwen.Input.InputHandler.IsLeftMouseDown)
@@ -1638,31 +1640,31 @@ namespace SabertoothClient
         public void RemoveStatWindow()
         {
             statWindow.SetPosition(200, 10);
-            statWindow.Hide();
+            statWindow.Close();
         }
 
         void RemoveShopStatWindow()
         {
             shopStatWindow.SetPosition(200, 10);
-            shopStatWindow.Hide();
+            shopStatWindow.Close();
         }
 
         void RemoveBankStatWindow()
         {
             bankStatWindow.SetPosition(200, 10);
-            bankStatWindow.Hide();
+            bankStatWindow.Close();
         }
 
         void RemoveChestStatWindow()
         {
             chestStatWindow.SetPosition(200, 10);
-            chestStatWindow.Hide();
+            chestStatWindow.Close();
         }
 
         public void RemoveSpellStatWindow()
         {
             spellStatWindow.SetPosition(200, 10);
-            spellStatWindow.Hide();
+            spellStatWindow.Close();
         }
 
         public void UpdateNpcChatWindow(int chatNum)

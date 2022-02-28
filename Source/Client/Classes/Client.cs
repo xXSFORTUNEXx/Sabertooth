@@ -452,7 +452,7 @@ namespace SabertoothClient
                         }
                         else
                         {
-                            gui.chatWindow.Hide();
+                            gui.chatWindow.Close();
                         }
                     }
                 }
@@ -486,13 +486,13 @@ namespace SabertoothClient
                             }
                             else
                             {
-                                gui.menuWindow.Hide();
+                                gui.menuWindow.Close();
                                 gui.RemoveStatWindow();
                             }
                         }
                         else
                         {
-                            gui.menuWindow.Show();
+                            gui.menuWindow.Close();
                             gui.charTab.Press();
                         }
                     }
@@ -512,14 +512,14 @@ namespace SabertoothClient
                             }
                             else
                             {
-                                gui.menuWindow.Hide();
+                                gui.menuWindow.Close();
                                 gui.RemoveSpellStatWindow();
 
                             }
                         }
                         else
                         {
-                            gui.menuWindow.Show();
+                            gui.menuWindow.Close();
                             gui.spellsTab.Press();
                         }
                     }
@@ -539,7 +539,7 @@ namespace SabertoothClient
                             }
                             else
                             {
-                                gui.menuWindow.Hide();
+                                gui.menuWindow.Close();
                                 gui.RemoveStatWindow();
 
                             }
@@ -566,7 +566,7 @@ namespace SabertoothClient
                             }
                             else
                             {
-                                gui.menuWindow.Hide();
+                                gui.menuWindow.Close();
                                 gui.RemoveStatWindow();
 
                             }
@@ -588,7 +588,7 @@ namespace SabertoothClient
 
                         if (gui.d_Window.IsVisible)
                         {
-                            gui.d_Window.Hide();
+                            gui.d_Window.Close();
                         }
                         else
                         {
@@ -1044,7 +1044,9 @@ namespace SabertoothClient
             int mX = (curX / PIC_X) + (player.X);
             int mY = (curY / PIC_Y) + (player.Y);
             int target = -1;
+            int targetType = (int)TargetType.None;
             bool isNPC = false;
+            bool isPlayer = false;
 
             for (int i = 0; i < MAX_MAP_NPCS; i++)
             {
@@ -1064,13 +1066,34 @@ namespace SabertoothClient
                                 break;
                         }
                         target = i;
+                        targetType = (int)TargetType.Npc;
                         isNPC = true;
+                        isPlayer = false;
                         break;
                     }
                 }
             }
+            
+            for (int i = 0; i < MAX_PLAYERS; i++)
+            {
+                if (i != HandleData.myIndex)
+                {
+                    if (players[i] != null && players[i].Connection != null && players[i].Map == player.Map)
+                    {
+                        if (players[i].X == mX && players[i].Y == mY)
+                        {
+                            curTexture = new Texture("Resources/talk.png");
+                            target = i;
+                            targetType = (int)TargetType.Player;
+                            isNPC = false;
+                            isPlayer = true;
+                            break;
+                        }
+                    }
+                }
+            }
 
-            if (!isNPC)
+            if (!isNPC && !isPlayer)
             {
                 curTexture = new Texture("Resources/cursor.png");
             }
@@ -1080,6 +1103,7 @@ namespace SabertoothClient
                 if (target > -1)
                 {
                     player.Target = target;
+                    player.TargetType = targetType;
                 }
             }
 
@@ -1108,16 +1132,19 @@ namespace SabertoothClient
                             {
                                 player.SendInteraction(target, 0);
                                 player.Target = target;
+                                player.TargetType = targetType;
                             }
                             break;
 
                         case (int)BehaviorType.Passive:
                             player.Target = target;
+                            player.TargetType = targetType;
                             player.Attacking = true;
                             break;
                         
                         case (int)BehaviorType.Aggressive:
                             player.Target = target;
+                            player.TargetType = targetType;
                             player.Attacking = true;
                             break;
                     }
